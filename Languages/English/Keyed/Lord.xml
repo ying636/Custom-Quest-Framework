@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <LordName>Lord name:</LordName>
+  <LordNameWithTarget>Lord name:</LordNameWithTarget>
+  <CustomLordNameTip>Automatically searches for lords matching the name and joins them at generation, or creates a lord with the job "CQF Custom Action" if this is empty.</CustomLordNameTip>
+  <CQF_LordJob>Lord job:{0}</CQF_LordJob>
+  <ActionsAfterGeneration>Actions after generation:</ActionsAfterGeneration>
+
+  <DesignatorLord>Custom lord</DesignatorLord>
+  <DesignatorLordDesc>Customize lord within the map, lord data will be saved in the custom map def</DesignatorLordDesc>
+
+  <LordJob_Custom>CQF custom job</LordJob_Custom>
+
+  <LordJobData_DefendBase>Lord data:defend base</LordJobData_DefendBase>
+  <TargetPositionName>Defending centre:</TargetPositionName>
+
+  <GroupEditor>Group Editor</GroupEditor>
+  <CQFAction_Lord_Visit>Lord action:visit colony</CQFAction_Lord_Visit>
+  <CQFAction_Lord_Visit_Tip>Set the lord job as tovisit colony, and the group will leave the map after the duration</CQFAction_Lord_Visit_Tip>
+
+  <LordJob_VisitColony>Visit colony</LordJob_VisitColony>
+
+  <LordJob_DefendBase>Defend base</LordJob_DefendBase>
+
+  <LordJobData>Lord job data</LordJobData>
+
+</LanguageData>

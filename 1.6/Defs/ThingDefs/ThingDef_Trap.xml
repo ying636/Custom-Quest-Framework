@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_CaptureNet</defName>
+        <label>Capture net</label>
+        <description>A capture net.</description>
+        <thingClass>QuestEditor_Library.CustomTrap_Capture</thingClass>
+        <selectable>false</selectable>
+        <graphicData>
+            <drawSize>(3,3)</drawSize>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/CaptureNet</texPath>
+            <shaderType>Cutout</shaderType>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+            <paintable>true</paintable>
+            <ai_chillDestination>false</ai_chillDestination>
+            <destroySound>BuildingDestroyed_Metal_Small</destroySound>
+            <haulToContainerDuration>500</haulToContainerDuration>
+        </building>
+        <stuffCategories>
+            <li>Fabric</li>
+            <li>Leathery</li>
+        </stuffCategories>
+        <modExtensions>
+            <li Class="QuestEditor_Library.ModExtension_CustomThing">
+                <captureTrapGraphicdata_Back>
+                    <texPath>Things/Trap/CaptureNet_Tight_Back</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <drawOffset>(0,0,0.4)</drawOffset>
+                    <drawSize>(5,5)</drawSize>
+                    <shaderType>Cutout</shaderType>
+                </captureTrapGraphicdata_Back>
+                <captureTrapGraphicdata_Front>
+                    <texPath>Things/Trap/CaptureNet_Tight_Front</texPath>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <drawOffset>(0,0.2,0.4)</drawOffset>
+                    <drawSize>(5,5)</drawSize>
+                    <shaderType>Cutout</shaderType>
+                </captureTrapGraphicdata_Front>
+                <caturedDrawOffset>(0,0.1,0.2)</caturedDrawOffset>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_StoneBurrow</defName>
+        <label>.</label>
+        <graphicData>
+            <drawSize>1.5</drawSize>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/StoneBurrow/StoneBurrow_Hide</texPath>
+        </graphicData>
+        <rotatable>false</rotatable>
+        <selectable>false</selectable>
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_TriggerTrap</defName>
+        <label>Custom Trap(Only displayed in Dev mode)</label>
+        <description>.</description>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+        <thingClass>QuestEditor_Library.CustomTrap_Dev</thingClass>
+        <selectable>false</selectable>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_StonePressurePlate</defName>
+        <label>Stone pressure plate</label>
+        <description>A stone pressure plate.</description>
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+        <selectable>false</selectable>
+        <graphicData>
+            <color>(180,180,180)</color>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/StonePressurePlate</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <stuffCategories>
+            <li>Stony</li>
+        </stuffCategories>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_PressurePlate</defName>
+        <label>Pressure plate</label>
+        <description>A pressure plate.</description>
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+        <selectable>false</selectable>
+        <graphicData>
+            <color>(180,180,180)</color>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/PressurePlate</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+    </ThingDef>
+
+</Defs>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  
+  <!-- EN: Exiter -->
+  <QE_Duty_Exiter.label>离开者</QE_Duty_Exiter.label>
+  <!-- EN: Exiter will find map exit to exit map. -->
+  <QE_Duty_Exiter.description>离开者会寻找出口并离开地图。</QE_Duty_Exiter.description>
+  
+  <!-- EN: Patrol guard -->
+  <QE_Duty_Guard.label>巡逻护卫</QE_Duty_Guard.label>
+  <!-- EN: Patrol guard will patrol along the given route and attack enemies around themselves. -->
+  <QE_Duty_Guard.description>巡逻护卫会根据给定的路径进行巡逻并攻击敌人。</QE_Duty_Guard.description>
+  
+  <!-- EN: Standing guard -->
+  <QE_Duty_Waiter.label>警戒护卫</QE_Duty_Waiter.label>
+  <!-- EN: Standing guard will be on guard in place. -->
+  <QE_Duty_Waiter.description>警戒护卫会在原地警戒。</QE_Duty_Waiter.description>
+  
+</LanguageData>

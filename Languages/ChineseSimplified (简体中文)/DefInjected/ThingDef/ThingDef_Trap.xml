@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  
+  <!-- EN: Capture net -->
+  <QE_CaptureNet.label>捕捉网</QE_CaptureNet.label>
+  <!-- EN: A capture net. -->
+  <QE_CaptureNet.description>捕捉网</QE_CaptureNet.description>
+  
+  <!-- EN: Pressure plate -->
+  <QE_PressurePlate.label>压力板</QE_PressurePlate.label>
+  <!-- EN: A pressure plate. -->
+  <QE_PressurePlate.description>压力板</QE_PressurePlate.description>
+  
+  <!-- EN: . -->
+  <QE_StoneBurrow.label>.</QE_StoneBurrow.label>
+  
+  <!-- EN: Stone pressure plate -->
+  <QE_StonePressurePlate.label>石质压力板</QE_StonePressurePlate.label>
+  <!-- EN: A stone pressure plate. -->
+  <QE_StonePressurePlate.description>石质压力板</QE_StonePressurePlate.description>
+  
+  <!-- EN: Custom Trap(Only displayed in Dev mode) -->
+  <QE_TriggerTrap.label>自定义陷阱（只在开发者模式显示）</QE_TriggerTrap.label>
+  <!-- EN: . -->
+  <QE_TriggerTrap.description>自定义陷阱（只在开发者模式显示）</QE_TriggerTrap.description>
+  
+</LanguageData>

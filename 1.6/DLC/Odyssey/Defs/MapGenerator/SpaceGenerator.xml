@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+
+    <MapGeneratorDef>
+        <defName>QE_SpaceCustomMap_Generator</defName>
+        <label>CQF generator</label>
+        <pocketMapProperties>
+            <biome>Space</biome>
+            <temperature>-175</temperature>
+        </pocketMapProperties>
+        <disableShadows>true</disableShadows>
+        <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+        <disableCallAid>true</disableCallAid>
+        <renderWorld>true</renderWorld>
+        <disableMapClippers>true</disableMapClippers>
+        <defaultUnderGridTerrain>Space</defaultUnderGridTerrain>
+        <genSteps>
+            <li>Space</li>
+            <li>QE_CustomMap_Step_Fog</li>
+        </genSteps>
+    </MapGeneratorDef>
+
+</Defs>

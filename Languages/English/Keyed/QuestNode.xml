@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <QuestNode_RandomCustomMap>Node:Random Custom Map</QuestNode_RandomCustomMap>
+
+
+  <planetLayer>Planet Layer:{0}</planetLayer>
+  <MapDataDefName>Map Data DefName:</MapDataDefName>
+  <MapName>Map Name:</MapName>
+  <MapDesc>Map Description</MapDesc>
+  <MapDatas>Maps:\n {0}</MapDatas>
+  <MapData>Map：{0}</MapData>
+  <MapTags>Map tags:</MapTags>
+  <FoggedWhenPlayerEnter>Fogged when player enter:</FoggedWhenPlayerEnter>
+  <DeleteMapData>Delete map data</DeleteMapData>
+  <ChildNodes>Child nodes:</ChildNodes>
+  <RootNode_CustomMap>Node:Spawn Custom Map</RootNode_CustomMap>
+
+  <MapFaction>Map Faction:</MapFaction>
+  <CurFaction>Cur Faction:{0}</CurFaction>
+  <SelectFaction>Select faction</SelectFaction>
+  <MapNameRule>Map name rule:</MapNameRule>
+  <BiomesBlackList>Biomes black list:</BiomesBlackList>
+  <BiomesWhiteList>Biomes white list:</BiomesWhiteList>
+  <EnableBlackList>Enable black list:</EnableBlackList>
+  <EndSignal>End Signal:</EndSignal>
+  <SelectEndType>Select End Type:</SelectEndType>
+  <ArriveMap>Arrive Map</ArriveMap>
+  <SaveMapToFile>Save Map To File</SaveMapToFile>
+
+  <WorldObjectDefOfSite>World object def of site:</WorldObjectDefOfSite>
+
+  <DisdestroyBecauseOfNoColonist>Disdestroy because of no colonist:</DisdestroyBecauseOfNoColonist>
+  <Reenterable>Re-enterable:</Reenterable>
+  <BeUnreenterableWhenAllEnemiesDefeated>Destroyed when all enemies are deteated:</BeUnreenterableWhenAllEnemiesDefeated>
+
+  <StoreAsText>Store as:</StoreAsText>
+  <SelectMapData>Select map data</SelectMapData>
+  <AddMapData>Add map data</AddMapData>
+  <MapDistance>Map Distance:</MapDistance>
+  <SiteIconPath>Site Icon Path:</SiteIconPath>
+  <ExpandingIconPath>Expanding Icon Path:</ExpandingIconPath>
+
+  <OpenNode>Open Node</OpenNode>
+
+  <QuestNode_IsNull>Node:Is Null</QuestNode_IsNull>
+  <ObjectKeyword>Key:</ObjectKeyword>
+  <SelectTrueNode>Select True Node</SelectTrueNode>
+  <SelectFalseNode>Select False Node</SelectFalseNode>
+
+  <text>text:</text>
+  <SelectLetterType>Select letter type</SelectLetterType>
+
+  <True>True</True>
+  <False>False</False>
+
+  <QuestNode_GameUnique>Node:Game Unique</QuestNode_GameUnique>
+  <QuestNode_GameUnique_Tip>A game can only be triggered once</QuestNode_GameUnique_Tip>
+
+  <QuestNode_FindTileOnCoast>Node:Find Tile On Coast</QuestNode_FindTileOnCoast>
+  <RequiredRotation>Required Ocean Direction:{0}</RequiredRotation>
+
+  <QuestNode_GenerateGroup>Node:Generate Group</QuestNode_GenerateGroup>
+  <groupDef>Group def:</groupDef>
+
+</LanguageData>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleText>
+  <ruleName>Test_Desc</ruleName>
+  <rulesFiles IsNull="True" />
+  <stringRules>
+    <li>questDescription -&gt; 帝国在附近建造了一个小营地，也许你可以去看看?</li>
+  </stringRules>
+</RuleText>

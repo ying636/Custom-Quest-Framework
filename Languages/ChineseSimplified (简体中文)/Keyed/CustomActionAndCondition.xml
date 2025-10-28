@@ -1,0 +1,556 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+
+  <!-- EN: Dialog actions -->
+  <CQFActions>行为：</CQFActions>
+  <!-- EN: Add dialog action -->
+  <AddCQFAction>添加行为</AddCQFAction>
+
+  <!-- EN: Action: send signal -->
+  <CQFAction_SentSignal>行为：输出信号</CQFAction_SentSignal>
+  <!-- EN: Dialog conditions -->
+  <DialogConditions>条件：</DialogConditions>
+  <!-- EN: Add condition -->
+  <AddDialogCondition>添加条件</AddDialogCondition>
+  <!-- EN: Add quest prefix when sending: -->
+  <AddQuestPrefix>发送时添加任务前缀：</AddQuestPrefix>
+  <!-- EN: Used to prevent signal interference between different quests -->
+  <AddQuestPrefixTip>用于防止不同任务之间出现信号干扰</AddQuestPrefixTip>
+  <!-- EN: Out signal: -->
+  <OutSignal>输出信号：</OutSignal>
+
+  <!-- EN: Action: give trait -->
+  <CQFAction_Trait>行为：给予特性</CQFAction_Trait>
+  <!-- EN: Given trait: {0} -->
+  <GivenTrait>给予特性：{0}</GivenTrait>
+  <!-- EN: Degree of trait -->
+  <DegreeOfTrait>程度：</DegreeOfTrait>
+
+  <!-- EN: Action:remove trait -->
+  <CQFAction_RemoveTrait>行为：移除特性</CQFAction_RemoveTrait>
+
+  <!-- EN: Action: give hediff -->
+  <CQFAction_Hediff>行为：给予状态</CQFAction_Hediff>
+  <!-- EN: Given hediff:  -->
+  <GivenHediff>给予状态：</GivenHediff>
+  <!-- EN: Severity of hediff -->
+  <SeverityOfHediff>严重度：</SeverityOfHediff>
+  <!-- EN: Body part: {0} -->
+  <CQFBodyPartForHediff>身体部位：{0}</CQFBodyPartForHediff>
+
+  <!-- EN: Action: give thought -->
+  <CQFAction_GainMood>行为：给予心情</CQFAction_GainMood>
+  <!-- EN: Thought def: {0} -->
+  <CQF_ThoughtDef>心情定义：{0}</CQF_ThoughtDef>
+
+  <!-- EN: Action: spawn -->
+  <CQFAction_Spawn>行为：生成</CQFAction_Spawn>
+
+  <!-- EN: Action: set faction -->
+  <CQFAction_Faction>行为：设置派系</CQFAction_Faction>
+
+  <!-- EN: Action list -->
+  <CQFAction_Sequence>行为集合</CQFAction_Sequence>
+  <!-- EN: Trigger actions: -->
+  <TriggerActions>触发行为：</TriggerActions>
+
+  <!-- EN: Action: start dialog -->
+  <CQFAction_StartDialog>行为：开始对话</CQFAction_StartDialog>
+
+  <!-- EN: Action: gain experience -->
+  <CQFAction_GainExperience>行为：给予经验</CQFAction_GainExperience>
+  <!-- EN: Skill type: {0} -->
+  <SkillType>技能类型：{0}</SkillType>
+  <!-- EN: Random -->
+  <Random>随机</Random>
+  <!-- EN: Experience range: -->
+  <GainExperienceRange>经验范围：</GainExperienceRange>
+  <!-- EN: {0} gained {1} experience of {2} -->
+  <PawnGainExperience>{0}获取了{1}{2}经验</PawnGainExperience>
+
+  <!-- EN: Action: chance -->
+  <CQFAction_Chance>行为：概率</CQFAction_Chance>
+  <!-- EN: Select action -->
+  <SelectAction>选择行为</SelectAction>
+
+  <!-- EN: Action: random -->
+  <CQFAction_Random>行为：随机</CQFAction_Random>
+  <!-- EN: Randomly selects one of its sub actions. -->
+  <CQFAction_Random_Tip>从其所有子行为随机选择一个进行运作</CQFAction_Random_Tip>
+
+  <!-- EN: Action: open loot box -->
+  <CQFAction_OpenLootBox>行为：打开战利品箱</CQFAction_OpenLootBox>
+
+  <!-- EN: Action: set duty -->
+  <CQFAction_SetDuty>行为：设置职责</CQFAction_SetDuty>
+
+  <!-- EN: Action: set xenotype -->
+  <CQFAction_SetXenotype>行为：设置异种</CQFAction_SetXenotype>
+  <!-- EN: Xenotype: {0} -->
+  <CQFXenotypeDef>异种：{0}</CQFXenotypeDef>
+
+  <!-- EN: Condition: skill -->
+  <DialogCondition_Skill>条件：技能</DialogCondition_Skill>
+  <!-- EN: Skill isn't satisfied -->
+  <SkillIsntsatisfied>{0}不满足要求</SkillIsntsatisfied>
+  <!-- EN: Target isn't pawn -->
+  <TargetIsntPawn>目标不是实体</TargetIsntPawn>
+  <!-- EN: Target isn't like human or target is null -->
+  <TargetIsntLikeHumanOrTargetIsNull>目标并非类人生物或者不存在</TargetIsntLikeHumanOrTargetIsNull>
+  <!-- EN: Target name: -->
+  <DialogueTarget>目标名称：</DialogueTarget>
+  <!-- EN: Interviewee -->
+  <Interviewee>被交谈者</Interviewee>
+  <!-- EN: Interviewer -->
+  <Interviewer>交谈者</Interviewer>
+  <!-- EN: Custom thing -->
+  <CustomThing>自定义事物</CustomThing>
+  <!-- EN: Trigger -->
+  <Trigger>触发者</Trigger>
+  <!-- EN: Captured -->
+  <Captured>被捕获者</Captured>
+  <!-- EN: Position -->
+  <Position>位置</Position>
+  <Inner>内部事物</Inner>
+  <!-- EN: Select target -->
+  <SelectTarget>选择目标</SelectTarget>
+  <!-- EN: Required skill -->
+  <RequiredSkill>需要技能：</RequiredSkill>
+  <!-- EN: Select -->
+  <Select>选择</Select>
+  <!-- EN: Required level -->
+  <RequiredLevel>需要等级:</RequiredLevel>
+  <!-- EN: Needs to be greater -->
+  <NeedToBeGreater>需要大于</NeedToBeGreater>
+  <!-- EN: Condition: hediff -->
+  <DialogCondition_Hediff>条件：状态</DialogCondition_Hediff>
+  <!-- EN: Target hasn't required -->
+  <TargetHasntRequired>对话者没有{0}</TargetHasntRequired>
+  <!-- EN: Required hediff -->
+  <RequiredHediff>需要状态：</RequiredHediff>
+  <!-- EN: Required severity -->
+  <RequiredSeverity>需要严重度：</RequiredSeverity>
+  <!-- EN: Hediff isn't satisfied -->
+  <HediffIsntsatisfied>{0}没有达到合适的严重度</HediffIsntsatisfied>
+
+  <!-- EN: Condition: trait -->
+  <DialogCondition_Trait>条件：特性</DialogCondition_Trait>
+  <!-- EN: Target hasn't required {0} trait -->
+  <TargetHasntRequiredTrait>对话者没有{0}特性</TargetHasntRequiredTrait>
+  <!-- EN: Required trait:{0} -->
+  <RequiredTrait>需要特性：{0}</RequiredTrait>
+  <!-- EN: Required degree -->
+  <RequiredDegree>需要程度：</RequiredDegree>
+  <!-- EN: Trait isn't satisfied -->
+  <TraitIsntsatisfied>特性不满足要求</TraitIsntsatisfied>
+  <!-- EN: Accurate: -->
+  <Accurate>精准：</Accurate>
+  <!-- EN: Only when the trait is completely given trait will it be satisfied -->
+  <Accurate_Tip>只有当特性完全为给出特性时才会满足</Accurate_Tip>
+
+
+  <!-- EN: Condition: faction -->
+  <DialogTreeCondition_Faction>条件：派系</DialogTreeCondition_Faction>
+
+  <!-- EN: Condition: faction -->
+  <DialogCondition_Faction>条件：派系</DialogCondition_Faction>
+  <!-- EN: Required faction:{0} -->
+  <RequiredFaction>需求派系：{0}</RequiredFaction>
+  <!-- EN: Target is not number of {0} -->
+  <TargetIsntNumberOfFaction>目标不属于{0}</TargetIsntNumberOfFaction>
+
+  <!-- EN: Condition:bool -->
+  <DialogCondition_Bool>条件：判断值</DialogCondition_Bool>
+  <!-- EN: Obtain the bool value from the quest database to determine whether to pass -->
+  <DialogCondition_Bool_Tip>获取任务数据库中判断值来决定是否通过</DialogCondition_Bool_Tip>
+  <!-- EN: Key of bool: -->
+  <keyOfBoolValue>判断值的密匙：</keyOfBoolValue>
+  <!-- EN: Fail reason: -->
+  <CQFFailReason>失败原因：</CQFFailReason>
+
+  <!-- EN: Condition:age -->
+  <DialogCondition_Age>条件：年龄</DialogCondition_Age>
+  <!-- EN: Age: -->
+  <CQFAge>年龄：</CQFAge>
+
+  <!-- EN: Condition:chance -->
+  <DialogCondition_Chance>条件：概率</DialogCondition_Chance>
+
+  <!-- EN: Condition:prisoner or slave -->
+  <DialogCondition_PrisonerOrSlave>条件：俘虏或囚犯</DialogCondition_PrisonerOrSlave>
+
+  <!-- EN: Condition:thought -->
+  <DialogCondition_Thought>条件：心情</DialogCondition_Thought>
+
+  <!-- EN: Condition:and -->
+  <DialogCondition_And>条件：与</DialogCondition_And>
+  <!-- EN: If all sub conditions are true, return true. Otherwise, it is false. The reason for failure is the reason for the condition that is false -->
+  <DialogCondition_And_Tip>附属条件中全成立返回真，反之为假，失败原因为不成立的那个条件的原因</DialogCondition_And_Tip>
+  <!-- EN: Condition:or -->
+  <DialogCondition_Or>条件：或</DialogCondition_Or>
+  <!-- EN: Any of the sub conditions that are true will return true, otherwise it will be false, and the failure reason will be customized reason of condition -->
+  <DialogCondition_Or_Tip>附属条件中任一成立返回真，反之为假，失败原因为本条件所自定义的原因</DialogCondition_Or_Tip>
+
+  <!-- EN: Condition:quest was not generated -->
+  <DialogCondition_QuestIsGenerated>条件：任务已生成</DialogCondition_QuestIsGenerated>
+  <!-- EN: If the provided quest has been generated in the game, return false -->
+  <DialogCondition_QuestIsGenerated_Tip>如果游戏中生成过所提供的任务，则返回假</DialogCondition_QuestIsGenerated_Tip>
+
+  <!-- EN: Condition:reversal -->
+  <DialogCondition_Reversal>条件：逆转</DialogCondition_Reversal>
+  <!-- EN: Return the value of the reversed sub condition -->
+  <DialogCondition_Reversal_Tip>返回逆转过后的子条件的值</DialogCondition_Reversal_Tip>
+
+  <!-- EN: Condition:quest state -->
+  <DialogCondition_QuestState>条件：任务状态</DialogCondition_QuestState>
+  <!-- EN: If no quest def is given, automatically retrieve the quest from the target of the triggering condition -->
+  <DialogCondition_QuestState_Tip>如果没有给定任务定义，则自动从触发条件的目标处获取任务</DialogCondition_QuestState_Tip>
+  <!-- EN: Quest State:{0} -->
+  <QuestState>任务状态:{0}</QuestState>
+  <!-- EN: Quest fail -->
+  <EndedFailed>任务失败</EndedFailed>
+  <!-- EN: Quest success -->
+  <EndedSuccess>任务成功</EndedSuccess>
+  <!-- EN: Quest ongoing -->
+  <Ongoing>任务进行中</Ongoing>
+  <!-- EN: Quest offer expired -->
+  <EndedOfferExpired>任务超时</EndedOfferExpired>
+
+  <!-- EN: Condition:captured pawn -->
+  <DialogCondition_CapturedPawn>条件：是否捕捉到实体</DialogCondition_CapturedPawn>
+  <!-- EN: Determine whether the given capture trap, such as a capture net, has captured pawn -->
+  <DialogCondition_CapturedPawn_Tip>判断给予的捕捉式陷阱，如捕捉网，是否有捕捉到实体</DialogCondition_CapturedPawn_Tip>
+
+  <!-- EN: Condition:container is full -->
+  <DialogCondition_ContainerIsFull>条件：容器被充满</DialogCondition_ContainerIsFull>
+
+  <!-- EN: Action: remove dialog manager -->
+  <CQFAction_RemoveDialogManager>行为：移除对话管理者</CQFAction_RemoveDialogManager>
+
+  <!-- EN: The actual signal sent is [Data name of the interviewee] + [This signal]. -->
+  <CQFAction_SentSignal_Tip>实际发送的信号为[生成被对话者的实体数据名称] + . + [该信号]。</CQFAction_SentSignal_Tip>
+  <!-- EN: In order to reduce computational complexity and improve performance. -->
+  <CQFAction_RemoveDialogManagerl_Tip>以便减少运算量，提高性能。</CQFAction_RemoveDialogManagerl_Tip>
+
+  <!-- EN: Interactable Thing -->
+  <ITab_InteractableThing>可互动事物</ITab_InteractableThing>
+  <!-- EN: Interaction operations -->
+  <InteractionOperations>交互选项</InteractionOperations>
+
+  <!-- EN: Interaction conditions: -->
+  <InteractionConditions>交互所需条件：</InteractionConditions>
+  <!-- EN: Interaction results: -->
+  <InteractionResults>交互结果：</InteractionResults>
+  <!-- EN: Time required for interaction（tick): -->
+  <TickToOperate>交互所需时间（tick）：</TickToOperate>
+
+  <!-- EN: Condition:thing position -->
+  <DialogCondition_ThingInPosition>条件：物体位置</DialogCondition_ThingInPosition>
+  <!-- EN: Determine whether the given thing is located at the given position (if the given position includes a map, the map will also be determined) -->
+  <DialogCondition_ThingInPosition_Tip>判断给予的物体的位置是否给予的位置上（如果给予的位置包含地图，则会同时判断地图）</DialogCondition_ThingInPosition_Tip>
+  <!-- EN: Position: -->
+  <PositionName>位置密匙：</PositionName>
+
+  <!-- EN: Condition:Inventory -->
+  <DialogCondition_Inventory>条件：库存</DialogCondition_Inventory>
+  <!-- EN: Required things: -->
+  <RequiredThings>需求事物：</RequiredThings>
+
+  <DialogCondition_DatabaseExists>条件：数据库存在</DialogCondition_DatabaseExists>
+  <TargetKey>目标密匙：</TargetKey>
+  <NeedSpawned>需要事物已生成：</NeedSpawned>
+  <CheckGlobalDatabase>检测全局数据库：</CheckGlobalDatabase>
+  <CheckTemporaryDatabase>检测临时数据库</CheckTemporaryDatabase>
+  <CheckQuestDatabase>检测任务数据库</CheckQuestDatabase>
+
+  <!-- EN: If: -->
+  <If>如果：</If>
+  <!-- EN: Interaction action: -->
+  <InteractionActions>触发行为：</InteractionActions>
+
+  <!-- EN: Action: take damage -->
+  <CQFAction_TakeDamage>行为：造成伤害</CQFAction_TakeDamage>
+  <!-- EN: Damage type: -->
+  <DamageType>伤害类型：</DamageType>
+  <!-- EN: Damage amount: -->
+  <DamageAmount>伤害量：</DamageAmount>
+
+
+  <!-- EN: Action: causing explosion -->
+  <CQFAction_Explosion>行为：造成爆炸</CQFAction_Explosion>
+  <!-- EN: Explosion damage type: -->
+  <ExplostionDamageType>爆炸伤害类型：</ExplostionDamageType>
+  <!-- EN: Explosion radius: -->
+  <ExplosionRadius>爆炸范围：</ExplosionRadius>
+
+  <!-- EN: Action: destory -->
+  <CQFAction_Destory>行为：摧毁</CQFAction_Destory>
+
+  <!-- EN: Used to determine the goal of the action. "Custom thing" usually refers to the executor of the action, such as the "custom thing" of the action generated by a custom trap, which is itself. The same applies to interactable things. "Trigger" is usually a pawn who triggered the trap. Target can be also "null", which can be used in dialogs where interviewee is a wall or an animal.
+  It is also possible to use the "key" of things recorded in the "quest database" to get them as targets. -->
+  <CQFTargetTextTip>用于决定行为的目标，“自定义事物”通常指的是行为的执行者，如自定义陷阱产生的行为的“自定义事物”则是其本身，同理可交互事物也是如此。而“触发者”通常是触发陷阱的实体。\n  也可以使用被记录到“任务数据库”的事物的“密匙”来获取其本身作为目标。</CQFTargetTextTip>
+
+  <!-- EN: Action: send message -->
+  <CQFAction_Message>行为：发送消息</CQFAction_Message>
+  <!-- EN: Message: -->
+  <CQFMessage>消息：</CQFMessage>
+  <!-- EN: Message type: {0} -->
+  <CQFMessageType>消息类型：{0}</CQFMessageType>
+  <!-- EN: Big threat -->
+  <ThreatBig>大型威胁</ThreatBig>
+  <!-- EN: Small threat -->
+  <ThreatSmall>小型威胁</ThreatSmall>
+  <!-- EN: Pawn death -->
+  <PawnDeath>实体死亡</PawnDeath>
+  <!-- EN: Negative health event -->
+  <NegativeHealthEvent>负面健康事件</NegativeHealthEvent>
+  <!-- EN: Negative event -->
+  <NegativeEvent>负面事件</NegativeEvent>
+  <!-- EN: Neutral event -->
+  <NeutralEvent>自然事件</NeutralEvent>
+  <!-- EN: Task completion -->
+  <TaskCompletion>任务完成</TaskCompletion>
+  <!-- EN: Positive event -->
+  <PositiveEvent>正面事件</PositiveEvent>
+  <!-- EN: Situation resolved -->
+  <SituationResolved>情况已解决</SituationResolved>
+  <!-- EN: Reject input -->
+  <RejectInput>拒绝输入</RejectInput>
+  <!-- EN: Caution input -->
+  <CautionInput>警告输入</CautionInput>
+  <!-- EN: Silent input -->
+  <SilentInput>无声</SilentInput>
+
+  <!-- EN: Action: replace -->
+  <CQFAction_Replace>行为：替换</CQFAction_Replace>
+  <!-- EN: Replace with: {0} -->
+  <CQFReplaceThing>替换为：{0}</CQFReplaceThing>
+  <!-- EN: Use the same stuff: -->
+  <UseSameStuff>使用相同材质：</UseSameStuff>
+
+
+  <!-- EN: Action: give quest -->
+  <CQFAction_Quest>行为：给予任务</CQFAction_Quest>
+  <!-- EN: Quest: {0} -->
+  <CQFQuestDef>任务：{0}</CQFQuestDef>
+
+  <!-- EN: Action: execute incident -->
+  <CQFAction_Incident>行为：触发事件</CQFAction_Incident>
+  <!-- EN: Incident: {0} -->
+  <CQFIncidentDef>事件：{0}</CQFIncidentDef>
+
+  <!-- EN: Action: give trait -->
+  <SpawnAfterAction_GiveTrait>行为：给予特性</SpawnAfterAction_GiveTrait>
+
+  <!-- EN: Action:do actions -->
+  <SpawnAfterAction_DoAction>行为：执行行为</SpawnAfterAction_DoAction>
+
+  <!-- EN: Action:add dialog manager -->
+  <CQFAction_AddDialogManager>行为：添加对话管理者</CQFAction_AddDialogManager>
+
+  <!-- EN: Action:start mental state -->
+  <CQFAction_StartMentalState>行为：造成精神状态</CQFAction_StartMentalState>
+  <!-- EN: Mental state:{0} -->
+  <CQFMentalState>精神状态：{0}</CQFMentalState>
+  <!-- EN: State target: -->
+  <stateTargetText>状态目标：</stateTargetText>
+
+  <!-- EN: Action:record to database -->
+  <CQFAction_RecordToDatabase>行为：记录到数据库</CQFAction_RecordToDatabase>
+  <!-- EN: Record the target to the database so that it can be used as a target object elsewhere -->
+  <CQFAction_RecordToDatabase_Tip>将目标记录到数据库中以便能够在其他地方作为目标对象</CQFAction_RecordToDatabase_Tip>
+  <!-- EN: Record key of data: -->
+  <RecordKeyOfData>数据密匙：</RecordKeyOfData>
+  <!-- EN: Record to temporary base: -->
+  <RecordToTemporaryBase>记录到临时数据库：</RecordToTemporaryBase>
+  <!-- EN: The temporary database is independent of the quest database and operates during the following time periods, clearing recorded data after that time periods
+Map generation
+Open the loot box
+Interacte interactive things -->
+  <RecordToTemporaryBase_Tip>临时数据库独立于任务数据库，在以下时段起作用，并在时段后清空记录的数据\n地图生成时\n打开战利品箱\n互动可互动事物</RecordToTemporaryBase_Tip>
+  <!-- EN: Record to quest base: -->
+  <RecordToQuestBase>记录到任务数据库：</RecordToQuestBase>
+  <!-- EN: Record to global base: -->
+  <RecordToGlobalBase>记录到全局数据库：</RecordToGlobalBase>
+
+  <!-- EN: Action:get thing to record -->
+  <CQFAction_GetThingToRecord>行为：获取事物并记录</CQFAction_GetThingToRecord>
+  <!-- EN: Get the first thing at the given target location (excluding the given target) and record it in the database -->
+  <CQFAction_GetThingToRecord_Tip>获取给定的目标位置上的第一个事物（不会包括被给定的目标）并记录到数据库中</CQFAction_GetThingToRecord_Tip>
+
+  <!-- EN: Action:get cell to record -->
+  <CQFAction_GetCellToRecord>行为：获取位置并记录</CQFAction_GetCellToRecord>
+  <!-- EN: Get the cell of the given target and record it in the database -->
+  <CQFAction_GetCellToRecord_Tip>获取给定的目标的位置并记录到数据库中</CQFAction_GetCellToRecord_Tip>
+
+  <!-- EN: Action:spawn and add to container -->
+  <CQFAction_SpawnAndAddToContainer>行为：生成并添加到容器</CQFAction_SpawnAndAddToContainer>
+  <!-- EN: Spawn things and add them to the target container -->
+  <CQFAction_SpawnAndAddToContainer_Tip>生成事物并添加其到目标容器中</CQFAction_SpawnAndAddToContainer_Tip>
+
+  <!-- EN: Action: release from container -->
+  <CQFAction_ReleaseFromContainer>行为：从容器中释放</CQFAction_ReleaseFromContainer>
+  <!-- EN: Release the contents of the container from it -->
+  <CQFAction_ReleaseFromContainer_Tip>将容器内的事物从中中释放</CQFAction_ReleaseFromContainer_Tip>
+
+  <!-- EN: Action: set bool -->
+  <CQFAction_SetBool>行为：设置判断值</CQFAction_SetBool>
+  <!-- EN: Set a bool value (true or false) to the quest database -->
+  <CQFAction_SetBool_Tip>设置一个判断值（真或否）到任务数据库中</CQFAction_SetBool_Tip>
+  <!-- EN: Value of bool: -->
+  <valueOfBool>判断值的值：</valueOfBool>
+
+  <!-- EN: Action:skip -->
+  <CQFAction_Skip>行为：传送</CQFAction_Skip>
+  <!-- EN: Skiped target: -->
+  <skipedTargetText>被传送目标：</skipedTargetText>
+  <!-- EN: Target location: -->
+  <targetLocationText>目标地点：</targetLocationText>
+
+  <!-- EN: Action: set global bool -->
+  <CQFAction_SetGlobalBool>行为：设置全局判断值</CQFAction_SetGlobalBool>
+  <!-- EN: Set a global bool(true or no) to the quest database, which will take effect throughout the entire save -->
+  <CQFAction_SetGlobalBool_Tip>设置一个全局判断值（真或否）到任务数据库中，这个判断值在整个游戏内生效</CQFAction_SetGlobalBool_Tip>
+
+  <!-- EN: Search for lords with matching names from the database as the target. If it is in the group editor or custom lord, the edited lord will be automatically selected as the target. This field can be left blank -->
+  <LordNameTip>从数据库中搜寻符合名字的集群作为目标，如果是在集群编辑器或自定义集群中，自动以被编辑的集群作为目标，此项可以不填</LordNameTip>
+
+  <!-- EN: Action:replace(custom thing) -->
+  <CQFAction_ReplaceUsingCustomThing>行为：替换（自定义事物）</CQFAction_ReplaceUsingCustomThing>
+  <!-- EN: Edit Custom Thing -->
+  <EditCustomThing>编辑自定义事物</EditCustomThing>
+  <!-- EN: Edit Action And Text -->
+  <EditActionAndText>编辑行为与文本</EditActionAndText>
+
+  <!-- EN: Action:activate custom map -->
+  <CQFAction_ActivateCustomMap>行为：激活自定义地图</CQFAction_ActivateCustomMap>
+  <!-- EN: If the target is a custom map entrance and the entrance does not generate a custom map, activate the entrance to generate a custom map -->
+  <CQFAction_ActivateCustomMap_Tip>如果目标为自定义地图入口并且入口没有生成自定义地图，则激活入口，使其生成自定义地图</CQFAction_ActivateCustomMap_Tip>
+
+  <!-- EN: Action:delay execute -->
+  <CQFAction_DelayExecute>行为：延迟触发</CQFAction_DelayExecute>
+  <!-- EN: The sub actions will be triggered after the delay time -->
+  <CQFAction_DelayExecute_Tip>子行为会在延迟时间后触发</CQFAction_DelayExecute_Tip>
+  <!-- EN: Delay time: -->
+  <DelayTime>延迟时间：</DelayTime>
+
+  <!-- EN: Action:loop -->
+  <CQFAction_Loop>行为：循环</CQFAction_Loop>
+  <!-- EN: Loop Count: -->
+  <LoopCount>循环次数：</LoopCount>
+
+  <!-- EN: Action:condition -->
+  <CQFAction_Condition>行为：条件</CQFAction_Condition>
+  <!-- EN: Trigger sub actions when conditions are satisfied -->
+  <CQFAction_Condition_Tip>子行为在条件满足时触发</CQFAction_Condition_Tip>
+  <!-- EN: Trigger conditions: -->
+  <TriggerConditions>触发条件：</TriggerConditions>
+
+  <!-- EN: Action:polluate -->
+  <CQFAction_Pollute>行为：污染</CQFAction_Pollute>
+  <!-- EN: Polluating radius: -->
+  <PolluatingRadius>污染半径：</PolluatingRadius>
+
+  <!-- EN: Action:add extra operation -->
+  <CQFAction_AddExtraOpteration>行为：添加额外交互</CQFAction_AddExtraOpteration>
+  <!-- EN: Add extra interaction operation to the gave target so that make it interactable -->
+  <CQFAction_AddExtraOpteration_Tip>添加额外的交互选项给给定的目标，让目标能够被互动</CQFAction_AddExtraOpteration_Tip>
+
+  <!-- EN: Atction:do effect -->
+  <CQFAction_DoEffect>行为：执行特效</CQFAction_DoEffect>
+  <!-- EN: Effect:{0} -->
+  <CQF_EffectDef>特效定义：{0}</CQF_EffectDef>
+
+  <!-- EN: Action:lightning -->
+  <CQFAction_Lightning>行为：雷击目标</CQFAction_Lightning>
+
+  <!-- EN: Action:make static mote -->
+  <CQFAction_MakeMoteStatic>行为：制造静态Mote</CQFAction_MakeMoteStatic>
+  <!-- EN: Mote:{0} -->
+  <CQF_MoteDef>Mote：{0}</CQF_MoteDef>
+  <!-- EN: Mote offset: -->
+  <MoteOffset>位置偏转：</MoteOffset>
+  <!-- EN: Scale: -->
+  <MoteScale>大小：</MoteScale>
+
+  <!-- EN: Action:throw mote -->
+  <CQFAction_ThrowMote>行为：抛出Mote</CQFAction_ThrowMote>
+
+  <!-- EN: Action:set entrance opening status -->
+  <CQFAction_SwtichEntranceStatus>行为：设置入口开关状态</CQFAction_SwtichEntranceStatus>
+  <!-- EN: Status: -->
+  <OpeningStatus>设置为：</OpeningStatus>
+  <!-- EN: Always is opposite: -->
+  <AlwaysIsOpposite>总是与入口的状态相反：</AlwaysIsOpposite>
+
+  <!-- EN: Action:end game -->
+  <CQFAction_EndGame>行为：结束游戏</CQFAction_EndGame>
+  <!-- EN: message: -->
+  <CQFAction_EndGame_Message>终局文本：</CQFAction_EndGame_Message>
+
+
+  <!-- EN: Action:change goodwill with faction -->
+  <CQFAction_ChangeGoodwillOfFaction>行为：改变派系好感度</CQFAction_ChangeGoodwillOfFaction>
+  <!-- EN: Change the goodwill of the faction, if the given faction is null, it will change the goodwill of the faction of the selected target -->
+  <CQFAction_ChangeGoodwillOfFaction_Tip>改变与派系的好感，如果给定派系为无则会改变与选定目标的派系的好感</CQFAction_ChangeGoodwillOfFaction_Tip>
+  <!-- EN: Is ncrease: -->
+  <IsIncrease>增长好感：</IsIncrease>
+  <!-- EN: Send letter: -->
+  <SendLetter>发送消息：</SendLetter>
+  <!-- EN: Goodwill value: -->
+  <GoodwillValue>好感值：</GoodwillValue>
+
+  <!-- EN: Action:consume things in Inventory -->
+  <CQFAction_ConsumeInInventory>行为：消耗库存事物</CQFAction_ConsumeInInventory>
+
+  <!-- EN: Action:spawn and add to inventory -->
+  <CQFAction_SpawnAndAddToInventory>行为：生成并添加到库存</CQFAction_SpawnAndAddToInventory>
+
+  <!-- EN: Action:add quest tag -->
+  <CQFAction_AddQuestTag>行为：添加任务标签</CQFAction_AddQuestTag>
+  <!-- EN: Add quest tag to the target, and things with quest tag can send signals -->
+  <CQFAction_AddQuestTag_Tip>给目标事物添加任务标签，拥有任务标签的事物会发出信号</CQFAction_AddQuestTag_Tip>
+  <!-- EN: Quest tag: -->
+  <QuestTag>Quest Tag</QuestTag>
+
+  <!-- EN: Action:set relation -->
+  <CQFAction_SetRelation>行为：设置关系</CQFAction_SetRelation>
+  <!-- EN: Relation:{0} -->
+  <CQF_RelationDef>关系：{0}</CQF_RelationDef>
+  <!-- EN: Target A: -->
+  <TargetA>目标A：</TargetA>
+  <!-- EN: Target B: -->
+  <TargetB>目标B：</TargetB>
+
+  <CQFAction_GenerateSubMap>行为：生成子地图</CQFAction_GenerateSubMap>
+  <StartPosition>起点：</StartPosition>
+  <EditCustomMapGenerationSet>编辑地图设置</EditCustomMapGenerationSet>
+
+  <CQFAction_Fog>行为：覆盖迷雾</CQFAction_Fog>
+  <CQFAction_Fog_Tip>使目标位置覆盖迷雾</CQFAction_Fog_Tip>
+
+  <CQFAction_FloodUnfog>行为：填充式消除迷雾</CQFAction_FloodUnfog>
+  <CQFAction_FloodUnfog_Tip>从目标位置开始消除迷雾，并且开始消除相邻的迷雾，直接到遇到建筑物</CQFAction_FloodUnfog_Tip>
+
+  <CQFAction_PostGenerationExecute>行为：地图生成后执行</CQFAction_PostGenerationExecute>
+
+  <CQFAction_SetGameCondition>行为：设置游戏条件</CQFAction_SetGameCondition>
+  <IsPermanent>永久：</IsPermanent>
+  <Duration>持续时间：</Duration>
+  <CQFGameConditionDef>条件定义：{0}</CQFGameConditionDef>
+
+  <CQFAction_InfectTarget>行为：感染建筑</CQFAction_InfectTarget>
+  <CQFAction_InfectTarget_Tip>（锈蚀火种Mod联动）将目标建筑感染为机兽</CQFAction_InfectTarget_Tip>
+
+  <CQFAction_RecordStartCell>行为：记录起始位置</CQFAction_RecordStartCell>
+  <CQFAction_RecordStartCell_Tip>记录起始位置到地图数据库之中，起始位置用于创造矩形</CQFAction_RecordStartCell_Tip>
+
+  <CQFAction_FinishRect>行为：完成矩形</CQFAction_FinishRect>
+  <CQFAction_FinishRect_Tip>通过目标位置以及地图数据库之中记录的起始位置创造一个矩形，对矩形内每一个位置执行行为，每个位置的对象密匙为[Position]</CQFAction_FinishRect_Tip>
+
+  <CQFAction_AddThingActionTrigger>行为：添加事物行为触发器</CQFAction_AddThingActionTrigger>
+  <CQFAction_AddThingActionTrigger_Tip>添加事物行为触发器到地图之中，当该事物发生特定事件时触发对应的行为</CQFAction_AddThingActionTrigger_Tip>
+  <TriggerMode>触发模式：{0}</TriggerMode>
+
+</LanguageData>

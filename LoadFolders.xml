@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<loadFolders>
+  <v1.4>
+    <li>/</li>
+    <li>1.4</li>
+  </v1.4>
+  <v1.5>
+    <li>/</li>
+    <li>1.5</li>
+    <li IfModActive="3HSTltd.Framework">1.5/Bill</li>
+  </v1.5>
+  <v1.6>
+    <li>/</li>
+    <li>1.6</li>
+    <li IfModActive="3HSTltd.Framework">1.6/Bill</li>
+    <li IfModActive="Ludeon.RimWorld.Odyssey">1.6/DLC/Odyssey</li>
+    <li IfModActive="HaiLuan.AllsparkCrisis">1.6/Mod/AllsparkCrisis</li>
+  </v1.6>
+</loadFolders>

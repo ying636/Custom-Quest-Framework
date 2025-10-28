@@ -1,0 +1,1030 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+    <!--Public Text-->
+    <value1>Value1</value1>
+    <value2>Value2</value2>
+    <storeAs>Store As</storeAs>
+    <myTypeShort>My Type Short</myTypeShort>
+    <selectionWeight>Selection Weight</selectionWeight>
+    <compareAs>Compare As</compareAs>
+    <node>Node</node>
+    <elseNode>Else Node</elseNode>
+    <value>Value</value>
+    <name>Name</name>
+    <inSignals>In Signals</inSignals>
+    <outSignals>Out Signals</outSignals>
+    <signalListenMode>Signal Listen Mode</signalListenMode>
+    <inSignalEnable>In Signal Enable</inSignalEnable>
+    <inSignalDisable>In Signal Disable</inSignalDisable>
+    <nodes>Nodes</nodes>
+    <inSignal>In Signal</inSignal>
+    <prefix>Prefix</prefix>
+    <allowNonPrefixedLookup>Allow Non Prefixed Lookup</allowNonPrefixedLookup>
+    <parms>Parms</parms>
+    <returnVarNames>Return Var Names</returnVarNames>
+    <message>Message</message>
+    <addToList>Add To List</addToList>
+    <addToLists>Add To Lists</addToLists>
+    <kindDef>Kind Def</kindDef>
+    <faction>Faction</faction>
+    <forbidAnyTitle>Forbid Any Title</forbidAnyTitle>
+    <ensureNonNumericName>Ensure Non Numeric Name</ensureNonNumericName>
+    <forcedTraits>Forced Traits</forcedTraits>
+    <prohibitedTraits>Prohibited Traits</prohibitedTraits>
+    <extraPawnForExtraRelationChance>Extra Pawn For Extra Relation Chance</extraPawnForExtraRelationChance>
+    <relationWithExtraPawnChanceFactor>Relation With Extra Pawn Chance Factor</relationWithExtraPawnChanceFactor>
+    <allowAddictions>Allow Addictions</allowAddictions>
+    <biocodeWeaponChance>Biocode Weapon Chance</biocodeWeaponChance>
+    <biocodeApparelChance>Biocode Apparel Chance</biocodeApparelChance>
+    <mustBeCapableOfViolence>Must Be Capable Of Violence</mustBeCapableOfViolence>
+    <isChild>Is Child</isChild>
+    <allowPregnant>Allow Pregnant</allowPregnant>
+    <fixedGender>Fixed Gender</fixedGender>
+    <def>Def</def>
+    <tile>Tile</tile>
+    <tile_Tip>Position on the world, in the "Generate custom map" node, if it is empty then automatically find a map tile as the position</tile_Tip>
+    <contents>Contents</contents>
+    <transportShip>Transport Ship</transportShip>
+    <jobDef>Job Def</jobDef>
+    <shipJobStartMode>Ship Job Start Mode</shipJobStartMode>
+    <unsatisfiedDropMode>Unsatisfied Drop Mode</unsatisfiedDropMode>
+    <minAge>Min Age</minAge>
+    <map>Map</map>
+    <max>Max</max>
+    <monumentMarker>Monument Marker</monumentMarker>
+    <mapOf>Map Of</mapOf>
+    <roundRandom>Round Random</roundRandom>
+    <options>Options</options>
+    <storeCountAs>Store Count As</storeCountAs>
+    <curve>Curve</curve>
+    <min>Min</min>
+    <sitePartDefs>Site Part Defs</sitePartDefs>
+    <mustBeHostileToFactionOf>Must Be Hostile To Faction Of</mustBeHostileToFactionOf>
+    <range>Range</range>
+    <storeFactionAs>Store Faction As</storeFactionAs>
+    <sitePartsParams>Site Parts Params</sitePartsParams>
+    <pointsToRequiredWorkCurve>Points To Required Work Curve</pointsToRequiredWorkCurve>
+    <pawns>Pawns</pawns>
+    <durationTicks>Duration ticks:</durationTicks>
+    <pawn>Pawn</pawn>
+    <factionOf>Faction Of</factionOf>
+    <thing>Thing</thing>
+    <modID>Mod I D</modID>
+    <inSignalChoiceUsed>In Signal Choice Used</inSignalChoiceUsed>
+    <reason>Reason</reason>
+    <things>Things</things>
+    <sendStandardLetter>Send Standard Letter</sendStandardLetter>
+    <contentsDefs>Contents Defs</contentsDefs>
+    <joinPlayer>Join Player</joinPlayer>
+    <makePrisoners>Make Prisoners</makePrisoners>
+    <customLetterLabel>Custom Letter Label</customLetterLabel>
+    <customLetterText>Custom Letter Text</customLetterText>
+    <customLetterLabelRules>Custom Letter Label Rules</customLetterLabelRules>
+    <customLetterTextRules>Custom Letter Text Rules</customLetterTextRules>
+    <giveTo>Give To</giveTo>
+    <giveToAccepter>Give To Accepter</giveToAccepter>
+    <amount>Amount</amount>
+    <isSingleReward>Is Single Reward</isSingleReward>
+    <outSignalComplete>Out Signal Complete</outSignalComplete>
+    <delayTicks>Delay Ticks</delayTicks>
+    <targets>Targets</targets>
+    <inspectString>Inspect String</inspectString>
+    <inSignalRemovePawn>In Signal Remove Pawn</inSignalRemovePawn>
+    <shuttle>Shuttle</shuttle>
+    <text>Text</text>
+    <lookTargets>Look Targets</lookTargets>
+    <outSignal>Out Signal</outSignal>
+    <worldObject>World Object</worldObject>
+    <rewardDetailsHidden>Reward Details Hidden</rewardDetailsHidden>
+    <count>Count</count>
+    <tag>Tag</tag>
+    <otherPawn>Other Pawn</otherPawn>
+    <addToLookTargets>Add To Look Targets</addToLookTargets>
+    <dropEverything>Drop Everything</dropEverything>
+    <challengeRating>Challenge Rating</challengeRating>
+    <items>Items</items>
+    <ticks>Ticks</ticks>
+    <dropSpot>Drop Spot</dropSpot>
+    <expiryInfoPart>Expiry Info Part</expiryInfoPart>
+    <expiryInfoPartTip>Expiry Info Part Tip</expiryInfoPartTip>
+    <inspectStringTargets>Inspect String Targets</inspectStringTargets>
+    <delayTicksRange>Delay Ticks Range</delayTicksRange>
+    <isQuestTimeout>Is Quest Timeout</isQuestTimeout>
+    <reactivatable>Reactivatable</reactivatable>
+    <storeMarketValueAs>Store Market Value As</storeMarketValueAs>
+    <settlement>Settlement</settlement>
+    <rules>Rules</rules>
+    <TextRoot>Text Root</TextRoot>
+    <duration>Duration</duration>
+    <points>Points</points>
+    <incidentDef>Incident Def</incidentDef>
+    <walkInSpot>Walk In Spot</walkInSpot>
+    <arrivalMode>Arrival Mode</arrivalMode>
+    <canTimeoutOrFlee>Can Timeout Or Flee</canTimeoutOrFlee>
+
+    <!--Node Text-->
+
+    <!--QuestNode_Add-->
+    <QuestNode_Add>QuestNode_Add</QuestNode_Add>
+
+    <!--QuestNode_Divide-->
+    <QuestNode_Divide>QuestNode_Divide</QuestNode_Divide>
+    <value1>Value1</value1>
+    <value2>Value2</value2>
+    <storeAs>Store As</storeAs>
+    <myTypeShort>My Type Short</myTypeShort>
+    <selectionWeight>Selection Weight</selectionWeight>
+
+    <!--QuestNode_MultiplyRange-->
+    <QuestNode_MultiplyRange>QuestNode_MultiplyRange</QuestNode_MultiplyRange>
+
+    <!--QuestNode_Equal-->
+    <QuestNode_Equal>QuestNode_Equal</QuestNode_Equal>
+
+    <!--QuestNode_EqualOrFail-->
+    <QuestNode_EqualOrFail>QuestNode_EqualOrFail</QuestNode_EqualOrFail>
+    <compareAs>Compare As</compareAs>
+    <node>Node</node>
+
+    <!--QuestNode_Greater-->
+    <QuestNode_Greater>QuestNode_Greater</QuestNode_Greater>
+    <elseNode>Else Node</elseNode>
+
+    <!--QuestNode_IsInList-->
+    <QuestNode_IsInList>QuestNode_IsInList</QuestNode_IsInList>
+    <value>Value</value>
+
+    <!--QuestNode_IsSet-->
+    <QuestNode_IsSet>QuestNode_IsSet</QuestNode_IsSet>
+    <name>Name</name>
+
+    <!--QuestNode_AddTag-->
+    <QuestNode_AddTag>QuestNode_AddTag</QuestNode_AddTag>
+
+    <!--QuestNode_AllSignals-->
+    <QuestNode_AllSignals>QuestNode_AllSignals</QuestNode_AllSignals>
+
+    <!--QuestNode_AllSignalsActivable-->
+    <QuestNode_AllSignalsActivable>QuestNode_AllSignalsActivable</QuestNode_AllSignalsActivable>
+    <inSignals>In Signals</inSignals>
+    <outSignals>Out Signals</outSignals>
+    <signalListenMode>Signal Listen Mode</signalListenMode>
+
+    <!--QuestNode_AnySignalActivable-->
+    <QuestNode_AnySignalActivable>QuestNode_AnySignalActivable</QuestNode_AnySignalActivable>
+    <inSignalEnable>In Signal Enable</inSignalEnable>
+    <inSignalDisable>In Signal Disable</inSignalDisable>
+
+    <!--QuestNode_Chance-->
+    <QuestNode_Chance>QuestNode_Chance</QuestNode_Chance>
+    <chance>Chance</chance>
+
+    <!--QuestNode_Clamp-->
+    <QuestNode_Clamp>QuestNode_Clamp</QuestNode_Clamp>
+
+    <!--QuestNode_Delay-->
+    <QuestNode_Delay>QuestNode_Delay</QuestNode_Delay>
+
+    <!--QuestNode_End-->
+    <QuestNode_End>QuestNode_End</QuestNode_End>
+    <outcome>Outcome</outcome>
+    <goodwillChangeAmount>Goodwill Change Amount</goodwillChangeAmount>
+    <goodwillChangeFactionOf>Goodwill Change Faction Of</goodwillChangeFactionOf>
+    <goodwillChangeReason>Goodwill Change Reason</goodwillChangeReason>
+
+    <!--QuestNode_ExpansionActive-->
+    <QuestNode_ExpansionActive>QuestNode_ExpansionActive</QuestNode_ExpansionActive>
+
+    <!--QuestNode_Prefix-->
+    <QuestNode_Prefix>QuestNode_Prefix</QuestNode_Prefix>
+
+    <!--QuestNode_RandomNode-->
+    <QuestNode_RandomNode>QuestNode_RandomNode</QuestNode_RandomNode>
+
+    <!--QuestNode_SendSignals-->
+    <QuestNode_SendSignals>QuestNode_SendSignals</QuestNode_SendSignals>
+    <outSignalsFormat>Out Signals Format</outSignalsFormat>
+    <outSignalsFormattedCount>Out Signals Formatted Count</outSignalsFormattedCount>
+
+    <!--QuestNode_Sequence-->
+    <QuestNode_Sequence>Quest Node:Sequence</QuestNode_Sequence>
+    <nodes>Nodes</nodes>
+
+    <!--QuestNode_Set-->
+    <QuestNode_Set>Quest Node:Set</QuestNode_Set>
+    <convertTo>Convert To</convertTo>
+
+    <!--QuestNode_Signal-->
+    <QuestNode_Signal>Quest Node:Signal</QuestNode_Signal>
+    <QuestNode_Signal_Tip>This node is used to receive signals from quest and execute the behavior that its signalnode and emits outsignals.
+    Note: signalnode must have a receiving signal entry to function properly. Otherwise, it cannot take effect normally.</QuestNode_Signal_Tip>
+    <inSignal>In Signal</inSignal>
+    <SignalNode>Trigger node:</SignalNode>
+
+    <!--QuestNode_SubScript-->
+    <QuestNode_SubScript>QuestNode_SubScript</QuestNode_SubScript>
+    <prefix>Prefix</prefix>
+    <allowNonPrefixedLookup>Allow Non Prefixed Lookup</allowNonPrefixedLookup>
+    <parms>Parms</parms>
+    <returnVarNames>Return Var Names</returnVarNames>
+
+    <!--QuestNode_Log-->
+    <QuestNode_Log>QuestNode_Log</QuestNode_Log>
+
+    <!--QuestNode_RuntimeLog-->
+    <QuestNode_RuntimeLog>QuestNode_RuntimeLog</QuestNode_RuntimeLog>
+    <message>Message:</message>
+
+    <!--QuestNode_GenerateMonumentMarker-->
+    <QuestNode_GenerateMonumentMarker>QuestNode_GenerateMonumentMarker</QuestNode_GenerateMonumentMarker>
+    <sketch>Sketch</sketch>
+
+    <!--QuestNode_GenerateNonBuildableMonumentRequiredResources-->
+    <QuestNode_GenerateNonBuildableMonumentRequiredResources>QuestNode_GenerateNonBuildableMonumentRequiredResources</QuestNode_GenerateNonBuildableMonumentRequiredResources>
+
+    <!--QuestNode_GeneratePawn-->
+    <QuestNode_GeneratePawn>QuestNode_GeneratePawn</QuestNode_GeneratePawn>
+    <addToList>Add To List</addToList>
+
+    <!--QuestNode_GeneratePawnRandDevelopmentStage-->
+    <QuestNode_GeneratePawnRandDevelopmentStage>QuestNode_GeneratePawnRandDevelopmentStage</QuestNode_GeneratePawnRandDevelopmentStage>
+    <childChance>Child Chance</childChance>
+    <adultChance>Adult Chance</adultChance>
+    <addToLists>Add To Lists</addToLists>
+    <kindDef>Kind Def</kindDef>
+    <faction>Faction</faction>
+    <forbidAnyTitle>Forbid Any Title</forbidAnyTitle>
+    <ensureNonNumericName>Ensure Non Numeric Name</ensureNonNumericName>
+    <forcedTraits>Forced Traits</forcedTraits>
+    <prohibitedTraits>Prohibited Traits</prohibitedTraits>
+    <extraPawnForExtraRelationChance>Extra Pawn For Extra Relation Chance</extraPawnForExtraRelationChance>
+    <relationWithExtraPawnChanceFactor>Relation With Extra Pawn Chance Factor</relationWithExtraPawnChanceFactor>
+    <allowAddictions>Allow Addictions</allowAddictions>
+    <biocodeWeaponChance>Biocode Weapon Chance</biocodeWeaponChance>
+    <biocodeApparelChance>Biocode Apparel Chance</biocodeApparelChance>
+    <mustBeCapableOfViolence>Must Be Capable Of Violence</mustBeCapableOfViolence>
+    <isChild>Is Child</isChild>
+    <allowPregnant>Allow Pregnant</allowPregnant>
+    <fixedGender>Fixed Gender</fixedGender>
+
+    <!--QuestNode_GenerateShuttle-->
+    <QuestNode_GenerateShuttle>QuestNode_GenerateShuttle</QuestNode_GenerateShuttle>
+    <requiredPawns>Required Pawns</requiredPawns>
+    <requiredItems>Required Items</requiredItems>
+    <requireColonistCount>Require Colonist Count</requireColonistCount>
+    <acceptColonists>Accept Colonists</acceptColonists>
+    <acceptChildren>Accept Children</acceptChildren>
+    <onlyAcceptColonists>Only Accept Colonists</onlyAcceptColonists>
+    <onlyAcceptHealthy>Only Accept Healthy</onlyAcceptHealthy>
+    <owningFaction>Owning Faction</owningFaction>
+    <permitShuttle>Permit Shuttle</permitShuttle>
+    <overrideMass>Override Mass</overrideMass>
+
+    <!--QuestNode_GenerateSite-->
+    <QuestNode_GenerateSite>QuestNode_GenerateSite</QuestNode_GenerateSite>
+    <singleSitePartRules>Single Site Part Rules</singleSitePartRules>
+    <hiddenSitePartsPossible>Hidden Site Parts Possible</hiddenSitePartsPossible>
+
+    <!--QuestNode_GenerateThing-->
+    <QuestNode_GenerateThing>QuestNode_GenerateThing</QuestNode_GenerateThing>
+    <def>Def</def>
+    <stackCount>Stack Count</stackCount>
+
+    <!--QuestNode_GenerateThingSet-->
+    <QuestNode_GenerateThingSet>QuestNode_GenerateThingSet</QuestNode_GenerateThingSet>
+    <thingSetMaker>Thing Set Maker</thingSetMaker>
+    <totalMarketValueRange>Total Market Value Range</totalMarketValueRange>
+    <qualityGenerator>Quality Generator</qualityGenerator>
+
+    <!--QuestNode_GenerateWorldObject-->
+    <QuestNode_GenerateWorldObject>QuestNode_GenerateWorldObject</QuestNode_GenerateWorldObject>
+
+    <!--QuestNode_GenerateTransportShip-->
+    <QuestNode_GenerateTransportShip>QuestNode_GenerateTransportShip</QuestNode_GenerateTransportShip>
+    <shipThing>Ship Thing</shipThing>
+    <contents>Contents</contents>
+
+    <!--QuestNode_AddShipJob-->
+    <QuestNode_AddShipJob>QuestNode_AddShipJob</QuestNode_AddShipJob>
+
+    <!--QuestNode_AddShipJob_Arrive-->
+    <QuestNode_AddShipJob_Arrive>QuestNode_AddShipJob_Arrive</QuestNode_AddShipJob_Arrive>
+    <landingCell>Landing Cell</landingCell>
+    <transportShip>Transport Ship</transportShip>
+    <jobDef>Job Def</jobDef>
+    <shipJobStartMode>Ship Job Start Mode</shipJobStartMode>
+
+    <!--QuestNode_AddShipJob_Wait-->
+    <QuestNode_AddShipJob_Wait>QuestNode_AddShipJob_Wait</QuestNode_AddShipJob_Wait>
+    <leaveImmediatelyWhenSatisfied>Leave Immediately When Satisfied</leaveImmediatelyWhenSatisfied>
+    <sendAwayIfAllDespawned>Send Away If All Despawned</sendAwayIfAllDespawned>
+
+    <!--QuestNode_AddShipJob_Unload-->
+    <QuestNode_AddShipJob_Unload>QuestNode_AddShipJob_Unload</QuestNode_AddShipJob_Unload>
+    <dropMode>Drop Mode</dropMode>
+
+    <!--QuestNode_AddShipJob_FlyAway-->
+    <QuestNode_AddShipJob_FlyAway>QuestNode_AddShipJob_FlyAway</QuestNode_AddShipJob_FlyAway>
+    <destination>Destination</destination>
+
+    <!--QuestNode_SendTransportShipAwayOnCleanup-->
+    <QuestNode_SendTransportShipAwayOnCleanup>QuestNode_SendTransportShipAwayOnCleanup</QuestNode_SendTransportShipAwayOnCleanup>
+    <unloadContents>Unload Contents</unloadContents>
+    <unsatisfiedDropMode>Unsatisfied Drop Mode</unsatisfiedDropMode>
+
+    <!--QuestNode_EvaluateSimpleCurve-->
+    <QuestNode_EvaluateSimpleCurve>QuestNode_EvaluateSimpleCurve</QuestNode_EvaluateSimpleCurve>
+
+    <!--QuestNode_GetAnimalToHunt-->
+    <QuestNode_GetAnimalToHunt>QuestNode_GetAnimalToHunt</QuestNode_GetAnimalToHunt>
+    <storeAnimalToHuntAs>Store Animal To Hunt As</storeAnimalToHuntAs>
+    <storeCountToHuntAs>Store Count To Hunt As</storeCountToHuntAs>
+    <pointsToAnimalsToHuntCountCurve>Points To Animals To Hunt Count Curve</pointsToAnimalsToHuntCountCurve>
+    <pointsToAnimalDifficultyCurve>Points To Animal Difficulty Curve</pointsToAnimalDifficultyCurve>
+    <animalsToHuntCountRandomFactorRange>Animals To Hunt Count Random Factor Range</animalsToHuntCountRandomFactorRange>
+
+    <!--QuestNode_GetBodySize-->
+    <QuestNode_GetBodySize>QuestNode_GetBodySize</QuestNode_GetBodySize>
+    <pawnKind>Pawn Kind</pawnKind>
+
+    <!--QuestNode_GetColonistCountFromColonyPercentage-->
+    <QuestNode_GetColonistCountFromColonyPercentage>QuestNode_GetColonistCountFromColonyPercentage</QuestNode_GetColonistCountFromColonyPercentage>
+    <colonyPercentage>Colony Percentage</colonyPercentage>
+    <mustHaveFreeColonistsAvailableCount>Must Have Free Colonists Available Count</mustHaveFreeColonistsAvailableCount>
+    <minAge>Min Age</minAge>
+
+    <!--QuestNode_GetFreeColonistsCount-->
+    <QuestNode_GetFreeColonistsCount>QuestNode_GetFreeColonistsCount</QuestNode_GetFreeColonistsCount>
+    <onlyThisMap>Only This Map</onlyThisMap>
+
+    <!--QuestNode_GetDefaultSitePartsParams-->
+    <QuestNode_GetDefaultSitePartsParams>QuestNode_GetDefaultSitePartsParams</QuestNode_GetDefaultSitePartsParams>
+    <storeSitePartsParamsAs>Store Site Parts Params As</storeSitePartsParamsAs>
+
+    <!--QuestNode_GetDropSpot-->
+    <QuestNode_GetDropSpot>QuestNode_GetDropSpot</QuestNode_GetDropSpot>
+    <minDistanceFromEdge>Min Distance From Edge</minDistanceFromEdge>
+
+    <!--QuestNode_GetEventDelays-->
+    <QuestNode_GetEventDelays>QuestNode_GetEventDelays</QuestNode_GetEventDelays>
+    <intervalTicksRange>Interval Ticks Range</intervalTicksRange>
+    <storeDelaysAs>Store Delays As</storeDelaysAs>
+
+    <!--QuestNode_GetFaction-->
+    <QuestNode_GetFaction>QuestNode_GetFaction</QuestNode_GetFaction>
+    <allowEnemy>Allow Enemy</allowEnemy>
+    <allowNeutral>Allow Neutral</allowNeutral>
+    <allowAlly>Allow Ally</allowAlly>
+    <allowAskerFaction>Allow Asker Faction</allowAskerFaction>
+    <allowPermanentEnemy>Allow Permanent Enemy</allowPermanentEnemy>
+    <mustBePermanentEnemy>Must Be Permanent Enemy</mustBePermanentEnemy>
+    <playerCantBeAttackingCurrently>Player Cant Be Attacking Currently</playerCantBeAttackingCurrently>
+    <peaceTalksCantExist>Peace Talks Cant Exist</peaceTalksCantExist>
+    <leaderMustBeSafe>Leader Must Be Safe</leaderMustBeSafe>
+    <mustHaveGoodwillRewardsEnabled>Must Have Goodwill Rewards Enabled</mustHaveGoodwillRewardsEnabled>
+    <ofPawn>Of Pawn</ofPawn>
+    <exclude>Exclude</exclude>
+    <allowedHiddenFactions>Allowed Hidden Factions</allowedHiddenFactions>
+
+    <!--QuestNode_GetFactionOf-->
+    <QuestNode_GetFactionOf>QuestNode_GetFactionOf</QuestNode_GetFactionOf>
+
+    <!--QuestNode_GetFieldValue-->
+    <QuestNode_GetFieldValue>QuestNode_GetFieldValue</QuestNode_GetFieldValue>
+    <obj>Obj</obj>
+    <field>Field</field>
+    <type>Type</type>
+
+    <!--QuestNode_GetHediff-->
+    <QuestNode_GetHediff>QuestNode_GetHediff</QuestNode_GetHediff>
+    <storeHediffAs>Store Hediff As</storeHediffAs>
+    <storePartsToAffectAs>Store Parts To Affect As</storePartsToAffectAs>
+
+    <!--QuestNode_GetLargestClearArea-->
+    <QuestNode_GetLargestClearArea>QuestNode_GetLargestClearArea</QuestNode_GetLargestClearArea>
+    <map>Map</map>
+    <failIfSmaller>Fail If Smaller</failIfSmaller>
+    <max>Max</max>
+
+    <!--QuestNode_GetMap-->
+    <QuestNode_GetMap>QuestNode_GetMap</QuestNode_GetMap>
+    <mustBeInfestable>Must Be Infestable</mustBeInfestable>
+    <preferMapWithMinFreeColonists>Prefer Map With Min Free Colonists</preferMapWithMinFreeColonists>
+
+    <!--QuestNode_GetMapOf-->
+    <QuestNode_GetMapOf>QuestNode_GetMapOf</QuestNode_GetMapOf>
+
+    <!--QuestNode_GetMarketValue-->
+    <QuestNode_GetMarketValue>QuestNode_GetMarketValue</QuestNode_GetMarketValue>
+
+    <!--QuestNode_GetMonumentRequiredResourcesString-->
+    <QuestNode_GetMonumentRequiredResourcesString>QuestNode_GetMonumentRequiredResourcesString</QuestNode_GetMonumentRequiredResourcesString>
+    <monumentMarker>Monument Marker</monumentMarker>
+
+    <!--QuestNode_GetMonumentSketch-->
+    <QuestNode_GetMonumentSketch>QuestNode_GetMonumentSketch</QuestNode_GetMonumentSketch>
+    <useOnlyResourcesAvailableOnMap>Use Only Resources Available On Map</useOnlyResourcesAvailableOnMap>
+    <maxSize>Max Size</maxSize>
+    <pointsPerArea>Points Per Area</pointsPerArea>
+    <clearStuff>Clear Stuff</clearStuff>
+
+    <!--QuestNode_GetNearbySettlement-->
+    <QuestNode_GetNearbySettlement>QuestNode_GetNearbySettlement</QuestNode_GetNearbySettlement>
+    <allowActiveTradeRequest>Allow Active Trade Request</allowActiveTradeRequest>
+    <maxTileDistance>Max Tile Distance</maxTileDistance>
+    <storeFactionLeaderAs>Store Faction Leader As</storeFactionLeaderAs>
+
+    <!--QuestNode_GetNearestHomeMapOf-->
+    <QuestNode_GetNearestHomeMapOf>QuestNode_GetNearestHomeMapOf</QuestNode_GetNearestHomeMapOf>
+    <mapOf>Map Of</mapOf>
+
+    <!--QuestNode_GetPawn-->
+    <QuestNode_GetPawn>QuestNode_GetPawn</QuestNode_GetPawn>
+    <mustBeFactionLeader>Must Be Faction Leader</mustBeFactionLeader>
+    <mustBeWorldPawn>Must Be World Pawn</mustBeWorldPawn>
+    <ifWorldPawnThenMustBeFree>If World Pawn Then Must Be Free</ifWorldPawnThenMustBeFree>
+    <ifWorldPawnThenMustBeFreeOrLeader>If World Pawn Then Must Be Free Or Leader</ifWorldPawnThenMustBeFreeOrLeader>
+    <mustHaveNoFaction>Must Have No Faction</mustHaveNoFaction>
+    <mustBeFreeColonist>Must Be Free Colonist</mustBeFreeColonist>
+    <mustBePlayerPrisoner>Must Be Player Prisoner</mustBePlayerPrisoner>
+    <mustBeNotSuspended>Must Be Not Suspended</mustBeNotSuspended>
+    <mustHaveRoyalTitleInCurrentFaction>Must Have Royal Title In Current Faction</mustHaveRoyalTitleInCurrentFaction>
+    <mustBeNonHostileToPlayer>Must Be Non Hostile To Player</mustBeNonHostileToPlayer>
+    <allowPermanentEnemyFaction>Allow Permanent Enemy Faction</allowPermanentEnemyFaction>
+    <canGeneratePawn>Can Generate Pawn</canGeneratePawn>
+    <requireResearchedBedroomFurnitureIfRoyal>Require Researched Bedroom Furniture If Royal</requireResearchedBedroomFurnitureIfRoyal>
+    <mustBeOfKind>Must Be Of Kind</mustBeOfKind>
+    <seniorityRange>Seniority Range</seniorityRange>
+    <minTechLevel>Min Tech Level</minTechLevel>
+    <excludeFactionDefs>Exclude Faction Defs</excludeFactionDefs>
+    <hostileWeight>Hostile Weight</hostileWeight>
+    <nonHostileWeight>Non Hostile Weight</nonHostileWeight>
+    <maxUsablePawnsToGenerate>Max Usable Pawns To Generate</maxUsablePawnsToGenerate>
+
+    <!--QuestNode_GetPawnCountByPointsWeighted-->
+    <QuestNode_GetPawnCountByPointsWeighted>QuestNode_GetPawnCountByPointsWeighted</QuestNode_GetPawnCountByPointsWeighted>
+    <maxCountOneStar>Max Count One Star</maxCountOneStar>
+    <maxCountTwoStar>Max Count Two Star</maxCountTwoStar>
+    <maxCountThreeStar>Max Count Three Star</maxCountThreeStar>
+    <pointsCurve>Points Curve</pointsCurve>
+    <chancesCurve>Chances Curve</chancesCurve>
+    <roundRandom>Round Random</roundRandom>
+
+    <!--QuestNode_GetPawnKind-->
+    <QuestNode_GetPawnKind>QuestNode_GetPawnKind</QuestNode_GetPawnKind>
+    <options>Options</options>
+
+    <!--QuestNode_GetPawnsWithRoyalTitle-->
+    <QuestNode_GetPawnsWithRoyalTitle>QuestNode_GetPawnsWithRoyalTitle</QuestNode_GetPawnsWithRoyalTitle>
+    <storeCountAs>Store Count As</storeCountAs>
+    <storePawnsLabelAs>Store Pawns Label As</storePawnsLabelAs>
+
+    <!--QuestNode_GetPlantPlayerCanHarvest-->
+    <QuestNode_GetPlantPlayerCanHarvest>QuestNode_GetPlantPlayerCanHarvest</QuestNode_GetPlantPlayerCanHarvest>
+    <storeHarvestItemDefAs>Store Harvest Item Def As</storeHarvestItemDefAs>
+    <storeHarvestItemCountAs>Store Harvest Item Count As</storeHarvestItemCountAs>
+    <storeGrowDaysAs>Store Grow Days As</storeGrowDaysAs>
+    <maxPlantGrowDays>Max Plant Grow Days</maxPlantGrowDays>
+    <workRandomFactorRange>Work Random Factor Range</workRandomFactorRange>
+
+    <!--QuestNode_GetRandomByCurve-->
+    <QuestNode_GetRandomByCurve>QuestNode_GetRandomByCurve</QuestNode_GetRandomByCurve>
+    <curve>Curve</curve>
+    <min>Min</min>
+
+    <!--QuestNode_GetRandomFactionForSite-->
+    <QuestNode_GetRandomFactionForSite>QuestNode_GetRandomFactionForSite</QuestNode_GetRandomFactionForSite>
+    <sitePartDefs>Site Part Defs</sitePartDefs>
+    <mustBeHostileToFactionOf>Must Be Hostile To Faction Of</mustBeHostileToFactionOf>
+
+    <!--QuestNode_GetRandomInRangeFloat-->
+    <QuestNode_GetRandomInRangeFloat>QuestNode_GetRandomInRangeFloat</QuestNode_GetRandomInRangeFloat>
+    <range>Range</range>
+
+    <!--QuestNode_GetRandomInRangeForChallengeRating-->
+    <QuestNode_GetRandomInRangeForChallengeRating>QuestNode_GetRandomInRangeForChallengeRating</QuestNode_GetRandomInRangeForChallengeRating>
+    <oneStarRange>One Star Range</oneStarRange>
+    <twoStarRange>Two Star Range</twoStarRange>
+    <threeStarRange>Three Star Range</threeStarRange>
+
+    <!--QuestNode_GetRandomNegativeGameCondition-->
+    <QuestNode_GetRandomNegativeGameCondition>QuestNode_GetRandomNegativeGameCondition</QuestNode_GetRandomNegativeGameCondition>
+    <storeGameConditionAs>Store Game Condition As</storeGameConditionAs>
+    <storeGameConditionDurationAs>Store Game Condition Duration As</storeGameConditionDurationAs>
+    <storeGameConditionDifficultyAs>Store Game Condition Difficulty As</storeGameConditionDifficultyAs>
+
+    <!--QuestNode_GetRelationsInfo-->
+    <QuestNode_GetRelationsInfo>QuestNode_GetRelationsInfo</QuestNode_GetRelationsInfo>
+    <otherPawns>Other Pawns</otherPawns>
+    <nonRelatedLabel>Non Related Label</nonRelatedLabel>
+    <nonRelatedLabelPlural>Non Related Label Plural</nonRelatedLabelPlural>
+
+    <!--QuestNode_GetSitePartDefsByTagsAndFaction-->
+    <QuestNode_GetSitePartDefsByTagsAndFaction>QuestNode_GetSitePartDefsByTagsAndFaction</QuestNode_GetSitePartDefsByTagsAndFaction>
+    <sitePartsTags>Site Parts Tags</sitePartsTags>
+    <storeFactionAs>Store Faction As</storeFactionAs>
+
+    <!--QuestNode_GetSiteThreatPoints-->
+    <QuestNode_GetSiteThreatPoints>QuestNode_GetSiteThreatPoints</QuestNode_GetSiteThreatPoints>
+    <site>Site</site>
+    <sitePartsParams>Site Parts Params</sitePartsParams>
+
+    <!--QuestNode_GetSiteTile-->
+    <QuestNode_GetSiteTile>QuestNode_GetSiteTile</QuestNode_GetSiteTile>
+    <preferCloserTiles>Prefer Closer Tiles</preferCloserTiles>
+    <allowCaravans>Allow Caravans</allowCaravans>
+    <clampRangeBySiteParts>Clamp Range By Site Parts</clampRangeBySiteParts>
+
+    <!--QuestNode_GetThingPlayerCanProduce-->
+    <QuestNode_GetThingPlayerCanProduce>QuestNode_GetThingPlayerCanProduce</QuestNode_GetThingPlayerCanProduce>
+    <storeProductionItemDefAs>Store Production Item Def As</storeProductionItemDefAs>
+    <storeProductionItemStuffAs>Store Production Item Stuff As</storeProductionItemStuffAs>
+    <storeProductionItemCountAs>Store Production Item Count As</storeProductionItemCountAs>
+    <storeProductionItemLabelAs>Store Production Item Label As</storeProductionItemLabelAs>
+    <pointsToRequiredWorkCurve>Points To Required Work Curve</pointsToRequiredWorkCurve>
+    <pointsToMaxItemMarketValueCurve>Points To Max Item Market Value Curve</pointsToMaxItemMarketValueCurve>
+    <maxMarketValueFactor>Max Market Value Factor</maxMarketValueFactor>
+    <minStuffCommonality>Min Stuff Commonality</minStuffCommonality>
+    <workAmountRandomFactorRange>Work Amount Random Factor Range</workAmountRandomFactorRange>
+    <productionItemCountRandomFactorRange>Production Item Count Random Factor Range</productionItemCountRandomFactorRange>
+
+    <!--QuestNode_SplitRandomly-->
+    <QuestNode_SplitRandomly>QuestNode_SplitRandomly</QuestNode_SplitRandomly>
+    <storeAsFormat>Store As Format</storeAsFormat>
+    <storeAs1>Store As1</storeAs1>
+    <storeAs2>Store As2</storeAs2>
+    <storeAs3>Store As3</storeAs3>
+    <storeAs4>Store As4</storeAs4>
+    <storeAs5>Store As5</storeAs5>
+    <valueToSplit>Value To Split</valueToSplit>
+    <countToSplit>Count To Split</countToSplit>
+    <zeroIfFractionBelow1>Zero If Fraction Below1</zeroIfFractionBelow1>
+    <zeroIfFractionBelow2>Zero If Fraction Below2</zeroIfFractionBelow2>
+    <zeroIfFractionBelow3>Zero If Fraction Below3</zeroIfFractionBelow3>
+    <zeroIfFractionBelow4>Zero If Fraction Below4</zeroIfFractionBelow4>
+    <zeroIfFractionBelow5>Zero If Fraction Below5</zeroIfFractionBelow5>
+    <minFraction1>Min Fraction1</minFraction1>
+    <minFraction2>Min Fraction2</minFraction2>
+    <minFraction3>Min Fraction3</minFraction3>
+    <minFraction4>Min Fraction4</minFraction4>
+    <minFraction5>Min Fraction5</minFraction5>
+
+    <!--QuestNode_AssaultColony-->
+    <QuestNode_AssaultColony>QuestNode_AssaultColony</QuestNode_AssaultColony>
+    <pawns>Pawns</pawns>
+
+    <!--QuestNode_VisitColony-->
+    <QuestNode_VisitColony>QuestNode_VisitColony</QuestNode_VisitColony>
+
+    <!--QuestNode_HasRoyalTitleInCurrentFaction-->
+    <QuestNode_HasRoyalTitleInCurrentFaction>QuestNode_HasRoyalTitleInCurrentFaction</QuestNode_HasRoyalTitleInCurrentFaction>
+    <pawn>Pawn</pawn>
+
+    <!--QuestNode_IsFactionHostileToPlayer-->
+    <QuestNode_IsFactionHostileToPlayer>QuestNode_IsFactionHostileToPlayer</QuestNode_IsFactionHostileToPlayer>
+    <factionOf>Faction Of</factionOf>
+
+    <!--QuestNode_IsOfFaction-->
+    <QuestNode_IsOfFaction>QuestNode_IsOfFaction</QuestNode_IsOfFaction>
+    <thing>Thing</thing>
+
+    <!--QuestNode_ModIsActive-->
+    <QuestNode_ModIsActive>QuestNode_ModIsActive</QuestNode_ModIsActive>
+    <modID>Mod I D</modID>
+
+    <!--QuestNode_AddContentsToShuttle-->
+    <QuestNode_AddContentsToShuttle>QuestNode_AddContentsToShuttle</QuestNode_AddContentsToShuttle>
+
+    <!--QuestNode_AddHediff-->
+    <QuestNode_AddHediff>QuestNode_AddHediff</QuestNode_AddHediff>
+    <hediffDef>Hediff Def</hediffDef>
+    <partsToAffect>Parts To Affect</partsToAffect>
+    <checkDiseaseContractChance>Check Disease Contract Chance</checkDiseaseContractChance>
+    <addToHyperlinks>Add To Hyperlinks</addToHyperlinks>
+
+    <!--QuestNode_AddItemsReward-->
+    <QuestNode_AddItemsReward>QuestNode_AddItemsReward</QuestNode_AddItemsReward>
+
+    <!--QuestNode_AddMemoryThought-->
+    <QuestNode_AddMemoryThought>QuestNode_AddMemoryThought</QuestNode_AddMemoryThought>
+
+    <!--QuestNode_AddPassageOffworldReward-->
+    <QuestNode_AddPassageOffworldReward>QuestNode_AddPassageOffworldReward</QuestNode_AddPassageOffworldReward>
+    <inSignalChoiceUsed>In Signal Choice Used</inSignalChoiceUsed>
+
+    <!--QuestNode_AddPawnReward-->
+    <QuestNode_AddPawnReward>QuestNode_AddPawnReward</QuestNode_AddPawnReward>
+
+    <!--QuestNode_AllowDecreesForLodger-->
+    <QuestNode_AllowDecreesForLodger>QuestNode_AllowDecreesForLodger</QuestNode_AllowDecreesForLodger>
+    <lodger>Lodger</lodger>
+
+    <!--QuestNode_BetrayMTB-->
+    <QuestNode_BetrayMTB>QuestNode_BetrayMTB</QuestNode_BetrayMTB>
+
+    <!--QuestNode_ChangeFactionGoodwill-->
+    <QuestNode_ChangeFactionGoodwill>QuestNode_ChangeFactionGoodwill</QuestNode_ChangeFactionGoodwill>
+    <change>Change</change>
+    <canSendLetter>Can Send Letter</canSendLetter>
+    <canSendMessage>Can Send Message:</canSendMessage>
+    <ensureHostile>Ensure Hostile</ensureHostile>
+
+    <!--QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle-->
+    <QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle</QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>
+    <goodwillChange>Goodwill Change</goodwillChange>
+    <reason>Reason</reason>
+
+    <!--QuestNode_ChangeHeir-->
+    <QuestNode_ChangeHeir>QuestNode_ChangeHeir</QuestNode_ChangeHeir>
+    <holder>Holder</holder>
+    <heir>Heir</heir>
+
+    <!--QuestNode_ChangeNeed-->
+    <QuestNode_ChangeNeed>QuestNode_ChangeNeed</QuestNode_ChangeNeed>
+    <need>Need</need>
+    <offset>Offset</offset>
+
+    <!--QuestNode_DamageUntilDowned-->
+    <QuestNode_DamageUntilDowned>QuestNode_DamageUntilDowned</QuestNode_DamageUntilDowned>
+    <allowBleedingWounds>Allow Bleeding Wounds</allowBleedingWounds>
+
+    <!--QuestNode_DestroyOrPassToWorld-->
+    <QuestNode_DestroyOrPassToWorld>QuestNode_DestroyOrPassToWorld</QuestNode_DestroyOrPassToWorld>
+    <things>Things</things>
+
+    <!--QuestNode_DestroyWorldObject-->
+    <QuestNode_DestroyWorldObject>QuestNode_DestroyWorldObject</QuestNode_DestroyWorldObject>
+
+    <!--QuestNode_DropMonumentMarkerCopy-->
+    <QuestNode_DropMonumentMarkerCopy>QuestNode_DropMonumentMarkerCopy</QuestNode_DropMonumentMarkerCopy>
+    <outSignalResult>Out Signal Result</outSignalResult>
+    <destroyOrPassToWorldOnCleanup>Destroy Or Pass To World On Cleanup</destroyOrPassToWorldOnCleanup>
+
+    <!--QuestNode_DropPods-->
+    <QuestNode_DropPods>QuestNode_DropPods</QuestNode_DropPods>
+    <useTradeDropSpot>Use Trade Drop Spot</useTradeDropSpot>
+    <sendStandardLetter>Send Standard Letter</sendStandardLetter>
+    <thingsToExcludeFromHyperlinks>Things To Exclude From Hyperlinks</thingsToExcludeFromHyperlinks>
+
+    <!--QuestNode_EndGame-->
+    <QuestNode_EndGame>QuestNode_EndGame</QuestNode_EndGame>
+    <introText>Intro Text</introText>
+    <endingText>Ending Text</endingText>
+    <introTextRules>Intro Text Rules</introTextRules>
+    <endingTextRules>Ending Text Rules</endingTextRules>
+
+    <!--QuestNode_ExtraFaction-->
+    <QuestNode_ExtraFaction>QuestNode_ExtraFaction</QuestNode_ExtraFaction>
+    <factionType>Faction Type</factionType>
+    <areHelpers>Are Helpers</areHelpers>
+
+    <!--QuestNode_FactionGoodwillForMoodChange-->
+    <QuestNode_FactionGoodwillForMoodChange>QuestNode_FactionGoodwillForMoodChange</QuestNode_FactionGoodwillForMoodChange>
+    <outSignalSuccess>Out Signal Success</outSignalSuccess>
+    <outSignalFailed>Out Signal Failed</outSignalFailed>
+
+    <!--QuestNode_GetRandomPawnKindForFaction-->
+    <QuestNode_GetRandomPawnKindForFaction>QuestNode_GetRandomPawnKindForFaction</QuestNode_GetRandomPawnKindForFaction>
+    <choices>Choices</choices>
+    <fallback>Fallback</fallback>
+
+    <!--QuestNode_GiveNearPawn-->
+    <QuestNode_GiveNearPawn>QuestNode_GiveNearPawn</QuestNode_GiveNearPawn>
+    <contentsDefs>Contents Defs</contentsDefs>
+    <nearPawn>Near Pawn</nearPawn>
+    <joinPlayer>Join Player</joinPlayer>
+    <makePrisoners>Make Prisoners</makePrisoners>
+    <customDropPodsLetterLabel>Custom Drop Pods Letter Label</customDropPodsLetterLabel>
+    <customDropPodsLetterText>Custom Drop Pods Letter Text</customDropPodsLetterText>
+    <customCaravanInventoryLetterLabel>Custom Caravan Inventory Letter Label</customCaravanInventoryLetterLabel>
+    <customCaravanInventoryLetterText>Custom Caravan Inventory Letter Text</customCaravanInventoryLetterText>
+    <customDropPodsLetterLabelRules>Custom Drop Pods Letter Label Rules</customDropPodsLetterLabelRules>
+    <customDropPodsLetterTextRules>Custom Drop Pods Letter Text Rules</customDropPodsLetterTextRules>
+    <customCaravanInventoryLetterLabelRules>Custom Caravan Inventory Letter Label Rules</customCaravanInventoryLetterLabelRules>
+    <customCaravanInventoryLetterTextRules>Custom Caravan Inventory Letter Text Rules</customCaravanInventoryLetterTextRules>
+
+    <!--QuestNode_GiveRewards-->
+    <QuestNode_GiveRewards>QuestNode_GiveRewards</QuestNode_GiveRewards>
+    <customLetterLabel>Custom Letter Label</customLetterLabel>
+    <customLetterText>Custom Letter Text</customLetterText>
+    <customLetterLabelRules>Custom Letter Label Rules</customLetterLabelRules>
+    <customLetterTextRules>Custom Letter Text Rules</customLetterTextRules>
+    <useDifficultyFactor>Use Difficulty Factor</useDifficultyFactor>
+    <nodeIfChosenPawnSignalUsed>Node If Chosen Pawn Signal Used</nodeIfChosenPawnSignalUsed>
+    <variants>Variants</variants>
+    <addCampLootReward>Add Camp Loot Reward</addCampLootReward>
+
+    <!--QuestNode_GiveRoyalFavor-->
+    <QuestNode_GiveRoyalFavor>QuestNode_GiveRoyalFavor</QuestNode_GiveRoyalFavor>
+
+    <!--QuestNode_GiveRoyalFavorAndDevelopmentPoints-->
+    <QuestNode_GiveRoyalFavorAndDevelopmentPoints>QuestNode_GiveRoyalFavorAndDevelopmentPoints</QuestNode_GiveRoyalFavorAndDevelopmentPoints>
+    <giveTo>Give To</giveTo>
+    <giveToAccepter>Give To Accepter</giveToAccepter>
+    <amount>Amount</amount>
+    <isSingleReward>Is Single Reward</isSingleReward>
+
+    <!--QuestNode_GiveTechprints-->
+    <QuestNode_GiveTechprints>QuestNode_GiveTechprints</QuestNode_GiveTechprints>
+    <fixedProject>Fixed Project</fixedProject>
+    <storeProjectAs>Store Project As</storeProjectAs>
+
+    <!--QuestNode_GuardianShipDelay-->
+    <QuestNode_GuardianShipDelay>QuestNode_GuardianShipDelay</QuestNode_GuardianShipDelay>
+    <outSignalComplete>Out Signal Complete</outSignalComplete>
+    <delayTicks>Delay Ticks</delayTicks>
+
+    <!--QuestNode_InspectString-->
+    <QuestNode_InspectString>QuestNode_InspectString</QuestNode_InspectString>
+    <targets>Targets</targets>
+    <inspectString>Inspect String</inspectString>
+
+    <!--QuestNode_Leave-->
+    <QuestNode_Leave>QuestNode_Leave</QuestNode_Leave>
+    <inSignalRemovePawn>In Signal Remove Pawn</inSignalRemovePawn>
+    <leaveOnCleanup>Leave On Cleanup</leaveOnCleanup>
+
+    <!--QuestNode_LendColonistsToFaction-->
+    <QuestNode_LendColonistsToFaction>QuestNode_LendColonistsToFaction</QuestNode_LendColonistsToFaction>
+    <outSignalColonistsDied>Out Signal Colonists Died</outSignalColonistsDied>
+    <shuttle>Shuttle</shuttle>
+    <lendColonistsToFactionOf>Lend Colonists To Faction Of</lendColonistsToFactionOf>
+    <returnLentColonistsInTicks>Return Lent Colonists In Ticks</returnLentColonistsInTicks>
+
+    <!--QuestNode_Letter-->
+    <QuestNode_Letter>QuestNode_Letter</QuestNode_Letter>
+    <relatedFaction>Related Faction</relatedFaction>
+    <letterDef>Letter Def</letterDef>
+    <label>Label</label>
+    <labelRules>Label Rules</labelRules>
+    <textRules>Text Rules</textRules>
+    <chosenPawnSignal>Chosen Pawn Signal</chosenPawnSignal>
+    <useColonistsOnMap>Use Colonists On Map</useColonistsOnMap>
+    <useColonistsFromCaravanArg>Use Colonists From Caravan Arg</useColonistsFromCaravanArg>
+    <acceptedVisitorsSignal>Accepted Visitors Signal</acceptedVisitorsSignal>
+    <visitors>Visitors</visitors>
+    <filterDeadPawnsFromLookTargets>Filter Dead Pawns From Look Targets</filterDeadPawnsFromLookTargets>
+
+    <!--QuestNode_LoopCount-->
+    <QuestNode_LoopCount>QuestNode_LoopCount</QuestNode_LoopCount>
+    <loopCount>Loop Count</loopCount>
+    <storeLoopCounterAs>Store Loop Counter As</storeLoopCounterAs>
+
+    <!--QuestNode_Message-->
+    <QuestNode_Message>Node:Message</QuestNode_Message>
+    <messageType>Message Type:</messageType>
+    <text>Text:</text>
+    <lookTargets>Look Targets:</lookTargets>
+
+    <!--QuestNode_MoodBelow-->
+    <QuestNode_MoodBelow>QuestNode_MoodBelow</QuestNode_MoodBelow>
+    <outSignal>Out Signal</outSignal>
+    <threshold>Threshold</threshold>
+
+    <!--QuestNode_NoWorldObject-->
+    <QuestNode_NoWorldObject>QuestNode_NoWorldObject</QuestNode_NoWorldObject>
+    <worldObject>World Object</worldObject>
+
+    <!--QuestNode_Notify_PlayerRaidedSomeone-->
+    <QuestNode_Notify_PlayerRaidedSomeone>QuestNode_Notify_PlayerRaidedSomeone</QuestNode_Notify_PlayerRaidedSomeone>
+    <getRaidersFromMap>Get Raiders From Map</getRaidersFromMap>
+    <getRaidersFromMapParent>Get Raiders From Map Parent</getRaidersFromMapParent>
+
+    <!--QuestNode_PawnsArrive-->
+    <QuestNode_PawnsArrive>QuestNode_PawnsArrive</QuestNode_PawnsArrive>
+    <customLetterDef>Custom Letter Def</customLetterDef>
+    <rewardDetailsHidden>Reward Details Hidden</rewardDetailsHidden>
+
+    <!--QuestNode_PawnsKilled-->
+    <QuestNode_PawnsKilled>QuestNode_PawnsKilled</QuestNode_PawnsKilled>
+    <outSignalPawnsNotAvailable>Out Signal Pawns Not Available</outSignalPawnsNotAvailable>
+    <race>Race</race>
+
+    <!--QuestNode_PlantsHarvested-->
+    <QuestNode_PlantsHarvested>QuestNode_PlantsHarvested</QuestNode_PlantsHarvested>
+    <plant>Plant</plant>
+    <count>Count</count>
+
+    <!--QuestNode_QuestUnique-->
+    <QuestNode_QuestUnique>QuestNode_QuestUnique</QuestNode_QuestUnique>
+    <tag>Tag</tag>
+    <storeProcessedTagAs>Store Processed Tag As</storeProcessedTagAs>
+
+    <!--QuestNode_RecordHistoryEvent-->
+    <QuestNode_RecordHistoryEvent>QuestNode_RecordHistoryEvent</QuestNode_RecordHistoryEvent>
+    <historyDef>History Def</historyDef>
+
+    <!--QuestNode_RemoveMemoryThought-->
+    <QuestNode_RemoveMemoryThought>QuestNode_RemoveMemoryThought</QuestNode_RemoveMemoryThought>
+    <otherPawn>Other Pawn</otherPawn>
+    <addToLookTargets>Add To Look Targets</addToLookTargets>
+
+    <!--QuestNode_RequirementsToAcceptColonistWithTitle-->
+    <QuestNode_RequirementsToAcceptColonistWithTitle>QuestNode_RequirementsToAcceptColonistWithTitle</QuestNode_RequirementsToAcceptColonistWithTitle>
+    <minimumTitle>Minimum Title</minimumTitle>
+
+    <!--QuestNode_SendShuttleAway-->
+    <QuestNode_SendShuttleAway>QuestNode_SendShuttleAway</QuestNode_SendShuttleAway>
+
+    <!--QuestNode_SendShuttleAwayOnCleanup-->
+    <QuestNode_SendShuttleAwayOnCleanup>QuestNode_SendShuttleAwayOnCleanup</QuestNode_SendShuttleAwayOnCleanup>
+    <dropEverything>Drop Everything</dropEverything>
+
+    <!--QuestNode_SetChallengeRating-->
+    <QuestNode_SetChallengeRating>QuestNode_SetChallengeRating</QuestNode_SetChallengeRating>
+    <challengeRating>Challenge Rating</challengeRating>
+
+    <!--QuestNode_SetItemStashContents-->
+    <QuestNode_SetItemStashContents>QuestNode_SetItemStashContents</QuestNode_SetItemStashContents>
+    <items>Items</items>
+    <categories>Categories</categories>
+
+    <!--QuestNode_SetRoyalTitle-->
+    <QuestNode_SetRoyalTitle>QuestNode_SetRoyalTitle</QuestNode_SetRoyalTitle>
+    <royalTitle>Royal Title</royalTitle>
+
+    <!--QuestNode_SetTicksUntilAcceptanceExpiry-->
+    <QuestNode_SetTicksUntilAcceptanceExpiry>QuestNode_SetTicksUntilAcceptanceExpiry</QuestNode_SetTicksUntilAcceptanceExpiry>
+    <ticks>Ticks</ticks>
+
+    <!--QuestNode_ShuttleDelay-->
+    <QuestNode_ShuttleDelay>QuestNode_ShuttleDelay</QuestNode_ShuttleDelay>
+    <lodgers>Lodgers</lodgers>
+
+    <!--QuestNode_ShuttleLeaveDelay-->
+    <QuestNode_ShuttleLeaveDelay>QuestNode_ShuttleLeaveDelay</QuestNode_ShuttleLeaveDelay>
+    <inSignalsDisable>In Signals Disable</inSignalsDisable>
+
+    <!--QuestNode_SpawnMechCluster-->
+    <QuestNode_SpawnMechCluster>QuestNode_SpawnMechCluster</QuestNode_SpawnMechCluster>
+    <dropSpot>Drop Spot</dropSpot>
+
+    <!--QuestNode_SpawnSkyfaller-->
+    <QuestNode_SpawnSkyfaller>QuestNode_SpawnSkyfaller</QuestNode_SpawnSkyfaller>
+    <skyfallerDef>Skyfaller Def</skyfallerDef>
+    <innerThings>Inner Things</innerThings>
+    <cell>Cell</cell>
+    <factionOfForSafeSpot>Faction Of For Safe Spot</factionOfForSafeSpot>
+    <lookForSafeSpot>Look For Safe Spot</lookForSafeSpot>
+    <tryLandInShipLandingZone>Try Land In Ship Landing Zone</tryLandInShipLandingZone>
+
+    <!--QuestNode_SpawnWorldObjects-->
+    <QuestNode_SpawnWorldObjects>QuestNode_SpawnWorldObjects</QuestNode_SpawnWorldObjects>
+    <worldObjects>World Objects</worldObjects>
+    <defsToExcludeFromHyperlinks>Defs To Exclude From Hyperlinks</defsToExcludeFromHyperlinks>
+
+    <!--QuestNode_ThingsProduced-->
+    <QuestNode_ThingsProduced>QuestNode_ThingsProduced</QuestNode_ThingsProduced>
+    <stuff>Stuff</stuff>
+
+    <!--QuestNode_TrackWhenExitMentalState-->
+    <QuestNode_TrackWhenExitMentalState>QuestNode_TrackWhenExitMentalState</QuestNode_TrackWhenExitMentalState>
+    <mentalStateDef>Mental State Def</mentalStateDef>
+
+    <!--QuestNode_WorkDisabled-->
+    <QuestNode_WorkDisabled>QuestNode_WorkDisabled</QuestNode_WorkDisabled>
+    <disabledWorkTags>Disabled Work Tags</disabledWorkTags>
+
+    <!--QuestNode_WorldObjectTimeout-->
+    <QuestNode_WorldObjectTimeout>QuestNode_WorldObjectTimeout</QuestNode_WorldObjectTimeout>
+    <destroyOnCleanup>Destroy On Cleanup</destroyOnCleanup>
+    <expiryInfoPart>Expiry Info Part</expiryInfoPart>
+    <expiryInfoPartTip>Expiry Info Part Tip</expiryInfoPartTip>
+    <inspectStringTargets>Inspect String Targets</inspectStringTargets>
+    <delayTicksRange>Delay Ticks Range</delayTicksRange>
+    <isQuestTimeout>Is Quest Timeout</isQuestTimeout>
+    <reactivatable>Reactivatable</reactivatable>
+
+    <!--QuestNode_Root_BestowingCeremony-->
+    <QuestNode_Root_BestowingCeremony>QuestNode_Root_BestowingCeremony</QuestNode_Root_BestowingCeremony>
+    <QuestTag>Quest Tag</QuestTag>
+
+    <!--QuestNode_Root_RefugeeBetrayal-->
+    <QuestNode_Root_RefugeeBetrayal>QuestNode_Root_RefugeeBetrayal</QuestNode_Root_RefugeeBetrayal>
+    <FailureRecruitedSignal>Failure Recruited Signal</FailureRecruitedSignal>
+    <FailureLeftSignal>Failure Left Signal</FailureLeftSignal>
+
+    <!--QuestNode_Root_Hospitality_Refugee-->
+    <QuestNode_Root_Hospitality_Refugee>QuestNode_Root_Hospitality_Refugee</QuestNode_Root_Hospitality_Refugee>
+    <RewardFactor_BetrayalOffer>Reward Factor_ Betrayal Offer</RewardFactor_BetrayalOffer>
+    <BetrayalOfferGoodwillReward>Betrayal Offer Goodwill Reward</BetrayalOfferGoodwillReward>
+
+    <!--QuestNode_Root_MechanitorShip-->
+    <QuestNode_Root_MechanitorShip>QuestNode_Root_MechanitorShip</QuestNode_Root_MechanitorShip>
+    <combatPointsFactor>Combat Points Factor</combatPointsFactor>
+    <mechGroups>Mech Groups</mechGroups>
+
+    <!--QuestNode_Root_MechanitorStartingMech-->
+    <QuestNode_Root_MechanitorStartingMech>QuestNode_Root_MechanitorStartingMech</QuestNode_Root_MechanitorStartingMech>
+    <mechTypes>Mech Types</mechTypes>
+
+    <!--QuestNode_Root_Mission_BanditCamp-->
+    <QuestNode_Root_Mission_BanditCamp>QuestNode_Root_Mission_BanditCamp</QuestNode_Root_Mission_BanditCamp>
+    <factionsToDrawLeaderFrom>Factions To Draw Leader From</factionsToDrawLeaderFrom>
+    <siteFactions>Site Factions</siteFactions>
+    <timeLimitDays>Time Limit Days</timeLimitDays>
+
+    <!--QuestNode_Root_SanguophageMeetingHost-->
+    <QuestNode_Root_SanguophageMeetingHost>QuestNode_Root_SanguophageMeetingHost</QuestNode_Root_SanguophageMeetingHost>
+    <SanguophageFactionAlias>Sanguophage Faction Alias</SanguophageFactionAlias>
+    <SanguophageListAlias>Sanguophage List Alias</SanguophageListAlias>
+    <ReimplantWaitTicksAlias>Reimplant Wait Ticks Alias</ReimplantWaitTicksAlias>
+    <ReimplantedSignalAlias>Reimplanted Signal Alias</ReimplantedSignalAlias>
+    <GatherSpotAlias>Gather Spot Alias</GatherSpotAlias>
+    <ReimplantWaitDurationTicks>Reimplant Wait Duration Ticks</ReimplantWaitDurationTicks>
+
+    <!--QuestNode_Root_WandererJoin_WalkIn-->
+    <QuestNode_Root_WandererJoin_WalkIn>QuestNode_Root_WandererJoin_WalkIn</QuestNode_Root_WandererJoin_WalkIn>
+    <RelationWithColonistWeight>Relation With Colonist Weight</RelationWithColonistWeight>
+
+    <!--QuestNode_TradeRequest_Initiate-->
+    <QuestNode_TradeRequest_Initiate>QuestNode_TradeRequest_Initiate</QuestNode_TradeRequest_Initiate>
+    <requestedThingDef>Requested Thing Def</requestedThingDef>
+    <requestedThingCount>Requested Thing Count</requestedThingCount>
+
+    <!--QuestNode_TradeRequest_GetRequestedThing-->
+    <QuestNode_TradeRequest_GetRequestedThing>QuestNode_TradeRequest_GetRequestedThing</QuestNode_TradeRequest_GetRequestedThing>
+    <storeThingAs>Store Thing As</storeThingAs>
+    <storeThingCountAs>Store Thing Count As</storeThingCountAs>
+    <storeMarketValueAs>Store Market Value As</storeMarketValueAs>
+    <storeHasQualityAs>Store Has Quality As</storeHasQualityAs>
+    <dontRequest>Dont Request</dontRequest>
+
+    <!--QuestNode_TradeRequest_RandomOfferDuration-->
+    <QuestNode_TradeRequest_RandomOfferDuration>QuestNode_TradeRequest_RandomOfferDuration</QuestNode_TradeRequest_RandomOfferDuration>
+    <settlement>Settlement</settlement>
+    <storeEstimatedTravelTimeAs>Store Estimated Travel Time As</storeEstimatedTravelTimeAs>
+
+    <!--QuestNode_ResolveQuestDescription-->
+    <QuestNode_ResolveQuestDescription>QuestNode_ResolveQuestDescription</QuestNode_ResolveQuestDescription>
+    <rules>Rules</rules>
+
+    <!--QuestNode_ResolveQuestName-->
+    <QuestNode_ResolveQuestName>QuestNode_ResolveQuestName</QuestNode_ResolveQuestName>
+    <TextRoot>Text Root</TextRoot>
+
+    <!--QuestNode_ResolveTextNow-->
+    <QuestNode_ResolveTextNow>QuestNode_ResolveTextNow</QuestNode_ResolveTextNow>
+    <root>Root</root>
+
+    <!--QuestNode_TextRules-->
+    <QuestNode_TextRules>QuestNode_TextRules</QuestNode_TextRules>
+    <target>Target</target>
+
+    <!--QuestNode_CreateIncidents-->
+    <QuestNode_CreateIncidents>QuestNode_CreateIncidents</QuestNode_CreateIncidents>
+    <intervalTicks>Interval Ticks</intervalTicks>
+    <randomIncidents>Random Incidents</randomIncidents>
+    <startOffsetTicks>Start Offset Ticks</startOffsetTicks>
+    <duration>Duration</duration>
+    <points>Points</points>
+
+    <!--QuestNode_GameCondition-->
+    <QuestNode_GameCondition>QuestNode_GameCondition</QuestNode_GameCondition>
+    <gameCondition>Game Condition</gameCondition>
+    <targetWorld>Target World</targetWorld>
+    <storeGameConditionDescriptionFutureAs>Store Game Condition Description Future As</storeGameConditionDescriptionFutureAs>
+
+    <!--QuestNode_GenerateThreats-->
+    <QuestNode_GenerateThreats>QuestNode_GenerateThreats</QuestNode_GenerateThreats>
+    <storeThreatExampleAs>Store Threat Example As</storeThreatExampleAs>
+    <threatStartTicks>Threat Start Ticks</threatStartTicks>
+
+    <!--QuestNode_Incident-->
+    <QuestNode_Incident>QuestNode_Incident</QuestNode_Incident>
+    <incidentDef>Incident Def</incidentDef>
+
+    <!--QuestNode_Infestation-->
+    <QuestNode_Infestation>QuestNode_Infestation</QuestNode_Infestation>
+    <hivesCount>Hives Count</hivesCount>
+
+    <!--QuestNode_ManhunterPack-->
+    <QuestNode_ManhunterPack>QuestNode_ManhunterPack</QuestNode_ManhunterPack>
+    <walkInSpot>Walk In Spot</walkInSpot>
+    <animalCount>Animal Count</animalCount>
+
+    <!--QuestNode_Raid-->
+    <QuestNode_Raid>QuestNode_Raid</QuestNode_Raid>
+    <arrivalMode>Arrival Mode</arrivalMode>
+    <raidPawnKind>Raid Pawn Kind</raidPawnKind>
+    <canTimeoutOrFlee>Can timeout or flee</canTimeoutOrFlee>
+    <inSignalLeave>In Signal Leave</inSignalLeave>
+
+    <!--QuestNode_RandomRaid-->
+    <QuestNode_RandomRaid>QuestNode_RandomRaid</QuestNode_RandomRaid>
+    <useCurrentThreatPoints>Use Current Threat Points</useCurrentThreatPoints>
+    <currentThreatPointsFactor>Current Threat Points Factor</currentThreatPointsFactor>
+
+    <!--QuestNode_RandomCustomMap-->
+    <QuestNode_RandomCustomMap>QuestNode_RandomCustomMap</QuestNode_RandomCustomMap>
+    <datas>Datas</datas>
+    <buffer>Buffer</buffer>
+    <bufferMin>Buffer Min</bufferMin>
+    <siteIconPath>Site Icon Path</siteIconPath>
+    <expandingIconPath>Expanding Icon Path</expandingIconPath>
+    <mapSiteName>Map Site Name</mapSiteName>
+    <distance>Distance</distance>
+    <blacklist>Blacklist</blacklist>
+    <siteName>Site Name</siteName>
+</LanguageData>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <ThingDef Name = "CustomTrapBase" Abstract="True">
+        <altitudeLayer>Building</altitudeLayer>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <useHitPoints>false</useHitPoints>
+        <tickerType>Normal</tickerType>
+        <passability>Standable</passability>
+        <selectable>true</selectable>
+        <receivesSignals>true</receivesSignals>
+        <category>Attachment</category>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>QuestEditor_Library.ITab_CustomThing</li>
+        </inspectorTabs>
+        <building>
+            <canPlaceOverWall>true</canPlaceOverWall>
+            <deconstructible>false</deconstructible>
+            <alwaysDeconstructible>false</alwaysDeconstructible>
+        </building>
+    </ThingDef>
+
+    <ThingDef Name = "CustomThingBase" Abstract="True">
+        <altitudeLayer>Building</altitudeLayer>
+        <drawGUIOverlay>false</drawGUIOverlay>
+        <useHitPoints>false</useHitPoints>
+        <tickerType>Normal</tickerType>
+        <passability>Standable</passability>
+        <selectable>true</selectable>
+        <category>Building</category>
+        <receivesSignals>true</receivesSignals>
+        <holdsRoof>false</holdsRoof>
+        <inspectorTabs>
+            <li>QuestEditor_Library.ITab_CustomThing</li>
+            <li>QuestEditor_Library.ITab_CompActionWorker</li>
+            <li>QuestEditor_Library.ITab_CustomText</li>
+        </inspectorTabs>
+        <comps>
+            <li>
+                <compClass>QuestEditor_Library.CompActionWorker</compClass>
+            </li>
+            <li>
+                <compClass>QuestEditor_Library.CompCustomText</compClass>
+            </li>
+        </comps>
+        <building>
+            <canPlaceOverWall>true</canPlaceOverWall>
+            <deconstructible>false</deconstructible>
+            <alwaysDeconstructible>false</alwaysDeconstructible>
+        </building>
+    </ThingDef>
+
+    <ThingDef Name = "CustomThingBaseWithoutComps" Abstract="True">
+        <altitudeLayer>Building</altitudeLayer>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <useHitPoints>false</useHitPoints>
+        <tickerType>Normal</tickerType>
+        <passability>Standable</passability>
+        <selectable>true</selectable>
+        <category>Building</category>
+        <receivesSignals>true</receivesSignals>
+        <inspectorTabs>
+            <li>QuestEditor_Library.ITab_CustomThing</li>
+        </inspectorTabs>
+        <building>
+            <canPlaceOverWall>true</canPlaceOverWall>
+            <deconstructible>false</deconstructible>
+            <alwaysDeconstructible>false</alwaysDeconstructible>
+        </building>
+    </ThingDef>
+
+
+    <ThingDef Name = "CustomToolBase" ParentName="CustomThingBase" Abstract="True">
+        <graphicData>
+            <drawOffset>(0,5,0)</drawOffset>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef Name = "CustomToolBaseWithoutComps" ParentName="CustomThingBaseWithoutComps" Abstract="True">
+        <graphicData>
+            <drawOffset>(0,5,0)</drawOffset>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+    </ThingDef>
+
+
+    <ThingDef ParentName="CustomToolBaseWithoutComps">
+        <defName>QE_Spawner_Editor</defName>
+        <label>Pawn spawner</label>
+        <category>Attachment</category>
+        <altitudeLayer>Item</altitudeLayer>
+        <description>Used to generate pawns.</description>
+        <thingClass>QuestEditor_Library.Spawner</thingClass>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBaseWithoutComps">
+        <defName>QE_GenerationActionWorker</defName>
+        <label>Generation action worker</label>
+        <category>Attachment</category>
+        <altitudeLayer>Item</altitudeLayer>
+        <description>When generating the map, its set actions will be run.Target key of It's position is "Position".</description>
+        <thingClass>QuestEditor_Library.GenerationActionWorker</thingClass>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_LootBox</defName>
+        <label>Lootbox</label>
+        <description>A LootBox for testing.</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <category>Attachment</category>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_InteractableThing</defName>
+        <label>Interactable thing</label>
+        <description>A interactable thing for testing.</description>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <category>Attachment</category>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThing_Entrance">
+        <defName>QE_CustomMapEntrance</defName>
+        <label>Custom map entrance</label>
+        <description>A entrance for testing.</description>
+        <thingClass>QuestEditor_Library.CustomMapEntrance</thingClass>
+        <category>Attachment</category>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <graphicData>
+            <drawOffset>(0,5,0)</drawOffset>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThing_Entrance">
+        <defName>QE_CustomMapEntrance_Chance</defName>
+        <label>Custom random map entrance</label>
+        <description>A entrance for testing.</description>
+        <thingClass>QuestEditor_Library.CustomMapEntrance_Chance</thingClass>
+        <category>Attachment</category>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <graphicData>
+            <drawOffset>(0,5,0)</drawOffset>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThing_Exit">
+        <defName>QE_CustomMapExit</defName>
+        <label>Custom map exit</label>
+        <description>A exit for testing.</description>
+        <thingClass>QuestEditor_Library.CustomMapExit</thingClass>
+        <category>Attachment</category>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <graphicData>
+            <drawOffset>(0,5,0)</drawOffset>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_ZoneCore</defName>
+        <label>Zone core</label>
+        <description>Zone core is a tool for designing custom maps, which can be used to generate "map parts". When generating a custom map, if there is a zone core on the map, it will extract the "map parts" based on its settings for generation.</description>
+        <thingClass>QuestEditor_Library.ZoneCore</thingClass>
+        <category>Attachment</category>
+        <altitudeLayer>Weather</altitudeLayer>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>ZoneCore</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_CustomTrap</defName>
+        <label>Custom trap</label>
+        <description>A trap for testing.</description>
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+        <selectable>false</selectable>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <graphicData>
+            <drawOffset>(0,5,0)</drawOffset>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef Name="CustomDoorBase" ParentName="BuildingBase" Abstract="True">
+        <category>Building</category>
+        <altitudeLayer>DoorMoveable</altitudeLayer>
+        <fillPercent>1</fillPercent>
+        <useHitPoints>true</useHitPoints>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <statBases>
+            <MaxHitPoints>160</MaxHitPoints>
+            <Flammability>1.0</Flammability>
+        </statBases>
+        <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+        <selectable>true</selectable>
+        <tickerType>Normal</tickerType>
+        <rotatable>false</rotatable>
+        <soundImpactDefault>BulletImpact_Metal</soundImpactDefault>
+        <useStuffTerrainAffordance>true</useStuffTerrainAffordance>
+        <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+        <uiOrder>2010</uiOrder>
+        <holdsRoof>true</holdsRoof>
+        <staticSunShadowHeight>1.0</staticSunShadowHeight>
+        <blockLight>true</blockLight>
+        <drawerType>RealtimeOnly</drawerType>
+        <placeWorkers>
+            <li>PlaceWorker_DoorLearnOpeningSpeed</li>
+        </placeWorkers>
+        <thingClass>QuestEditor_Library.CustomDoor</thingClass>
+        <inspectorTabs>
+            <li>QuestEditor_Library.ITab_CustomThing</li>
+            <li>QuestEditor_Library.ITab_CompActionWorker</li>
+            <li>QuestEditor_Library.ITab_CustomText</li>
+        </inspectorTabs>
+        <comps>
+            <li>
+                <compClass>QuestEditor_Library.CompActionWorker</compClass>
+            </li>
+            <li>
+                <compClass>QuestEditor_Library.CompCustomText</compClass>
+            </li>
+            <li Class="CompProperties_Forbiddable">
+                <allowNonPlayer>true</allowNonPlayer>
+            </li>
+        </comps>
+        <building>
+            <canPlaceOverWall>true</canPlaceOverWall>
+            <deconstructible>false</deconstructible>
+            <alwaysDeconstructible>false</alwaysDeconstructible>
+            <isInert>true</isInert>
+            <soundDoorOpenPowered>Door_OpenPowered</soundDoorOpenPowered>
+            <soundDoorClosePowered>Door_ClosePowered</soundDoorClosePowered>
+            <soundDoorOpenManual>Door_OpenManual</soundDoorOpenManual>
+            <soundDoorCloseManual>Door_CloseManual</soundDoorCloseManual>
+            <blueprintClass>Blueprint_Door</blueprintClass>
+            <blueprintGraphicData>
+                <texPath>Things/Building/Door/Door_Blueprint</texPath>
+            </blueprintGraphicData>
+            <ai_chillDestination>false</ai_chillDestination>
+            <paintable>true</paintable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomDoorBase">
+        <defName>CQF_CustomDoor</defName>
+        <label>custom door</label>
+        <description>Divides rooms. Simple doors must be manually opened, which slows people down. The amount of slowdown depends on what the door is made of.</description>
+        <statBases>
+            <WorkToBuild>850</WorkToBuild>
+        </statBases>
+        <graphicData>
+            <texPath>Things/Building/Door/DoorSimple_Mover</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
+        <costStuffCount>25</costStuffCount>
+    </ThingDef>
+
+</Defs>  

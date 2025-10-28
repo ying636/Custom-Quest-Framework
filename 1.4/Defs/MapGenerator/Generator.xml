@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <MapGeneratorDef>
+        <defName>QE_CustomMap_Editor_Generator</defName>
+        <genSteps>
+            <li>QE_CustomMap_Step_Terrain</li>
+            <li>QE_CustomMap_Step_Fog</li>
+        </genSteps>
+    </MapGeneratorDef>
+
+    <GenStepDef>
+        <defName>QE_CustomMap_Step_Terrain</defName>
+        <order>210</order>
+        <genStep Class="QuestEditor_Library.GenStep_SetTerrain"/>
+    </GenStepDef>
+
+    <GenStepDef>
+        <defName>QE_CustomMap_Step_Fog</defName>
+        <order>2100</order>
+        <genStep Class="QuestEditor_Library.GenStep_SetFog"/>
+    </GenStepDef>
+</Defs>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <WorldObjectDef ParentName="SpaceSite">
+        <defName>QE_SpaceCustomSite</defName>
+        <worldObjectClass>QuestEditor_Library.CustomSite</worldObjectClass>
+        <expandingIcon>true</expandingIcon>
+        <expandingIconPriority>70</expandingIconPriority>
+        <comps>
+            <li Class="WorldObjectCompProperties_Timeout" />
+            <li Class="WorldObjectCompProperties_ItemStashContents" />
+            <li Class="WorldObjectCompProperties_DownedRefugee" />
+            <li Class="WorldObjectCompProperties_PrisonerWillingToJoin" />
+            <li Class="WorldObjectCompProperties_FormCaravan" />
+            <li Class="WorldObjectCompProperties_EnterCooldown" />
+            <li Class="WorldObjectCompProperties_TimedMakeFactionHostile" />
+        </comps>
+        <IncidentTargetTags>
+            <li>Map_Misc</li>
+        </IncidentTargetTags>
+    </WorldObjectDef>
+
+    <WorldObjectDef ParentName="SpaceSite">
+        <defName>QE_CustomMap_SpaceSubMap</defName>
+        <worldObjectClass>QuestEditor_Library.MapParent_Custom</worldObjectClass>
+        <mapGenerator>QE_SpaceCustomMap_Generator</mapGenerator>
+        <texture>UI/Null</texture>
+        <expandingIcon>false</expandingIcon>
+        <expandingIconTexture>UI/Null</expandingIconTexture>
+        <expandingIconPriority>50</expandingIconPriority>
+        <expandMore>false</expandMore>
+        <canBePlayerHome>false</canBePlayerHome>
+        <selectable>false</selectable>
+    </WorldObjectDef>
+
+</Defs>

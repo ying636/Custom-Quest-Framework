@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+    <ZoneCondition_Size>Zone condition:Size</ZoneCondition_Size>
+    <RangeOfX>Width(X):</RangeOfX>
+    <RangeOfZ>Height(Z):</RangeOfZ>
+
+    <ZoneCondition_Tag>Zone condition:Tag</ZoneCondition_Tag>
+
+    <ZoneCondition_Wealth>Zone condition:Wealth</ZoneCondition_Wealth>
+    <ZoneCondition_Wealth_Tip>It will met,when the player's wealth is not within the set range or when sub conditions are met.</ZoneCondition_Wealth_Tip>
+    <WealthRange>Wealth range:</WealthRange>
+    <SelectCondition>Select condition</SelectCondition>
+
+    <ZoneCondition_CoreTag>Zone condition:Core tag</ZoneCondition_CoreTag>
+    <ZoneCondition_CoreTag_Tip>During generation, only the core with corresponding tag will be selected as the "docking core" for generation</ZoneCondition_CoreTag_Tip>
+    <CoreTags>Core tags:</CoreTags>
+    <InvertResult>Invert result:</InvertResult>
+
+    <ZoneCondition_Invert>Zone condition:Invert</ZoneCondition_Invert>
+
+    <ZoneCondition_FactionMeme>Zone condition:Meme</ZoneCondition_FactionMeme>
+    <RequiredMeme>Requried meme:{0}</RequiredMeme>
+
+</LanguageData>

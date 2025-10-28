@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <QuestEditor_Library.SpecialPawnGenerateDef>
+        <defName>QE_RandomDialog</defName>
+        <commonality>0.6</commonality>
+        <generator Class="QuestEditor_Library.SpecialPawnGenerator_AddDialog">
+            <dialogs>
+                <li>
+                    <tag>CommonDialog</tag>
+                    <commonality>0.9</commonality>
+                </li>
+                <li>
+                    <tag>RareDialog</tag>
+                    <commonality>0.6</commonality>
+                </li>
+                <li>
+                    <tag>EpicDialog</tag>
+                    <commonality>0.3</commonality>
+                </li>
+                <li>
+                    <tag>UniqueDialog</tag>
+                    <commonality>0.1</commonality>
+                </li>
+            </dialogs>
+        </generator>
+    </QuestEditor_Library.SpecialPawnGenerateDef>
+
+</Defs>

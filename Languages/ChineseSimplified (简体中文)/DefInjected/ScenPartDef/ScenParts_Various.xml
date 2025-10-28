@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  
+  <!-- EN: start map -->
+  <CQF_StartMap.label>开局地图</CQF_StartMap.label>
+  
+  <!-- EN: start with structure -->
+  <CQF_StartWithStructure.label>开局特殊结构</CQF_StartWithStructure.label>
+  
+</LanguageData>

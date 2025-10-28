@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <DutyDef Name = "CustomDutyBase" Abstract="True">
+        <modExtensions>
+            <li Class="QuestEditor_Library.ModExtension_CustomDuty" />
+        </modExtensions>
+    </DutyDef>
+
+    <DutyDef ParentName="CustomDutyBase">
+        <defName>QE_Duty_Guard</defName>
+        <label>Patrol guard</label>
+        <description>Patrol guard will patrol along the given route and attack enemies around themselves.</description>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="JobGiver_AIFightEnemies">
+                    <targetAcquireRadius>30</targetAcquireRadius>
+                    <targetKeepRadius>60</targetKeepRadius>
+                </li>
+                <li Class="QuestEditor_Library.JobGiver_Patrol" />
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef ParentName="CustomDutyBase">
+        <defName>QE_Duty_Waiter</defName>
+        <label>Standing guard</label>
+        <description>Standing guard will be on guard in place.</description>
+        <alwaysShowWeapon>true</alwaysShowWeapon>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="JobGiver_AIFightEnemies">
+                    <targetAcquireRadius>10</targetAcquireRadius>
+                    <targetKeepRadius>30</targetKeepRadius>
+                </li>
+                <li Class="QuestEditor_Library.JobGiver_Wait" />
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+    <DutyDef ParentName="CustomDutyBase">
+        <defName>QE_Duty_Exiter</defName>
+        <label>Exiter</label>
+        <description>Exiter will find map exit to exit map.</description>
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="QuestEditor_Library.JobGiver_ExitSubMapAndExitMap" />
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+</Defs>

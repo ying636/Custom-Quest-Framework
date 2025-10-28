@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <WorkGiverDef>
+        <defName>QE_WorkGiver_MoveIn</defName>
+        <label>Move targetA to submap</label>
+        <giverClass>QuestEditor_Library.WorkGiver_MoveIn</giverClass>
+        <workType>Hauling</workType>
+        <verb>move in</verb>
+        <gerund>moving in</gerund>
+        <canBeDoneWhileDrafted>false</canBeDoneWhileDrafted>
+        <emergency>false</emergency>
+    </WorkGiverDef>
+
+    <WorkGiverDef>
+        <defName>QE_WorkGiver_MoveOut</defName>
+        <label>Move TargetA out of submap</label>
+        <giverClass>QuestEditor_Library.WorkGiver_MoveOut</giverClass>
+        <workType>Hauling</workType>
+        <verb>move out</verb>
+        <gerund>moving out</gerund>
+        <canBeDoneWhileDrafted>false</canBeDoneWhileDrafted>
+        <emergency>false</emergency>
+    </WorkGiverDef>
+
+</Defs>

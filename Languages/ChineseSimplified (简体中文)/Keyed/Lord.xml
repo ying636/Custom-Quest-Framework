@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <!-- EN: Lord name: -->
+  <LordName>集群名字：</LordName>
+  <!-- EN: Lord name: -->
+  <LordNameWithTarget>集群名字：</LordNameWithTarget>
+  <!-- EN: Automatically searches for lords matching the name and joins them at generation, or creates a lord with the job "CQF Custom Action" if this is empty. -->
+  <CustomLordNameTip>在生成时自动搜素符合名字的集群并加入，如果为空则自动创建一个行为为“CQF自定义行为”集群</CustomLordNameTip>
+  <!-- EN: Lord job:{0} -->
+  <CQF_LordJob>集群行为：{0}</CQF_LordJob>
+  <!-- EN: Actions after generation: -->
+  <ActionsAfterGeneration>生成后行为：</ActionsAfterGeneration>
+
+  <!-- EN: Custom lord -->
+  <DesignatorLord>自定义集群</DesignatorLord>
+  <!-- EN: Customize lord within the map, lord data will be saved in the custom map def -->
+  <DesignatorLordDesc>在地图内自定义集群，集群数据会保存的自定义地图文件中</DesignatorLordDesc>
+
+  <!-- EN: CQF custom job -->
+  <LordJob_Custom>CQF自定义行为</LordJob_Custom>
+
+  <!-- EN: Lord data:defend base -->
+  <LordJobData_DefendBase>行为数据：保护基地</LordJobData_DefendBase>
+  <!-- EN: Defending centre: -->
+  <TargetPositionName>保卫中心：</TargetPositionName>
+
+  <!-- EN: Group Editor -->
+  <GroupEditor>集群编辑器</GroupEditor>
+  <!-- EN: Lord action:visit colony -->
+  <CQFAction_Lord_Visit>集群行为：访问殖民地</CQFAction_Lord_Visit>
+  <!-- EN: Set the lord job as tovisit colony, and the group will leave the map after the duration -->
+  <CQFAction_Lord_Visit_Tip>将集群行为设置为访问殖民地，集群将在持续时间之后离开地图</CQFAction_Lord_Visit_Tip>
+
+  <!-- EN: Visit colony -->
+  <LordJob_VisitColony>访问殖民地</LordJob_VisitColony>
+
+  <!-- EN: Defend base -->
+  <LordJob_DefendBase>保卫基地</LordJob_DefendBase>
+
+  <!-- EN: Lord job data -->
+  <LordJobData>集群行为数据</LordJobData>
+
+</LanguageData>

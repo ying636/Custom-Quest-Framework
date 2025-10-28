@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  
+  <!-- EN: Move targetA to submap -->
+  <QE_WorkGiver_MoveIn.label>将目标搬入子地图</QE_WorkGiver_MoveIn.label>
+  <!-- EN: moving in -->
+  <QE_WorkGiver_MoveIn.gerund>搬入</QE_WorkGiver_MoveIn.gerund>
+  <!-- EN: move in -->
+  <QE_WorkGiver_MoveIn.verb>搬入</QE_WorkGiver_MoveIn.verb>
+  
+  <!-- EN: Move TargetA out of submap -->
+  <QE_WorkGiver_MoveOut.label>将目标搬出子地图</QE_WorkGiver_MoveOut.label>
+  <!-- EN: moving out -->
+  <QE_WorkGiver_MoveOut.gerund>搬出</QE_WorkGiver_MoveOut.gerund>
+  <!-- EN: move out -->
+  <QE_WorkGiver_MoveOut.verb>搬出</QE_WorkGiver_MoveOut.verb>
+  
+</LanguageData>

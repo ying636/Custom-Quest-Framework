@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  
+  <!-- EN: Disarming TargetA。 -->
+  <QE_DisarmTrap.reportString>正在解除TargetA</QE_DisarmTrap.reportString>
+  
+  <!-- EN: Going to TargetA. -->
+  <QE_EnterOrExitSubMap.reportString>正在去到TargetA。</QE_EnterOrExitSubMap.reportString>
+  
+  <!-- EN: Interacting with the TargetA. -->
+  <QE_InteractingWithTarget.reportString>交互TargetA</QE_InteractingWithTarget.reportString>
+  
+  <!-- EN: Moving in TargetA to submap. -->
+  <QE_MoveInTargetToSubMap.reportString>正在将TargetA搬入子地图。</QE_MoveInTargetToSubMap.reportString>
+  
+  <!-- EN: Moving TargetA out of submap. -->
+  <QE_MoveTargetOutOfSubMap.reportString>正在将TargetA搬出子地图。</QE_MoveTargetOutOfSubMap.reportString>
+  
+  <!-- EN: Opening TargetA。 -->
+  <QE_Open.reportString>正在打开TargetA。</QE_Open.reportString>
+  
+  <!-- EN: Patroling. -->
+  <QE_Patrol.reportString>正在巡逻中。</QE_Patrol.reportString>
+  
+  <!-- EN: Talking to TargetA. -->
+  <QE_StartDialog.reportString>正在与TargetA对话。</QE_StartDialog.reportString>
+  
+</LanguageData>

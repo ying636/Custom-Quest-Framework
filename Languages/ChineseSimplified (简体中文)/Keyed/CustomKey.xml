@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+    <!-- EN: leave -->
+  <CQF_Leave>离开</CQF_Leave>
+
+    <!-- EN: Search -->
+  <CQF_Search>搜刮</CQF_Search>
+    <!-- EN: There are nothing valuable to search for. -->
+  <CQF_SearchFail>搜刮不到任何有价值的东西</CQF_SearchFail>
+    <!-- EN: Found {0}。 -->
+  <CQF_SearchSucceed>搜刮到了{0}</CQF_SearchSucceed>
+    <!-- EN: Some insects have crawled out of the remains! -->
+  <CQF_SearchInsect>一些虫族从尸骸从爬出来了！</CQF_SearchInsect>
+
+    <!-- EN: Mine -->
+  <CQF_Mine>开采</CQF_Mine>
+    <!-- EN: Mining out {0}。 -->
+  <CQF_MineSucceed>开采出了{0}。</CQF_MineSucceed>
+
+    <!-- EN: Gorgeous treasures emerge from it! Among them, there are {0} -->
+  <CQF_GorgeousTreasures>华丽的财宝从中涌现！其中有{0}</CQF_GorgeousTreasures>
+
+    <!-- EN: The treasure chest is filled with an ancient atmosphere, some artifacts({0}) woke up -->
+  <CQF_ArtifactsTreasures>宝箱之中弥漫着古老的气息，一些神器({0})苏醒了</CQF_ArtifactsTreasures>
+
+    <!-- EN: Open -->
+  <CQF_Open>打开</CQF_Open>
+
+    <!-- EN: The sarcophagus is filled with rich and magnificent burial items! Burial items include{0} -->
+  <CQF_OpenSarcophagus_Treasures>棺材中堆满了丰富的华丽葬品！葬品有{0}</CQF_OpenSarcophagus_Treasures>
+    <!-- EN: There is only one white bone and some tattered burial({0}) items in the sarcophagus，It seems that this white bone is not wealthy -->
+  <CQF_OpenSarcophagus_Poor>棺材中只有一具白骨和一些破烂的葬品({0})，看来这具白骨并不富裕</CQF_OpenSarcophagus_Poor>
+    <!-- EN: The sarcophagus is........SHITTTTTTTTTTTTT!BUGSSSSSSSSSSS! -->
+  <CQF_OpenSarcophagus_Insect>棺材中......卧槽，有虫子！</CQF_OpenSarcophagus_Insect>
+    <!-- EN: Red lights shot out from the sarcophagus, it seem indicating that we have a big trouble -->
+  <CQF_OpenSarcophagus_Mechanoid>一道道红光从棺材之中射出，看来我们有个大麻烦了</CQF_OpenSarcophagus_Mechanoid>
+    <!-- EN: A plasmasword with a red glow was held by a skeleton in the sarcophagus, as if the deceased had been a brave warrior during his lifetime -->
+  <CQF_OpenSarcophagus_PlasmaSword>一把发着红光的等离子剑被棺材中的骷髅所握住，似乎死者生前是一位勇猛的战士</CQF_OpenSarcophagus_PlasmaSword>
+
+    <!-- EN: Look -->
+  <CQF_Look>查看</CQF_Look>
+    <!-- EN: The front area is under development -->
+  <CQF_IsDeveloping>前面的区域正在开发中...</CQF_IsDeveloping>
+
+    <!-- EN: Talk with {INTERVIEWEE_nameDef} -->
+  <CQF_Dialog_Talk>与{Interviewee_nameDef}交谈</CQF_Dialog_Talk>
+
+</LanguageData>

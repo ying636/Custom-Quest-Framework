@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <ThingDef Name = "CustomThing_Exit" ParentName="CustomThingBase" Abstract="True">
+        <destroyable>false</destroyable>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_Exit</defName>
+        <label>Exit</label>
+        <description>A exit leading to the ground.</description>
+        <thingClass>QuestEditor_Library.CustomMapExit</thingClass>
+        <category>Building</category>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>UI/Null</texPath>
+        </graphicData>
+        <destroyable>false</destroyable>
+        <rotatable>false</rotatable>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThingBase">
+        <defName>QE_SubMap_Burrow</defName>
+        <label>Burrow</label>
+        <description>A burrow to underground.</description>
+        <thingClass>QuestEditor_Library.CustomMapEntrance</thingClass>
+        <filthLeaving>Filth_CorpseBile</filthLeaving>
+        <altitudeLayer>Building</altitudeLayer>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <useHitPoints>false</useHitPoints>
+        <tickerType>Normal</tickerType>
+        <category>Building</category>
+        <selectable>true</selectable>
+        <uiIconPath>Things/Building/SubMap/CaveMouth</uiIconPath>
+        <statBases>
+            <Beauty>-5</Beauty>
+        </statBases>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/SubMap/CaveMouth</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThingBase">
+        <defName>QE_LootBox_HumanCorpses</defName>
+        <label>Skeleton</label>
+        <description>A dried human corpse, no longer able to recognize any of its features.</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <filthLeaving>Filth_CorpseBile</filthLeaving>
+        <altitudeLayer>Building</altitudeLayer>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <useHitPoints>true</useHitPoints>
+        <tickerType>Normal</tickerType>
+        <category>Building</category>
+        <selectable>true</selectable>
+        <uiIconPath>Things/Building/LootBox/Skeleton/CorpseCrate_south</uiIconPath>
+        <statBases>
+            <MaxHitPoints>200</MaxHitPoints>
+            <Beauty>-5</Beauty>
+        </statBases>
+        <graphicData>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <texPath>Things/Building/LootBox/Skeleton/CorpseCrate</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThingBase">
+        <defName>QE_LootBox_Corpses</defName>
+        <label>Some corpses</label>
+        <description>The corpses of some poor people, but perhaps we can scrape some valuable things from them.</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <filthLeaving>Filth_CorpseBile</filthLeaving>
+        <altitudeLayer>Building</altitudeLayer>
+        <drawGUIOverlay>true</drawGUIOverlay>
+        <useHitPoints>true</useHitPoints>
+        <tickerType>Normal</tickerType>
+        <category>Building</category>
+        <selectable>true</selectable>
+        <statBases>
+            <MaxHitPoints>200</MaxHitPoints>
+            <Beauty>-5</Beauty>
+        </statBases>
+        <graphicData>
+            <graphicClass>Graphic_Random</graphicClass>
+            <texPath>Things/Building/LootBox/Corpases</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <modExtensions>
+            <li Class="QuestEditor_Library.ModExtension_CustomThing">
+                <openedGraphicdata>
+                    <graphicClass>Graphic_Single</graphicClass>
+                    <texPath>Things/Building/LootBox/Corpases_Opened/LootBox_Corpases_opened</texPath>
+                </openedGraphicdata>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_TriggerTrap</defName>
+        <label>Custom Trap(Only displayed in Dev mode)</label>
+        <description>.</description>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Spawner</texPath>
+        </graphicData>
+        <thingClass>QuestEditor_Library.CustomTrap_Dev</thingClass>
+        <selectable>false</selectable>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_StonePressurePlate</defName>
+        <label>Stone pressure plate</label>
+        <description>A stone pressure plate.</description>
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+        <selectable>false</selectable>
+        <graphicData>
+            <color>(180,180,180)</color>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/StonePressurePlate</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <stuffCategories>
+            <li>Stony</li>
+        </stuffCategories>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomTrapBase">
+        <defName>QE_PressurePlate</defName>
+        <label>Pressure plate</label>
+        <description>A pressure plate.</description>
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+        <selectable>false</selectable>
+        <graphicData>
+            <color>(180,180,180)</color>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/PressurePlate</texPath>
+        </graphicData>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_Cabinet</defName>
+        <label>Ancient cabinet</label>
+        <description>A cabinet that has been around for an unknown period of time may contain some valuable treasures.</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <category>Building</category>
+        <size>(2,1)</size>
+        <graphicData>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawSize>(2,1)</drawSize>
+            <texPath>Things/Building/LootBox/Cabinet/Cabinet</texPath>
+        </graphicData>
+        <costStuffCount>50</costStuffCount>
+        <useHitPoints>true</useHitPoints>
+        <statBases>
+            <MaxHitPoints>350</MaxHitPoints>
+            <Mass>20</Mass>
+        </statBases>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_TreasureChest</defName>
+        <label>Treasure chest</label>
+        <description>A chest full of danger and treasure,no one knows what's inside.</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <category>Building</category>
+        <rotatable>false</rotatable>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/LootBox/TreasureChest/TreasureChest</texPath>
+            <drawSize>2</drawSize>
+            <drawOffset>0,1,0</drawOffset>
+        </graphicData>
+        <costStuffCount>35</costStuffCount>
+        <statBases>
+            <Mass>20</Mass>
+        </statBases>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_Bookshelf</defName>
+        <label>Bookshelf</label>
+        <description>A bookshelf with several books inside, from which knowledge or information can be obtained.</description>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <category>Building</category>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <graphicData>
+            <drawRotated>false</drawRotated>
+            <drawSize>(2.5,2.5)</drawSize>
+            <shaderType>CutoutComplex</shaderType>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <texPath>Things/Building/Interactable/Bookshelf/Bookshelf</texPath>
+            <drawOffset>0,1,0.5</drawOffset>
+        </graphicData>
+        <uiIconPath>Things/Building/Interactable/Bookshelf/Bookshelf_south</uiIconPath>
+        <size>(2,1)</size>
+        <costStuffCount>40</costStuffCount>
+        <statBases>
+            <Mass>25</Mass>
+        </statBases>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>CQF_CryptosleepCasket</defName>
+        <label>Ancient cryptosleep casket</label>
+        <description>This cryptosleep casket looks like it has been here for a very long time. Who knows what it might contain?</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <drawerType>MapMeshAndRealTime</drawerType>
+        <graphicData>
+            <texPath>Things/Building/Ship/ShipCryptosleepCasket</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawSize>(1,2)</drawSize>
+            <shadowData>
+                <volume>(0.83, 0.3, 1.7)</volume>
+            </shadowData>
+        </graphicData>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <pathCost>42</pathCost>
+        <blockWind>true</blockWind>
+        <fillPercent>0.5</fillPercent>
+        <canOverlapZones>false</canOverlapZones>
+        <useHitPoints>true</useHitPoints>
+        <statBases>
+            <MaxHitPoints>250</MaxHitPoints>
+            <Flammability>1.0</Flammability>
+        </statBases>
+        <tickerType>Normal</tickerType>
+        <size>(1,2)</size>
+        <hasInteractionCell>true</hasInteractionCell>
+        <interactionCellOffset>(1,0,0)</interactionCellOffset>
+        <costList>
+            <Steel>180</Steel>
+            <Uranium>5</Uranium>
+        </costList>
+        <killedLeavings>
+            <ChunkSlagSteel>1</ChunkSlagSteel>
+            <Steel>25</Steel>
+            <Uranium>3</Uranium>
+        </killedLeavings>
+        <building>
+            <ai_chillDestination>false</ai_chillDestination>
+            <destroySound>BuildingDestroyed_Metal_Small</destroySound>
+        </building>
+        <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+        <terrainAffordanceNeeded>Medium</terrainAffordanceNeeded>
+        <modExtensions>
+            <li Class="QuestEditor_Library.ModExtension_CustomThing">
+                <openedGraphicdata>
+                    <texPath>Things/Building/LootBox/CryptosleepCasket/CryptosleepCasket_Opened</texPath>
+                    <graphicClass>Graphic_Multi</graphicClass>
+                    <drawSize>(1, 2)</drawSize>
+                </openedGraphicdata>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_WorkSpot</defName>
+        <label>Work spot</label>
+        <description>A place for working.</description>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <category>Building</category>
+        <graphicData>
+            <texPath>Things/Building/Production/CraftingSpot</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <drawSize>(1,1)</drawSize>
+        </graphicData>
+        <statBases>
+            <Mass>0</Mass>
+        </statBases>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef>
+        <defName>QE_EmplyBookshelf</defName>
+        <label>Emply bookshelf</label>
+        <description>A bookshelf with nothing.</description>
+        <thingClass>Building</thingClass>
+        <category>Building</category>
+        <selectable>true</selectable>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <graphicData>
+            <drawRotated>false</drawRotated>
+            <drawSize>(2.5,2.5)</drawSize>
+            <shaderType>CutoutComplex</shaderType>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <texPath>Things/Building/Interactable/Bookshelf/Used/EmptyBookshelf</texPath>
+            <drawOffset>0,1,0.5</drawOffset>
+        </graphicData>
+        <uiIconPath>Things/Building/Interactable/Bookshelf/Used/EmptyBookshelf_south</uiIconPath>
+        <size>(2,1)</size>
+        <costStuffCount>40</costStuffCount>
+        <statBases>
+            <Mass>25</Mass>
+        </statBases>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_Tunnel</defName>
+        <label>Tunnel</label>
+        <description>A tunnel.</description>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <category>Building</category>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/Interactable/Tunnel</texPath>
+        </graphicData>
+        <statBases>
+            <Mass>10</Mass>
+        </statBases>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_Sign</defName>
+        <label>Sign</label>
+        <description>A sign that records some information.</description>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <category>Building</category>
+        <graphicData>
+            <drawSize>(2,2)</drawSize>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <texPath>Things/Building/Interactable/Sign/Sign</texPath>
+        </graphicData>
+        <statBases>
+            <Mass>10</Mass>
+        </statBases>
+        <costStuffCount>20</costStuffCount>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_DamagedSign</defName>
+        <label>Damaged sign</label>
+        <description>A damaged sign that records some information.Due to the damage of this sign, we are unable to fully read the information on it.</description>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <category>Building</category>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <graphicData>
+            <drawSize>(2,2)</drawSize>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <texPath>Things/Building/Interactable/Sign/DamagedSign</texPath>
+        </graphicData>
+        <statBases>
+            <Mass>8</Mass>
+        </statBases>
+        <costStuffCount>10</costStuffCount>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBase">
+        <defName>QE_Sarcophagus</defName>
+        <label>Sarcophagus</label>
+        <description>An ornamented burial receptacle for the honored dead.</description>
+        <thingClass>QuestEditor_Library.LootBox</thingClass>
+        <graphicData>
+            <texPath>Things/Building/LootBox/Sarcophagus/Sarcophagus</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawSize>(3,4)</drawSize>
+            <damageData>
+                <cornerTL>Damage/Corner</cornerTL>
+                <cornerTR>Damage/Corner</cornerTR>
+                <cornerBL>Damage/Corner</cornerBL>
+                <cornerBR>Damage/Corner</cornerBR>
+            </damageData>
+        </graphicData>
+        <leaveResourcesWhenKilled>true</leaveResourcesWhenKilled>
+        <useHitPoints>true</useHitPoints>
+        <size>(1,2)</size>
+        <pathCost>42</pathCost>
+        <castEdgeShadows>true</castEdgeShadows>
+        <fillPercent>0.5</fillPercent>
+        <tickerType>Normal</tickerType>
+        <canOverlapZones>false</canOverlapZones>
+        <statBases>
+            <WorkToBuild>2400</WorkToBuild>
+            <MaxHitPoints>250</MaxHitPoints>
+            <Flammability>1.0</Flammability>
+            <MeditationFocusStrength>0.10</MeditationFocusStrength>
+            <Beauty>0</Beauty>
+        </statBases>
+        <stuffCategories>
+            <li>Woody</li>
+            <li>Metallic</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <costStuffCount>60</costStuffCount>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>PassThroughOnly</passability>
+        <blockWind>true</blockWind>
+        <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+        <staticSunShadowHeight>0.3</staticSunShadowHeight>
+        <uiOrder>2050</uiOrder>
+    </ThingDef>
+
+
+    <ThingDef ParentName="BuildingBase">
+        <defName>QF_MiracleWall</defName>
+        <label>Miracle wall</label>
+        <description>An impassable wall. Capable of holding up a roof.It is a miracle, indestructible , Undamageable.</description>
+        <thingClass>Building</thingClass>
+        <category>Building</category>
+        <drawerType>MapMeshOnly</drawerType>
+        <graphicData>
+            <texPath>Things/Building/Linked/Wall</texPath>
+            <graphicClass>Graphic_Appearances</graphicClass>
+            <linkType>CornerFiller</linkType>
+            <linkFlags>
+                <li>Wall</li>
+                <li>Rock</li>
+            </linkFlags>
+            <damageData>
+                <cornerTL>Damage/Corner</cornerTL>
+                <cornerTR>Damage/Corner</cornerTR>
+                <cornerBL>Damage/Corner</cornerBL>
+                <cornerBR>Damage/Corner</cornerBR>
+                <edgeTop>Damage/Edge</edgeTop>
+                <edgeBot>Damage/Edge</edgeBot>
+                <edgeLeft>Damage/Edge</edgeLeft>
+                <edgeRight>Damage/Edge</edgeRight>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Linked/WallSmooth_MenuIcon</uiIconPath>
+        <uiIconPathsStuff>
+            <li>
+                <appearance>Planks</appearance>
+                <iconPath>Things/Building/Linked/WallPlanks_MenuIcon</iconPath>
+            </li>
+            <li>
+                <appearance>Bricks</appearance>
+                <iconPath>Things/Building/Linked/WallBricks_MenuIcon</iconPath>
+            </li>
+        </uiIconPathsStuff>
+        <costStuffCount>5</costStuffCount>
+        <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>Impassable</passability>
+        <blockWind>true</blockWind>
+        <castEdgeShadows>true</castEdgeShadows>
+        <fillPercent>1</fillPercent>
+        <coversFloor>true</coversFloor>
+        <tickerType>Never</tickerType>
+        <rotatable>false</rotatable>
+        <selectable>true</selectable>
+        <neverMultiSelect>true</neverMultiSelect>
+        <useStuffTerrainAffordance>true</useStuffTerrainAffordance>
+        <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>        <!-- Best affordance needed for stone -->
+        <holdsRoof>true</holdsRoof>
+        <uiOrder>2000</uiOrder>
+        <staticSunShadowHeight>1.0</staticSunShadowHeight>
+        <blockLight>true</blockLight>
+        <canOverlapZones>false</canOverlapZones>
+        <fertility>0</fertility>
+        <building>
+            <deconstructible>false</deconstructible>
+            <alwaysDeconstructible>false</alwaysDeconstructible>
+        </building>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <useHitPoints>false</useHitPoints>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThingBase">
+        <defName>QF_StrangeWall</defName>
+        <label>Strange wall</label>
+        <description>A wall that looks very normal.</description>
+        <category>Building</category>
+        <drawerType>MapMeshOnly</drawerType>
+        <thingClass>QuestEditor_Library.InteractableThing</thingClass>
+        <graphicData>
+            <texPath>Things/Building/Linked/Wall</texPath>
+            <graphicClass>Graphic_Appearances</graphicClass>
+            <linkType>CornerFiller</linkType>
+            <linkFlags>
+                <li>Wall</li>
+                <li>Rock</li>
+            </linkFlags>
+            <damageData>
+                <cornerTL>Damage/Corner</cornerTL>
+                <cornerTR>Damage/Corner</cornerTR>
+                <cornerBL>Damage/Corner</cornerBL>
+                <cornerBR>Damage/Corner</cornerBR>
+                <edgeTop>Damage/Edge</edgeTop>
+                <edgeBot>Damage/Edge</edgeBot>
+                <edgeLeft>Damage/Edge</edgeLeft>
+                <edgeRight>Damage/Edge</edgeRight>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Linked/WallSmooth_MenuIcon</uiIconPath>
+        <uiIconPathsStuff>
+            <li>
+                <appearance>Planks</appearance>
+                <iconPath>Things/Building/Linked/WallPlanks_MenuIcon</iconPath>
+            </li>
+            <li>
+                <appearance>Bricks</appearance>
+                <iconPath>Things/Building/Linked/WallBricks_MenuIcon</iconPath>
+            </li>
+        </uiIconPathsStuff>
+        <costStuffCount>5</costStuffCount>
+        <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+        <altitudeLayer>Building</altitudeLayer>
+        <passability>Impassable</passability>
+        <blockWind>true</blockWind>
+        <castEdgeShadows>true</castEdgeShadows>
+        <fillPercent>1</fillPercent>
+        <coversFloor>true</coversFloor>
+        <tickerType>Never</tickerType>
+        <rotatable>false</rotatable>
+        <selectable>true</selectable>
+        <neverMultiSelect>true</neverMultiSelect>
+        <useStuffTerrainAffordance>true</useStuffTerrainAffordance>
+        <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>        <!-- Best affordance needed for stone -->
+        <holdsRoof>true</holdsRoof>
+        <uiOrder>2000</uiOrder>
+        <staticSunShadowHeight>1.0</staticSunShadowHeight>
+        <blockLight>true</blockLight>
+        <canOverlapZones>false</canOverlapZones>
+        <fertility>0</fertility>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <useHitPoints>false</useHitPoints>
+    </ThingDef>
+
+
+</Defs>

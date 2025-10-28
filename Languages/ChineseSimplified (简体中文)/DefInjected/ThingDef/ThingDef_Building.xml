@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  
+  <!-- EN: Ancient cryptosleep casket -->
+  <CQF_CryptosleepCasket.label>远古休眠舱</CQF_CryptosleepCasket.label>
+  <!-- EN: This cryptosleep casket looks like it has been here for a very long time. Who knows what it might contain? -->
+  <CQF_CryptosleepCasket.description>这个低温休眠舱看起来已经在这里有很长时间了。谁知道这里边装着什么？</CQF_CryptosleepCasket.description>
+  
+  <!-- EN: A pile of crate -->
+  <QE_APileOfCrate.label>大堆板条箱</QE_APileOfCrate.label>
+  <!-- EN: a pile of crate full of sundries. -->
+  <QE_APileOfCrate.description>一大堆板条箱，里面装着难以置信的宝藏</QE_APileOfCrate.description>
+  
+  <!-- EN: Bookshelf -->
+  <QE_Bookshelf.label>书架</QE_Bookshelf.label>
+  <!-- EN: A bookshelf with several books inside, from which knowledge or information can be obtained. -->
+  <QE_Bookshelf.description>一个有着几本书的书架，从中能获取一些信息或知识。</QE_Bookshelf.description>
+  
+  <!-- EN: Ancient cabinet -->
+  <QE_Cabinet.label>失落之柜</QE_Cabinet.label>
+  <!-- EN: A cabinet that has been around for an unknown period of time may contain some valuable treasures. -->
+  <QE_Cabinet.description>一个不知道存在多久的柜子，里面也许有着一些有价值的宝物。</QE_Cabinet.description>
+  
+  <!-- EN: cage -->
+  <QE_Cage.label>笼子</QE_Cage.label>
+  <!-- EN: A small cage used to hold prisoners or other creatures. -->
+  <QE_Cage.description>一个用于关押囚犯或其他生物的小型笼子。</QE_Cage.description>
+  
+  <!-- EN: cellar door -->
+  <QE_CellarDoor.label>地窖门</QE_CellarDoor.label>
+  <!-- EN: A cellar door leading to the underground. -->
+  <QE_CellarDoor.description>一个通往地窖的入口</QE_CellarDoor.description>
+  
+  <!-- EN: Crate -->
+  <QE_Crate.label>板条箱</QE_Crate.label>
+  <!-- EN: A crate full of sundries. -->
+  <QE_Crate.description>一个装着杂物的板条箱，里面充满了走私物和成瘾品。</QE_Crate.description>
+  
+  <!-- EN: Damaged sign -->
+  <QE_DamagedSign.label>损坏的告示牌</QE_DamagedSign.label>
+  <!-- EN: A damaged sign that records some information.Due to the damage of this sign, we are unable to fully read the information on it. -->
+  <QE_DamagedSign.description>一个损坏的告示牌，其上记录了一些信息，但由于其损坏严重，我们只能从中阅读一些片段。</QE_DamagedSign.description>
+  
+  <!-- EN: Emply bookshelf -->
+  <QE_EmplyBookshelf.label>空书架</QE_EmplyBookshelf.label>
+  <!-- EN: A bookshelf with nothing. -->
+  <QE_EmplyBookshelf.description>一个空书架。</QE_EmplyBookshelf.description>
+  
+  <!-- EN: Exit -->
+  <QE_Exit.label>出口</QE_Exit.label>
+  <!-- EN: A exit leading to the ground. -->
+  <QE_Exit.description>一个出口通向地面。</QE_Exit.description>
+  
+  <!-- EN: ? -->
+  <QE_Flash.label>?</QE_Flash.label>
+  <!-- EN: . -->
+  <QE_Flash.description>?</QE_Flash.description>
+  
+  <!-- EN: ladder -->
+  <QE_Labber.label>梯子</QE_Labber.label>
+  <!-- EN: A ladder leading to the outside. -->
+  <QE_Labber.description>一个通往外面的梯子。</QE_Labber.description>
+  
+  <!-- EN: ladder -->
+  <QE_LabberEntrance.label>梯子</QE_LabberEntrance.label>
+  <!-- EN: A ladder leading upward. -->
+  <QE_LabberEntrance.description>一个通往上面的梯子。</QE_LabberEntrance.description>
+  
+  <!-- EN: ladder -->
+  <QE_LadderDown.label>梯子</QE_LadderDown.label>
+  <!-- EN: A ladder leading to the outside. -->
+  <QE_LadderDown.description>一个通往外面的梯子。</QE_LadderDown.description>
+  
+  <!-- EN: large cage -->
+  <QE_LargeCage.label>大型笼子</QE_LargeCage.label>
+  <!-- EN: A large cage used to hold large creatures such as thrumbos or megasloth -->
+  <QE_LargeCage.description>一个用于关押诸如敲击兽、大地懒之类的大型生物的笼子。</QE_LargeCage.description>
+  
+  <!-- EN: Some corpses -->
+  <QE_LootBox_Corpses.label>一些尸骸</QE_LootBox_Corpses.label>
+  <!-- EN: The corpses of some poor people, but perhaps we can scrape some valuable things from them. -->
+  <QE_LootBox_Corpses.description>一些可怜的家伙的尸体，但兴许我们可以从中搜刮到一些有价值的东西。</QE_LootBox_Corpses.description>
+  
+  <!-- EN: Skeleton -->
+  <QE_LootBox_HumanCorpses.label>骷髅</QE_LootBox_HumanCorpses.label>
+  <!-- EN: A dried human corpse, no longer able to recognize any of its features. -->
+  <QE_LootBox_HumanCorpses.description>一个风干的人类尸体，已经风干到无法辨明死者的任何生前特征。</QE_LootBox_HumanCorpses.description>
+  
+  <!-- EN: Sarcophagus -->
+  <QE_Sarcophagus.label>棺材</QE_Sarcophagus.label>
+  <!-- EN: An ornamented burial receptacle for the honored dead. -->
+  <QE_Sarcophagus.description>受尊敬的死者用的、装饰华丽的安葬容器。</QE_Sarcophagus.description>
+  
+  <!-- EN: Sign -->
+  <QE_Sign.label>告示牌</QE_Sign.label>
+  <!-- EN: A sign that records some information. -->
+  <QE_Sign.description>一个记录某些信息的告示牌。</QE_Sign.description>
+  
+  <!-- EN: Some crate -->
+  <QE_SomeCrate.label>板条箱堆</QE_SomeCrate.label>
+  <!-- EN: Some crate full of sundries. -->
+  <QE_SomeCrate.description>一堆装着杂物的板条箱，里面充满了走私物和成瘾品。</QE_SomeCrate.description>
+  
+  <!-- EN: Burrow -->
+  <QE_SubMap_Burrow.label>地洞</QE_SubMap_Burrow.label>
+  <!-- EN: A burrow to underground. -->
+  <QE_SubMap_Burrow.description>一个通往地下的地洞</QE_SubMap_Burrow.description>
+  
+  <!-- EN: StoneBurrow -->
+  <QE_SubMap_StoneBurrow.label>石洞</QE_SubMap_StoneBurrow.label>
+  <!-- EN: A burrow to underground. -->
+  <QE_SubMap_StoneBurrow.description>一个通往地下的地洞</QE_SubMap_StoneBurrow.description>
+  
+  <!-- EN: Treasure chest -->
+  <QE_TreasureChest.label>宝箱</QE_TreasureChest.label>
+  <!-- EN: A chest full of danger and treasure,no one knows what's inside. -->
+  <QE_TreasureChest.description>一个装着危险与财宝的箱子，没有人知道里面是什么。</QE_TreasureChest.description>
+  
+  <!-- EN: Tunnel -->
+  <QE_Tunnel.label>隧道</QE_Tunnel.label>
+  <!-- EN: A tunnel. -->
+  <QE_Tunnel.description>隧道</QE_Tunnel.description>
+  
+  <!-- EN: Work spot -->
+  <QE_WorkSpot.label>工作点</QE_WorkSpot.label>
+  <!-- EN: A place for working. -->
+  <QE_WorkSpot.description>一个用于工作的地点。</QE_WorkSpot.description>
+  
+  <!-- EN: Miracle wall -->
+  <QF_MiracleWall.label>奇迹墙</QF_MiracleWall.label>
+  <!-- EN: An impassable wall. Capable of holding up a roof.It is a miracle, indestructible , Undamageable. -->
+  <QF_MiracleWall.description>一个不可通过的可支撑屋顶的墙，这种墙存在本身便是一种奇迹，不可摧毁，不可破坏。</QF_MiracleWall.description>
+  
+  <!-- EN: Strange wall -->
+  <QF_StrangeWall.label>奇怪的墙</QF_StrangeWall.label>
+  <!-- EN: A wall that looks very normal. -->
+  <QF_StrangeWall.description>一道看起来十分正常的墙。</QF_StrangeWall.description>
+  
+</LanguageData>

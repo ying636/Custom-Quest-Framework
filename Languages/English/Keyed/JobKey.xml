@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <JobDriver_MoveInTargetToSubMap_Report>Moving {0} in {1}</JobDriver_MoveInTargetToSubMap_Report>
+  <JobDriver_MoveTargetOutOfSubMap_Report>Moving {0} out {1}</JobDriver_MoveTargetOutOfSubMap_Report>
+
+  <JobDriver_EnterSubMap_Report>entering {0}</JobDriver_EnterSubMap_Report>
+  <JobDriver_ExitSubMap_Report>exiting {0}</JobDriver_ExitSubMap_Report>
+
+</LanguageData>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <FleckDef ParentName="FleckBase">
+        <defName>CQF_Flash</defName>
+        <altitudeLayer>MoteOverhead</altitudeLayer>
+        <solidTime>0.1</solidTime>
+        <fadeOutTime>0.1</fadeOutTime>
+        <graphicData>
+            <texPath>Things/Mote/SparkFlash</texPath>
+            <shaderType>MoteGlow</shaderType>
+        </graphicData>
+    </FleckDef>
+</Defs>  

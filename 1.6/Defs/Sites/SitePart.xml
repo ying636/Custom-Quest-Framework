@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <SitePartDef>
+    <defName>QE_CustomSite</defName>
+    <label>custom site</label>
+    <description>A custom site.</description>
+    <workerClass>QuestEditor_Library.SitePartWorker_Custom</workerClass>
+    <siteTexture>World/WorldObjects/Sites/GenericSite</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/Sites/AncientMechanitorComplex</expandingIconTexture>
+    <approachOrderString>Investigate {0}</approachOrderString>
+    <approachingReportString>Investigate {0}</approachingReportString>
+    <arrivedLetterDef>NeutralEvent</arrivedLetterDef>
+    <wantsThreatPoints>true</wantsThreatPoints>
+    <minMapSize>(60, 1, 60)</minMapSize>
+    <disallowsAutomaticDetectionTimerStart>true</disallowsAutomaticDetectionTimerStart>
+    <gravShipsCanLandOn>true</gravShipsCanLandOn>
+  </SitePartDef>
+
+  <GenStepDef>
+    <defName>QE_CustomSite_GenStep</defName>
+    <linkWithSite>QE_CustomSite</linkWithSite>
+    <order>1499</order>
+    <genStep Class="QuestEditor_Library.GenStep_CustomMap" />
+  </GenStepDef>
+
+
+</Defs>

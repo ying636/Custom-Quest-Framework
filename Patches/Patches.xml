@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Patch>
+
+	<Operation Class="PatchOperationAdd">
+		<xpath>/Defs/DesignationCategoryDef[defName="Orders"]/specialDesignatorClasses</xpath>
+		<value>
+			<li>QuestEditor_Library.Designator_DestroyThing</li>
+			<li>QuestEditor_Library.Designator_Route</li>
+			<li>QuestEditor_Library.Designator_Roof</li>
+			<li>QuestEditor_Library.Designator_Terrain</li>
+			<li>QuestEditor_Library.Designator_SpawnThing</li>
+			<li>QuestEditor_Library.Designator_MoveOut</li>
+			<li>QuestEditor_Library.Designator_MoveIn</li>
+			<li>QuestEditor_Library.Designator_CQFTools</li>
+			<li>QuestEditor_Library.Designator_CustomTrap</li>
+			<li>QuestEditor_Library.Designator_SetFaction</li>
+			<li>QuestEditor_Library.Designator_SetStyle</li>
+			<li>QuestEditor_Library.Designator_Paste</li>
+			<li>QuestEditor_Library.Designator_SaveZoneAsDef</li>
+			<li>QuestEditor_Library.Designator_Disgenerate</li>
+			<li>QuestEditor_Library.Designator_Disdestroy</li>
+			<li>QuestEditor_Library.Designator_CustomLord</li>
+		</value>
+	</Operation>
+
+
+</Patch>

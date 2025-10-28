@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleText>
+  <ruleName>Test_Site</ruleName>
+  <rulesFiles IsNull="True" />
+  <stringRules>
+    <li>SiteName -&gt; 营地</li>
+  </stringRules>
+</RuleText>

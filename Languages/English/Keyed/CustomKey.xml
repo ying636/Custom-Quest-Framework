@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+    <CQF_Leave>leave</CQF_Leave>
+
+    <CQF_Search>Search</CQF_Search>
+    <CQF_SearchFail>There are nothing valuable to search for.</CQF_SearchFail>
+    <CQF_SearchSucceed>Found {0}。</CQF_SearchSucceed>
+    <CQF_SearchInsect>Some insects have crawled out of the remains!</CQF_SearchInsect>
+
+    <CQF_Mine>Mine</CQF_Mine>
+    <CQF_MineSucceed>Mining out {0}。</CQF_MineSucceed>
+
+    <CQF_GorgeousTreasures>Gorgeous treasures emerge from it! Among them, there are {0}</CQF_GorgeousTreasures>
+
+    <CQF_ArtifactsTreasures>The treasure chest is filled with an ancient atmosphere, some artifacts({0}) woke up</CQF_ArtifactsTreasures>
+
+    <CQF_Open>Open</CQF_Open>
+
+    <CQF_OpenSarcophagus_Treasures>The sarcophagus is filled with rich and magnificent burial items! Burial items include{0}</CQF_OpenSarcophagus_Treasures>
+    <CQF_OpenSarcophagus_Poor>There is only one white bone and some tattered burial({0}) items in the sarcophagus，It seems that this white bone is not wealthy</CQF_OpenSarcophagus_Poor>
+    <CQF_OpenSarcophagus_Insect>The sarcophagus is........SHITTTTTTTTTTTTT!BUGSSSSSSSSSSS!</CQF_OpenSarcophagus_Insect>
+    <CQF_OpenSarcophagus_Mechanoid>Red lights shot out from the sarcophagus, it seem indicating that we have a big trouble</CQF_OpenSarcophagus_Mechanoid>
+    <CQF_OpenSarcophagus_PlasmaSword>A plasmasword with a red glow was held by a skeleton in the sarcophagus, as if the deceased had been a brave warrior during his lifetime</CQF_OpenSarcophagus_PlasmaSword>
+
+    <CQF_Look>Look</CQF_Look>
+    <CQF_IsDeveloping>The front area is under development</CQF_IsDeveloping>
+
+    <CQF_Dialog_Talk>Talk with {INTERVIEWEE_nameDef}</CQF_Dialog_Talk>
+
+</LanguageData>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <DesignationDef>
+        <defName>QE_MoveIn</defName>
+        <texturePath>UI/Icon_MoveIn</texturePath>
+        <targetType>Thing</targetType>
+    </DesignationDef>
+
+    <DesignationDef>
+        <defName>QE_MoveOut</defName>
+        <texturePath>UI/Icon_MoveOut</texturePath>
+        <targetType>Thing</targetType>
+    </DesignationDef>
+
+    <DesignationDef>
+        <defName>QE_MoveToRoot</defName>
+        <texturePath>UI/Icon_MoveToRoot</texturePath>
+        <targetType>Thing</targetType>
+    </DesignationDef>
+
+    <DesignationDef>
+        <defName>QE_Disgenerate</defName>
+        <texturePath>UI/Icons/Icon_Disgenerate</texturePath>
+        <targetType>Cell</targetType>
+    </DesignationDef>
+
+    <DesignationDef>
+        <defName>QE_Disdestroy</defName>
+        <texturePath>UI/Icons/Icon_Disdestroy</texturePath>
+        <targetType>Cell</targetType>
+    </DesignationDef>
+
+</Defs> 

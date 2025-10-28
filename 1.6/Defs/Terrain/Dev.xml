@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <TerrainDef>
+        <defName>QE_Null</defName>
+        <label>Null</label>
+        <texturePath>Terrains/Null</texturePath>
+        <pollutedTexturePath>Terrain/Surfaces/SoilPolluted</pollutedTexturePath>
+        <edgeType>FadeRough</edgeType>
+        <renderPrecedence>340</renderPrecedence>
+        <pathCost>0</pathCost>
+        <layerable>false</layerable>
+        <affordances>
+            <li>Light</li>
+            <li>Medium</li>
+            <li>Heavy</li>
+        </affordances>
+        <fertility>0</fertility>
+    </TerrainDef>
+
+</Defs>

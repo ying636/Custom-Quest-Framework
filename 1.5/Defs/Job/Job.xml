@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <JobDef>
+    <defName>QE_Patrol</defName>
+    <driverClass>QuestEditor_Library.JobDriver_Patrol</driverClass>
+    <reportString>Patroling.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_Open</defName>
+    <driverClass>QuestEditor_Library.JobDriver_OpenLootBox</driverClass>
+    <reportString>Opening TargetA。</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_DisarmTrap</defName>
+    <driverClass>QuestEditor_Library.JobDriver_DisarmTrap</driverClass>
+    <reportString>Disarming TargetA。</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_StartDialog</defName>
+    <driverClass>QuestEditor_Library.JobDriver_StartDialog</driverClass>
+    <reportString>Talking to TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_InteractingWithTarget</defName>
+    <driverClass>QuestEditor_Library.JobDriver_InteracteThing</driverClass>
+    <reportString>Interacting with the TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_EnterOrExitSubMap</defName>
+    <driverClass>QuestEditor_Library.JobDriver_EnterOrExitSubMap</driverClass>
+    <reportString>Going to TargetA.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_MoveInTargetToSubMap</defName>
+    <driverClass>QuestEditor_Library.JobDriver_MoveInTargetToSubMap</driverClass>
+    <reportString>Moving in TargetA to submap.</reportString>
+  </JobDef>
+
+  <JobDef>
+    <defName>QE_MoveTargetOutOfSubMap</defName>
+    <driverClass>QuestEditor_Library.JobDriver_MoveTargetOutOfSubMap</driverClass>
+    <reportString>Moving TargetA out of submap.</reportString>
+  </JobDef>
+
+</Defs>

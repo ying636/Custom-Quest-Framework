@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <!-- EN: Node:Random Custom Map -->
+  <QuestNode_RandomCustomMap>节点：生成随机地图</QuestNode_RandomCustomMap>
+
+
+  <!-- EN: Planet Layer:{0} -->
+  <planetLayer>星球层：{0}</planetLayer>
+  <!-- EN: Map Data DefName: -->
+  <MapDataDefName>地图数据名字</MapDataDefName>
+  <!-- EN: Map Name: -->
+  <MapName>地图名字</MapName>
+  <!-- EN: Map Description -->
+  <MapDesc>地图描述</MapDesc>
+  <!-- EN: Maps:\n {0} -->
+  <MapDatas>地图：\n {0}</MapDatas>
+  <!-- EN: Map：{0} -->
+  <MapData>地图：{0}</MapData>
+  <!-- EN: Map tags: -->
+  <MapTags>地图标签：</MapTags>
+  <!-- EN: Fogged when player enter: -->
+  <FoggedWhenPlayerEnter>初始覆盖着迷雾：</FoggedWhenPlayerEnter>
+  <!-- EN: Delete map data -->
+  <DeleteMapData>删除地图数据</DeleteMapData>
+  <!-- EN: Child nodes: -->
+  <ChildNodes>子节点：</ChildNodes>
+  <!-- EN: Node:Spawn Custom Map -->
+  <RootNode_CustomMap>节点：生成自定义地图</RootNode_CustomMap>
+
+  <!-- EN: Map Faction: -->
+  <MapFaction>地图派系：</MapFaction>
+  <!-- EN: Cur Faction:{0} -->
+  <CurFaction>当前派系：{0}</CurFaction>
+  <!-- EN: Select faction -->
+  <SelectFaction>选择派系</SelectFaction>
+  <!-- EN: Map name rule: -->
+  <MapNameRule>地图名字文本集：</MapNameRule>
+  <!-- EN: Biomes black list: -->
+  <BiomesBlackList>生态黑名单：</BiomesBlackList>
+  <!-- EN: Biomes white list: -->
+  <BiomesWhiteList>生态白名单：</BiomesWhiteList>
+  <!-- EN: Enable black list: -->
+  <EnableBlackList>启用黑名单：</EnableBlackList>
+  <!-- EN: End Signal: -->
+  <EndSignal>结束信号：</EndSignal>
+  <!-- EN: Select End Type: -->
+  <SelectEndType>选择任务结束信号</SelectEndType>
+  <!-- EN: Arrive Map -->
+  <ArriveMap>抵达地图时</ArriveMap>
+  <!-- EN: Save Map To File -->
+  <SaveMapToFile>保存地图到本地</SaveMapToFile>
+  <WorldObjectDefOfSite>站点的定义：</WorldObjectDefOfSite> 
+
+  <!-- EN: Disdestroy because of no colonist: -->
+  <DisdestroyBecauseOfNoColonist>不因无殖民者而销毁：</DisdestroyBecauseOfNoColonist>
+  <Reenterable>可重复进入：</Reenterable>
+  <BeUnreenterableWhenAllEnemiesDefeated>当敌人全部死亡时不可进入：</BeUnreenterableWhenAllEnemiesDefeated>
+
+  <!-- EN: Store as: -->
+  <StoreAsText>保存为：</StoreAsText>
+  <!-- EN: Select map data -->
+  <SelectMapData>选择地图数据</SelectMapData>
+  <!-- EN: Add map data -->
+  <AddMapData>添加地图数据</AddMapData>
+  <!-- EN: Map Distance: -->
+  <MapDistance>任务地点离基地的距离</MapDistance>
+  <!-- EN: Site Icon Path: -->
+  <SiteIconPath>站点图标路径</SiteIconPath>
+  <!-- EN: Expanding Icon Path: -->
+  <ExpandingIconPath>放大后图标路径</ExpandingIconPath>
+
+  <!-- EN: Open Node -->
+  <OpenNode>打开节点</OpenNode>
+
+  <!-- EN: Node:Is Null -->
+  <QuestNode_IsNull>节点：存在</QuestNode_IsNull>
+  <!-- EN: Key: -->
+  <ObjectKeyword>对象密匙：</ObjectKeyword>
+  <!-- EN: Select True Node -->
+  <SelectTrueNode>选择真节点</SelectTrueNode>
+  <!-- EN: Select False Node -->
+  <SelectFalseNode>选择假节点</SelectFalseNode>
+
+  <!-- EN: text: -->
+  <text>文本：</text>
+  <!-- EN: Select letter type -->
+  <SelectLetterType>选择信封类型</SelectLetterType>
+
+  <!-- EN: True -->
+  <True>真</True>
+  <!-- EN: False -->
+  <False>否</False>
+
+  <!-- EN: Node:Game Unique -->
+  <QuestNode_GameUnique>节点：全局唯一</QuestNode_GameUnique>
+  <!-- EN: A game can only be triggered once -->
+  <QuestNode_GameUnique_Tip>一个存档只能触发一次</QuestNode_GameUnique_Tip>
+
+  <!-- EN: Node:Find Tile On Coast -->
+  <QuestNode_FindTileOnCoast>节点：寻找靠海地图格</QuestNode_FindTileOnCoast>
+  <!-- EN: Required Ocean Direction:{0} -->
+  <RequiredRotation>需求海洋方向：{0}</RequiredRotation>
+
+  <!-- EN: Node:Generate Group -->
+  <QuestNode_GenerateGroup>节点：生成集群</QuestNode_GenerateGroup>
+  <!-- EN: Group def: -->
+  <groupDef>集群定义：</groupDef>
+
+</LanguageData>

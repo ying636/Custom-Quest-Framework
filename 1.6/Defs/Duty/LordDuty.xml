@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+    <DutyDef>
+        <defName>QE_Duty_MoveLevel</defName>
+        <label>Move Duty</label> 
+        <thinkNode Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="QuestEditor_Library.JobGiver_MoveToNewLevel" />
+            </subNodes>
+        </thinkNode>
+    </DutyDef>
+
+</Defs>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleText>
+  <ruleName>Test_Name</ruleName>
+  <rulesFiles IsNull="True" />
+  <stringRules>
+    <li>questName -&gt; 帝国营地</li>
+  </stringRules>
+</RuleText>
