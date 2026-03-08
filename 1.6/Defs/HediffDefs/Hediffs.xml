@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <HediffDef>
+    <defName>CQF_CustomHediff</defName>
+    <label>custom hediff</label>
+    <description>Custom hediff</description>
+    <hediffClass>QuestEditor_Library.CustomHediff</hediffClass>
+    <lethalSeverity>1</lethalSeverity>
+    <stages>
+      <li>
+        <label></label>
+      </li>
+    </stages>
+  </HediffDef>
+</Defs>

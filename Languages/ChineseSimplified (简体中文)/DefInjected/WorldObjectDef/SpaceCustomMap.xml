@@ -2,6 +2,9 @@
 <LanguageData>
   
   <!-- EN: space site -->
-  <QE_SpaceCustomSite.label>TODO</QE_SpaceCustomSite.label>
+  <QE_CustomMap_SpaceSubMap.label>太空站点</QE_CustomMap_SpaceSubMap.label>
+  
+  <!-- EN: space site -->
+  <QE_SpaceCustomSite.label>太空站点</QE_SpaceCustomSite.label>
   
 </LanguageData>

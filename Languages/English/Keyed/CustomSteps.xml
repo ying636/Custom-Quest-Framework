@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+
+  <CustomSteps>Custom steps:</CustomSteps>
+  <CustomMapStep_GenStepDef>Step:GenStepDef</CustomMapStep_GenStepDef>
+  <CQF_GenStepDef>GenStepDef:{0}</CQF_GenStepDef>
+
+  <CustomMapStep_MapPart>Step: Map Part</CustomMapStep_MapPart>
+  <GenerationCount>Generation count:</GenerationCount>
+
+</LanguageData>

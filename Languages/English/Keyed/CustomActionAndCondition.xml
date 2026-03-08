@@ -156,6 +156,15 @@
   <CheckTemporaryDatabase>Check temporary database:</CheckTemporaryDatabase>
   <CheckQuestDatabase>Check quest database:</CheckQuestDatabase>
 
+  <DialogCondition_SkillCheck>Condition: Skill Check</DialogCondition_SkillCheck>
+  <DialogCondition_SkillCheck_Tip>Roll a random number between 0 and 20. If the result is lower than the target's corresponding skill level plus the check modifier, the condition is passed.</DialogCondition_SkillCheck_Tip>
+  <CheckModifier>Check Modifier:</CheckModifier>
+
+  <DialogCondition_GroupExists>Condition:group exists</DialogCondition_GroupExists>
+
+  <DialogCondition_ColonistCount>Condition:colonist count</DialogCondition_ColonistCount>
+  <NeedCount>Need count:</NeedCount>
+
   <If>If:</If>
   <InteractionActions>Interaction action:</InteractionActions>
 
@@ -340,5 +349,39 @@ Interacte interactive things</RecordToTemporaryBase_Tip>
   <CQFAction_AddThingActionTrigger>Action:add thing action trigger</CQFAction_AddThingActionTrigger>
   <CQFAction_AddThingActionTrigger_Tip>Add a thing action trigger to the map.When the thing encounters a specific event, the corresponding trigger is executed.</CQFAction_AddThingActionTrigger_Tip>
   <TriggerMode>Trigger mode:{0}</TriggerMode>
+
+  <CQFAction_SkipToPlayerMap>Action:skip to player map</CQFAction_SkipToPlayerMap>
+
+
+  <CQFAction_RecordToGroup>Action: Record to Group</CQFAction_RecordToGroup>
+  <CQFAction_RecordToGroup_Tip>Add the target Pawn to the group data in the task database.  
+Group data can contain multiple Pawns, and when actions is executed, it will be applied to each Pawn individually.</CQFAction_RecordToGroup_Tip>
+
+  <CQFAction_LinkEntranceAndExit>Action: Link Entrance and Exit</CQFAction_LinkEntranceAndExit>
+  <EntranceKey>Entrance Key:</EntranceKey>
+  <ExitKey>Exit Key:</ExitKey>
+
+  <CQFAction_SetGameConditionWithActions>Action:Set Game Condition With Actions</CQFAction_SetGameConditionWithActions>
+  <UseTick>Periodic trigger:</UseTick>
+
+  <CQFAction_AddRandomDialogManager>Action:Add Random Dialog</CQFAction_AddRandomDialogManager>
+
+  <CQFAction_SpawnCustomThing>Action:Spawn Custom Thing</CQFAction_SpawnCustomThing>
+  <SpawnThing>Thing:</SpawnThing>
+
+  <CQFAction_DoActionForGroup>Action: Execute Group Actions</CQFAction_DoActionForGroup>
+  <CQFAction_DoActionForGroup_Tip>Get all pawns in the group, use each pawn as the target, and execute each sub-action separately with the key as Target.</CQFAction_DoActionForGroup_Tip>
+
+  <CQFAction_SetCustomHediff>Action:set custom hediff</CQFAction_SetCustomHediff>
+  <HediffColor>Hediff color:</HediffColor>
+
+  <CQFAction_UpgradeTrait>Action: Upgrade Trait</CQFAction_UpgradeTrait>
+  <CQFAction_UpgradeTrait_Tip>If the target does not have the specified trait, it will be granted. If the target already has it, the trait will be upgraded.</CQFAction_UpgradeTrait_Tip>
+  <GiveTrait>Give Trait:</GiveTrait>
+  <InitDegree>Init degree:</InitDegree>
+  <InitMessage>Init message:</InitMessage>
+
+  <CQFAction_Ability>Action:gain ability</CQFAction_Ability>
+  <CQFAbilityDef>Ability def:</CQFAbilityDef>
 
 </LanguageData> 

@@ -183,9 +183,10 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <SpecialThingData>Special thing datas:</SpecialThingData>
   <CQFThingSetMaker>Thing set maker</CQFThingSetMaker>
   <ThingSetMaker>Thing set maker:{0}</ThingSetMaker>
+  <CQFThingData_Value_Category>Category:{0}</CQFThingData_Value_Category>
   <TotalMarketValueRange>Total value range:</TotalMarketValueRange>
   <CQFThingData_Corpse>Corpse</CQFThingData_Corpse>
-
+  <CQFThingData_Value>Value</CQFThingData_Value>
   <ITab_CompActionWorker>Actions</ITab_CompActionWorker>
 
   <DialogEditor>Dialog editor</DialogEditor>
@@ -246,9 +247,6 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
 
   <AdvancedSetting>Advanced Setting</AdvancedSetting>
 
-  <CustomSteps>Custom steps:</CustomSteps>
-  <CustomMapStep_GenStepDef>Step:GenStepDef</CustomMapStep_GenStepDef>
-  <CQF_GenStepDef>GenStepDef:{0}</CQF_GenStepDef>
 
   <DialogManager>Dialog Manager</DialogManager>
   <DialogManagerForSpawner>Dialog Manager:{0}</DialogManagerForSpawner>
@@ -309,6 +307,9 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <ActionTriggerMode_Spawn>post spawning</ActionTriggerMode_Spawn>
   <ActionTriggerMode_MapGeneration>post map generation</ActionTriggerMode_MapGeneration>
   <ActionTriggerMode_Open>post opening</ActionTriggerMode_Open>
+  <ActionTriggerMode_Down>Down</ActionTriggerMode_Down>
+  <ActionTriggerMode_Kill>Killed</ActionTriggerMode_Kill>
+
   <TickToTrigger>trigger time (tick):</TickToTrigger>
   <TickToTriggerTip>1 game hour = 2500 tick </TickToTriggerTip>
   <TrapInSignal>In signal:</TrapInSignal>
@@ -413,6 +414,7 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <CustomMapEntrance>Sub map entrance</CustomMapEntrance>
   <CustomContainer>Custom container</CustomContainer>
 
+  <ActionComps>Action comps</ActionComps>
 
   <InteractionOption_RequiredThing>Required things:</InteractionOption_RequiredThing>
   <CQFThingDefCount>Thing</CQFThingDefCount>
@@ -488,5 +490,17 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <SetOutput>Set Output</SetOutput>
   <SetOutputDesc>Set the output amount</SetOutputDesc>
   <TargetOutput>Target Output: {0}</TargetOutput>
+
+  <AddSpecialOption>Special</AddSpecialOption>
+
+  <DialogOption>Normal Option</DialogOption>
+  <DialogOption_SelectColonists>Option: Select Colonists</DialogOption_SelectColonists>
+
+  <CQF_SetReceiver>Receiver: {0}</CQF_SetReceiver>
+  <CQF_SetReceiverDesc>Set the receiver. The receiver can be a receiving building on the parent map or any child map of the current map.</CQF_SetReceiverDesc>
+  <CQF_SetReceiverText>Select Receiver</CQF_SetReceiverText>
+
+  <Fail>Failed</Fail>
+  <Success>Success</Success>
 
 </LanguageData>

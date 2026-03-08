@@ -175,8 +175,7 @@
         <defName>QE_SubMap_Burrow</defName>
         <label>Burrow</label>
         <description>A burrow to underground.</description>
-        <thingClass>QuestEditor_Library.CustomMapEntrance</thingClass>
-        <filthLeaving>Filth_CorpseBile</filthLeaving>
+        <thingClass>QuestEditor_Library.CustomMapEntrance</thingClass> 
         <altitudeLayer>Building</altitudeLayer>
         <drawGUIOverlay>true</drawGUIOverlay>
         <useHitPoints>false</useHitPoints>

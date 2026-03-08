@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+    <!-- EN: Custom steps: -->
+    <CustomSteps>额外生成步骤：</CustomSteps>
+    <!-- EN: Step:GenStepDef -->
+    <CustomMapStep_GenStepDef>步骤：步骤定义</CustomMapStep_GenStepDef>
+    <!-- EN: GenStepDef:{0} -->
+    <CQF_GenStepDef>GenStepDef：{0}</CQF_GenStepDef>
+
+    <CustomMapStep_MapPart>步骤：地图部分</CustomMapStep_MapPart>
+    <GenerationCount>生成次数：</GenerationCount>
+
+
+</LanguageData>

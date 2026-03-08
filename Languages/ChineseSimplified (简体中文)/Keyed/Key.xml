@@ -318,11 +318,14 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <CQFThingSetMaker>事物组</CQFThingSetMaker>
   <!-- EN: Thing set maker:{0} -->
   <ThingSetMaker>事物组：{0}</ThingSetMaker>
+  <!-- EN: Category:{0} -->
+  <CQFThingData_Value_Category>种类：{0}</CQFThingData_Value_Category>
   <!-- EN: Total value range: -->
   <TotalMarketValueRange>总共价值范围：</TotalMarketValueRange>
   <!-- EN: Corpse -->
   <CQFThingData_Corpse>尸体</CQFThingData_Corpse>
-
+  <!-- EN: Value -->
+  <CQFThingData_Value>价值</CQFThingData_Value>
   <!-- EN: Actions -->
   <ITab_CompActionWorker>行为组件</ITab_CompActionWorker>
 
@@ -432,12 +435,6 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <!-- EN: Advanced Setting -->
   <AdvancedSetting>高级设置</AdvancedSetting>
 
-  <!-- EN: Custom steps: -->
-  <CustomSteps>额外生成步骤：</CustomSteps>
-  <!-- EN: Step:GenStepDef -->
-  <CustomMapStep_GenStepDef>步骤：步骤定义</CustomMapStep_GenStepDef>
-  <!-- EN: GenStepDef:{0} -->
-  <CQF_GenStepDef>GenStepDef：{0}</CQF_GenStepDef>
 
   <!-- EN: Dialog Manager -->
   <DialogManager>对话管理者</DialogManager>
@@ -545,7 +542,10 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <ActionTriggerMode_Spawn>生成时</ActionTriggerMode_Spawn>
   <!-- EN: post map generation -->
   <ActionTriggerMode_MapGeneration>地图生成时</ActionTriggerMode_MapGeneration>
+  <!-- EN: post opening -->
   <ActionTriggerMode_Open>打开之后</ActionTriggerMode_Open>
+  <ActionTriggerMode_Down>倒地</ActionTriggerMode_Down>
+  <ActionTriggerMode_Kill>被杀</ActionTriggerMode_Kill>
   <!-- EN: trigger time (tick): -->
   <TickToTrigger>触发时间(tick)：</TickToTrigger>
   <!-- EN: 1 game hour = 2500 tick  -->
@@ -719,9 +719,15 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <CustomDoor>自定义门</CustomDoor>
   <!-- EN: Chance entrance -->
   <CustomMapEntrance_Chance>子地图几率入口</CustomMapEntrance_Chance>
+  <!-- EN: Spawner -->
   <Spawner>生成者</Spawner>
+  <!-- EN: Sub map entrance -->
   <CustomMapEntrance>子地图入口</CustomMapEntrance>
+  <!-- EN: Custom container -->
   <CustomContainer>自定义容器</CustomContainer>
+
+  <!-- EN: Action comps -->
+  <ActionComps>行为组件</ActionComps>
 
   <!-- EN: Required things: -->
   <InteractionOption_RequiredThing>所需事物：</InteractionOption_RequiredThing>
@@ -816,29 +822,57 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <!-- EN: Show CQF buttons: -->
   <ShowCQF>显示CQF相关按钮：</ShowCQF>
 
+  <!-- EN: Chance: -->
   <Chance>概率：</Chance>
 
+  <!-- EN: Show -->
   <Show>显示</Show>
+  <!-- EN: Hide -->
   <Hide>隐藏</Hide>
 
+  <!-- EN: Genepack -->
   <CQFThingData_Genepack>基因组</CQFThingData_Genepack>
+  <!-- EN: Genes: -->
   <Genes>基因：</Genes>
 
+  <!-- EN: Landfill -->
   <CQF_Landfill>填埋</CQF_Landfill>
+  <!-- EN: Cancel Landfill -->
   <CQF_CancelLandfill>取消填埋</CQF_CancelLandfill>
+  <!-- EN: Cancel the landfill operation for this building -->
   <CQF_CancelLandfillDesc>取消对这个建筑的填埋工作</CQF_CancelLandfillDesc>
+  <!-- EN: Start Landfill -->
   <CQF_StartLandfill>开始填埋</CQF_StartLandfill>
+  <!-- EN: Mark this building to be landfilled. WARNING: This will destroy the building's attached map! -->
   <CQF_StartLandfillDesc>开始填埋这个建筑，！警告，这会摧毁这个建筑的附属地图！</CQF_StartLandfillDesc>
 
+  <!-- EN: Output Mode -->
+  <ToggleOutputMode>输出模式</ToggleOutputMode>
+  <!-- EN: Switch to output mode, transmitting power to the receiver -->
+  <ToggleOutputModeDesc>切换为输出模式，输出电力到接收端</ToggleOutputModeDesc>
+  <!-- EN: Set Output -->
+  <SetOutput>设置输出量</SetOutput>
+  <!-- EN: Set the output amount -->
+  <SetOutputDesc>设置输出量</SetOutputDesc>
+  <!-- EN: Target Output: {0} -->
+  <TargetOutput>目标输出量：{0}</TargetOutput>
+
+  <!-- EN: Special -->
+  <AddSpecialOption>特殊选项</AddSpecialOption>
+
+  <!-- EN: Normal Option -->
+  <DialogOption>普通选项</DialogOption>
+  <!-- EN: Option: Select Colonists -->
+  <DialogOption_SelectColonists>选项：选择殖民者</DialogOption_SelectColonists>
+
+  <!-- UNUSED -->
   <CQF_SetReceiver>接受端:{0}</CQF_SetReceiver>
   <CQF_SetReceiverDesc>设置接受端，接收端可设置为当前地图的父地图或子地图之中的接收建筑</CQF_SetReceiverDesc>
   <CQF_SetReceiverText>选择接受端</CQF_SetReceiverText>
 
-  <ToggleOutputMode>输出模式</ToggleOutputMode>
-  <ToggleOutputModeDesc>切换为输出模式，输出电力到接收端</ToggleOutputModeDesc>
-  <SetOutput>设置输出量</SetOutput>
-  <SetOutputDesc>设置输出量</SetOutputDesc>
-  <TargetOutput>目标输出量：{0}</TargetOutput>
+
+  <Fail>失败</Fail>
+  <Success>成功</Success>
 
 
 </LanguageData>

@@ -10,6 +10,9 @@
   <!-- EN: Interacting with the TargetA. -->
   <QE_InteractingWithTarget.reportString>交互TargetA</QE_InteractingWithTarget.reportString>
   
+  <!-- EN: Landfilling TargetA. -->
+  <QE_Landfill.reportString>填充TargetA</QE_Landfill.reportString>
+  
   <!-- EN: Moving in TargetA to submap. -->
   <QE_MoveInTargetToSubMap.reportString>正在将TargetA搬入子地图。</QE_MoveInTargetToSubMap.reportString>
   

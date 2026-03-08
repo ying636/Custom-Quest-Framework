@@ -112,6 +112,7 @@
   <Captured>被捕获者</Captured>
   <!-- EN: Position -->
   <Position>位置</Position>
+  <!-- EN: Inner -->
   <Inner>内部事物</Inner>
   <!-- EN: Select target -->
   <SelectTarget>选择目标</SelectTarget>
@@ -252,17 +253,36 @@
   <!-- EN: Position: -->
   <PositionName>位置密匙：</PositionName>
 
-  <!-- EN: Condition:Inventory -->
+  <!-- EN: Condition:inventory -->
   <DialogCondition_Inventory>条件：库存</DialogCondition_Inventory>
   <!-- EN: Required things: -->
   <RequiredThings>需求事物：</RequiredThings>
 
+  <!-- EN: Condition:database exists -->
   <DialogCondition_DatabaseExists>条件：数据库存在</DialogCondition_DatabaseExists>
+  <!-- EN: Target key: -->
   <TargetKey>目标密匙：</TargetKey>
+  <!-- EN: Need target is spawned: -->
   <NeedSpawned>需要事物已生成：</NeedSpawned>
+  <!-- EN: Check global database: -->
   <CheckGlobalDatabase>检测全局数据库：</CheckGlobalDatabase>
+  <!-- EN: Check temporary database: -->
   <CheckTemporaryDatabase>检测临时数据库</CheckTemporaryDatabase>
+  <!-- EN: Check quest database: -->
   <CheckQuestDatabase>检测任务数据库</CheckQuestDatabase>
+
+  <!-- EN: Condition: Skill Check -->
+  <DialogCondition_SkillCheck>条件：技能检查</DialogCondition_SkillCheck>
+  <!-- EN: Roll a random number between 0 and 20. If the result is lower than the target's corresponding skill level plus the check modifier, the condition is passed. -->
+  <DialogCondition_SkillCheck_Tip>随机生成一个0~20的数，如果数小于目标对应的技能等级 + 判定补偿则该条件通过</DialogCondition_SkillCheck_Tip>
+  <!-- EN: Check Modifier: -->
+  <CheckModifier>判定补偿：</CheckModifier>
+
+  <!-- EN: Condition:group exists -->
+  <DialogCondition_GroupExists>条件：群组存在</DialogCondition_GroupExists>
+
+  <DialogCondition_ColonistCount>条件：殖民者数量</DialogCondition_ColonistCount>
+  <NeedCount>需要数量：</NeedCount>
 
   <!-- EN: If: -->
   <If>如果：</If>
@@ -523,34 +543,107 @@ Interacte interactive things -->
   <!-- EN: Target B: -->
   <TargetB>目标B：</TargetB>
 
+  <!-- EN: Action:generate submap -->
   <CQFAction_GenerateSubMap>行为：生成子地图</CQFAction_GenerateSubMap>
+  <!-- EN: Start position: -->
   <StartPosition>起点：</StartPosition>
+  <!-- EN: Edit map set -->
   <EditCustomMapGenerationSet>编辑地图设置</EditCustomMapGenerationSet>
 
+
+  <!-- EN: Action:fog -->
   <CQFAction_Fog>行为：覆盖迷雾</CQFAction_Fog>
+  <!-- EN: make target cell foged -->
   <CQFAction_Fog_Tip>使目标位置覆盖迷雾</CQFAction_Fog_Tip>
 
+  <!-- EN: Action:flood unfog -->
   <CQFAction_FloodUnfog>行为：填充式消除迷雾</CQFAction_FloodUnfog>
+  <!-- EN: Clears the fog starting from the target cell, and continues clearing adjacent fog until a building is encountered. -->
   <CQFAction_FloodUnfog_Tip>从目标位置开始消除迷雾，并且开始消除相邻的迷雾，直接到遇到建筑物</CQFAction_FloodUnfog_Tip>
 
+
+  <!-- EN: Action:execute post map generation -->
   <CQFAction_PostGenerationExecute>行为：地图生成后执行</CQFAction_PostGenerationExecute>
 
+  <!-- EN: Action:set game condition -->
   <CQFAction_SetGameCondition>行为：设置游戏条件</CQFAction_SetGameCondition>
+  <!-- EN: Is permanent: -->
   <IsPermanent>永久：</IsPermanent>
+  <!-- EN: Duration: -->
   <Duration>持续时间：</Duration>
+  <!-- EN: COndition:{0} -->
   <CQFGameConditionDef>条件定义：{0}</CQFGameConditionDef>
 
+  <!-- EN: Action:infect target -->
   <CQFAction_InfectTarget>行为：感染建筑</CQFAction_InfectTarget>
+  <!-- EN: （Rustspark Crisis）infect target to become biometal -->
   <CQFAction_InfectTarget_Tip>（锈蚀火种Mod联动）将目标建筑感染为机兽</CQFAction_InfectTarget_Tip>
 
+  <!-- EN: Action:record start cell -->
   <CQFAction_RecordStartCell>行为：记录起始位置</CQFAction_RecordStartCell>
+  <!-- EN: Record the start cell into the map database,the start cell is used to create a rectangle. -->
   <CQFAction_RecordStartCell_Tip>记录起始位置到地图数据库之中，起始位置用于创造矩形</CQFAction_RecordStartCell_Tip>
 
+  <!-- EN: Action:finish rectangle -->
   <CQFAction_FinishRect>行为：完成矩形</CQFAction_FinishRect>
+  <!-- EN: Create a rectangle using the target cell and the start cell recorded in the map database.Execute actions on every cell within the rectangle.The target key for each cell is:[Position] -->
   <CQFAction_FinishRect_Tip>通过目标位置以及地图数据库之中记录的起始位置创造一个矩形，对矩形内每一个位置执行行为，每个位置的对象密匙为[Position]</CQFAction_FinishRect_Tip>
 
+  <!-- EN: Action:add thing action trigger -->
   <CQFAction_AddThingActionTrigger>行为：添加事物行为触发器</CQFAction_AddThingActionTrigger>
+  <!-- EN: Add a thing action trigger to the map.When the thing encounters a specific event, the corresponding trigger is executed. -->
   <CQFAction_AddThingActionTrigger_Tip>添加事物行为触发器到地图之中，当该事物发生特定事件时触发对应的行为</CQFAction_AddThingActionTrigger_Tip>
+  <!-- EN: Trigger mode:{0} -->
   <TriggerMode>触发模式：{0}</TriggerMode>
+
+  <!-- EN: Action:skip to player map -->
+  <CQFAction_SkipToPlayerMap>行为：折跃到殖民地</CQFAction_SkipToPlayerMap>
+
+
+  <!-- EN: Action: Record to Group -->
+  <CQFAction_RecordToGroup>行为：记录到群组</CQFAction_RecordToGroup>
+  <!-- EN: Add the target Pawn to the group data in the task database.  
+Group data can contain multiple Pawns, and when actions is executed, it will be applied to each Pawn individually. -->
+  <CQFAction_RecordToGroup_Tip>将目标生物添加到任务数据库中的群组数据，群组数据包含多个生物数据，执行行为时会对每个生物分别执行行为</CQFAction_RecordToGroup_Tip>
+
+  <!-- EN: Action: Link Entrance and Exit -->
+  <CQFAction_LinkEntranceAndExit>行为：连接入口与出口</CQFAction_LinkEntranceAndExit>
+  <!-- EN: Entrance Key: -->
+  <EntranceKey>入口密匙：</EntranceKey>
+  <!-- EN: Exit Key: -->
+  <ExitKey>出口密匙：</ExitKey>
+
+  <!-- EN: Action:Set Game Condition With Actions -->
+  <CQFAction_SetGameConditionWithActions>行为：设置行为游戏条件</CQFAction_SetGameConditionWithActions>
+  <UseTick>周期触发：</UseTick>
+
+  <!-- EN: Action:Add Random Dialog -->
+  <CQFAction_AddRandomDialogManager>行为：添加随机对话</CQFAction_AddRandomDialogManager>
+
+  <!-- EN: Action:Spawn Custom Thing -->
+  <CQFAction_SpawnCustomThing>行为：生成自定义事物</CQFAction_SpawnCustomThing>
+  <!-- EN: Thing: -->
+  <SpawnThing>事物：</SpawnThing>
+
+  <!-- EN: Action: Execute Group Actions -->
+  <CQFAction_DoActionForGroup>行为：执行群组行为</CQFAction_DoActionForGroup>
+  <!-- EN: Get all pawns in the group, use each pawn as the target, and execute each sub-action separately with the key as Target. -->
+  <CQFAction_DoActionForGroup_Tip>获取群组内实体，以实体为目标，密匙为Target分别执行每个子行为</CQFAction_DoActionForGroup_Tip>
+
+  <!-- EN: Action:set custom hediff -->
+  <CQFAction_SetCustomHediff>行为：设置自定义状态</CQFAction_SetCustomHediff>
+  <!-- EN: Hediff color: -->
+  <HediffColor>状态颜色：</HediffColor>
+
+
+  <CQFAction_UpgradeTrait>行为：升级特性</CQFAction_UpgradeTrait>
+  <CQFAction_UpgradeTrait_Tip>如果目标没有对应特性则赋予相应特性，如果有对应特性则将其升级</CQFAction_UpgradeTrait_Tip>
+  <GiveTrait>给予特性：</GiveTrait>
+  <InitDegree>初始等级：</InitDegree>
+  <InitMessage>初始信息：</InitMessage>
+
+  <CQFAction_Ability>行为：给予能力</CQFAction_Ability>
+  <CQFAbilityDef>能力定义：</CQFAbilityDef>
+
 
 </LanguageData>

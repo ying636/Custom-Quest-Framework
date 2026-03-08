@@ -63,4 +63,7 @@
   <QuestNode_GenerateGroup>Node:Generate Group</QuestNode_GenerateGroup>
   <groupDef>Group def:</groupDef>
 
+  <QuestNode_RemoveDataWhenEnd>Node:Remove Data When End</QuestNode_RemoveDataWhenEnd>
+  <QuestNode_DoCQFActions>Node:Do Actions</QuestNode_DoCQFActions>
+
 </LanguageData>

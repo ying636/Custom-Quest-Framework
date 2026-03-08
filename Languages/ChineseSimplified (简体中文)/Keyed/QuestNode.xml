@@ -50,11 +50,15 @@
   <ArriveMap>抵达地图时</ArriveMap>
   <!-- EN: Save Map To File -->
   <SaveMapToFile>保存地图到本地</SaveMapToFile>
-  <WorldObjectDefOfSite>站点的定义：</WorldObjectDefOfSite> 
+
+  <!-- EN: World object def of site: -->
+  <WorldObjectDefOfSite>站点的定义：</WorldObjectDefOfSite>
 
   <!-- EN: Disdestroy because of no colonist: -->
   <DisdestroyBecauseOfNoColonist>不因无殖民者而销毁：</DisdestroyBecauseOfNoColonist>
+  <!-- EN: Re-enterable: -->
   <Reenterable>可重复进入：</Reenterable>
+  <!-- EN: Destroyed when all enemies are deteated: -->
   <BeUnreenterableWhenAllEnemiesDefeated>当敌人全部死亡时不可进入：</BeUnreenterableWhenAllEnemiesDefeated>
 
   <!-- EN: Store as: -->
@@ -106,5 +110,10 @@
   <QuestNode_GenerateGroup>节点：生成集群</QuestNode_GenerateGroup>
   <!-- EN: Group def: -->
   <groupDef>集群定义：</groupDef>
+
+  <!-- EN: Quest:Remove Data When End -->
+  <QuestNode_RemoveDataWhenEnd>节点：移除数据当结束任务的时候</QuestNode_RemoveDataWhenEnd>
+
+  <QuestNode_DoCQFActions>节点：执行行为</QuestNode_DoCQFActions>
 
 </LanguageData>
