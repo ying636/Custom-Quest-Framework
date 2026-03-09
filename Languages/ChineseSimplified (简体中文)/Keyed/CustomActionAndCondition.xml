@@ -645,5 +645,10 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFAction_Ability>行为：给予能力</CQFAction_Ability>
   <CQFAbilityDef>能力定义：</CQFAbilityDef>
 
+  <CQFAction_JoinHiveGroup>巢群行为：加入巢群</CQFAction_JoinHiveGroup>
+  <CQFAction_JoinHiveGroup_Tip>通过密匙获取对应的事物，并获取事物的巢群，让目标加入获取到的巢群之中</CQFAction_JoinHiveGroup_Tip>
+  <HiveKey>巢群密匙：</HiveKey>
+
+  <CQFAction_SetHiveGroupMode>巢群行为：设置集群模式</CQFAction_SetHiveGroupMode>
 
 </LanguageData>

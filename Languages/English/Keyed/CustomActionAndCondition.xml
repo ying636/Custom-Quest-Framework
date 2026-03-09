@@ -384,4 +384,10 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFAction_Ability>Action:gain ability</CQFAction_Ability>
   <CQFAbilityDef>Ability def:</CQFAbilityDef>
 
+  <CQFAction_JoinHiveGroup>HCF Action: Join Hive</CQFAction_JoinHiveGroup>
+  <CQFAction_JoinHiveGroup_Tip>Use the key to obtain the corresponding entity and its hive group, allowing the target to join the retrieved hive group</CQFAction_JoinHiveGroup_Tip>
+  <HiveKey>Hive Key:</HiveKey>
+
+  <CQFAction_SetHiveGroupMode>HCF Action:Set Group Mode</CQFAction_SetHiveGroupMode>
+
 </LanguageData> 
