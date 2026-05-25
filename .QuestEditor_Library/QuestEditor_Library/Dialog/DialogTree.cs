@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -27,10 +27,7 @@ namespace QuestEditor_Library
                 rect.height = 30f;
                 if (Widgets.ButtonText(rect, "DialogTree".Translate(tree.tree?.defName), false))
                 {
-                    List<DialogTreeDef> trees = new List<DialogTreeDef>();
-                    trees.AddRange(DefDatabase<DialogTreeDef>.AllDefsListForReading);
-                    trees.AddRange(CQFEditorTools.GetObject<DialogTreeDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogTreeDef"));
-                    CQFEditorTools.DrawFloatMenu<DialogTreeDef>(trees, (x) =>
+                    CQFEditorTools.DrawFloatMenu(DefDatabase<DialogTreeDef>.AllDefsListForReading, (x) =>
                     {
                         replaces.Add(index, new DialogTreeAndConditions(x, tree.conditions));
                     }, (x) => x.defName);

@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
@@ -190,20 +190,7 @@ namespace QuestEditor_Library
             Rect rect = new Rect(15f, y, 430f, 30f);
             if (Widgets.ButtonText(rect,"CurCustomMap".Translate(this.MapName),false))
             {
-                List<CustomMapDataDef> list = new List<CustomMapDataDef>();
-                list.AddRange(DefDatabase<CustomMapDataDef>.AllDefsListForReading.ToList());
-                DirectoryInfo mapDir = new DirectoryInfo(Page_QuestEditor.Path + @"\Map\");
-                foreach (FileInfo file in mapDir.GetFiles("*.xml"))
-                {
-                    XmlDocument xml = new XmlDocument();
-                    xml.Load(file.FullName);
-                    foreach (XmlNode xmlNode in xml.SelectNodes("//QuestEditor_Library.CustomMapDataDef"))
-                    {
-                        list.Add(DirectXmlToObject.ObjectFromXml<CustomMapDataDef>(xmlNode, false));
-                    }
-                }
-                DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
-                CQFEditorTools.DrawFloatMenu<CustomMapDataDef>(list, (x) => this.mapDef = x, (x) => x.label);
+                CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, (x) => this.mapDef = x, (x) => x.label);
             }
             y += 35f;
             Widgets.CheckboxLabeled(new Rect(15f,y,350f,25f), "DefaultOpened".Translate(), ref this.opended);

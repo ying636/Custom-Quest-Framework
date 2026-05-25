@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -177,10 +177,7 @@ namespace QuestEditor_Library
         {
             if (Widgets.ButtonText(new Rect(800f, 30f, 100f, 38f), "LoadPremade".Translate()))
             {
-                List<DialogTreeDef> trees = new List<DialogTreeDef>();
-                trees.AddRange(DefDatabase<DialogTreeDef>.AllDefsListForReading);
-                trees.AddRange(CQFEditorTools.GetObject<DialogTreeDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogTreeDef"));
-                CQFEditorTools.DrawFloatMenu<DialogTreeDef>(trees, (x) => 
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogTreeDef>.AllDefsListForReading, (x) => 
                 {
                     this.CurTree = x;
                     this.CurTree.Update();

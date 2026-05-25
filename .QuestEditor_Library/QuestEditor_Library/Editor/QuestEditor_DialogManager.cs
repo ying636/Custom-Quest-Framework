@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -30,10 +30,7 @@ namespace QuestEditor_Library
             Rect button = new Rect(10f, y, 100f, 30f);
             if (Widgets.ButtonText(button, "Add".Translate()))
             {
-                List<DialogTreeDef> trees = new List<DialogTreeDef>();
-                trees.AddRange(DefDatabase<DialogTreeDef>.AllDefsListForReading);
-                trees.AddRange(CQFEditorTools.GetObject<DialogTreeDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogTreeDef"));
-                CQFEditorTools.DrawFloatMenu<DialogTreeDef>(trees, (x) =>
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogTreeDef>.AllDefsListForReading, (x) =>
                 {
                     this.Manager.trees.Add(new DialogTreeAndConditions(x, new List<DialogCondition>()));
                 }, (x) => x.defName);
@@ -57,10 +54,7 @@ namespace QuestEditor_Library
             }
             if (Widgets.ButtonText(new Rect(780f, 30f,90f, 30f), "LoadPremade".Translate()))
             {
-                List<DialogManagerDef> managers = new List<DialogManagerDef>();
-                managers.AddRange(DefDatabase<DialogManagerDef>.AllDefsListForReading);
-                managers.AddRange(CQFEditorTools.GetObject<DialogManagerDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogManagerDef"));
-                CQFEditorTools.DrawFloatMenu<DialogManagerDef>(managers, (x) =>
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, (x) =>
                 {
                     manager = x;
                 }, (x) => x.defName);

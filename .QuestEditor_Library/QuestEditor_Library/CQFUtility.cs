@@ -2226,10 +2226,7 @@ t =>
             base.Draw(ref y, inRect, x);
             if (Widgets.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(this.dialog?.defName), false))
             {
-                List<DialogManagerDef> managers = new List<DialogManagerDef>();
-                managers.AddRange(DefDatabase<DialogManagerDef>.AllDefsListForReading);
-                managers.AddRange(CQFEditorTools.GetObject<DialogManagerDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogManagerDef"));
-                CQFEditorTools.DrawFloatMenu(managers, m => this.dialog = m, m => m.defName);
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => this.dialog = m, m => m.defName);
             }
             y += 30f;
             CQFEditorTools.DrawSelectableText(y, "Interviewer".Translate(), ref this.interviewerText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.interviewerText = t, t => t.Translate()), x, 150f);
@@ -3039,10 +3036,7 @@ t =>
             base.Draw(ref y, inRect, x);
             if (Widgets.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(this.dialog?.defName), false))
             {
-                List<DialogManagerDef> managers = new List<DialogManagerDef>();
-                managers.AddRange(DefDatabase<DialogManagerDef>.AllDefsListForReading);
-                managers.AddRange(CQFEditorTools.GetObject<DialogManagerDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogManagerDef"));
-                CQFEditorTools.DrawFloatMenu(managers, m => this.dialog = m, m => m.defName);
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => this.dialog = m, m => m.defName);
             }
             y += 30f;
         }

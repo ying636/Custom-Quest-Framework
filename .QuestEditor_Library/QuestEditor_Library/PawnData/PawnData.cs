@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,11 +94,8 @@ namespace QuestEditor_Library
                 TooltipHandler.TipRegion(rect2, "CustomLordNameTip".Translate());
                 y += 30f;
             }
-            List<DialogManagerDef> managers = new List<DialogManagerDef>();
-            managers.AddRange(DefDatabase<DialogManagerDef>.AllDefsListForReading);
-            managers.AddRange(CQFEditorTools.GetObject<DialogManagerDef>(Page_QuestEditor.Path + @"\DialogTree\", "//QuestEditor_Library.DialogManagerDef"));
             CQFEditorTools.DrawButtonAndText(ref y, "DialogTree".Translate(this.dialogManager?.defName), "Select".Translate(),
-                () => CQFEditorTools.DrawFloatMenu(managers, (t) => this.dialogManager = t, (t) => t.defName), 20f + x);
+                () => CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, (t) => this.dialogManager = t, (t) => t.defName), 20f + x);
             y += 5f;
             if (Widgets.ButtonText(new Rect(20f + x, y, 300f, 30f), "Misc".Translate(), false))
             {

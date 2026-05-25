@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,20 +23,7 @@ namespace QuestEditor_Library
             y += 30f;
             if (Widgets.ButtonText(new Rect(5f, y, 150f, 35f), "SelectMapData".Translate()))
             {
-                List<CustomMapDataDef> list = new List<CustomMapDataDef>();
-                list.AddRange(DefDatabase<CustomMapDataDef>.AllDefsListForReading.ToList());
-                DirectoryInfo mapDir = new DirectoryInfo(Page_QuestEditor.Path + @"\Map\");
-                foreach (FileInfo file in mapDir.GetFiles("*.xml"))
-                {
-                    XmlDocument xml = new XmlDocument();
-                    xml.Load(file.FullName);
-                    foreach (XmlNode xmlNode in xml.SelectNodes("//QuestEditor_Library.CustomMapDataDef"))
-                    {
-                        list.Add(DirectXmlToObject.ObjectFromXml<CustomMapDataDef>(xmlNode, false));
-                    }
-                }
-                DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
-                CQFEditorTools.DrawFloatMenu<CustomMapDataDef>(list, (x) => this.data = x.defName, (x) => x.label);
+                CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, (x) => this.data = x.defName, (x) => x.label);
             }
             y += 60f;       
             Widgets.Label(new Rect(5f, y, 150f, 25f), "chance".Translate());

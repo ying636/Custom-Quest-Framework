@@ -62,7 +62,10 @@ namespace QuestEditor_Library
 				site.mapDef = map; 
 				site.replaceMapGeneration = this.replaceMapGeneration;
                 quest.SpawnWorldObject(site, null, null);
-				slate.Set<Site>(this.storeAs.GetValue(slate), site);
+                if (this.storeAs.GetValue(slate) != null)
+                {
+	                slate.Set<Site>(this.storeAs.GetValue(slate), site);   
+                }
 			}
 			else 
 			{

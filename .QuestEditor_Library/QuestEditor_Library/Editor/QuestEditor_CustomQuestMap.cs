@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -42,16 +42,12 @@ namespace QuestEditor_Library
                     GenerateMap(m.size, m);
                 };
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
-                DirectoryInfo ruleDir = new DirectoryInfo(Page_QuestEditor.Path + @"\Map\");
-                List<CustomMapDataDef> defs = new List<CustomMapDataDef>();
-                defs.AddRange(DefDatabase<CustomMapDataDef>.AllDefsListForReading);
-                defs.AddRange(CQFEditorTools.GetObject<CustomMapDataDef>(Page_QuestEditor.Path + @"\Map\", "//QuestEditor_Library.CustomMapDataDef"));
+                List<CustomMapDataDef> defs = DefDatabase<CustomMapDataDef>.AllDefsListForReading;
                 defs.ForEach(x => options.Add(new FloatMenuOption(x.label, () =>
                 {
                     generateMap(x);
                     this.Close();
                 })));
-                DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
                 if (options.Any())
                 {
                     Find.WindowStack.Add(new FloatMenu(options));
