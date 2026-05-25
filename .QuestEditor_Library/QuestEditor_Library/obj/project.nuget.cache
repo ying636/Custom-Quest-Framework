@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "BAEOpWcoSQE=",
+  "success": true,
+  "projectFilePath": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestEditor_Library.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HaiLu\\.nuget\\packages\\krafs.rimworld.ref\\1.6.4633\\krafs.rimworld.ref.1.6.4633.nupkg.sha512",
+    "C:\\Users\\HaiLu\\.nuget\\packages\\lib.harmony.ref\\2.4.2\\lib.harmony.ref.2.4.2.nupkg.sha512",
+    "C:\\Users\\HaiLu\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -29,6 +29,7 @@
   <SaveMapToFile>Save Map To File</SaveMapToFile>
 
   <WorldObjectDefOfSite>World object def of site:</WorldObjectDefOfSite>
+  <WorldObjectDefOfSite_Tip>World object must inherit from CustomSite. This can be left empty to use CQF's built-in world object by default.</WorldObjectDefOfSite_Tip>
 
   <DisdestroyBecauseOfNoColonist>Disdestroy because of no colonist:</DisdestroyBecauseOfNoColonist>
   <Reenterable>Re-enterable:</Reenterable>

@@ -172,6 +172,7 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <SelectStuff>Select stuff{0}</SelectStuff>
   <LootPawn>Loot pawn</LootPawn>
   <DestroyAfterOpening>Destroy after opening</DestroyAfterOpening>
+  <OpenWhenDestroyed>Open when destroying:</OpenWhenDestroyed>
   <MessageAfterOpening>Message after opening</MessageAfterOpening>
   <PastePawns>Paste pawns</PastePawns>
   <UseLootDef>Use loot def (In order to save loading time)</UseLootDef>
@@ -186,6 +187,10 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <CQFThingData_Value_Category>Category:{0}</CQFThingData_Value_Category>
   <TotalMarketValueRange>Total value range:</TotalMarketValueRange>
   <CQFThingData_Corpse>Corpse</CQFThingData_Corpse>
+  <CurRotMode>Rot mode:{0}</CurRotMode>
+  <Rotting>Rotting</Rotting>
+  <Dessicated>Dessicated</Dessicated>
+  <Fresh>Fresh</Fresh>
   <CQFThingData_Value>Value</CQFThingData_Value>
   <ITab_CompActionWorker>Actions</ITab_CompActionWorker>
 
@@ -422,12 +427,11 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
 
   <onlyGenerateSingleResult>Only generate single result:</onlyGenerateSingleResult>
 
-  <NoRequiredThing>require {0}[{1}/{2}]</NoRequiredThing>
+  <NoRequiredThing>require {0} [{1}/{2}]</NoRequiredThing>
   <NoRequiredThingCategory>lack {0}*{1}</NoRequiredThingCategory>
 
   <DialogResults>Dialog results:</DialogResults>
   <ResultName>Result name:</ResultName>
-  <NoRequiredTHing>require {0}*{1}</NoRequiredTHing>
 
   <Tags>Tags:</Tags>
   <GenerationLimit>Generation limit:</GenerationLimit>

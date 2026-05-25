@@ -3,6 +3,7 @@
 
     <WorldObjectDef ParentName="SpaceSite">
         <defName>QE_SpaceCustomSite</defName>
+        <label>space site</label>
         <worldObjectClass>QuestEditor_Library.CustomSite</worldObjectClass>
         <expandingIcon>true</expandingIcon>
         <expandingIconPriority>70</expandingIconPriority>
@@ -22,6 +23,7 @@
 
     <WorldObjectDef ParentName="SpaceSite">
         <defName>QE_CustomMap_SpaceSubMap</defName>
+        <label>space site</label>
         <worldObjectClass>QuestEditor_Library.MapParent_Custom</worldObjectClass>
         <mapGenerator>QE_SpaceCustomMap_Generator</mapGenerator>
         <texture>UI/Null</texture>

@@ -3,6 +3,7 @@
 
     <WorldObjectDef>
         <defName>QE_CustomMap_Editor</defName>
+        <label>custom map editor</label>
         <worldObjectClass>QuestEditor_Library.EditorMapObject</worldObjectClass>
         <texture>World/WorldObjects/Ambush</texture>
         <mapGenerator>QE_CustomMap_Editor_Generator</mapGenerator>
@@ -12,6 +13,7 @@
 
     <WorldObjectDef>
         <defName>QE_CustomMap_SubMap</defName>
+        <label>custom sub map</label>
         <worldObjectClass>QuestEditor_Library.MapParent_Custom</worldObjectClass>
         <mapGenerator>QE_CustomMap_Editor_Generator</mapGenerator>
         <texture>UI/Null</texture>
@@ -25,6 +27,7 @@
 
     <WorldObjectDef>
         <defName>CQF_CustomSite</defName>
+        <label>custom site</label>
         <worldObjectClass>QuestEditor_Library.CustomSite</worldObjectClass>
         <expandingIcon>true</expandingIcon>
         <expandingIconPriority>70</expandingIconPriority>

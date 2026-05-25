@@ -20,7 +20,7 @@
   <GenStepDef>
     <defName>QE_CustomSite_GenStep</defName>
     <linkWithSite>QE_CustomSite</linkWithSite>
-    <order>1499</order>
+    <order>3500</order>
     <genStep Class="QuestEditor_Library.GenStep_CustomMap" />
   </GenStepDef>
 

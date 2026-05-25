@@ -297,6 +297,7 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <LootPawn>陷阱实体：</LootPawn>
   <!-- EN: Destroy after opening -->
   <DestroyAfterOpening>打开后摧毁：</DestroyAfterOpening>
+  <OpenWhenDestroyed>摧毁时打开：</OpenWhenDestroyed>
   <!-- EN: Message after opening -->
   <MessageAfterOpening>打开后弹出信息：</MessageAfterOpening>
   <!-- EN: Paste pawns -->
@@ -324,6 +325,10 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <TotalMarketValueRange>总共价值范围：</TotalMarketValueRange>
   <!-- EN: Corpse -->
   <CQFThingData_Corpse>尸体</CQFThingData_Corpse>
+  <CurRotMode>腐烂模式：{0}</CurRotMode>
+  <Rotting>腐烂中</Rotting>
+  <Dessicated>风干</Dessicated>
+  <Fresh>新鲜</Fresh>
   <!-- EN: Value -->
   <CQFThingData_Value>价值</CQFThingData_Value>
   <!-- EN: Actions -->
@@ -748,8 +753,6 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <DialogResults>对话结果：</DialogResults>
   <!-- EN: Result name: -->
   <ResultName>结果名字：</ResultName>
-  <!-- EN: require {0}*{1} -->
-  <NoRequiredTHing>需要{0}[{1}\{2}]</NoRequiredTHing>
 
   <!-- EN: Tags: -->
   <Tags>标签：</Tags>

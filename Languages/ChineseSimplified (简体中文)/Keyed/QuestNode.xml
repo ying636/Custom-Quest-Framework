@@ -53,6 +53,8 @@
 
   <!-- EN: World object def of site: -->
   <WorldObjectDefOfSite>站点的定义：</WorldObjectDefOfSite>
+  <!-- EN: World object must inherit from CustomSite. This can be left empty to use CQF's built-in world object by default. -->
+  <WorldObjectDefOfSite_Tip>世界对象需要继承 CustomSite。此项可以留空，默认使用 CQF 内置的世界对象。</WorldObjectDefOfSite_Tip>
 
   <!-- EN: Disdestroy because of no colonist: -->
   <DisdestroyBecauseOfNoColonist>不因无殖民者而销毁：</DisdestroyBecauseOfNoColonist>

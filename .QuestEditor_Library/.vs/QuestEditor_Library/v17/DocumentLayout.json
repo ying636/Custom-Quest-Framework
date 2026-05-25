@@ -1,0 +1,925 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Code\\Git\\QuestEditor_Library\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|d:\\code\\git\\questeditor_library\\questeditor_library\\dialog\\option\\dialogoption_selectcolonists.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\dialog\\option\\dialogoption_selectcolonists.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\dialog\\dialogtree.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\dialog\\dialogtree.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\window\\dialog_editdialognode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\window\\dialog_editdialognode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\editor\\questeditor_dialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\editor\\questeditor_dialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\component\\gamecomponent_editor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\component\\gamecomponent_editor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\customquestframework_mod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\customquestframework_mod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\patch\\patch_wildanimal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\patch\\patch_wildanimal.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\PatchMain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Patch\\PatchMain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\questeditor_library\\patch\\patch_mapexit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:questeditor_library\\patch\\patch_mapexit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Comp\\CompSetMapAndGenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:QuestEditor_Library\\Comp\\CompSetMapAndGenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_MapGenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Patch\\Patch_MapGenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_GenerateSpecialPawns.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Patch\\Patch_GenerateSpecialPawns.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\PawnData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\PawnData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\LordData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\LordData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\GenStep\\GenStep_CustomMap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\GenStep\\GenStep_CustomMap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\MapParent_Custom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\MapParent\\MapParent_Custom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QEDefOf.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\QEDefOf.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CQFUtility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CQFUtility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Def\\CustomMapDataDef.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Def\\CustomMapDataDef.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\SpawnType.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\SpawnType.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_SaveMapToFile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Editor\\QuestEditor_SaveMapToFile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\Site\\CustomSite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\MapParent\\Site\\CustomSite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\DebugTools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\DebugTools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\LootBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\SpecialThing\\LootBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestNode\\QuestNode_Root_CustomMap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\QuestNode\\QuestNode_Root_CustomMap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\Submap\\CompPower_Level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\ThingComp\\Submap\\CompPower_Level.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\ZoneCore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\SpecialThing\\ZoneCore.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_LootBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\CustomThingData_LootBox.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\CustomThingData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_SpawnThing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_SpawnThing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_Disgenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_Disgenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_SaveZoneAsDef.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_SaveZoneAsDef.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_PawnDataEditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Editor\\QuestEditor_PawnDataEditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\CompTriggerDialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\ThingComp\\CompTriggerDialog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\CompSetMapAndGenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\ThingComp\\CompSetMapAndGenerate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_Route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_Route.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_CustomTrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_CustomTrap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_MoveIn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_MoveIn.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_DestroyThing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_DestroyThing.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_CQFTools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Designator\\Designator_CQFTools.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CQFFilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CQFFilter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Lord\\LevelAI\\LevelUtility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Lord\\LevelAI\\LevelUtility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Lord\\LevelAI\\LevelPather.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Lord\\LevelAI\\LevelPather.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapEntrance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapEntrance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\GameComponent_LevelSchedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Component\\GameComponent_LevelSchedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\MapComponent_CQFLord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Component\\MapComponent_CQFLord.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Job\\JobGiver_MoveToNewLevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Job\\JobGiver_MoveToNewLevel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestNode\\QuestNode_GenerateCustomWorldObject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\QuestNode\\QuestNode_GenerateCustomWorldObject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapExit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapExit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_SaveXml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Patch\\Patch_SaveXml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapExit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapExit.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapEntrance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapEntrance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Incident\\IncidentWorker_Caravan_CustomMap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Incident\\IncidentWorker_Caravan_CustomMap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_SitePartParams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Patch\\Patch_SitePartParams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_AddCaravanAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\Patch\\Patch_AddCaravanAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\Site\\SitePartWorker_Custom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{41D3F9A5-7A2C-4F7D-A306-1E2F70EA0EB2}|QuestEditor_Library\\QuestEditor_Library.csproj|solutionrelative:QuestEditor_Library\\MapParent\\Site\\SitePartWorker_Custom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DialogOption_SelectColonists.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Dialog\\Option\\DialogOption_SelectColonists.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Dialog\\Option\\DialogOption_SelectColonists.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Dialog\\Option\\DialogOption_SelectColonists.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Dialog\\Option\\DialogOption_SelectColonists.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T07:38:06.967Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DialogTree.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Dialog\\DialogTree.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Dialog\\DialogTree.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Dialog\\DialogTree.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Dialog\\DialogTree.cs",
+              "ViewState": "AgIAAFwBAAAAAAAAAAAqwAgCAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T07:28:28.366Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Dialog_EditDialogNode.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Window\\Dialog_EditDialogNode.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Window\\Dialog_EditDialogNode.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Window\\Dialog_EditDialogNode.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Window\\Dialog_EditDialogNode.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAowEQAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T07:28:17.047Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "QuestEditor_Dialog.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_Dialog.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Editor\\QuestEditor_Dialog.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_Dialog.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Editor\\QuestEditor_Dialog.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T07:27:47.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CustomQuestFramework_Mod.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomQuestFramework_Mod.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomQuestFramework_Mod.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomQuestFramework_Mod.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomQuestFramework_Mod.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-29T07:59:12.775Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "GenStep_CustomMap.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\GenStep\\GenStep_CustomMap.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\GenStep\\GenStep_CustomMap.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\GenStep\\GenStep_CustomMap.cs",
+              "RelativeToolTip": "QuestEditor_Library\\GenStep\\GenStep_CustomMap.cs",
+              "ViewState": "AgIAAIYAAAAAAAAAAAAUwCIAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-27T12:49:17.419Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "MapParent_Custom.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\MapParent_Custom.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\MapParent\\MapParent_Custom.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\MapParent_Custom.cs",
+              "RelativeToolTip": "QuestEditor_Library\\MapParent\\MapParent_Custom.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAkwBEAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-27T13:37:42.082Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Patch_MapExit.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_MapExit.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_MapExit.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_MapExit.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_MapExit.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T02:24:01.689Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PatchMain.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\PatchMain.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\PatchMain.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\PatchMain.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\PatchMain.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvxQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-14T11:42:34.334Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GameComponent_Editor.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\GameComponent_Editor.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Component\\GameComponent_Editor.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\GameComponent_Editor.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Component\\GameComponent_Editor.cs",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAqwKEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T05:16:37.493Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "LordData.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\LordData.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\LordData.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\LordData.cs",
+              "RelativeToolTip": "QuestEditor_Library\\LordData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-10T09:47:23.944Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PawnData.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\PawnData.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\PawnData.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\PawnData.cs",
+              "RelativeToolTip": "QuestEditor_Library\\PawnData.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-10T09:47:24.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Patch_WildAnimal.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_WildAnimal.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_WildAnimal.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_WildAnimal.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_WildAnimal.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-14T11:43:18.647Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Patch_GenerateSpecialPawns.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_GenerateSpecialPawns.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_GenerateSpecialPawns.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_GenerateSpecialPawns.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_GenerateSpecialPawns.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T07:48:49.448Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Patch_MapGenerate.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_MapGenerate.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_MapGenerate.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_MapGenerate.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_MapGenerate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T07:48:49.985Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "QEDefOf.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QEDefOf.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\QEDefOf.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QEDefOf.cs",
+              "RelativeToolTip": "QuestEditor_Library\\QEDefOf.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-10T09:47:25.026Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "CQFUtility.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CQFUtility.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CQFUtility.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CQFUtility.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CQFUtility.cs",
+              "ViewState": "AgIAAA4GAAAAAAAAAAAYwBgGAABgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T10:42:46.837Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "CustomMapDataDef.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Def\\CustomMapDataDef.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Def\\CustomMapDataDef.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Def\\CustomMapDataDef.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Def\\CustomMapDataDef.cs",
+              "ViewState": "AgIAAOsCAAAAAAAAAAAmwPgCAABKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-14T12:08:30.701Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "SpawnType.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\SpawnType.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\SpawnType.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\SpawnType.cs",
+              "RelativeToolTip": "QuestEditor_Library\\SpawnType.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-10T09:47:26.326Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "QuestEditor_SaveMapToFile.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_SaveMapToFile.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Editor\\QuestEditor_SaveMapToFile.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_SaveMapToFile.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Editor\\QuestEditor_SaveMapToFile.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAmwLIAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:04:48.509Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "CustomSite.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\Site\\CustomSite.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\MapParent\\Site\\CustomSite.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\Site\\CustomSite.cs",
+              "RelativeToolTip": "QuestEditor_Library\\MapParent\\Site\\CustomSite.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAADwv0kAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T18:20:50.151Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "DebugTools.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\DebugTools.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\DebugTools.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\DebugTools.cs",
+              "RelativeToolTip": "QuestEditor_Library\\DebugTools.cs",
+              "ViewState": "AgIAAJkAAAAAAAAAAAAYwFwAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T08:01:17.25Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "LootBox.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\LootBox.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\SpecialThing\\LootBox.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\LootBox.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\SpecialThing\\LootBox.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAowNUAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T07:58:42.552Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "QuestNode_Root_CustomMap.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestNode\\QuestNode_Root_CustomMap.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\QuestNode\\QuestNode_Root_CustomMap.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestNode\\QuestNode_Root_CustomMap.cs",
+              "RelativeToolTip": "QuestEditor_Library\\QuestNode\\QuestNode_Root_CustomMap.cs",
+              "ViewState": "AgIAANQAAAAAAAAAAAAuwCABAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T10:46:15.62Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "CompPower_Level.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\Submap\\CompPower_Level.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\ThingComp\\Submap\\CompPower_Level.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\Submap\\CompPower_Level.cs",
+              "RelativeToolTip": "QuestEditor_Library\\ThingComp\\Submap\\CompPower_Level.cs",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAYwKkAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-28T09:18:14.592Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "ZoneCore.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\ZoneCore.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\SpecialThing\\ZoneCore.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\ZoneCore.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\SpecialThing\\ZoneCore.cs",
+              "ViewState": "AgIAAH4BAAAAAAAAAAAxwJkBAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-06T10:19:04.859Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "CustomThingData_LootBox.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_LootBox.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\CustomThingData_LootBox.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_LootBox.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\CustomThingData_LootBox.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAgwC4AAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-29T14:50:58.748Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "CustomThingData.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\CustomThingData.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\CustomThingData.cs",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAkwIIAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-29T14:51:04.68Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "Designator_SpawnThing.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_SpawnThing.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_SpawnThing.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_SpawnThing.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_SpawnThing.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:14:07.477Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "Designator_Disgenerate.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_Disgenerate.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_Disgenerate.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_Disgenerate.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_Disgenerate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:14:08.3Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Designator_SaveZoneAsDef.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_SaveZoneAsDef.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_SaveZoneAsDef.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_SaveZoneAsDef.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_SaveZoneAsDef.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:14:06.807Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "QuestEditor_PawnDataEditor.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_PawnDataEditor.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Editor\\QuestEditor_PawnDataEditor.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Editor\\QuestEditor_PawnDataEditor.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Editor\\QuestEditor_PawnDataEditor.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAADwv2kAAAA9AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-22T07:47:28.951Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "CompTriggerDialog.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\CompTriggerDialog.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\ThingComp\\CompTriggerDialog.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\CompTriggerDialog.cs",
+              "RelativeToolTip": "QuestEditor_Library\\ThingComp\\CompTriggerDialog.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T06:23:15.131Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "CompSetMapAndGenerate.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\CompSetMapAndGenerate.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\ThingComp\\CompSetMapAndGenerate.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\ThingComp\\CompSetMapAndGenerate.cs",
+              "RelativeToolTip": "QuestEditor_Library\\ThingComp\\CompSetMapAndGenerate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T06:23:16.132Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "Designator_Route.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_Route.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_Route.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_Route.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_Route.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAswBEAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:18:40.595Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "Designator_CustomTrap.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_CustomTrap.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_CustomTrap.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_CustomTrap.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_CustomTrap.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:14:09.484Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "Designator_MoveIn.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_MoveIn.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_MoveIn.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_MoveIn.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_MoveIn.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABAAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:14:11.278Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "Designator_DestroyThing.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_DestroyThing.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_DestroyThing.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_DestroyThing.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_DestroyThing.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:14:01.462Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "Designator_CQFTools.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_CQFTools.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Designator\\Designator_CQFTools.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Designator\\Designator_CQFTools.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Designator\\Designator_CQFTools.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T14:13:55.582Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "CQFFilter.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CQFFilter.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CQFFilter.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CQFFilter.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CQFFilter.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T07:58:12.547Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "LevelUtility.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Lord\\LevelAI\\LevelUtility.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Lord\\LevelAI\\LevelUtility.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Lord\\LevelAI\\LevelUtility.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Lord\\LevelAI\\LevelUtility.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABsAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-27T13:35:14.099Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "LevelPather.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Lord\\LevelAI\\LevelPather.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Lord\\LevelAI\\LevelPather.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Lord\\LevelAI\\LevelPather.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Lord\\LevelAI\\LevelPather.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T03:35:19.538Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "CustomMapEntrance.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapEntrance.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapEntrance.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapEntrance.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapEntrance.cs",
+              "ViewState": "AgIAAGYAAAAAAAAAAAAAAHUAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T08:21:47.939Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "GameComponent_LevelSchedule.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\GameComponent_LevelSchedule.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Component\\GameComponent_LevelSchedule.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\GameComponent_LevelSchedule.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Component\\GameComponent_LevelSchedule.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAgwCAAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T03:21:58.774Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "MapComponent_CQFLord.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\MapComponent_CQFLord.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Component\\MapComponent_CQFLord.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Component\\MapComponent_CQFLord.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Component\\MapComponent_CQFLord.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-25T12:08:11.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "JobGiver_MoveToNewLevel.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Job\\JobGiver_MoveToNewLevel.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Job\\JobGiver_MoveToNewLevel.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Job\\JobGiver_MoveToNewLevel.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Job\\JobGiver_MoveToNewLevel.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAswBUAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-24T03:35:17.143Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "QuestNode_GenerateCustomWorldObject.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestNode\\QuestNode_GenerateCustomWorldObject.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\QuestNode\\QuestNode_GenerateCustomWorldObject.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestNode\\QuestNode_GenerateCustomWorldObject.cs",
+              "RelativeToolTip": "QuestEditor_Library\\QuestNode\\QuestNode_GenerateCustomWorldObject.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAASwCQAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-22T01:43:06.444Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "CustomThingData_CustomMapExit.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapExit.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapExit.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapExit.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapExit.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T09:45:24.385Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CompSetMapAndGenerate.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Comp\\CompSetMapAndGenerate.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Comp\\CompSetMapAndGenerate.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Comp\\CompSetMapAndGenerate.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Comp\\CompSetMapAndGenerate.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvxEAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T08:22:42.381Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "Patch_SaveXml.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_SaveXml.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_SaveXml.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_SaveXml.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_SaveXml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-21T02:24:00.433Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "CustomMapExit.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapExit.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapExit.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapExit.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\SpecialThing\\CustomMapExit.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAIwCEAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T08:14:02.34Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "CustomThingData_CustomMapEntrance.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapEntrance.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapEntrance.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapEntrance.cs",
+              "RelativeToolTip": "QuestEditor_Library\\CustomThing\\CustomThingData_CustomMapEntrance.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAADwvxEAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-19T09:45:24.882Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "IncidentWorker_Caravan_CustomMap.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Incident\\IncidentWorker_Caravan_CustomMap.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Incident\\IncidentWorker_Caravan_CustomMap.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Incident\\IncidentWorker_Caravan_CustomMap.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Incident\\IncidentWorker_Caravan_CustomMap.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAvwDYAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T18:26:26.823Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 53,
+              "Title": "Patch_SitePartParams.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_SitePartParams.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_SitePartParams.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_SitePartParams.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_SitePartParams.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAcwBMAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T18:26:18.488Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 54,
+              "Title": "Patch_AddCaravanAction.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_AddCaravanAction.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\Patch\\Patch_AddCaravanAction.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\Patch\\Patch_AddCaravanAction.cs",
+              "RelativeToolTip": "QuestEditor_Library\\Patch\\Patch_AddCaravanAction.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAADwvyYAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-14T13:54:59.708Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "SitePartWorker_Custom.cs",
+              "DocumentMoniker": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\Site\\SitePartWorker_Custom.cs",
+              "RelativeDocumentMoniker": "QuestEditor_Library\\MapParent\\Site\\SitePartWorker_Custom.cs",
+              "ToolTip": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\MapParent\\Site\\SitePartWorker_Custom.cs",
+              "RelativeToolTip": "QuestEditor_Library\\MapParent\\Site\\SitePartWorker_Custom.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvw8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-13T18:18:13.047Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
