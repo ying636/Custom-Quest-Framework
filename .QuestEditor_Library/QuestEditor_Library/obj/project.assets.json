@@ -339,11 +339,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestEditor_Library.csproj",
+      "projectUniqueName": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\.QuestEditor_Library\\QuestEditor_Library\\QuestEditor_Library.csproj",
       "projectName": "QuestEditor_Library",
-      "projectPath": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\QuestEditor_Library.csproj",
+      "projectPath": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\.QuestEditor_Library\\QuestEditor_Library\\QuestEditor_Library.csproj",
       "packagesPath": "C:\\Users\\HaiLu\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\Git\\QuestEditor_Library\\QuestEditor_Library\\obj\\",
+      "outputPath": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\.QuestEditor_Library\\QuestEditor_Library\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\HaiLu\\AppData\\Roaming\\NuGet\\NuGet.Config"

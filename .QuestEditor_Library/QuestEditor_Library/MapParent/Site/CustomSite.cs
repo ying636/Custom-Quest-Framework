@@ -18,7 +18,7 @@ namespace QuestEditor_Library
         {
             get
             {
-                if (this.siteIconPath != null)
+                if (!this.siteIconPath.NullOrEmpty())
                 {
                     if (this.material == null)
                     {
@@ -35,7 +35,7 @@ namespace QuestEditor_Library
         {
             get
             {
-                if (this.expandingIconPath != null)
+                if (!this.expandingIconPath.NullOrEmpty())
                 {
                     if (this.expandingIcon == null) 
                     {

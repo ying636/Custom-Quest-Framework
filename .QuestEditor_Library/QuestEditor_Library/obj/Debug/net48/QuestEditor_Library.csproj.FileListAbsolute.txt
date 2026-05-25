@@ -8,3 +8,11 @@ D:\Code\Git\QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_
 D:\Code\Git\QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.sourcelink.json
 D:\Code\Git\QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.dll
 D:\Code\Git\QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.pdb
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.csproj.AssemblyReference.cache
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.AssemblyInfoInputs.cache
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.AssemblyInfo.cs
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.csproj.CoreCompileInputs.cache
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.sourcelink.json
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.dll
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\obj\Debug\net48\QuestEditor_Library.pdb
