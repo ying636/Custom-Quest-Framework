@@ -254,6 +254,7 @@ namespace QuestEditor_Library
                     });
                     defs_Text.Save(path_Text);
 
+                    CQFQuestDefBootstrap.HotLoadDialogTreeDef(this.CurTree);
 
                     Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
                 }

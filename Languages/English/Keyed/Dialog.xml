@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <DialogImages>Dialog Images</DialogImages>
+  <DialogImages_Tip>Configure the images shown above this dialog node's text. Each image can be selected from the image picker and assigned a size scale.</DialogImages_Tip>
+  <DialogImage_Title>Dialog Images</DialogImage_Title>
+  <DialogImage_Mod>Mod</DialogImage_Mod>
+  <DialogImage_All>All</DialogImage_All>
+  <DialogImage_Search>Search</DialogImage_Search>
+  <DialogImage_Element>Image</DialogImage_Element>
+  <DialogImage_Select>Select</DialogImage_Select>
+  <DialogImage_Scale>Size scale</DialogImage_Scale>
+  <DialogImage_SelectTip>Click the image to select it</DialogImage_SelectTip>
+  <DialogImage_None>None</DialogImage_None>
+  <DialogImage_NotSelected>Not selected</DialogImage_NotSelected>
+</LanguageData>

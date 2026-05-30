@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using RimWorld;
 using RimWorld.QuestGen;
@@ -21,6 +21,16 @@ namespace QuestEditor_Library
             {
                 Log.Error("CQF quest bootstrap load error: " + e);
             }
+        }
+
+        public static void HotLoadDialogTreeDef(DialogTreeDef currentDef)
+        {
+            ReplaceDef(currentDef, currentDef);
+        }
+
+        public static void HotLoadDialogManagerDef(DialogManagerDef currentDef)
+        {
+            ReplaceDef(currentDef, currentDef);
         }
 
         private static void LoadAll()
@@ -58,5 +68,32 @@ namespace QuestEditor_Library
                 }
             }
         }
+
+        private static void ReplaceDef<T>(T def, T currentDef) where T : Def
+        {
+            if (currentDef != null && DefDatabase<T>.AllDefsListForReading.Contains(currentDef))
+            {
+                RemoveDef(currentDef);
+            }
+            T existingDef = DefDatabase<T>.GetNamedSilentFail(def.defName);
+            if (existingDef != null)
+            {
+                RemoveDef(existingDef);
+            }
+            DefDatabase<T>.Add(def);
+        }
+
+        private static void RemoveDef<T>(T def) where T : Def
+        {
+            CQFQuestDefBootstrap.removeMethodCache.TryGetValue(typeof(T), out MethodInfo removeMethod);
+            if (removeMethod == null)
+            {
+                removeMethod = typeof(DefDatabase<>).MakeGenericType(typeof(T)).GetMethod("Remove", BindingFlags.NonPublic | BindingFlags.Static);
+                CQFQuestDefBootstrap.removeMethodCache[typeof(T)] = removeMethod;
+            }
+            removeMethod?.Invoke(null, [def]);
+        }
+
+        private static readonly Dictionary<System.Type, MethodInfo> removeMethodCache = new Dictionary<System.Type, MethodInfo>();
     }
 }

@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -51,7 +51,7 @@ public class CQFDialogTreeWindow : Window
         Rect dialogRect = new Rect(CharacterWidth,40f,inRect.width - CharacterWidth * 2f,inRect.height - 40f );
         Widgets.DrawBox(dialogRect);
         Widgets.DrawTitleBG(dialogRect);
-        Rect curRect = new Rect(20f, 20f,dialogRect.width - 40f,dialogRect.height);
+        Rect curRect = new Rect(20f, 25f,dialogRect.width - 40f,dialogRect.height - 5f);
         float y = 15f;
         Widgets.BeginScrollView(dialogRect,ref pos,new Rect(0,0,dialogRect.width - 16f,height));
         foreach (var dialogElement in this.elements)
@@ -94,7 +94,7 @@ public class CQFDialogTreeWindow : Window
         {
             this.curNode = node;
             this.nextOptions.Clear();
-            this.elements.Add(this.curNode.Get(interviewer,interviewee,tree,this.quest));
+            this.elements.AddRange(this.curNode.Get(interviewer,interviewee,tree,this.quest));
             foreach (var curNodeOption in this.curNode.options)
             {
                 foreach (var op in curNodeOption.GetDEOptions(interviewer,interviewee,tree,this.quest))

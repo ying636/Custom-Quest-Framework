@@ -68,11 +68,8 @@ namespace QuestEditor_Library
                     XElement tree = this.Manager.SaveToXElement("QuestEditor_Library.DialogManagerDef");
                     defs.Add(tree);
                     defs.Save(path);
+                    CQFQuestDefBootstrap.HotLoadDialogManagerDef(this.Manager);
                     Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
-                    if (!DefDatabase<DialogManagerDef>.AllDefsListForReading.Exists(d => d.defName == this.Manager.defName))
-                    {
-                        DefDatabase<DialogManagerDef>.Add(this.Manager);
-                    }
                 }
                 catch (Exception e)
                 {

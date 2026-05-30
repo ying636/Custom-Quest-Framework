@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using RimWorld.Planet;
 using RimWorld;
@@ -425,6 +425,18 @@ namespace QuestEditor_Library
             }
             return def;
         }
+        private static void SetTerrainSafely(Map map, IntVec3 cell, TerrainDef terrain)
+        {
+            if (terrain == null || !cell.InBounds(map))
+            {
+                return;
+            }
+            if (terrain.isFoundation && map.terrainGrid.UnderTerrainAt(cell) != null)
+            {
+                map.terrainGrid.RemoveTopLayer(cell, false);
+            }
+            map.terrainGrid.SetTerrain(cell, terrain);
+        }
         public static void SetRoofAndTerrain(Map map, CustomMapDataDef def, IntVec3 center,bool ignoreDisgenerate = false)
         {
             foreach (KeyValuePair<string, List<IntVec3>> content in def.terrains)
@@ -434,7 +446,7 @@ namespace QuestEditor_Library
                 {
                     if ((x + center).InBounds(map))
                     {
-                        map.terrainGrid.SetTerrain(x + center, terrain);
+                        SetTerrainSafely(map, x + center, terrain);
                     }
                 });
             }
@@ -447,7 +459,7 @@ namespace QuestEditor_Library
                     {
                         if ((item + center).InBounds(map))
                         {
-                            map.terrainGrid.SetTerrain(item + center, terrain);
+                            SetTerrainSafely(map, item + center, terrain);
                         }
                     }
                 });

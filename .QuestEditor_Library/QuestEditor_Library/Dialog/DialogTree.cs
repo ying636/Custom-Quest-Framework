@@ -377,14 +377,23 @@ namespace QuestEditor_Library
             this.index = index;
             parent.subNodeIndexs.Add(this.index.Value);
         }
-        public IDialogElement Get(Thing interviewer, Thing interviewee,DialogTreeDef dialog,Quest quest)
-        {  
+        public List<IDialogElement> Get(Thing interviewer, Thing interviewee,DialogTreeDef dialog,Quest quest)
+        {
+            List<IDialogElement> result = new List<IDialogElement>();
+            this.images.ForEach(x =>
+            {
+                if (!x.imagePath.NullOrEmpty())
+                {
+                    result.Add(new DialogElement_Image(ContentFinder<Texture2D>.Get(x.imagePath, false), x.scale));
+                }
+            });
             List<string> texts =
             [
                 this.text
             ];
             texts.AddRange(this.extraText);
-            return new DialogElement_Text(GameTools.GetDialogText(texts.RandomElement(), interviewer, interviewee, dialog, quest));
+            result.Add(new DialogElement_Text(GameTools.GetDialogText(texts.RandomElement(), interviewer, interviewee, dialog, quest)));
+            return result;
         }
         public string DebugInformation(DialogTreeDef tree)
         {
@@ -422,7 +431,13 @@ namespace QuestEditor_Library
                 subNodeIndexs.Add(new XElement("li", x));
             });
             result.Add(subNodeIndexs);
-            result.Add(options); 
+            result.Add(options);
+            if (this.images.Any())
+            {
+                XElement images = new XElement("images");
+                this.images.ForEach(x => images.Add(x.SaveToXElement("li")));
+                result.Add(images);
+            }
             if (!this.extraText.NullOrEmpty()) 
             {
                 result.Add(CQFEditorTools.SaveList(this.extraText, "extraText"));
@@ -436,6 +451,21 @@ namespace QuestEditor_Library
         public int? parentIndex = null;
         public List<DialogOption> options = new List<DialogOption>();
         public List<int> subNodeIndexs = new List<int>();
+        public List<DialogImage> images = new List<DialogImage>();
+    }
+    public class DialogImage : ISaveable
+    {
+        public XElement SaveToXElement(string nodeName)
+        {
+            XElement result = new XElement(nodeName);
+            result.Add(new XElement("imagePath", this.imagePath));
+            result.Add(new XElement("scale", this.scale));
+            return result;
+        }
+
+        public string imagePath = string.Empty;
+        public float scale = 1f;
+        public string buffer_scale = "1";
     }
     public class DialogResult : ISaveable
     {

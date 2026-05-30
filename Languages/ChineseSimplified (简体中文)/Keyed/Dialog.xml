@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: Dialog Images -->
+  <DialogImages>对话图片</DialogImages>
+  <!-- EN: Configure the images shown above this dialog node's text. Each image can be selected from the image picker and assigned a size scale. -->
+  <DialogImages_Tip>配置显示在当前对话节点正文上方的图片。每张图片都可以通过图片选择器指定，并设置对应的大小倍率。</DialogImages_Tip>
+  <!-- EN: Dialog Images -->
+  <DialogImage_Title>对话图片</DialogImage_Title>
+  <!-- EN: Mod -->
+  <DialogImage_Mod>模组</DialogImage_Mod>
+  <!-- EN: All -->
+  <DialogImage_All>全部</DialogImage_All>
+  <!-- EN: Search -->
+  <DialogImage_Search>搜索</DialogImage_Search>
+  <!-- EN: Image -->
+  <DialogImage_Element>图片</DialogImage_Element>
+  <!-- EN: Select -->
+  <DialogImage_Select>选择</DialogImage_Select>
+  <!-- EN: Size scale -->
+  <DialogImage_Scale>大小倍率</DialogImage_Scale>
+  <!-- EN: Click the image to select it -->
+  <DialogImage_SelectTip>点击图片进行选择</DialogImage_SelectTip>
+  <!-- EN: None -->
+  <DialogImage_None>无</DialogImage_None>
+  <!-- EN: Not selected -->
+  <DialogImage_NotSelected>未选择</DialogImage_NotSelected> 
+</LanguageData>
