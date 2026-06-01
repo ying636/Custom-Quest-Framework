@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using RimWorld.Planet;
 using RimWorld;
@@ -219,13 +219,13 @@ namespace QuestEditor_Library
                 {
                     foreach (PawnSpawnData data in content.Value)
                     {
-                        if (data.spawnType != SpawnType.BuildingTick)
+                        if (data is PawnSpawnData pawnData && pawnData.spawnType == SpawnType.BuildingTick)
                         {
-                            specialDatas.Add(data);
+                            component.pawnSpawnDatas_Tick.Add(new PawnDataWithPosAndTime() { data = pawnData, position = intVec3 });
                         }
                         else
                         {
-                            component.pawnSpawnDatas_Tick.Add(new PawnDataWithPosAndTime() { data = data, position = intVec3 });
+                            specialDatas.Add(data);
                         }
                     }
                 }
@@ -258,17 +258,18 @@ namespace QuestEditor_Library
                     {
                         continue;
                     }
-                    if (data.lordDataName != null && lordsWithName.ContainsKey(data.lordDataName))
+                    PawnSpawnData pawnData = data as PawnSpawnData;
+                    if (pawnData != null && pawnData.lordDataName != null && lordsWithName.ContainsKey(pawnData.lordDataName))
                     {
-                        lord = lordsWithName[data.lordDataName];
+                        lord = lordsWithName[pawnData.lordDataName];
                     }
-                    else 
+                    else if (pawnData != null)
                     {
-                        if (faction == null && data.faction != null && GameTools.GetFaction(data.faction, map) != null)
+                        if (faction == null && pawnData.faction != null && GameTools.GetFaction(pawnData.faction, map) != null)
                         {
-                            faction = GameTools.GetFaction(data.faction,map);
+                            faction = GameTools.GetFaction(pawnData.faction,map);
                         }
-                        if (faction != null && data.enableLord)
+                        if (faction != null && pawnData.enableLord)
                         {
                             if (lords.ContainsKey(faction))
                             {
@@ -312,11 +313,11 @@ namespace QuestEditor_Library
                         pawns.AddRange(ps);
                     }
 
-                    if (lord != null && lord.LordJob is LordJob_Custom lordJob)
+                    if (pawnData != null && lord != null && lord.LordJob is LordJob_Custom lordJob)
                     {
-                        if (data.duty == QEDefOf.QE_Duty_Guard)
+                        if (pawnData.duty == QEDefOf.QE_Duty_Guard)
                         {
-                            if (def.routes.TryGetValue(data.routeName, out List<IntVec3> route))
+                            if (def.routes.TryGetValue(pawnData.routeName, out List<IntVec3> route))
                             {
                                 List<IntVec3> route2 = new List<IntVec3>();
                                 route.ForEach((x) => route2.Add(x + center));
@@ -330,7 +331,7 @@ namespace QuestEditor_Library
                                 Log.Error("null route");
                             }
                         }
-                        if (data.duty == QEDefOf.QE_Duty_Waiter || data.duty == DutyDefOf.Defend) 
+                        if (pawnData.duty == QEDefOf.QE_Duty_Waiter || pawnData.duty == DutyDefOf.Defend) 
                         {
                             pawns.ForEach((x) =>
                             {
@@ -339,7 +340,7 @@ namespace QuestEditor_Library
                         }
                         pawns.ForEach((x) =>
                         {
-                            lordJob.pawnDutyDatas.SetOrAdd(x, data.duty);
+                            lordJob.pawnDutyDatas.SetOrAdd(x, pawnData.duty);
                         });
                     }
                 }
@@ -599,3 +600,5 @@ namespace QuestEditor_Library
         public static List<ExecutiveRequest> requests = new List<ExecutiveRequest>();
     }
 }
+
+

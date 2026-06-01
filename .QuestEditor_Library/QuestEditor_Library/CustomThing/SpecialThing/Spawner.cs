@@ -23,7 +23,8 @@ namespace QuestEditor_Library
             {
                 this.pawns.ForEach(x =>
                 {
-                    Lord lord = LordMaker.MakeNewLord(x.faction == null ? null : GameTools.GetFaction(x.faction, this.Map), new LordJob_Custom(), this.Map);
+                    PawnSpawnData pawnData = x as PawnSpawnData;
+                    Lord lord = pawnData == null ? null : LordMaker.MakeNewLord(pawnData.faction == null ? null : GameTools.GetFaction(pawnData.faction, this.Map), new LordJob_Custom(), this.Map);
                     x.Spawn(this.Position, this.Map, "null",null, lord);
                 }
                 );
@@ -64,3 +65,5 @@ namespace QuestEditor_Library
         public List<PawnSpawnData> pawns = new List<PawnSpawnData>();
     }
 }
+
+

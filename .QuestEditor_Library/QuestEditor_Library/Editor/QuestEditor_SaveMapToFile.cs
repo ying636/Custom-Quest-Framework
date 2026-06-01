@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -98,7 +98,7 @@ namespace QuestEditor_Library
                 Find.WindowStack.Add(new Window_ReplaceData(def));
             }
             Rect tip = new Rect(110f + x2, y, 25f, 25f);
-            Widgets.DrawTextureFitted(tip, Page_QuestEditor.tipIcon, 1f);
+            Widgets.DrawTextureFitted(tip, CQFEditorTools.TipIcon, 1f);
             TooltipHandler.TipRegion(tip, "ReplaceDefTip".Translate());
             y += 30f;
             if (Widgets.ButtonText(new Rect(x2,y,180f,30f), "AdvancedSetting".Translate(),false))

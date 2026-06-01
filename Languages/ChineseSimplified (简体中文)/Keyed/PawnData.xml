@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <PawnDataEditor>实体数据生成器(未完成)</PawnDataEditor>
+  <SpawnMessage>生成提示：</SpawnMessage>
+  <PawnSpawnDatas>实体数据：</PawnSpawnDatas>
+  <AddNewPawns>添加实体生成数据</AddNewPawns>
+  <DeleteNewPawns>移除实体生成数据</DeleteNewPawns>
+
+  <PawnDataCannotSaveToMapWarning>无法将此实体生成数据保存到地图：请在保存前配置必要的生成数据。</PawnDataCannotSaveToMapWarning>
+
+  <PawnSpawnData>常规生成数据</PawnSpawnData>
+  <PawnSpawnData_Tip>标准实体生成数据。用于配置实体种类、数量、派系、Lord、职责、物品、装备、Hediff和生成时机。</PawnSpawnData_Tip>
+  <QE_PawnKind>实体类型：{0}</QE_PawnKind>
+  <SelectPawnKind>选择实体类型</SelectPawnKind>
+  <PawnDataFaction>派系：</PawnDataFaction>
+  <PawnDataFactionTip>随机敌对/中立/友好会在生成时随机选择一个敌对/中立/友好派系进行生成，地图派系则会根据当前地图的派系进行生成</PawnDataFactionTip>
+  <PawnDataMapFaction>地图派系</PawnDataMapFaction>
+  <QE_Count>数量：</QE_Count>
+  <SpawnType>生成方式：{0}</SpawnType>
+  <SelectSpawnType>选择生成方式</SelectSpawnType>
+  <MapGeneration>和地图一起生成</MapGeneration>
+  <BuildingDamaged>建筑物受到伤害时</BuildingDamaged>
+  <BuildingTick>每隔一段时间</BuildingTick>
+  <SpawnTypeTip_BuildingTick>生成时会自动选择生成位置上的建筑物作为“生成者”，当生成者存在时每隔一段时间生成实体，被破坏后无效</SpawnTypeTip_BuildingTick>
+  <TimeToSpawn>生成一次的间隔Tick：</TimeToSpawn>
+  <BuildingDestroyed>建筑物被破坏时</BuildingDestroyed>
+  <EnableLord>启用集群AI：</EnableLord>
+  <LordAndFactionTip>启用集群AI必须要有一个派系</LordAndFactionTip>
+  <PawnDataNameTip>用于输出信号。\n  每个实体执行被杀死或受伤时等等事件时就会输出[标签].[数据名称].[编号].[行为]的信号（实际上最前面会加相关任务的编号以识别是哪个任务需要接受的信号，但你本身不用填写）。\n  其中编号是在生成这个数据的所有实体时，根据生成顺序赋予的，从0开始，如一共生成十个实体，第五个生成的编号为4\n  如一个生成地图时生成的，数据名称为骸鸾的，第五个生成的实体被杀死时会发出[骸鸾.4.Kiied]的信号，\n  由战利品箱(LootBox)生成时，[标签]为战利品箱的名字，若不是则为无，同时不会具有标签后的“.”。\n  以下是行为与信号对应列表：\n  改变派系：ChangedFaction\n  改变派系且新派系不是玩家派系：ChangedFactionToNonPlayer\n  改变派系且新派系是玩家派系：ChangedFactionToPlayer\n  实体生成时：Spawned\n  实体被摧毁时：Despawned\n  实体被杀死时：Killed\n  受到来自玩家派系的伤害：TookDamageFromPlayer\n  离开地图：LeftMap\n  \n  在生成时，会将生成的实体记录到“任务数据库”中，其“密匙”则是其数据名字</PawnDataNameTip>
+  <PawnRotation>面朝方向：{0}</PawnRotation>
+  <PawnHediffs>状态：</PawnHediffs>
+  <PawnSpawnDataHediff>状态：{0}</PawnSpawnDataHediff>
+  <PawnSpawnDataHediffPart>部位：{0}</PawnSpawnDataHediffPart>
+  <NoPawnKindToGetBody>缺少实体类型以获取身体结构</NoPawnKindToGetBody>
+
+  <PawnSpawnData_Random>随机生成数据</PawnSpawnData_Random>
+  <PawnSpawnData_Random_Tip>随机实体生成数据。会从附属实体生成数据中随机选择一项进行生成。</PawnSpawnData_Random_Tip>
+
+  <PawnSpawnData_Faction>派系生成数据</PawnSpawnData_Faction>
+  <PawnSpawnData_Faction_Tip>派系实体生成数据。会根据战斗点数从派系实体组生成器中生成实体。</PawnSpawnData_Faction_Tip>
+  <CQF_PawnGroupMaker>生成组：{0}</CQF_PawnGroupMaker>
+  <CQF_PawnGroupMaker_Tip>根据派系定义的生成组(PawnGroupMaker)来生成实体</CQF_PawnGroupMaker_Tip>
+  <SpawmPoint>生成点数：</SpawmPoint>
+
+  <PawnSpawnData_Group>集群生成数据</PawnSpawnData_Group>
+  <PawnSpawnData_Group_Tip>实体组生成数据。会把生成的实体记录到指定任务组，供后续行为或条件使用。</PawnSpawnData_Group_Tip>
+  <CQF_PawnGroupDef>集群数据：{0}</CQF_PawnGroupDef>
+
+  <PawnSpawnData_Character>角色生成数据</PawnSpawnData_Character>
+  <CharacterSpawnDef>角色定义：{0}</CharacterSpawnDef>
+
+  <MainPawnSpawnData>主要角色生成数据</MainPawnSpawnData>
+  <MainPawnSpawnData_Tip>主要角色生成数据。用于可被主要地图缓存的重要长期角色，也可以从任务数据库或全局数据库恢复。</MainPawnSpawnData_Tip>
+  <MainPawnSpawnDataSpawnData>Pawn生成数据</MainPawnSpawnDataSpawnData>
+  <MainPawnChangeSubPawnData>更改附属实体数据</MainPawnChangeSubPawnData>
+  <MainPawnAllowGetFromQuestDatabase>从任务数据库获取</MainPawnAllowGetFromQuestDatabase>
+  <MainPawnAllowGetFromGlobalDatabase>从全局数据库获取</MainPawnAllowGetFromGlobalDatabase>
+  <MainPawnQuestDatabaseKey>任务数据库密匙：</MainPawnQuestDatabaseKey>
+  <MainPawnGlobalDatabaseKey>全局数据库密匙：</MainPawnGlobalDatabaseKey>
+  <MainPawnRegenerateIfDead>死亡后重新生成</MainPawnRegenerateIfDead>
+  <MainPawnGenerateConditions>生成条件</MainPawnGenerateConditions>
+  <MainPawnRegenerateConditions>重新生成条件</MainPawnRegenerateConditions>
+</LanguageData>

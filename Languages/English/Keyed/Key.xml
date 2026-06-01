@@ -66,69 +66,13 @@ SiteName: SiteName-></RuleTip>
   <SaveInNonEditorMap>Save in non editor map</SaveInNonEditorMap>
   <CQF_SaveWholeMap>Save whole map</CQF_SaveWholeMap>
   <LoadRule>Load rule</LoadRule>
-  <SpawnMessage>Spawn message</SpawnMessage>
-  <PawnDataEditor>Pawn data editor</PawnDataEditor>
-  <ITab_Spawner>Spawner</ITab_Spawner>
-
-  <PawnSpawnData>Normal spawn data</PawnSpawnData>
-  <PawnSpawnData_Random>Randomly spawn data</PawnSpawnData_Random>
-  <PawnSpawnData_Faction>Spawn data of faction</PawnSpawnData_Faction>
-
-  <PawnSpawnData_Group>Group spawn data</PawnSpawnData_Group>
-  <CQF_PawnGroupDef>Group def:{0}</CQF_PawnGroupDef>
-
-  <PawnSpawnData_Character>Character spawn data</PawnSpawnData_Character>
-  <CharacterSpawnDef>Character def:{0}</CharacterSpawnDef>
-
-  <CQF_PawnGroupMaker>Pawn group make:{0}</CQF_PawnGroupMaker>
-  <CQF_PawnGroupMaker_Tip>Generate pawn based on pawn group maker of faction</CQF_PawnGroupMaker_Tip>
-
-  <SpawmPoint>Spawning point:</SpawmPoint>
-
-  <GenerationChance>Generation chance:</GenerationChance>
-
-  <PawnSpawnDatas>Pawn datas:</PawnSpawnDatas>
-  <AddNewPawns>Add a new pawns</AddNewPawns>
-  <DeleteNewPawns>Delete a new pawns</DeleteNewPawns>
-  <QE_PawnKind>Pawn kind: {0}</QE_PawnKind>
-  <SelectPawnKind>Select pawn kind</SelectPawnKind>
-  <PawnDataFactionTip>If this is random hostile/neutral/ally,it will randomly select random hostile/neutral/ally faction to generate during generation, and if it is map faction,it will select the faction of the current map to generate</PawnDataFactionTip>
-  <PawnDataFaction>Faction:</PawnDataFaction>
-  <RandomHostile>Random hostile</RandomHostile>
+<ITab_Spawner>Spawner</ITab_Spawner>
+<GenerationChance>Generation chance:</GenerationChance>
+<RandomHostile>Random hostile</RandomHostile>
   <RandomAlly>Random ally</RandomAlly>
   <RandomNeutral>Random neutral</RandomNeutral>
-  <PawnDataMapFaction>Map faction</PawnDataMapFaction>
-  <QE_Count>Count</QE_Count>
-  <DutyType>Duty type</DutyType>
-  <SpawnType>Spawn type: {0}</SpawnType>
-  <SelectSpawnType>Select spawn type</SelectSpawnType>
-  <MapGeneration>Map generation</MapGeneration>
-  <BuildingDamaged>Building damaged</BuildingDamaged>
-  <BuildingTick>Building tick</BuildingTick>
-  <SpawnTypeTip_BuildingTick>When generating, it will automatically select the building in the generating location as the "generator", and spawn pawns at intervals when the generator exists, but it will be invalidated when generator is destroyed.</SpawnTypeTip_BuildingTick>
-  <TimeToSpawn>Time to spawn</TimeToSpawn>
-  <BuildingDestroyed>Building destroyed</BuildingDestroyed>
-  <EnableLord>Enable lord</EnableLord>
-  <LordAndFactionTip>Lord and faction tip</LordAndFactionTip>
-  <PawnDataNameTip>Used for outputting signals.
-Each pawn will output a tag when executing events such as being killed or injured [DataName] [Number] The signal of behavior (in fact, the relevant task number is added at the beginning to identify which task needs to receive the signal).
-The number is assigned according to the generation order when generating all entities of this data, starting from 0. For example, if a total of ten entities are generated, the fifth generated number is 4
-If a map is generated with a data name of "HaiLuan", the fifth spawned pawn will emit a signal of "HaiLuan.4.Killed" when she is killed,
-When spawned from the LootBox, [label] is the name of the loot box.If not, it means none and will not have a '.' after the label.
-
-The following is a list of behaviors and signals corresponding to each other:
-ChangeFaction
-Change faction and the new faction is not a player faction: ChangedFactionToNonPlayer
-Change faction and the new faction is a player faction: ChangedFactionToPlayer
-When generating pawn: Spawned
-When the pawn is destroyed: Despawned
-When an pawn is killed: Killed
-Suffer damage from player faction: TookDamageFromPlayer
-Leaving Map: LeftMap
-
-When spawning, the spawned pawn will be recorded in the "quest database", and its "key" is its data name</PawnDataNameTip>
-  <PawnRotation>Pawn rotation</PawnRotation>
-  <SelectRotation>Select rotation</SelectRotation>
+<DutyType>Duty type</DutyType>
+<SelectRotation>Select rotation</SelectRotation>
   <Defend>Guard</Defend>
   <InventoryThing>Inventory thing</InventoryThing>
   <InventoryThingCategorys>Inventory thing categories</InventoryThingCategorys>
@@ -257,14 +201,8 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <DialogManagerForSpawner>Dialog Manager:{0}</DialogManagerForSpawner>
   <DialogManagerDefName>Manager def name:</DialogManagerDefName>
   <Conditions>Condtions:</Conditions>
-
-  <PawnHediffs>Hediffs: </PawnHediffs>
-  <PawnSpawnDataHediff>Hediff: {0}</PawnSpawnDataHediff>
-  <PawnSpawnDataHediffPart>Part: {0}</PawnSpawnDataHediffPart>
-  <FullBody>full body</FullBody>
-  <NoPawnKindToGetBody>No PawnKind to get body</NoPawnKindToGetBody>
-
-  <DefaultDialogKey>Talk with {Interviewee_nameDef}</DefaultDialogKey>
+<FullBody>full body</FullBody>
+<DefaultDialogKey>Talk with {Interviewee_nameDef}</DefaultDialogKey>
 
   <PawnSpawnActions>Pawn spawn actions:</PawnSpawnActions>
 
@@ -507,4 +445,25 @@ When spawning, the spawned pawn will be recorded in the "quest database", and it
   <Fail>Failed</Fail>
   <Success>Success</Success>
 
+  <MainMapDefEditor>Main Map Editor</MainMapDefEditor>
+  <MainMapDef>Main map: {0}</MainMapDef>
+  <MainMapDefName>Main map defName:</MainMapDefName>
+  <MainMapAndConditions>Main map candidates</MainMapAndConditions>
+  <MainMapAndConditionLabel>Candidate {0}</MainMapAndConditionLabel>
+  <MainMapDefaultMapName>Default map</MainMapDefaultMapName>
+  <MainMapConditionName>Name:</MainMapConditionName>
+  <MainMapGenerationSet>Map generation set</MainMapGenerationSet>
+  <MainMapConditions>Conditions</MainMapConditions>
+  <ConfirmCreateNewMainMapDef>Create a new MainMapDef and discard current editing data?</ConfirmCreateNewMainMapDef>
+  <Drag>Drag</Drag>
+  <MainMapSystemTip>Main maps are reusable long-term world sites. Their runtime maps follow vanilla generation and removal; persistent behavior should be stored on MainSite state and important pawns should be reused through MainPawnSpawnData.</MainMapSystemTip>
+  <MainMapDefNameTip>The defName of this MainMapDef. It is referenced by main map quest nodes, actions, saved XML, and hot-loaded defs.</MainMapDefNameTip>
+  <MainMapAndConditionsTip>Candidate map generation entries are checked from top to bottom. The first candidate whose conditions pass is selected; keep the last entry unconditional as the fallback.</MainMapAndConditionsTip>
+  <MainMapCandidateTip>Open this candidate entry to edit its editor name, generation set, and selection conditions. It does not store runtime map state.</MainMapCandidateTip>
+  <MainMapDragTip>Drag this handle onto another candidate row to reorder candidates. Order matters because candidates are selected from top to bottom.</MainMapDragTip>
+  <MainMapAddCandidateTip>Add a new candidate map generation entry. Put broad fallback candidates lower in the list.</MainMapAddCandidateTip>
+  <MainMapDeleteCandidateTip>Delete an existing candidate map generation entry.</MainMapDeleteCandidateTip>
+  <MainMapConditionNameTip>Display name for this candidate in the editor list. It is only for editor readability and is not runtime state.</MainMapConditionNameTip>
+  <MainMapGenerationSetTip>The CustomMapGenerationSet used by this candidate. It decides which CustomMapDataDef can be generated when the MainSite map is created.</MainMapGenerationSetTip>
+  <MainMapConditionsTip>Conditions that must pass for this candidate to be selected. Leave empty only for the intended fallback candidate.</MainMapConditionsTip>
 </LanguageData>

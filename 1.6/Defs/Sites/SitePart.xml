@@ -17,11 +17,34 @@
     <gravShipsCanLandOn>true</gravShipsCanLandOn>
   </SitePartDef>
 
+  <SitePartDef>
+    <defName>CQF_MainSitePart</defName>
+    <label>main site</label>
+    <description>A main site.</description>
+    <workerClass>QuestEditor_Library.SitePartWorker_Custom</workerClass>
+    <siteTexture>World/WorldObjects/Sites/GenericSite</siteTexture>
+    <expandingIconTexture>World/WorldObjects/Expanding/Sites/AncientMechanitorComplex</expandingIconTexture>
+    <approachOrderString>Investigate {0}</approachOrderString>
+    <approachingReportString>Investigate {0}</approachingReportString>
+    <arrivedLetterDef>NeutralEvent</arrivedLetterDef>
+    <wantsThreatPoints>true</wantsThreatPoints>
+    <minMapSize>(60, 1, 60)</minMapSize>
+    <disallowsAutomaticDetectionTimerStart>true</disallowsAutomaticDetectionTimerStart>
+    <gravShipsCanLandOn>true</gravShipsCanLandOn>
+  </SitePartDef>
+
   <GenStepDef>
     <defName>QE_CustomSite_GenStep</defName>
     <linkWithSite>QE_CustomSite</linkWithSite>
     <order>3500</order>
     <genStep Class="QuestEditor_Library.GenStep_CustomMap" />
+  </GenStepDef>
+
+  <GenStepDef>
+    <defName>CQF_MainSite_GenStep</defName>
+    <linkWithSite>CQF_MainSitePart</linkWithSite>
+    <order>3501</order>
+    <genStep Class="QuestEditor_Library.GenStep_MainMap" />
   </GenStepDef>
 
 

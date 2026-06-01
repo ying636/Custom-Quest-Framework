@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -18,6 +18,7 @@ namespace QuestEditor_Library
         public static DesignationDef QE_MoveToRoot;
 
         public static SitePartDef QE_CustomSite;
+        public static SitePartDef CQF_MainSitePart;
         public static ThingDef QE_Spawner_Editor;
         public static ThingDef QE_ZoneCore;
         public static ThingDef QE_GenerationActionWorker;
@@ -39,6 +40,7 @@ namespace QuestEditor_Library
         public static MapGeneratorDef CQF_Base_Player;
         public static WorldObjectDef QE_CustomMap_SubMap; 
         public static WorldObjectDef CQF_CustomSite;
+        public static WorldObjectDef CQF_MainSite;
         [MayRequireOdyssey]
         public static WorldObjectDef QE_SpaceCustomSite;
         [MayRequireOdyssey]

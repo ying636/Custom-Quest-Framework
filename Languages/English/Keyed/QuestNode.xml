@@ -15,6 +15,7 @@
   <DeleteMapData>Delete map data</DeleteMapData>
   <ChildNodes>Child nodes:</ChildNodes>
   <RootNode_CustomMap>Node:Spawn Custom Map</RootNode_CustomMap>
+  <RootNode_MainMap>Node:Spawn Main Map</RootNode_MainMap>
 
   <MapFaction>Map Faction:</MapFaction>
   <CurFaction>Cur Faction:{0}</CurFaction>

@@ -941,3 +941,5 @@ null,d => d.label, "Select".Translate(), d => action(new CQFThingCategoryCount {
         public FloatRange totalMarketValueRange = new FloatRange(100, 1000);
     }
 }
+
+

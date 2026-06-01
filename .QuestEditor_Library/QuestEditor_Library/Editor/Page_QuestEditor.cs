@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -139,7 +139,7 @@ namespace QuestEditor_Library
                 Widgets.Label(new Rect(170f, y + 19f, 350f, 25f), "CurRuleName".Translate(Page_QuestEditor.questNameRules?.ruleName).Colorize(Color.gray));
             }
             Rect tip = new Rect(Text.CalcSize(nameRule).x + 5f, textRect.y, 25f, 25f);
-            Widgets.ButtonImage(tip, Page_QuestEditor.tipIcon);
+            Widgets.ButtonImage(tip, CQFEditorTools.TipIcon);
             TooltipHandler.TipRegion(tip, "RuleTip".Translate());
             y += 2f;
             Page_QuestEditor.DrawSelectRule(ref y, (node) => { RuleData rule = DirectXmlToObject.ObjectFromXml<RuleData>(node, false); this.CurQuestData.questNameRules = rule.GetRulePack(); Page_QuestEditor.questNameRules = rule; });
@@ -521,7 +521,11 @@ return "";
             {
                 Find.WindowStack.Add(new QuestEditor_DialogManager());
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 210f, 150f, 25f), "GenerateNodeText".Translate()))
+            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 210f, 150f, 25f), "MainMapDefEditor".Translate()))
+            {
+                Find.WindowStack.Add(new QuestEditor_MainMapDefEditor());
+            }
+            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 240f, 150f, 25f), "GenerateNodeText".Translate()))
             {
                 List<XElement> publicText = new List<XElement>();
                 Dictionary<XElement,List<XElement>> texts = new Dictionary<XElement, List<XElement>>();
@@ -594,7 +598,7 @@ return "";
                 textXml.Save(path,SaveOptions.DisableFormatting);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 240f, 150f, 25f), "GroupEditor".Translate()))
+            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 270f, 150f, 25f), "GroupEditor".Translate()))
             {
                 Find.WindowStack.Add(new QuestEditor_GroupEditor());
             }
@@ -648,7 +652,6 @@ return "";
         public static string questPath = null;
         private static QuestScriptDef curQuestData = null;
         public Vector2 scrollPos = Vector2.zero;
-        public static readonly Texture2D tipIcon = ContentFinder<Texture2D>.Get("UI/TipIcon", true);
         public static readonly Texture2D miscIcon = ContentFinder<Texture2D>.Get("UI/Icon_Edit", true);
     }
 

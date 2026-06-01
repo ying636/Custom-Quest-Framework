@@ -131,9 +131,9 @@ namespace QuestEditor_Library
             {
                 foreach (PawnSpawnData data in list)
                 {
-                    if (data.spawnType == SpawnType.BuildingDamaged)
+                    if (data is PawnSpawnData pawnData && pawnData.spawnType == SpawnType.BuildingDamaged)
                     {
-                        if (this.TryGetLord(data.lordDataName, out Lord lord))
+                        if (this.TryGetLord(pawnData.lordDataName, out Lord lord))
                         {
                             data.Spawn(building.Position, building.Map, this.QuestTag, Find.QuestManager.QuestsListForReading.Find(q => "Quest" + q.id == this.QuestTag), lord);
                         }
@@ -247,3 +247,4 @@ namespace QuestEditor_Library
         public ActionTriggerMode mode;
     }
 }
+

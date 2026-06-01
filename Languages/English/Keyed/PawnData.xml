@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <PawnDataEditor>Pawn data editor</PawnDataEditor>
+  <SpawnMessage>Spawn message</SpawnMessage>
+  <PawnSpawnDatas>Pawn datas:</PawnSpawnDatas>
+  <AddNewPawns>Add a new pawns</AddNewPawns>
+  <DeleteNewPawns>Delete a new pawns</DeleteNewPawns>
+
+  <PawnDataCannotSaveToMapWarning>Cannot save this pawn data to the map: configure the required generation data before saving.</PawnDataCannotSaveToMapWarning>
+
+  <PawnSpawnData>Normal spawn data</PawnSpawnData>
+  <PawnSpawnData_Tip>Standard pawn generation data. Use it to configure pawn kind, count, faction, lord, duty, inventory, apparel, hediffs, and spawn timing.</PawnSpawnData_Tip>
+  <QE_PawnKind>Pawn kind: {0}</QE_PawnKind>
+  <SelectPawnKind>Select pawn kind</SelectPawnKind>
+  <PawnDataFaction>Faction:</PawnDataFaction>
+  <PawnDataFactionTip>If this is random hostile/neutral/ally,it will randomly select random hostile/neutral/ally faction to generate during generation, and if it is map faction,it will select the faction of the current map to generate</PawnDataFactionTip>
+  <PawnDataMapFaction>Map faction</PawnDataMapFaction>
+  <QE_Count>Count</QE_Count>
+  <SpawnType>Spawn type: {0}</SpawnType>
+  <SelectSpawnType>Select spawn type</SelectSpawnType>
+  <MapGeneration>Map generation</MapGeneration>
+  <BuildingDamaged>Building damaged</BuildingDamaged>
+  <BuildingTick>Building tick</BuildingTick>
+  <SpawnTypeTip_BuildingTick>When generating, it will automatically select the building in the generating location as the &quot;generator&quot;, and spawn pawns at intervals when the generator exists, but it will be invalidated when generator is destroyed.</SpawnTypeTip_BuildingTick>
+  <TimeToSpawn>Time to spawn</TimeToSpawn>
+  <BuildingDestroyed>Building destroyed</BuildingDestroyed>
+  <EnableLord>Enable lord</EnableLord>
+  <LordAndFactionTip>Lord and faction tip</LordAndFactionTip>
+  <PawnDataNameTip>Used for outputting signals.
+Each pawn will output a tag when executing events such as being killed or injured [DataName] [Number] The signal of behavior (in fact, the relevant task number is added at the beginning to identify which task needs to receive the signal).
+The number is assigned according to the generation order when generating all entities of this data, starting from 0. For example, if a total of ten entities are generated, the fifth generated number is 4
+If a map is generated with a data name of &quot;HaiLuan&quot;, the fifth spawned pawn will emit a signal of &quot;HaiLuan.4.Killed&quot; when she is killed,
+When spawned from the LootBox, [label] is the name of the loot box.If not, it means none and will not have a &apos;.&apos; after the label.
+
+The following is a list of behaviors and signals corresponding to each other:
+ChangeFaction
+Change faction and the new faction is not a player faction: ChangedFactionToNonPlayer
+Change faction and the new faction is a player faction: ChangedFactionToPlayer
+When generating pawn: Spawned
+When the pawn is destroyed: Despawned
+When an pawn is killed: Killed
+Suffer damage from player faction: TookDamageFromPlayer
+Leaving Map: LeftMap
+
+When spawning, the spawned pawn will be recorded in the &quot;quest database&quot;, and its &quot;key&quot; is its data name</PawnDataNameTip>
+  <PawnRotation>Pawn rotation</PawnRotation>
+  <PawnHediffs>Hediffs: </PawnHediffs>
+  <PawnSpawnDataHediff>Hediff: {0}</PawnSpawnDataHediff>
+  <PawnSpawnDataHediffPart>Part: {0}</PawnSpawnDataHediffPart>
+  <NoPawnKindToGetBody>No PawnKind to get body</NoPawnKindToGetBody>
+
+  <PawnSpawnData_Random>Randomly spawn data</PawnSpawnData_Random>
+  <PawnSpawnData_Random_Tip>Random pawn generation data. It randomly selects one sub pawn data entry to generate.</PawnSpawnData_Random_Tip>
+
+  <PawnSpawnData_Faction>Spawn data of faction</PawnSpawnData_Faction>
+  <PawnSpawnData_Faction_Tip>Faction pawn generation data. It generates pawns from a faction pawn group maker by combat points.</PawnSpawnData_Faction_Tip>
+  <CQF_PawnGroupMaker>Pawn group make:{0}</CQF_PawnGroupMaker>
+  <CQF_PawnGroupMaker_Tip>Generate pawn based on pawn group maker of faction</CQF_PawnGroupMaker_Tip>
+  <SpawmPoint>Spawning point:</SpawmPoint>
+
+  <PawnSpawnData_Group>Group spawn data</PawnSpawnData_Group>
+  <PawnSpawnData_Group_Tip>Group pawn generation data. It records spawned pawns into a named quest group for later actions or conditions.</PawnSpawnData_Group_Tip>
+  <CQF_PawnGroupDef>Group def:{0}</CQF_PawnGroupDef>
+
+  <PawnSpawnData_Character>Character spawn data</PawnSpawnData_Character>
+  <CharacterSpawnDef>Character def:{0}</CharacterSpawnDef>
+
+  <MainPawnSpawnData>Main pawn spawn data</MainPawnSpawnData>
+  <MainPawnSpawnData_Tip>Main pawn generation data. Use it for important reusable characters that can be cached by main maps and optionally restored from quest or global databases.</MainPawnSpawnData_Tip>
+  <MainPawnSpawnDataSpawnData>Pawn generation data</MainPawnSpawnDataSpawnData>
+  <MainPawnChangeSubPawnData>Change sub pawn data</MainPawnChangeSubPawnData>
+  <MainPawnAllowGetFromQuestDatabase>Get from quest database</MainPawnAllowGetFromQuestDatabase>
+  <MainPawnAllowGetFromGlobalDatabase>Get from global database</MainPawnAllowGetFromGlobalDatabase>
+  <MainPawnQuestDatabaseKey>Quest database key:</MainPawnQuestDatabaseKey>
+  <MainPawnGlobalDatabaseKey>Global database key:</MainPawnGlobalDatabaseKey>
+  <MainPawnRegenerateIfDead>Regenerate if dead</MainPawnRegenerateIfDead>
+  <MainPawnGenerateConditions>Generate conditions</MainPawnGenerateConditions>
+  <MainPawnRegenerateConditions>Regenerate conditions</MainPawnRegenerateConditions>
+</LanguageData>

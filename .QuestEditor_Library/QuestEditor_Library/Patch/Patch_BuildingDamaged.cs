@@ -32,9 +32,9 @@ namespace QuestEditor_Library
             {
                 foreach (PawnSpawnData data in list)
                 {
-                    if (data.spawnType == SpawnType.BuildingDestroyed)
+                    if (data is PawnSpawnData pawnData && pawnData.spawnType == SpawnType.BuildingDestroyed)
                     {
-                        if (component.TryGetLord(data.lordDataName, out Lord lord))
+                        if (component.TryGetLord(pawnData.lordDataName, out Lord lord))
                         {
                             data.Spawn(__instance.Position, __instance.Map, component.QuestTag, Find.QuestManager.QuestsListForReading.Find(q => "Quest" + q.id == component.QuestTag), lord);
                         }

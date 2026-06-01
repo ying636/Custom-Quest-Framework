@@ -555,16 +555,17 @@ add(p3))));
                     List<PawnSpawnData> specialPawns = new List<PawnSpawnData>();
                     foreach (PawnSpawnData pawnKinds in spawner.pawns)
                     {
-                        if (!(pawnKinds.kind == null || pawnKinds.count.max < 1) || pawnKinds.GetType() != typeof(PawnSpawnData))
+                        if (pawnKinds == null || !pawnKinds.CanSaveToMap())
                         {
-                            if (pawnKinds.spawnType == SpawnType.MapGeneration)
-                            {
-                                pawns.Add(pawnKinds);
-                            }
-                            else
-                            {
-                                specialPawns.Add(pawnKinds);
-                            }
+                            continue;
+                        }
+                        if (pawnKinds.spawnType == SpawnType.MapGeneration)
+                        {
+                            pawns.Add(pawnKinds);
+                        }
+                        else
+                        {
+                            specialPawns.Add(pawnKinds);
                         }
                     }
                     if (specialPawns.Any())
@@ -1134,3 +1135,5 @@ t2 => t2.uiIcon, t2 => t2.label, "SelectTerrainDefToReplace".Translate(), t2 =>
         public ReplaceData data;
     }
 }
+
+
