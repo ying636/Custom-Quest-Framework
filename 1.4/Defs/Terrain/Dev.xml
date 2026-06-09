@@ -18,4 +18,21 @@
         <fertility>0</fertility>
     </TerrainDef>
 
+    <TerrainDef>
+        <defName>QE_EtherealVoid</defName>
+        <label>Ethereal void</label>
+        <texturePath>UI/Null</texturePath>
+        <pollutedTexturePath>UI/Null</pollutedTexturePath>
+        <edgeType>FadeRough</edgeType>
+        <renderPrecedence>340</renderPrecedence>
+        <pathCost>0</pathCost>
+        <layerable>false</layerable>
+        <affordances>
+            <li>Light</li>
+            <li>Medium</li>
+            <li>Heavy</li>
+        </affordances>
+        <fertility>0</fertility>
+    </TerrainDef>
+
 </Defs>

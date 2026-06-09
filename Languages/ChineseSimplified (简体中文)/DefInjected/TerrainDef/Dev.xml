@@ -3,5 +3,8 @@
   
   <!-- EN: Null -->
   <QE_Null.label>Null</QE_Null.label>
+
+  <!-- EN: Ethereal void -->
+  <QE_EtherealVoid.label>虚无缥缈</QE_EtherealVoid.label>
   
 </LanguageData>

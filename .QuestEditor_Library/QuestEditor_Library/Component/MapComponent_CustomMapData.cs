@@ -179,6 +179,7 @@ namespace QuestEditor_Library
             Scribe_Collections.Look(ref this.pawnSpawnDatas_Tick, "QE_LordJob_DefendAndPatrol_pawnSpawnDatas_Tick", LookMode.Deep);
             Scribe_Collections.Look(ref this.triggers, "triggers",LookMode.Deep);
             Scribe_Collections.Look(ref this.startCells, "startCells", LookMode.Value,LookMode.Value);
+            Scribe_Deep.Look(ref this.background, "background");
         }
 
         public bool init = false;
@@ -203,6 +204,8 @@ namespace QuestEditor_Library
         public Dictionary<string, Route> route = new Dictionary<string, Route>();
 
         public string questTag = "";
+
+        public CustomMapBackgroundData background;
 
 
 

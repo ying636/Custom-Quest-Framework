@@ -466,4 +466,10 @@ SiteName: SiteName-></RuleTip>
   <MainMapConditionNameTip>Display name for this candidate in the editor list. It is only for editor readability and is not runtime state.</MainMapConditionNameTip>
   <MainMapGenerationSetTip>The CustomMapGenerationSet used by this candidate. It decides which CustomMapDataDef can be generated when the MainSite map is created.</MainMapGenerationSetTip>
   <MainMapConditionsTip>Conditions that must pass for this candidate to be selected. Leave empty only for the intended fallback candidate.</MainMapConditionsTip>
+  <CustomMapStep_MapBackground>Map background</CustomMapStep_MapBackground>
+  <CQF_MapBackgroundTexturePath>Background texture path:</CQF_MapBackgroundTexturePath>
+  <CQF_MapBackgroundAlpha>Background alpha:</CQF_MapBackgroundAlpha>
+  <CQF_MapBackgroundDrawSize>Background draw size:</CQF_MapBackgroundDrawSize>
+  <CQF_MapBackgroundOffset>Background offset:</CQF_MapBackgroundOffset>
+  <CQF_MapBackgroundColor>Background color</CQF_MapBackgroundColor>
 </LanguageData>

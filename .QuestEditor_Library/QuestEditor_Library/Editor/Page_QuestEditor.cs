@@ -482,11 +482,14 @@ return "";
         }
         private void DrawButtonToOtherTools(Rect inRect)
         {
-            if (Widgets.ButtonImage(new Rect(inRect.width - 230f, 50f,30f, 38f), miscIcon))
+            float x = inRect.width - 230f;
+            float y = 50f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), miscIcon, "Misc"))
             {
                 Find.WindowStack.Add(new Dialog_QuestEditorMisc());
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 50f, 150f, 38f), "LoadQuest".Translate()))
+            x += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), loadQuestIcon, "LoadQuest"))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 DefDatabase<QuestScriptDef>.AllDefsListForReading.ForEach((x) =>
@@ -498,15 +501,19 @@ return "";
                 );
                 Find.WindowStack.Add(new FloatMenu(options));
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 90f, 150f, 25f), "RuleCreater".Translate()))
+            x += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), ruleCreaterIcon, "RuleCreater"))
             {
                 Find.WindowStack.Add(new QuestEditor_CreateNewRlueDef(Page_QuestEditor.RulePath));
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 120f, 150f, 25f), "CustomQuestMap".Translate()))
+            x += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), customQuestMapIcon, "CustomQuestMap"))
             {
                 Find.WindowStack.Add(new QuestEditor_CustomQuestMap());
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 150f, 150f, 25f), "PawnEditor".Translate()))
+            x = inRect.width - 230f;
+            y += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), pawnEditorIcon, "PawnEditor"))
             {
                 if (Current.Game != null)
                 {
@@ -517,15 +524,18 @@ return "";
                     Messages.Message("NoGame".Translate(),MessageTypeDefOf.CautionInput);
                 }
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 180f, 150f, 25f), "DialogManager".Translate()))
+            x += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), dialogManagerIcon, "DialogManager"))
             {
                 Find.WindowStack.Add(new QuestEditor_DialogManager());
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 210f, 150f, 25f), "MainMapDefEditor".Translate()))
+            x += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), mainMapDefEditorIcon, "MainMapDefEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_MainMapDefEditor());
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 240f, 150f, 25f), "GenerateNodeText".Translate()))
+            x += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), generateNodeTextIcon, "GenerateNodeText"))
             {
                 List<XElement> publicText = new List<XElement>();
                 Dictionary<XElement,List<XElement>> texts = new Dictionary<XElement, List<XElement>>();
@@ -598,10 +608,18 @@ return "";
                 textXml.Save(path,SaveOptions.DisableFormatting);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 190f, 270f, 150f, 25f), "GroupEditor".Translate()))
+            x = inRect.width - 230f;
+            y += 45f;
+            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), groupEditorIcon, "GroupEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_GroupEditor());
             }
+        }
+
+        private static bool DrawToolButton(Rect rect, Texture2D icon, string tipKey)
+        {
+            TooltipHandler.TipRegion(rect, tipKey.Translate());
+            return Widgets.ButtonImage(rect, icon);
         }
 
         public static void DrawSelectRule(ref float y,Action<XmlNode> ruleAction , float x = 0f)
@@ -653,6 +671,14 @@ return "";
         private static QuestScriptDef curQuestData = null;
         public Vector2 scrollPos = Vector2.zero;
         public static readonly Texture2D miscIcon = ContentFinder<Texture2D>.Get("UI/Icon_Edit", true);
+        public static readonly Texture2D loadQuestIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/LoadQuest", true);
+        public static readonly Texture2D ruleCreaterIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/RuleCreater", true);
+        public static readonly Texture2D customQuestMapIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/CustomQuestMap", true);
+        public static readonly Texture2D pawnEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/PawnEditor", true);
+        public static readonly Texture2D dialogManagerIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/DialogManager", true);
+        public static readonly Texture2D mainMapDefEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/MainMapDefEditor", true);
+        public static readonly Texture2D generateNodeTextIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/GenerateNodeText", true);
+        public static readonly Texture2D groupEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/GroupEditor", true);
     }
 
 }
