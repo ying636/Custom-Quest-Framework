@@ -9,6 +9,7 @@
     <CQF_GenStepDef>GenStepDef：{0}</CQF_GenStepDef>
 
     <CustomMapStep_MapPart>步骤：地图部分</CustomMapStep_MapPart>
+    <CustomMapStep_MapBackground>步骤：地图背景</CustomMapStep_MapBackground>
     <GenerationCount>生成次数：</GenerationCount>
 
 

@@ -358,10 +358,15 @@
   <MainMapConditionNameTip>这个候选项在编辑器列表中显示的名字，只用于提高编辑时的可读性，不是运行时状态。</MainMapConditionNameTip>
   <MainMapGenerationSetTip>这个候选项使用的地图生成集合，用来决定主要地图站点创建地图时可生成哪些自定义地图数据。</MainMapGenerationSetTip>
   <MainMapConditionsTip>这个候选项被选中前必须通过的条件。只有预期作为兜底的候选项才应留空。</MainMapConditionsTip>
-  <CustomMapStep_MapBackground>地图背景</CustomMapStep_MapBackground>
   <CQF_MapBackgroundTexturePath>背景贴图路径：</CQF_MapBackgroundTexturePath>
   <CQF_MapBackgroundAlpha>背景透明度：</CQF_MapBackgroundAlpha>
   <CQF_MapBackgroundDrawSize>背景绘制尺寸：</CQF_MapBackgroundDrawSize>
   <CQF_MapBackgroundOffset>背景偏移：</CQF_MapBackgroundOffset>
   <CQF_MapBackgroundColor>背景颜色</CQF_MapBackgroundColor>
+  <CQF_MapBackgroundPreview>背景预览</CQF_MapBackgroundPreview>
+  <CQF_MapBackgroundNoPreview>无可用预览</CQF_MapBackgroundNoPreview>
+  <MapBackgroundImage_Title>选择地图背景</MapBackgroundImage_Title>
+  <MapBackgroundImage_Mod>模组：</MapBackgroundImage_Mod>
+  <MapBackgroundImage_All>全部</MapBackgroundImage_All>
+  <MapBackgroundImage_Search>搜索：</MapBackgroundImage_Search>
 </LanguageData>

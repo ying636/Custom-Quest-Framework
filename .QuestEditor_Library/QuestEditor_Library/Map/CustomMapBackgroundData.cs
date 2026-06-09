@@ -26,17 +26,15 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
 
     public void Draw(ref float y, Rect inRect, float x)
     {
-        CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MapBackgroundTexturePath".Translate(), ref this.texPath, x, 360f);
-        y += 30f;
-        CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MapBackgroundAlpha".Translate(), ref this.alpha, ref this.bufferAlpha, x, 60f);
-        y += 30f;
+        Widgets.Label(new Rect(x, y, inRect.width - 40f, 30f), "CustomMapStep_MapBackground".Translate().Colorize(ColorLibrary.SkyBlue));
+        y += 35f;
+        this.DrawPreview(new Rect(x, y, 430f, 240f));
+        y += 255f;
+        this.DrawPathField(ref y, x, 430f);
+        this.DrawPercentField(ref y, x);
         this.DrawVector2(ref y, "CQF_MapBackgroundDrawSize".Translate(), ref this.drawSize, ref this.bufferDrawSizeX, ref this.bufferDrawSizeY, x);
         this.DrawVector2(ref y, "CQF_MapBackgroundOffset".Translate(), ref this.offset, ref this.bufferOffsetX, ref this.bufferOffsetY, x);
-        if (Widgets.ButtonText(new Rect(x, y, 200f, 25f), "CQF_MapBackgroundColor".Translate(), false))
-        {
-            Find.WindowStack.Add(new Dialog_RGB(this.color, c => this.color = c));
-        }
-        y += 30f;
+        CQFEditorTools.DrawSelectColorButtons(ref y, "CQF_MapBackgroundColor".Translate(), this.color, c => this.color = c, x + 120f);
     }
 
     public void ExposeData()
@@ -68,17 +66,58 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         return result;
     }
 
+    private void DrawPathField(ref float y, float x, float width)
+    {
+        Rect labelRect = new Rect(x, y, 120f, 25f);
+        if (Widgets.ButtonText(labelRect, "CQF_MapBackgroundTexturePath".Translate(), false))
+        {
+            Find.WindowStack.Add(new Dialog_SelectMapBackgroundImage(path => this.texPath = path, this.texPath));
+        }
+        this.texPath = Widgets.TextField(new Rect(x + 125f, y, width - 125f, 25f), this.texPath);
+        y += 35f;
+    }
+
+    private void DrawPercentField(ref float y, float x)
+    {
+        Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundAlpha".Translate());
+        Widgets.TextFieldPercent(new Rect(x + 125f, y, 70f, 25f), ref this.alpha, ref this.bufferAlpha);
+        y += 35f;
+    }
+
+    private void DrawPreview(Rect rect)
+    {
+        Widgets.Label(new Rect(rect.x, rect.y, rect.width, 25f), "CQF_MapBackgroundPreview".Translate().Colorize(ColorLibrary.SkyBlue));
+        Rect imageRect = new Rect(rect.x, rect.y + 30f, rect.width, rect.height - 30f);
+        Widgets.DrawBoxSolid(imageRect, Color.black);
+        Texture2D texture = this.texPath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(this.texPath, false);
+        if (texture != null)
+        {
+            Color oldColor = GUI.color;
+            GUI.color = this.color;
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, GUI.color.a * this.alpha);
+            Widgets.DrawTextureFitted(imageRect.ContractedBy(4f), texture, 1f);
+            GUI.color = oldColor;
+        }
+        else
+        {
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(imageRect, "CQF_MapBackgroundNoPreview".Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+        }
+        Widgets.DrawBox(imageRect);
+    }
+
     private void DrawVector2(ref float y, string label, ref Vector2 vector, ref string bufferX, ref string bufferY, float x)
     {
-        Widgets.Label(new Rect(x, y, 350f, 25f), label);
-        Rect rect = new Rect(Text.CalcSize(label).x + x + 5f, y, 60f, 25f);
+        Widgets.Label(new Rect(x, y, 120f, 25f), label);
+        Rect rect = new Rect(x + 125f, y, 70f, 25f);
         float xValue = vector.x;
         float yValue = vector.y;
         Widgets.TextFieldNumeric(rect, ref xValue, ref bufferX);
-        rect.x += 70f;
+        rect.x += 80f;
         Widgets.TextFieldNumeric(rect, ref yValue, ref bufferY);
         vector = new Vector2(xValue, yValue);
-        y += 30f;
+        y += 35f;
     }
 
     public string texPath = "UI/Null";
