@@ -1,4 +1,6 @@
 using System.Xml.Linq;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -20,7 +22,9 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
             color = this.color,
             alpha = this.alpha,
             drawSize = this.drawSize,
-            offset = this.offset
+            offset = this.offset,
+            enableTerrainEdges = this.enableTerrainEdges,
+            backgroundEffects = this.backgroundEffects.ListFullCopy()
         };
     }
 
@@ -34,6 +38,10 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         this.DrawPercentField(ref y, x);
         this.DrawVector2(ref y, "CQF_MapBackgroundDrawSize".Translate(), ref this.drawSize, ref this.bufferDrawSizeX, ref this.bufferDrawSizeY, x);
         this.DrawVector2(ref y, "CQF_MapBackgroundOffset".Translate(), ref this.offset, ref this.bufferOffsetX, ref this.bufferOffsetY, x);
+        Rect backgroundMapRect = new Rect(x, y, 430f, 25f);
+        Widgets.CheckboxLabeled(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMap".Translate(), ref this.enableTerrainEdges);
+        TooltipHandler.TipRegion(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMapTip".Translate());
+        y += 35f;
         CQFEditorTools.DrawSelectColorButtons(ref y, "CQF_MapBackgroundColor".Translate(), this.color, c => this.color = c, x + 120f);
     }
 
@@ -44,6 +52,9 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         Scribe_Values.Look(ref this.alpha, "alpha", 1f);
         Scribe_Values.Look(ref this.drawSize, "drawSize", Vector2.zero);
         Scribe_Values.Look(ref this.offset, "offset", Vector2.zero);
+        Scribe_Values.Look(ref this.enableTerrainEdges, "enableTerrainEdges");
+        Scribe_Collections.Look(ref this.backgroundEffects, "backgroundEffects", LookMode.Def);
+        this.backgroundEffects ??= new List<CustomMapBackgroundEffectDef>();
     }
 
     public XElement SaveToXElement(string nodeName)
@@ -62,6 +73,10 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         if (this.offset != Vector2.zero)
         {
             result.Add(new XElement("offset", this.offset));
+        }
+        if (this.enableTerrainEdges)
+        {
+            result.Add(new XElement("enableTerrainEdges", this.enableTerrainEdges));
         }
         return result;
     }
@@ -125,6 +140,8 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
     public float alpha = 1f;
     public Vector2 drawSize = Vector2.zero;
     public Vector2 offset = Vector2.zero;
+    public bool enableTerrainEdges; 
+    public List<CustomMapBackgroundEffectDef> backgroundEffects = new List<CustomMapBackgroundEffectDef>();
 
     private string bufferAlpha;
     private string bufferDrawSizeX;

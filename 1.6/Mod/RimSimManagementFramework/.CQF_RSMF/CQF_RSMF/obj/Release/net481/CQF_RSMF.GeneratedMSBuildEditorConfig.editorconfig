@@ -1,0 +1,8 @@
+is_global = true
+build_property.RootNamespace = CQF_RSMF
+build_property.ProjectDir = D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 

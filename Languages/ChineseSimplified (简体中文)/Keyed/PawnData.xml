@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <PawnDataEditor>实体数据生成器(未完成)</PawnDataEditor>
+  <PawnDataEditor>实体编辑器</PawnDataEditor>
   <SpawnMessage>生成提示：</SpawnMessage>
   <PawnSpawnDatas>实体数据：</PawnSpawnDatas>
   <AddNewPawns>添加实体生成数据</AddNewPawns>
@@ -48,6 +48,10 @@
 
   <PawnSpawnData_Character>角色生成数据</PawnSpawnData_Character>
   <CharacterSpawnDef>角色定义：{0}</CharacterSpawnDef>
+  <!-- EN: Custom NPC spawn data -->
+  <PawnSpawnData_ComplexPawn>自定义NPC生成数据</PawnSpawnData_ComplexPawn>
+  <!-- EN: Generates a pawn from a ComplexPawnDef custom NPC definition. -->
+  <PawnSpawnData_ComplexPawn_Tip>根据ComplexPawnDef自定义NPC定义生成实体。</PawnSpawnData_ComplexPawn_Tip>
 
   <MainPawnSpawnData>主要角色生成数据</MainPawnSpawnData>
   <MainPawnSpawnData_Tip>主要角色生成数据。用于可被主要地图缓存的重要长期角色，也可以从任务数据库或全局数据库恢复。</MainPawnSpawnData_Tip>

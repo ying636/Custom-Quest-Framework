@@ -64,6 +64,8 @@ When spawning, the spawned pawn will be recorded in the &quot;quest database&quo
 
   <PawnSpawnData_Character>Character spawn data</PawnSpawnData_Character>
   <CharacterSpawnDef>Character def:{0}</CharacterSpawnDef>
+  <PawnSpawnData_ComplexPawn>Custom NPC spawn data</PawnSpawnData_ComplexPawn>
+  <PawnSpawnData_ComplexPawn_Tip>Generates a pawn from a ComplexPawnDef custom NPC definition.</PawnSpawnData_ComplexPawn_Tip>
 
   <MainPawnSpawnData>Main pawn spawn data</MainPawnSpawnData>
   <MainPawnSpawnData_Tip>Main pawn generation data. Use it for important reusable characters that can be cached by main maps and optionally restored from quest or global databases.</MainPawnSpawnData_Tip>

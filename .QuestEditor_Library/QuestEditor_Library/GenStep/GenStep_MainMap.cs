@@ -25,7 +25,7 @@ namespace QuestEditor_Library
                 GenStep_CustomMap.SpawnCustomMap(map, parms, def, site.quest,
                     site.dev, null,
                     false, false,
-                    false, true, site.replaceMapGeneration);
+                    false, def.destroyAllThing, site.replaceMapGeneration);
             }
             finally
             {

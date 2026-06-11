@@ -223,7 +223,7 @@ namespace QuestEditor_Library
         {
             if (!GameTools.isGeneratingMap)
             {
-                GameTools.temporaryTargets.Clear();
+                GameTools.ClearTemporaryTargets();
             }
             if (this.TryGetComp<CompActionWorker>() is CompActionWorker comp) 
             {

@@ -103,6 +103,21 @@ namespace QuestEditor_Library
             }
             text = Widgets.TextField(new Rect(nullText ? x + 5f : Text.CalcSize(label).x + x + 5f, y, width, 25f), text);
         }
+        public static void DrawFactionSelectableText(float y, string label, ref string faction, Action<string> setFaction, float x = 0f, float width = 60f)
+        {
+            DrawSelectableText(y, label, ref faction, () => DrawFactionFloatMenu(setFaction), x, width);
+        }
+        public static void DrawFactionFloatMenu(Action<string> setFaction)
+        {
+            DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll(f => !f.isPlayer),
+                f => setFaction(f.defName), f => f.label, new List<FloatMenuOption>()
+                {
+                    new FloatMenuOption("RandomHostile".Translate(), () => setFaction("RandomHostile")),
+                    new FloatMenuOption("RandomAlly".Translate(), () => setFaction("RandomAlly")),
+                    new FloatMenuOption("RandomNeutral".Translate(), () => setFaction("RandomNeutral")),
+                    new FloatMenuOption("PawnDataMapFaction".Translate(), () => setFaction("MapFaction"))
+                });
+        }
         public static void DrawSelectableText(float y, string label, ref SlateRef<string> text, Action selectAction, float x = 0f, float width = 60f)
         {
             bool nullText = label.NullOrEmpty();
@@ -298,6 +313,57 @@ namespace QuestEditor_Library
                 Find.WindowStack.Add(new FloatMenu(options));
             }
         }
+
+        public static void OpenCQFActionSelect(Action<Type> acceptAction)
+        {
+            Dictionary<string, Func<CQFAction, bool>> typeFilters = new Dictionary<string, Func<CQFAction, bool>>();
+            Dictionary<string, string> typeTips = new Dictionary<string, string>();
+            foreach (CQFActionCategory category in Enum.GetValues(typeof(CQFActionCategory)))
+            {
+                CQFActionCategory capturedCategory = category;
+                string label = CQFEditorTools.GetCQFActionCategoryLabel(category);
+                typeFilters[label] = action => action.ActionCategory == capturedCategory;
+                typeTips[label] = CQFEditorTools.GetCQFActionCategoryTip(category);
+            }
+            Find.WindowStack.Add(new Dialog_Select<CQFAction>(CQFEditorTools.GetCQFActions(), null, t => t.GetType().Name.Translate(), "Select".Translate(),
+                action => acceptAction(action.GetType()),
+                null, null, t => (t.GetType().Name + "_Tip").CanTranslate() ? (t.GetType().Name + "_Tip").Translate().ToString() : "", null, null, null,
+                typeFilters, typeTips));
+        }
+
+        public static List<Type> GetCQFActionTypes()
+        {
+            return typeof(CQFAction).AllSubclassesNonAbstract();
+        }
+
+        public static List<CQFAction> GetCQFActions()
+        {
+            return CQFEditorTools.GetCQFActionTypes().Select(type => (CQFAction)Activator.CreateInstance(type)).ToList();
+        }
+
+        public static Dictionary<string, Func<CQFAction, bool>> GetCQFActionTypeFilters()
+        {
+            Dictionary<string, Func<CQFAction, bool>> result = new Dictionary<string, Func<CQFAction, bool>>();
+            foreach (CQFActionCategory category in Enum.GetValues(typeof(CQFActionCategory)))
+            {
+                CQFActionCategory capturedCategory = category;
+                result[CQFEditorTools.GetCQFActionCategoryLabel(category)] = action => action.ActionCategory == capturedCategory;
+            }
+            return result;
+        }
+
+        public static string GetCQFActionCategoryLabel(CQFActionCategory category)
+        {
+            string key = "CQFActionCategory_" + category;
+            return key.CanTranslate() ? key.Translate().ToString() : category.ToString();
+        }
+
+        public static string GetCQFActionCategoryTip(CQFActionCategory category)
+        {
+            string key = "CQFActionCategory_" + category + "_Tip";
+            return key.CanTranslate() ? key.Translate().ToString() : null;
+        }
+
         public static void DrawSelectButton<T>(float x, ref float y, string title,
             List<T> list, Action<T> addAction, Func<T, string> getText, List<FloatMenuOption> extraOptions = null)
         {
@@ -382,7 +448,7 @@ namespace QuestEditor_Library
             }
             if (Widgets.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
             {
-                Find.WindowStack.Add(new Dialog_Select<Type>(typeof(CQFAction).AllSubclassesNonAbstract(),null,a => a.Name.Translate(),"Select".Translate(),t => list.Add((CQFAction)Activator.CreateInstance(t)),null,null,t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""));
+                CQFEditorTools.OpenCQFActionSelect(t => list.Add((CQFAction)Activator.CreateInstance(t)));
             }
             if (Widgets.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
             {
@@ -798,8 +864,7 @@ namespace QuestEditor_Library
                 TooltipHandler.TipRegion(titleRect, tip);
             }
             CQFEditorTools.DrawButtonWithIcon(y,
-                () => Find.WindowStack.Add(new Dialog_Select<Type>(typeof(CQFAction).AllSubclassesNonAbstract(),null,t => t.Name.Translate(),"Select".Translate(),t => list.Add((CQFAction)Activator.CreateInstance(t)),
-                null,null,t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : "")),
+                () => CQFEditorTools.OpenCQFActionSelect(t => list.Add((CQFAction)Activator.CreateInstance(t))),
                 () => CQFEditorTools.DrawFloatMenu(list,a => list.Remove(a),a => a.GetType().Name.Translate()),inRect.width - 150f,30f);
             y += 30f;
             Vector2 start = new Vector2(x, y);
@@ -1054,7 +1119,15 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
     {
         public static void AddTemporaryTagret(string name,TargetInfo target) 
         {
-            temporaryTargets.SetOrAdd(name,target);
+            GameComponent_Editor.Component.TemporaryDatabase.RecordTarget(name, target);
+        }
+        public static void ClearTemporaryTargets()
+        {
+            GameComponent_Editor.Component.ClearTemporaryDatabase();
+        }
+        public static void ResetTemporaryTargets()
+        {
+            GameComponent_Editor.Component.ResetTemporaryDatabase();
         }
         public static Map GenerateSubMap(IntVec3 size,PocketMapParent parent, MapGeneratorDef generatorDef, IEnumerable<GenStepWithParams> extraGenStepDefs, Map sourceMap)
         {
@@ -1137,7 +1210,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             {
                 target = target2;
             }
-            if (target == null && temporaryTargets.TryGetValue(targetText,out TargetInfo target3))
+            if (target == null && GameTools.GetTargetFromTemporaryDatabase(targetText) is TargetInfo target3)
             {
                 target = target3;
             }
@@ -1146,6 +1219,14 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                 target = target4;
             }
             return target;
+        }
+        public static TargetInfo GetTargetFromTemporaryDatabase(string targetText)
+        {
+            if (targetText == null)
+            {
+                return null;
+            }
+            return GameComponent_Editor.Component.TemporaryDatabase.GetTarget(targetText);
         }
         public static TargetInfo GetTargetFromQuestDatabase(Quest quest, string targetText)
         {
@@ -1433,7 +1514,6 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         }
 
         public static bool isGeneratingMap = false;
-        public static Dictionary<string, TargetInfo> temporaryTargets = new Dictionary<string, TargetInfo>();
     }
     public class ThingData : IExposable, ISaveable
     {

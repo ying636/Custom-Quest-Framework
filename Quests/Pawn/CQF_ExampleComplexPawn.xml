@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.ComplexPawnDef>
+    <defName>CQF_ExampleComplexPawn</defName>
+    <label>example custom NPC</label>
+    <unique>true</unique>
+    <firstName>CQF</firstName>
+    <nickName>Example</nickName>
+    <lastName>NPC</lastName>
+    <kindDef>Colonist</kindDef>
+    <faction>PlayerColony</faction>
+    <gender>Female</gender>
+    <bioAge>28</bioAge>
+    <chrAge>28</chrAge>
+  </QuestEditor_Library.ComplexPawnDef>
+</Defs>

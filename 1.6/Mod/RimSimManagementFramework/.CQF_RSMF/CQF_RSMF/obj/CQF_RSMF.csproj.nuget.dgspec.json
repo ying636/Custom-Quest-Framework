@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\1.6\\Mod\\RimSimManagementFramework\\.CQF_RSMF\\CQF_RSMF\\CQF_RSMF.csproj": {}
+  },
+  "projects": {
+    "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\1.6\\Mod\\RimSimManagementFramework\\.CQF_RSMF\\CQF_RSMF\\CQF_RSMF.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\1.6\\Mod\\RimSimManagementFramework\\.CQF_RSMF\\CQF_RSMF\\CQF_RSMF.csproj",
+        "projectName": "CQF_RSMF",
+        "projectPath": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\1.6\\Mod\\RimSimManagementFramework\\.CQF_RSMF\\CQF_RSMF\\CQF_RSMF.csproj",
+        "packagesPath": "C:\\Users\\HaiLu\\.nuget\\packages\\",
+        "outputPath": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\1.6\\Mod\\RimSimManagementFramework\\.CQF_RSMF\\CQF_RSMF\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\HaiLu\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net481"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net481": {
+            "targetAlias": "net481",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net481": {
+          "targetAlias": "net481",
+          "dependencies": {
+            "Krafs.Rimworld.Ref": {
+              "target": "Package",
+              "version": "[1.6.4837-beta, )"
+            },
+            "Lib.Harmony.Ref": {
+              "target": "Package",
+              "version": "[2.4.2, )"
+            },
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

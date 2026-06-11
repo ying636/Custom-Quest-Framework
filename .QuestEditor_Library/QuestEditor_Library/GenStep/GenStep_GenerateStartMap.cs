@@ -16,7 +16,7 @@ namespace QuestEditor_Library
         {
             if (Find.Scenario.AllParts.ToList().Find(p => p is ScenPart_GenerateCustomMap) is ScenPart_GenerateCustomMap part) 
             {
-                GenStep_CustomMap.SpawnCustomMap(map, parms,part.map, null, false,IntVec3.Zero, false, false, false);
+                GenStep_CustomMap.SpawnCustomMap(map, parms, part.map, null, false, IntVec3.Zero, false, false, false, part.map.destroyAllThing);
             }
         }
     }

@@ -19,14 +19,14 @@ namespace QuestEditor_Library
                 GenStep_CustomMap.SpawnCustomMap(map, parms, def, customParams.quest,
                     customParams.dev, null,
                     false, customParams.isSubMap,
-                    false, true, customParams.replaceMapGeneration);
+                    false, def.destroyAllThing, customParams.replaceMapGeneration);
             }
             else if (map.Parent is CustomSite site)
             {
                 GenStep_CustomMap.SpawnCustomMap(map, parms, site.mapDef, site.quest,
                     site.dev, null,
                     false, false,
-                    false, true, site.replaceMapGeneration);
+                    false, site.mapDef.destroyAllThing, site.replaceMapGeneration);
             }
         }
 
@@ -40,7 +40,7 @@ namespace QuestEditor_Library
                 if (!isGenerateByCore)
                 {
                     GameTools.isGeneratingMap = true;
-                    GameTools.temporaryTargets.Clear();
+                    GameTools.ResetTemporaryTargets();
                     def.mapPartGenerationLimit.ForEach(l => generatedLimit_Key.SetOrAdd(l.key, l.limit));
                     faction = GameTools.GetFaction(def.faction, map); 
                 }
@@ -124,7 +124,7 @@ namespace QuestEditor_Library
                     if (DebugTools.clearGenerationData)
                     {
                         GameTools.isGeneratingMap = false;
-                        GameTools.temporaryTargets.Clear();
+                        GameTools.ClearTemporaryTargets();
                         faction = null;
                         replaceData?.Clear();
                         replaceData = null;
@@ -509,6 +509,7 @@ namespace QuestEditor_Library
         {
             CellRect rect = def.GetRect(center);
             List<IntVec3> poss = rect.Cells.ToList();
+            HashSet<IntVec3> customMapCells = new HashSet<IntVec3>(def.GetAllPosition().Select(p => p + center));
             List<Thing> things = new List<Thing>();
             if (map.fogGrid == null)
             {
@@ -516,7 +517,7 @@ namespace QuestEditor_Library
             }
             poss.ForEach(x =>
             {
-                if (x.InBounds(map) && !def.disdestroy.Contains(x - center))
+                if (x.InBounds(map) && customMapCells.Contains(x) && !def.disdestroy.Contains(x - center))
                 {
                     if (!isGenerateByCore && destroyThings) 
                     {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <CQF_BackgroundEffect_BlinkStars.label>Blinking stars</CQF_BackgroundEffect_BlinkStars.label>
+  <CQF_BackgroundEffect_BlinkStars.description>Periodically draws stars that fade in and out above the map background.</CQF_BackgroundEffect_BlinkStars.description>
+  <CQF_BackgroundEffect_Meteors.label>Meteors</CQF_BackgroundEffect_Meteors.label>
+  <CQF_BackgroundEffect_Meteors.description>Periodically draws meteors crossing above the map background.</CQF_BackgroundEffect_Meteors.description>
+
+</LanguageData>

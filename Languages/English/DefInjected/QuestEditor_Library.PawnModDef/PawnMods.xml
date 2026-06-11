@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_PawnMod_Basic.label>Basic</CQF_PawnMod_Basic.label>
+  <CQF_PawnMod_Basic.description>Basic custom NPC data.</CQF_PawnMod_Basic.description>
+  <CQF_PawnMod_NameAndBody.label>Name and body</CQF_PawnMod_NameAndBody.label>
+  <CQF_PawnMod_NameAndBody.description>Name, gender, and age data.</CQF_PawnMod_NameAndBody.description>
+  <CQF_PawnMod_Appearance.label>Appearance</CQF_PawnMod_Appearance.label>
+  <CQF_PawnMod_Appearance.description>Head, body, hair, and colors.</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Backstory.label>Backstory</CQF_PawnMod_Backstory.label>
+  <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
+  <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
+  <CQF_PawnMod_Traits.description>Pawn traits.</CQF_PawnMod_Traits.description>
+  <CQF_PawnMod_Apparel.label>Apparel</CQF_PawnMod_Apparel.label>
+  <CQF_PawnMod_Apparel.description>Pawn apparel.</CQF_PawnMod_Apparel.description>
+  <CQF_PawnMod_Weapon.label>Weapon</CQF_PawnMod_Weapon.label>
+  <CQF_PawnMod_Weapon.description>Pawn weapon.</CQF_PawnMod_Weapon.description>
+</LanguageData>

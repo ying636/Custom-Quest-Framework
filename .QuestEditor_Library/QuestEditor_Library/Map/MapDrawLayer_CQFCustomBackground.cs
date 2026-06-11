@@ -28,7 +28,7 @@ public class MapDrawLayer_CQFCustomBackground : MapDrawLayer
         }
         Color color = background.color;
         color.a *= background.alpha;
-        Material material = MaterialPool.MatFrom(texture, ShaderDatabase.Transparent, color);
+        Material material = MaterialPool.MatFrom(texture, ShaderDatabase.Transparent, color, BackgroundRenderQueue);
         LayerSubMesh subMesh = base.GetSubMesh(material);
         if (subMesh == null)
         {
@@ -39,6 +39,8 @@ public class MapDrawLayer_CQFCustomBackground : MapDrawLayer
     }
 
     private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.background;
+
+    private const int BackgroundRenderQueue = 1900;
 
     private void MakeBackgroundGeometry(CustomMapBackgroundData background, LayerSubMesh subMesh)
     {

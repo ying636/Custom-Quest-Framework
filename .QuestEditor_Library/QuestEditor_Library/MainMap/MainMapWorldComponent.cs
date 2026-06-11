@@ -1,3 +1,4 @@
+using RimWorld;
 using RimWorld.Planet;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,58 @@ namespace QuestEditor_Library
             }
             this.mainSites?.Remove(site);
             this.RebuildMainSiteIndex();
+        }
+
+        public bool DestroyMainSite(MainSite site, bool destroyMap = true, bool notifyPlayer = true)
+        {
+            if (site == null || site.Destroyed)
+            {
+                return false;
+            }
+            if (destroyMap && site.HasMap)
+            {
+                Current.Game.DeinitAndRemoveMap(site.Map, notifyPlayer);
+            }
+            if (!site.Destroyed)
+            {
+                site.Destroy();
+            }
+            this.UnregisterMainSite(site);
+            return true;
+        }
+
+        public bool TryDestroyMainSiteByKey(string key, Quest quest, Dictionary<string, TargetInfo> targets = null, bool destroyMap = true, bool notifyPlayer = true)
+        {
+            if (this.TryGetMainSiteByKey(key, quest, targets, out MainSite site))
+            {
+                return this.DestroyMainSite(site, destroyMap, notifyPlayer);
+            }
+            return false;
+        }
+
+        public bool TryGetMainSiteByKey(string key, Quest quest, Dictionary<string, TargetInfo> targets, out MainSite site)
+        {
+            site = null;
+            if (key.NullOrEmpty())
+            {
+                return false;
+            }
+            TargetInfo target = GameTools.GetTarget(targets, quest, key);
+            if (target != null)
+            {
+                if (target.Thing?.Map?.Parent is MainSite targetSite)
+                {
+                    site = targetSite;
+                    return true;
+                }
+                if (target.Map?.Parent is MainSite mapSite)
+                {
+                    site = mapSite;
+                    return true;
+                }
+            }
+            site = this.GetAllMainSites().FirstOrDefault(s => s.MainMapKey == key || s.ID.ToString() == key);
+            return site != null;
         }
 
         public List<MainSite> GetMainSites(MainMapDef mainMapDef)

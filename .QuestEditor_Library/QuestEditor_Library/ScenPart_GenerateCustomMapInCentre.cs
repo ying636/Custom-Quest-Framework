@@ -30,7 +30,7 @@ namespace QuestEditor_Library
             if (Find.TickManager.TicksGame < 5f && map != null)
             {
                 CustomMapDataDef data = this.maps.RandomElement();
-                GenStep_CustomMap.SpawnCustomMap(map, new GenStepParams(), data, null, false, map.Center - new IntVec3(data.size.x / 2, 0, data.size.z / 2), false, false, false, true, false, t => t is Building);
+                GenStep_CustomMap.SpawnCustomMap(map, new GenStepParams(), data, null, false, map.Center - new IntVec3(data.size.x / 2, 0, data.size.z / 2), false, false, false, data.destroyAllThing, false, t => t is Building);
             }
         }
 

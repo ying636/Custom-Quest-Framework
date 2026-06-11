@@ -20,8 +20,27 @@ using System.Text;
 
 namespace QuestEditor_Library
 {
+    public enum CQFActionCategory
+    {
+        FlowControl,
+        SignalState,
+        DataWrite,
+        SpawnThing,
+        MapAction,
+        ThingChange,
+        Pawn,
+        Faction,
+        VisualEffect,
+        DialogEvent,
+        MainMap,
+        EventArea,
+        Misc
+    }
+
     public abstract class CQFAction : ISaveable, IDrawable, IExposable
     {
+        public virtual CQFActionCategory ActionCategory => CQFActionCategory.Misc;
+
         public virtual CQFAction Copy()
         {
             XElement x = this.SaveToXElement("CQFAction");
@@ -52,6 +71,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Loop : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -89,6 +110,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_DelayExecute : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -123,6 +146,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_PostGenerationExecute : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -149,6 +174,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Sequence : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -175,6 +202,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Random : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -201,6 +230,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Condition : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -235,6 +266,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Chance : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -247,7 +280,7 @@ namespace QuestEditor_Library
             }
             if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "SelectAction".Translate(), false))
             {
-                CQFEditorTools.DrawFloatMenu(typeof(CQFAction).AllSubclassesNonAbstract(), a => this.action = (CQFAction)Activator.CreateInstance(a), a => a.Name.Translate());
+                CQFEditorTools.OpenCQFActionSelect(a => this.action = (CQFAction)Activator.CreateInstance(a));
             }
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "LootChance".Translate(), ref this.chance, ref this.buffer, x, 150f);
@@ -281,6 +314,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_SentSignal : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -340,6 +375,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_SetBool : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -372,6 +409,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_SetGlobalBool : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -404,6 +443,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Message : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -466,6 +507,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Quest : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -500,6 +543,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_Incident : CQFAction_Target
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -536,6 +581,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_StartDialog : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -598,6 +645,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_SetRelation : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.Pawn;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -663,6 +712,8 @@ namespace QuestEditor_Library
 
     public class CQFAction_LinkEntranceAndExit : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -732,6 +783,8 @@ namespace QuestEditor_Library
 
     public class CQFAction_Skip : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -808,6 +861,8 @@ namespace QuestEditor_Library
     }
     public class CQFAction_SkipToPlayerMap : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
@@ -861,6 +916,8 @@ namespace QuestEditor_Library
     
     public class CQFAction_ClearMainPawnCache : CQFAction
     {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (this.pawnName.NullOrEmpty())
@@ -907,5 +964,123 @@ namespace QuestEditor_Library
         public string pawnName;
         public MainMapDef mainMapDef;
         public bool clearAllMainMaps;
+    }
+
+    public class CQFAction_DestroyMainSite : CQFAction
+    {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectableText(y, "MainSiteKey".Translate(), ref this.key,
+                () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.key = t, t => t.Translate()), x, 150f);
+            y += 30f;
+        }
+
+        public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
+        {
+            MainMapWorldComponent.Component?.TryDestroyMainSiteByKey(this.key, quest, targets);
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (!this.key.NullOrEmpty())
+            {
+                result.Add(new XElement("key", this.key));
+            }
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            Scribe_Values.Look(ref this.key, "key");
+        }
+
+        public string key;
+    }
+
+    public class CQFAction_RecordMainSiteVisitCount : CQFAction
+    {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectableText(y, "MainSiteKey".Translate(), ref this.key,
+                () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.key = t, t => t.Translate()), x, 150f);
+            y += 30f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "RecordKeyOfData".Translate(), ref this.recordKey, x, 150f);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToTemporaryBase".Translate(), ref this.recordToTemporaryBase);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToQuestBase".Translate(), ref this.recordToQuestBase);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToGlobalBase".Translate(), ref this.recordToGlobalBase);
+            y += 30f;
+        }
+
+        public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
+        {
+            if (MainMapWorldComponent.Component == null ||
+                !MainMapWorldComponent.Component.TryGetMainSiteByKey(this.key, quest, targets, out MainSite site))
+            {
+                return;
+            }
+            if (this.recordToTemporaryBase)
+            {
+                GameComponent_Editor.Component.TemporaryDatabase.SetValue(this.recordKey, site.visitCount);
+            }
+            if (this.recordToQuestBase)
+            {
+                GameComponent_Editor.Component.GetQuestData(quest)?.SetValue(this.recordKey, site.visitCount);
+            }
+            if (this.recordToGlobalBase)
+            {
+                GameComponent_Editor.Component.GlobalDatabase.SetValue(this.recordKey, site.visitCount);
+            }
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (!this.key.NullOrEmpty())
+            {
+                result.Add(new XElement("key", this.key));
+            }
+            if (!this.recordKey.NullOrEmpty())
+            {
+                result.Add(new XElement("recordKey", this.recordKey));
+            }
+            if (this.recordToTemporaryBase)
+            {
+                result.Add(new XElement("recordToTemporaryBase", this.recordToTemporaryBase));
+            }
+            if (this.recordToQuestBase)
+            {
+                result.Add(new XElement("recordToQuestBase", this.recordToQuestBase));
+            }
+            if (this.recordToGlobalBase)
+            {
+                result.Add(new XElement("recordToGlobalBase", this.recordToGlobalBase));
+            }
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            Scribe_Values.Look(ref this.key, "key");
+            Scribe_Values.Look(ref this.recordKey, "recordKey");
+            Scribe_Values.Look(ref this.recordToTemporaryBase, "recordToTemporaryBase");
+            Scribe_Values.Look(ref this.recordToQuestBase, "recordToQuestBase", true);
+            Scribe_Values.Look(ref this.recordToGlobalBase, "recordToGlobalBase");
+        }
+
+        public string key;
+        public string recordKey;
+        public bool recordToQuestBase = true;
+        public bool recordToTemporaryBase;
+        public bool recordToGlobalBase;
     }
 }

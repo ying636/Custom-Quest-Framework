@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "GmXqvOho354=",
+  "success": true,
+  "projectFilePath": "D:\\Game\\Steam\\steamapps\\common\\RimWorld\\Mods\\CQF\\1.6\\Mod\\RimSimManagementFramework\\.CQF_RSMF\\CQF_RSMF\\CQF_RSMF.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HaiLu\\.nuget\\packages\\krafs.rimworld.ref\\1.6.4837-beta\\krafs.rimworld.ref.1.6.4837-beta.nupkg.sha512",
+    "C:\\Users\\HaiLu\\.nuget\\packages\\lib.harmony.ref\\2.4.2\\lib.harmony.ref.2.4.2.nupkg.sha512",
+    "C:\\Users\\HaiLu\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
+    "C:\\Users\\HaiLu\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net481\\1.0.3\\microsoft.netframework.referenceassemblies.net481.1.0.3.nupkg.sha512",
+    "C:\\Users\\HaiLu\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

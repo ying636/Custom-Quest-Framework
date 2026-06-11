@@ -651,4 +651,81 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
 
   <CQFAction_SetHiveGroupMode>巢群行为：设置集群模式</CQFAction_SetHiveGroupMode>
 
+  <CQFAction_DestroyMainSite>行为：销毁主要站点</CQFAction_DestroyMainSite>
+  <CQFAction_DestroyMainSite_Tip>销毁给定 Key 对应的主要站点。Key 可指向数据库中的主要站点地图目标，也可以直接填写主要站点的 MainMapKey。</CQFAction_DestroyMainSite_Tip>
+  <MainSiteKey>主要站点 Key：</MainSiteKey>
+
+  <CQFAction_RecordMainSiteVisitCount>行为：记录主要站点访问次数</CQFAction_RecordMainSiteVisitCount>
+  <CQFAction_RecordMainSiteVisitCount_Tip>获取给定 Key 对应主要站点的访问次数，并写入指定数据库。</CQFAction_RecordMainSiteVisitCount_Tip>
+  <CQFAction_ClearMainPawnCache>行为：清理主要角色缓存</CQFAction_ClearMainPawnCache>
+  <CQFAction_ClearMainPawnCache_Tip>从一个主要地图或所有主要地图中移除指定名字的主要角色缓存，使其之后可以重新生成或再次从数据库恢复。</CQFAction_ClearMainPawnCache_Tip>
+  <pawnName>主要角色名字：</pawnName>
+  <mainMapDef>主要地图定义：</mainMapDef>
+  <clearAllMainMaps>清理所有主要地图：</clearAllMainMaps>
+
+  <CQFAction_CreateEventArea>行为：创建事件区域</CQFAction_CreateEventArea>
+  <CQFAction_CreateEventArea_Tip>创建一个进入后触发事件的区域。区域格子可通过添加事件区域格子行为继续写入。</CQFAction_CreateEventArea_Tip>
+  <CQFAction_AddCellToEventArea>行为：添加事件区域格子</CQFAction_AddCellToEventArea>
+  <CQFAction_AddCellToEventArea_Tip>将目标位置添加到指定 Key 的事件区域中。</CQFAction_AddCellToEventArea_Tip>
+  <CQFAction_DeleteEventArea>行为：删除事件区域</CQFAction_DeleteEventArea>
+  <CQFAction_DeleteEventArea_Tip>删除指定 Key 的事件区域。</CQFAction_DeleteEventArea_Tip>
+  <EventAreaKey>事件区域 Key：</EventAreaKey>
+  <EventAreaFaction>需求派系：</EventAreaFaction>
+  <EventAreaFactionTip>用于筛选能触发事件区域的实体派系。随机敌对/中立/友好会匹配对应关系的派系，地图派系会匹配当前地图所属派系；也可以直接填写具体派系 defName。</EventAreaFactionTip>
+  <EventAreaOnlyHumanlike>仅人形生物：</EventAreaOnlyHumanlike>
+  <EventAreaReplaceExisting>替换已有区域：</EventAreaReplaceExisting>
+
+  <!-- EN: 1. Flow control -->
+  <CQFActionCategory_FlowControl>流程控制</CQFActionCategory_FlowControl>
+  <!-- EN: Actions that control execution order, branches, chance, loops, or delayed execution. -->
+  <CQFActionCategory_FlowControl_Tip>控制执行顺序、分支、概率、循环或延迟执行的行为。</CQFActionCategory_FlowControl_Tip>
+  <!-- EN: 2. Signal and state -->
+  <CQFActionCategory_SignalState>信号状态</CQFActionCategory_SignalState>
+  <!-- EN: Actions that send signals, set bools, add quest tags, or create game conditions. -->
+  <CQFActionCategory_SignalState_Tip>发送信号、设置布尔值、添加任务标签或创建游戏条件的行为。</CQFActionCategory_SignalState_Tip>
+  <!-- EN: 3. Data write -->
+  <CQFActionCategory_DataWrite>数据写用</CQFActionCategory_DataWrite>
+  <!-- EN: Actions that record things, cells, groups, or map rectangles into CQF databases. -->
+  <CQFActionCategory_DataWrite_Tip>将事物、格子、群组或地图矩形写入 CQF 数据库的行为。</CQFActionCategory_DataWrite_Tip>
+  <!-- EN: 4. Spawn things -->
+  <CQFActionCategory_SpawnThing>生成事物</CQFActionCategory_SpawnThing>
+  <!-- EN: Actions that spawn normal loot data or CQF custom things. Container actions are not included here. -->
+  <CQFActionCategory_SpawnThing_Tip>生成普通战利品数据或 CQF 自定义事物的行为。容器相关行为不归入此类。</CQFActionCategory_SpawnThing_Tip>
+  <!-- EN: 5. Map actions -->
+  <CQFActionCategory_MapAction>地图行为</CQFActionCategory_MapAction>
+  <!-- EN: Actions that affect maps, submaps, entrances, exits, fog, pollution, or teleporting between maps. -->
+  <CQFActionCategory_MapAction_Tip>影响地图、子地图、入口、出口、雾、污染或地图间传送的行为。</CQFActionCategory_MapAction_Tip>
+  <!-- EN: 6. Thing changes -->
+  <CQFActionCategory_ThingChange>事物变动</CQFActionCategory_ThingChange>
+  <!-- EN: Actions that replace, destroy, damage, explode, strike, or add triggers to things. -->
+  <CQFActionCategory_ThingChange_Tip>替换、摧毁、伤害、爆炸、雷击或给事物添加触发器的行为。</CQFActionCategory_ThingChange_Tip>
+  <!-- EN: 7. Pawn related -->
+  <CQFActionCategory_Pawn>实体相关</CQFActionCategory_Pawn>
+  <!-- EN: Actions that change pawns, including hediffs, traits, abilities, xenotypes, thoughts, experience, duties, mental states, or relations. -->
+  <CQFActionCategory_Pawn_Tip>改变实体的行为，包括状态、特性、能力、异种类型、心情、经验、职责、精神状态或关系。</CQFActionCategory_Pawn_Tip>
+  <!-- EN: 8. Faction related -->
+  <CQFActionCategory_Faction>派系相关</CQFActionCategory_Faction>
+  <!-- EN: Actions that change factions, goodwill, or faction-driven group AI. -->
+  <CQFActionCategory_Faction_Tip>改变派系、好感度或派系驱动群体 AI 的行为。</CQFActionCategory_Faction_Tip>
+  <!-- EN: 9. Visual effects -->
+  <CQFActionCategory_VisualEffect>特效视觉</CQFActionCategory_VisualEffect>
+  <!-- EN: Actions that create visual effects or motes. Damage-causing actions are not included here. -->
+  <CQFActionCategory_VisualEffect_Tip>创建视觉特效或 Mote 的行为。造成伤害的行为不归入此类。</CQFActionCategory_VisualEffect_Tip>
+  <!-- EN: 10. Dialog and event -->
+  <CQFActionCategory_DialogEvent>对话事件</CQFActionCategory_DialogEvent>
+  <!-- EN: Actions that show messages, start dialogs, manage dialog managers, start quests or incidents, or end the game. -->
+  <CQFActionCategory_DialogEvent_Tip>显示消息、启动对话、管理对话管理器、启动任务或事件、结束游戏的行为。</CQFActionCategory_DialogEvent_Tip>
+  <!-- EN: 11. Main map -->
+  <CQFActionCategory_MainMap>主要地图</CQFActionCategory_MainMap>
+  <!-- EN: Actions for MainMap and main-site state, such as destroying sites, recording visits, or clearing cached main pawns. -->
+  <CQFActionCategory_MainMap_Tip>处理主要地图和主要站点状态的行为，例如销毁站点、记录访问次数或清理主要角色缓存。</CQFActionCategory_MainMap_Tip>
+  <!-- EN: 12. Event area -->
+  <CQFActionCategory_EventArea>事件区域</CQFActionCategory_EventArea>
+  <!-- EN: Actions that create, modify, or delete event areas. -->
+  <CQFActionCategory_EventArea_Tip>创建、修改或删除事件区域的行为。</CQFActionCategory_EventArea_Tip>
+  <!-- EN: 13. Misc -->
+  <CQFActionCategory_Misc>杂项</CQFActionCategory_Misc>
+  <!-- EN: Actions that do not fit the other categories, including container and inventory utility actions. -->
+  <CQFActionCategory_Misc_Tip>不适合其他分类的行为，包括容器和库存工具类行为。</CQFActionCategory_Misc_Tip>
+
 </LanguageData>

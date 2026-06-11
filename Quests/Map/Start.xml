@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.CustomMapDataDef>
+    <defName>Start</defName>
+    <label>Star</label>
+    <size>(50, 1, 50)</size>
+    <commonality>0.8</commonality>
+    <terrainsRect>
+      <li>
+        <key>QE_EtherealVoid</key>
+        <value>
+          <li>(0,0,49,6)</li>
+          <li>(0,7,9,49)</li>
+          <li>(10,27,49,49)</li>
+          <li>(42,7,49,26)</li>
+        </value>
+      </li>
+      <li>
+        <key>QE_GlazedGlass</key>
+        <value>
+          <li>(10,7,41,26)</li>
+        </value>
+      </li>
+    </terrainsRect>
+    <customSteps>
+      <li Class="QuestEditor_Library.CustomMapStep_MapBackground">
+        <background>
+          <texPath>UI/CQF/MapBackgroup/StarrySky</texPath>
+          <color>RGBA(1.000, 1.000, 1.000, 1.000)</color>
+          <alpha>1</alpha>
+          <enableTerrainEdges>true</enableTerrainEdges> 
+          <backgroundEffects>
+            <li>CQF_BackgroundEffect_BlinkStars</li>
+            <li>CQF_BackgroundEffect_BlinkStars</li>
+            <li>CQF_BackgroundEffect_Meteors</li>
+            <li>CQF_BackgroundEffect_Meteors</li>
+          </backgroundEffects>
+        </background>
+      </li>
+    </customSteps>
+  </QuestEditor_Library.CustomMapDataDef>
+</Defs>

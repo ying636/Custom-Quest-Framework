@@ -8,6 +8,7 @@
 
   <CustomMapStep_MapPart>Step: Map Part</CustomMapStep_MapPart>
   <CustomMapStep_MapBackground>Step: Map Background</CustomMapStep_MapBackground>
+  <CustomMapStep_BackgroundEffects>Step: Background Effects</CustomMapStep_BackgroundEffects>
   <GenerationCount>Generation count:</GenerationCount>
 
 </LanguageData>

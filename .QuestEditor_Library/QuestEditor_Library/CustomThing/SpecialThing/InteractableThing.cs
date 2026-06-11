@@ -333,7 +333,7 @@ namespace QuestEditor_Library
 
             if (!GameTools.isGeneratingMap)
             {
-                GameTools.temporaryTargets.Clear();
+                GameTools.ClearTemporaryTargets();
             }
         }
         public bool Satisfied(Pawn target,Thing thing,out string reason, Quest quest)

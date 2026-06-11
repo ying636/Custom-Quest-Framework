@@ -68,6 +68,17 @@ namespace QuestEditor_Library
                 return this.triggers;
             }
         }
+        public List<CQFEventArea> EventAreas
+        {
+            get
+            {
+                if (this.eventAreas == null)
+                {
+                    this.eventAreas = new List<CQFEventArea>();
+                }
+                return this.eventAreas;
+            }
+        }
         public Dictionary<string, IntVec3> StartCells
         {
             get
@@ -101,6 +112,7 @@ namespace QuestEditor_Library
                         this.AddSubMap(parent);
                     }
                 });
+                this.RebuildEventAreaPawnCache();
             }
             this.pawnSpawnDatas_Tick?.ForEach(data =>
             {
@@ -122,6 +134,68 @@ namespace QuestEditor_Library
                     }
                 }
             });
+            if (Find.TickManager.TicksGame % 60 == 0)
+            {
+                this.CheckEventAreas();
+            }
+        }
+        public void AddOrReplaceEventArea(CQFEventArea area, bool replaceExisting = true)
+        {
+            if (area == null || area.key.NullOrEmpty())
+            {
+                return;
+            }
+            if (replaceExisting)
+            {
+                this.EventAreas.RemoveAll(a => a.key == area.key);
+            }
+            CQFEventArea oldArea = this.EventAreas.Find(a => a.key == area.key);
+            if (oldArea != null)
+            {
+                oldArea.Merge(area);
+                oldArea.InitializeRuntime(this.map);
+                return;
+            }
+            area.InitializeRuntime(this.map);
+            this.EventAreas.Add(area);
+        }
+        public CQFEventArea GetEventArea(string key)
+        {
+            if (key.NullOrEmpty())
+            {
+                return null;
+            }
+            return this.EventAreas.Find(a => a.key == key);
+        }
+        public void RemoveEventArea(string key)
+        {
+            if (key.NullOrEmpty())
+            {
+                return;
+            }
+            this.EventAreas.RemoveAll(a => a.key == key);
+        }
+        public void Notify_PawnSpawned(Pawn pawn)
+        {
+            if (pawn == null)
+            {
+                return;
+            }
+            foreach (CQFEventArea area in this.EventAreas)
+            {
+                area.Notify_PawnSpawned(pawn, this.map);
+            }
+        }
+        public void Notify_PawnDespawned(Pawn pawn)
+        {
+            if (pawn == null)
+            {
+                return;
+            }
+            foreach (CQFEventArea area in this.EventAreas)
+            {
+                area.Notify_PawnDespawned(pawn);
+            }
         }
         public void Notify_ThingDamaged(Thing thing, DamageInfo dinfo) 
         {
@@ -167,7 +241,7 @@ namespace QuestEditor_Library
             if (Scribe.mode == LoadSaveMode.Saving) 
             {
                 this.PawnSpawnDatas_Building.RemoveAll(b => b.Key == null || b.Key.Destroyed);
-            }
+            } 
             Scribe_Values.Look(ref this.questTag,"questTag");
             Scribe_Collections.Look(ref this.subMaps, "QE_MapComponent_CustomMapData_subMaps",LookMode.Reference);
             Scribe_Collections.Look(ref this.customLords, "QE_MapComponent_CustomMapData_customLords", LookMode.Deep);
@@ -178,15 +252,48 @@ namespace QuestEditor_Library
             Scribe_Collections.Look(ref this.pawnSpawnDatas_Building, "QE_LordJob_DefendAndPatrol_pawnSpawnDatas_Building", LookMode.Reference, LookMode.Deep, ref this.tmpBuildings, ref this.tmpPawnDatas);
             Scribe_Collections.Look(ref this.pawnSpawnDatas_Tick, "QE_LordJob_DefendAndPatrol_pawnSpawnDatas_Tick", LookMode.Deep);
             Scribe_Collections.Look(ref this.triggers, "triggers",LookMode.Deep);
+            Scribe_Collections.Look(ref this.eventAreas, "eventAreas", LookMode.Deep);
             Scribe_Collections.Look(ref this.startCells, "startCells", LookMode.Value,LookMode.Value);
             Scribe_Deep.Look(ref this.background, "background");
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                this.EventAreas.RemoveAll(a => a == null || a.key.NullOrEmpty());
+            }
         }
-
+        private void CheckEventAreas()
+        {
+            if (!this.EventAreas.Any())
+            {
+                return;
+            }
+            List<CQFEventArea> triggeredAreas = new List<CQFEventArea>();
+            Quest quest = GameTools.GetQuestFromMap(this.map);
+            foreach (CQFEventArea area in this.EventAreas)
+            {
+                if (area.TryTrigger(this.map, quest))
+                {
+                    triggeredAreas.Add(area);
+                }
+            }
+            foreach (CQFEventArea area in triggeredAreas)
+            {
+                this.EventAreas.Remove(area);
+            }
+        }
+        private void RebuildEventAreaPawnCache()
+        {
+            foreach (CQFEventArea area in this.EventAreas)
+            {
+                area.InitializeRuntime(this.map);
+            }
+        }
+ 
         public bool init = false;
         public List<MapParent_Custom> subMaps = new List<MapParent_Custom>();
         public Dictionary<Thing, Thing> designatedAndMap = new Dictionary<Thing, Thing>();
 
         List<ThingActionTrigger> triggers = new List<ThingActionTrigger>();
+        List<CQFEventArea> eventAreas = new List<CQFEventArea>();
 
         public Dictionary<Building, List<PawnSpawnData>> pawnSpawnDatas_Building = new Dictionary<Building, List<PawnSpawnData>>();
         public List<Building> tmpBuildings = new List<Building>();
@@ -248,6 +355,166 @@ namespace QuestEditor_Library
         public List<Thing> things = new List<Thing>();
         public List<CQFAction> actions = new List<CQFAction>();
         public ActionTriggerMode mode;
+    }
+    public class CQFEventArea : IExposable
+    {
+        public void AddCell(IntVec3 cell)
+        {
+            if (!cell.IsValid)
+            {
+                return;
+            }
+            if (!this.Cells.Contains(cell))
+            {
+                this.Cells.Add(cell);
+            }
+            this.cellSet?.Add(cell);
+        }
+        public void InitializeRuntime(Map map)
+        {
+            this.cellSet = new HashSet<IntVec3>(this.Cells);
+            this.pawns = new HashSet<Pawn>();
+            if (map == null)
+            {
+                return;
+            }
+            foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned)
+            {
+                this.Notify_PawnSpawned(pawn, map);
+            }
+        }
+        public void Merge(CQFEventArea area)
+        {
+            foreach (IntVec3 cell in area.Cells)
+            {
+                this.AddCell(cell);
+            }
+            if (!area.faction.NullOrEmpty())
+            {
+                this.faction = area.faction;
+            }
+            this.onlyHumanlike = area.onlyHumanlike;
+            this.actions = area.actions ?? new List<CQFAction>();
+        }
+        public void Notify_PawnSpawned(Pawn pawn, Map map)
+        {
+            this.EnsureRuntime(map);
+            if (this.PawnMatches(pawn, map))
+            {
+                this.pawns.Add(pawn);
+            }
+            else
+            {
+                this.pawns.Remove(pawn);
+            }
+        }
+        public void Notify_PawnDespawned(Pawn pawn)
+        {
+            this.pawns?.Remove(pawn);
+        }
+        public bool TryTrigger(Map map, Quest quest)
+        {
+            this.EnsureRuntime(map);
+            foreach (Pawn pawn in this.pawns.ToList())
+            {
+                if (pawn == null || pawn.Destroyed || !pawn.Spawned || pawn.Map != map)
+                {
+                    this.pawns.Remove(pawn);
+                    continue;
+                }
+                if (this.cellSet.Contains(pawn.Position))
+                {
+                    this.Trigger(pawn, map, quest);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref this.key, "key");
+            Scribe_Values.Look(ref this.faction, "faction");
+            Scribe_Values.Look(ref this.onlyHumanlike, "onlyHumanlike");
+            Scribe_Collections.Look(ref this.cells, "cells", LookMode.Value);
+            Scribe_Collections.Look(ref this.actions, "actions", LookMode.Deep);
+        }
+        private void EnsureRuntime(Map map)
+        {
+            if (this.cellSet == null || this.pawns == null)
+            {
+                this.InitializeRuntime(map);
+            }
+        }
+        private bool PawnMatches(Pawn pawn, Map map)
+        {
+            if (pawn == null || pawn.Destroyed || !pawn.Spawned || pawn.Map != map)
+            {
+                return false;
+            }
+            if (this.onlyHumanlike && !pawn.RaceProps.Humanlike)
+            {
+                return false;
+            }
+            if (this.faction.NullOrEmpty() || this.faction == "Any")
+            {
+                return true;
+            }
+            if (this.faction == "Player")
+            {
+                return pawn.Faction == Faction.OfPlayer;
+            }
+            if (this.faction == "Hostile" || this.faction == "RandomHostile")
+            {
+                return pawn.Faction != null && pawn.Faction.HostileTo(Faction.OfPlayer);
+            }
+            if (this.faction == "Ally" || this.faction == "RandomAlly")
+            {
+                return pawn.Faction != null && !pawn.Faction.IsPlayer && pawn.Faction.PlayerRelationKind == FactionRelationKind.Ally;
+            }
+            if (this.faction == "Neutral" || this.faction == "RandomNeutral")
+            {
+                return pawn.Faction != null && !pawn.Faction.IsPlayer && pawn.Faction.PlayerRelationKind == FactionRelationKind.Neutral;
+            }
+            if (this.faction == "MapFaction")
+            {
+                return pawn.Faction != null && map?.Parent?.Faction != null && pawn.Faction == map.Parent.Faction;
+            }
+            return pawn.Faction != null && pawn.Faction.def.defName == this.faction;
+        }
+        private void Trigger(Pawn pawn, Map map, Quest quest)
+        {
+            Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>()
+            {
+                ["Trigger"] = pawn,
+                ["Position"] = new TargetInfo(pawn.Position, map),
+                ["Map"] = new TargetInfo(pawn.Position, map)
+            };
+            foreach (CQFAction action in this.actions)
+            {
+                action.Work(targets, quest);
+            }
+        }
+
+        public List<IntVec3> Cells
+        {
+            get
+            {
+                if (this.cells == null)
+                {
+                    this.cells = new List<IntVec3>();
+                }
+                return this.cells;
+            }
+        }
+
+        public string key;
+        public string faction;
+        public bool onlyHumanlike;
+        public List<IntVec3> cells = new List<IntVec3>();
+        public List<CQFAction> actions = new List<CQFAction>();
+
+        private HashSet<IntVec3> cellSet;
+        private HashSet<Pawn> pawns;
     }
 }
 

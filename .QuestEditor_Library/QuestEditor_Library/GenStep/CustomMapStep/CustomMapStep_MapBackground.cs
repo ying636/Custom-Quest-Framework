@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 using Verse;
@@ -10,7 +11,12 @@ public class CustomMapStep_MapBackground : CustomMapStep
     {
         if (MapComponent_CustomMapData.GetComp(map) is { } comp)
         {
+            List<CustomMapBackgroundEffectDef> backgroundEffects = comp.background?.backgroundEffects;
             comp.background = this.background?.Copy();
+            if (comp.background != null && backgroundEffects != null)
+            {
+                comp.background.backgroundEffects = backgroundEffects;
+            }
             if (Current.ProgramState == ProgramState.Playing)
             {
                 map.mapDrawer.RegenerateEverythingNow();

@@ -5,7 +5,8 @@
         <defName>QE_Null</defName>
         <label>Null</label>
         <texturePath>Terrains/Null</texturePath>
-        <pollutedTexturePath>Terrain/Surfaces/SoilPolluted</pollutedTexturePath>
+        <pollutedTexturePath>UI/Null</pollutedTexturePath>
+        <canBePolluted>false</canBePolluted>
         <edgeType>FadeRough</edgeType>
         <renderPrecedence>340</renderPrecedence>
         <pathCost>0</pathCost>
@@ -25,6 +26,22 @@
         <pollutedTexturePath>UI/Null</pollutedTexturePath>
         <edgeType>FadeRough</edgeType>
         <renderPrecedence>340</renderPrecedence>
+        <passability>Impassable</passability>
+        <pathCost>300</pathCost>
+        <avoidWander>true</avoidWander>
+        <layerable>false</layerable>
+        <fertility>0</fertility>
+    </TerrainDef>
+
+    <TerrainDef>
+        <defName>QE_GlazedGlass</defName>
+        <label>Glazed glass</label>
+        <texturePath>Terrains/GlazedGlass/GlazedGlass</texturePath>
+        <pollutedTexturePath>UI/Null</pollutedTexturePath>
+        <canBePolluted>false</canBePolluted>
+        <edgeType>Hard</edgeType>
+        <customShader>Transparent</customShader>
+        <renderPrecedence>340</renderPrecedence>
         <pathCost>0</pathCost>
         <layerable>false</layerable>
         <affordances>
@@ -33,6 +50,22 @@
             <li>Heavy</li>
         </affordances>
         <fertility>0</fertility>
+        <modExtensions>
+            <li Class="QuestEditor_Library.ModExtension_CQFTerrainEdges" />
+        </modExtensions>
+        <spaceEdgeGraphicData>
+            <OShapeTexPath>Terrains/GlazedGlass/GlazedGlassBorderInside_OShape</OShapeTexPath>
+            <UShapeTexPath>Terrains/GlazedGlass/GlazedGlassBorderInside_UShape</UShapeTexPath>
+            <CornerInnerTexPath>Terrains/GlazedGlass/GlazedGlassBorderInside_CornerInner</CornerInnerTexPath>
+            <CornerOuterTexPath>Terrains/GlazedGlass/GlazedGlassBorderInside_CornerOuter</CornerOuterTexPath>
+            <FlatTexPath>Terrains/GlazedGlass/GlazedGlassBorderInside_Flat</FlatTexPath>
+            <LoopLeftTexPath>Terrains/GlazedGlass/GlazedGlassEdge_Left</LoopLeftTexPath>
+            <LoopRightTexPath>Terrains/GlazedGlass/GlazedGlassEdge_Right</LoopRightTexPath>
+            <LoopSingleTexPath>Terrains/GlazedGlass/GlazedGlassEdge_Single</LoopSingleTexPath>
+            <LoopTexPaths>
+                <li>Terrains/GlazedGlass/GlazedGlassEdge_Single</li>
+            </LoopTexPaths>
+        </spaceEdgeGraphicData>
     </TerrainDef>
 
 </Defs>

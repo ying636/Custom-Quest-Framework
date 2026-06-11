@@ -23,7 +23,9 @@ namespace QuestEditor_Library
         {
             try
             {
-                return GenStep_CustomMap.SpawnCustomMap(map, new GenStepParams(), this, quest, load, center, false, true, debug, destroyThings, ignoreDisgenerate);
+                return GenStep_CustomMap.SpawnCustomMap(map, new GenStepParams(), this, quest, load, center, false, true, debug,
+                    destroyThings: destroyThings || this.destroyAllThing,
+                    ignoreDisgenerate: ignoreDisgenerate);
             }
             catch (Exception e)
             {
@@ -45,7 +47,9 @@ namespace QuestEditor_Library
         {
             try
             {
-                return GenStep_CustomMap.SpawnCustomMap(map, new GenStepParams(), this, quest, load, center, true, true, debug, destroyThings, ignoreDisgenerate);
+                return GenStep_CustomMap.SpawnCustomMap(map, new GenStepParams(), this, quest, load, center, true, true, debug,
+                    destroyThings: destroyThings,
+                    ignoreDisgenerate: ignoreDisgenerate);
             }
             catch (Exception e)
             {
@@ -353,6 +357,7 @@ add(p3))));
             result.description = this.description;
             result.size = this.size;
             result.isPart = this.isPart;
+            result.destroyAllThing = this.destroyAllThing;
             result.fogged = this.fogged;
             result.tags = this.tags.ListFullCopy();
             result.rot = this.rot;
@@ -690,6 +695,10 @@ add(p3))));
             {
                 result.Add(new XElement("isPart", this.isPart));
             }
+            if (!this.destroyAllThing)
+            {
+                result.Add(new XElement("destroyAllThing", this.destroyAllThing));
+            }
             result.Add(new XElement("commonality", this.commonality));
             if (!this.faction.NullOrEmpty())
             {
@@ -809,6 +818,7 @@ add(p3))));
         public bool fogged = false;
         public IntVec3 size;
         public bool isPart = false;
+        public bool destroyAllThing = true;
         public float commonality = 0.8f;
         public int generationLimit = 0;
         public string faction = null;

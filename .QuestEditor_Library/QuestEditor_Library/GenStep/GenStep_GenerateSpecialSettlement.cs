@@ -31,7 +31,8 @@ namespace QuestEditor_Library
                     }
                 });
                 
-               GenStep_CustomMap.SpawnCustomMap(map, parms,datas.RandomElementByWeight(d => d.Value).Key,null,false, null, false,false,false,true);;
+               CustomMapDataDef data = datas.RandomElementByWeight(d => d.Value).Key;
+               GenStep_CustomMap.SpawnCustomMap(map, parms, data, null, false, null, false, false, false, data.destroyAllThing);;
             }
         }
     }

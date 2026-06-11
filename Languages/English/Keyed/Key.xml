@@ -9,6 +9,8 @@
   <QuestDescriptionRulePack>Quest description rule:</QuestDescriptionRulePack>
   <CurRuleName>Name of cur rule:{0}</CurRuleName>
   <SelectRule>Select rule</SelectRule>
+  <CQF_DialogSelectType>Type: {0}</CQF_DialogSelectType>
+  <CQF_DialogSelectAllTypes>All</CQF_DialogSelectAllTypes>
   <AddNewNode>Add new node</AddNewNode>
   <DeleteNode>Delete node</DeleteNode>
   <LoadQuest>Load quest</LoadQuest>
@@ -83,19 +85,51 @@ SiteName: SiteName-></RuleTip>
 
 
   <PawnEditor>Pawn editor</PawnEditor>
+  <ComplexPawnDefName>Pawn def name:</ComplexPawnDefName>
+  <ComplexPawnLabel>Label:</ComplexPawnLabel>
+  <ComplexPawnDef>Custom NPC:{0}</ComplexPawnDef>
+  <ConfirmCreateNewComplexPawnDef>Create a new custom NPC and discard the current unsaved edits?</ConfirmCreateNewComplexPawnDef>
+  <NoPawnModAvailable>No pawn modules are available for the current pawn kind.</NoPawnModAvailable>
+  <PawnPreview>Preview</PawnPreview>
+  <PawnModules>Modules</PawnModules>
+  <CQF_PawnMod_Basic.label>Basic</CQF_PawnMod_Basic.label>
+  <CQF_PawnMod_Basic.description>Basic custom NPC data.</CQF_PawnMod_Basic.description>
+  <CQF_PawnMod_NameAndBody.label>Name and body</CQF_PawnMod_NameAndBody.label>
+  <CQF_PawnMod_NameAndBody.description>Name, gender, and age data.</CQF_PawnMod_NameAndBody.description>
+  <CQF_PawnMod_Appearance.label>Appearance</CQF_PawnMod_Appearance.label>
+  <CQF_PawnMod_Appearance.description>Head, body, hair, and colors.</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Backstory.label>Backstory</CQF_PawnMod_Backstory.label>
+  <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
+  <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
+  <CQF_PawnMod_Traits.description>Pawn traits.</CQF_PawnMod_Traits.description>
+  <CQF_PawnMod_Apparel.label>Apparel</CQF_PawnMod_Apparel.label>
+  <CQF_PawnMod_Apparel.description>Pawn apparel.</CQF_PawnMod_Apparel.description>
+  <CQF_PawnMod_Weapon.label>Weapon</CQF_PawnMod_Weapon.label>
+  <CQF_PawnMod_Weapon.description>Pawn weapon.</CQF_PawnMod_Weapon.description>
+  <PawnKindModuleLabel>Pawn kind</PawnKindModuleLabel>
+  <BioAge>Biological age:</BioAge>
+  <ChronologicalAge>Chronological age:</ChronologicalAge>
+  <Gender>Gender:{0}</Gender>
+  <Childhood>Childhood:{0}</Childhood>
+  <Adulthood>Adulthood:{0}</Adulthood>
+  <PawnTraits>Traits</PawnTraits>
+  <PawnApparels>Apparel</PawnApparels>
+  <PawnWeapon>Weapon:{0}</PawnWeapon>
   <DataName>Data name</DataName>
-  <IsUnique>Is unique</IsUnique>
   <BirthName>Birth name</BirthName>
-  <RandomName>Random name</RandomName>
-  <CurHair>Cur hair</CurHair>
+  <RandomName>Randomize name on generation</RandomName>
+  <PawnNameMaker>Name maker:{0}</PawnNameMaker>
+  <RandomizePawnName>Randomize name</RandomizePawnName>
+  <NoPawnNameMaker>No available name maker</NoPawnNameMaker>
+  <CurHair>Hair:{0}</CurHair>
   <SelectHair>Select hair</SelectHair>
   <SelectHairColor>Select hair color</SelectHairColor>
-  <CurHeadType>Cur head type</CurHeadType>
+  <CurHeadType>Head type:{0}</CurHeadType>
   <SelectHeadType>Select head type</SelectHeadType>
   <SelectSkinColor>Select skin color</SelectSkinColor>
   <Colorbase>Colorbase</Colorbase>
   <Hex>Hex</Hex>
-  <CurBodyType>Cur body type</CurBodyType>
+  <CurBodyType>Body type:{0}</CurBodyType>
   <SelectBodyType>Select body type</SelectBodyType>
   <Thin>Thin</Thin>
   <Fat>Fat</Fat>
@@ -292,6 +326,8 @@ SiteName: SiteName-></RuleTip>
 
   <CustomMapIsPart>Is Part:</CustomMapIsPart>
   <CustomMapIsPartTip>It is a part of a complete map that will be extracted and generated when randomly generating regions.</CustomMapIsPartTip>
+  <CustomMapDestroyAllThing>Destroy all things:</CustomMapDestroyAllThing>
+  <CustomMapDestroyAllThingTip>Destroy existing things in the map area before generating this custom map.</CustomMapDestroyAllThingTip>
 
   <Designator_Round>Save Zone: Circular</Designator_Round>
   <Designator_RoundDesc>Select a circular zone to save as a custom map def.(Only applicable to saving map part. If saving a whole map, please use Save Whole Map)</Designator_RoundDesc>
@@ -473,6 +509,12 @@ SiteName: SiteName-></RuleTip>
   <CQF_MapBackgroundColor>Background color</CQF_MapBackgroundColor>
   <CQF_MapBackgroundPreview>Background preview</CQF_MapBackgroundPreview>
   <CQF_MapBackgroundNoPreview>No preview available</CQF_MapBackgroundNoPreview>
+  <CQF_MapBackgroundEnableTerrainEdges>Enable terrain edge drawing</CQF_MapBackgroundEnableTerrainEdges>
+  <CQF_MapBackgroundDynamicEffects>Dynamic background effects</CQF_MapBackgroundDynamicEffects>
+  <CQF_MapBackgroundSelectDynamicEffect>Select background effect</CQF_MapBackgroundSelectDynamicEffect>
+  <CQF_BlankMapEnableTerrainEdges>Enable terrain edge drawing</CQF_BlankMapEnableTerrainEdges>
+  <CQF_MapBackgroundIsBackgroundMap>Background map</CQF_MapBackgroundIsBackgroundMap>
+  <CQF_MapBackgroundIsBackgroundMapTip>When enabled, this map is treated as a background map: transparent/background terrain can reveal the map background, and CQF draws terrain edges for that background map.</CQF_MapBackgroundIsBackgroundMapTip>
   <MapBackgroundImage_Title>Select map background</MapBackgroundImage_Title>
   <MapBackgroundImage_Mod>Mod:</MapBackgroundImage_Mod>
   <MapBackgroundImage_All>All</MapBackgroundImage_All>

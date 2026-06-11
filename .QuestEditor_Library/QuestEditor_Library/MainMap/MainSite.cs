@@ -46,7 +46,6 @@ namespace QuestEditor_Library
         public override void PostMapGenerate()
         {
             base.PostMapGenerate();
-            this.lastGenerateTick = Find.TickManager.TicksGame;
             this.lastLeaveTick = -1;
             this.visitCount++;
         }
@@ -55,6 +54,10 @@ namespace QuestEditor_Library
         {
             this.lastLeaveTick = Find.TickManager.TicksGame;
             base.Notify_MyMapRemoved(map);
+            if (this.killed)
+            {
+                MainMapWorldComponent.Component?.DestroyMainSite(this, false);
+            }
         }
 
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Caravan caravan)
@@ -78,8 +81,8 @@ namespace QuestEditor_Library
             Scribe_Defs.Look(ref this.mainMapDef, "mainMapDef");
             Scribe_Collections.Look(ref this.mainPawns, "mainPawns", LookMode.Value, LookMode.Reference, ref this.tmpMainPawnNames, ref this.tmpMainPawns);
             Scribe_Values.Look(ref this.lastLeaveTick, "lastLeaveTick", -1);
-            Scribe_Values.Look(ref this.lastGenerateTick, "lastGenerateTick", -1);
             Scribe_Values.Look(ref this.visitCount, "visitCount");
+            Scribe_Values.Look(ref this.killed, "killed", false);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 MainMapWorldComponent.Component?.RegisterMainSite(this);
@@ -89,8 +92,8 @@ namespace QuestEditor_Library
         public MainMapDef mainMapDef;
         public Dictionary<string, Pawn> mainPawns = new Dictionary<string, Pawn>();
         public int lastLeaveTick = -1;
-        public int lastGenerateTick = -1;
         public int visitCount;
+        public bool killed;
 
         private List<string> tmpMainPawnNames;
         private List<Pawn> tmpMainPawns;

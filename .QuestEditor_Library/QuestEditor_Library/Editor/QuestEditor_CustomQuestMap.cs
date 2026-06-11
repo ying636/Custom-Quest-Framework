@@ -29,9 +29,13 @@ namespace QuestEditor_Library
             Widgets.Label(new Rect((inRect.width / 2) - 5f, y, 10f, 20f), "x");
             Widgets.TextFieldNumeric<int>(new Rect((inRect.width / 2) + 5f, y, 70f, 20f), ref this.mapSize.z, ref this.bufferz);
             y += 35f;
+            Rect backgroundMapRect = new Rect(10f, y, inRect.width - 20f, 25f);
+            Widgets.CheckboxLabeled(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMap".Translate(), ref this.enableTerrainEdges);
+            TooltipHandler.TipRegion(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMapTip".Translate());
+            y += 35f;
             if (Widgets.ButtonText(new Rect(10f, y, 100f, 38f), "OK".Translate()))
             {
-                GenerateMap(this.mapSize);
+                GenerateMap(this.mapSize, null, this.enableTerrainEdges);
                 this.Close();
             }
             if (Widgets.ButtonText(new Rect(inRect.width - 110f, y, 100f, 38f), "Load".Translate()))
@@ -55,7 +59,7 @@ namespace QuestEditor_Library
             }
         }
 
-        public static void GenerateMap(IntVec3 size,CustomMapDataDef def = null) 
+        public static void GenerateMap(IntVec3 size,CustomMapDataDef def = null, bool enableTerrainEdges = false) 
         {
             if (Current.Game == null)
             {
@@ -89,6 +93,13 @@ namespace QuestEditor_Library
                         })
                     })));
                 Current.Game.CurrentMap = map;
+                if (def == null && enableTerrainEdges)
+                {
+                    MapComponent_CustomMapData comp = map.GetComponent<MapComponent_CustomMapData>();
+                    comp.background ??= new CustomMapBackgroundData();
+                    comp.background.enableTerrainEdges = true;
+                    map.mapDrawer.RegenerateEverythingNow();
+                }
                 def?.disdestroy?.ForEach(d =>
                 {
                     if (!map.designationManager.HasMapDesignationAt(d)) 
@@ -116,6 +127,7 @@ namespace QuestEditor_Library
         public IntVec3 mapSize = IntVec3.Zero;
         public string buffer;
         public string bufferz;
-        private static readonly Vector2 size = new Vector2(260f, 200f);
+        public bool enableTerrainEdges;
+        private static readonly Vector2 size = new Vector2(260f, 235f);
     }
 }

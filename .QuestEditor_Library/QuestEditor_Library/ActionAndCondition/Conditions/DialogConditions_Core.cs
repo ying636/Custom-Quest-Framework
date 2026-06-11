@@ -148,9 +148,7 @@ namespace QuestEditor_Library
                 reason = null;
                 return true;
             }
-            if (this.checkTemporaryDatabase && GameTools.temporaryTargets.ToList().Exists(
-    d => d.Key == this.targetKey &&
-    (!this.needSpawned || (d.Value.HasThing && d.Value.Thing.Spawned))))
+            if (this.checkTemporaryDatabase && GameComponent_Editor.Component.TemporaryDatabase.TargetExists(this.targetKey, this.needSpawned))
             {
                 reason = null;
                 return true;

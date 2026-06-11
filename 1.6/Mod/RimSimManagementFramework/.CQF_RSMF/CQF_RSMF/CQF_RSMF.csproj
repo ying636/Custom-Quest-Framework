@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>12</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\Assemblies</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\Assemblies</OutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4837-beta" />
+      <PackageReference Include="Lib.Harmony.Ref" Version="2.4.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="QuestEditor_Library">
+        <HintPath>D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Assemblies\net48\QuestEditor_Library.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+      <Reference Include="SimManagementLib">
+        <HintPath>D:\Game\Steam\steamapps\workshop\content\294100\3736621496\1.6\Assemblies\SimManagementLib.dll</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+
+</Project>

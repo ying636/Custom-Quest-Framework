@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <!-- EN: Basic -->
+  <CQF_PawnMod_Basic.label>基础</CQF_PawnMod_Basic.label>
+  <!-- EN: Basic custom NPC data. -->
+  <CQF_PawnMod_Basic.description>自定义NPC的基础数据。</CQF_PawnMod_Basic.description>
+  <!-- EN: Name and body -->
+  <CQF_PawnMod_NameAndBody.label>姓名与身体</CQF_PawnMod_NameAndBody.label>
+  <!-- EN: Name, gender, and age data. -->
+  <CQF_PawnMod_NameAndBody.description>姓名、性别与年龄数据。</CQF_PawnMod_NameAndBody.description>
+  <!-- EN: Appearance -->
+  <CQF_PawnMod_Appearance.label>外观</CQF_PawnMod_Appearance.label>
+  <!-- EN: Head, body, hair, and colors. -->
+  <CQF_PawnMod_Appearance.description>头型、体型、发型与颜色。</CQF_PawnMod_Appearance.description>
+  <!-- EN: Backstory -->
+  <CQF_PawnMod_Backstory.label>背景故事</CQF_PawnMod_Backstory.label>
+  <!-- EN: Childhood and adulthood backstories. -->
+  <CQF_PawnMod_Backstory.description>童年与成年背景故事。</CQF_PawnMod_Backstory.description>
+  <!-- EN: Traits -->
+  <CQF_PawnMod_Traits.label>特性</CQF_PawnMod_Traits.label>
+  <!-- EN: Pawn traits. -->
+  <CQF_PawnMod_Traits.description>实体特性。</CQF_PawnMod_Traits.description>
+  <!-- EN: Apparel -->
+  <CQF_PawnMod_Apparel.label>服装</CQF_PawnMod_Apparel.label>
+  <!-- EN: Pawn apparel. -->
+  <CQF_PawnMod_Apparel.description>实体服装。</CQF_PawnMod_Apparel.description>
+  <!-- EN: Weapon -->
+  <CQF_PawnMod_Weapon.label>武器</CQF_PawnMod_Weapon.label>
+  <!-- EN: Pawn weapon. -->
+  <CQF_PawnMod_Weapon.description>实体武器。</CQF_PawnMod_Weapon.description>
+</LanguageData>

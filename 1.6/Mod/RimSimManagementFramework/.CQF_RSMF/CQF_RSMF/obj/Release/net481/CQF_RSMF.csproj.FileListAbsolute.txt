@@ -1,0 +1,6 @@
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\obj\Release\net481\CQF_RSMF.csproj.AssemblyReference.cache
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\obj\Release\net481\CQF_RSMF.GeneratedMSBuildEditorConfig.editorconfig
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\obj\Release\net481\CQF_RSMF.AssemblyInfoInputs.cache
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\obj\Release\net481\CQF_RSMF.AssemblyInfo.cs
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\obj\Release\net481\CQF_RSMF.csproj.CoreCompileInputs.cache
+D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Mod\RimSimManagementFramework\.CQF_RSMF\CQF_RSMF\obj\Release\net481\CQF_RSMF.sourcelink.json

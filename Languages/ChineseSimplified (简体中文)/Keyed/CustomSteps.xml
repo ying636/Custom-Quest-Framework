@@ -10,6 +10,7 @@
 
     <CustomMapStep_MapPart>步骤：地图部分</CustomMapStep_MapPart>
     <CustomMapStep_MapBackground>步骤：地图背景</CustomMapStep_MapBackground>
+    <CustomMapStep_BackgroundEffects>步骤：背景特效</CustomMapStep_BackgroundEffects>
     <GenerationCount>生成次数：</GenerationCount>
 
 

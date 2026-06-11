@@ -38,6 +38,11 @@ namespace QuestEditor_Library
             ReplaceDef(currentDef, currentDef);
         }
 
+        public static void HotLoadComplexPawnDef(ComplexPawnDef currentDef)
+        {
+            ReplaceDef(currentDef, currentDef);
+        }
+
         private static void LoadAll()
         {
             string questPath = Page_QuestEditor.Path;
@@ -50,6 +55,7 @@ namespace QuestEditor_Library
             LoadDefs(questPath + @"\Map", "//QuestEditor_Library.MainMapDef", DefDatabase<MainMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<MainMapDef>(node, false), def => DefDatabase<MainMapDef>.Add(def));
             LoadDefs(questPath + @"\DialogTree", "//QuestEditor_Library.DialogTreeDef", DefDatabase<DialogTreeDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DialogTreeDef>(node, false), def => DefDatabase<DialogTreeDef>.Add(def));
             LoadDefs(questPath + @"\DialogTree", "//QuestEditor_Library.DialogManagerDef", DefDatabase<DialogManagerDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DialogManagerDef>(node, false), def => DefDatabase<DialogManagerDef>.Add(def));
+            LoadDefs(questPath + @"\Pawn", "//QuestEditor_Library.ComplexPawnDef", DefDatabase<ComplexPawnDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<ComplexPawnDef>(node, false), def => DefDatabase<ComplexPawnDef>.Add(def));
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
         }
 

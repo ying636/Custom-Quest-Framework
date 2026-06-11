@@ -390,4 +390,55 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
 
   <CQFAction_SetHiveGroupMode>HCF Action:Set Group Mode</CQFAction_SetHiveGroupMode>
 
+  <CQFAction_DestroyMainSite>Action: destroy main site</CQFAction_DestroyMainSite>
+  <CQFAction_DestroyMainSite_Tip>Destroy the main site resolved from the given key. The key can point to a recorded main-site map target, or be the site's MainMapKey directly.</CQFAction_DestroyMainSite_Tip>
+  <MainSiteKey>Main site key:</MainSiteKey>
+
+  <CQFAction_RecordMainSiteVisitCount>Action: record main site visit count</CQFAction_RecordMainSiteVisitCount>
+  <CQFAction_RecordMainSiteVisitCount_Tip>Get the visit count of the main site resolved from the given key, then write it into the selected database.</CQFAction_RecordMainSiteVisitCount_Tip>
+  <CQFAction_ClearMainPawnCache>Action: clear main pawn cache</CQFAction_ClearMainPawnCache>
+  <CQFAction_ClearMainPawnCache_Tip>Remove the cached main pawn with the given pawn name from one main map or all main maps, so it can be regenerated or restored again.</CQFAction_ClearMainPawnCache_Tip>
+  <pawnName>Main pawn name:</pawnName>
+  <mainMapDef>Main map def:</mainMapDef>
+  <clearAllMainMaps>Clear all main maps:</clearAllMainMaps>
+
+  <CQFAction_CreateEventArea>Action: create event area</CQFAction_CreateEventArea>
+  <CQFAction_CreateEventArea_Tip>Create an area that triggers actions when a matching pawn enters it. Cells can be added with Add Cell To Event Area.</CQFAction_CreateEventArea_Tip>
+  <CQFAction_AddCellToEventArea>Action: add event area cell</CQFAction_AddCellToEventArea>
+  <CQFAction_AddCellToEventArea_Tip>Add the target cell to the event area with the given key.</CQFAction_AddCellToEventArea_Tip>
+  <CQFAction_DeleteEventArea>Action: delete event area</CQFAction_DeleteEventArea>
+  <CQFAction_DeleteEventArea_Tip>Delete the event area with the given key.</CQFAction_DeleteEventArea_Tip>
+  <EventAreaKey>Event area key:</EventAreaKey>
+  <EventAreaFaction>Required faction:</EventAreaFaction>
+  <EventAreaFactionTip>Filters which pawn factions can trigger the event area. Random hostile/neutral/ally matches factions with that relation, map faction matches the current map faction, and a specific faction defName can also be entered.</EventAreaFactionTip>
+  <EventAreaOnlyHumanlike>Only humanlike:</EventAreaOnlyHumanlike>
+  <EventAreaReplaceExisting>Replace existing area:</EventAreaReplaceExisting>
+
+  <CQFActionCategory_FlowControl>Flow control</CQFActionCategory_FlowControl>
+  <CQFActionCategory_FlowControl_Tip>Actions that control execution order, branches, chance, loops, or delayed execution.</CQFActionCategory_FlowControl_Tip>
+  <CQFActionCategory_SignalState>Signal and state</CQFActionCategory_SignalState>
+  <CQFActionCategory_SignalState_Tip>Actions that send signals, set bools, add quest tags, or create game conditions.</CQFActionCategory_SignalState_Tip>
+  <CQFActionCategory_DataWrite>Data write</CQFActionCategory_DataWrite>
+  <CQFActionCategory_DataWrite_Tip>Actions that record things, cells, groups, or map rectangles into CQF databases.</CQFActionCategory_DataWrite_Tip>
+  <CQFActionCategory_SpawnThing>Spawn things</CQFActionCategory_SpawnThing>
+  <CQFActionCategory_SpawnThing_Tip>Actions that spawn normal loot data or CQF custom things. Container actions are not included here.</CQFActionCategory_SpawnThing_Tip>
+  <CQFActionCategory_MapAction>Map actions</CQFActionCategory_MapAction>
+  <CQFActionCategory_MapAction_Tip>Actions that affect maps, submaps, entrances, exits, fog, pollution, or teleporting between maps.</CQFActionCategory_MapAction_Tip>
+  <CQFActionCategory_ThingChange>Thing changes</CQFActionCategory_ThingChange>
+  <CQFActionCategory_ThingChange_Tip>Actions that replace, destroy, damage, explode, strike, or add triggers to things.</CQFActionCategory_ThingChange_Tip>
+  <CQFActionCategory_Pawn>Pawn related</CQFActionCategory_Pawn>
+  <CQFActionCategory_Pawn_Tip>Actions that change pawns, including hediffs, traits, abilities, xenotypes, thoughts, experience, duties, mental states, or relations.</CQFActionCategory_Pawn_Tip>
+  <CQFActionCategory_Faction>Faction related</CQFActionCategory_Faction>
+  <CQFActionCategory_Faction_Tip>Actions that change factions, goodwill, or faction-driven group AI.</CQFActionCategory_Faction_Tip>
+  <CQFActionCategory_VisualEffect>Visual effects</CQFActionCategory_VisualEffect>
+  <CQFActionCategory_VisualEffect_Tip>Actions that create visual effects or motes. Damage-causing actions are not included here.</CQFActionCategory_VisualEffect_Tip>
+  <CQFActionCategory_DialogEvent>Dialog and event</CQFActionCategory_DialogEvent>
+  <CQFActionCategory_DialogEvent_Tip>Actions that show messages, start dialogs, manage dialog managers, start quests or incidents, or end the game.</CQFActionCategory_DialogEvent_Tip>
+  <CQFActionCategory_MainMap>Main map</CQFActionCategory_MainMap>
+  <CQFActionCategory_MainMap_Tip>Actions for MainMap and main-site state, such as destroying sites, recording visits, or clearing cached main pawns.</CQFActionCategory_MainMap_Tip>
+  <CQFActionCategory_EventArea>Event area</CQFActionCategory_EventArea>
+  <CQFActionCategory_EventArea_Tip>Actions that create, modify, or delete event areas.</CQFActionCategory_EventArea_Tip>
+  <CQFActionCategory_Misc>Misc</CQFActionCategory_Misc>
+  <CQFActionCategory_Misc_Tip>Actions that do not fit the other categories, including container and inventory utility actions.</CQFActionCategory_Misc_Tip>
+
 </LanguageData> 

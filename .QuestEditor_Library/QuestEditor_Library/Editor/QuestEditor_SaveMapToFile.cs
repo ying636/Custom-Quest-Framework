@@ -64,6 +64,9 @@ namespace QuestEditor_Library
             y += 30f;
             if (!def.isPart)
             {
+                Widgets.CheckboxLabeled(new Rect(x2, y, 250f, 25f), "CustomMapDestroyAllThing".Translate(), ref QuestEditor_SaveMapToFile.def.destroyAllThing);
+                TooltipHandler.TipRegion(new Rect(x2, y, 250f, 25f), "CustomMapDestroyAllThingTip".Translate());
+                y += 30f;
                 Rect reserveRect = new Rect(x2, y, 300f, 25f);
                 if (!def.isPart && Widgets.ButtonText(reserveRect, "ReserveGenerationThing".Translate(def.reserveThing == null ? "NoGenerate".Translate().ToString() : def.reserveThing?.stuff?.label + def.reserveThing?.def?.label), false))
                 {
@@ -174,7 +177,7 @@ namespace QuestEditor_Library
                 {
                     DefDatabase<CustomMapDataDef>.Add(def);
                 }
-                def = new CustomMapDataDef() {isPart = def.isPart};
+                def = new CustomMapDataDef() {isPart = def.isPart, destroyAllThing = def.destroyAllThing};
             }), "SaveToFile".Translate(), true, (Exception x) => { Log.Message("SaveError:" + x.ToString()); });
             this.saveMode = SaveMode.None;   
             this.Close();

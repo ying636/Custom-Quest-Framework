@@ -8,6 +8,8 @@
   <QuestDescriptionRulePack>描述文本集</QuestDescriptionRulePack>
   <CurRuleName>当前文本集的名字：{0}</CurRuleName>
   <SelectRule>选择文本集</SelectRule>
+  <CQF_DialogSelectType>类型：{0}</CQF_DialogSelectType>
+  <CQF_DialogSelectAllTypes>全部</CQF_DialogSelectAllTypes>
   <AddNewNode>添加新节点</AddNewNode>
   <DeleteNode>删除节点</DeleteNode>
   <LoadQuest>加载任务</LoadQuest>
@@ -59,10 +61,42 @@
   <ArrivingWay>正常</ArrivingWay>
   <ArrivingWay_DropPod>空投仓</ArrivingWay_DropPod>
   <PawnEditor>实体编辑器</PawnEditor>
+  <ComplexPawnDefName>实体定义名：</ComplexPawnDefName>
+  <ComplexPawnLabel>显示名：</ComplexPawnLabel>
+  <ComplexPawnDef>自定义NPC：{0}</ComplexPawnDef>
+  <ConfirmCreateNewComplexPawnDef>要新建一个自定义NPC并放弃当前未保存的修改吗？</ConfirmCreateNewComplexPawnDef>
+  <NoPawnModAvailable>当前实体类型没有可用的实体模块。</NoPawnModAvailable>
+  <PawnPreview>预览</PawnPreview>
+  <PawnModules>模块</PawnModules>
+  <CQF_PawnMod_Basic.label>基础</CQF_PawnMod_Basic.label>
+  <CQF_PawnMod_Basic.description>自定义NPC的基础数据。</CQF_PawnMod_Basic.description>
+  <CQF_PawnMod_NameAndBody.label>姓名与身体</CQF_PawnMod_NameAndBody.label>
+  <CQF_PawnMod_NameAndBody.description>姓名、性别与年龄数据。</CQF_PawnMod_NameAndBody.description>
+  <CQF_PawnMod_Appearance.label>外观</CQF_PawnMod_Appearance.label>
+  <CQF_PawnMod_Appearance.description>头型、体型、发型与颜色。</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Backstory.label>背景故事</CQF_PawnMod_Backstory.label>
+  <CQF_PawnMod_Backstory.description>童年与成年背景故事。</CQF_PawnMod_Backstory.description>
+  <CQF_PawnMod_Traits.label>特性</CQF_PawnMod_Traits.label>
+  <CQF_PawnMod_Traits.description>实体特性。</CQF_PawnMod_Traits.description>
+  <CQF_PawnMod_Apparel.label>服装</CQF_PawnMod_Apparel.label>
+  <CQF_PawnMod_Apparel.description>实体服装。</CQF_PawnMod_Apparel.description>
+  <CQF_PawnMod_Weapon.label>武器</CQF_PawnMod_Weapon.label>
+  <CQF_PawnMod_Weapon.description>实体武器。</CQF_PawnMod_Weapon.description>
+  <PawnKindModuleLabel>实体类型</PawnKindModuleLabel>
+  <BioAge>生理年龄：</BioAge>
+  <ChronologicalAge>历法年龄：</ChronologicalAge>
+  <Gender>性别：{0}</Gender>
+  <Childhood>童年背景：{0}</Childhood>
+  <Adulthood>成年背景：{0}</Adulthood>
+  <PawnTraits>特性</PawnTraits>
+  <PawnApparels>服装</PawnApparels>
+  <PawnWeapon>武器：{0}</PawnWeapon>
   <DataName>数据名字：</DataName>
-  <IsUnique>唯一实体：</IsUnique>
   <BirthName>出生名字：</BirthName>
-  <RandomName>随机名字：</RandomName>
+  <RandomName>生成时随机名字</RandomName>
+  <PawnNameMaker>名字生成器：{0}</PawnNameMaker>
+  <RandomizePawnName>随机化名字</RandomizePawnName>
+  <NoPawnNameMaker>缺少可用的名字生成器</NoPawnNameMaker>
   <CurHair>发型：{0}</CurHair>
   <SelectHair>选择发型</SelectHair>
   <SelectHairColor>选择发型颜色</SelectHairColor>
@@ -71,7 +105,7 @@
   <SelectSkinColor>选择肤色</SelectSkinColor>
   <Colorbase>颜色库</Colorbase>
   <Hex>16进制代码</Hex>
-  <CurBodyType>当前身体类型：</CurBodyType>
+  <CurBodyType>当前身体类型：{0}</CurBodyType>
   <SelectBodyType>选择身体类型</SelectBodyType>
   <Thin>俊俏</Thin>
   <Fat>肥胖</Fat>
@@ -231,6 +265,8 @@
   <InSignal>触发信号：</InSignal>
   <CustomMapIsPart>是部分：</CustomMapIsPart>
   <CustomMapIsPartTip>是某个完整的地图的一部分，会在随机生成区域时抽取生成。</CustomMapIsPartTip>
+  <CustomMapDestroyAllThing>摧毁全部物件：</CustomMapDestroyAllThing>
+  <CustomMapDestroyAllThingTip>生成此自定义地图前，摧毁地图区域内已有的物件。</CustomMapDestroyAllThingTip>
   <Designator_Round>保存区域：圆形</Designator_Round>
   <Designator_RoundDesc>选择一片圆形区域保存为自定义地图定义。（只适用于保存地图部分，如果保存单个地图请使用保存整张地图）</Designator_RoundDesc>
   <SaveMode_Round>模式：圆形</SaveMode_Round>
@@ -365,6 +401,12 @@
   <CQF_MapBackgroundColor>背景颜色</CQF_MapBackgroundColor>
   <CQF_MapBackgroundPreview>背景预览</CQF_MapBackgroundPreview>
   <CQF_MapBackgroundNoPreview>无可用预览</CQF_MapBackgroundNoPreview>
+  <CQF_MapBackgroundEnableTerrainEdges>启用地形边缘绘制</CQF_MapBackgroundEnableTerrainEdges>
+  <CQF_MapBackgroundDynamicEffects>动态背景特效</CQF_MapBackgroundDynamicEffects>
+  <CQF_MapBackgroundSelectDynamicEffect>选择背景特效</CQF_MapBackgroundSelectDynamicEffect>
+  <CQF_BlankMapEnableTerrainEdges>启用地形边缘绘制</CQF_BlankMapEnableTerrainEdges>
+  <CQF_MapBackgroundIsBackgroundMap>是否为背景地图</CQF_MapBackgroundIsBackgroundMap>
+  <CQF_MapBackgroundIsBackgroundMapTip>启用后，这张地图会按背景地图处理：允许透明/背景地形露出地图背景，并绘制用于背景地图的地形边缘。</CQF_MapBackgroundIsBackgroundMapTip>
   <MapBackgroundImage_Title>选择地图背景</MapBackgroundImage_Title>
   <MapBackgroundImage_Mod>模组：</MapBackgroundImage_Mod>
   <MapBackgroundImage_All>全部</MapBackgroundImage_All>

@@ -54,6 +54,17 @@ namespace QuestEditor_Library
                 return this.globalData;
             }
         }
+        public QuestData TemporaryDatabase
+        {
+            get
+            {
+                if (this.temporaryData == null)
+                {
+                    this.temporaryData = new QuestData();
+                }
+                return this.temporaryData;
+            }
+        }
         public Dictionary<Thing, DialogManagerDef> Dialogs
         {
             get
@@ -106,6 +117,14 @@ namespace QuestEditor_Library
         public void SetBool(string name, bool value)
         {
             this.GlobalDatabase.SetBool(name, value);
+        }
+        public void ResetTemporaryDatabase()
+        {
+            this.temporaryData = new QuestData();
+        }
+        public void ClearTemporaryDatabase()
+        {
+            this.TemporaryDatabase.Clear();
         }
         public QuestData GetQuestData(Quest quest)
         {
@@ -225,7 +244,7 @@ namespace QuestEditor_Library
                 this.dialogsWithTargets.RemoveAll(d => (d.Value.removeWhenThingDespawned && !d.Key.Spawned) || (d.Value.removeWhenPawnDied && d.Key is Pawn p && p.Dead));
                 List<Quest> qs = Find.QuestManager.QuestsListForReading.FindAll(q => q.Historical);
                 this.datas.RemoveAll(v => qs.Exists(q=> q.id == v.Key));
-            }
+            } 
             Scribe_Deep.Look(ref this.globalData, "globalData");
             Scribe_Collections.Look(ref this.requests, "QE_GameComponent_Editor_requests",LookMode.Deep);
             Scribe_Collections.Look(ref this.dialogsWithTargets, "QE_GameComponent_Editor_dialogsWithTargets", LookMode.Reference, LookMode.Def, ref this.tmpdialogsThings, ref this.tmpdialogsDialogManagerDefs);
@@ -236,6 +255,7 @@ namespace QuestEditor_Library
         }
 
         private QuestData globalData = new QuestData();
+        private QuestData temporaryData = new QuestData();
 
         public Dictionary<Color, Material> materialPool_Dialog = new Dictionary<Color, Material>();
 
@@ -250,11 +270,7 @@ namespace QuestEditor_Library
 
         private Dictionary<int, QuestData> datas = new Dictionary<int, QuestData>();
         List<int> tmpQuestIndex;
-        List<QuestData> tmpQuestData;
-
-
-        private Dictionary<Thing, Quest> thignsOfQuest = new Dictionary<Thing, Quest>();
-
+        List<QuestData> tmpQuestData; 
         private Dictionary<CaravanActionDef, CD> CACDs = new Dictionary<CaravanActionDef, CD>();
         private List<CaravanActionDef> tmpCACDs;
         private List<CD> tmpCACDs_CD;
@@ -320,6 +336,19 @@ namespace QuestEditor_Library
                 this.TargetDatas.Add(new TargetWithKey(name, target));
             }
         }
+        public TargetInfo GetTarget(string name)
+        {
+            if (this.TargetDatas.Find(t => t.key == name) is TargetWithKey target)
+            {
+                return target.target;
+            }
+            return TargetInfo.Invalid;
+        }
+        public bool TargetExists(string name, bool needSpawned)
+        {
+            return this.TargetDatas.Exists(d => d.key == name &&
+                (!needSpawned || (d.target.HasThing && d.target.Thing.Spawned)));
+        }
         public void AddGroup(string name, List<Pawn> pawns)
         {
             
@@ -354,6 +383,22 @@ namespace QuestEditor_Library
         public void SetBool(string name, bool value)
         {
             this.values_B.SetOrAdd(name, value);
+        }
+        public int GetValue(string name, int defaultValue = 0)
+        {
+            return this.values.TryGetValue(name, out int value) ? value : defaultValue;
+        }
+        public void SetValue(string name, int value)
+        {
+            this.values.SetOrAdd(name, value);
+        }
+        public void Clear()
+        {
+            this.Lords.Clear();
+            this.pawnGroups.Clear();
+            this.TargetDatas.Clear();
+            this.values.Clear();
+            this.values_B.Clear();
         }
         public void ExposeData()
         {

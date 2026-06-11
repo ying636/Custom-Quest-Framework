@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Basic</defName>
+    <label>basic</label>
+    <description>Basic custom NPC data.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Basic</workerClass>
+    <order>0</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_NameAndBody</defName>
+    <label>name and body</label>
+    <description>Name, gender, and age data.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_NameAndBody</workerClass>
+    <order>10</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Appearance</defName>
+    <label>appearance</label>
+    <description>Head, body, hair, and colors.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Appearance</workerClass>
+    <order>20</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Backstory</defName>
+    <label>backstory</label>
+    <description>Childhood and adulthood backstories.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Backstory</workerClass>
+    <order>30</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Traits</defName>
+    <label>traits</label>
+    <description>Pawn traits.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Traits</workerClass>
+    <order>40</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Apparel</defName>
+    <label>apparel</label>
+    <description>Pawn apparel.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Apparel</workerClass>
+    <order>50</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Weapon</defName>
+    <label>weapon</label>
+    <description>Pawn weapon.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Weapon</workerClass>
+    <order>60</order>
+  </QuestEditor_Library.PawnModDef>
+</Defs>

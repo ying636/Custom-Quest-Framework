@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <!-- EN: Blinking stars -->
+  <CQF_BackgroundEffect_BlinkStars.label>闪烁星辰</CQF_BackgroundEffect_BlinkStars.label>
+  <!-- EN: Periodically draws stars that fade in and out above the map background. -->
+  <CQF_BackgroundEffect_BlinkStars.description>在地图背景上周期性绘制淡入淡出的星辰。</CQF_BackgroundEffect_BlinkStars.description>
+  <!-- EN: Meteors -->
+  <CQF_BackgroundEffect_Meteors.label>流星</CQF_BackgroundEffect_Meteors.label>
+  <!-- EN: Periodically draws meteors crossing above the map background. -->
+  <CQF_BackgroundEffect_Meteors.description>在地图背景上周期性绘制一闪而过的流星。</CQF_BackgroundEffect_Meteors.description>
+
+</LanguageData>

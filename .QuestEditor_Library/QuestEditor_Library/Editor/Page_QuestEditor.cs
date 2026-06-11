@@ -519,9 +519,9 @@ return "";
                 {
                     Find.WindowStack.Add(new QuestEditor_PawnDataEditor());
                 }
-                else 
+                else
                 {
-                    Messages.Message("NoGame".Translate(),MessageTypeDefOf.CautionInput);
+                    Messages.Message("NoGame".Translate(), MessageTypeDefOf.CautionInput);
                 }
             }
             x += 45f;
