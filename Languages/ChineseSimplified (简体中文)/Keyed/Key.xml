@@ -312,6 +312,7 @@
   <CustomDoor>自定义门</CustomDoor>
   <CustomMapEntrance_Chance>子地图几率入口</CustomMapEntrance_Chance>
   <Spawner>生成者</Spawner>
+  <CustomMapEnterSpot>自定义地图进入点</CustomMapEnterSpot>
   <CustomMapEntrance>子地图入口</CustomMapEntrance>
   <CustomContainer>自定义容器</CustomContainer>
   <ActionComps>行为组件</ActionComps>

@@ -20,6 +20,7 @@ namespace QuestEditor_Library
         public static SitePartDef QE_CustomSite;
         public static SitePartDef CQF_MainSitePart;
         public static ThingDef QE_Spawner_Editor;
+        public static ThingDef CQF_CustomMapEnterSpot;
         public static ThingDef QE_ZoneCore;
         public static ThingDef QE_GenerationActionWorker;
 

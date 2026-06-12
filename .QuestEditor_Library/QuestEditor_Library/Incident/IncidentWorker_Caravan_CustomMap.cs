@@ -63,10 +63,17 @@ namespace QuestEditor_Library
                 site.customDescription = mapDef.description;
                 Find.WorldObjects.Add(site);
                 Map map = MapGenerator.GenerateMap(new IntVec3(200,1,200), site, site.MapGeneratorDef, site.ExtraGenStepDefs, null, false);     
-                IntVec3 playerStartingSpot;
-                IntVec3 root;
-                MultipleCaravansCellFinder.FindStartingCellsFor2Groups(map, out playerStartingSpot, out root);
-                CaravanEnterMapUtility.Enter(c, map, (Pawn x) => CellFinder.RandomSpawnCellForPawnNear(playerStartingSpot, map, 4), CaravanDropInventoryMode.DoNotDrop, true);
+                if (mapDef.TryGetEnterSpot(map, out IntVec3 enterSpot))
+                {
+                    CaravanEnterMapUtility.Enter(c, map, pawn => CellFinder.RandomSpawnCellForPawnNear(enterSpot, map, 4), CaravanDropInventoryMode.DoNotDrop, true);
+                }
+                else
+                {
+                    IntVec3 playerStartingSpot;
+                    IntVec3 root;
+                    MultipleCaravansCellFinder.FindStartingCellsFor2Groups(map, out playerStartingSpot, out root);
+                    CaravanEnterMapUtility.Enter(c, map, pawn => CellFinder.RandomSpawnCellForPawnNear(playerStartingSpot, map, 4), CaravanDropInventoryMode.DoNotDrop, true);
+                }
                 base.SendStandardLetter(this.def.letterLabel, this.def.letterText, extension.letterDef, parms,p, Array.Empty<NamedArgument>());
             }
             return false;

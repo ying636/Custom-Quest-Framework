@@ -390,6 +390,7 @@ SiteName: SiteName-></RuleTip>
   <CustomDoor>Custom door</CustomDoor>
   <CustomMapEntrance_Chance>Chance entrance</CustomMapEntrance_Chance>
   <Spawner>Spawner</Spawner>
+  <CustomMapEnterSpot>Custom map enter spot</CustomMapEnterSpot>
   <CustomMapEntrance>Sub map entrance</CustomMapEntrance>
   <CustomContainer>Custom container</CustomContainer>
 

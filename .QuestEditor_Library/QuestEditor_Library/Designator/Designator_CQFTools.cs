@@ -47,7 +47,7 @@ namespace QuestEditor_Library
                 return Designator_CQFTools.bespawnable;
             }
         }
-        public static List<Type> ToolTypes => new List<Type>() {typeof(GenerationActionWorker), typeof(LootBox),typeof(CustomContainer), 
+        public static List<Type> ToolTypes => new List<Type>() {typeof(GenerationActionWorker), typeof(LootBox),typeof(CustomContainer), typeof(CustomMapEnterSpot),
             typeof(Spawner), typeof(InteractableThing),typeof(CustomDoor), typeof(CustomMapEntrance), typeof(CustomMapExit) ,typeof(ZoneCore)};
         public static bool IsCQFTool(ThingDef def) 
         {

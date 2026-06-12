@@ -45,6 +45,11 @@
   <QE_Spawner_Editor.label>实体生成者</QE_Spawner_Editor.label>
   <!-- EN: Used to generate pawns. -->
   <QE_Spawner_Editor.description>用于生成实体</QE_Spawner_Editor.description>
+
+  <!-- EN: Custom map enter spot -->
+  <CQF_CustomMapEnterSpot.label>自定义地图进入点</CQF_CustomMapEnterSpot.label>
+  <!-- EN: Controls where colonists enter this custom map. -->
+  <CQF_CustomMapEnterSpot.description>用于控制殖民者进入此自定义地图时的位置。</CQF_CustomMapEnterSpot.description>
   
   <!-- EN: Zone core -->
   <QE_ZoneCore.label>区域核心</QE_ZoneCore.label>

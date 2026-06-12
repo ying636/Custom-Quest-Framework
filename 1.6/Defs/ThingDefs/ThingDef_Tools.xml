@@ -98,6 +98,15 @@
     </ThingDef>
 
     <ThingDef ParentName="CustomToolBaseWithoutComps">
+        <defName>CQF_CustomMapEnterSpot</defName>
+        <label>Custom map enter spot</label>
+        <category>Attachment</category>
+        <altitudeLayer>Item</altitudeLayer>
+        <description>Controls where colonists enter this custom map.</description>
+        <thingClass>QuestEditor_Library.CustomMapEnterSpot</thingClass>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomToolBaseWithoutComps">
         <defName>QE_GenerationActionWorker</defName>
         <label>Generation action worker</label>
         <category>Attachment</category>

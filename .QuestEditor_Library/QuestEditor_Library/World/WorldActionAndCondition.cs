@@ -143,7 +143,7 @@ namespace QuestEditor_Library
                     GetOrGenerateMap(site.Tile,this.replaceMapGeneration ?
                         site.mapDef.size : Find.World.info.initialMapSize, site.def) is Map m)
             {
-                CaravanEnterMapUtility.Enter(c, m, CaravanEnterMode.Edge);
+                site.mapDef.EnterCaravan(c, m);
             }
         }
         public override void ExposeData()

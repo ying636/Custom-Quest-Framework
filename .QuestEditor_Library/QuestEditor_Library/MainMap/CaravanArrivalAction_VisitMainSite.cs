@@ -91,7 +91,14 @@ namespace QuestEditor_Library
             {
                 Find.LetterStack.ReceiveLetter("LetterLabelCaravanEnteredMap".Translate(site), "LetterCaravanEnteredMap".Translate(caravan.Label, site).CapitalizeFirst(), LetterDefOf.NeutralEvent, lookTargets);
             }
-            CaravanEnterMapUtility.Enter(caravan, map, CaravanEnterMode.Edge, CaravanDropInventoryMode.DoNotDrop, draftColonists);
+            if (site.mapDef != null)
+            {
+                site.mapDef.EnterCaravan(caravan, map, CaravanDropInventoryMode.DoNotDrop, draftColonists);
+            }
+            else
+            {
+                CaravanEnterMapUtility.Enter(caravan, map, CaravanEnterMode.Edge, CaravanDropInventoryMode.DoNotDrop, draftColonists);
+            }
         }
 
         private void AppendThreatInfo(StringBuilder sb, MainSite site, Map map, out LetterDef letterDef, out LookTargets allLookTargets)

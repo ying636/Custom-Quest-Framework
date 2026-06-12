@@ -16,6 +16,10 @@ namespace QuestEditor_Library
             if (parms.sitePart.parms is CustomSitePartParams customParams &&
                 customParams.mapData is CustomMapDataDef def)
             {
+                if (map.Parent is CustomSite site)
+                {
+                    site.mapDef = def;
+                }
                 GenStep_CustomMap.SpawnCustomMap(map, parms, def, customParams.quest,
                     customParams.dev, null,
                     false, customParams.isSubMap,

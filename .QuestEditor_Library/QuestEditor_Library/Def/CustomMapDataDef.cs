@@ -163,6 +163,7 @@ namespace QuestEditor_Library
             this.zoneCores.ForEach(d => add(d.position));
             this.pawns.Keys.ToList().ForEach(p => add(p));
             this.specialSpawnPawns.Keys.ToList().ForEach(p => add(p));
+            this.enterSpots.ForEach(add);
             this.routes.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
             this.terrains.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
             this.terrainsRect.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 => 
@@ -348,6 +349,9 @@ add(p3))));
             {
                 this.specialSpawnPawns.Add(ChangingAction(variable, pawn.Key), pawn.Value);
             }
+            List<IntVec3> enterSpots = new List<IntVec3>();
+            this.enterSpots.ForEach(t => enterSpots.Add(ChangingAction(variable, t)));
+            this.enterSpots = enterSpots;
         }
         public CustomMapDataDef Copy(string name)
         {
@@ -381,6 +385,7 @@ add(p3))));
             this.pawns.ToList().ForEach(t => result.pawns.Add(t.Key, t.Value));
             result.specialSpawnPawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
             this.specialSpawnPawns.ToList().ForEach(t => result.specialSpawnPawns.Add(t.Key, t.Value));
+            result.enterSpots = this.enterSpots.ListFullCopy();
             result.routes = new Dictionary<string, List<IntVec3>>();
             this.routes.ToList().ForEach(t => result.routes.Add(t.Key, t.Value));
             result.replaces = new List<ReplaceData>();
@@ -593,6 +598,11 @@ add(p3))));
                     }
                     continue;
                 }
+                if (thing is CustomMapEnterSpot)
+                {
+                    this.enterSpots.Add(savePos);
+                    continue;
+                }
                 if (thing is GenerationActionWorker worker) 
                 {
                     this.generationActions.Add(new GenerationAction(savePos,worker.actions));
@@ -728,6 +738,10 @@ add(p3))));
             {
                 result.Add(CQFEditorTools.SaveDictionary_Saveable_List(this.pawns, "pawns"));
             }
+            if (this.enterSpots.Any())
+            {
+                result.Add(CQFEditorTools.SaveList(this.enterSpots, "enterSpots"));
+            }
             if (this.routes.Any())
             {
                 result.Add(CQFEditorTools.SaveDictionary_List(this.routes, "routes"));
@@ -815,6 +829,36 @@ add(p3))));
             }
         }
 
+        public void EnterCaravan(Caravan caravan, Map map, CaravanDropInventoryMode dropInventoryMode = CaravanDropInventoryMode.DoNotDrop, bool draftColonists = false)
+        {
+            if (this.TryGetEnterSpot(map, out IntVec3 enterSpot))
+            {
+                CaravanEnterMapUtility.Enter(caravan, map, pawn => CellFinder.RandomSpawnCellForPawnNear(enterSpot, map), dropInventoryMode, draftColonists);
+                return;
+            }
+            CaravanEnterMapUtility.Enter(caravan, map, CaravanEnterMode.Edge, dropInventoryMode, draftColonists);
+        }
+
+        public bool TryGetEnterSpot(Map map, out IntVec3 enterSpot)
+        {
+            if (map != null && !this.enterSpots.NullOrEmpty())
+            {
+                IntVec3 offset = IntVec3.Zero;
+                if (!this.size.IsValid || map.Size != this.size)
+                {
+                    offset = map.Center - new IntVec3(this.size.x / 2, 0, this.size.z / 2);
+                }
+                List<IntVec3> spots = this.enterSpots.Select(p => p + offset).Where(p => p.InBounds(map)).ToList();
+                if (spots.Any())
+                {
+                    enterSpot = spots.RandomElement();
+                    return true;
+                }
+            }
+            enterSpot = IntVec3.Invalid;
+            return false;
+        }
+
         public bool fogged = false;
         public IntVec3 size;
         public bool isPart = false;
@@ -827,6 +871,7 @@ add(p3))));
         public List<CustomThingData> zoneCores = new List<CustomThingData>();
         public Dictionary<IntVec3, List<PawnSpawnData>> specialSpawnPawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
         public Dictionary<IntVec3, List<PawnSpawnData>> pawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
+        public List<IntVec3> enterSpots = new List<IntVec3>();
         public Dictionary<string, List<IntVec3>> routes = new Dictionary<string, List<IntVec3>>();
         public Dictionary<RoofDef, List<IntVec3>> roofs = new Dictionary<RoofDef, List<IntVec3>>();
         public Dictionary<RoofDef, List<CellRect>> roofRects = new Dictionary<RoofDef, List<CellRect>>();
