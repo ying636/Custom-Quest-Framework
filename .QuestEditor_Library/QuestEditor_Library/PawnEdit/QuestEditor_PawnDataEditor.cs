@@ -17,15 +17,11 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
-        public override string PageTitle => "PawnEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "CQF_PawnEditor_Title".Translate().Colorize(ColorLibrary.SkyBlue);
 
         public override void DoWindowContents(Rect inRect)
         {
             base.DrawPageTitle(inRect);
-            if (Widgets.CloseButtonFor(inRect))
-            {
-                this.Close();
-            }
             this.DrawButtons(inRect);
             Rect mainRect = new Rect(5f, 76f, inRect.width - 10f, inRect.height - 84f);
             float leftWidth = 270f;
@@ -43,7 +39,7 @@ namespace QuestEditor_Library
         private void DrawButtons(Rect inRect)
         {
             float y = 30f;
-            if (Widgets.ButtonText(new Rect(inRect.width - 320f, y, 90f, 30f), "LoadPremade".Translate()))
+            if (Widgets.ButtonText(new Rect(inRect.width - 320f, y, 90f, 30f), "CQF_PawnEditor_LoadPremade".Translate()))
             {
                 List<ComplexPawnDef> defs = new List<ComplexPawnDef>();
                 defs.AddRange(DefDatabase<ComplexPawnDef>.AllDefsListForReading);
@@ -55,16 +51,16 @@ namespace QuestEditor_Library
                     this.previewKey = null;
                 }, def => def.defName);
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 220f, y, 90f, 30f), "Save".Translate()))
+            if (Widgets.ButtonText(new Rect(inRect.width - 220f, y, 90f, 30f), "CQF_PawnEditor_Save".Translate()))
             {
                 this.Save();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 120f, y, 90f, 30f), "ResetBinding".Translate()))
+            if (Widgets.ButtonText(new Rect(inRect.width - 120f, y, 90f, 30f), "CQF_PawnEditor_New".Translate()))
             {
-                Dialog_MessageBox dialog = new Dialog_MessageBox("ConfirmCreateNewComplexPawnDef".Translate());
-                dialog.buttonBText = "Cancel".Translate();
+                Dialog_MessageBox dialog = new Dialog_MessageBox("CQF_PawnEditor_ConfirmCreateNew".Translate());
+                dialog.buttonBText = "CQF_PawnEditor_Cancel".Translate();
                 dialog.buttonBAction = () => dialog.Close();
-                dialog.buttonAText = "Confirm".Translate();
+                dialog.buttonAText = "CQF_PawnEditor_Confirm".Translate();
                 dialog.buttonAAction = () =>
                 {
                     QuestEditor_PawnDataEditor.curDef = new ComplexPawnDef();
@@ -80,20 +76,20 @@ namespace QuestEditor_Library
             Widgets.DrawMenuSection(rect);
             float y = rect.y + 12f;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "PawnPreview".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Preview".Translate().Colorize(ColorLibrary.PaleBlue));
             Text.Font = GameFont.Small;
             y += 40f;
             Rect portraitRect = new Rect(rect.x + 35f, y, rect.width - 70f, 260f);
             Widgets.DrawLightHighlight(portraitRect);
             this.DrawPawnPreview(portraitRect.ContractedBy(10f));
             y = portraitRect.yMax + 18f;
-            this.DrawSummaryLine(rect, ref y, "ComplexPawnDefName".Translate(), this.CurDef.defName);
-            this.DrawSummaryLine(rect, ref y, "ComplexPawnLabel".Translate(), this.CurDef.label);
-            this.DrawSummaryLine(rect, ref y, "QE_PawnKind".Translate(""), this.CurDef.kindDef?.label);
-            this.DrawSummaryLine(rect, ref y, "PawnDataFaction".Translate(), this.CurDef.faction?.label);
-            this.DrawSummaryLine(rect, ref y, "Gender".Translate(""), this.CurDef.gender.ToString().Translate());
-            this.DrawSummaryLine(rect, ref y, "BioAge".Translate(), this.CurDef.bioAge.ToString());
-            this.DrawSummaryLine(rect, ref y, "ChronologicalAge".Translate(), this.CurDef.chrAge.ToString());
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_DefName".Translate(), this.CurDef.defName);
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Label".Translate(), this.CurDef.label);
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_PawnKind".Translate(""), this.CurDef.kindDef?.label);
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Faction".Translate(), this.CurDef.faction?.label);
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Gender".Translate(""), this.CurDef.gender.ToString().Translate());
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_BioAge".Translate(), this.CurDef.bioAge.ToString());
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_ChronologicalAge".Translate(), this.CurDef.chrAge.ToString());
         }
 
         private void DrawSummaryLine(Rect rect, ref float y, string label, string value)
@@ -101,7 +97,7 @@ namespace QuestEditor_Library
             Rect labelRect = new Rect(rect.x + 14f, y, 105f, 24f);
             Rect valueRect = new Rect(labelRect.xMax + 6f, y, rect.width - 139f, 24f);
             Widgets.Label(labelRect, label.Colorize(ColorLibrary.PaleBlue));
-            Widgets.Label(valueRect, value.NullOrEmpty() ? "None".Translate().ToString() : value);
+            Widgets.Label(valueRect, value.NullOrEmpty() ? "CQF_PawnEditor_None".Translate().ToString() : value);
             y += 26f;
         }
 
@@ -110,7 +106,7 @@ namespace QuestEditor_Library
             Widgets.DrawMenuSection(rect);
             float y = rect.y + 12f;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "PawnModules".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Modules".Translate().Colorize(ColorLibrary.PaleBlue));
             Text.Font = GameFont.Small;
             y += 38f;
             List<PawnModDef> mods = this.CurDef.AvailableMods();
@@ -137,7 +133,7 @@ namespace QuestEditor_Library
             }
             if (mods.NullOrEmpty())
             {
-                Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 60f), "NoPawnModAvailable".Translate());
+                Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 60f), "CQF_PawnEditor_NoPawnModAvailable".Translate());
             }
         }
 
@@ -149,7 +145,7 @@ namespace QuestEditor_Library
             PawnModDef mod = mods.FirstOrDefault(def => def.defName == this.selectedModDefName);
             if (mod == null)
             {
-                Widgets.Label(rect.ContractedBy(14f), "NoPawnModAvailable".Translate());
+                Widgets.Label(rect.ContractedBy(14f), "CQF_PawnEditor_NoPawnModAvailable".Translate());
                 return;
             }
             Rect titleRect = new Rect(rect.x + 14f, rect.y + 12f, rect.width - 28f, 34f);
@@ -178,7 +174,7 @@ namespace QuestEditor_Library
                 else
                 {
                     Text.Anchor = TextAnchor.MiddleCenter;
-                    Widgets.Label(rect, "QE_PawnKind".Translate("None".Translate()));
+                    Widgets.Label(rect, "CQF_PawnEditor_PawnKind".Translate("CQF_PawnEditor_None".Translate()));
                     Text.Anchor = TextAnchor.UpperLeft;
                 }
                 return;
@@ -260,10 +256,28 @@ namespace QuestEditor_Library
                 parts.Add(trait.degree.ToString());
                 parts.Add(trait.chance.ToString());
             }
+            foreach (SkillData skill in this.CurDef.skills)
+            {
+                parts.Add(skill.def?.defName);
+                parts.Add(skill.level.ToString());
+                parts.Add(skill.passion.ToString());
+            }
+            foreach (AbilityData ability in this.CurDef.abilities)
+            {
+                parts.Add(ability.def?.defName);
+            }
             foreach (ThingData apparel in this.CurDef.apparels)
             {
                 parts.Add(apparel.def?.defName);
                 parts.Add(apparel.stuff?.defName);
+            }
+            foreach (HediffData hediff in this.CurDef.hediffs)
+            {
+                parts.Add(hediff.def?.defName);
+                parts.Add(hediff.part?.defName);
+                parts.Add(hediff.partLabel);
+                parts.Add(hediff.partIndex.ToString());
+                parts.Add(hediff.severity.ToString());
             }
             parts.Add(this.CurDef.weapon?.def?.defName);
             parts.Add(this.CurDef.weapon?.stuff?.defName);
@@ -289,7 +303,7 @@ namespace QuestEditor_Library
             {
                 if (this.CurDef.defName.NullOrEmpty())
                 {
-                    Messages.Message("NoName".Translate(), MessageTypeDefOf.CautionInput);
+                    Messages.Message("CQF_PawnEditor_NoName".Translate(), MessageTypeDefOf.CautionInput);
                     return;
                 }
                 Directory.CreateDirectory(QuestEditor_PawnDataEditor.SaveDir);
@@ -298,7 +312,7 @@ namespace QuestEditor_Library
                 defs.Add(this.CurDef.SaveToXElement("QuestEditor_Library.ComplexPawnDef"));
                 defs.Save(path);
                 CQFQuestDefBootstrap.HotLoadComplexPawnDef(this.CurDef);
-                Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
+                Messages.Message("CQF_PawnEditor_SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
             catch (Exception e)
             {

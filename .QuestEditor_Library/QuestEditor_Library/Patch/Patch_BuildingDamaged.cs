@@ -21,6 +21,20 @@ namespace QuestEditor_Library
             }
         }
     }
+    [HarmonyPatch(typeof(Pawn), "PostApplyDamage")]
+    public class Patch_PawnDamaged
+    {
+        [HarmonyPostfix]
+        public static void PostFix(Pawn __instance, DamageInfo dinfo)
+        {
+            if (__instance.Spawned && __instance.Map.GetComponent<MapComponent_CustomMapData>()
+                is MapComponent_CustomMapData component)
+            {
+                component.Notify_ThingDamaged(__instance, dinfo);
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(Building), "Destroy")]
     public class Patch_BuildingDestroy
     {

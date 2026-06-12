@@ -11,7 +11,7 @@ namespace QuestEditor_Library
     {
         public ITab_CustomThing()
         {
-            this.size = new Vector2(500f,500f);
+            this.size = new Vector2(560f, 620f);
             this.labelKey = "ITab_CustomThing";
             this.tutorTag = "CustomThing";
         }

@@ -8,7 +8,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using UnityEngine.Tilemaps;
+using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library
@@ -17,18 +19,45 @@ namespace QuestEditor_Library
     {
         public static implicit operator WorldTarget(Caravan caravan)
         {
-            return new WorldTarget() { caravan = caravan };
+            return new WorldTarget() { worldObject = caravan };
         }
-        public int Tile => this.tile ?? this.caravan.Tile;
+
+        public static implicit operator WorldTarget(PlanetTile tile)
+        {
+            return new WorldTarget() { tile = tile };
+        }
+
+        public int Tile => this.tile ?? this.worldObject.Tile;
+        public Caravan Caravan => this.worldObject as Caravan;
+
         public TargetInfo target;
-        public Caravan caravan;
+        public WorldObject worldObject; 
         private int? tile;
     }
-    public class WorldAction : IExposable
+    public class WorldAction : ISaveable, IDrawable, IExposable
     {
+        public virtual void Draw(ref float y, Rect inRect, float x)
+        {
+            Rect rect = new Rect(x, y, 250f, 25f);
+            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
+            if ((this.GetType().Name + "_Tip").CanTranslate())
+            {
+                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
+            }
+            y += 30f;
+        }
+
+        public virtual XElement SaveToXElement(string nodeName)
+        {
+            XElement result = new XElement(nodeName);
+            result.SetAttributeValue("Class", this.GetType().FullName);
+            return result;
+        }
+
         public virtual void Work(WorldTarget target) 
         {
         }
+
         public virtual void ExposeData()
         {
 
@@ -40,10 +69,32 @@ namespace QuestEditor_Library
         {
             this.actions.RandomElementByWeight(a => a.Value).Key.Work(target);
         }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawIDrawList(ref y, x, this.actions.Keys.ToList(), inRect, "TriggerActions".Translate(), () =>
+                CQFEditorTools.DrawFloatMenu(typeof(WorldAction).AllSubclassesNonAbstract(),
+                    a => this.actions.Add((WorldAction)Activator.CreateInstance(a), 1f), a => a.Name.Translate()),
+                a => a.GetType().Name.Translate());
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            XElement actions = new XElement("actions");
+            foreach (KeyValuePair<WorldAction, float> action in this.actions)
+            {
+                XElement li = new XElement("li");
+                li.Add(action.Key.SaveToXElement("key"));
+                li.Add(new XElement("value", action.Value));
+                actions.Add(li);
+            }
+            result.Add(actions);
+            return result;
+        }
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(ref this.actions, "actions",LookMode.Def,LookMode.Value);
+            Scribe_Collections.Look(ref this.actions, "actions",LookMode.Deep,LookMode.Value);
         }
 
         public Dictionary<WorldAction,float> actions = new Dictionary<WorldAction, float>();
@@ -55,10 +106,22 @@ namespace QuestEditor_Library
             WorldObject wo = WorldObjectMaker.MakeWorldObject(this.worldObject);
             wo.Tile = target.Tile;
             Find.WorldObjects.Add(wo);
-            if (target.caravan is Caravan c && GetOrGenerateMapUtility.GetOrGenerateMap(wo.Tile, wo.def) is Map m) 
+            if (target.Caravan is Caravan c && GetOrGenerateMapUtility.GetOrGenerateMap(wo.Tile, wo.def) is Map m) 
             {
                 CaravanEnterMapUtility.Enter(c,m,CaravanEnterMode.Edge);
             }
+        }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.worldObject?.defName),
+                DefDatabase<WorldObjectDef>.AllDefsListForReading, d => this.worldObject = d, d => d.label ?? d.defName);
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("worldObject", this.worldObject?.defName));
+            return result;
         }
         public override void ExposeData()
         {
@@ -85,10 +148,31 @@ namespace QuestEditor_Library
                 }
             }
             Find.WorldObjects.Add(wo);
-            if (target.caravan is Caravan c && GetOrGenerateMapUtility.GetOrGenerateMap(wo.Tile,wo.def) is Map m)
+            if (target.Caravan is Caravan c && GetOrGenerateMapUtility.GetOrGenerateMap(wo.Tile,wo.def) is Map m)
             {
                 CaravanEnterMapUtility.Enter(c, m, CaravanEnterMode.Edge);
             }
+        }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawFactionSelectableText(y, "MapFaction".Translate(), ref this.faction, f => this.faction = f, x, 150f);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SentDefeatLetter".Translate(), ref this.sentDefeatLetter);
+            y += 30f;
+            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.defName),
+                DefDatabase<SitePartDef>.AllDefsListForReading, d => this.part = d, d => d.label ?? d.defName);
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("faction", this.faction));
+            result.Add(new XElement("setCaravanTileAsTarget", this.setCaravanTileAsTarget));
+            result.Add(new XElement("sentDefeatLetter", this.sentDefeatLetter));
+            result.Add(new XElement("part", this.part?.defName));
+            return result;
         }
         public override void ExposeData()
         {
@@ -139,12 +223,64 @@ namespace QuestEditor_Library
                 }
             }
             Find.WorldObjects.Add(site);
-            if (target.caravan is Caravan c && GetOrGenerateMapUtility.
+            if (target.Caravan is Caravan c && GetOrGenerateMapUtility.
                     GetOrGenerateMap(site.Tile,this.replaceMapGeneration ?
                         site.mapDef.size : Find.World.info.initialMapSize, site.def) is Map m)
             {
                 site.mapDef.EnterCaravan(c, m);
             }
+        }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "SiteIconPath".Translate(), ref this.siteIconPath, x, 150f);
+            y += 30f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "ExpandingIconPath".Translate(), ref this.expandingIconPath, x, 150f);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "ReplaceMapGeneration".Translate(), ref this.replaceMapGeneration);
+            y += 30f;
+            CQFEditorTools.DrawFactionSelectableText(y, "MapFaction".Translate(), ref this.faction, f => this.faction = f, x, 150f);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SentDefeatLetter".Translate(), ref this.sentDefeatLetter);
+            y += 30f;
+            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.defName),
+                DefDatabase<SitePartDef>.AllDefsListForReading, d => this.part = d, d => d.label ?? d.defName);
+            CQFEditorTools.DrawEditableList(this.customMapDataTags, ref y, (textField, t) =>
+            {
+                t.tag = Widgets.TextField(textField, t.tag);
+                Rect chance = new Rect(textField.width + textField.x + 10f, textField.y, 100f, 25f);
+                Widgets.Label(chance, "LootChance".Translate());
+                chance.x += 80f;
+                Widgets.TextFieldPercent(chance, ref t.weight, ref t.buffer);
+            }, t => t.tag, "TagWithChance".Translate(), "TagWithChance_Tip".Translate(), true, x, 350f);
+            CQFEditorTools.DrawEditableList(this.customMapDatas, ref y, (textField, t) =>
+            {
+                string buttonText = "CustomMapDef".Translate(t.data?.label);
+                if (Widgets.ButtonText(textField, buttonText, false))
+                {
+                    CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, d => t.data = d, d => d.label);
+                }
+                Rect chance = new Rect(Text.CalcSize(buttonText).x + textField.x + 10f, textField.y, 100f, 25f);
+                Widgets.Label(chance, "Chance".Translate());
+                chance.x += 80f;
+                Widgets.TextFieldPercent(chance, ref t.weight, ref t.buffer);
+            }, t => t.data?.label, "MapDefWithChance".Translate(), "MapDefWithChance_Tip".Translate(), true, x, 350f);
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("siteIconPath", this.siteIconPath));
+            result.Add(new XElement("expandingIconPath", this.expandingIconPath));
+            result.Add(new XElement("replaceMapGeneration", this.replaceMapGeneration));
+            result.Add(CQFEditorTools.SaveList_Saveable(this.customMapDataTags, "customMapDataTags"));
+            result.Add(CQFEditorTools.SaveList_Saveable(this.customMapDatas, "customMapDatas"));
+            result.Add(new XElement("faction", this.faction));
+            result.Add(new XElement("setCaravanTileAsTarget", this.setCaravanTileAsTarget));
+            result.Add(new XElement("sentDefeatLetter", this.sentDefeatLetter));
+            result.Add(new XElement("part", this.part?.defName));
+            return result;
         }
         public override void ExposeData()
         {
@@ -153,6 +289,11 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.setCaravanTileAsTarget, "setCaravanTileAsTarget");
             Scribe_Values.Look(ref this.sentDefeatLetter, "sentDefeatLetter");
             Scribe_Defs.Look(ref this.part, "part");
+            Scribe_Values.Look(ref this.siteIconPath, "siteIconPath");
+            Scribe_Values.Look(ref this.expandingIconPath, "expandingIconPath");
+            Scribe_Values.Look(ref this.replaceMapGeneration, "replaceMapGeneration");
+            Scribe_Collections.Look(ref this.customMapDataTags, "customMapDataTags", LookMode.Deep);
+            Scribe_Collections.Look(ref this.customMapDatas, "customMapDatas", LookMode.Deep);
         }
 
         public string siteIconPath;
@@ -192,21 +333,146 @@ namespace QuestEditor_Library
             Scribe_Defs.Look(ref this.quest,"quest");
             Scribe_Values.Look(ref this.setCaravanTileAsTarget,"set");
         }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, "CQFQuestDef".Translate(this.quest?.defName),
+                DefDatabase<QuestScriptDef>.AllDefsListForReading, d => this.quest = d, d => d.defName);
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
+            y += 30f;
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("quest", this.quest?.defName));
+            result.Add(new XElement("set", this.setCaravanTileAsTarget));
+            return result;
+        }
 
         public QuestScriptDef quest;
         public bool setCaravanTileAsTarget;
     }
 
-    public class WorldCondition : IExposable
+    public class WorldCondition : ISaveable, IDrawable, IExposable
     {
+        public virtual void Draw(ref float y, Rect inRect, float x)
+        {
+            Rect rect = new Rect(x, y, 250f, 25f);
+            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
+            if ((this.GetType().Name + "_Tip").CanTranslate())
+            {
+                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
+            }
+            y += 30f;
+        }
+
+        public virtual XElement SaveToXElement(string nodeName)
+        {
+            XElement result = new XElement(nodeName);
+            result.SetAttributeValue("Class", this.GetType().FullName);
+            return result;
+        }
+
         public virtual bool Satisfied(WorldTarget target)
         {
             return true;
         }
+
         public virtual void ExposeData()
         {
        
         }
+    }
+    public class WorldCondition_And : WorldCondition
+    {
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.conditions, inRect, "WorldConditions".Translate());
+            y += 30f;
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "condition"));
+            return result;
+        }
+
+        public override bool Satisfied(WorldTarget target)
+        {
+            return this.conditions.NullOrEmpty() || !this.conditions.Exists(condition => !condition.Satisfied(target));
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Collections.Look(ref this.conditions, "conditions", LookMode.Deep);
+        }
+
+        public List<WorldCondition> conditions = new List<WorldCondition>();
+    }
+    public class WorldCondition_Or : WorldCondition
+    {
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.conditions, inRect, "WorldConditions".Translate());
+            y += 30f;
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "condition"));
+            return result;
+        }
+
+        public override bool Satisfied(WorldTarget target)
+        {
+            return !this.conditions.NullOrEmpty() && this.conditions.Exists(condition => condition.Satisfied(target));
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Collections.Look(ref this.conditions, "conditions", LookMode.Deep);
+        }
+
+        public List<WorldCondition> conditions = new List<WorldCondition>();
+    }
+    public class WorldCondition_Reversal : WorldCondition
+    {
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, typeof(WorldCondition).AllSubclassesNonAbstract(), t => this.condition = (WorldCondition)Activator.CreateInstance(t), t => t.Name.Translate());
+            this.condition?.Draw(ref y, inRect, x);
+            y += 30f;
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (this.condition != null)
+            {
+                result.Add(this.condition.SaveToXElement("condition"));
+            }
+            return result;
+        }
+
+        public override bool Satisfied(WorldTarget target)
+        {
+            return this.condition == null || !this.condition.Satisfied(target);
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Deep.Look(ref this.condition, "condition");
+        }
+
+        public WorldCondition condition;
     }
     public class WorldCondition_WorldObject : WorldCondition 
     {
@@ -216,6 +482,27 @@ namespace QuestEditor_Library
                 || wo.Faction?.def == this.faction) && (!this.nonPlayer ||wo.Faction == null || !wo.Faction.IsPlayer)
                 && (!this.nonHostile || wo.Faction == null 
                 || !wo.Faction.def.isPlayer || wo.Faction.HostileTo(Find.FactionManager.OfPlayer));
+        }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "NonHostile".Translate(), ref this.nonHostile);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "NonPlayer".Translate(), ref this.nonPlayer);
+            y += 30f;
+            CQFEditorTools.DrawSelectButton(x, ref y, "WorldConditionFaction".Translate(this.faction?.defName),
+                DefDatabase<FactionDef>.AllDefsListForReading, d => this.faction = d, d => d.label);
+            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.objectDef?.defName),
+                DefDatabase<WorldObjectDef>.AllDefsListForReading, d => this.objectDef = d, d => d.label ?? d.defName);
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("nonHostile", this.nonHostile));
+            result.Add(new XElement("nonPlayer", this.nonPlayer));
+            result.Add(new XElement("faction", this.faction?.defName));
+            result.Add(new XElement("objectDef", this.objectDef?.defName));
+            return result;
         }
         public override void ExposeData()
         {
@@ -231,16 +518,103 @@ namespace QuestEditor_Library
         public FactionDef faction;
         public WorldObjectDef objectDef;
     }
+    public class WorldCondition_Landmark : WorldCondition
+    {
+        public override bool Satisfied(WorldTarget target)
+        {
+            return this.landmark == null || Find.World.grid[target.Tile].Landmark?.def == this.landmark;
+        }
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, "LandmarkDef".Translate(this.landmark?.defName),
+                DefDatabase<LandmarkDef>.AllDefsListForReading, d => this.landmark = d, d => d.label ?? d.defName);
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("landmark", this.landmark?.defName));
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref this.landmark, "landmark");
+        }
+
+        public LandmarkDef landmark;
+    }
+    public class WorldCondition_Biome : WorldCondition
+    {
+        public override bool Satisfied(WorldTarget target)
+        {
+            return this.biome == null || Find.World.grid[target.Tile].Biomes.Contains(this.biome);
+        }
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, "BiomeDef".Translate(this.biome?.defName),
+                DefDatabase<BiomeDef>.AllDefsListForReading, d => this.biome = d, d => d.label ?? d.defName);
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("biome", this.biome?.defName));
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref this.biome, "biome");
+        }
+
+        public BiomeDef biome;
+    }
+    public class WorldCondition_TileMutator : WorldCondition
+    {
+        public override bool Satisfied(WorldTarget target)
+        {
+            return this.mutator == null || Find.World.grid[target.Tile].Mutators.Contains(this.mutator);
+        }
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, "TileMutatorDef".Translate(this.mutator?.defName),
+                DefDatabase<TileMutatorDef>.AllDefsListForReading, d => this.mutator = d, d => d.label ?? d.defName);
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("mutator", this.mutator?.defName));
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref this.mutator, "mutator");
+        }
+
+        public TileMutatorDef mutator;
+    }
     public class WorldCondition_TotalSkill : WorldCondition
     {
         public override bool Satisfied(WorldTarget target)
         {
             int result = 0;
-            if (target.caravan == null) 
+            if (target.Caravan == null) 
             {
                 return false;
             }
-            foreach (var pawn in target.caravan.pawns)
+            foreach (var pawn in target.Caravan.pawns)
             {
                 if (pawn.skills != null && pawn.skills.GetSkill(this.skill) is SkillRecord record) 
                 {
@@ -249,6 +623,21 @@ namespace QuestEditor_Library
             }
 
             return result >= this.vaule;
+        }
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawSelectButton(x, ref y, "SkillDef".Translate(this.skill?.defName),
+                DefDatabase<SkillDef>.AllDefsListForReading, d => this.skill = d, d => d.label);
+            CQFEditorTools.DrawLabelAndText_Line(y, "RequiredLevel".Translate(), ref this.vaule, ref this.buffer, x);
+            y += 30f;
+        }
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            result.Add(new XElement("skill", this.skill?.defName));
+            result.Add(new XElement("vaule", this.vaule));
+            return result;
         }
         public override void ExposeData()
         {
@@ -259,5 +648,6 @@ namespace QuestEditor_Library
 
         public SkillDef skill;
         public int vaule;
+        public string buffer;
     }
 }

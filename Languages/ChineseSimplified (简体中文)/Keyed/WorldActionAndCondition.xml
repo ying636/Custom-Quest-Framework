@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <!-- EN: World action: chance -->
+  <WorldAction_Chance>世界行为：概率</WorldAction_Chance>
+  <!-- EN: World action: generate map and enter -->
+  <WorldAction_GenerateMapAndEnter>世界行为：生成地图并进入</WorldAction_GenerateMapAndEnter>
+  <!-- EN: World action: generate site and enter -->
+  <WorldAction_GenerateSiteAndEnter>世界行为：生成站点并进入</WorldAction_GenerateSiteAndEnter>
+  <!-- EN: World action: generate custom map and enter -->
+  <WorldAction_GenerateCustomMapAndEnter>世界行为：生成自定义地图并进入</WorldAction_GenerateCustomMapAndEnter>
+  <!-- EN: World action: generate quest -->
+  <WorldAction_GenerateQuest>世界行为：生成任务</WorldAction_GenerateQuest>
+
+  <!-- EN: Condition: world object -->
+  <WorldCondition_WorldObject>条件：世界对象</WorldCondition_WorldObject>
+  <!-- EN: Condition: and -->
+  <WorldCondition_And>条件：与</WorldCondition_And>
+  <!-- EN: All sub world conditions must be true. -->
+  <WorldCondition_And_Tip>所有子世界条件都满足时通过。</WorldCondition_And_Tip>
+  <!-- EN: Condition: or -->
+  <WorldCondition_Or>条件：或</WorldCondition_Or>
+  <!-- EN: Any sub world condition can be true. -->
+  <WorldCondition_Or_Tip>任意子世界条件满足时通过。</WorldCondition_Or_Tip>
+  <!-- EN: Condition: reversal -->
+  <WorldCondition_Reversal>条件：逆转</WorldCondition_Reversal>
+  <!-- EN: Returns the opposite result of the selected world condition. -->
+  <WorldCondition_Reversal_Tip>返回所选世界条件的相反结果。</WorldCondition_Reversal_Tip>
+  <!-- EN: Condition: landmark -->
+  <WorldCondition_Landmark>条件：地标</WorldCondition_Landmark>
+  <!-- EN: Condition: biome -->
+  <WorldCondition_Biome>条件：生态</WorldCondition_Biome>
+  <!-- EN: Condition: tile mutator -->
+  <WorldCondition_TileMutator>条件：地图元素</WorldCondition_TileMutator>
+  <!-- EN: Condition: caravan total skill -->
+  <WorldCondition_TotalSkill>条件：队伍总技能</WorldCondition_TotalSkill>
+
+  <!-- EN: World object: {0} -->
+  <WorldObjectDef>世界对象：{0}</WorldObjectDef>
+  <!-- EN: Map faction: {0} -->
+  <WorldConditionFaction>地图派系：{0}</WorldConditionFaction>
+  <!-- EN: Landmark: {0} -->
+  <LandmarkDef>地标：{0}</LandmarkDef>
+  <!-- EN: Biome: {0} -->
+  <BiomeDef>生态：{0}</BiomeDef>
+  <!-- EN: Tile mutator: {0} -->
+  <TileMutatorDef>地图元素：{0}</TileMutatorDef>
+  <!-- EN: Site part: {0} -->
+  <SitePartDef>站点组件：{0}</SitePartDef>
+  <!-- EN: Skill: {0} -->
+  <SkillDef>技能：{0}</SkillDef>
+  <!-- EN: Non-hostile: -->
+  <NonHostile>非敌对：</NonHostile>
+  <!-- EN: Non-player: -->
+  <NonPlayer>非玩家：</NonPlayer>
+  <!-- EN: Set caravan tile as target: -->
+  <SetCaravanTileAsTarget>将队伍地块设为目标：</SetCaravanTileAsTarget>
+  <!-- EN: Send defeat letter: -->
+  <SentDefeatLetter>发送击败信件：</SentDefeatLetter>
+  <!-- EN: Replace map generation: -->
+  <ReplaceMapGeneration>替换地图生成：</ReplaceMapGeneration>
+
+</LanguageData>

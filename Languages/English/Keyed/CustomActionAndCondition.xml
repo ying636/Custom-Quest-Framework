@@ -137,9 +137,26 @@
 
   <ITab_InteractableThing>Interactable Thing</ITab_InteractableThing>
   <InteractionOperations>Interaction operations</InteractionOperations>
+  <CQF_NoInteractionOperations>No interaction operations</CQF_NoInteractionOperations>
+  <CQF_NoInteractionDefs>No linked interaction defs</CQF_NoInteractionDefs>
+  <CQF_ClickToEdit>Click to edit</CQF_ClickToEdit>
+  <CQF_LinkedInteractionDefs>Linked interaction defs</CQF_LinkedInteractionDefs>
+  <CQF_NoLootData>No custom loot data</CQF_NoLootData>
+  <CQF_NoLootThings>No loot things</CQF_NoLootThings>
+  <CQF_NoLootCategories>No loot categories</CQF_NoLootCategories>
+  <CQF_NoSpecialThingData>No special thing data</CQF_NoSpecialThingData>
+  <CQF_NoLootPawns>No loot pawns</CQF_NoLootPawns>
+  <CQF_CustomLootData>Custom loot data</CQF_CustomLootData>
+  <CQF_UseLootDataDef>Use loot data def</CQF_UseLootDataDef>
+  <CQF_LootSettings>Opening settings</CQF_LootSettings>
 
   <InteractionConditions>Interaction conditions:</InteractionConditions>
   <InteractionResults>Interaction results:</InteractionResults>
+  <CQF_NoRequiredThings>No required things</CQF_NoRequiredThings>
+  <CQF_NoInteractionConditions>No interaction conditions</CQF_NoInteractionConditions>
+  <CQF_NoInteractionResults>No interaction results</CQF_NoInteractionResults>
+  <CQF_NoResultConditions>No result conditions</CQF_NoResultConditions>
+  <CQF_NoResultActions>No result actions</CQF_NoResultActions>
   <TickToOperate>Time required for interaction（tick):</TickToOperate>
 
   <DialogCondition_ThingInPosition>Condition:thing position</DialogCondition_ThingInPosition>

@@ -42,6 +42,14 @@
   <BiomesBlackList>生态黑名单：</BiomesBlackList>
   <!-- EN: Biomes white list: -->
   <BiomesWhiteList>生态白名单：</BiomesWhiteList>
+  <!-- EN: No biome filters -->
+  <NoBiomeFilters>没有生态限制</NoBiomeFilters>
+  <!-- EN: World conditions: -->
+  <WorldConditions>世界条件：</WorldConditions>
+  <!-- EN: No world conditions -->
+  <NoWorldConditions>没有世界条件</NoWorldConditions>
+  <!-- EN: {0} - {1} -->
+  <ConditionWithTarget>{0} - {1}</ConditionWithTarget>
   <!-- EN: Enable black list: -->
   <EnableBlackList>启用黑名单：</EnableBlackList>
   <!-- EN: End Signal: -->

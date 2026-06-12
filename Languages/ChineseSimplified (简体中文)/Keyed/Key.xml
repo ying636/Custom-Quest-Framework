@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <QuestEditor>任务编辑器</QuestEditor>
   <SelectOutputMod>输出Mod：{0}</SelectOutputMod>
@@ -61,51 +61,11 @@
   <ArrivingWay>正常</ArrivingWay>
   <ArrivingWay_DropPod>空投仓</ArrivingWay_DropPod>
   <PawnEditor>实体编辑器</PawnEditor>
-  <ComplexPawnDefName>实体定义名：</ComplexPawnDefName>
-  <ComplexPawnLabel>显示名：</ComplexPawnLabel>
-  <ComplexPawnDef>自定义NPC：{0}</ComplexPawnDef>
-  <ConfirmCreateNewComplexPawnDef>要新建一个自定义NPC并放弃当前未保存的修改吗？</ConfirmCreateNewComplexPawnDef>
-  <NoPawnModAvailable>当前实体类型没有可用的实体模块。</NoPawnModAvailable>
-  <PawnPreview>预览</PawnPreview>
-  <PawnModules>模块</PawnModules>
-  <CQF_PawnMod_Basic.label>基础</CQF_PawnMod_Basic.label>
-  <CQF_PawnMod_Basic.description>自定义NPC的基础数据。</CQF_PawnMod_Basic.description>
-  <CQF_PawnMod_NameAndBody.label>姓名与身体</CQF_PawnMod_NameAndBody.label>
-  <CQF_PawnMod_NameAndBody.description>姓名、性别与年龄数据。</CQF_PawnMod_NameAndBody.description>
-  <CQF_PawnMod_Appearance.label>外观</CQF_PawnMod_Appearance.label>
-  <CQF_PawnMod_Appearance.description>头型、体型、发型与颜色。</CQF_PawnMod_Appearance.description>
-  <CQF_PawnMod_Backstory.label>背景故事</CQF_PawnMod_Backstory.label>
-  <CQF_PawnMod_Backstory.description>童年与成年背景故事。</CQF_PawnMod_Backstory.description>
-  <CQF_PawnMod_Traits.label>特性</CQF_PawnMod_Traits.label>
-  <CQF_PawnMod_Traits.description>实体特性。</CQF_PawnMod_Traits.description>
-  <CQF_PawnMod_Apparel.label>服装</CQF_PawnMod_Apparel.label>
-  <CQF_PawnMod_Apparel.description>实体服装。</CQF_PawnMod_Apparel.description>
-  <CQF_PawnMod_Weapon.label>武器</CQF_PawnMod_Weapon.label>
-  <CQF_PawnMod_Weapon.description>实体武器。</CQF_PawnMod_Weapon.description>
-  <PawnKindModuleLabel>实体类型</PawnKindModuleLabel>
-  <BioAge>生理年龄：</BioAge>
-  <ChronologicalAge>历法年龄：</ChronologicalAge>
   <Gender>性别：{0}</Gender>
-  <Childhood>童年背景：{0}</Childhood>
-  <Adulthood>成年背景：{0}</Adulthood>
-  <PawnTraits>特性</PawnTraits>
-  <PawnApparels>服装</PawnApparels>
-  <PawnWeapon>武器：{0}</PawnWeapon>
   <DataName>数据名字：</DataName>
   <BirthName>出生名字：</BirthName>
-  <RandomName>生成时随机名字</RandomName>
-  <PawnNameMaker>名字生成器：{0}</PawnNameMaker>
-  <RandomizePawnName>随机化名字</RandomizePawnName>
-  <NoPawnNameMaker>缺少可用的名字生成器</NoPawnNameMaker>
-  <CurHair>发型：{0}</CurHair>
   <SelectHair>选择发型</SelectHair>
-  <SelectHairColor>选择发型颜色</SelectHairColor>
-  <CurHeadType>头型：{0}</CurHeadType>
   <SelectHeadType>选择头型</SelectHeadType>
-  <SelectSkinColor>选择肤色</SelectSkinColor>
-  <Colorbase>颜色库</Colorbase>
-  <Hex>16进制代码</Hex>
-  <CurBodyType>当前身体类型：{0}</CurBodyType>
   <SelectBodyType>选择身体类型</SelectBodyType>
   <Thin>俊俏</Thin>
   <Fat>肥胖</Fat>
@@ -125,6 +85,8 @@
   <SelectStuff>选择材质：{0}</SelectStuff>
   <LootPawn>陷阱实体：</LootPawn>
   <DestroyAfterOpening>打开后摧毁：</DestroyAfterOpening>
+  <!-- EN: Open when destroying: -->
+  <OpenWhenDestroyed>摧毁时打开：</OpenWhenDestroyed>
   <MessageAfterOpening>打开后弹出信息：</MessageAfterOpening>
   <PastePawns>粘贴数据</PastePawns>
   <UseLootDef>使用战利品数据定义（以便节省加载时间）</UseLootDef>
@@ -256,6 +218,7 @@
   <CQFSetStyleDesc>设置所选事物为指定风格。</CQFSetStyleDesc>
   <CQFSpawnThing>生成：{0}</CQFSpawnThing>
   <CQFSpawnThingTip>提示：右键可以打开菜单选择要生成的事物。</CQFSpawnThingTip>
+  <CQFToolsTip>提示：右键以选择自定义事物。</CQFToolsTip>
   <ExtraKinds>额外种类：</ExtraKinds>
   <ExtraKindsTip>生成时会一同生成的其他实体种类，其派系、状态等参数是通用的。</ExtraKindsTip>
   <CQFPaste>批量粘贴</CQFPaste>

@@ -16,6 +16,7 @@ namespace QuestEditor_Library
             this.defaultDesc = Designator_CQFTools.thing.description.Colorize(ColorLibrary.SkyBlue);
             this.useMouseIcon = true;
         }
+        public override string Desc => base.Desc + "\n" + "CQFToolsTip".Translate();
         public override bool Visible => DebugSettings.godMode;
         public override DrawStyleCategoryDef DrawStyleCategory
         {

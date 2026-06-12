@@ -12,6 +12,7 @@ namespace QuestEditor_Library
         public Dialog_InteractionOption(InteractionOperation operation)
         {
             this.operation = operation;
+            this.windowRect = new Rect((UI.screenWidth - 760f) / 2f, (UI.screenHeight - 680f) / 2f, 760f, 680f);
             this.forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
             this.closeOnAccept = false;
             this.closeOnCancel = false; 
@@ -22,10 +23,9 @@ namespace QuestEditor_Library
         }
         public override void DoWindowContents(Rect inRect)
         {
-            float x = 8f; 
-            float y = 5f;
-            Widgets.BeginScrollView(new Rect(0f,0f,inRect.width,inRect.height), ref this.pos,new Rect(0f,0f,inRect.width,this.height + 10f));
-            Widgets.DrawBox(new Rect(0f, 3f, inRect.width - 20f, this.height), 1, QuestEditor_Dialog.blueTex);
+            float x = 10f; 
+            float y = 8f;
+            Widgets.BeginScrollView(new Rect(0f, 0f, inRect.width, inRect.height), ref this.pos, new Rect(0f, 0f, inRect.width - 20f, this.height + 12f));
             this.operation.Draw(ref y,inRect,x);
             Widgets.EndScrollView();
             this.height = y + 5f;

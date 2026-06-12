@@ -20,6 +20,14 @@
   <CQF_PawnMod_Traits.label>特性</CQF_PawnMod_Traits.label>
   <!-- EN: Pawn traits. -->
   <CQF_PawnMod_Traits.description>实体特性。</CQF_PawnMod_Traits.description>
+  <!-- EN: Skills -->
+  <CQF_PawnMod_Skills.label>技能</CQF_PawnMod_Skills.label>
+  <!-- EN: Pawn skills. -->
+  <CQF_PawnMod_Skills.description>实体技能。</CQF_PawnMod_Skills.description>
+  <!-- EN: Abilities -->
+  <CQF_PawnMod_Abilities.label>能力</CQF_PawnMod_Abilities.label>
+  <!-- EN: Pawn abilities. -->
+  <CQF_PawnMod_Abilities.description>实体能力。</CQF_PawnMod_Abilities.description>
   <!-- EN: Apparel -->
   <CQF_PawnMod_Apparel.label>服装</CQF_PawnMod_Apparel.label>
   <!-- EN: Pawn apparel. -->
@@ -28,4 +36,16 @@
   <CQF_PawnMod_Weapon.label>武器</CQF_PawnMod_Weapon.label>
   <!-- EN: Pawn weapon. -->
   <CQF_PawnMod_Weapon.description>实体武器。</CQF_PawnMod_Weapon.description>
+  <!-- EN: Hediff -->
+  <CQF_PawnMod_Hediff.label>健康状态</CQF_PawnMod_Hediff.label>
+  <!-- EN: Pawn hediffs. -->
+  <CQF_PawnMod_Hediff.description>实体健康状态。</CQF_PawnMod_Hediff.description>
+  <!-- EN: Dialog -->
+  <CQF_PawnMod_Dialog.label>对话</CQF_PawnMod_Dialog.label>
+  <!-- EN: Pawn dialog manager. -->
+  <CQF_PawnMod_Dialog.description>实体对话管理者。</CQF_PawnMod_Dialog.description>
+  <!-- EN: Action trigger -->
+  <CQF_PawnMod_ActionTrigger.label>行为触发</CQF_PawnMod_ActionTrigger.label>
+  <!-- EN: Pawn action triggers. -->
+  <CQF_PawnMod_ActionTrigger.description>实体行为触发器。</CQF_PawnMod_ActionTrigger.description>
 </LanguageData>

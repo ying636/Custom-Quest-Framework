@@ -10,8 +10,18 @@
   <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
   <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
   <CQF_PawnMod_Traits.description>Pawn traits.</CQF_PawnMod_Traits.description>
+  <CQF_PawnMod_Skills.label>Skills</CQF_PawnMod_Skills.label>
+  <CQF_PawnMod_Skills.description>Pawn skills.</CQF_PawnMod_Skills.description>
+  <CQF_PawnMod_Abilities.label>Abilities</CQF_PawnMod_Abilities.label>
+  <CQF_PawnMod_Abilities.description>Pawn abilities.</CQF_PawnMod_Abilities.description>
   <CQF_PawnMod_Apparel.label>Apparel</CQF_PawnMod_Apparel.label>
   <CQF_PawnMod_Apparel.description>Pawn apparel.</CQF_PawnMod_Apparel.description>
   <CQF_PawnMod_Weapon.label>Weapon</CQF_PawnMod_Weapon.label>
   <CQF_PawnMod_Weapon.description>Pawn weapon.</CQF_PawnMod_Weapon.description>
+  <CQF_PawnMod_Hediff.label>Hediff</CQF_PawnMod_Hediff.label>
+  <CQF_PawnMod_Hediff.description>Pawn hediffs.</CQF_PawnMod_Hediff.description>
+  <CQF_PawnMod_Dialog.label>Dialog</CQF_PawnMod_Dialog.label>
+  <CQF_PawnMod_Dialog.description>Pawn dialog manager.</CQF_PawnMod_Dialog.description>
+  <CQF_PawnMod_ActionTrigger.label>Action trigger</CQF_PawnMod_ActionTrigger.label>
+  <CQF_PawnMod_ActionTrigger.description>Pawn action triggers.</CQF_PawnMod_ActionTrigger.description>
 </LanguageData>

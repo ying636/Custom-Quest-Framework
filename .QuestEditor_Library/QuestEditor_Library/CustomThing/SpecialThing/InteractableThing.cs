@@ -73,34 +73,43 @@ namespace QuestEditor_Library
         }
         public void DrawTab()
         {
-            Widgets.BeginScrollView(new Rect(7f, 25f, 475f, 590f), ref this.scrollPos, new Rect(7f, 10f, 475f, this.height));
-            Widgets.DrawBox(new Rect(8f, 10f, 470f, this.height), 1, QuestEditor_Dialog.blueTex);
-            float y = 20f;
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(15f, y, 900f, 38f), "InteractionOperations".Translate().Colorize(ColorLibrary.SkyBlue));
-            Text.Font = GameFont.Small;
-            if (Widgets.ButtonImage(new Rect(450f, y, 25f, 25f), TexButton.Copy))
+            Rect outRect = new Rect(8f, 18f, 536f, 584f);
+            Rect viewRect = new Rect(0f, 0f, 516f, this.height);
+            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
+            float y = 12f;
+            Rect copyAllRect = this.DrawSectionHeader(ref y, viewRect.width, "InteractionOperations".Translate(), true);
+            if (Widgets.ButtonImage(copyAllRect, TexButton.Copy))
             {
                 this.operations.ForEach(o => CQFEditorTools.operations.Add(o.Copy()));
                 this.operationDefs.ForEach(o => CQFEditorTools.operationDefs.Add(o));
             }
-            TooltipHandler.TipRegion(new Rect(450f, y, 25f, 25f), "Copy".Translate());
-            y += 40f;
-            Rect rect = new Rect(15f, y, 400f, 30f);
+            TooltipHandler.TipRegion(copyAllRect, "Copy".Translate());
+            this.DrawOperationList(ref y, viewRect.width);
+            y += 18f;
+            this.DrawOperationDefList(ref y, viewRect.width);
+            this.height = y + 10f;
+            Widgets.EndScrollView();
+        }
+
+        private void DrawOperationList(ref float y, float width)
+        {
+            float initY = y;
+            Rect rect = new Rect(18f, y + 6f, 340f, 30f);
             for(int i = 0; i<this.operations.Count; i++)
             {
                 InteractionOperation o = this.operations[i];
-                rect.y = y;
+                rect.y = y + 6f;
                 if (Widgets.ButtonText(rect, o.interactionText, false))
                 {
                     Find.WindowStack.Add(new Dialog_InteractionOption(o));
                 }
-                if (Widgets.ButtonImage(new Rect(450f, y, 25f, 25f), TexButton.Copy))
+                TooltipHandler.TipRegion(rect, "CQF_ClickToEdit".Translate());
+                if (Widgets.ButtonImage(new Rect(426f, y + 8f, 25f, 25f), TexButton.Copy))
                 {
                     CQFEditorTools.operation = o.Copy();
                 }
-                TooltipHandler.TipRegion(new Rect(450f, y, 25f, 25f), "Copy".Translate());
-                Rect save = new Rect(420f,y,25f,25f);
+                TooltipHandler.TipRegion(new Rect(426f, y + 8f, 25f, 25f), "Copy".Translate());
+                Rect save = new Rect(456f,y + 8f,25f,25f);
                 if (Widgets.ButtonImage(save, ContentFinder<Texture2D>.Get("UI/Icon_MoveOut", true)))
                 {
                     Find.WindowStack.Add(new Dialog_RenameForQE(name =>
@@ -128,20 +137,56 @@ namespace QuestEditor_Library
                     {optionalTitle = "SetDefname".Translate()});
                 }
                 TooltipHandler.TipRegion(save, "SaveAsDef".Translate());
-                y += 35f;
+                y += 40f;
             };
-            y += 5f;       
-            if (Widgets.ButtonImage(new Rect(212.5f, y, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)
+            if (!this.operations.Any())
+            {
+                Widgets.Label(new Rect(16f, y + 4f, 420f, 25f), "CQF_NoInteractionOperations".Translate().Colorize(Color.gray));
+                y += 34f;
+            }
+            Widgets.DrawBox(new Rect(10f, initY, width - 42f, Mathf.Max(42f, y - initY)), 1, QuestEditor_Dialog.blueTex);
+            y += 10f;
+            if (Widgets.ButtonText(new Rect(15f, y, 120f, 32f), "Add".Translate()))
+            {
+                this.operations.Add(new InteractionOperation());
+            }
+            if (Widgets.ButtonText(new Rect(155f, y, 120f, 32f), "Remove".Translate()) && this.operations.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(this.operations, o => this.operations.Remove(o), o => o.interactionText);
+            }
+            if (Widgets.ButtonImage(new Rect(295f, y + 3f, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)
             {
                 this.operations.Add(CQFEditorTools.operation.Copy());
             }
-            TooltipHandler.TipRegion(new Rect(212.5f, y, 25f, 25f), "Paste".Translate());
-            CQFEditorTools.DrawButtonForList(ref y, this.operations, x => x.interactionText,10f);
-            y += 5f;
-            CQFEditorTools.DrawEditableList(this.operationDefs,ref y,(r,o) => Widgets.Label(r,o.label),o => o.label,() => 
-            CQFEditorTools.DrawFloatMenu(DefDatabase<InteractionDataDef>.AllDefsListForReading,d => this.operationDefs.Add(d),d => d.label),"InteractionDataDefs".Translate(),null,true,15f,320f);
-            this.height = y + 5f;
-            Widgets.EndScrollView();
+            TooltipHandler.TipRegion(new Rect(295f, y + 3f, 25f, 25f), "Paste".Translate());
+            y += 42f;
+        }
+
+        private void DrawOperationDefList(ref float y, float width)
+        {
+            this.DrawSimpleSectionTitle(ref y, width, "InteractionDataDefs".Translate());
+            Rect rect = new Rect(18f, y + 6f, width - 90f, 28f);
+            foreach (InteractionDataDef def in this.operationDefs)
+            {
+                rect.y = y + 6f;
+                Widgets.Label(rect, def.label ?? def.defName);
+                y += 36f;
+            }
+            if (!this.operationDefs.Any())
+            {
+                Widgets.Label(new Rect(16f, y + 4f, 420f, 25f), "CQF_NoInteractionDefs".Translate().Colorize(Color.gray));
+                y += 34f;
+            }
+            y += 6f;
+            if (Widgets.ButtonText(new Rect(15f, y, 120f, 32f), "Add".Translate()))
+            {
+                CQFEditorTools.DrawFloatMenu(DefDatabase<InteractionDataDef>.AllDefsListForReading, d => this.operationDefs.Add(d), d => d.label);
+            }
+            if (Widgets.ButtonText(new Rect(155f, y, 120f, 32f), "Remove".Translate()) && this.operationDefs.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(this.operationDefs, d => this.operationDefs.Remove(d), d => d.label);
+            }
+            y += 42f;
         }
         public void ProduceResult(Pawn operatorPawn, string operationText)
         {
@@ -211,6 +256,31 @@ namespace QuestEditor_Library
             return new CustomThingData_InteractableThing(this,pos);
         }
 
+        private Rect DrawSectionHeader(ref float y, float width, string label, bool drawCopyButton = false)
+        {
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(15f, y, width - 35f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Rect copyRect = Rect.zero;
+            if (drawCopyButton)
+            {
+                float labelWidth = Text.CalcSize(label).x;
+                copyRect = new Rect(Mathf.Min(15f + labelWidth + 12f, width - 58f), y + 2f, 25f, 25f);
+            }
+            Text.Font = GameFont.Small;
+            y += 32f;
+            Widgets.DrawLine(new Vector2(15f, y), new Vector2(width - 35f, y), ColorLibrary.SkyBlue, 1f);
+            y += 10f;
+            return copyRect;
+        }
+
+        private void DrawSimpleSectionTitle(ref float y, float width, string label)
+        {
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(15f, y, width - 35f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Text.Font = GameFont.Small;
+            y += 38f;
+        }
+
         public float height = 0f;
         public Vector2 scrollPos;
         public bool disable = false;
@@ -223,60 +293,118 @@ namespace QuestEditor_Library
     {    
         public void Draw(ref float y, Rect inRect, float x)
         {
-            float curY = y;
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(x, curY, inRect.width, 35f), this.interactionText.Colorize(ColorLibrary.SkyBlue));
-            Text.Font = GameFont.Small;
-            curY += 30f;
-            if (Widgets.ButtonText(new Rect(x, curY, 150f, 25f), "Rename".Translate()))
-            {
-                Find.WindowStack.Add(new Dialog_RenameForQE((name) => this.interactionText = name));
-            }
-            curY += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(curY, "TickToOperate".Translate(), ref this.tickToOperate, ref this.buffer, x);
-            curY += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, curY, 350f, 25f), "onlyGenerateSingleResult".Translate(), ref this.onlyGenerateSingleResult);
-            curY += 30f;
-            CQFEditorTools.DrawIDrawList(ref curY, x, this.requiredThings, inRect, "InteractionOption_RequiredThing".Translate(), () =>
-            CQFEditorTools.DrawFloatMenu(new List<Type>() {typeof(CQFThingDefCount) }, t =>
-            {
-                CQFThingData.OpenSelectWindow(t, d => this.requiredThings.Add(d));
-            }, t => t.Name.Translate()), t => t.ToString(), (t, y2, rect, x2) =>
-            {
-                t.DrawWithSingleCount(ref y2, rect, x2);
-                return y2;
-            });
-            float initY = curY;
-            curY += 15f;
-            Widgets.Label(new Rect(x + 5f, curY, inRect.width, 30f), "InteractionConditions".Translate().Colorize(ColorLibrary.PaleBlue));
-            curY += 25f;
-            this.conditions.ForEach(c =>
-            {
-                c.Draw(ref curY, inRect, x + 5f);
-            });
-            curY += 10f;
-            CQFEditorTools.DrawButtonForList(ref curY, this.conditions, c => c.GetType().Name.Translate(), () => CQFEditorTools.DrawFloatMenu(typeof(DialogCondition).AllSubclassesNonAbstract(), c =>
-                this.conditions.Add((DialogCondition)Activator.CreateInstance(c)), c => c.Name.Translate()), 10, 150f);
-            curY += 5f;
-            Widgets.DrawBox(new Rect(x, initY, inRect.width - 40f - (2 * x), curY - initY), 1, QuestEditor_Dialog.blueTex);
-            curY += 5f;
-            initY = curY;
-            curY += 5f;
-            Widgets.Label(new Rect(x + 5f, curY, inRect.width, 30f), "InteractionResults".Translate().Colorize(ColorLibrary.PaleBlue));
+            float width = inRect.width - 35f - x;
+            this.DrawBasicSettings(ref y, x, width);
+            this.DrawRequiredThings(ref y, x, width, inRect);
+            this.DrawConditions(ref y, x, width, inRect);
+            this.DrawResults(ref y, x, width, inRect);
+        }
 
-            curY += 35f;
-            this.results.ForEach(c =>
+        private void DrawBasicSettings(ref float y, float x, float width)
+        {
+            this.DrawHeader(ref y, x, width, this.interactionText, () => Find.WindowStack.Add(new Dialog_RenameForQE(name => this.interactionText = name)), "Rename".Translate(), null, null, TexButton.Rename);
+            float labelWidth = 190f;
+            Widgets.Label(new Rect(x + 8f, y + 4f, labelWidth, 25f), "TickToOperate".Translate());
+            Widgets.TextFieldNumeric(new Rect(x + labelWidth, y, 90f, 28f), ref this.tickToOperate, ref this.buffer);
+            y += 36f;
+            Widgets.CheckboxLabeled(new Rect(x + 8f, y, 330f, 28f), "onlyGenerateSingleResult".Translate(), ref this.onlyGenerateSingleResult);
+            y += 42f;
+        }
+
+        private void DrawRequiredThings(ref float y, float x, float width, Rect inRect)
+        {
+            this.DrawHeader(ref y, x, width, "InteractionOption_RequiredThing".Translate(), () =>
+                CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
+                {
+                    CQFThingData.OpenSelectWindow(t, d => this.requiredThings.Add(d));
+                }, t => t.Name.Translate()), "Add".Translate(), () =>
+                CQFEditorTools.DrawFloatMenu(this.requiredThings, d => this.requiredThings.Remove(d), d => d.ToString()), "Remove".Translate());
+            float initY = y;
+            foreach (CQFThingData thing in this.requiredThings)
             {
-                curY += 3f;
-                c.Draw(ref curY, inRect, x + 5f);
-                curY += 3f;
-            });
-            curY += 10f;
-            CQFEditorTools.DrawButtonForList<InteractionResult>(ref curY, this.results, c => c.resultName, 10, 150f);
-            curY += 5f; 
-            Widgets.DrawBox(new Rect(x, initY, inRect.width - 40f - (2 * x), curY - initY), 1, QuestEditor_Dialog.blueTex);
-            curY += 5f;
-            y = curY;
+                thing.DrawWithSingleCount(ref y, inRect, x + 10f);
+                y += 6f;
+            }
+            if (!this.requiredThings.Any())
+            {
+                Widgets.Label(new Rect(x + 12f, y + 4f, width - 24f, 25f), "CQF_NoRequiredThings".Translate().Colorize(Color.gray));
+                y += 34f;
+            }
+            y += 12f;
+        }
+
+        private void DrawConditions(ref float y, float x, float width, Rect inRect)
+        {
+            this.DrawHeader(ref y, x, width, "InteractionConditions".Translate(), () =>
+                CQFEditorTools.DrawFloatMenu(typeof(DialogCondition).AllSubclassesNonAbstract(), c =>
+                    this.conditions.Add((DialogCondition)Activator.CreateInstance(c)), c => c.Name.Translate()), "Add".Translate(), () =>
+                CQFEditorTools.DrawFloatMenu(this.conditions, c => this.conditions.Remove(c), c => c.GetType().Name.Translate()), "Remove".Translate());
+            float initY = y;
+            foreach (DialogCondition condition in this.conditions)
+            {
+                float itemY = y;
+                condition.Draw(ref y, inRect, x + 10f);
+                y += 4f;
+                this.DrawListItemFrame(itemY, y, x + 6f, width - 12f);
+                y += 8f;
+            }
+            if (!this.conditions.Any())
+            {
+                Widgets.Label(new Rect(x + 12f, y + 4f, width - 24f, 25f), "CQF_NoInteractionConditions".Translate().Colorize(Color.gray));
+                y += 34f;
+            }
+            y += 12f;
+        }
+
+        private void DrawResults(ref float y, float x, float width, Rect inRect)
+        {
+            this.DrawHeader(ref y, x, width, "InteractionResults".Translate(), () => this.results.Add(new InteractionResult()), "Add".Translate(), () =>
+                CQFEditorTools.DrawFloatMenu(this.results, r => this.results.Remove(r), r => r.resultName), "Remove".Translate());
+            float initY = y;
+            foreach (InteractionResult result in this.results)
+            {
+                result.Draw(ref y, inRect, x + 10f);
+                y += 10f;
+            }
+            if (!this.results.Any())
+            {
+                Widgets.Label(new Rect(x + 12f, y + 4f, width - 24f, 25f), "CQF_NoInteractionResults".Translate().Colorize(Color.gray));
+                y += 34f;
+            }
+            y += 12f;
+        }
+
+        private void DrawHeader(ref float y, float x, float width, string label, Action addAction = null, string addTip = null, Action removeAction = null, string removeTip = null, Texture2D addIcon = null)
+        {
+            Widgets.DrawHighlight(new Rect(x - 4f, y - 2f, width + 8f, 32f));
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(x, y, width - 90f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Text.Font = GameFont.Small;
+            Rect button = new Rect(x + width - 60f, y + 2f, 25f, 25f);
+            if (addAction != null && Widgets.ButtonImage(button, addIcon ?? TexButton.Plus))
+            {
+                addAction();
+            }
+            if (addAction != null && addTip != null)
+            {
+                TooltipHandler.TipRegion(button, addTip);
+            }
+            button.x += 30f;
+            if (removeAction != null && Widgets.ButtonImage(button, TexButton.Delete))
+            {
+                removeAction();
+            }
+            if (removeAction != null && removeTip != null)
+            {
+                TooltipHandler.TipRegion(button, removeTip);
+            }
+            y += 32f;
+            y += 10f;
+        }
+
+        private void DrawListItemFrame(float startY, float endY, float x, float width)
+        {
+            Widgets.DrawBox(new Rect(x, startY - 4f, width, Mathf.Max(34f, endY - startY + 8f)), 1, QuestEditor_Dialog.blueTex);
         }
 
         public InteractionOperation Copy() 
@@ -433,46 +561,95 @@ namespace QuestEditor_Library
     {
         public void Draw(ref float y,Rect inRect,float x = 0f)
         {
-            x += 5f;
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(x, y, 350f, 35f),this.resultName.Colorize(ColorLibrary.SkyBlue));   
+            float width = inRect.width - 70f - x;
+            Widgets.DrawHighlight(new Rect(x - 4f, y - 2f, width + 8f, 32f));
             Text.Font = GameFont.Small;
-            y += 40f;
+            Widgets.Label(new Rect(x, y + 4f, width - 75f, 28f), this.resultName.Colorize(ColorLibrary.PaleBlue));
+            Text.Font = GameFont.Small;
+            Rect renameRect = new Rect(x + width - 60f, y + 2f, 25f, 25f);
+            if (Widgets.ButtonImage(renameRect, TexButton.Rename))
+            {
+                Find.WindowStack.Add(new Dialog_RenameForQE(name => this.resultName = name));
+            }
+            TooltipHandler.TipRegion(renameRect, "Rename".Translate());
+            Rect toggleRect = new Rect(x + width - 30f, y + 2f, 25f, 25f);
             if (this.show)
             {
-                Rect rect = new Rect(x + 360f, y - 40f, 25f, 25f);
-                if (Widgets.ButtonImage(rect, CQFEditorTools.hideIcon))
+                if (Widgets.ButtonImage(toggleRect, CQFEditorTools.hideIcon))
                 {
                     this.show = false;
                 }
-                TooltipHandler.TipRegion(rect, "Hide".Translate());
-                if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "Rename".Translate()))
-                {
-                    Find.WindowStack.Add(new Dialog_RenameForQE((name) => this.resultName = name));
-                }
+                TooltipHandler.TipRegion(toggleRect, "Hide".Translate());
                 y += 30f;
-                float initY = y;
-                Widgets.Label(new Rect(x, y, 150f, 25f), "If".Translate().Colorize(ColorLibrary.PaleBlue));
-                CQFEditorTools.DrawButtonWithIcon(y, () => Find.WindowStack.Add(new Dialog_Select<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), null, c => c.Name.Translate(), "Select".Translate(), c =>
-    this.conditions.Add((DialogCondition)Activator.CreateInstance(c)))), () => CQFEditorTools.DrawFloatMenu(this.conditions, c => this.conditions.Remove(c), c => c.GetType().Name.Translate()), inRect.width - 150f, 30);
-                y += 30f;
+                this.DrawSubHeader(ref y, x + 8f, width - 16f, "If".Translate(), () => Find.WindowStack.Add(new Dialog_Select<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), null, c => c.Name.Translate(), "Select".Translate(), c =>
+                    this.conditions.Add((DialogCondition)Activator.CreateInstance(c)))), () => CQFEditorTools.DrawFloatMenu(this.conditions, c => this.conditions.Remove(c), c => c.GetType().Name.Translate()));
                 foreach (DialogCondition c in this.conditions)
                 {
-                    c.Draw(ref y, inRect, x);
+                    float itemY = y;
+                    c.Draw(ref y, inRect, x + 8f);
+                    y += 4f;
+                    this.DrawListItemFrame(itemY, y, x + 4f, width - 8f);
+                    y += 8f;
                 }
-                y += 5f;
-                CQFEditorTools.DrawActionList(ref y, x, this.actions, inRect, "InteractionActions".Translate().Colorize(ColorLibrary.SkyBlue), false);
+                if (!this.conditions.Any())
+                {
+                    this.DrawEmptyState(ref y, x + 16f, width - 32f, "CQF_NoResultConditions".Translate());
+                }
+                this.DrawSubHeader(ref y, x + 8f, width - 16f, "InteractionActions".Translate(), () => CQFEditorTools.OpenCQFActionSelect(t => this.actions.Add((CQFAction)Activator.CreateInstance(t))),
+                    () => CQFEditorTools.DrawFloatMenu(this.actions, a => this.actions.Remove(a), a => a.GetType().Name.Translate()));
+                foreach (CQFAction action in this.actions)
+                {
+                    action.Draw(ref y, inRect, x + 8f);
+                    y += 6f;
+                }
+                if (!this.actions.Any())
+                {
+                    this.DrawEmptyState(ref y, x + 16f, width - 32f, "CQF_NoResultActions".Translate());
+                }
             }
             else 
             {
-                Rect rect = new Rect(x + 360f, y - 40f, 25f, 25f);
-                if (Widgets.ButtonImage(rect,CQFEditorTools.showIcon))
+                if (Widgets.ButtonImage(toggleRect,CQFEditorTools.showIcon))
                 {
                     this.show = true;
                 }
-                TooltipHandler.TipRegion(rect,"Show".Translate());
+                TooltipHandler.TipRegion(toggleRect,"Show".Translate());
+                y += 30f;
             }
+            Widgets.DrawLine(new Vector2(x, y), new Vector2(x + width, y), Color.gray, 1f);
+            y += 8f;
         }
+
+        private void DrawSubHeader(ref float y, float x, float width, string label, Action addAction, Action removeAction)
+        {
+            Text.Font = GameFont.Small;
+            Widgets.Label(new Rect(x, y + 4f, width - 70f, 25f), label.Colorize(ColorLibrary.SkyBlue));
+            Rect button = new Rect(x + width - 60f, y + 2f, 25f, 25f);
+            if (Widgets.ButtonImage(button, TexButton.Plus))
+            {
+                addAction();
+            }
+            TooltipHandler.TipRegion(button, "Add".Translate());
+            button.x += 30f;
+            if (Widgets.ButtonImage(button, TexButton.Delete))
+            {
+                removeAction();
+            }
+            TooltipHandler.TipRegion(button, "Remove".Translate());
+            y += 32f;
+        }
+
+        private void DrawEmptyState(ref float y, float x, float width, string label)
+        {
+            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
+            y += 32f;
+        }
+
+        private void DrawListItemFrame(float startY, float endY, float x, float width)
+        {
+            Widgets.DrawBox(new Rect(x, startY - 4f, width, Mathf.Max(34f, endY - startY + 8f)), 1, QuestEditor_Dialog.blueTex);
+        }
+
         public void DoResult(Pawn target, Thing thing,Quest quest) 
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();

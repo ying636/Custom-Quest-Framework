@@ -238,11 +238,45 @@
   <ITab_InteractableThing>可互动事物</ITab_InteractableThing>
   <!-- EN: Interaction operations -->
   <InteractionOperations>交互选项</InteractionOperations>
+  <!-- EN: No interaction operations -->
+  <CQF_NoInteractionOperations>没有交互选项</CQF_NoInteractionOperations>
+  <!-- EN: No linked interaction defs -->
+  <CQF_NoInteractionDefs>没有引用的交互定义</CQF_NoInteractionDefs>
+  <!-- EN: Click to edit -->
+  <CQF_ClickToEdit>点击编辑</CQF_ClickToEdit>
+  <!-- EN: Linked interaction defs -->
+  <CQF_LinkedInteractionDefs>引用的交互定义</CQF_LinkedInteractionDefs>
+  <!-- EN: No custom loot data -->
+  <CQF_NoLootData>没有自定义战利品数据</CQF_NoLootData>
+  <!-- EN: No loot things -->
+  <CQF_NoLootThings>没有战利品物品</CQF_NoLootThings>
+  <!-- EN: No loot categories -->
+  <CQF_NoLootCategories>没有战利品物品种类</CQF_NoLootCategories>
+  <!-- EN: No special thing data -->
+  <CQF_NoSpecialThingData>没有特殊事物数据</CQF_NoSpecialThingData>
+  <!-- EN: No loot pawns -->
+  <CQF_NoLootPawns>没有战利品实体</CQF_NoLootPawns>
+  <!-- EN: Custom loot data -->
+  <CQF_CustomLootData>自定义战利品数据</CQF_CustomLootData>
+  <!-- EN: Use loot data def -->
+  <CQF_UseLootDataDef>使用战利品定义</CQF_UseLootDataDef>
+  <!-- EN: Opening settings -->
+  <CQF_LootSettings>开启设置</CQF_LootSettings>
 
   <!-- EN: Interaction conditions: -->
   <InteractionConditions>交互所需条件：</InteractionConditions>
   <!-- EN: Interaction results: -->
   <InteractionResults>交互结果：</InteractionResults>
+  <!-- EN: No required things -->
+  <CQF_NoRequiredThings>没有所需事物</CQF_NoRequiredThings>
+  <!-- EN: No interaction conditions -->
+  <CQF_NoInteractionConditions>没有交互条件</CQF_NoInteractionConditions>
+  <!-- EN: No interaction results -->
+  <CQF_NoInteractionResults>没有交互结果</CQF_NoInteractionResults>
+  <!-- EN: No result conditions -->
+  <CQF_NoResultConditions>没有结果条件</CQF_NoResultConditions>
+  <!-- EN: No result actions -->
+  <CQF_NoResultActions>没有结果行为</CQF_NoResultActions>
   <!-- EN: Time required for interaction（tick): -->
   <TickToOperate>交互所需时间（tick）：</TickToOperate>
 

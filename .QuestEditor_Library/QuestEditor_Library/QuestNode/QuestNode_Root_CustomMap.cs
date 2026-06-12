@@ -38,13 +38,17 @@ namespace QuestEditor_Library
                 || TileFinder.TryFindNewSiteTile(out tile, root
                 , this.distance.min, this.distance.max, false, null, 0.5f, true, TileFinderMode.Random, false,
                 layer != null && layer.Def.isSpace, layer,
-                 (x) => this.blacklist == null ||
-                !this.blacklist.Contains(Find.World.grid[x].PrimaryBiome)))
+                 x => this.ValidTile(x)))
             {
                 if (tile == default) 
 				{
 					return;
 				}
+                if (!this.ValidTile(tile))
+                {
+                    quest.End(QuestEndOutcome.Fail);
+                    return;
+                }
 
 				var map = this.GetMap(); 
 				CustomSite site = QuestNode_Root_CustomMap
@@ -124,20 +128,117 @@ namespace QuestEditor_Library
 			CQFEditorTools.DrawSelectableField(x + 7f,ref y, "planetLayer".Translate(this.planetLayer == null ?
 				null : this.planetLayer.ToString())
 				,PlanetLayerDef, d => this.planetLayer = d, d => d.label,new Vector2(120f,25f)); 
-            string listText = "";
-            this.blacklist.ForEach(b => listText = b.label + "," + listText);
-            Widgets.Label(new Rect(x + 7f, y, 300f, 60f), (enableBlack ? "BiomesBlackList".Translate() : "BiomesWhiteList".Translate()) + listText);
-			y += 70f;
-			if (Widgets.ButtonText(new Rect(x + 7f, y, 70f, 25f), "Add".Translate()))
-            {
-                CQFEditorTools.DrawFloatMenu<BiomeDef>(DefDatabase<BiomeDef>.AllDefs.ToList().FindAll(b => !this.blacklist.Contains(b)), (b) => this.blacklist.Add(b), (b) => b.label);
-            }
-            if (Widgets.ButtonText(new Rect(x + 70f, y, 70f, 25f), "Delete".Translate()))
-            {
-                CQFEditorTools.DrawFloatMenu<BiomeDef>(this.blacklist, (b) => this.blacklist.Remove(b), (b) => b.label);
-            }
-			y += 30f;
+            this.DrawBiomeFilter(ref y, inRect, x + 7f);
+            this.DrawWorldConditions(ref y, inRect, x + 7f);
         }
+
+		private void DrawBiomeFilter(ref float y, Rect inRect, float x)
+		{
+			this.DrawSectionHeader(
+				ref y,
+				inRect,
+				x,
+				this.enableBlack ? "BiomesBlackList".Translate() : "BiomesWhiteList".Translate(),
+				() => CQFEditorTools.DrawFloatMenu<BiomeDef>(
+					DefDatabase<BiomeDef>.AllDefs.ToList().FindAll(b => !this.blacklist.Contains(b)),
+					b => this.blacklist.Add(b),
+					b => b.label),
+				() => CQFEditorTools.DrawFloatMenu<BiomeDef>(
+					this.blacklist,
+					b => this.blacklist.Remove(b),
+					b => b.label));
+			if (this.blacklist.NullOrEmpty())
+			{
+				Widgets.Label(new Rect(x, y, 600f, 25f), "NoBiomeFilters".Translate().Colorize(Color.gray));
+				y += 30f;
+				return;
+			}
+			foreach (BiomeDef biome in this.blacklist)
+			{
+				Widgets.Label(new Rect(x, y, 600f, 25f), (biome.label ?? biome.defName).CapitalizeFirst());
+				y += 25f;
+			}
+			y += 5f;
+		}
+
+		private void DrawWorldConditions(ref float y, Rect inRect, float x)
+		{
+			this.DrawSectionHeader(
+				ref y,
+				inRect,
+				x,
+				"WorldConditions".Translate(),
+				() =>
+				{
+					List<Type> types = typeof(WorldCondition).AllSubclassesNonAbstract().ToList();
+					CQFEditorTools.DrawFloatMenu(types, t => this.worldConditions.Add((WorldCondition)Activator.CreateInstance(t)), t => t.Name.Translate());
+				},
+				() => CQFEditorTools.DrawFloatMenu<WorldCondition>(this.worldConditions, d => this.worldConditions.Remove(d), this.WorldConditionLabel));
+			if (this.worldConditions.NullOrEmpty())
+			{
+				Widgets.Label(new Rect(x, y, 600f, 25f), "NoWorldConditions".Translate().Colorize(Color.gray));
+				y += 30f;
+				return;
+			}
+			foreach (WorldCondition condition in this.worldConditions)
+			{
+				if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), this.WorldConditionLabel(condition), false))
+				{
+					Find.WindowStack.Add(new Dialog_EditIDrawable(condition));
+				}
+				y += 30f;
+			}
+			y += 5f;
+		}
+
+		private void DrawSectionHeader(ref float y, Rect inRect, float x, string title, Action addAction, Action removeAction)
+		{
+			Widgets.Label(new Rect(x, y, 400f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+			Rect button = new Rect(x + 420f, y, 30f, 30f);
+			if (Widgets.ButtonImage(button, TexButton.Plus))
+			{
+				addAction();
+			}
+			button.x += 40f;
+			if (Widgets.ButtonImage(button, TexButton.Delete))
+			{
+				removeAction();
+			}
+			y += 30f;
+		}
+
+		private string WorldConditionLabel(WorldCondition condition)
+		{
+			string typeName = condition.GetType().Name.Translate();
+			string targetName = null;
+			if (condition is WorldCondition_WorldObject worldObject)
+			{
+				targetName = worldObject.objectDef?.label ?? worldObject.objectDef?.defName;
+			}
+			else if (condition is WorldCondition_Landmark landmark)
+			{
+				targetName = landmark.landmark?.label ?? landmark.landmark?.defName;
+			}
+			else if (condition is WorldCondition_Biome biome)
+			{
+				targetName = biome.biome?.label ?? biome.biome?.defName;
+			}
+			else if (condition is WorldCondition_TileMutator mutator)
+			{
+				targetName = mutator.mutator?.label ?? mutator.mutator?.defName;
+			}
+			else if (condition is WorldCondition_TotalSkill totalSkill)
+			{
+				targetName = totalSkill.skill?.label ?? totalSkill.skill?.defName;
+			}
+			return targetName.NullOrEmpty() ? typeName : "ConditionWithTarget".Translate(typeName, targetName);
+		}
+
+		private bool ValidTile(PlanetTile tile)
+		{
+			return (this.blacklist == null || !this.blacklist.Contains(Find.World.grid[tile].PrimaryBiome))
+				&& (this.worldConditions.NullOrEmpty() || !this.worldConditions.Exists(condition => !condition.Satisfied(tile)));
+		}
 
 		public static CustomSite GenerateCustomSite(IEnumerable<SitePartDefWithParams> sitePartsParams,
 			PlanetTile tile, Faction faction, bool hiddenSitePartsPossible = false,
@@ -297,8 +398,9 @@ namespace QuestEditor_Library
         [NoTranslate]
         public SlateRef<string> faction;
 		public SlateRef<Faction> overrideFaction;
-        public IntRange distance = new IntRange(10,20);
+		public IntRange distance = new IntRange(10,20);
 		public List<BiomeDef> blacklist = new List<BiomeDef>();
+		public List<WorldCondition> worldConditions = new List<WorldCondition>();
 		public SlateRef<PlanetTile> tile;
     }
 }

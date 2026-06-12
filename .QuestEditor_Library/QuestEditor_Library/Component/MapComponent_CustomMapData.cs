@@ -218,8 +218,7 @@ namespace QuestEditor_Library
                     }
                 }
             }
-            if (this.Triggers.Find(t => t.things.Exists(t0 => t0 == thing)
-            && t.mode == ActionTriggerMode.Damaged) is ThingActionTrigger trigger) 
+            foreach (ThingActionTrigger trigger in this.Triggers.Where(t => t.things.Contains(thing) && t.mode == ActionTriggerMode.Damaged).ToList())
             {
                 trigger.Trigger(new Dictionary<string, TargetInfo>() 
                 {
@@ -347,6 +346,7 @@ namespace QuestEditor_Library
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.key,"key");
+            Scribe_Values.Look(ref this.mode, "mode");
             Scribe_Collections.Look(ref this.things, "things",LookMode.Reference);
             Scribe_Collections.Look(ref this.actions, "actions", LookMode.Deep);
         }

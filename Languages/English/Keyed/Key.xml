@@ -85,51 +85,11 @@ SiteName: SiteName-></RuleTip>
 
 
   <PawnEditor>Pawn editor</PawnEditor>
-  <ComplexPawnDefName>Pawn def name:</ComplexPawnDefName>
-  <ComplexPawnLabel>Label:</ComplexPawnLabel>
-  <ComplexPawnDef>Custom NPC:{0}</ComplexPawnDef>
-  <ConfirmCreateNewComplexPawnDef>Create a new custom NPC and discard the current unsaved edits?</ConfirmCreateNewComplexPawnDef>
-  <NoPawnModAvailable>No pawn modules are available for the current pawn kind.</NoPawnModAvailable>
-  <PawnPreview>Preview</PawnPreview>
-  <PawnModules>Modules</PawnModules>
-  <CQF_PawnMod_Basic.label>Basic</CQF_PawnMod_Basic.label>
-  <CQF_PawnMod_Basic.description>Basic custom NPC data.</CQF_PawnMod_Basic.description>
-  <CQF_PawnMod_NameAndBody.label>Name and body</CQF_PawnMod_NameAndBody.label>
-  <CQF_PawnMod_NameAndBody.description>Name, gender, and age data.</CQF_PawnMod_NameAndBody.description>
-  <CQF_PawnMod_Appearance.label>Appearance</CQF_PawnMod_Appearance.label>
-  <CQF_PawnMod_Appearance.description>Head, body, hair, and colors.</CQF_PawnMod_Appearance.description>
-  <CQF_PawnMod_Backstory.label>Backstory</CQF_PawnMod_Backstory.label>
-  <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
-  <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
-  <CQF_PawnMod_Traits.description>Pawn traits.</CQF_PawnMod_Traits.description>
-  <CQF_PawnMod_Apparel.label>Apparel</CQF_PawnMod_Apparel.label>
-  <CQF_PawnMod_Apparel.description>Pawn apparel.</CQF_PawnMod_Apparel.description>
-  <CQF_PawnMod_Weapon.label>Weapon</CQF_PawnMod_Weapon.label>
-  <CQF_PawnMod_Weapon.description>Pawn weapon.</CQF_PawnMod_Weapon.description>
-  <PawnKindModuleLabel>Pawn kind</PawnKindModuleLabel>
-  <BioAge>Biological age:</BioAge>
-  <ChronologicalAge>Chronological age:</ChronologicalAge>
   <Gender>Gender:{0}</Gender>
-  <Childhood>Childhood:{0}</Childhood>
-  <Adulthood>Adulthood:{0}</Adulthood>
-  <PawnTraits>Traits</PawnTraits>
-  <PawnApparels>Apparel</PawnApparels>
-  <PawnWeapon>Weapon:{0}</PawnWeapon>
   <DataName>Data name</DataName>
   <BirthName>Birth name</BirthName>
-  <RandomName>Randomize name on generation</RandomName>
-  <PawnNameMaker>Name maker:{0}</PawnNameMaker>
-  <RandomizePawnName>Randomize name</RandomizePawnName>
-  <NoPawnNameMaker>No available name maker</NoPawnNameMaker>
-  <CurHair>Hair:{0}</CurHair>
   <SelectHair>Select hair</SelectHair>
-  <SelectHairColor>Select hair color</SelectHairColor>
-  <CurHeadType>Head type:{0}</CurHeadType>
   <SelectHeadType>Select head type</SelectHeadType>
-  <SelectSkinColor>Select skin color</SelectSkinColor>
-  <Colorbase>Colorbase</Colorbase>
-  <Hex>Hex</Hex>
-  <CurBodyType>Body type:{0}</CurBodyType>
   <SelectBodyType>Select body type</SelectBodyType>
   <Thin>Thin</Thin>
   <Fat>Fat</Fat>
@@ -150,7 +110,7 @@ SiteName: SiteName-></RuleTip>
   <SelectStuff>Select stuff{0}</SelectStuff>
   <LootPawn>Loot pawn</LootPawn>
   <DestroyAfterOpening>Destroy after opening</DestroyAfterOpening>
-  <OpenWhenDestroyed>Open when destroying:</OpenWhenDestroyed>
+  <OpenWhenDestroyed>Open when destroyed:</OpenWhenDestroyed>
   <MessageAfterOpening>Message after opening</MessageAfterOpening>
   <PastePawns>Paste pawns</PastePawns>
   <UseLootDef>Use loot def (In order to save loading time)</UseLootDef>
@@ -312,6 +272,7 @@ SiteName: SiteName-></RuleTip>
 
   <CQFSpawnThing>Spawn: {0}</CQFSpawnThing>
   <CQFSpawnThingTip>Tip: Right click to open the menu and select the thing to generate.</CQFSpawnThingTip>
+  <CQFToolsTip>Tip: Right click to select a custom thing.</CQFToolsTip>
 
   <ExtraKinds>Extra kinds</ExtraKinds>
   <ExtraKindsTip>The pawn kinds that will be generated together during generation. They will use same faction, hediffs, and other parameters from pawn data.</ExtraKindsTip>

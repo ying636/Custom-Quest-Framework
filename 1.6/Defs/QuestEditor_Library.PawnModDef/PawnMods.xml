@@ -41,6 +41,22 @@
   </QuestEditor_Library.PawnModDef>
 
   <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Skills</defName>
+    <label>skills</label>
+    <description>Pawn skills.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Skills</workerClass>
+    <order>45</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Abilities</defName>
+    <label>abilities</label>
+    <description>Pawn abilities.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Abilities</workerClass>
+    <order>48</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
     <defName>CQF_PawnMod_Apparel</defName>
     <label>apparel</label>
     <description>Pawn apparel.</description>
@@ -54,5 +70,29 @@
     <description>Pawn weapon.</description>
     <workerClass>QuestEditor_Library.PawnModWorker_Weapon</workerClass>
     <order>60</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Hediff</defName>
+    <label>hediff</label>
+    <description>Pawn hediffs.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Hediff</workerClass>
+    <order>70</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Dialog</defName>
+    <label>dialog</label>
+    <description>Pawn dialog manager.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Dialog</workerClass>
+    <order>80</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_ActionTrigger</defName>
+    <label>action trigger</label>
+    <description>Pawn action triggers.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_ActionTrigger</workerClass>
+    <order>90</order>
   </QuestEditor_Library.PawnModDef>
 </Defs>

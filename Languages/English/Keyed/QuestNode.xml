@@ -23,6 +23,10 @@
   <MapNameRule>Map name rule:</MapNameRule>
   <BiomesBlackList>Biomes black list:</BiomesBlackList>
   <BiomesWhiteList>Biomes white list:</BiomesWhiteList>
+  <NoBiomeFilters>No biome filters</NoBiomeFilters>
+  <WorldConditions>World conditions:</WorldConditions>
+  <NoWorldConditions>No world conditions</NoWorldConditions>
+  <ConditionWithTarget>{0} - {1}</ConditionWithTarget>
   <EnableBlackList>Enable black list:</EnableBlackList>
   <EndSignal>End Signal:</EndSignal>
   <SelectEndType>Select End Type:</SelectEndType>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+  <WorldAction_Chance>World action: chance</WorldAction_Chance>
+  <WorldAction_GenerateMapAndEnter>World action: generate map and enter</WorldAction_GenerateMapAndEnter>
+  <WorldAction_GenerateSiteAndEnter>World action: generate site and enter</WorldAction_GenerateSiteAndEnter>
+  <WorldAction_GenerateCustomMapAndEnter>World action: generate custom map and enter</WorldAction_GenerateCustomMapAndEnter>
+  <WorldAction_GenerateQuest>World action: generate quest</WorldAction_GenerateQuest>
+
+  <WorldCondition_WorldObject>Condition: world object</WorldCondition_WorldObject>
+  <WorldCondition_And>Condition: and</WorldCondition_And>
+  <WorldCondition_And_Tip>All sub world conditions must be true.</WorldCondition_And_Tip>
+  <WorldCondition_Or>Condition: or</WorldCondition_Or>
+  <WorldCondition_Or_Tip>Any sub world condition can be true.</WorldCondition_Or_Tip>
+  <WorldCondition_Reversal>Condition: reversal</WorldCondition_Reversal>
+  <WorldCondition_Reversal_Tip>Returns the opposite result of the selected world condition.</WorldCondition_Reversal_Tip>
+  <WorldCondition_Landmark>Condition: landmark</WorldCondition_Landmark>
+  <WorldCondition_Biome>Condition: biome</WorldCondition_Biome>
+  <WorldCondition_TileMutator>Condition: tile mutator</WorldCondition_TileMutator>
+  <WorldCondition_TotalSkill>Condition: caravan total skill</WorldCondition_TotalSkill>
+
+  <WorldObjectDef>World object: {0}</WorldObjectDef>
+  <WorldConditionFaction>Map faction: {0}</WorldConditionFaction>
+  <LandmarkDef>Landmark: {0}</LandmarkDef>
+  <BiomeDef>Biome: {0}</BiomeDef>
+  <TileMutatorDef>Tile mutator: {0}</TileMutatorDef>
+  <SitePartDef>Site part: {0}</SitePartDef>
+  <SkillDef>Skill: {0}</SkillDef>
+  <NonHostile>Non-hostile:</NonHostile>
+  <NonPlayer>Non-player:</NonPlayer>
+  <SetCaravanTileAsTarget>Set caravan tile as target:</SetCaravanTileAsTarget>
+  <SentDefeatLetter>Send defeat letter:</SentDefeatLetter>
+  <ReplaceMapGeneration>Replace map generation:</ReplaceMapGeneration>
+
+</LanguageData>

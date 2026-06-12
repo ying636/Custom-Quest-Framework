@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_PawnEditor_Title>Pawn editor</CQF_PawnEditor_Title>
+  <CQF_PawnEditor_LoadPremade>Load</CQF_PawnEditor_LoadPremade>
+  <CQF_PawnEditor_Save>Save</CQF_PawnEditor_Save>
+  <CQF_PawnEditor_New>New</CQF_PawnEditor_New>
+  <CQF_PawnEditor_Cancel>Cancel</CQF_PawnEditor_Cancel>
+  <CQF_PawnEditor_Confirm>Confirm</CQF_PawnEditor_Confirm>
+  <CQF_PawnEditor_Add>Add</CQF_PawnEditor_Add>
+  <CQF_PawnEditor_Delete>Delete</CQF_PawnEditor_Delete>
+  <CQF_PawnEditor_Select>Select</CQF_PawnEditor_Select>
+  <CQF_PawnEditor_SelectStuff>Select stuff</CQF_PawnEditor_SelectStuff>
+  <CQF_PawnEditor_None>None</CQF_PawnEditor_None>
+  <CQF_PawnEditor_DefName>Pawn def name:</CQF_PawnEditor_DefName>
+  <CQF_PawnEditor_Label>Label:</CQF_PawnEditor_Label>
+  <CQF_PawnEditor_ComplexPawnDef>Custom NPC:{0}</CQF_PawnEditor_ComplexPawnDef>
+  <CQF_PawnEditor_ConfirmCreateNew>Create a new custom NPC and discard the current unsaved edits?</CQF_PawnEditor_ConfirmCreateNew>
+  <CQF_PawnEditor_NoPawnModAvailable>No pawn modules are available for the current pawn kind.</CQF_PawnEditor_NoPawnModAvailable>
+  <CQF_PawnEditor_Preview>Preview</CQF_PawnEditor_Preview>
+  <CQF_PawnEditor_Modules>Modules</CQF_PawnEditor_Modules>
+  <CQF_PawnEditor_PawnKind>Pawn kind:{0}</CQF_PawnEditor_PawnKind>
+  <CQF_PawnEditor_SelectPawnKind>Select pawn kind</CQF_PawnEditor_SelectPawnKind>
+  <CQF_PawnEditor_Faction>Faction:</CQF_PawnEditor_Faction>
+  <CQF_PawnEditor_Name>Name:</CQF_PawnEditor_Name>
+  <CQF_PawnEditor_BioAge>Biological age:</CQF_PawnEditor_BioAge>
+  <CQF_PawnEditor_ChronologicalAge>Chronological age:</CQF_PawnEditor_ChronologicalAge>
+  <CQF_PawnEditor_Gender>Gender:{0}</CQF_PawnEditor_Gender>
+  <CQF_PawnEditor_Childhood>Childhood:{0}</CQF_PawnEditor_Childhood>
+  <CQF_PawnEditor_Adulthood>Adulthood:{0}</CQF_PawnEditor_Adulthood>
+  <CQF_PawnEditor_Weapon>Weapon:{0}</CQF_PawnEditor_Weapon>
+  <CQF_PawnEditor_RandomNameOnGeneration>Randomize name on generation</CQF_PawnEditor_RandomNameOnGeneration>
+  <CQF_PawnEditor_NameMaker>Name maker:{0}</CQF_PawnEditor_NameMaker>
+  <CQF_PawnEditor_RandomizeName>Randomize name</CQF_PawnEditor_RandomizeName>
+  <CQF_PawnEditor_NoNameMaker>No available name maker</CQF_PawnEditor_NoNameMaker>
+  <CQF_PawnEditor_Hair>Hair:{0}</CQF_PawnEditor_Hair>
+  <CQF_PawnEditor_SelectHairColor>Select hair color</CQF_PawnEditor_SelectHairColor>
+  <CQF_PawnEditor_HeadType>Head type:{0}</CQF_PawnEditor_HeadType>
+  <CQF_PawnEditor_SelectSkinColor>Select skin color</CQF_PawnEditor_SelectSkinColor>
+  <CQF_PawnEditor_ColorLibrary>Color library</CQF_PawnEditor_ColorLibrary>
+  <CQF_PawnEditor_HexColor>Hex</CQF_PawnEditor_HexColor>
+  <CQF_PawnEditor_BodyType>Body type:{0}</CQF_PawnEditor_BodyType>
+  <CQF_PawnEditor_Chance>Chance</CQF_PawnEditor_Chance>
+  <CQF_PawnEditor_SkillLevel>Level</CQF_PawnEditor_SkillLevel>
+  <CQF_PawnEditor_SkillPassion>Passion:{0}</CQF_PawnEditor_SkillPassion>
+  <CQF_PawnEditor_HediffPart>Part:{0}</CQF_PawnEditor_HediffPart>
+  <CQF_PawnEditor_WholeBody>Whole body</CQF_PawnEditor_WholeBody>
+  <CQF_PawnEditor_Severity>Severity</CQF_PawnEditor_Severity>
+  <CQF_PawnEditor_DialogManager>Dialog manager:{0}</CQF_PawnEditor_DialogManager>
+  <CQF_PawnEditor_TriggerKey>Trigger key:</CQF_PawnEditor_TriggerKey>
+  <CQF_PawnEditor_TriggerMode>Trigger mode:{0}</CQF_PawnEditor_TriggerMode>
+  <CQF_PawnEditor_TriggerActions>Trigger actions</CQF_PawnEditor_TriggerActions>
+  <CQF_PawnEditor_NoName>Missing pawn def name</CQF_PawnEditor_NoName>
+  <CQF_PawnEditor_SaveSucceed>Saved:{0}</CQF_PawnEditor_SaveSucceed>
+
+  <CQF_PawnMod_Basic.label>Basic</CQF_PawnMod_Basic.label>
+  <CQF_PawnMod_Basic.description>Basic custom NPC data.</CQF_PawnMod_Basic.description>
+  <CQF_PawnMod_NameAndBody.label>Name and body</CQF_PawnMod_NameAndBody.label>
+  <CQF_PawnMod_NameAndBody.description>Name, gender, and age data.</CQF_PawnMod_NameAndBody.description>
+  <CQF_PawnMod_Appearance.label>Appearance</CQF_PawnMod_Appearance.label>
+  <CQF_PawnMod_Appearance.description>Head, body, hair, and colors.</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Backstory.label>Backstory</CQF_PawnMod_Backstory.label>
+  <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
+  <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
+  <CQF_PawnMod_Traits.description>Pawn traits.</CQF_PawnMod_Traits.description>
+  <CQF_PawnMod_Skills.label>Skills</CQF_PawnMod_Skills.label>
+  <CQF_PawnMod_Skills.description>Pawn skills.</CQF_PawnMod_Skills.description>
+  <CQF_PawnMod_Abilities.label>Abilities</CQF_PawnMod_Abilities.label>
+  <CQF_PawnMod_Abilities.description>Pawn abilities.</CQF_PawnMod_Abilities.description>
+  <CQF_PawnMod_Apparel.label>Apparel</CQF_PawnMod_Apparel.label>
+  <CQF_PawnMod_Apparel.description>Pawn apparel.</CQF_PawnMod_Apparel.description>
+  <CQF_PawnMod_Weapon.label>Weapon</CQF_PawnMod_Weapon.label>
+  <CQF_PawnMod_Weapon.description>Pawn weapon.</CQF_PawnMod_Weapon.description>
+  <CQF_PawnMod_Hediff.label>Hediff</CQF_PawnMod_Hediff.label>
+  <CQF_PawnMod_Hediff.description>Pawn hediffs.</CQF_PawnMod_Hediff.description>
+  <CQF_PawnMod_Dialog.label>Dialog</CQF_PawnMod_Dialog.label>
+  <CQF_PawnMod_Dialog.description>Pawn dialog manager.</CQF_PawnMod_Dialog.description>
+  <CQF_PawnMod_ActionTrigger.label>Action trigger</CQF_PawnMod_ActionTrigger.label>
+  <CQF_PawnMod_ActionTrigger.description>Pawn action triggers.</CQF_PawnMod_ActionTrigger.description>
+</LanguageData>

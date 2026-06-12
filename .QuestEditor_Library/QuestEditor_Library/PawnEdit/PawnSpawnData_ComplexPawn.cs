@@ -15,7 +15,7 @@ namespace QuestEditor_Library
             Rect rect = new Rect(16f + x, y + 10f, 500f, 45f);
             this.DrawName(ref y, x, rect);
             Rect pawnRect = new Rect(20f + x, y, 360f, 25f);
-            if (Widgets.ButtonText(pawnRect, "ComplexPawnDef".Translate(this.pawnDef?.defName), false))
+            if (Widgets.ButtonText(pawnRect, "CQF_PawnEditor_ComplexPawnDef".Translate(this.pawnDef?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<ComplexPawnDef>.AllDefsListForReading, def => this.pawnDef = def, def => def.LabelCap);
             }
@@ -55,6 +55,10 @@ namespace QuestEditor_Library
                 result.SetOrAdd(this.dataName + "." + i, pawn);
             }
             this.SpawnPnaw(pawns, position, map);
+            foreach (Pawn pawn in pawns)
+            {
+                this.pawnDef.NotifyPawnSpawned(pawn, quest);
+            }
             if (this.dataName != "undefined")
             {
                 GameComponent_Editor.Component.GetQuestData(quest)?.AddGroup(this.dataName, result.Values.Select(target => target.Thing as Pawn).Where(pawn => pawn != null).ToList());
