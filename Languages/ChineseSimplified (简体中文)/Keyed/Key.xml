@@ -249,6 +249,8 @@
   <DestroyThingsWhenGeneration>生成时销毁事物：</DestroyThingsWhenGeneration>
   <MapPartGenerationLimit>地图部分生成限制</MapPartGenerationLimit>
   <MapPartGenerationLimit_Tip>当区域核心生成时，会使其生成密匙对应的计数器加一，到达上限后不再生成</MapPartGenerationLimit_Tip>
+  <CustomMapEnterDirection>进入方向：{0}</CustomMapEnterDirection>
+  <CustomMapEnterDirection_Tip>不为中心时，殖民者进入此自定义地图会使用所选方向一侧的进入点。</CustomMapEnterDirection_Tip>
   <Rot_Invalid>中心</Rot_Invalid>
   <NoSatisfiedCustomMapData>缺少符合条件的自定义地图数据</NoSatisfiedCustomMapData>
   <DefaultOpened>默认开启状态：</DefaultOpened>

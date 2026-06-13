@@ -199,6 +199,10 @@ add(p3))));
                     d.rotation.Rotate(direction);
                 }
             });
+            if (result.enterDirection.IsValid)
+            {
+                result.enterDirection.Rotate(direction);
+            }
 
             result.customThings.ForEach(t =>
             {
@@ -386,6 +390,7 @@ add(p3))));
             result.specialSpawnPawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
             this.specialSpawnPawns.ToList().ForEach(t => result.specialSpawnPawns.Add(t.Key, t.Value));
             result.enterSpots = this.enterSpots.ListFullCopy();
+            result.enterDirection = this.enterDirection;
             result.routes = new Dictionary<string, List<IntVec3>>();
             this.routes.ToList().ForEach(t => result.routes.Add(t.Key, t.Value));
             result.replaces = new List<ReplaceData>();
@@ -742,6 +747,10 @@ add(p3))));
             {
                 result.Add(CQFEditorTools.SaveList(this.enterSpots, "enterSpots"));
             }
+            if (this.enterDirection.IsValid)
+            {
+                result.Add(new XElement("enterDirection", this.enterDirection));
+            }
             if (this.routes.Any())
             {
                 result.Add(CQFEditorTools.SaveDictionary_List(this.routes, "routes"));
@@ -848,7 +857,8 @@ add(p3))));
                 {
                     offset = map.Center - new IntVec3(this.size.x / 2, 0, this.size.z / 2);
                 }
-                List<IntVec3> spots = this.enterSpots.Select(p => p + offset).Where(p => p.InBounds(map)).ToList();
+                List<IntVec3> localSpots = this.FilterEnterSpotsByDirection(this.enterSpots);
+                List<IntVec3> spots = localSpots.Select(p => p + offset).Where(p => p.InBounds(map)).ToList();
                 if (spots.Any())
                 {
                     enterSpot = spots.RandomElement();
@@ -857,6 +867,32 @@ add(p3))));
             }
             enterSpot = IntVec3.Invalid;
             return false;
+        }
+
+        private List<IntVec3> FilterEnterSpotsByDirection(List<IntVec3> spots)
+        {
+            if (!this.enterDirection.IsValid || spots.NullOrEmpty())
+            {
+                return spots;
+            }
+            int targetValue;
+            switch (this.enterDirection.AsInt)
+            {
+                case 0:
+                    targetValue = spots.Max(p => p.z);
+                    return spots.FindAll(p => p.z == targetValue);
+                case 1:
+                    targetValue = spots.Max(p => p.x);
+                    return spots.FindAll(p => p.x == targetValue);
+                case 2:
+                    targetValue = spots.Min(p => p.z);
+                    return spots.FindAll(p => p.z == targetValue);
+                case 3:
+                    targetValue = spots.Min(p => p.x);
+                    return spots.FindAll(p => p.x == targetValue);
+                default:
+                    return spots;
+            }
         }
 
         public bool fogged = false;
@@ -872,6 +908,7 @@ add(p3))));
         public Dictionary<IntVec3, List<PawnSpawnData>> specialSpawnPawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
         public Dictionary<IntVec3, List<PawnSpawnData>> pawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
         public List<IntVec3> enterSpots = new List<IntVec3>();
+        public Rot4 enterDirection = Rot4.Invalid;
         public Dictionary<string, List<IntVec3>> routes = new Dictionary<string, List<IntVec3>>();
         public Dictionary<RoofDef, List<IntVec3>> roofs = new Dictionary<RoofDef, List<IntVec3>>();
         public Dictionary<RoofDef, List<CellRect>> roofRects = new Dictionary<RoofDef, List<CellRect>>();

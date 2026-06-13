@@ -114,7 +114,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.worldObject?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.worldObject?.label ?? this.worldObject?.defName),
                 DefDatabase<WorldObjectDef>.AllDefsListForReading, d => this.worldObject = d, d => d.label ?? d.defName);
         }
         public override XElement SaveToXElement(string nodeName)
@@ -162,7 +162,7 @@ namespace QuestEditor_Library
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SentDefeatLetter".Translate(), ref this.sentDefeatLetter);
             y += 30f;
-            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.label ?? this.part?.defName),
                 DefDatabase<SitePartDef>.AllDefsListForReading, d => this.part = d, d => d.label ?? d.defName);
         }
         public override XElement SaveToXElement(string nodeName)
@@ -245,7 +245,7 @@ namespace QuestEditor_Library
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SentDefeatLetter".Translate(), ref this.sentDefeatLetter);
             y += 30f;
-            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.label ?? this.part?.defName),
                 DefDatabase<SitePartDef>.AllDefsListForReading, d => this.part = d, d => d.label ?? d.defName);
             CQFEditorTools.DrawEditableList(this.customMapDataTags, ref y, (textField, t) =>
             {
@@ -336,8 +336,8 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "CQFQuestDef".Translate(this.quest?.defName),
-                DefDatabase<QuestScriptDef>.AllDefsListForReading, d => this.quest = d, d => d.defName);
+            CQFEditorTools.DrawSelectButton(x, ref y, "CQFQuestDef".Translate(this.quest?.label ?? this.quest?.defName),
+                DefDatabase<QuestScriptDef>.AllDefsListForReading, d => this.quest = d, d => d.label ?? d.defName);
             Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
             y += 30f;
         }
@@ -490,9 +490,9 @@ namespace QuestEditor_Library
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "NonPlayer".Translate(), ref this.nonPlayer);
             y += 30f;
-            CQFEditorTools.DrawSelectButton(x, ref y, "WorldConditionFaction".Translate(this.faction?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "WorldConditionFaction".Translate(this.faction?.label ?? this.faction?.defName),
                 DefDatabase<FactionDef>.AllDefsListForReading, d => this.faction = d, d => d.label);
-            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.objectDef?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.objectDef?.label ?? this.objectDef?.defName),
                 DefDatabase<WorldObjectDef>.AllDefsListForReading, d => this.objectDef = d, d => d.label ?? d.defName);
         }
         public override XElement SaveToXElement(string nodeName)
@@ -528,7 +528,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "LandmarkDef".Translate(this.landmark?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "LandmarkDef".Translate(this.landmark?.label ?? this.landmark?.defName),
                 DefDatabase<LandmarkDef>.AllDefsListForReading, d => this.landmark = d, d => d.label ?? d.defName);
         }
 
@@ -557,7 +557,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "BiomeDef".Translate(this.biome?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "BiomeDef".Translate(this.biome?.label ?? this.biome?.defName),
                 DefDatabase<BiomeDef>.AllDefsListForReading, d => this.biome = d, d => d.label ?? d.defName);
         }
 
@@ -586,7 +586,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "TileMutatorDef".Translate(this.mutator?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "TileMutatorDef".Translate(this.mutator?.label ?? this.mutator?.defName),
                 DefDatabase<TileMutatorDef>.AllDefsListForReading, d => this.mutator = d, d => d.label ?? d.defName);
         }
 
@@ -627,7 +627,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "SkillDef".Translate(this.skill?.defName),
+            CQFEditorTools.DrawSelectButton(x, ref y, "SkillDef".Translate(this.skill?.label ?? this.skill?.defName),
                 DefDatabase<SkillDef>.AllDefsListForReading, d => this.skill = d, d => d.label);
             CQFEditorTools.DrawLabelAndText_Line(y, "RequiredLevel".Translate(), ref this.vaule, ref this.buffer, x);
             y += 30f;

@@ -39,6 +39,15 @@ namespace QuestEditor_Library
                 Rect chance = new Rect(textField.width + textField.x + 10f, textField.y, textField.width + 80f, 25f);
                 Widgets.TextFieldNumericLabeled(chance, "GenerationLimit".Translate(), ref t.limit, ref t.buffer);
             }, t => t.key, "MapPartGenerationLimit".Translate(), "MapPartGenerationLimit_Tip".Translate(), true, x2, 300f);
+            Rect enterDirection = new Rect(x2, y, 300f, 25f);
+            if (Widgets.ButtonText(enterDirection, "CustomMapEnterDirection".Translate(this.EnterDirectionLabel(this.def.enterDirection)), false))
+            {
+                CQFEditorTools.DrawFloatMenu(new List<Rot4>() { Rot4.East, Rot4.West, Rot4.North, Rot4.South, Rot4.Invalid },
+                    r => this.def.enterDirection = r,
+                    this.EnterDirectionLabel);
+            }
+            TooltipHandler.TipRegion(enterDirection, "CustomMapEnterDirection_Tip".Translate());
+            y += 30f;
             CQFEditorTools.DrawIDrawList_UseWindow_UseIcon(ref y,x2,this.def.customSteps,inRect,"CustomSteps".Translate(),s => s.GetType().Name.Translate());
             Rect generator = new Rect(x2, y, 300f, 25f);
             if (Widgets.ButtonText(generator, 
@@ -52,6 +61,11 @@ namespace QuestEditor_Library
             TooltipHandler.TipRegion(generator, "CQF_MapGenerator_Tip".Translate());
             Widgets.EndScrollView();
             this.height = y + 5f;
+        }
+
+        private string EnterDirectionLabel(Rot4 rot)
+        {
+            return rot == Rot4.Invalid ? "Rot_Invalid".Translate().ToString() : rot.ToStringHuman().Translate().ToString();
         }
 
         public CustomMapDataDef def;

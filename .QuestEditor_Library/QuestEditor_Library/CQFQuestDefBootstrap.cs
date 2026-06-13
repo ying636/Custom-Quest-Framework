@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml;
@@ -57,6 +58,10 @@ namespace QuestEditor_Library
             LoadDefs(questPath + @"\DialogTree", "//QuestEditor_Library.DialogManagerDef", DefDatabase<DialogManagerDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DialogManagerDef>(node, false), def => DefDatabase<DialogManagerDef>.Add(def));
             LoadDefs(questPath + @"\Pawn", "//QuestEditor_Library.ComplexPawnDef", DefDatabase<ComplexPawnDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<ComplexPawnDef>(node, false), def => DefDatabase<ComplexPawnDef>.Add(def));
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
+            foreach (LoadedDefInfo loadedDef in CQFQuestDefBootstrap.loadedDefs)
+            {
+                ValidateDef(loadedDef);
+            }
         }
 
         private static void LoadDefs<T>(string path, string xpath, List<T> loadedDefs, System.Func<XmlNode, T> loadAction, System.Action<T> addAction) where T : Def
@@ -77,6 +82,7 @@ namespace QuestEditor_Library
                         continue;
                     }
                     addAction(def);
+                    CQFQuestDefBootstrap.loadedDefs.Add(new LoadedDefInfo(def, file.FullName));
                 }
             }
         }
@@ -93,6 +99,7 @@ namespace QuestEditor_Library
                 RemoveDef(existingDef);
             }
             DefDatabase<T>.Add(def);
+            ValidateDef(new LoadedDefInfo(def, "hot load"));
         }
 
         private static void RemoveDef<T>(T def) where T : Def
@@ -106,6 +113,27 @@ namespace QuestEditor_Library
             removeMethod?.Invoke(null, [def]);
         }
 
+        private static void ValidateDef(LoadedDefInfo loadedDef)
+        {
+            foreach (string error in loadedDef.def.ConfigErrors())
+            {
+                Log.Error($"CQF loaded def config error in {loadedDef.source}: {loadedDef.def.GetType().Name} '{loadedDef.def.defName}': {error}");
+            }
+        }
+
+        private readonly struct LoadedDefInfo
+        {
+            public LoadedDefInfo(Def def, string source)
+            {
+                this.def = def;
+                this.source = source;
+            }
+
+            public readonly Def def;
+            public readonly string source;
+        }
+
+        private static readonly List<LoadedDefInfo> loadedDefs = new List<LoadedDefInfo>();
         private static readonly Dictionary<System.Type, MethodInfo> removeMethodCache = new Dictionary<System.Type, MethodInfo>();
     }
 }

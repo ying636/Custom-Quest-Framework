@@ -316,6 +316,8 @@ SiteName: SiteName-></RuleTip>
 
   <MapPartGenerationLimit>Map part generation limit</MapPartGenerationLimit>
   <MapPartGenerationLimit_Tip>When the zone core is generating, it will increase the counter corresponding to the generation key by one, and once it reaches the upper limit, it willn't generate part.</MapPartGenerationLimit_Tip>
+  <CustomMapEnterDirection>Enter direction:{0}</CustomMapEnterDirection>
+  <CustomMapEnterDirection_Tip>When not set to Centre, colonists entering this custom map will use an enter spot on the selected side.</CustomMapEnterDirection_Tip>
 
   <Rot_Invalid>Centre</Rot_Invalid>
 

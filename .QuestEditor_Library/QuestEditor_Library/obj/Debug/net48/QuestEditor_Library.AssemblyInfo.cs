@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuestEditor_Library")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1ffb54cd4c0abd9803ee3a183a298cb6d7680ed")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ebcb5fd147103790b3678da57af2a6f2c095a3a9")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuestEditor_Library")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuestEditor_Library")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
