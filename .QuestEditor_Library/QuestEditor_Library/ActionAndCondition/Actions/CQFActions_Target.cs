@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -475,7 +475,7 @@ namespace QuestEditor_Library
             {
                 if (t.Value.HasThing)
                 {
-                    Current.Game.GetComponent<GameComponent_Editor>().RemoveDialog(t.Value.Thing);
+                    GameComponent_Editor.Instance.RemoveDialog(t.Value.Thing);
                 }
             });
         }
@@ -505,7 +505,7 @@ namespace QuestEditor_Library
             {
                 if (t.Value.HasThing)
                 {
-                    Current.Game.GetComponent<GameComponent_Editor>().AddDialog(t.Value.Thing, this.dialog);
+                    GameComponent_Editor.Instance.AddDialog(t.Value.Thing, this.dialog);
                 }
             });
         }
@@ -540,7 +540,7 @@ namespace QuestEditor_Library
             {
                 if (t.Value.HasThing)
                 {
-                    Current.Game.GetComponent<GameComponent_Editor>().AddDialog(t.Value.Thing,dialog );
+                    GameComponent_Editor.Instance.AddDialog(t.Value.Thing,dialog );
                 }
             });
         }
@@ -774,7 +774,7 @@ namespace QuestEditor_Library
                         (d, b) => d, t.Value.Thing?.Rotation);
                     if (this.key != null)
                     {
-                        GameComponent_Editor.Component.GetQuestData(quest).RecordTarget(this.key,thing);
+                        GameComponent_Editor.Instance.GetQuestData(quest).RecordTarget(this.key,thing);
                     }
                 }
             });
@@ -938,11 +938,9 @@ namespace QuestEditor_Library
         {
             base.Draw(ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
-            if (Widgets.ButtonText(rect, "DutyType".Translate(this.duty != null && this.duty.HasModExtension<ModExtension_CustomDuty>() ? this.duty?.label : this.duty?.defName.Translate().ToString()), false))
+            if (Widgets.ButtonText(rect, "DutyType".Translate(CQFEditorTools.DutyLabel(this.duty)), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<DutyDef>(DefDatabase<DutyDef>.AllDefsListForReading,
-                    null, (d) => d == null ? null : d.HasModExtension<ModExtension_CustomDuty>() ? d.label : d.defName.Translate().ToString(), "Select".Translate(), (d) => this.duty = d,
-                    null, null, d => d.description, d => d.HasModExtension<ModExtension_CustomDuty>() || d.defName.CanTranslate() ? 1 : 5));
+                CQFEditorTools.OpenDutySelect(d => this.duty = d);
             }
             y += 30f;
         }
@@ -2373,7 +2371,7 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
 
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            if (GameComponent_Editor.Component.GetQuestData(quest) is QuestData data && data.Lords.TryGetValue(this.lordName, out Lord lord))
+            if (GameComponent_Editor.Instance.GetQuestData(quest) is QuestData data && data.Lords.TryGetValue(this.lordName, out Lord lord))
             {
                 this.WorkForLord(targets, quest, lord);
             }
@@ -2440,6 +2438,121 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
         private int durationTicks;
         private string buffer;
     }
+    public class CQFAction_Pawn_RunDutyMapTransition : CQFAction_Target
+    {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.Pawn;
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            Rect rect = new Rect(x, y, 260f, 25f);
+            if (Widgets.ButtonText(rect, "CQF_DutyMapDef".Translate(this.dutyMap?.defName ?? "Null"), false))
+            {
+                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, null, d => d.defName, "Select".Translate(), d => this.dutyMap = d));
+            }
+            y += 30f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyMapNodeId".Translate(), ref this.toNodeId, x, 150f);
+            y += 30f;
+        }
+
+        public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
+        {
+            targets.ToList().ForEach(t =>
+            {
+                if (t.Value.Thing is Pawn pawn)
+                {
+                    if (this.dutyMap != null)
+                    {
+                        GameComponent_ComplexDuty.Instance.SetDutyMap(pawn, this.dutyMap, quest, true);
+                    }
+                    DutyMapRuntime runtime = GameComponent_ComplexDuty.Instance.GetRuntime(pawn);
+                    LordJob_ComplexCustom.GetForPawn(pawn)?.TryChangeByTransition(pawn, runtime?.CurrentNode?.nodeId, this.toNodeId, quest, targets);
+                }
+            });
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (this.dutyMap != null)
+            {
+                result.Add(new XElement("dutyMap", this.dutyMap.defName));
+            }
+            result.Add(new XElement("toNodeId", this.toNodeId));
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref this.dutyMap, "dutyMap");
+            Scribe_Values.Look(ref this.toNodeId, "toNodeId");
+            string legacyNodeId = null;
+            Scribe_Values.Look(ref legacyNodeId, "nodeId");
+            if (this.toNodeId.NullOrEmpty())
+            {
+                this.toNodeId = legacyNodeId;
+            }
+        }
+
+        public DutyMapDef dutyMap;
+        public string toNodeId;
+    }
+
+    public class CQFAction_Pawn_SetDutyMap : CQFAction_Target
+    {
+        public override CQFActionCategory ActionCategory => CQFActionCategory.Pawn;
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            Rect rect = new Rect(x, y, 260f, 25f);
+            if (Widgets.ButtonText(rect, "CQF_DutyMapDef".Translate(this.dutyMap?.defName ?? "Null"), false))
+            {
+                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, null, d => d.defName, "Select".Translate(), d => this.dutyMap = d));
+            }
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 320f, 25f), "CQF_DutyMapUseStartNode".Translate(), ref this.useStartNode);
+            y += 30f;
+        }
+
+        public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
+        {
+            if (this.dutyMap == null)
+            {
+                return;
+            }
+            targets.ToList().ForEach(t =>
+            {
+                if (t.Value.Thing is Pawn pawn)
+                {
+                    GameComponent_ComplexDuty.Instance.SetDutyMap(pawn, this.dutyMap, quest, this.useStartNode);
+                }
+            });
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (this.dutyMap != null)
+            {
+                result.Add(new XElement("dutyMap", this.dutyMap.defName));
+            }
+            result.Add(new XElement("useStartNode", this.useStartNode));
+            return result;
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref this.dutyMap, "dutyMap");
+            Scribe_Values.Look(ref this.useStartNode, "useStartNode", true);
+        }
+
+        public DutyMapDef dutyMap;
+        public bool useStartNode = true;
+    }
+
     public class CQFAction_EndGame : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
@@ -2462,3 +2575,4 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
         public string message;
     }
 }
+

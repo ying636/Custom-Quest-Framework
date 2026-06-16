@@ -35,7 +35,14 @@
   <CQF_PawnEditor_Hair>Hair:{0}</CQF_PawnEditor_Hair>
   <CQF_PawnEditor_SelectHairColor>Select hair color</CQF_PawnEditor_SelectHairColor>
   <CQF_PawnEditor_HeadType>Head type:{0}</CQF_PawnEditor_HeadType>
-  <CQF_PawnEditor_SelectSkinColor>Select skin color</CQF_PawnEditor_SelectSkinColor>
+  <CQF_PawnEditor_SelectSkinColor>Skin color:{0}</CQF_PawnEditor_SelectSkinColor>
+  <CQF_PawnEditor_GeneSkinColor>gene default</CQF_PawnEditor_GeneSkinColor>
+  <CQF_PawnEditor_CustomSkinColor>custom</CQF_PawnEditor_CustomSkinColor>
+  <CQF_PawnEditor_UseGeneSkinColor>Use gene/default skin color</CQF_PawnEditor_UseGeneSkinColor>
+  <CQF_PawnEditor_Xenotype>Xenotype:{0}</CQF_PawnEditor_Xenotype>
+  <CQF_PawnEditor_SelectXenotype>Select xenotype</CQF_PawnEditor_SelectXenotype>
+  <CQF_PawnEditor_CustomGenes>Custom genes</CQF_PawnEditor_CustomGenes>
+  <CQF_PawnEditor_SelectGene>Select gene</CQF_PawnEditor_SelectGene>
   <CQF_PawnEditor_ColorLibrary>Color library</CQF_PawnEditor_ColorLibrary>
   <CQF_PawnEditor_HexColor>Hex</CQF_PawnEditor_HexColor>
   <CQF_PawnEditor_BodyType>Body type:{0}</CQF_PawnEditor_BodyType>
@@ -46,6 +53,8 @@
   <CQF_PawnEditor_WholeBody>Whole body</CQF_PawnEditor_WholeBody>
   <CQF_PawnEditor_Severity>Severity</CQF_PawnEditor_Severity>
   <CQF_PawnEditor_DialogManager>Dialog manager:{0}</CQF_PawnEditor_DialogManager>
+  <CQF_PawnEditor_DutyMap>Duty map:{0}</CQF_PawnEditor_DutyMap>
+  <CQF_PawnEditor_DutyMapStartNode>Duty map start node:{0}</CQF_PawnEditor_DutyMapStartNode>
   <CQF_PawnEditor_TriggerKey>Trigger key:</CQF_PawnEditor_TriggerKey>
   <CQF_PawnEditor_TriggerMode>Trigger mode:{0}</CQF_PawnEditor_TriggerMode>
   <CQF_PawnEditor_TriggerActions>Trigger actions</CQF_PawnEditor_TriggerActions>
@@ -58,6 +67,8 @@
   <CQF_PawnMod_NameAndBody.description>Name, gender, and age data.</CQF_PawnMod_NameAndBody.description>
   <CQF_PawnMod_Appearance.label>Appearance</CQF_PawnMod_Appearance.label>
   <CQF_PawnMod_Appearance.description>Head, body, hair, and colors.</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Genes.label>Gene template</CQF_PawnMod_Genes.label>
+  <CQF_PawnMod_Genes.description>Pawn xenotype and gene template.</CQF_PawnMod_Genes.description>
   <CQF_PawnMod_Backstory.label>Backstory</CQF_PawnMod_Backstory.label>
   <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
   <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
@@ -76,4 +87,9 @@
   <CQF_PawnMod_Dialog.description>Pawn dialog manager.</CQF_PawnMod_Dialog.description>
   <CQF_PawnMod_ActionTrigger.label>Action trigger</CQF_PawnMod_ActionTrigger.label>
   <CQF_PawnMod_ActionTrigger.description>Pawn action triggers.</CQF_PawnMod_ActionTrigger.description>
+  <CQF_PawnMod_DutyMap.label>Duty map</CQF_PawnMod_DutyMap.label>
+  <CQF_PawnMod_DutyMap.description>Pawn duty map assignment.</CQF_PawnMod_DutyMap.description>
+
+  <CQF_LordData_DutyMap>Duty map:{0}</CQF_LordData_DutyMap>
+  <CQF_LordData_DutyMapStartNode>Duty map start node</CQF_LordData_DutyMapStartNode>
 </LanguageData>

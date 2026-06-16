@@ -49,7 +49,7 @@ namespace QuestEditor_Library
                     QuestEditor_PawnDataEditor.curDef = def;
                     this.selectedModDefName = null;
                     this.previewKey = null;
-                }, def => def.defName);
+                }, this.PawnDisplayName);
             }
             if (Widgets.ButtonText(new Rect(inRect.width - 220f, y, 90f, 30f), "CQF_PawnEditor_Save".Translate()))
             {
@@ -83,13 +83,15 @@ namespace QuestEditor_Library
             Widgets.DrawLightHighlight(portraitRect);
             this.DrawPawnPreview(portraitRect.ContractedBy(10f));
             y = portraitRect.yMax + 18f;
+            PawnModData_Basic basic = this.CurDef.DataFor<PawnModData_Basic>();
+            PawnModData_NameAndBody nameAndBody = this.CurDef.DataFor<PawnModData_NameAndBody>();
             this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_DefName".Translate(), this.CurDef.defName);
             this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Label".Translate(), this.CurDef.label);
-            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_PawnKind".Translate(""), this.CurDef.kindDef?.label);
-            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Faction".Translate(), this.CurDef.faction?.label);
-            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Gender".Translate(""), this.CurDef.gender.ToString().Translate());
-            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_BioAge".Translate(), this.CurDef.bioAge.ToString());
-            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_ChronologicalAge".Translate(), this.CurDef.chrAge.ToString());
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_PawnKind".Translate(""), basic.kindDef?.label);
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Faction".Translate(), basic.faction?.label);
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_Gender".Translate(""), nameAndBody.gender.ToString().Translate());
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_BioAge".Translate(), nameAndBody.bioAge.ToString());
+            this.DrawSummaryLine(rect, ref y, "CQF_PawnEditor_ChronologicalAge".Translate(), nameAndBody.chrAge.ToString());
         }
 
         private void DrawSummaryLine(Rect rect, ref float y, string label, string value)
@@ -167,9 +169,9 @@ namespace QuestEditor_Library
             this.EnsurePreviewPawn();
             if (this.previewPawn == null)
             {
-                if (this.CurDef.kindDef?.race != null)
+                if (this.CurDef.KindDef?.race != null)
                 {
-                    Widgets.DefIcon(new Rect(rect.center.x - 48f, rect.center.y - 48f, 96f, 96f), this.CurDef.kindDef.race);
+                    Widgets.DefIcon(new Rect(rect.center.x - 48f, rect.center.y - 48f, 96f, 96f), this.CurDef.KindDef.race);
                 }
                 else
                 {
@@ -193,7 +195,7 @@ namespace QuestEditor_Library
             }
             this.previewKey = key;
             this.previewPawn = null;
-            if (this.CurDef.kindDef == null || Current.Game == null)
+            if (this.CurDef.KindDef == null || Current.Game == null)
             {
                 return;
             }
@@ -210,7 +212,7 @@ namespace QuestEditor_Library
 
         private string GetPreviewKey()
         {
-            return this.CurDef.kindDef?.defName ?? "";
+            return this.CurDef.KindDef?.defName ?? "";
         }
 
         private void SyncPreviewPawn()
@@ -232,55 +234,14 @@ namespace QuestEditor_Library
 
         private string GetPreviewApplyKey()
         {
-            List<string> parts = new List<string>
+            List<string> parts = this.CurDef.modDatas
+                .Where(data => data != null)
+                .Select(data => data.SaveToXElement("li").ToString(SaveOptions.DisableFormatting))
+                .ToList();
+            foreach (PawnModDef mod in this.CurDef.AvailableMods())
             {
-                this.CurDef.firstName,
-                this.CurDef.nickName,
-                this.CurDef.lastName,
-                this.CurDef.randomName.ToString(),
-                this.CurDef.nameMaker?.defName,
-                this.CurDef.gender.ToString(),
-                this.CurDef.bioAge.ToString(),
-                this.CurDef.chrAge.ToString(),
-                this.CurDef.hair?.defName,
-                this.CurDef.head?.defName,
-                this.CurDef.bodyType?.defName,
-                this.CurDef.hairColor?.ToString(),
-                this.CurDef.skinColor?.ToString(),
-                this.CurDef.childhood?.defName,
-                this.CurDef.adulthood?.defName
-            };
-            foreach (TraitData trait in this.CurDef.traits)
-            {
-                parts.Add(trait.def?.defName);
-                parts.Add(trait.degree.ToString());
-                parts.Add(trait.chance.ToString());
+                parts.AddRange(mod.Worker.GetPreviewApplyKeyParts(this.CurDef));
             }
-            foreach (SkillData skill in this.CurDef.skills)
-            {
-                parts.Add(skill.def?.defName);
-                parts.Add(skill.level.ToString());
-                parts.Add(skill.passion.ToString());
-            }
-            foreach (AbilityData ability in this.CurDef.abilities)
-            {
-                parts.Add(ability.def?.defName);
-            }
-            foreach (ThingData apparel in this.CurDef.apparels)
-            {
-                parts.Add(apparel.def?.defName);
-                parts.Add(apparel.stuff?.defName);
-            }
-            foreach (HediffData hediff in this.CurDef.hediffs)
-            {
-                parts.Add(hediff.def?.defName);
-                parts.Add(hediff.part?.defName);
-                parts.Add(hediff.partLabel);
-                parts.Add(hediff.partIndex.ToString());
-                parts.Add(hediff.severity.ToString());
-            }
-            parts.Add(this.CurDef.weapon?.def?.defName);
-            parts.Add(this.CurDef.weapon?.stuff?.defName);
             return string.Join("|", parts);
         }
 
@@ -295,6 +256,11 @@ namespace QuestEditor_Library
             {
                 this.selectedModDefName = mods[0].defName;
             }
+        }
+
+        private string PawnDisplayName(ComplexPawnDef def)
+        {
+            return def?.label.NullOrEmpty() == false ? def.label : def?.defName;
         }
 
         private void Save()

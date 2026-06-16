@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_DutyMapEditor>职责图编辑器</CQF_DutyMapEditor>
+  <CQF_DutyDefEditor>职责编辑器</CQF_DutyDefEditor>
+  <CQF_DefName>DefName：</CQF_DefName>
+  <CQF_DutyMapLabel>显示名：</CQF_DutyMapLabel>
+  <CQF_DutyLabel>职责显示名：</CQF_DutyLabel>
+  <CQF_DutyDescription>职责描述：</CQF_DutyDescription>
+  <CQF_DutyMapNodeId>节点ID：</CQF_DutyMapNodeId>
+  <CQF_DutyType>职责类型：{0}</CQF_DutyType>
+  <CQF_DutyMapTransition>职责切换</CQF_DutyMapTransition>
+  <CQF_DutyTransitionTriggers>切换触发器</CQF_DutyTransitionTriggers>
+  <CQF_DutyMapFromNode>起点节点：</CQF_DutyMapFromNode>
+  <CQF_DutyMapToNode>目标节点：</CQF_DutyMapToNode>
+  <CQF_AddTransition>添加切换</CQF_AddTransition>
+  <CQF_FocusTarget>目标点：</CQF_FocusTarget>
+  <CQF_FocusSecondTarget>第二目标：</CQF_FocusSecondTarget>
+  <CQF_FocusThirdTarget>第三目标：</CQF_FocusThirdTarget>
+  <CQF_Radius>半径：</CQF_Radius>
+  <CQF_WanderRadius>游荡半径：</CQF_WanderRadius>
+  <CQF_LocomotionUrgency>移动方式：{0}</CQF_LocomotionUrgency>
+  <CQF_EnterActions>进入动作</CQF_EnterActions>
+  <CQF_ExitActions>离开动作</CQF_ExitActions>
+  <CQF_SetStartNode>设为初始节点</CQF_SetStartNode>
+  <CQF_DutyMapNoOptions>无可用选项</CQF_DutyMapNoOptions>
+  <CQF_DutySelectTrigger>选择职责切换触发器</CQF_DutySelectTrigger>
+  <CQF_IntervalTicks>间隔 tick：</CQF_IntervalTicks>
+  <CQF_PawnCount>实体数量：</CQF_PawnCount>
+  <CQF_CustomDutyTransition>职责切换</CQF_CustomDutyTransition>
+  <CQF_CustomDutyTrigger_Condition>条件触发器</CQF_CustomDutyTrigger_Condition>
+  <CQF_CustomDutyTrigger_Condition_Tip>始终通过的占位触发器。适合临时测试，正式职责图中请谨慎使用。</CQF_CustomDutyTrigger_Condition_Tip>
+  <CQF_CustomDutyTrigger_TickInterval>间隔触发器</CQF_CustomDutyTrigger_TickInterval>
+  <CQF_CustomDutyTrigger_TickInterval_Tip>每隔指定 tick 检查通过一次。</CQF_CustomDutyTrigger_TickInterval_Tip>
+  <CQF_CustomDutyTrigger_LordPawnCountBelow>Lord 人数低于触发器</CQF_CustomDutyTrigger_LordPawnCountBelow>
+  <CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>当当前 Lord 拥有的角色数量低于指定值时通过。</CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>
+  <CQF_DutyMapNodeEditor>职责节点编辑器</CQF_DutyMapNodeEditor>
+  <CQF_DutyMapTransitionEditor>职责切换编辑器</CQF_DutyMapTransitionEditor>
+  <CQF_DutyMapDef>职责图：{0}</CQF_DutyMapDef>
+  <CQF_EditDutyMapNode>编辑职责</CQF_EditDutyMapNode>
+  <CQF_DutyDefBasicSettings>职责基础设置</CQF_DutyDefBasicSettings>
+  <CQF_DutyMiscSettings>职责杂项设置</CQF_DutyMiscSettings>
+  <CQF_DutyAlwaysShowWeapon>始终显示武器</CQF_DutyAlwaysShowWeapon>
+  <CQF_DutyThreatDisabled>禁用威胁</CQF_DutyThreatDisabled>
+  <CQF_DutyRitualSpectateTarget>仪式旁观目标</CQF_DutyRitualSpectateTarget>
+  <CQF_DutyForceFaceUpPosture>强制朝上姿势</CQF_DutyForceFaceUpPosture>
+  <CQF_DutyHook>思考树挂钩：{0}</CQF_DutyHook>
+  <CQF_DutySocialModeMax>最大社交模式：{0}</CQF_DutySocialModeMax>
+  <CQF_DutyDrawBodyOverride>身体绘制覆盖</CQF_DutyDrawBodyOverride>
+  <CQF_DutyThinkNode>主行为节点</CQF_DutyThinkNode>
+  <CQF_DutyThinkNode_Tip>主行为节点用于按优先级尝试发放工作，是职责最主要的行为树。</CQF_DutyThinkNode_Tip>
+  <CQF_DutyConstantThinkNode>持续行为节点</CQF_DutyConstantThinkNode>
+  <CQF_DutyConstantThinkNode_Tip>持续行为节点会在职责执行期间持续检查，适合放置需要长期维持或补充执行的行为。</CQF_DutyConstantThinkNode_Tip>
+  <CQF_DutySelectThinkNode>选择行为节点</CQF_DutySelectThinkNode>
+  <CQF_DutyThinkNodeCategory_CQF>CQF</CQF_DutyThinkNodeCategory_CQF>
+  <CQF_DutyThinkNodeCategory_Vanilla>原版</CQF_DutyThinkNodeCategory_Vanilla>
+  <CQF_DutyThinkNodeMod>来源：{0}\n类型：{1}</CQF_DutyThinkNodeMod>
+  <CQF_DutyChangeNode>更换节点</CQF_DutyChangeNode>
+  <CQF_DutyAddSubNode>添加子节点</CQF_DutyAddSubNode>
+  <CQF_DutySubNodes>子节点</CQF_DutySubNodes>
+  <CQF_DutyNoSubNodes>暂无子节点，可拖拽节点到此处或点击添加子节点。</CQF_DutyNoSubNodes>
+  <CQF_DutyDragNodeTip>按住并拖拽到其他节点的子节点区域，可移动到该节点下。</CQF_DutyDragNodeTip>
+  <CQF_DutyMoveUp>上移</CQF_DutyMoveUp>
+  <CQF_DutyMoveDown>下移</CQF_DutyMoveDown>
+  <CQF_DutyUnsupportedField>{0}（暂不支持：{1}）</CQF_DutyUnsupportedField>
+  <CQF_DutyField_tag>标签</CQF_DutyField_tag>
+  <CQF_DutyField_priority>优先级</CQF_DutyField_priority>
+  <CQF_DutyField_leaveJoinableLordIfIssuesJob>发布工作时离开可加入 Lord</CQF_DutyField_leaveJoinableLordIfIssuesJob>
+  <CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>启用后，此节点成功发布工作时，执行该工作的角色会从可加入的 Lord 中脱离。适合一次性指派任务，避免角色继续被原 Lord 流程接管。</CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>
+  <CQF_DutyField_reportStringOverride>工作报告覆盖</CQF_DutyField_reportStringOverride>
+  <CQF_DutyField_crawlingReportStringOverride>爬行工作报告覆盖</CQF_DutyField_crawlingReportStringOverride>
+  <CQF_DutyEnum_ThinkTreeDutyHook_None>无</CQF_DutyEnum_ThinkTreeDutyHook_None>
+  <CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>高优先级</CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>
+  <CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>中优先级</CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>
+  <CQF_DutyEnum_ThinkTreeDutyHook_LowPriority>低优先级</CQF_DutyEnum_ThinkTreeDutyHook_LowPriority>
+  <CQF_DutyEnum_RandomSocialMode_Off>关闭</CQF_DutyEnum_RandomSocialMode_Off>
+  <CQF_DutyEnum_RandomSocialMode_Quiet>安静</CQF_DutyEnum_RandomSocialMode_Quiet>
+  <CQF_DutyEnum_RandomSocialMode_Normal>普通</CQF_DutyEnum_RandomSocialMode_Normal>
+  <CQF_DutyEnum_RandomSocialMode_SuperActive>非常活跃</CQF_DutyEnum_RandomSocialMode_SuperActive>
+  <CQF_DutyNode_ThinkNode_Priority>优先级节点</CQF_DutyNode_ThinkNode_Priority>
+  <CQF_DutyNode_JobGiver_PlayWithGoldenCube>玩金方块</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
+  <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>准备商队：集合角色</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
+  <CQFAction_Pawn_RunDutyMapTransition>角色行为：触发职责图切换</CQFAction_Pawn_RunDutyMapTransition>
+  <CQFAction_Pawn_SetDutyMap>角色行为：设置职责图</CQFAction_Pawn_SetDutyMap>
+  <CQF_DutyMapUseStartNode>设置后进入初始节点</CQF_DutyMapUseStartNode>
+</LanguageData>

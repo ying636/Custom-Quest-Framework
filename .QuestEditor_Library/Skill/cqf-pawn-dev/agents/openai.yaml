@@ -1,0 +1,4 @@
+interface:
+  display_name: "CQF Pawn Dev"
+  short_description: "CQF pawn, lord, duty development"
+  default_prompt: "Use $cqf-pawn-dev to update a CQF pawn editor module or pawn spawn flow."

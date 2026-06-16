@@ -218,15 +218,7 @@ namespace QuestEditor_Library
                 y += 20f;
                 if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "AddNewNode".Translate()))
                 {
-                    Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes,
-null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Translate(), d => sequence.nodes.Add((QuestNode)Activator.CreateInstance(d)),null,null,t => 
-{
-    if ((t.Name + "_Tip").CanTranslate())
-    {
-       return (t.Name + "_Tip").Translate();
-    }
-    return "";
-},null,null,t => t.Name));
+                    Page_QuestEditor.OpenQuestNodeSelect(d => sequence.nodes.Add((QuestNode)Activator.CreateInstance(d)));
                 }
                 if (Widgets.ButtonText(new Rect(x + 200f, y, 150f, 30f), "DeleteNode".Translate()))
                 {
@@ -241,15 +233,7 @@ null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Transla
                 y += 30f;
                 if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "SelectTrueNode".Translate()))
                 {
-                    Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes,
-null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Translate(), d => nodeNull.node = (QuestNode)Activator.CreateInstance(d), null, null, t =>
-{
-if ((t.Name + "_Tip").CanTranslate())
-{
-return (t.Name + "_Tip").Translate();
-}
-return "";
-},null,null,t => t.Name));
+                    Page_QuestEditor.OpenQuestNodeSelect(d => nodeNull.node = (QuestNode)Activator.CreateInstance(d));
                 }
                 y += 45f;
                 if (nodeNull.node != null)
@@ -259,15 +243,7 @@ return "";
                 }
                 if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "SelectFalseNode".Translate()))
                 {
-                    Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes,
-null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Translate(), d => nodeNull.elseNode = (QuestNode)Activator.CreateInstance(d), null, null, t =>
-{
-    if ((t.Name + "_Tip").CanTranslate())
-    {
-        return (t.Name + "_Tip").Translate();
-    }
-    return "";
-},null,null,t => t.Name));
+                    Page_QuestEditor.OpenQuestNodeSelect(d => nodeNull.elseNode = (QuestNode)Activator.CreateInstance(d));
                 }
                 y += 45f;
                 if (nodeNull.elseNode != null)
@@ -313,15 +289,7 @@ null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Transla
                 {
                     if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "SelectNode".Translate()))
                     {
-                        Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes,
-null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Translate(), d => signal.node = (QuestNode)Activator.CreateInstance(d), null, null, t =>
-{
-if ((t.Name + "_Tip").CanTranslate())
-{
-return (t.Name + "_Tip").Translate();
-}
-return "";
-},null,null,t => t.Name));
+                        Page_QuestEditor.OpenQuestNodeSelect(d => signal.node = (QuestNode)Activator.CreateInstance(d));
                     }    
                     y += 55f;
                 }
@@ -348,15 +316,7 @@ return "";
                         {
                             if (Widgets.ButtonText(new Rect(x, y, 130f, 30f), "SelectNode".Translate()))
                             {
-                                Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes,
-null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, "Select".Translate(), d => field.SetValue(node, (QuestNode)Activator.CreateInstance(d)), null, null, t =>
-{
-if ((t.Name + "_Tip").CanTranslate())
-{
-return (t.Name + "_Tip").Translate();
-}
-return "";
-},null,null,t => t.Name)); 
+                                Page_QuestEditor.OpenQuestNodeSelect(d => field.SetValue(node, (QuestNode)Activator.CreateInstance(d))); 
                             }         
                             y += 45f;
                         }
@@ -390,17 +350,7 @@ return "";
                         y += 20f;
                         if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "AddNewNode".Translate()))
                         {
-                            Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes,
-null, d => d.Name.CanTranslate() ? d.Name.Translate() : d.Name, 
-"Select".Translate(), d => nodes.Add((QuestNode)Activator.CreateInstance(d)), 
-null, null, t =>
-{
-if ((t.Name + "_Tip").CanTranslate())
-{
-return (t.Name + "_Tip").Translate();
-}
-return "";
-},null,null,t => t.Name));
+                            Page_QuestEditor.OpenQuestNodeSelect(d => nodes.Add((QuestNode)Activator.CreateInstance(d)));
                         }
                         if (Widgets.ButtonText(new Rect(x + 200f, y, 150f, 30f), "DeleteNode".Translate()))
                         {
@@ -480,16 +430,71 @@ return "";
             }
             Page_QuestEditor.drawHeight.SetOrAdd("Node" + node.GetHashCode(), y);
         }
+
+        private static void OpenQuestNodeSelect(Action<Type> acceptAction)
+        {
+            Dictionary<string, Func<Type, bool>> typeFilters = Page_QuestEditor.MakeQuestNodeModFilters();
+            Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes, null,
+                Page_QuestEditor.GetQuestNodeLabel, "Select".Translate(), acceptAction, null, null,
+                Page_QuestEditor.GetQuestNodeTip, null, null, t => t.Name,
+                typeFilters));
+        }
+
+        private static string GetQuestNodeLabel(Type type)
+        {
+            return type.Name.CanTranslate() ? type.Name.Translate() : type.Name;
+        }
+
+        private static string GetQuestNodeTip(Type type)
+        {
+            return (type.Name + "_Tip").CanTranslate() ? (type.Name + "_Tip").Translate() : "";
+        }
+
+        private static Dictionary<string, Func<Type, bool>> MakeQuestNodeModFilters()
+        {
+            Dictionary<string, Func<Type, bool>> result = new Dictionary<string, Func<Type, bool>>();
+            List<string> modNames = Page_QuestEditor.UseableNodes
+                .Select(Page_QuestEditor.QuestNodeModFilterName)
+                .Distinct()
+                .OrderBy(name => name == CQFModName ? 0 : name == VanillaModName ? 1 : 2)
+                .ThenBy(name => name)
+                .ToList();
+            foreach (string modName in modNames)
+            {
+                string capturedName = modName;
+                result[capturedName] = type => Page_QuestEditor.QuestNodeModFilterName(type) == capturedName;
+            }
+            return result;
+        }
+
+        private static string QuestNodeModFilterName(Type type)
+        {
+            if (type.Assembly == typeof(QuestNode).Assembly)
+            {
+                return VanillaModName;
+            }
+            if (ModTypeUtility.IsCQFType(type))
+            {
+                return CQFModName;
+            }
+            return ModTypeUtility.GetModName(type);
+        }
+
         private void DrawButtonToOtherTools(Rect inRect)
         {
-            float x = inRect.width - 230f;
-            float y = 50f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), miscIcon, "Misc"))
+            int toolIndex = 0;
+            Rect NextToolRect()
+            {
+                int column = toolIndex % 4;
+                int row = toolIndex / 4;
+                toolIndex++;
+                return new Rect(inRect.width - 230f + column * 45f, 50f + row * 45f, 38f, 38f);
+            }
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), miscIcon, "Misc"))
             {
                 Find.WindowStack.Add(new Dialog_QuestEditorMisc());
             }
-            x += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), loadQuestIcon, "LoadQuest"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), loadQuestIcon, "LoadQuest"))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 DefDatabase<QuestScriptDef>.AllDefsListForReading.ForEach((x) =>
@@ -501,19 +506,15 @@ return "";
                 );
                 Find.WindowStack.Add(new FloatMenu(options));
             }
-            x += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), ruleCreaterIcon, "RuleCreater"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), ruleCreaterIcon, "RuleCreater"))
             {
                 Find.WindowStack.Add(new QuestEditor_CreateNewRlueDef(Page_QuestEditor.RulePath));
             }
-            x += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), customQuestMapIcon, "CustomQuestMap"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), customQuestMapIcon, "CustomQuestMap"))
             {
                 Find.WindowStack.Add(new QuestEditor_CustomQuestMap());
             }
-            x = inRect.width - 230f;
-            y += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), pawnEditorIcon, "PawnEditor"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), pawnEditorIcon, "PawnEditor"))
             {
                 if (Current.Game != null)
                 {
@@ -524,18 +525,23 @@ return "";
                     Messages.Message("NoGame".Translate(), MessageTypeDefOf.CautionInput);
                 }
             }
-            x += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), dialogManagerIcon, "DialogManager"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), dialogManagerIcon, "DialogManager"))
             {
                 Find.WindowStack.Add(new QuestEditor_DialogManager());
             }
-            x += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), mainMapDefEditorIcon, "MainMapDefEditor"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), dutyDefEditorIcon, "CQF_DutyDefEditor"))
+            {
+                Find.WindowStack.Add(new QuestEditor_DutyDefEditor());
+            }
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), dutyMapEditorIcon, "CQF_DutyMapEditor"))
+            {
+                Find.WindowStack.Add(new QuestEditor_DutyMap());
+            }
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), mainMapDefEditorIcon, "MainMapDefEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_MainMapDefEditor());
             }
-            x += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), generateNodeTextIcon, "GenerateNodeText"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), generateNodeTextIcon, "GenerateNodeText"))
             {
                 List<XElement> publicText = new List<XElement>();
                 Dictionary<XElement,List<XElement>> texts = new Dictionary<XElement, List<XElement>>();
@@ -608,9 +614,7 @@ return "";
                 textXml.Save(path,SaveOptions.DisableFormatting);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
-            x = inRect.width - 230f;
-            y += 45f;
-            if (Page_QuestEditor.DrawToolButton(new Rect(x, y, 38f, 38f), groupEditorIcon, "GroupEditor"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), groupEditorIcon, "GroupEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_GroupEditor());
             }
@@ -676,9 +680,13 @@ return "";
         public static readonly Texture2D customQuestMapIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/CustomQuestMap", true);
         public static readonly Texture2D pawnEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/PawnEditor", true);
         public static readonly Texture2D dialogManagerIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/DialogManager", true);
+        public static readonly Texture2D dutyDefEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/DutyDefEditor", true);
+        public static readonly Texture2D dutyMapEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/DutyMapEditor", true);
         public static readonly Texture2D mainMapDefEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/MainMapDefEditor", true);
         public static readonly Texture2D generateNodeTextIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/GenerateNodeText", true);
         public static readonly Texture2D groupEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/GroupEditor", true);
+        private static readonly string CQFModName = "CQF_QuestNodeCategory_CQF".Translate().ToString();
+        private static readonly string VanillaModName = "CQF_QuestNodeCategory_Vanilla".Translate().ToString();
     }
 
 }

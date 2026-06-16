@@ -12,6 +12,10 @@
   <CQF_PawnMod_Appearance.label>外观</CQF_PawnMod_Appearance.label>
   <!-- EN: Head, body, hair, and colors. -->
   <CQF_PawnMod_Appearance.description>头型、体型、发型与颜色。</CQF_PawnMod_Appearance.description>
+  <!-- EN: Gene template -->
+  <CQF_PawnMod_Genes.label>基因模板</CQF_PawnMod_Genes.label>
+  <!-- EN: Pawn xenotype and gene template. -->
+  <CQF_PawnMod_Genes.description>实体的基因模板与异种类型。</CQF_PawnMod_Genes.description>
   <!-- EN: Backstory -->
   <CQF_PawnMod_Backstory.label>背景故事</CQF_PawnMod_Backstory.label>
   <!-- EN: Childhood and adulthood backstories. -->
@@ -48,4 +52,8 @@
   <CQF_PawnMod_ActionTrigger.label>行为触发</CQF_PawnMod_ActionTrigger.label>
   <!-- EN: Pawn action triggers. -->
   <CQF_PawnMod_ActionTrigger.description>实体行为触发器。</CQF_PawnMod_ActionTrigger.description>
+  <!-- EN: Duty map -->
+  <CQF_PawnMod_DutyMap.label>职责图</CQF_PawnMod_DutyMap.label>
+  <!-- EN: Pawn duty map assignment. -->
+  <CQF_PawnMod_DutyMap.description>实体职责图配置。</CQF_PawnMod_DutyMap.description>
 </LanguageData>

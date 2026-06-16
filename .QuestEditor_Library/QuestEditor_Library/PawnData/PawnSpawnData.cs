@@ -66,14 +66,9 @@ public class PawnSpawnData : IExposable, ISaveable, IDrawable
             {
                 Rect rectDuty = new Rect(20f + x, y, 250f, 25f);
                 if (Widgets.ButtonText(rectDuty,
-                    "DutyType".Translate(this.duty == null 
-                    ? null :
-                    (this.duty.HasModExtension<ModExtension_CustomDuty>()
-                    ? this.duty.label : this.duty.defName.Translate().ToString())), false))
+                    "DutyType".Translate(CQFEditorTools.DutyLabel(this.duty)), false))
                 {
-                    Find.WindowStack.Add(new Dialog_Select<DutyDef>(DefDatabase<DutyDef>.AllDefsListForReading,
-                        null, (d) => d == null ? null : d.HasModExtension<ModExtension_CustomDuty>() ? d.label : d.defName.CanTranslate() ? d.defName.Translate().ToString() : d.defName, "Select".Translate(), (d) => this.duty = d,
-                        null, null, d => d.description, d => d.HasModExtension<ModExtension_CustomDuty>() || d.defName.CanTranslate() ? 1 : 5));
+                    CQFEditorTools.OpenDutySelect(d => this.duty = d);
                 }
                 if (this.duty?.description != null && this.duty.description != "")
                 {
@@ -318,7 +313,7 @@ c => c.uiIcon, c => c.label, "Select".Translate(),
                 {
                     List<Pawn> ps = new List<Pawn>();
                     result.Values.ToList().ForEach(t => ps.Add(t.Thing as Pawn));
-                    GameComponent_Editor.Component.GetQuestData(quest)?.AddGroup(this.dataName, ps);
+                    GameComponent_Editor.Instance.GetQuestData(quest)?.AddGroup(this.dataName, ps);
                 }
                 return result;
             }
@@ -362,6 +357,10 @@ c => c.uiIcon, c => c.label, "Select".Translate(),
                             {
                                 job.pawnDutyDatas.Add(pawn, this.duty);
                             }
+                            if (lord.LordJob is LordJob_ComplexCustom complexJob)
+                            {
+                                complexJob.ApplyDefaultDutyMap(pawn, quest);
+                            }
                         }
                         if (pawn.kindDef == this.kind)
                         {
@@ -402,7 +401,7 @@ c => c.uiIcon, c => c.label, "Select".Translate(),
             }
             if (this.dialogManager != null)
             {
-                Current.Game.GetComponent<GameComponent_Editor>().AddDialog(pawn, this.dialogManager);
+                GameComponent_Editor.Instance.AddDialog(pawn, this.dialogManager);
             }
             pawn.questTags = new List<string>()
                 {
@@ -496,5 +495,6 @@ c => c.uiIcon, c => c.label, "Select".Translate(),
         public List<CQFThingCategoryCount> inventoryCategorys = new List<CQFThingCategoryCount>();
     }
 }
+
 
 

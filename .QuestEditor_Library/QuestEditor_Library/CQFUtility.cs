@@ -118,6 +118,25 @@ namespace QuestEditor_Library
                     new FloatMenuOption("PawnDataMapFaction".Translate(), () => setFaction("MapFaction"))
                 });
         }
+        public static void OpenDutySelect(Action<DutyDef> acceptAction)
+        {
+            List<DutyDef> duties = DefDatabase<DutyDef>.AllDefsListForReading;
+            Find.WindowStack.Add(new Dialog_Select<DutyDef>(duties, null, CQFEditorTools.DutyLabel, "Select".Translate(), acceptAction,
+                null, null, CQFEditorTools.DutyTip, CQFEditorTools.DutyPriority, null, duty => duty.defName, CQFEditorTools.MakeDutyModFilters(duties)));
+        }
+
+        public static string DutyLabel(DutyDef duty)
+        {
+            if (duty == null)
+            {
+                return null;
+            }
+            if (!duty.label.NullOrEmpty())
+            {
+                return duty.label;
+            }
+            return duty.defName.CanTranslate() ? duty.defName.Translate().ToString() : duty.defName;
+        }
         public static void DrawSelectableText(float y, string label, ref SlateRef<string> text, Action selectAction, float x = 0f, float width = 60f)
         {
             bool nullText = label.NullOrEmpty();
@@ -1059,6 +1078,42 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             return result;
         }
 
+        private static string DutyTip(DutyDef duty)
+        {
+            if (duty == null)
+            {
+                return null;
+            }
+            string description = duty.description.NullOrEmpty() ? string.Empty : "\n" + duty.description;
+            return "CQF_DutyThinkNodeMod".Translate(ModTypeUtility.GetModName(duty), duty.defName) + description;
+        }
+
+        private static int DutyPriority(DutyDef duty)
+        {
+            if (ModTypeUtility.IsCQFDef(duty))
+            {
+                return -100;
+            }
+            return duty.defName.CanTranslate() || !duty.label.NullOrEmpty() ? 0 : 10;
+        }
+
+        private static Dictionary<string, Func<DutyDef, bool>> MakeDutyModFilters(List<DutyDef> duties)
+        {
+            Dictionary<string, Func<DutyDef, bool>> result = new Dictionary<string, Func<DutyDef, bool>>();
+            List<string> modNames = duties
+                .Select(duty => ModTypeUtility.GetModName(duty))
+                .Distinct()
+                .OrderBy(name => duties.Any(duty => ModTypeUtility.GetModName(duty) == name && ModTypeUtility.IsCQFDef(duty)) ? 0 : 1)
+                .ThenBy(name => name)
+                .ToList();
+            foreach (string modName in modNames)
+            {
+                string capturedName = modName;
+                result[capturedName] = duty => ModTypeUtility.GetModName(duty) == capturedName;
+            }
+            return result;
+        }
+
 
         public static string exitName;
         public static List<TagWithChance> tagWithChance = new List<TagWithChance>();
@@ -1119,15 +1174,15 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
     {
         public static void AddTemporaryTagret(string name,TargetInfo target) 
         {
-            GameComponent_Editor.Component.TemporaryDatabase.RecordTarget(name, target);
+            GameComponent_Editor.Instance.TemporaryDatabase.RecordTarget(name, target);
         }
         public static void ClearTemporaryTargets()
         {
-            GameComponent_Editor.Component.ClearTemporaryDatabase();
+            GameComponent_Editor.Instance.ClearTemporaryDatabase();
         }
         public static void ResetTemporaryTargets()
         {
-            GameComponent_Editor.Component.ResetTemporaryDatabase();
+            GameComponent_Editor.Instance.ResetTemporaryDatabase();
         }
         public static Map GenerateSubMap(IntVec3 size,PocketMapParent parent, MapGeneratorDef generatorDef, IEnumerable<GenStepWithParams> extraGenStepDefs, Map sourceMap)
         {
@@ -1226,7 +1281,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             {
                 return null;
             }
-            return GameComponent_Editor.Component.TemporaryDatabase.GetTarget(targetText);
+            return GameComponent_Editor.Instance.TemporaryDatabase.GetTarget(targetText);
         }
         public static TargetInfo GetTargetFromQuestDatabase(Quest quest, string targetText)
         {
@@ -1241,7 +1296,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             {
                 result = result ?? GetTargetWithIndex(quest, ts.First(), index0);
             }
-            QuestData data = GameComponent_Editor.Component.GetQuestData(quest);
+            QuestData data = GameComponent_Editor.Instance.GetQuestData(quest);
             if (data != null)
             {
                 if (data.GetGroup(targetText) is {} ps)
@@ -1280,7 +1335,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             {
                 result = result ?? GetTargetWithIndex(quest, ts.First(), index0);
             }
-            QuestData data = GameComponent_Editor.Component.GlobalDatabase;
+            QuestData data = GameComponent_Editor.Instance.GlobalDatabase;
             if (data != null)
             {
                 if (data.GetGroup(targetText) is {} ps)
@@ -1296,7 +1351,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         }
         public static List<TargetInfo> GetTargetsFromGroup(Quest quest, string targetText)
         {
-            QuestData data = GameComponent_Editor.Component.GetQuestData(quest) ?? GameComponent_Editor.Component.GlobalDatabase;
+            QuestData data = GameComponent_Editor.Instance.GetQuestData(quest) ?? GameComponent_Editor.Instance.GlobalDatabase;
             if (DebugSettings.godMode && data != null)
             {
                 Log.Message(data.ToString());
@@ -1312,7 +1367,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         public static TargetInfo GetTargetWithIndex(Quest quest, string targetText, int index)
         {
             TargetInfo? result = null;
-            QuestData data = GameComponent_Editor.Component.GetQuestData(quest);
+            QuestData data = GameComponent_Editor.Instance.GetQuestData(quest);
             if (DebugSettings.godMode && data != null)
             {
                 Log.Message(data.ToString());
@@ -1787,5 +1842,6 @@ t =>
         public List<string> stringRules = new List<string>() { "" };
     }
 }
+
 
 

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_DutyMapEditor>Duty map editor</CQF_DutyMapEditor>
+  <CQF_DutyDefEditor>Duty editor</CQF_DutyDefEditor>
+  <CQF_DefName>DefName:</CQF_DefName>
+  <CQF_DutyMapLabel>Label:</CQF_DutyMapLabel>
+  <CQF_DutyLabel>Duty label:</CQF_DutyLabel>
+  <CQF_DutyDescription>Duty description:</CQF_DutyDescription>
+  <CQF_DutyMapNodeId>Node id:</CQF_DutyMapNodeId>
+  <CQF_DutyType>Duty type: {0}</CQF_DutyType>
+  <CQF_DutyMapTransition>Duty transition</CQF_DutyMapTransition>
+  <CQF_DutyMapFromNode>From node:</CQF_DutyMapFromNode>
+  <CQF_DutyMapToNode>To node:</CQF_DutyMapToNode>
+  <CQF_AddTransition>Add transition</CQF_AddTransition>
+  <CQF_FocusTarget>Focus target:</CQF_FocusTarget>
+  <CQF_FocusSecondTarget>Second focus:</CQF_FocusSecondTarget>
+  <CQF_FocusThirdTarget>Third focus:</CQF_FocusThirdTarget>
+  <CQF_Radius>Radius:</CQF_Radius>
+  <CQF_WanderRadius>Wander radius:</CQF_WanderRadius>
+  <CQF_LocomotionUrgency>Locomotion: {0}</CQF_LocomotionUrgency>
+  <CQF_EnterActions>Enter actions</CQF_EnterActions>
+  <CQF_ExitActions>Exit actions</CQF_ExitActions>
+  <CQF_SetStartNode>Set initial node</CQF_SetStartNode>
+  <CQF_DutyMapNoOptions>No options</CQF_DutyMapNoOptions>
+  <CQF_DutySelectTrigger>Select duty transition trigger</CQF_DutySelectTrigger>
+  <CQF_IntervalTicks>Interval ticks:</CQF_IntervalTicks>
+  <CQF_PawnCount>Pawn count:</CQF_PawnCount>
+  <CQF_CustomDutyTransition>Transition</CQF_CustomDutyTransition>
+  <CQF_CustomDutyTrigger_TickInterval>Interval trigger</CQF_CustomDutyTrigger_TickInterval>
+  <CQF_CustomDutyTrigger_TickInterval_Tip>Passes once every specified number of ticks.</CQF_CustomDutyTrigger_TickInterval_Tip>
+  <CQF_CustomDutyTrigger_LordPawnCountBelow>Lord pawn count below</CQF_CustomDutyTrigger_LordPawnCountBelow>
+  <CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>Passes when the current lord owns fewer pawns than the specified count.</CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>
+  <CQF_DutyMapNodeEditor>Duty node editor</CQF_DutyMapNodeEditor>
+  <CQF_DutyMapTransitionEditor>Duty transition editor</CQF_DutyMapTransitionEditor>
+  <CQF_DutyMapDef>Duty map: {0}</CQF_DutyMapDef>
+  <CQF_EditDutyMapNode>Edit duty</CQF_EditDutyMapNode>
+  <CQF_DutyDefBasicSettings>Duty basic settings</CQF_DutyDefBasicSettings>
+  <CQF_DutyMiscSettings>Duty misc settings</CQF_DutyMiscSettings>
+  <CQF_DutyAlwaysShowWeapon>Always show weapon</CQF_DutyAlwaysShowWeapon>
+  <CQF_DutyThreatDisabled>Threat disabled</CQF_DutyThreatDisabled>
+  <CQF_DutyRitualSpectateTarget>Ritual spectate target</CQF_DutyRitualSpectateTarget>
+  <CQF_DutyForceFaceUpPosture>Force face-up posture</CQF_DutyForceFaceUpPosture>
+  <CQF_DutyHook>Think tree hook: {0}</CQF_DutyHook>
+  <CQF_DutySocialModeMax>Max social mode: {0}</CQF_DutySocialModeMax>
+  <CQF_DutyDrawBodyOverride>Draw body override</CQF_DutyDrawBodyOverride>
+  <CQF_DutyThinkNode>Main behavior node</CQF_DutyThinkNode>
+  <CQF_DutyThinkNode_Tip>The main behavior node tries to issue jobs by priority. This is the primary behavior tree for the duty.</CQF_DutyThinkNode_Tip>
+  <CQF_DutyConstantThinkNode>Constant behavior node</CQF_DutyConstantThinkNode>
+  <CQF_DutyConstantThinkNode_Tip>The constant behavior node is checked while the duty is active. Use it for long-running or supplemental behavior.</CQF_DutyConstantThinkNode_Tip>
+  <CQF_DutySelectThinkNode>Select behavior node</CQF_DutySelectThinkNode>
+  <CQF_DutyThinkNodeCategory_CQF>CQF</CQF_DutyThinkNodeCategory_CQF>
+  <CQF_DutyThinkNodeCategory_Vanilla>Vanilla</CQF_DutyThinkNodeCategory_Vanilla>
+  <CQF_DutyThinkNodeMod>Source: {0}\nType: {1}</CQF_DutyThinkNodeMod>
+  <CQF_DutyChangeNode>Change node</CQF_DutyChangeNode>
+  <CQF_DutyAddSubNode>Add child node</CQF_DutyAddSubNode>
+  <CQF_DutySubNodes>Child nodes</CQF_DutySubNodes>
+  <CQF_DutyNoSubNodes>No child nodes. Drag a node here or click add child node.</CQF_DutyNoSubNodes>
+  <CQF_DutyDragNodeTip>Drag this node to another node's child area to move it under that node.</CQF_DutyDragNodeTip>
+  <CQF_DutyMoveUp>Move up</CQF_DutyMoveUp>
+  <CQF_DutyMoveDown>Move down</CQF_DutyMoveDown>
+  <CQF_DutyUnsupportedField>{0} (unsupported: {1})</CQF_DutyUnsupportedField>
+  <CQF_DutyField_tag>Tag</CQF_DutyField_tag>
+  <CQF_DutyField_priority>Priority</CQF_DutyField_priority>
+  <CQF_DutyField_leaveJoinableLordIfIssuesJob>Leave joinable lord if issues job</CQF_DutyField_leaveJoinableLordIfIssuesJob>
+  <CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>When enabled, a pawn leaves its joinable lord after this node successfully issues a job. Use it for one-off assigned work that should stop being controlled by the original lord flow.</CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>
+  <CQF_DutyField_reportStringOverride>Report string override</CQF_DutyField_reportStringOverride>
+  <CQF_DutyField_crawlingReportStringOverride>Crawling report string override</CQF_DutyField_crawlingReportStringOverride>
+  <CQF_DutyEnum_ThinkTreeDutyHook_None>None</CQF_DutyEnum_ThinkTreeDutyHook_None>
+  <CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>High priority</CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>
+  <CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>Medium priority</CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>
+  <CQF_DutyEnum_ThinkTreeDutyHook_LowPriority>Low priority</CQF_DutyEnum_ThinkTreeDutyHook_LowPriority>
+  <CQF_DutyEnum_RandomSocialMode_Off>Off</CQF_DutyEnum_RandomSocialMode_Off>
+  <CQF_DutyEnum_RandomSocialMode_Quiet>Quiet</CQF_DutyEnum_RandomSocialMode_Quiet>
+  <CQF_DutyEnum_RandomSocialMode_Normal>Normal</CQF_DutyEnum_RandomSocialMode_Normal>
+  <CQF_DutyEnum_RandomSocialMode_SuperActive>Super active</CQF_DutyEnum_RandomSocialMode_SuperActive>
+  <CQF_DutyNode_ThinkNode_Priority>Priority node</CQF_DutyNode_ThinkNode_Priority>
+  <CQF_DutyNode_JobGiver_PlayWithGoldenCube>Play with golden cube</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
+  <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>Prepare caravan: collect pawns</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
+  <CQFAction_Pawn_RunDutyMapTransition>Pawn action: run duty map transition</CQFAction_Pawn_RunDutyMapTransition>
+  <CQFAction_Pawn_SetDutyMap>Pawn action: set duty map</CQFAction_Pawn_SetDutyMap>
+  <CQF_DutyMapUseStartNode>Enter initial node after setting</CQF_DutyMapUseStartNode>
+</LanguageData>

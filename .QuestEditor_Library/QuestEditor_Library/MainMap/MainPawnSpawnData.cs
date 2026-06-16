@@ -269,7 +269,7 @@ namespace QuestEditor_Library
             GenSpawn.Spawn(pawn, position, map);
             lord?.AddPawn(pawn);
             result.SetOrAdd(this.dataName + ".0", pawn);
-            GameComponent_Editor.Component.GetQuestData(quest)?.AddGroup(this.dataName, new List<Pawn> { pawn });
+            GameComponent_Editor.Instance.GetQuestData(quest)?.AddGroup(this.dataName, new List<Pawn> { pawn });
             return true;
         }
 
@@ -292,4 +292,5 @@ namespace QuestEditor_Library
         public List<DialogCondition> regenerateConditions = new List<DialogCondition>();
     }
 }
+
 

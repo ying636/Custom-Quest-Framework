@@ -11,6 +11,8 @@
   <DesignatorLordDesc>Customize lord within the map, lord data will be saved in the custom map def</DesignatorLordDesc>
 
   <LordJob_Custom>CQF custom job</LordJob_Custom>
+  <LordJob_ComplexCustom>Duty map job</LordJob_ComplexCustom>
+  <LordJob_ComplexCustom_Tip>Runs a duty map and switches pawn duties through its configured nodes and transitions.</LordJob_ComplexCustom_Tip>
 
   <LordJobData_DefendBase>Lord data:defend base</LordJobData_DefendBase>
   <TargetPositionName>Defending centre:</TargetPositionName>

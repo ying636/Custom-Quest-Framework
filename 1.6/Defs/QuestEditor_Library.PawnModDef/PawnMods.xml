@@ -25,6 +25,14 @@
   </QuestEditor_Library.PawnModDef>
 
   <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_Genes</defName>
+    <label>gene template</label>
+    <description>Pawn xenotype and gene template.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_Genes</workerClass>
+    <order>25</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
     <defName>CQF_PawnMod_Backstory</defName>
     <label>backstory</label>
     <description>Childhood and adulthood backstories.</description>
@@ -94,5 +102,13 @@
     <description>Pawn action triggers.</description>
     <workerClass>QuestEditor_Library.PawnModWorker_ActionTrigger</workerClass>
     <order>90</order>
+  </QuestEditor_Library.PawnModDef>
+
+  <QuestEditor_Library.PawnModDef>
+    <defName>CQF_PawnMod_DutyMap</defName>
+    <label>duty map</label>
+    <description>Pawn duty map assignment.</description>
+    <workerClass>QuestEditor_Library.PawnModWorker_DutyMap</workerClass>
+    <order>100</order>
   </QuestEditor_Library.PawnModDef>
 </Defs>

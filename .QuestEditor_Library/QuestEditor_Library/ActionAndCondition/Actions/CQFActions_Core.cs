@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -130,7 +130,7 @@ namespace QuestEditor_Library
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            this.actions.ForEach(a => GameComponent_Editor.Component.AddExecutiveRequest(delayTime,a,quest,targets));
+            this.actions.ForEach(a => GameComponent_Editor.Instance.AddExecutiveRequest(delayTime,a,quest,targets));
         }
 
         public override void ExposeData()
@@ -395,7 +395,7 @@ namespace QuestEditor_Library
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            GameComponent_Editor.Component.GetQuestData(quest)?.SetBool(this.keyOfBool, this.valueOfBool);
+            GameComponent_Editor.Instance.GetQuestData(quest)?.SetBool(this.keyOfBool, this.valueOfBool);
         }
         public override void ExposeData()
         {
@@ -429,7 +429,7 @@ namespace QuestEditor_Library
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            GameComponent_Editor.Component.SetBool(this.keyOfBool, this.valueOfBool);
+            GameComponent_Editor.Instance.SetBool(this.keyOfBool, this.valueOfBool);
         }
         public override void ExposeData()
         {
@@ -1030,15 +1030,15 @@ namespace QuestEditor_Library
             }
             if (this.recordToTemporaryBase)
             {
-                GameComponent_Editor.Component.TemporaryDatabase.SetValue(this.recordKey, site.visitCount);
+                GameComponent_Editor.Instance.TemporaryDatabase.SetValue(this.recordKey, site.visitCount);
             }
             if (this.recordToQuestBase)
             {
-                GameComponent_Editor.Component.GetQuestData(quest)?.SetValue(this.recordKey, site.visitCount);
+                GameComponent_Editor.Instance.GetQuestData(quest)?.SetValue(this.recordKey, site.visitCount);
             }
             if (this.recordToGlobalBase)
             {
-                GameComponent_Editor.Component.GlobalDatabase.SetValue(this.recordKey, site.visitCount);
+                GameComponent_Editor.Instance.GlobalDatabase.SetValue(this.recordKey, site.visitCount);
             }
         }
 
@@ -1084,3 +1084,4 @@ namespace QuestEditor_Library
         public bool recordToGlobalBase;
     }
 }
+

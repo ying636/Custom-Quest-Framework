@@ -64,7 +64,7 @@ namespace QuestEditor_Library
                         RandomElementByWeight(d2 => d2.Value);
                     if (Rand.Chance(d.Value)) 
                     {
-                        Current.Game.GetComponent<GameComponent_Editor>().AddDialog(p, d.Key);
+                        GameComponent_Editor.Instance.AddDialog(p, d.Key);
                         dialogs.Remove(d.Key);
                     }
                 }
@@ -81,3 +81,4 @@ namespace QuestEditor_Library
         public float commonality;
     }
 }
+

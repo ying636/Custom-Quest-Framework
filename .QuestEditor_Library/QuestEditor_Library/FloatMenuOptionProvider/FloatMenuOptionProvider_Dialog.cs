@@ -33,7 +33,7 @@ namespace QuestEditor_Library
         {
             if (pawn.CanReach(thing, PathEndMode.Touch, Danger.Deadly))
             {
-                Dictionary<Thing, DialogManagerDef> dialogs = Current.Game.GetComponent<GameComponent_Editor>().Dialogs;
+                Dictionary<Thing, DialogManagerDef> dialogs = GameComponent_Editor.Instance.Dialogs;
                 if (dialogs != null && dialogs.TryGetValue(thing, out DialogManagerDef manager) && manager.GetTree(pawn, thing) is DialogTreeDef def)
                 {
                     if (def.requireNonHostile && thing.HostileTo(pawn))

@@ -88,7 +88,7 @@ namespace QuestEditor_Library
                     {
                         Lord lord = LordMaker.MakeNewLord(GameTools.GetFaction(l.faction, map), l.lordJobData.CreateJob(map, quest), map);
                         map.GetComponent<MapComponent_CustomMapData>().Lords.Add(new LordWithName() { name = l.name, lord = lord });
-                        GameComponent_Editor.Component.GetQuestData(quest)?.Lords.SetOrAdd(l.name, lord);
+                        GameComponent_Editor.Instance.GetQuestData(quest)?.Lords.SetOrAdd(l.name, lord);
                         if (!lordsWithName.ContainsKey(l.name))
                         {
                             lordsWithName.Add(l.name, lord);
@@ -605,5 +605,6 @@ namespace QuestEditor_Library
         public static List<ExecutiveRequest> requests = new List<ExecutiveRequest>();
     }
 }
+
 
 

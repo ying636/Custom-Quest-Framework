@@ -71,6 +71,10 @@ public class PawnSpawnData_Faction : PawnSpawnData
                             {
                                 job.pawnDutyDatas.Add(p, this.duty);
                             }
+                            if (lord.LordJob is LordJob_ComplexCustom complexJob)
+                            {
+                                complexJob.ApplyDefaultDutyMap(p, quest);
+                            }
                         }
                         if (p.kindDef == this.kind)
                         {
@@ -87,7 +91,7 @@ public class PawnSpawnData_Faction : PawnSpawnData
                     {
                         List<Pawn> ps = new List<Pawn>();
                         result.Values.ToList().ForEach(t => ps.Add(t.Thing as Pawn));
-                        GameComponent_Editor.Component.GetQuestData(quest)?.AddGroup(this.dataName, ps);
+                        GameComponent_Editor.Instance.GetQuestData(quest)?.AddGroup(this.dataName, ps);
                     }
                     return result;
                 }
@@ -118,4 +122,5 @@ public class PawnSpawnData_Faction : PawnSpawnData
         public string buffer2;
     }
 }
+
 

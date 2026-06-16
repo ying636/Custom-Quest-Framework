@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -90,7 +90,7 @@ namespace QuestEditor_Library
                 dR.actions.ForEach(a => a.Work(targets, quest));
                 if (this.removeDialogAfterSelect)
                 {
-                    GameComponent_Editor.Component.RemoveDialog(interviewer);
+                    GameComponent_Editor.Instance.RemoveDialog(interviewer);
                 }
                 GameTools.ConsumeRequiredThings(interviewer as Pawn, interviewee as Pawn, this.requiredThings); 
             };

@@ -19,6 +19,10 @@
 
   <!-- EN: CQF custom job -->
   <LordJob_Custom>CQF自定义行为</LordJob_Custom>
+  <!-- EN: Duty map job -->
+  <LordJob_ComplexCustom>职责图行为</LordJob_ComplexCustom>
+  <!-- EN: Runs a duty map and switches pawn duties through its configured nodes and transitions. -->
+  <LordJob_ComplexCustom_Tip>运行职责图，并根据配置的节点与切换规则改变实体职责。</LordJob_ComplexCustom_Tip>
 
   <!-- EN: Lord data:defend base -->
   <LordJobData_DefendBase>行为数据：保护基地</LordJobData_DefendBase>

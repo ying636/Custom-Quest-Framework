@@ -37,7 +37,7 @@ namespace QuestEditor_Library
         }
         public virtual bool IsAllowed(Pawn pawn)
         {
-            return !pawn.IsColonist || GameComponent_LevelSchedule.GetComp.GetSchedule(pawn).
+            return !pawn.IsColonist || GameComponent_LevelSchedule.Instance.GetSchedule(pawn).
                 allowedLevels.Contains(this.MapEntrance);
         }
         public bool IsAvailable(Pawn pawn)
@@ -140,3 +140,4 @@ namespace QuestEditor_Library
         public int cd;
     }
 }
+

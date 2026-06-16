@@ -35,7 +35,14 @@
   <CQF_PawnEditor_Hair>发型：{0}</CQF_PawnEditor_Hair>
   <CQF_PawnEditor_SelectHairColor>选择发型颜色</CQF_PawnEditor_SelectHairColor>
   <CQF_PawnEditor_HeadType>头型：{0}</CQF_PawnEditor_HeadType>
-  <CQF_PawnEditor_SelectSkinColor>选择肤色</CQF_PawnEditor_SelectSkinColor>
+  <CQF_PawnEditor_SelectSkinColor>肤色：{0}</CQF_PawnEditor_SelectSkinColor>
+  <CQF_PawnEditor_GeneSkinColor>基因默认</CQF_PawnEditor_GeneSkinColor>
+  <CQF_PawnEditor_CustomSkinColor>自定义</CQF_PawnEditor_CustomSkinColor>
+  <CQF_PawnEditor_UseGeneSkinColor>使用基因/默认肤色</CQF_PawnEditor_UseGeneSkinColor>
+  <CQF_PawnEditor_Xenotype>基因模板：{0}</CQF_PawnEditor_Xenotype>
+  <CQF_PawnEditor_SelectXenotype>选择基因模板</CQF_PawnEditor_SelectXenotype>
+  <CQF_PawnEditor_CustomGenes>自定义基因</CQF_PawnEditor_CustomGenes>
+  <CQF_PawnEditor_SelectGene>选择基因</CQF_PawnEditor_SelectGene>
   <CQF_PawnEditor_ColorLibrary>颜色库</CQF_PawnEditor_ColorLibrary>
   <CQF_PawnEditor_HexColor>16进制代码</CQF_PawnEditor_HexColor>
   <CQF_PawnEditor_BodyType>身体类型：{0}</CQF_PawnEditor_BodyType>
@@ -46,6 +53,8 @@
   <CQF_PawnEditor_WholeBody>全身</CQF_PawnEditor_WholeBody>
   <CQF_PawnEditor_Severity>严重度</CQF_PawnEditor_Severity>
   <CQF_PawnEditor_DialogManager>对话管理者：{0}</CQF_PawnEditor_DialogManager>
+  <CQF_PawnEditor_DutyMap>职责图：{0}</CQF_PawnEditor_DutyMap>
+  <CQF_PawnEditor_DutyMapStartNode>职责图初始节点：{0}</CQF_PawnEditor_DutyMapStartNode>
   <CQF_PawnEditor_TriggerKey>触发器Key：</CQF_PawnEditor_TriggerKey>
   <CQF_PawnEditor_TriggerMode>触发模式：{0}</CQF_PawnEditor_TriggerMode>
   <CQF_PawnEditor_TriggerActions>触发行为</CQF_PawnEditor_TriggerActions>
@@ -58,6 +67,8 @@
   <CQF_PawnMod_NameAndBody.description>姓名、性别与年龄数据。</CQF_PawnMod_NameAndBody.description>
   <CQF_PawnMod_Appearance.label>外观</CQF_PawnMod_Appearance.label>
   <CQF_PawnMod_Appearance.description>头型、体型、发型与颜色。</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Genes.label>基因模板</CQF_PawnMod_Genes.label>
+  <CQF_PawnMod_Genes.description>实体的基因模板与异种类型。</CQF_PawnMod_Genes.description>
   <CQF_PawnMod_Backstory.label>背景故事</CQF_PawnMod_Backstory.label>
   <CQF_PawnMod_Backstory.description>童年与成年背景故事。</CQF_PawnMod_Backstory.description>
   <CQF_PawnMod_Traits.label>特性</CQF_PawnMod_Traits.label>
@@ -76,4 +87,9 @@
   <CQF_PawnMod_Dialog.description>实体对话管理者。</CQF_PawnMod_Dialog.description>
   <CQF_PawnMod_ActionTrigger.label>行为触发</CQF_PawnMod_ActionTrigger.label>
   <CQF_PawnMod_ActionTrigger.description>实体行为触发器。</CQF_PawnMod_ActionTrigger.description>
+  <CQF_PawnMod_DutyMap.label>职责图</CQF_PawnMod_DutyMap.label>
+  <CQF_PawnMod_DutyMap.description>实体职责图配置。</CQF_PawnMod_DutyMap.description>
+
+  <CQF_LordData_DutyMap>职责图：{0}</CQF_LordData_DutyMap>
+  <CQF_LordData_DutyMapStartNode>职责图初始节点</CQF_LordData_DutyMapStartNode>
 </LanguageData>

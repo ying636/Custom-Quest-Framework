@@ -16,7 +16,7 @@ namespace QuestEditor_Library
         [HarmonyPostfix]
         static void PostFix(ref IEnumerable<Gizmo> __result,Caravan __instance)
         {
-            GameComponent_Editor comp = GameComponent_Editor.Component;
+            GameComponent_Editor comp = GameComponent_Editor.Instance;
             List<CaravanActionDef> defs = 
                 DefDatabase<CaravanActionDef>.
                 AllDefsListForReading.FindAll(a => !a.conditions.Exists(c =>!c.Satisfied(__instance)));
@@ -50,3 +50,4 @@ namespace QuestEditor_Library
         }
     }
 }
+

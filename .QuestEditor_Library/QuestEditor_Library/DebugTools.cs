@@ -156,7 +156,7 @@ namespace QuestEditor_Library
 					IntVec3 pos = UI.MouseCell();
 					if (pos.InBounds(Find.CurrentMap) && pos.GetFirstPawn(Find.CurrentMap) is Pawn target)
 					{
-						Current.Game.GetComponent<GameComponent_Editor>().AddDialog(target,def);
+						GameComponent_Editor.Instance.AddDialog(target,def);
 					}
 				}));
 			}
@@ -201,7 +201,7 @@ namespace QuestEditor_Library
 		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetComponentInformation()
 		{
-			GameComponent_Editor component = Current.Game.GetComponent<GameComponent_Editor>();
+			GameComponent_Editor component = GameComponent_Editor.Instance;
 			StringBuilder information = new StringBuilder();
 			information.AppendLine("ExecutiveRequests".Translate());
 			foreach (ExecutiveRequest request in component.Request)
@@ -316,3 +316,4 @@ namespace QuestEditor_Library
 		public static bool clearGenerationData = true;
 	}
 }
+

@@ -127,5 +127,7 @@
   <QuestNode_RemoveDataWhenEnd>节点：移除数据当结束任务的时候</QuestNode_RemoveDataWhenEnd>
 
   <QuestNode_DoCQFActions>节点：执行行为</QuestNode_DoCQFActions>
+  <CQF_QuestNodeCategory_CQF>CQF</CQF_QuestNodeCategory_CQF>
+  <CQF_QuestNodeCategory_Vanilla>原版</CQF_QuestNodeCategory_Vanilla>
 
 </LanguageData>

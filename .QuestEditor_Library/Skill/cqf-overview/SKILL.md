@@ -199,6 +199,12 @@ CQF 不是单一玩法 Mod，而是一套用于制作以下内容的框架：
 
 地图相关任务应继续调用 `cqf-map-dev`。
 
+### 8. Pawn / 实体系统
+
+实体编辑器、实体生成数据、`ComplexPawnDef`、`PawnModDef` 模块、`PawnSpawnData_ComplexPawn`、Lord、Duty 和 DutyMap 相关任务应调用 `cqf-pawn-dev`。
+
+overview 只负责系统归类，不在这里维护 Pawn 细节，避免和 `cqf-pawn-dev` 的备份内容重复。
+
 ## CQF 里最重要的三组认知
 
 ### 1. Action 和 Condition 的关系

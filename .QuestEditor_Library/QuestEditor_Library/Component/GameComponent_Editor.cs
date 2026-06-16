@@ -15,23 +15,9 @@ namespace QuestEditor_Library
     {
         public GameComponent_Editor(Game game)
         {
+            Instance = this;
         }
-        public static GameComponent_Editor Component
-        {
-            get
-            {
-                if (Current.Game.GetComponent<GameComponent_Editor>() is GameComponent_Editor c)
-                {
-                    return c;
-
-                }
-                else 
-                {
-                    Current.Game.components.Add(new GameComponent_Editor(Current.Game));
-                    return Current.Game.GetComponent<GameComponent_Editor>();
-                }
-            }
-        }
+        public static GameComponent_Editor Component => Instance;
         public List<ExecutiveRequest> Request 
         {
             get 
@@ -256,6 +242,8 @@ namespace QuestEditor_Library
 
         private QuestData globalData = new QuestData();
         private QuestData temporaryData = new QuestData();
+
+        public static GameComponent_Editor Instance;
 
         public Dictionary<Color, Material> materialPool_Dialog = new Dictionary<Color, Material>();
 

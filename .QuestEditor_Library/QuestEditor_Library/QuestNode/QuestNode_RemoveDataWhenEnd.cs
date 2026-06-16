@@ -20,7 +20,7 @@ public class QuestPart_RemoveDataWhenEnd : QuestPart
 {
     public override void Notify_PreCleanup()
     {
-        GameComponent_Editor.Component.RemoveQuestData(this.quest);
+        GameComponent_Editor.Instance.RemoveQuestData(this.quest);
     }
     
 }

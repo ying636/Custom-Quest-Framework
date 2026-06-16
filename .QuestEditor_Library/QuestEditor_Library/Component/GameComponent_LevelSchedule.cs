@@ -10,9 +10,12 @@ namespace QuestEditor_Library
 {
     public class GameComponent_LevelSchedule : GameComponent
     {
-        public GameComponent_LevelSchedule(Game game) { }
+        public GameComponent_LevelSchedule(Game game)
+        {
+            Instance = this;
+        }
         public static GameComponent_LevelSchedule GetComp =>
-            Current.Game.GetComponent<GameComponent_LevelSchedule>();
+            Instance;
         public LevelSchedule GetSchedule(Pawn pawn)
         {
             if (pawn == null || !pawn.Spawned) 
@@ -88,6 +91,8 @@ namespace QuestEditor_Library
         }
 
         public List<LevelSchedule> schedules_CD = new List<LevelSchedule>();
+
+        public static GameComponent_LevelSchedule Instance;
 
         public List<Pawn> schedules_p = new List<Pawn>();
         public List<LevelSchedule> schedules_s = new List<LevelSchedule>();

@@ -6,6 +6,8 @@
   <CQF_PawnMod_NameAndBody.description>Name, gender, and age data.</CQF_PawnMod_NameAndBody.description>
   <CQF_PawnMod_Appearance.label>Appearance</CQF_PawnMod_Appearance.label>
   <CQF_PawnMod_Appearance.description>Head, body, hair, and colors.</CQF_PawnMod_Appearance.description>
+  <CQF_PawnMod_Genes.label>Gene template</CQF_PawnMod_Genes.label>
+  <CQF_PawnMod_Genes.description>Pawn xenotype and gene template.</CQF_PawnMod_Genes.description>
   <CQF_PawnMod_Backstory.label>Backstory</CQF_PawnMod_Backstory.label>
   <CQF_PawnMod_Backstory.description>Childhood and adulthood backstories.</CQF_PawnMod_Backstory.description>
   <CQF_PawnMod_Traits.label>Traits</CQF_PawnMod_Traits.label>
@@ -24,4 +26,6 @@
   <CQF_PawnMod_Dialog.description>Pawn dialog manager.</CQF_PawnMod_Dialog.description>
   <CQF_PawnMod_ActionTrigger.label>Action trigger</CQF_PawnMod_ActionTrigger.label>
   <CQF_PawnMod_ActionTrigger.description>Pawn action triggers.</CQF_PawnMod_ActionTrigger.description>
+  <CQF_PawnMod_DutyMap.label>Duty map</CQF_PawnMod_DutyMap.label>
+  <CQF_PawnMod_DutyMap.description>Pawn duty map assignment.</CQF_PawnMod_DutyMap.description>
 </LanguageData>

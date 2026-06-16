@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -69,12 +69,12 @@ namespace QuestEditor_Library
 
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
-            if (GameComponent_Editor.Component.GetBool(this.boolName))
+            if (GameComponent_Editor.Instance.GetBool(this.boolName))
             {
                 reason = null;
                 return true;
             }
-            else if (GameComponent_Editor.Component.GetQuestData(quest) is QuestData data && data.GetBool(this.boolName))
+            else if (GameComponent_Editor.Instance.GetQuestData(quest) is QuestData data && data.GetBool(this.boolName))
             {
                 reason = null;
                 return true;
@@ -141,19 +141,19 @@ namespace QuestEditor_Library
     {
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
-            if (this.checkGlobalDatabase && GameComponent_Editor.Component.GlobalDatabase.TargetDatas.Exists(
+            if (this.checkGlobalDatabase && GameComponent_Editor.Instance.GlobalDatabase.TargetDatas.Exists(
                 d => d.key == this.targetKey && 
                 (!this.needSpawned || (d.target.HasThing && d.target.Thing.Spawned)))) 
             {
                 reason = null;
                 return true;
             }
-            if (this.checkTemporaryDatabase && GameComponent_Editor.Component.TemporaryDatabase.TargetExists(this.targetKey, this.needSpawned))
+            if (this.checkTemporaryDatabase && GameComponent_Editor.Instance.TemporaryDatabase.TargetExists(this.targetKey, this.needSpawned))
             {
                 reason = null;
                 return true;
             }
-            if (this.checkQuestDatabase && quest != null && GameComponent_Editor.Component.GetQuestData(quest).TargetDatas.Exists(
+            if (this.checkQuestDatabase && quest != null && GameComponent_Editor.Instance.GetQuestData(quest).TargetDatas.Exists(
     d => d.key == this.targetKey &&
     (!this.needSpawned || (d.target.HasThing && d.target.Thing.Spawned))))
             {
@@ -222,7 +222,7 @@ namespace QuestEditor_Library
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         { 
             if (quest != null && base.GetTarget(targets, out Thing target, out reason, quest)
-                              && GameComponent_Editor.Component.GetQuestData(quest)
+                              && GameComponent_Editor.Instance.GetQuestData(quest)
                     .GetGroup(this.targetKey) is {} g && g.Exists(
                         d => d == target &&
                              (!this.needSpawned || (d.Spawned))))
@@ -440,3 +440,4 @@ namespace QuestEditor_Library
         public bool needGreater = true;
     }
 }
+

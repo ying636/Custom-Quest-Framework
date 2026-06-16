@@ -6,6 +6,7 @@ using System.Xml;
 using RimWorld;
 using RimWorld.QuestGen;
 using Verse;
+using Verse.AI;
 
 namespace QuestEditor_Library
 {
@@ -44,6 +45,16 @@ namespace QuestEditor_Library
             ReplaceDef(currentDef, currentDef);
         }
 
+        public static void HotLoadDutyMapDef(DutyMapDef currentDef)
+        {
+            ReplaceDef(currentDef, currentDef);
+        }
+
+        public static void HotLoadDutyDef(DutyDef currentDef)
+        {
+            ReplaceDef(currentDef, currentDef);
+        }
+
         private static void LoadAll()
         {
             string questPath = Page_QuestEditor.Path;
@@ -56,7 +67,9 @@ namespace QuestEditor_Library
             LoadDefs(questPath + @"\Map", "//QuestEditor_Library.MainMapDef", DefDatabase<MainMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<MainMapDef>(node, false), def => DefDatabase<MainMapDef>.Add(def));
             LoadDefs(questPath + @"\DialogTree", "//QuestEditor_Library.DialogTreeDef", DefDatabase<DialogTreeDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DialogTreeDef>(node, false), def => DefDatabase<DialogTreeDef>.Add(def));
             LoadDefs(questPath + @"\DialogTree", "//QuestEditor_Library.DialogManagerDef", DefDatabase<DialogManagerDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DialogManagerDef>(node, false), def => DefDatabase<DialogManagerDef>.Add(def));
-            LoadDefs(questPath + @"\Pawn", "//QuestEditor_Library.ComplexPawnDef", DefDatabase<ComplexPawnDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<ComplexPawnDef>(node, false), def => DefDatabase<ComplexPawnDef>.Add(def));
+            LoadDefs(questPath + @"\Pawn", "//QuestEditor_Library.ComplexPawnDef", DefDatabase<ComplexPawnDef>.AllDefsListForReading, LoadComplexPawnDef, def => DefDatabase<ComplexPawnDef>.Add(def));
+            LoadDefs(questPath + @"\Duty", "//DutyDef", DefDatabase<DutyDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyDef>(node, false), def => DefDatabase<DutyDef>.Add(def));
+            LoadDefs(questPath + @"\Duty", "//QuestEditor_Library.DutyMapDef", DefDatabase<DutyMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyMapDef>(node, false), def => DefDatabase<DutyMapDef>.Add(def));
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
             foreach (LoadedDefInfo loadedDef in CQFQuestDefBootstrap.loadedDefs)
             {
@@ -83,6 +96,27 @@ namespace QuestEditor_Library
                     }
                     addAction(def);
                     CQFQuestDefBootstrap.loadedDefs.Add(new LoadedDefInfo(def, file.FullName));
+                }
+            }
+        }
+
+        private static ComplexPawnDef LoadComplexPawnDef(XmlNode node)
+        {
+            XmlNode defNode = node.CloneNode(true);
+            StripPawnModNodes(defNode);
+            ComplexPawnDef def = DirectXmlToObject.ObjectFromXml<ComplexPawnDef>(defNode, false);
+            def?.LoadModData(node);
+            return def;
+        }
+
+        private static void StripPawnModNodes(XmlNode node)
+        {
+            HashSet<string> keepNodes = new HashSet<string> { "defName", "label", "modDatas" };
+            foreach (XmlNode child in node.ChildNodes.Cast<XmlNode>().ToList())
+            {
+                if (!keepNodes.Contains(child.Name))
+                {
+                    node.RemoveChild(child);
                 }
             }
         }

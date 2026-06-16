@@ -78,7 +78,13 @@ namespace QuestEditor_Library
         public virtual Type LordJob => this.lordJob;
         public virtual LordJob CreateJob(Map map,Quest quest) 
         {
-            return (LordJob)Activator.CreateInstance(this.lordJob);
+            LordJob result = (LordJob)Activator.CreateInstance(this.lordJob);
+            if (result is LordJob_ComplexCustom complexJob)
+            {
+                complexJob.defaultDutyMap = this.dutyMap;
+                complexJob.defaultStartNodeId = this.dutyMapStartNodeId;
+            }
+            return result;
         }
         public virtual void Draw(ref float y, Rect inRect, float x)
         {
@@ -97,6 +103,10 @@ namespace QuestEditor_Library
                 Widgets.Label(new Rect(x, y, 350f, 25f), "CQF_LordJob".Translate(this.LordJob.Name.CanTranslate() ? this.LordJob.Name.Translate().ToString() : this.LordJob.Name));
             }
             y += 30f;
+            if (this.lordJob == typeof(LordJob_ComplexCustom))
+            {
+                this.DrawComplexDutyMap(ref y, x);
+            }
         }
         public virtual void DrawName(ref float y, Rect inRect, float x)
         {      
@@ -125,16 +135,43 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("lordJob", this.lordJob.FullName));
             }
+            if (this.dutyMap != null)
+            {
+                result.Add(new XElement("dutyMap", this.dutyMap.defName));
+            }
+            if (!this.dutyMapStartNodeId.NullOrEmpty())
+            {
+                result.Add(new XElement("dutyMapStartNodeId", this.dutyMapStartNodeId));
+            }
             return result;
         }
 
         public virtual void ExposeData()
         {      
             Scribe_Values.Look(ref this.lordJob, "lordJob", typeof(LordJob_Custom),true);
+            Scribe_Defs.Look(ref this.dutyMap, "dutyMap");
+            Scribe_Values.Look(ref this.dutyMapStartNodeId, "dutyMapStartNodeId");
         }
 
         public Type lordJob = typeof(LordJob_Custom);
         public LordData lordData;
+        public DutyMapDef dutyMap;
+        public string dutyMapStartNodeId;
+
+        private void DrawComplexDutyMap(ref float y, float x)
+        {
+            if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordData_DutyMap".Translate(this.dutyMap?.defName ?? "Null"), false))
+            {
+                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, null, d => d.defName, "Select".Translate(), d => this.dutyMap = d));
+            }
+            y += 30f;
+            if (this.dutyMap != null && this.dutyMap.nodes.Any())
+            {
+                CQFEditorTools.DrawSelectableText(y, "CQF_LordData_DutyMapStartNode".Translate(), ref this.dutyMapStartNodeId, () =>
+                    CQFEditorTools.DrawFloatMenu(this.dutyMap.nodes, node => this.dutyMapStartNodeId = node.nodeId, node => node.nodeId), x, 180f);
+                y += 30f;
+            }
+        }
     }
     public class LordJobData_DefendBase : LordJobData 
     {

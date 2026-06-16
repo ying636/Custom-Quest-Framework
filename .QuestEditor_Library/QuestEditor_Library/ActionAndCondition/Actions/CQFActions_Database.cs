@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using RimWorld;
@@ -79,7 +79,7 @@ namespace QuestEditor_Library
                     result.Add(thing);
                 }
             });
-            GameComponent_Editor.Component.GetQuestData(quest).AddGroup(this.recordKey, result);
+            GameComponent_Editor.Instance.GetQuestData(quest).AddGroup(this.recordKey, result);
         }
 
         public string recordKey;
@@ -149,11 +149,11 @@ namespace QuestEditor_Library
                 }
                 if (this.recordToQuestBase)
                 {
-                    GameComponent_Editor.Component.GetQuestData(quest)?.RecordTarget(recordKey, t.Value);
+                    GameComponent_Editor.Instance.GetQuestData(quest)?.RecordTarget(recordKey, t.Value);
                 }
                 if (this.recordToGlobalBase)
                 {
-                    GameComponent_Editor.Component.GlobalDatabase.RecordTarget(recordKey, t.Value);
+                    GameComponent_Editor.Instance.GlobalDatabase.RecordTarget(recordKey, t.Value);
                 }
             });
         }
@@ -283,7 +283,7 @@ namespace QuestEditor_Library
 
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            foreach (var target in GameComponent_Editor.Component.GetQuestData(quest).GetGroup(this.recordKey))
+            foreach (var target in GameComponent_Editor.Instance.GetQuestData(quest).GetGroup(this.recordKey))
             {
                 foreach (var action in this.actions)
                 {
@@ -305,3 +305,4 @@ namespace QuestEditor_Library
         public List<CQFAction> actions = new List<CQFAction>();
     }
 }
+

@@ -59,7 +59,7 @@ namespace QuestEditor_Library
                     if (this.removeDialogAfterSelect)
                     {
                         Log.Message(interviewer.Label);
-                        GameComponent_Editor.Component.RemoveDialog(interviewer);
+                        GameComponent_Editor.Instance.RemoveDialog(interviewer);
                     }
 
                     GameTools.ConsumeRequiredThings(interviewer as Pawn, interviewee as Pawn, this.requiredThings);
@@ -72,3 +72,4 @@ namespace QuestEditor_Library
         }
     }
 }
+

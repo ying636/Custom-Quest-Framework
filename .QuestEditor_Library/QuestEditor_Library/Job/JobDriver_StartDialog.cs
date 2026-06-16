@@ -21,7 +21,7 @@ namespace QuestEditor_Library
             {
                 initAction = () => 
                 {
-                    if(Current.Game.GetComponent<GameComponent_Editor>().Dialogs.TryGetValue(this.TargetThingA,out DialogManagerDef manager)
+                    if(GameComponent_Editor.Instance.Dialogs.TryGetValue(this.TargetThingA,out DialogManagerDef manager)
                        && manager.GetTree(this.pawn,this.TargetThingA) is DialogTreeDef dialog)
                     {
                         Find.WindowStack.Add(dialog.CreateCQFDialog(this.pawn,
@@ -35,3 +35,4 @@ namespace QuestEditor_Library
         }
     }
 }
+
