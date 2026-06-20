@@ -2465,7 +2465,7 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
                     {
                         GameComponent_ComplexDuty.Instance.SetDutyMap(pawn, this.dutyMap, quest, true);
                     }
-                    DutyMapRuntime runtime = GameComponent_ComplexDuty.Instance.GetRuntime(pawn);
+                    CustomDutyMap runtime = GameComponent_ComplexDuty.Instance.GetRuntime(pawn);
                     LordJob_ComplexCustom.GetForPawn(pawn)?.TryChangeByTransition(pawn, runtime?.CurrentNode?.nodeId, this.toNodeId, quest, targets);
                 }
             });

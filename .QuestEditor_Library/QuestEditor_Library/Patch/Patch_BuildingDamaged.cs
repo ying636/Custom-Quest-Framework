@@ -32,6 +32,7 @@ namespace QuestEditor_Library
             {
                 component.Notify_ThingDamaged(__instance, dinfo);
             }
+            GameComponent_ComplexDuty.Instance?.NotifyPawnDamaged(__instance, dinfo);
         }
     }
 

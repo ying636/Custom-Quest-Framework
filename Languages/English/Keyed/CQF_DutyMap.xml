@@ -26,10 +26,19 @@
   <CQF_IntervalTicks>Interval ticks:</CQF_IntervalTicks>
   <CQF_PawnCount>Pawn count:</CQF_PawnCount>
   <CQF_CustomDutyTransition>Transition</CQF_CustomDutyTransition>
+  <CQF_StartCreateDutyMapTransition>Create transition</CQF_StartCreateDutyMapTransition>
+  <CQF_DutyMapTransitionSource>Transition source</CQF_DutyMapTransitionSource>
+  <CQF_DutyMapTransitionTargetHint>Click to create</CQF_DutyMapTransitionTargetHint>
   <CQF_CustomDutyTrigger_TickInterval>Interval trigger</CQF_CustomDutyTrigger_TickInterval>
   <CQF_CustomDutyTrigger_TickInterval_Tip>Passes once every specified number of ticks.</CQF_CustomDutyTrigger_TickInterval_Tip>
   <CQF_CustomDutyTrigger_LordPawnCountBelow>Lord pawn count below</CQF_CustomDutyTrigger_LordPawnCountBelow>
   <CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>Passes when the current lord owns fewer pawns than the specified count.</CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>
+  <CQF_CustomDutyTrigger_Damaged>Damaged</CQF_CustomDutyTrigger_Damaged>
+  <CQF_CustomDutyTrigger_Damaged_Tip>Passes when this pawn receives damage.</CQF_CustomDutyTrigger_Damaged_Tip>
+  <CQF_CustomDutyTrigger_Signal>Signal received</CQF_CustomDutyTrigger_Signal>
+  <CQF_CustomDutyTrigger_Signal_Tip>Passes when the specified signal is received. Leave empty to accept any signal.</CQF_CustomDutyTrigger_Signal_Tip>
+  <CQF_DutySignalAddQuestPrefix>Add quest prefix</CQF_DutySignalAddQuestPrefix>
+  <CQF_DutySignalAddQuestPrefix_Tip>When enabled, the trigger compares against Quest[id].[signal].</CQF_DutySignalAddQuestPrefix_Tip>
   <CQF_DutyMapNodeEditor>Duty node editor</CQF_DutyMapNodeEditor>
   <CQF_DutyMapTransitionEditor>Duty transition editor</CQF_DutyMapTransitionEditor>
   <CQF_DutyMapDef>Duty map: {0}</CQF_DutyMapDef>
@@ -65,6 +74,19 @@
   <CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>When enabled, a pawn leaves its joinable lord after this node successfully issues a job. Use it for one-off assigned work that should stop being controlled by the original lord flow.</CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>
   <CQF_DutyField_reportStringOverride>Report string override</CQF_DutyField_reportStringOverride>
   <CQF_DutyField_crawlingReportStringOverride>Crawling report string override</CQF_DutyField_crawlingReportStringOverride>
+  <CQF_DutyField_routeKey>Route key</CQF_DutyField_routeKey>
+  <CQF_DutyField_targetKey>Target key</CQF_DutyField_targetKey>
+  <CQF_DutyField_useRuntimeDatabase>Read duty-map runtime database</CQF_DutyField_useRuntimeDatabase>
+  <CQF_DutyField_useQuestDatabase>Read quest database</CQF_DutyField_useQuestDatabase>
+  <CQF_DutyField_useTemporaryDatabase>Read temporary database</CQF_DutyField_useTemporaryDatabase>
+  <CQF_DutyField_useGlobalDatabase>Read global database</CQF_DutyField_useGlobalDatabase>
+  <CQF_DutyField_routeIndexKey>Route index key</CQF_DutyField_routeIndexKey>
+  <CQF_DutyField_locomotion>Locomotion</CQF_DutyField_locomotion>
+  <CQF_DutyField_maxDanger>Max danger</CQF_DutyField_maxDanger>
+  <CQF_DutyField_pathEndMode>Path end mode</CQF_DutyField_pathEndMode>
+  <CQF_DutyField_leftTicks>Left look ticks</CQF_DutyField_leftTicks>
+  <CQF_DutyField_rightTicks>Right look ticks</CQF_DutyField_rightTicks>
+  <CQF_DutyField_forced>Forced</CQF_DutyField_forced>
   <CQF_DutyEnum_ThinkTreeDutyHook_None>None</CQF_DutyEnum_ThinkTreeDutyHook_None>
   <CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>High priority</CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>
   <CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>Medium priority</CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>
@@ -73,7 +95,25 @@
   <CQF_DutyEnum_RandomSocialMode_Quiet>Quiet</CQF_DutyEnum_RandomSocialMode_Quiet>
   <CQF_DutyEnum_RandomSocialMode_Normal>Normal</CQF_DutyEnum_RandomSocialMode_Normal>
   <CQF_DutyEnum_RandomSocialMode_SuperActive>Super active</CQF_DutyEnum_RandomSocialMode_SuperActive>
+  <CQF_DutyEnum_PathEndMode_None>None</CQF_DutyEnum_PathEndMode_None>
+  <CQF_DutyEnum_PathEndMode_OnCell>On cell</CQF_DutyEnum_PathEndMode_OnCell>
+  <CQF_DutyEnum_PathEndMode_Touch>Touch</CQF_DutyEnum_PathEndMode_Touch>
+  <CQF_DutyEnum_PathEndMode_ClosestTouch>Closest touch</CQF_DutyEnum_PathEndMode_ClosestTouch>
+  <CQF_DutyEnum_PathEndMode_InteractionCell>Interaction cell</CQF_DutyEnum_PathEndMode_InteractionCell>
+  <CQF_DutyEnum_Danger_None>None</CQF_DutyEnum_Danger_None>
+  <CQF_DutyEnum_Danger_Some>Some</CQF_DutyEnum_Danger_Some>
+  <CQF_DutyEnum_Danger_Dangerous>Dangerous</CQF_DutyEnum_Danger_Dangerous>
+  <CQF_DutyEnum_Danger_Deadly>Deadly</CQF_DutyEnum_Danger_Deadly>
+  <CQF_DutyEnum_LocomotionUrgency_None>None</CQF_DutyEnum_LocomotionUrgency_None>
+  <CQF_DutyEnum_LocomotionUrgency_Amble>Amble</CQF_DutyEnum_LocomotionUrgency_Amble>
+  <CQF_DutyEnum_LocomotionUrgency_Walk>Walk</CQF_DutyEnum_LocomotionUrgency_Walk>
+  <CQF_DutyEnum_LocomotionUrgency_Jog>Jog</CQF_DutyEnum_LocomotionUrgency_Jog>
+  <CQF_DutyEnum_LocomotionUrgency_Sprint>Sprint</CQF_DutyEnum_LocomotionUrgency_Sprint>
   <CQF_DutyNode_ThinkNode_Priority>Priority node</CQF_DutyNode_ThinkNode_Priority>
+  <CQF_DutyNode_JobGiver_PatrolMove>Patrol move</CQF_DutyNode_JobGiver_PatrolMove>
+  <CQF_DutyNode_JobGiver_GotoTarget>Go to database target</CQF_DutyNode_JobGiver_GotoTarget>
+  <CQF_DutyNode_JobGiver_RepairTarget>Repair database target</CQF_DutyNode_JobGiver_RepairTarget>
+  <CQF_DutyNode_JobGiver_PatrolObserve>Patrol observe</CQF_DutyNode_JobGiver_PatrolObserve>
   <CQF_DutyNode_JobGiver_PlayWithGoldenCube>Play with golden cube</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
   <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>Prepare caravan: collect pawns</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
   <CQFAction_Pawn_RunDutyMapTransition>Pawn action: run duty map transition</CQFAction_Pawn_RunDutyMapTransition>

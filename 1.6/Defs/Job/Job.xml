@@ -55,4 +55,10 @@
     <reportString>Landfilling TargetA.</reportString>
   </JobDef>
 
+  <JobDef>
+    <defName>CQF_DutyMapLookAround</defName>
+    <driverClass>QuestEditor_Library.JobDriver_LookAround</driverClass>
+    <reportString>Looking around.</reportString>
+  </JobDef>
+
 </Defs>

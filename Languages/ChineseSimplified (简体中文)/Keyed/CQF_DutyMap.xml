@@ -27,12 +27,19 @@
   <CQF_IntervalTicks>间隔 tick：</CQF_IntervalTicks>
   <CQF_PawnCount>实体数量：</CQF_PawnCount>
   <CQF_CustomDutyTransition>职责切换</CQF_CustomDutyTransition>
-  <CQF_CustomDutyTrigger_Condition>条件触发器</CQF_CustomDutyTrigger_Condition>
-  <CQF_CustomDutyTrigger_Condition_Tip>始终通过的占位触发器。适合临时测试，正式职责图中请谨慎使用。</CQF_CustomDutyTrigger_Condition_Tip>
+  <CQF_StartCreateDutyMapTransition>创建职责切换</CQF_StartCreateDutyMapTransition>
+  <CQF_DutyMapTransitionSource>切换起点</CQF_DutyMapTransitionSource>
+  <CQF_DutyMapTransitionTargetHint>点击创建切换</CQF_DutyMapTransitionTargetHint>
   <CQF_CustomDutyTrigger_TickInterval>间隔触发器</CQF_CustomDutyTrigger_TickInterval>
   <CQF_CustomDutyTrigger_TickInterval_Tip>每隔指定 tick 检查通过一次。</CQF_CustomDutyTrigger_TickInterval_Tip>
   <CQF_CustomDutyTrigger_LordPawnCountBelow>Lord 人数低于触发器</CQF_CustomDutyTrigger_LordPawnCountBelow>
   <CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>当当前 Lord 拥有的角色数量低于指定值时通过。</CQF_CustomDutyTrigger_LordPawnCountBelow_Tip>
+  <CQF_CustomDutyTrigger_Damaged>受到伤害</CQF_CustomDutyTrigger_Damaged>
+  <CQF_CustomDutyTrigger_Damaged_Tip>当该角色受到伤害时通过。</CQF_CustomDutyTrigger_Damaged_Tip>
+  <CQF_CustomDutyTrigger_Signal>接收到信号</CQF_CustomDutyTrigger_Signal>
+  <CQF_CustomDutyTrigger_Signal_Tip>接收到指定信号时通过。留空时接受任意信号。</CQF_CustomDutyTrigger_Signal_Tip>
+  <CQF_DutySignalAddQuestPrefix>添加任务前缀</CQF_DutySignalAddQuestPrefix>
+  <CQF_DutySignalAddQuestPrefix_Tip>启用后，触发器会按 Quest[id].[signal] 格式进行匹配。</CQF_DutySignalAddQuestPrefix_Tip>
   <CQF_DutyMapNodeEditor>职责节点编辑器</CQF_DutyMapNodeEditor>
   <CQF_DutyMapTransitionEditor>职责切换编辑器</CQF_DutyMapTransitionEditor>
   <CQF_DutyMapDef>职责图：{0}</CQF_DutyMapDef>
@@ -68,6 +75,19 @@
   <CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>启用后，此节点成功发布工作时，执行该工作的角色会从可加入的 Lord 中脱离。适合一次性指派任务，避免角色继续被原 Lord 流程接管。</CQF_DutyFieldTip_leaveJoinableLordIfIssuesJob>
   <CQF_DutyField_reportStringOverride>工作报告覆盖</CQF_DutyField_reportStringOverride>
   <CQF_DutyField_crawlingReportStringOverride>爬行工作报告覆盖</CQF_DutyField_crawlingReportStringOverride>
+  <CQF_DutyField_routeKey>路径 key</CQF_DutyField_routeKey>
+  <CQF_DutyField_targetKey>目标 key</CQF_DutyField_targetKey>
+  <CQF_DutyField_useRuntimeDatabase>读取职责图运行时数据库</CQF_DutyField_useRuntimeDatabase>
+  <CQF_DutyField_useQuestDatabase>读取任务数据库</CQF_DutyField_useQuestDatabase>
+  <CQF_DutyField_useTemporaryDatabase>读取临时数据库</CQF_DutyField_useTemporaryDatabase>
+  <CQF_DutyField_useGlobalDatabase>读取全局数据库</CQF_DutyField_useGlobalDatabase>
+  <CQF_DutyField_routeIndexKey>路径索引 key</CQF_DutyField_routeIndexKey>
+  <CQF_DutyField_locomotion>移动速度</CQF_DutyField_locomotion>
+  <CQF_DutyField_maxDanger>最大危险</CQF_DutyField_maxDanger>
+  <CQF_DutyField_pathEndMode>到达模式</CQF_DutyField_pathEndMode>
+  <CQF_DutyField_leftTicks>向左观察 tick</CQF_DutyField_leftTicks>
+  <CQF_DutyField_rightTicks>向右观察 tick</CQF_DutyField_rightTicks>
+  <CQF_DutyField_forced>强制执行</CQF_DutyField_forced>
   <CQF_DutyEnum_ThinkTreeDutyHook_None>无</CQF_DutyEnum_ThinkTreeDutyHook_None>
   <CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>高优先级</CQF_DutyEnum_ThinkTreeDutyHook_HighPriority>
   <CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>中优先级</CQF_DutyEnum_ThinkTreeDutyHook_MediumPriority>
@@ -76,7 +96,25 @@
   <CQF_DutyEnum_RandomSocialMode_Quiet>安静</CQF_DutyEnum_RandomSocialMode_Quiet>
   <CQF_DutyEnum_RandomSocialMode_Normal>普通</CQF_DutyEnum_RandomSocialMode_Normal>
   <CQF_DutyEnum_RandomSocialMode_SuperActive>非常活跃</CQF_DutyEnum_RandomSocialMode_SuperActive>
+  <CQF_DutyEnum_PathEndMode_None>无</CQF_DutyEnum_PathEndMode_None>
+  <CQF_DutyEnum_PathEndMode_OnCell>到达格子</CQF_DutyEnum_PathEndMode_OnCell>
+  <CQF_DutyEnum_PathEndMode_Touch>接触目标</CQF_DutyEnum_PathEndMode_Touch>
+  <CQF_DutyEnum_PathEndMode_ClosestTouch>最近接触点</CQF_DutyEnum_PathEndMode_ClosestTouch>
+  <CQF_DutyEnum_PathEndMode_InteractionCell>互动格</CQF_DutyEnum_PathEndMode_InteractionCell>
+  <CQF_DutyEnum_Danger_None>无</CQF_DutyEnum_Danger_None>
+  <CQF_DutyEnum_Danger_Some>较低</CQF_DutyEnum_Danger_Some>
+  <CQF_DutyEnum_Danger_Dangerous>危险</CQF_DutyEnum_Danger_Dangerous>
+  <CQF_DutyEnum_Danger_Deadly>致命</CQF_DutyEnum_Danger_Deadly>
+  <CQF_DutyEnum_LocomotionUrgency_None>无</CQF_DutyEnum_LocomotionUrgency_None>
+  <CQF_DutyEnum_LocomotionUrgency_Amble>漫步</CQF_DutyEnum_LocomotionUrgency_Amble>
+  <CQF_DutyEnum_LocomotionUrgency_Walk>行走</CQF_DutyEnum_LocomotionUrgency_Walk>
+  <CQF_DutyEnum_LocomotionUrgency_Jog>慢跑</CQF_DutyEnum_LocomotionUrgency_Jog>
+  <CQF_DutyEnum_LocomotionUrgency_Sprint>冲刺</CQF_DutyEnum_LocomotionUrgency_Sprint>
   <CQF_DutyNode_ThinkNode_Priority>优先级节点</CQF_DutyNode_ThinkNode_Priority>
+  <CQF_DutyNode_JobGiver_PatrolMove>行进</CQF_DutyNode_JobGiver_PatrolMove>
+  <CQF_DutyNode_JobGiver_GotoTarget>前往数据库目标</CQF_DutyNode_JobGiver_GotoTarget>
+  <CQF_DutyNode_JobGiver_RepairTarget>修理数据库目标</CQF_DutyNode_JobGiver_RepairTarget>
+  <CQF_DutyNode_JobGiver_PatrolObserve>观察</CQF_DutyNode_JobGiver_PatrolObserve>
   <CQF_DutyNode_JobGiver_PlayWithGoldenCube>玩金方块</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
   <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>准备商队：集合角色</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
   <CQFAction_Pawn_RunDutyMapTransition>角色行为：触发职责图切换</CQFAction_Pawn_RunDutyMapTransition>

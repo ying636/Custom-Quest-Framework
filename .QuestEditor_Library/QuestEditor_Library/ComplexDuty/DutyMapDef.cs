@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -218,7 +218,7 @@ namespace QuestEditor_Library
 
     public class DutyMapTransition : ISaveable, IDrawable, IExposable
     {
-        public bool CanTransition(Pawn pawn, DutyMapRuntime runtime, Quest quest, Dictionary<string, TargetInfo> targets)
+        public bool CanTransition(Pawn pawn, CustomDutyMap runtime, Quest quest, Dictionary<string, TargetInfo> targets)
         {
             return this.triggers.NullOrEmpty() || this.triggers.All(trigger => trigger.Triggered(pawn, runtime, quest, targets));
         }
@@ -261,7 +261,6 @@ namespace QuestEditor_Library
         private void OpenTriggerSelect()
         {
             List<Type> types = typeof(CustomDutyTrigger).AllSubclassesNonAbstract()
-                .Where(type => type != typeof(CustomDutyTrigger_Condition))
                 .OrderBy(type => this.TriggerLabel(type))
                 .ToList();
             Find.WindowStack.Add(new Dialog_Select<Type>(types, null, this.TriggerLabel, "CQF_DutySelectTrigger".Translate(), type =>

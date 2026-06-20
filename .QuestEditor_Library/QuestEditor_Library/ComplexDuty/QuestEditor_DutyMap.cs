@@ -38,8 +38,10 @@ namespace QuestEditor_Library
             Rect viewRect = new Rect(0f, 0f, this.canvasSize.x, this.canvasSize.y);
             Widgets.DrawBox(canvasRect, 1, QuestEditor_Dialog.blueTex);
             GUI.BeginGroup(canvasRect);
+            this.UpdateHoveredTransition(viewRect);
             this.DrawTransitions();
             this.DrawNodes();
+            this.DrawTransitionCreationPreview();
             this.HandleCanvasInput(viewRect);
             GUI.EndGroup();
         }
@@ -49,7 +51,12 @@ namespace QuestEditor_Library
             float x = inRect.width - 450f;
             if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "LoadPremade".Translate()))
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<DutyMapDef>.AllDefsListForReading, d => QuestEditor_DutyMap.curDutyMap = d, d => d.defName);
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DutyMapDef>.AllDefsListForReading, d =>
+                {
+                    QuestEditor_DutyMap.curDutyMap = d;
+                    this.ClearTransitionSelection();
+                    this.MarkTransitionLayoutDirty();
+                }, d => d.defName);
             }
             x += 110f;
             if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "Save".Translate()))
@@ -62,7 +69,8 @@ namespace QuestEditor_Library
                 QuestEditor_DutyMap.curDutyMap = new DutyMapDef();
                 QuestEditor_DutyMap.curDutyMap.CreateNode();
                 this.selectedNode = null;
-                this.selectedTransition = null;
+                this.ClearTransitionSelection();
+                this.MarkTransitionLayoutDirty();
             }
         }
 
@@ -76,6 +84,7 @@ namespace QuestEditor_Library
                 GUI.color = node.nodeId == this.CurDutyMap.startNodeId ? ColorLibrary.Yellow : Color.white;
                 Widgets.DrawTextureFitted(nodeRect, QuestEditor_Dialog.nodeTexture, 1f);
                 GUI.color = oldColor;
+                this.DrawTransitionTargetHint(node, nodeRect);
                 this.HandleNodeInput(node, nodeRect);
                 TooltipHandler.TipRegion(nodeRect, node.nodeId + "\n" + (node.duty?.defName ?? "Null"));
                 Widgets.Label(new Rect(node.editorPosition.x + 24f, node.editorPosition.y - 2f, 160f, 25f), node.nodeId);
@@ -93,6 +102,12 @@ namespace QuestEditor_Library
             UnityEngine.Event ev = UnityEngine.Event.current;
             if (ev.type == EventType.MouseDown && nodeRect.Contains(ev.mousePosition))
             {
+                if (this.transitionSourceNode != null && ev.button == 0)
+                {
+                    this.TryCreateTransitionTo(node);
+                    ev.Use();
+                    return;
+                }
                 if (ev.button == 0)
                 {
                     this.draggingNode = node;
@@ -115,6 +130,7 @@ namespace QuestEditor_Library
                 node.editorPosition = ev.mousePosition - this.dragOffset;
                 node.editorPosition.x = Mathf.Clamp(node.editorPosition.x, 0f, this.canvasSize.x - QuestEditor_Dialog.nodeSize.x);
                 node.editorPosition.y = Mathf.Clamp(node.editorPosition.y, 0f, this.canvasSize.y - QuestEditor_Dialog.nodeSize.y);
+                this.MarkTransitionLayoutDirty();
                 this.draggedNode = true;
                 ev.Use();
             }
@@ -135,6 +151,12 @@ namespace QuestEditor_Library
             UnityEngine.Event ev = UnityEngine.Event.current;
             if (ev.type != EventType.MouseDown || ev.button != 1 || !viewRect.Contains(ev.mousePosition))
             {
+                return;
+            }
+            if (this.transitionSourceNode != null)
+            {
+                this.transitionSourceNode = null;
+                ev.Use();
                 return;
             }
             bool overNode = this.CurDutyMap.nodes.Any(node => new Rect(node.editorPosition, QuestEditor_Dialog.nodeSize).Contains(ev.mousePosition));
@@ -170,9 +192,11 @@ namespace QuestEditor_Library
                     {
                         this.selectedNode = null;
                     }
+                    this.ClearTransitionSelection();
+                    this.MarkTransitionLayoutDirty();
                 }),
                 new FloatMenuOption("CQF_EditDutyMapNode".Translate(), () => Find.WindowStack.Add(new Dialog_EditDutyMapNode(node))),
-                new FloatMenuOption("CQF_CustomDutyTransition".Translate(), () => this.OpenTransitionMenu(node))
+                new FloatMenuOption("CQF_StartCreateDutyMapTransition".Translate(), () => this.StartTransitionCreation(node))
             };
             if (this.CurDutyMap.startNodeId != node.nodeId)
             {
@@ -181,77 +205,315 @@ namespace QuestEditor_Library
             Find.WindowStack.Add(new FloatMenu(options));
         }
 
-        private void OpenTransitionMenu(DutyMapNode node)
+        private void StartTransitionCreation(DutyMapNode node)
         {
-            List<FloatMenuOption> options = new List<FloatMenuOption>();
-            foreach (DutyMapNode target in this.CurDutyMap.nodes.Where(n => n != node))
+            this.transitionSourceNode = node;
+            this.selectedNode = node;
+            this.ClearTransitionSelection();
+        }
+
+        private void TryCreateTransitionTo(DutyMapNode target)
+        {
+            if (this.transitionSourceNode == null)
             {
-                DutyMapTransition existing = this.CurDutyMap.transitions.FirstOrDefault(t => t.fromNodeId == node.nodeId && t.toNodeId == target.nodeId);
-                if (existing == null)
-                {
-                    options.Add(new FloatMenuOption("CQF_AddTransition".Translate() + $" {node.nodeId}->{target.nodeId}", () =>
-                    {
-                        DutyMapTransition transition = new DutyMapTransition
-                        {
-                            fromNodeId = node.nodeId,
-                            toNodeId = target.nodeId
-                        };
-                        this.CurDutyMap.transitions.Add(transition);
-                        this.selectedTransition = transition;
-                        this.selectedNode = null;
-                    }));
-                }
-                else
-                {
-                    options.Add(new FloatMenuOption("Delete".Translate() + $" {node.nodeId}->{target.nodeId}", () =>
-                    {
-                        this.CurDutyMap.transitions.Remove(existing);
-                        if (this.selectedTransition == existing)
-                        {
-                            this.selectedTransition = null;
-                        }
-                    }));
-                }
+                return;
             }
-            foreach (DutyMapTransition transition in this.CurDutyMap.transitions.Where(t => t.toNodeId == node.nodeId).ToList())
+            DutyMapNode source = this.transitionSourceNode;
+            if (target == source)
             {
-                options.Add(new FloatMenuOption("Delete".Translate() + $" {transition.fromNodeId}->{node.nodeId}", () =>
-                {
-                    this.CurDutyMap.transitions.Remove(transition);
-                    if (this.selectedTransition == transition)
-                    {
-                        this.selectedTransition = null;
-                    }
-                }));
+                this.transitionSourceNode = null;
+                return;
             }
-            if (!options.Any())
+            DutyMapTransition existing = this.CurDutyMap.transitions.FirstOrDefault(t => t.fromNodeId == source.nodeId && t.toNodeId == target.nodeId);
+            if (existing != null)
             {
-                options.Add(new FloatMenuOption("CQF_DutyMapNoOptions".Translate(), null));
+                this.selectedNode = null;
+                this.transitionSourceNode = null;
+                this.ClearTransitionSelection();
+                return;
             }
-            Find.WindowStack.Add(new FloatMenu(options));
+            DutyMapTransition transition = new DutyMapTransition
+            {
+                fromNodeId = source.nodeId,
+                toNodeId = target.nodeId
+            };
+            this.CurDutyMap.transitions.Add(transition);
+            this.selectedNode = null;
+            this.transitionSourceNode = null;
+            this.ClearTransitionSelection();
+            this.MarkTransitionLayoutDirty();
         }
 
         private void DrawTransitions()
         {
-            foreach (DutyMapTransition transition in this.CurDutyMap.transitions)
+            this.EnsureTransitionLayout();
+            foreach (TransitionHitRecord record in this.transitionLayout)
             {
-                DutyMapNode from = this.CurDutyMap.GetNode(transition.fromNodeId);
-                DutyMapNode to = this.CurDutyMap.GetNode(transition.toNodeId);
-                if (from == null || to == null)
+                bool isHovered = this.hoveredTransition == record.Transition;
+                Color color = isHovered ? ColorLibrary.Yellow : ColorLibrary.SkyBlue;
+                Widgets.DrawLine(record.From, record.To, color, isHovered ? 2f : 1f);
+                this.HandleTransitionInput(record.Transition, isHovered);
+            }
+        }
+
+        private void HandleTransitionInput(DutyMapTransition transition, bool mouseOver)
+        {
+            UnityEngine.Event ev = UnityEngine.Event.current;
+            if (!mouseOver)
+            {
+                return;
+            }
+            TooltipHandler.TipRegion(new Rect(ev.mousePosition.x - 8f, ev.mousePosition.y - 8f, 16f, 16f), transition.fromNodeId + " -> " + transition.toNodeId);
+            if (ev.type != EventType.MouseDown)
+            {
+                return;
+            }
+            if (ev.button == 0)
+            {
+                this.selectedTransition = transition;
+                this.selectedNode = null;
+                Find.WindowStack.Add(new Dialog_EditDutyMapTransition(transition));
+                ev.Use();
+            }
+            else if (ev.button == 1)
+            {
+                ev.Use();
+                Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
+                {
+                    new FloatMenuOption("Delete".Translate(), () =>
+                    {
+                        this.CurDutyMap.transitions.Remove(transition);
+                        this.ClearTransitionSelection();
+                        this.MarkTransitionLayoutDirty();
+                    })
+                }));
+            }
+        }
+
+        private void EnsureTransitionLayout()
+        {
+            if (!this.transitionLayoutDirty)
+            {
+                return;
+            }
+            this.transitionLayout.Clear();
+            this.transitionGrid.Clear();
+            List<DutyMapTransition> transitions = this.CurDutyMap.transitions.ToList();
+            for (int i = 0; i < transitions.Count; i++)
+            {
+                DutyMapTransition transition = transitions[i];
+                if (!this.TryGetTransitionLine(transition, transitions, i, out Vector2 fromPos, out Vector2 toPos))
                 {
                     continue;
                 }
-                Vector2 fromPos = from.editorPosition + new Vector2(10f, 10f);
-                Vector2 toPos = to.editorPosition + new Vector2(10f, 10f);
-                Widgets.DrawLine(fromPos, toPos, ColorLibrary.SkyBlue, 1f);
-                Rect hitRect = new Rect((fromPos + toPos) / 2f - new Vector2(10f, 10f), QuestEditor_Dialog.nodeSize);
-                if (Widgets.ButtonImage(hitRect, QuestEditor_Dialog.optionTexture))
+                TransitionHitRecord record = new TransitionHitRecord(transition, fromPos, toPos);
+                int recordIndex = this.transitionLayout.Count;
+                this.transitionLayout.Add(record);
+                this.AddTransitionToGrid(record.Bounds, recordIndex);
+            }
+            if (this.hoveredTransition != null && !this.CurDutyMap.transitions.Contains(this.hoveredTransition))
+            {
+                this.hoveredTransition = null;
+            }
+            if (this.selectedTransition != null && !this.CurDutyMap.transitions.Contains(this.selectedTransition))
+            {
+                this.selectedTransition = null;
+            }
+            this.transitionLayoutDirty = false;
+        }
+
+        private void MarkTransitionLayoutDirty()
+        {
+            this.transitionLayoutDirty = true;
+        }
+
+        private void ClearTransitionSelection()
+        {
+            this.selectedTransition = null;
+            this.hoveredTransition = null;
+        }
+
+        private Vector2 GetTransitionOffset(List<DutyMapTransition> transitions, DutyMapTransition transition, int index, Vector2 fromPos, Vector2 toPos)
+        {
+            string groupKey = this.TransitionGroupKey(transition);
+            List<int> group = new List<int>();
+            for (int i = 0; i < transitions.Count; i++)
+            {
+                if (this.TransitionGroupKey(transitions[i]) == groupKey)
                 {
-                    this.selectedTransition = transition;
-                    this.selectedNode = null;
-                    Find.WindowStack.Add(new Dialog_EditDutyMapTransition(transition));
+                    group.Add(i);
                 }
             }
+            if (group.Count <= 1)
+            {
+                return Vector2.zero;
+            }
+            int order = group.IndexOf(index);
+            float center = (group.Count - 1) / 2f;
+            Vector2 direction = toPos - fromPos;
+            if (direction.sqrMagnitude < 0.001f)
+            {
+                return Vector2.zero;
+            }
+            Vector2 normal = new Vector2(-direction.y, direction.x).normalized;
+            return normal * ((order - center) * 8f);
+        }
+
+        private string TransitionGroupKey(DutyMapTransition transition)
+        {
+            if (string.CompareOrdinal(transition.fromNodeId, transition.toNodeId) <= 0)
+            {
+                return transition.fromNodeId + "|" + transition.toNodeId;
+            }
+            return transition.toNodeId + "|" + transition.fromNodeId;
+        }
+
+        private void UpdateHoveredTransition(Rect viewRect)
+        {
+            UnityEngine.Event ev = UnityEngine.Event.current;
+            if (this.draggingNode != null)
+            {
+                this.hoveredTransition = null;
+                return;
+            }
+            if (ev.type == EventType.MouseLeaveWindow)
+            {
+                this.hoveredTransition = null;
+                return;
+            }
+            if ((ev.type != EventType.MouseMove && ev.type != EventType.MouseDown && ev.type != EventType.MouseDrag) || !viewRect.Contains(ev.mousePosition))
+            {
+                return;
+            }
+            this.hoveredTransition = this.FindHoveredTransition(ev.mousePosition);
+        }
+
+        private DutyMapTransition FindHoveredTransition(Vector2 mousePosition)
+        {
+            if (this.IsMouseOverNode(mousePosition))
+            {
+                return null;
+            }
+            this.EnsureTransitionLayout();
+            DutyMapTransition result = null;
+            float bestDistance = 6f;
+            int gridKey = this.TransitionGridKey(mousePosition);
+            if (!this.transitionGrid.TryGetValue(gridKey, out List<int> candidates))
+            {
+                return null;
+            }
+            foreach (int candidate in candidates)
+            {
+                if (candidate < 0 || candidate >= this.transitionLayout.Count)
+                {
+                    continue;
+                }
+                TransitionHitRecord record = this.transitionLayout[candidate];
+                float distance = this.DistanceToSegment(mousePosition, record.From, record.To);
+                if (distance <= bestDistance)
+                {
+                    bestDistance = distance;
+                    result = record.Transition;
+                }
+            }
+            return result;
+        }
+
+        private void AddTransitionToGrid(Rect bounds, int transitionIndex)
+        {
+            int minX = Mathf.FloorToInt(bounds.xMin / TransitionGridSize);
+            int maxX = Mathf.FloorToInt(bounds.xMax / TransitionGridSize);
+            int minY = Mathf.FloorToInt(bounds.yMin / TransitionGridSize);
+            int maxY = Mathf.FloorToInt(bounds.yMax / TransitionGridSize);
+            for (int x = minX; x <= maxX; x++)
+            {
+                for (int y = minY; y <= maxY; y++)
+                {
+                    int key = this.TransitionGridKey(x, y);
+                    if (!this.transitionGrid.TryGetValue(key, out List<int> list))
+                    {
+                        list = new List<int>();
+                        this.transitionGrid[key] = list;
+                    }
+                    list.Add(transitionIndex);
+                }
+            }
+        }
+
+        private int TransitionGridKey(Vector2 position)
+        {
+            return this.TransitionGridKey(Mathf.FloorToInt(position.x / TransitionGridSize), Mathf.FloorToInt(position.y / TransitionGridSize));
+        }
+
+        private int TransitionGridKey(int x, int y)
+        {
+            return (x * 73856093) ^ (y * 19349663);
+        }
+
+        private bool TryGetTransitionLine(DutyMapTransition transition, List<DutyMapTransition> transitions, int index, out Vector2 fromPos, out Vector2 toPos)
+        {
+            fromPos = Vector2.zero;
+            toPos = Vector2.zero;
+            DutyMapNode from = this.CurDutyMap.GetNode(transition.fromNodeId);
+            DutyMapNode to = this.CurDutyMap.GetNode(transition.toNodeId);
+            if (from == null || to == null)
+            {
+                return false;
+            }
+            Vector2 start = from.editorPosition + new Vector2(10f, 10f);
+            Vector2 end = to.editorPosition + new Vector2(10f, 10f);
+            Vector2 offset = this.GetTransitionOffset(transitions, transition, index, start, end);
+            fromPos = start + offset;
+            toPos = end + offset;
+            return true;
+        }
+
+        private bool IsMouseOverNode(Vector2 mousePosition)
+        {
+            return this.CurDutyMap.nodes.Any(node => new Rect(node.editorPosition, QuestEditor_Dialog.nodeSize).Contains(mousePosition));
+        }
+
+        private float DistanceToSegment(Vector2 point, Vector2 start, Vector2 end)
+        {
+            Vector2 segment = end - start;
+            if (segment.sqrMagnitude < 0.001f)
+            {
+                return Vector2.Distance(point, start);
+            }
+            float t = Mathf.Clamp01(Vector2.Dot(point - start, segment) / segment.sqrMagnitude);
+            Vector2 projection = start + segment * t;
+            return Vector2.Distance(point, projection);
+        }
+
+        private void DrawTransitionTargetHint(DutyMapNode node, Rect nodeRect)
+        {
+            if (this.transitionSourceNode == null)
+            {
+                return;
+            }
+            bool source = node == this.transitionSourceNode;
+            bool available = !source && this.CurDutyMap.transitions.All(t => t.fromNodeId != this.transitionSourceNode.nodeId || t.toNodeId != node.nodeId);
+            if (!available && !source)
+            {
+                return;
+            }
+            Color color = source ? ColorLibrary.Yellow : ColorLibrary.SkyBlue;
+            Widgets.DrawBox(nodeRect.ExpandedBy(4f), 2, BaseContent.WhiteTex);
+            GUI.color = color;
+            Widgets.DrawBox(nodeRect.ExpandedBy(3f));
+            GUI.color = Color.white;
+            string label = source ? "CQF_DutyMapTransitionSource".Translate() : "CQF_DutyMapTransitionTargetHint".Translate();
+            Widgets.Label(new Rect(nodeRect.x, nodeRect.yMax + 2f, 150f, 24f), label.Colorize(color));
+        }
+
+        private void DrawTransitionCreationPreview()
+        {
+            if (this.transitionSourceNode == null)
+            {
+                return;
+            }
+            Vector2 fromPos = this.transitionSourceNode.editorPosition + new Vector2(10f, 10f);
+            Widgets.DrawLine(fromPos, UnityEngine.Event.current.mousePosition, ColorLibrary.SkyBlue, 1f);
         }
 
         private void Save()
@@ -280,10 +542,39 @@ namespace QuestEditor_Library
 
         private DutyMapNode selectedNode;
         private DutyMapTransition selectedTransition;
+        private DutyMapTransition hoveredTransition;
+        private DutyMapNode transitionSourceNode;
         private DutyMapNode draggingNode;
         private Vector2 dragOffset;
         private bool draggedNode;
+        private bool transitionLayoutDirty = true;
         private Vector2 canvasSize = new Vector2(1800f, 1200f);
+        private readonly List<TransitionHitRecord> transitionLayout = new List<TransitionHitRecord>();
+        private readonly Dictionary<int, List<int>> transitionGrid = new Dictionary<int, List<int>>();
+        private const float TransitionGridSize = 96f;
         private static DutyMapDef curDutyMap = new DutyMapDef();
+
+        private readonly struct TransitionHitRecord
+        {
+            public TransitionHitRecord(DutyMapTransition transition, Vector2 from, Vector2 to)
+            {
+                this.Transition = transition;
+                this.From = from;
+                this.To = to;
+                this.Bounds = new Rect(
+                    Mathf.Min(from.x, to.x),
+                    Mathf.Min(from.y, to.y),
+                    Mathf.Abs(from.x - to.x),
+                    Mathf.Abs(from.y - to.y)).ExpandedBy(8f);
+            }
+
+            public DutyMapTransition Transition { get; }
+
+            public Vector2 From { get; }
+
+            public Vector2 To { get; }
+
+            public Rect Bounds { get; }
+        }
     }
 }

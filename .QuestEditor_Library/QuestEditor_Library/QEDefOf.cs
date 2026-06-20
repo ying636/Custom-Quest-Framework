@@ -33,6 +33,7 @@ namespace QuestEditor_Library
         public static JobDef QE_MoveInTargetToSubMap;
         public static JobDef QE_MoveTargetOutOfSubMap;
         public static JobDef QE_Landfill;
+        public static JobDef CQF_DutyMapLookAround;
 
         public static DutyDef QE_Duty_Guard;
         public static DutyDef QE_Duty_Waiter;

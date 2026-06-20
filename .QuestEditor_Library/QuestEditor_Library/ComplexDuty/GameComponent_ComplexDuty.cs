@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using RimWorld.QuestGen;
@@ -15,29 +15,30 @@ namespace QuestEditor_Library
 
         public static GameComponent_ComplexDuty Component => Instance;
 
-        private Dictionary<Pawn, DutyMapRuntime> Runtimes
+        private Dictionary<Pawn, CustomDutyMap> Runtimes
         {
             get
             {
                 if (this.runtimes == null)
                 {
-                    this.runtimes = new Dictionary<Pawn, DutyMapRuntime>();
+                    this.runtimes = new Dictionary<Pawn, CustomDutyMap>();
                 }
                 return this.runtimes;
             }
         }
 
-        public DutyMapRuntime GetRuntime(Pawn pawn)
+        public CustomDutyMap GetRuntime(Pawn pawn)
         {
             if (pawn == null)
             {
                 return null;
             }
-            if (!this.Runtimes.TryGetValue(pawn, out DutyMapRuntime runtime))
+            if (!this.Runtimes.TryGetValue(pawn, out CustomDutyMap runtime))
             {
-                runtime = new DutyMapRuntime();
+                runtime = new CustomDutyMap();
                 this.Runtimes.Add(pawn, runtime);
             }
+            runtime.SetPawn(pawn);
             return runtime;
         }
 
@@ -48,14 +49,16 @@ namespace QuestEditor_Library
                 return;
             }
             LordJob_ComplexCustom job = LordJob_ComplexCustom.EnsureForPawn(pawn);
-            DutyMapRuntime runtime = this.GetRuntime(pawn);
+            CustomDutyMap runtime = this.GetRuntime(pawn);
             runtime.dutyMap = dutyMap;
+            runtime.RegisterSignalReceiver();
             if (useStartNode || runtime.currentNodeId.NullOrEmpty() || dutyMap.GetNode(runtime.currentNodeId) == null)
             {
                 runtime.currentNodeId = dutyMap.StartNode?.nodeId;
             }
             runtime.lastTransitionTick = Find.TickManager.TicksGame;
             job?.ApplyDuty(pawn, quest);
+            job?.TryRunTickTransition(pawn, quest);
         }
 
         public void SetNode(Pawn pawn, string nodeId, Quest quest)
@@ -65,7 +68,7 @@ namespace QuestEditor_Library
                 return;
             }
             LordJob_ComplexCustom job = LordJob_ComplexCustom.EnsureForPawn(pawn);
-            DutyMapRuntime runtime = this.GetRuntime(pawn);
+            CustomDutyMap runtime = this.GetRuntime(pawn);
             if (runtime?.dutyMap == null)
             {
                 return;
@@ -77,8 +80,23 @@ namespace QuestEditor_Library
         {
             if (pawn != null)
             {
+                if (this.Runtimes.TryGetValue(pawn, out CustomDutyMap runtime))
+                {
+                    runtime.DeregisterSignalReceiver();
+                }
                 this.Runtimes.Remove(pawn);
             }
+        }
+
+        public void NotifyPawnDamaged(Pawn pawn, DamageInfo dinfo)
+        {
+            CustomDutyMap runtime = this.GetRuntime(pawn);
+            if (runtime?.dutyMap == null)
+            {
+                return;
+            }
+            runtime.lastDamageTick = Find.TickManager.TicksGame;
+            LordJob_ComplexCustom.GetForPawn(pawn)?.TryRunTriggeredTransition(pawn, null, null, typeof(CustomDutyTrigger_Damaged));
         }
 
         public override void ExposeData()
@@ -89,28 +107,22 @@ namespace QuestEditor_Library
                 this.Runtimes.RemoveAll(pair => pair.Key == null || pair.Key.Destroyed || pair.Key.Dead || pair.Value?.dutyMap == null);
             }
             Scribe_Collections.Look(ref this.runtimes, "CQF_ComplexDuty_runtimes", LookMode.Reference, LookMode.Deep, ref this.tmpPawns, ref this.tmpRuntimes);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && this.runtimes != null)
+            {
+                foreach (KeyValuePair<Pawn, CustomDutyMap> pair in this.runtimes)
+                {
+                    pair.Value?.SetPawn(pair.Key);
+                    pair.Value?.RegisterSignalReceiver();
+                }
+            }
         }
 
         public static GameComponent_ComplexDuty Instance;
 
-        private Dictionary<Pawn, DutyMapRuntime> runtimes = new Dictionary<Pawn, DutyMapRuntime>();
+        private Dictionary<Pawn, CustomDutyMap> runtimes = new Dictionary<Pawn, CustomDutyMap>();
         private List<Pawn> tmpPawns;
-        private List<DutyMapRuntime> tmpRuntimes;
+        private List<CustomDutyMap> tmpRuntimes;
     }
 
-    public class DutyMapRuntime : IExposable
-    {
-        public DutyMapNode CurrentNode => this.dutyMap?.GetNode(this.currentNodeId) ?? this.dutyMap?.StartNode;
-
-        public void ExposeData()
-        {
-            Scribe_Defs.Look(ref this.dutyMap, "dutyMap");
-            Scribe_Values.Look(ref this.currentNodeId, "currentNodeId");
-            Scribe_Values.Look(ref this.lastTransitionTick, "lastTransitionTick");
-        }
-
-        public DutyMapDef dutyMap;
-        public string currentNodeId;
-        public int lastTransitionTick;
-    }
 }
+
