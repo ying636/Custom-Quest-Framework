@@ -9,6 +9,11 @@
   <CQF_DutyMapNodeId>Node id:</CQF_DutyMapNodeId>
   <CQF_DutyType>Duty type: {0}</CQF_DutyType>
   <CQF_DutyMapTransition>Duty transition</CQF_DutyMapTransition>
+  <CQF_DutyTransitionTriggers>Transition triggers</CQF_DutyTransitionTriggers>
+  <CQF_DutyTransitionConditions>Transition conditions</CQF_DutyTransitionConditions>
+  <CQF_DutySelectNode>Select duty node</CQF_DutySelectNode>
+  <CQF_SelectDialogCondition>Select condition</CQF_SelectDialogCondition>
+  <CQF_SubConditions>Child conditions</CQF_SubConditions>
   <CQF_DutyMapFromNode>From node:</CQF_DutyMapFromNode>
   <CQF_DutyMapToNode>To node:</CQF_DutyMapToNode>
   <CQF_AddTransition>Add transition</CQF_AddTransition>

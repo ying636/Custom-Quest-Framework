@@ -1014,15 +1014,21 @@ add(p3))));
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => !t.IsCorpse && t.category != ThingCategory.Mote && t.category != ThingCategory.Projectile && t.category != ThingCategory.Pawn && t.category != ThingCategory.Ethereal && t.category != ThingCategory.Attachment);
             CQFEditorTools.DrawButtonWithIcon(y,() => 
             {
-                Find.WindowStack.Add(new Dialog_Select<ThingDef>(defs,
-t => t.uiIcon, t => t.label, "SelectReplacedThing".Translate(), t =>
-{
-    Find.WindowStack.Add(new Dialog_Select<ThingDef>(defs,
-t2 => t2.uiIcon, t2 => t2.label, "SelectThingDefToReplace".Translate(), t2 =>
-{
-    this.replaceThings.Add(t.defName,t2.defName);
-},t2 => t2.graphicData == null ? Color.white : t2.graphicData.color));
-},t => t.graphicData == null ? Color.white : t.graphicData.color));
+                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                    new TextureSelectDrawer<ThingDef>(
+                        defs,
+                        t => t.uiIcon,
+                        t => t.label,
+                        t => Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                            new TextureSelectDrawer<ThingDef>(
+                                defs,
+                                t2 => t2.uiIcon,
+                                t2 => t2.label,
+                                t2 => this.replaceThings.Add(t.defName, t2.defName),
+                                t2 => t2.graphicData == null ? Color.white : t2.graphicData.color),
+                            "SelectThingDefToReplace".Translate())),
+                        t => t.graphicData == null ? Color.white : t.graphicData.color),
+                    "SelectReplacedThing".Translate()));
             },() => CQFEditorTools.DrawFloatMenu(this.replaceThings.ToList(),t => this.replaceThings.Remove(t.Key),t => ThingDef.Named(t.Key).label + "," + ThingDef.Named(t.Value).label),inRect.width - 100f);
             y += 30f;
             foreach (KeyValuePair<string, string> t in this.replaceThings)
@@ -1042,15 +1048,21 @@ t2 => t2.uiIcon, t2 => t2.label, "SelectThingDefToReplace".Translate(), t2 =>
             List<ThingDef> stuffs = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(d => d.IsStuff);
             CQFEditorTools.DrawButtonWithIcon(y, () =>
             {
-                Find.WindowStack.Add(new Dialog_Select<ThingDef>(stuffs,
-t => t.uiIcon, t => t.label, "SelectReplacedThing".Translate(), t =>
-{
-    Find.WindowStack.Add(new Dialog_Select<ThingDef>(stuffs,
-t2 => t2.uiIcon, t2 => t2.label, "SelectThingDefToReplace".Translate(), t2 =>
-{
-    this.replaceStuffs.Add(t.defName, t2.defName);
-},t2 => t2.graphicData == null ? Color.white : t2.graphicData.color));
-},t => t.graphicData == null ? Color.white : t.graphicData.color));
+                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                    new TextureSelectDrawer<ThingDef>(
+                        stuffs,
+                        t => t.uiIcon,
+                        t => t.label,
+                        t => Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                            new TextureSelectDrawer<ThingDef>(
+                                stuffs,
+                                t2 => t2.uiIcon,
+                                t2 => t2.label,
+                                t2 => this.replaceStuffs.Add(t.defName, t2.defName),
+                                t2 => t2.graphicData == null ? Color.white : t2.graphicData.color),
+                            "SelectThingDefToReplace".Translate())),
+                        t => t.graphicData == null ? Color.white : t.graphicData.color),
+                    "SelectReplacedThing".Translate()));
             }, () => CQFEditorTools.DrawFloatMenu(this.replaceStuffs.ToList(), t => this.replaceStuffs.Remove(t.Key), t => ThingDef.Named(t.Key).label + "," + ThingDef.Named(t.Value).label), inRect.width - 100f);
             y += 30f;
             foreach (KeyValuePair<string, string> t in this.replaceStuffs)
@@ -1069,15 +1081,23 @@ t2 => t2.uiIcon, t2 => t2.label, "SelectThingDefToReplace".Translate(), t2 =>
             Widgets.Label(new Rect(x, y + 7f, 1020f, 25f), "TerrainReplacement".Translate().Colorize(ColorLibrary.SkyBlue));
             CQFEditorTools.DrawButtonWithIcon(y, () =>
             {
-                Find.WindowStack.Add(new Dialog_Select<TerrainDef>(DefDatabase<TerrainDef>.AllDefsListForReading,
-t => t.uiIcon, t => t.label, "SelectReplacedTerrain".Translate(), t =>
-{
-    Find.WindowStack.Add(new Dialog_Select<TerrainDef>(DefDatabase<TerrainDef>.AllDefsListForReading,
-t2 => t2.uiIcon, t2 => t2.label, "SelectTerrainDefToReplace".Translate(), t2 =>
-{
-    this.replaceTerrains.Add(t.defName, t2.defName);
-},t2 => t2.DrawColor, (t2, r) => Widgets.DefIcon(r, t2, null, 1, null, false, t2.DrawColor)));
-},t => t.DrawColor, (t, r) => Widgets.DefIcon(r, t, null, 1, null, false, t.DrawColor)));
+                Find.WindowStack.Add(new Dialog_Select<TerrainDef>(
+                    new TextureSelectDrawer<TerrainDef>(
+                        DefDatabase<TerrainDef>.AllDefsListForReading,
+                        t => t.uiIcon,
+                        t => t.label,
+                        t => Find.WindowStack.Add(new Dialog_Select<TerrainDef>(
+                            new TextureSelectDrawer<TerrainDef>(
+                                DefDatabase<TerrainDef>.AllDefsListForReading,
+                                t2 => t2.uiIcon,
+                                t2 => t2.label,
+                                t2 => this.replaceTerrains.Add(t.defName, t2.defName),
+                                t2 => t2.DrawColor,
+                                (t2, r) => Widgets.DefIcon(r, t2, null, 1, null, false, t2.DrawColor)),
+                            "SelectTerrainDefToReplace".Translate())),
+                        t => t.DrawColor,
+                        (t, r) => Widgets.DefIcon(r, t, null, 1, null, false, t.DrawColor)),
+                    "SelectReplacedTerrain".Translate()));
             }, () => CQFEditorTools.DrawFloatMenu(this.replaceTerrains.ToList(), t => this.replaceTerrains.Remove(t.Key),t => TerrainDef.Named(t.Key).label + "," + TerrainDef.Named(t.Value).label), inRect.width - 100f);
             y += 30f;
             foreach (KeyValuePair<string, string> t in this.replaceTerrains)

@@ -841,7 +841,7 @@ namespace QuestEditor_Library
         {
             List<string> typeFilterOrder = this.MakeThinkNodeModFilterOrder();
             Dictionary<string, Func<Type, bool>> typeFilters = this.MakeThinkNodeModFilters(typeFilterOrder);
-            Find.WindowStack.Add(new Dialog_Select<Type>(this.ThinkNodeTypes, null, this.ThinkNodeTypeLabel, "CQF_DutySelectThinkNode".Translate(), acceptAction, null, null, this.ThinkNodeTypeTip, type => this.ThinkNodeTypePriority(type), null, type => type.Name, typeFilters));
+            Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(this.ThinkNodeTypes, this.ThinkNodeTypeLabel, acceptAction, null, this.ThinkNodeTypeTip, type => this.ThinkNodeTypePriority(type), type => type.Name, null, typeFilters, null), "CQF_DutySelectThinkNode".Translate()));
         }
 
         private ThinkNode MakeThinkNode(Type type)

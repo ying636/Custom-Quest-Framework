@@ -48,7 +48,7 @@ namespace QuestEditor_Library
                 {
                     QuestEditor_PawnDataEditor.curDef = def;
                     this.selectedModDefName = null;
-                    this.previewKey = null;
+                    QuestEditor_PawnDataEditor.ResetPreview();
                 }, this.PawnDisplayName);
             }
             if (Widgets.ButtonText(new Rect(inRect.width - 220f, y, 90f, 30f), "CQF_PawnEditor_Save".Translate()))
@@ -64,7 +64,7 @@ namespace QuestEditor_Library
                 dialog.buttonAAction = () =>
                 {
                     QuestEditor_PawnDataEditor.curDef = new ComplexPawnDef();
-                    this.previewKey = null;
+                    QuestEditor_PawnDataEditor.ResetPreview();
                     dialog.Close();
                 };
                 Find.WindowStack.Add(dialog);
@@ -167,7 +167,7 @@ namespace QuestEditor_Library
         private void DrawPawnPreview(Rect rect)
         {
             this.EnsurePreviewPawn();
-            if (this.previewPawn == null)
+            if (QuestEditor_PawnDataEditor.previewPawn == null)
             {
                 if (this.CurDef.KindDef?.race != null)
                 {
@@ -182,27 +182,27 @@ namespace QuestEditor_Library
                 return;
             }
             this.SyncPreviewPawn();
-            RenderTexture portrait = PortraitsCache.Get(this.previewPawn, new Vector2(rect.width, rect.height), Rot4.South, default(Vector3), 1.15f, true, true, true, true);
+            RenderTexture portrait = PortraitsCache.Get(QuestEditor_PawnDataEditor.previewPawn, new Vector2(rect.width, rect.height), Rot4.South, default(Vector3), 1.15f, true, true, true, true);
             GUI.DrawTexture(rect, portrait, ScaleMode.ScaleToFit);
         }
 
         private void EnsurePreviewPawn()
         {
             string key = this.GetPreviewKey();
-            if (key == this.previewKey)
+            if (key == QuestEditor_PawnDataEditor.previewKey)
             {
                 return;
             }
-            this.previewKey = key;
-            this.previewPawn = null;
+            QuestEditor_PawnDataEditor.previewKey = key;
+            QuestEditor_PawnDataEditor.previewPawn = null;
             if (this.CurDef.KindDef == null || Current.Game == null)
             {
                 return;
             }
             try
             {
-                this.previewPawn = this.CurDef.CreatePreviewPawn();
-                this.previewApplyKey = null;
+                QuestEditor_PawnDataEditor.previewPawn = this.CurDef.CreatePreviewPawn();
+                QuestEditor_PawnDataEditor.previewApplyKey = null;
             }
             catch (Exception e)
             {
@@ -217,19 +217,19 @@ namespace QuestEditor_Library
 
         private void SyncPreviewPawn()
         {
-            if (this.previewPawn == null)
+            if (QuestEditor_PawnDataEditor.previewPawn == null)
             {
                 return;
             }
             string key = this.GetPreviewApplyKey();
-            if (key == this.previewApplyKey)
+            if (key == QuestEditor_PawnDataEditor.previewApplyKey)
             {
                 return;
             }
-            this.previewApplyKey = key;
-            this.CurDef.ApplyModsToPawn(this.previewPawn, true);
-            this.previewPawn.Drawer?.renderer?.SetAllGraphicsDirty();
-            PortraitsCache.SetDirty(this.previewPawn);
+            QuestEditor_PawnDataEditor.previewApplyKey = key;
+            this.CurDef.ApplyModsToPawn(QuestEditor_PawnDataEditor.previewPawn, true);
+            QuestEditor_PawnDataEditor.previewPawn.Drawer?.renderer?.SetAllGraphicsDirty();
+            PortraitsCache.SetDirty(QuestEditor_PawnDataEditor.previewPawn);
         }
 
         private string GetPreviewApplyKey()
@@ -263,6 +263,13 @@ namespace QuestEditor_Library
             return def?.label.NullOrEmpty() == false ? def.label : def?.defName;
         }
 
+        private static void ResetPreview()
+        {
+            QuestEditor_PawnDataEditor.previewPawn = null;
+            QuestEditor_PawnDataEditor.previewKey = null;
+            QuestEditor_PawnDataEditor.previewApplyKey = null;
+        }
+
         private void Save()
         {
             try
@@ -290,10 +297,10 @@ namespace QuestEditor_Library
 
         public float height;
         public Vector2 scrollPos = Vector2.zero;
-        private Pawn previewPawn;
-        private string previewKey;
-        private string previewApplyKey;
         private string selectedModDefName;
+        private static Pawn previewPawn;
+        private static string previewKey;
+        private static string previewApplyKey;
         private static ComplexPawnDef curDef = new ComplexPawnDef();
     }
 }

@@ -277,10 +277,10 @@ namespace QuestEditor_Library
             Rect rect = new Rect(x, y, 150f, 25f);
             if (Widgets.ButtonText(rect, "RequiredFaction".Translate(this.faction?.label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<FactionDef>(DefDatabase<FactionDef>.AllDefsListForReading, null, t => t.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<FactionDef>(new TextSelectDrawer<FactionDef>(DefDatabase<FactionDef>.AllDefsListForReading, t => t.label, t =>
                 {
                     this.faction = t;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
         }
@@ -562,11 +562,11 @@ namespace QuestEditor_Library
             });
             if (Widgets.ButtonText(rect, "RequiredTrait".Translate(this.trait?.degreeDatas.Find(d => d.degree == this.degree)?.label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, null, t => t.Value.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
                 {
                     this.trait = t.Key;
                     this.degree = t.Value.degree;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 325f, 20f), "NeedToBeGreater".Translate(), ref this.needToBeGreater);
@@ -742,7 +742,7 @@ namespace QuestEditor_Library
             });
             if (Widgets.ButtonText(rect, "CQF_ThoughtDef".Translate(this.thought?.stages.Find(s => s.untranslatedLabel == this.untranslatedLabel)?.label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<ThoughtDef, ThoughtStage>>(stagets, null, t => t.Value?.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<ThoughtDef, ThoughtStage>>(new TextSelectDrawer<KeyValuePair<ThoughtDef, ThoughtStage>>(stagets, t => t.Value?.label, t =>
                 {
                     this.thought = t.Key;
                     if (t.Key.stages.Contains(t.Value))
@@ -753,7 +753,7 @@ namespace QuestEditor_Library
                     {
                         Log.Message("CQF Action Gain Mood Error:A thoughtstage without thought");
                     }
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
         }

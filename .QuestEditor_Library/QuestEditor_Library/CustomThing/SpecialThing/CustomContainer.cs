@@ -121,8 +121,8 @@ namespace QuestEditor_Library
 			y += 30f;
 			CQFEditorTools.DrawActionList(ref y, x, this.openingActions, inRect, "OpeningActions".Translate().Colorize(ColorLibrary.SkyBlue),true, "OpeningActionsTip".Translate().ToString());
 			Widgets.Label(new Rect(x, y, 150f, 25f), "OpeningConditions".Translate().Colorize(ColorLibrary.PaleBlue));
-			CQFEditorTools.DrawButtonWithIcon(y, () => Find.WindowStack.Add(new Dialog_Select<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), null, c => c.Name.Translate(), "Select".Translate(), c =>
-	this.openingConditions.Add((DialogCondition)Activator.CreateInstance(c)))), () => CQFEditorTools.DrawFloatMenu(this.openingConditions, c => this.openingConditions.Remove(c), c => c.GetType().Name.Translate()), inRect.width - 150f, 30);
+			CQFEditorTools.DrawButtonWithIcon(y, () => Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), c => c.Name.Translate(), c =>
+	this.openingConditions.Add((DialogCondition)Activator.CreateInstance(c)), null, null, null, null, null, null), "Select".Translate())), () => CQFEditorTools.DrawFloatMenu(this.openingConditions, c => this.openingConditions.Remove(c), c => c.GetType().Name.Translate()), inRect.width - 150f, 30);
 			y += 30f;
 			foreach (DialogCondition c in this.openingConditions)
 			{

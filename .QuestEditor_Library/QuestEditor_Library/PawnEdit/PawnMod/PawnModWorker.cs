@@ -81,9 +81,34 @@ namespace QuestEditor_Library
             return result;
         }
 
+        protected void DrawColorRow(ref float y, Rect inRect, float x, string label, Color color, Action<Color> apply)
+        {
+            this.DrawColorRow(ref y, inRect, x, label, color, apply, null);
+        }
+
+        protected void DrawColorRow(ref float y, Rect inRect, float x, string label, Color? color, Action<Color> apply, Action clear)
+        {
+            Rect rect = new Rect(x, y, inRect.width - x - 20f, 30f);
+            if (this.DrawTextButton(rect, label))
+            {
+                this.OpenColorDialog(label, color ?? Color.white, apply, clear);
+            }
+            if (color != null)
+            {
+                this.DrawColorSwatch(new Rect(rect.xMax - 32f, rect.y + 3f, 24f, 24f), color.Value);
+            }
+            this.EndRow(ref y);
+        }
+
         protected string ValueOrNone(string value)
         {
             return value.NullOrEmpty() ? "CQF_PawnEditor_None".Translate().ToString() : value;
+        }
+
+        protected Color Opaque(Color color)
+        {
+            color.a = 1f;
+            return color;
         }
 
         protected void AddText(XElement root, string name, string value)
@@ -123,6 +148,26 @@ namespace QuestEditor_Library
                 result.Add(DirectXmlToObject.ObjectFromXml<T>(li, false));
             }
             return result;
+        }
+
+        private void OpenColorDialog(string label, Color color, Action<Color> apply, Action clear = null)
+        {
+            List<FloatMenuOption> options = new List<FloatMenuOption>
+            {
+                new FloatMenuOption("CQF_PawnEditor_ColorLibrary".Translate(), () => Find.WindowStack.Add(new Dialog_ChooseColor(label, color, DefDatabase<ColorDef>.AllDefsListForReading.Select(def => def.color).ToList(), apply))),
+                new FloatMenuOption("CQF_PawnEditor_HexColor".Translate(), () => Find.WindowStack.Add(new Dialog_RGB(color, apply)))
+            };
+            if (clear != null)
+            {
+                options.Add(new FloatMenuOption("CQF_PawnEditor_UseDefaultSkinColor".Translate(), clear));
+            }
+            Find.WindowStack.Add(new FloatMenu(options));
+        }
+
+        private void DrawColorSwatch(Rect rect, Color color)
+        {
+            Widgets.DrawBoxSolid(rect, color);
+            Widgets.DrawBox(rect);
         }
 
         public PawnModDef def;

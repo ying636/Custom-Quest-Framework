@@ -94,10 +94,10 @@ namespace QuestEditor_Library
 
         private void OpenHediffSelector(Action<HediffData> action)
         {
-            Find.WindowStack.Add(new Dialog_Select<HediffDef>(DefDatabase<HediffDef>.AllDefsListForReading, null, def => def.label, "CQF_PawnEditor_Select".Translate(), def =>
+            Find.WindowStack.Add(new Dialog_Select<HediffDef>(new TextSelectDrawer<HediffDef>(DefDatabase<HediffDef>.AllDefsListForReading, def => def.label, def =>
             {
                 action(new HediffData { def = def, severity = Mathf.Max(0f, def.initialSeverity) });
-            }));
+            }, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
 
         private string HediffLabel(HediffData data)
@@ -109,7 +109,7 @@ namespace QuestEditor_Library
         {
             List<BodyPartRecord> parts = new List<BodyPartRecord> { null };
             parts.AddRange(this.AvailableParts(pawnDef));
-            Find.WindowStack.Add(new Dialog_Select<BodyPartRecord>(parts, null, this.PartLabel, "CQF_PawnEditor_Select".Translate(), action));
+            Find.WindowStack.Add(new Dialog_Select<BodyPartRecord>(new TextSelectDrawer<BodyPartRecord>(parts, this.PartLabel, action, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
 
         private List<BodyPartRecord> AvailableParts(ComplexPawnDef pawnDef)

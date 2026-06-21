@@ -86,7 +86,7 @@ namespace QuestEditor_Library
 
         private void OpenSelectDialog(ThingData data, List<ThingDef> defs, Action onSelected = null)
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(defs, def => def?.uiIcon, def => def?.label ?? "CQF_PawnEditor_None".Translate().ToString(), "CQF_PawnEditor_Select".Translate(), def =>
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs, def => def?.uiIcon, def => def?.label ?? "CQF_PawnEditor_None".Translate().ToString(), def =>
             {
                 if (def == null)
                 {
@@ -102,7 +102,7 @@ namespace QuestEditor_Library
                 }
                 this.SetThingData(data, def, null);
                 onSelected?.Invoke();
-            }, def => def?.graphic?.Color ?? Color.white));
+            }, def => def?.graphic?.Color ?? Color.white, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
 
         private List<ApparelLayerDef> AvailableLayers()
@@ -160,11 +160,11 @@ namespace QuestEditor_Library
 
         private void OpenStuffDialog(ThingData data, ThingDef def, Action onSelected)
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(def).ToList(), stuff => stuff.uiIcon, stuff => stuff.label, "CQF_PawnEditor_SelectStuff".Translate(), stuff =>
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(GenStuff.AllowedStuffsFor(def).ToList(), stuff => stuff.uiIcon, stuff => stuff.label, stuff =>
             {
                 this.SetThingData(data, def, stuff);
                 onSelected?.Invoke();
-            }, stuff => stuff.graphic?.Color ?? Color.white));
+            }, stuff => stuff.graphic?.Color ?? Color.white, null, null, null, null, null, null), "CQF_PawnEditor_SelectStuff".Translate()));
         }
 
         private void SetThingData(ThingData data, ThingDef def, ThingDef stuff)

@@ -41,9 +41,7 @@ namespace QuestEditor_Library
                 }
                 yield return new FloatMenuOption("Select".Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(Designator_CustomTrap.bespawnable,
-           x => x.uiIcon, x => this.IsCQFTool(x) ? x.label.Colorize(ColorLibrary.SkyBlue) : x.label, "Select".Translate(),
-           x =>
+                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CustomTrap.bespawnable, x => x.uiIcon, x => this.IsCQFTool(x) ? x.label.Colorize(ColorLibrary.SkyBlue) : x.label, x =>
            {
                Designator_CustomTrap.thing = x;
                stuff = null;
@@ -57,14 +55,22 @@ namespace QuestEditor_Library
                this.defaultDesc = x.description;
                if (x.MadeFromStuff)
                {
-                   Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(x).ToList(), s => s.uiIcon, s => s.label, "SelectStuff".Translate(), s =>
-                   {
-                       stuff = s;
-                       this.defaultLabel = s.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
-                       this.icon = x.GetUIIconForStuff(s);
-                   }, t => t.graphic?.Color ?? Color.white,(t, r) => Widgets.DefIcon(r, t, null)));
+                   Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                       new TextureSelectDrawer<ThingDef>(
+                           GenStuff.AllowedStuffsFor(x).ToList(),
+                           s => s.uiIcon,
+                           s => s.label,
+                           s =>
+                           {
+                               stuff = s;
+                               this.defaultLabel = s.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
+                               this.icon = x.GetUIIconForStuff(s);
+                           },
+                           t => t.graphic?.Color ?? Color.white,
+                           (t, r) => Widgets.DefIcon(r, t, null)),
+                       "SelectStuff".Translate()));
                }
-           }));
+           }, null, null), "Select".Translate()));
                 });
                 yield return new FloatMenuOption("TrapEditor".Translate(), () =>
                 {

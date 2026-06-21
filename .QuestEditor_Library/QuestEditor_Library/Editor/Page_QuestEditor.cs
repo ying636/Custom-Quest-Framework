@@ -434,10 +434,7 @@ namespace QuestEditor_Library
         private static void OpenQuestNodeSelect(Action<Type> acceptAction)
         {
             Dictionary<string, Func<Type, bool>> typeFilters = Page_QuestEditor.MakeQuestNodeModFilters();
-            Find.WindowStack.Add(new Dialog_Select<Type>(Page_QuestEditor.UseableNodes, null,
-                Page_QuestEditor.GetQuestNodeLabel, "Select".Translate(), acceptAction, null, null,
-                Page_QuestEditor.GetQuestNodeTip, null, null, t => t.Name,
-                typeFilters));
+            Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(Page_QuestEditor.UseableNodes, Page_QuestEditor.GetQuestNodeLabel, acceptAction, null, Page_QuestEditor.GetQuestNodeTip, null, t => t.Name, null, typeFilters, null), "Select".Translate()));
         }
 
         private static string GetQuestNodeLabel(Type type)

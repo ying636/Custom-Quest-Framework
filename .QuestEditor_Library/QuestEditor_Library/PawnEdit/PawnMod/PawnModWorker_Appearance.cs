@@ -69,59 +69,6 @@ namespace QuestEditor_Library
             data.skinColor = node["skinColor"] == null ? null : ParseHelper.FromString<Color>(node["skinColor"].InnerText);
         }
 
-        private void DrawColorRow(ref float y, Rect inRect, float x, string label, Color color, Action<Color> apply)
-        {
-            this.DrawColorRow(ref y, inRect, x, label, color, apply, null);
-        }
-
-        private void DrawColorRow(ref float y, Rect inRect, float x, string label, Color? color, Action<Color> apply, Action clear)
-        {
-            Rect rect = new Rect(x, y, inRect.width - x - 20f, 30f);
-            if (this.DrawTextButton(rect, label))
-            {
-                this.OpenColorDialog(label, color ?? Color.white, apply, clear);
-            }
-            if (color != null)
-            {
-                this.DrawColorSwatch(new Rect(rect.xMax - 32f, rect.y + 3f, 24f, 24f), color.Value);
-            }
-            this.EndRow(ref y);
-        }
-
-        private void DrawColorButton(Rect rect, string label, Color color, Action<Color> apply)
-        {
-            if (this.DrawTextButton(rect, label))
-            {
-                this.OpenColorDialog(label, color, apply);
-            }
-        }
-
-        private void OpenColorDialog(string label, Color color, Action<Color> apply, Action clear = null)
-        {
-            List<FloatMenuOption> options = new List<FloatMenuOption>
-            {
-                new FloatMenuOption("CQF_PawnEditor_ColorLibrary".Translate(), () => Find.WindowStack.Add(new Dialog_ChooseColor(label, color, DefDatabase<ColorDef>.AllDefsListForReading.Select(def => def.color).ToList(), apply))),
-                new FloatMenuOption("CQF_PawnEditor_HexColor".Translate(), () => Find.WindowStack.Add(new Dialog_RGB(color, apply)))
-            };
-            if (clear != null)
-            {
-                options.Add(new FloatMenuOption("CQF_PawnEditor_UseGeneSkinColor".Translate(), clear));
-            }
-            Find.WindowStack.Add(new FloatMenu(options));
-        }
-
-        private void DrawColorSwatch(Rect rect, Color color)
-        {
-            Widgets.DrawBoxSolid(rect, color);
-            Widgets.DrawBox(rect);
-        }
-
-        private Color Opaque(Color color)
-        {
-            color.a = 1f;
-            return color;
-        }
-
         private string BodyTypeLabel(BodyTypeDef bodyType)
         {
             if (bodyType == null)
@@ -133,7 +80,7 @@ namespace QuestEditor_Library
 
         private string SkinColorLabel(PawnModData_Appearance data)
         {
-            return "CQF_PawnEditor_SelectSkinColor".Translate(data.skinColor == null ? "CQF_PawnEditor_GeneSkinColor".Translate() : "CQF_PawnEditor_CustomSkinColor".Translate());
+            return "CQF_PawnEditor_SelectSkinColor".Translate(data.skinColor == null ? "CQF_PawnEditor_DefaultSkinColor".Translate() : "CQF_PawnEditor_CustomSkinColor".Translate());
         }
     }
 }

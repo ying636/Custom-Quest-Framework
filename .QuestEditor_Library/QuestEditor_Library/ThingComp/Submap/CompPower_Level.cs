@@ -100,9 +100,7 @@ namespace QuestEditor_Library
                                 };
                             }
                         }
-                        Find.WindowStack.Add(new Dialog_Select<Building>(receivers, null, r => r.Label
-                        , "CQF_SetReceiverText".Translate()
-                            , t => this.Link(t.TryGetComp<CompPower_Level>()), null, null, null, null, new List<ExtraOption>()
+                        Find.WindowStack.Add(new Dialog_Select<Building>(new TextSelectDrawer<Building>(receivers, r => r.Label, t => this.Link(t.TryGetComp<CompPower_Level>()), null, null, null, null, new List<ExtraOption>()
                             {
                     new ExtraOption("Null".Translate(),null,() =>
                     {
@@ -113,7 +111,7 @@ namespace QuestEditor_Library
                    this.linked = null;
                         this.comp = null;
                     })
-                            }));
+                            }, null), "CQF_SetReceiverText".Translate()));
                     }
                 };
                 yield return new Command_Action()

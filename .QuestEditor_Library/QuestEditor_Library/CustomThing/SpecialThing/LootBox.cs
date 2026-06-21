@@ -622,11 +622,7 @@ namespace QuestEditor_Library
         public static void OpenLootThingSelectWindow(Action<ThingDef> action)
         {
             List<ThingDef> defs = SelectableLootThings();
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(defs,
-                d => d.uiIcon, d => d.label, "SelectLootThing".Translate(), action,
-                drawAction: (t, r) => Widgets.DefIcon(r, t, null),
-                typeFilters: LootThingTypeFilters(defs),
-                typeTips: LootThingTypeTips(defs)));
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs, d => d.uiIcon, d => d.label, action, null, (t, r) => Widgets.DefIcon(r, t, null), null, null, null, null, LootThingTypeFilters(defs), LootThingTypeTips(defs)), "SelectLootThing".Translate()));
         }
 
         public static void OpenSelectWindow(Type type, Action<CQFThingData> action)
@@ -637,8 +633,7 @@ namespace QuestEditor_Library
             }
             if (type == typeof(CQFThingCategoryCount))
             {
-                Find.WindowStack.Add(new Dialog_Select<ThingCategoryDef>(DefDatabase<ThingCategoryDef>.AllDefsListForReading.FindAll((t2) => t2.defName != "Corpses" && !t2.Parents.Contains(ThingCategoryDefOf.Corpses) && t2 != ThingCategoryDefOf.Animals),
-null,d => d.label, "Select".Translate(), d => action(new CQFThingCategoryCount { category = d }), null, (t, r) => Widgets.DefIcon(r, t, null)));
+                Find.WindowStack.Add(new Dialog_Select<ThingCategoryDef>(new TextSelectDrawer<ThingCategoryDef>(DefDatabase<ThingCategoryDef>.AllDefsListForReading.FindAll((t2) => t2.defName != "Corpses" && !t2.Parents.Contains(ThingCategoryDefOf.Corpses) && t2 != ThingCategoryDefOf.Animals), d => d.label, d => action(new CQFThingCategoryCount { category = d }), null, null, null, null, null, null), "Select".Translate()));
             }
         }
 

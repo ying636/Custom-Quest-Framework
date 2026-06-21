@@ -622,25 +622,33 @@ namespace QuestEditor_Library
             if (Widgets.ButtonText(new Rect(x, y, 250f, 25f), 
                     "CQFReplaceThing".Translate(this.customThing == null ? "" : ((Thing)this.customThing).Label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<ThingDef>(Designator_CQFTools.Basespawnable.FindAll(sp =>
-                        sp != QEDefOf.QE_Spawner_Editor && sp != QEDefOf.QE_ZoneCore),
-             t => t.uiIcon, t =>  t.label.Colorize(ColorLibrary.SkyBlue)
-                                  + "(" + t.thingClass.Name.Translate() + ")", "Select".Translate(),
-             t =>
-             {
-                 string label = t.label;
-                 if (t.MadeFromStuff)
-                 {
-                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(t).ToList(), s => s.uiIcon, s => s.label, "SelectStuff".Translate(), s =>
-                     {
-                         this.customThing = GameTools.MakeThingWithoutID(t,s);
-                     }, s => s.graphic?.Color ?? Color.white, (s, r) => Widgets.DefIcon(r, s, null)));
-                 }
-                 else 
-                 {
-                     this.customThing = GameTools.MakeThingWithoutID(t);
-                 }
-             }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)));
+                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                    new TextureSelectDrawer<ThingDef>(
+                        Designator_CQFTools.Basespawnable.FindAll(sp => sp != QEDefOf.QE_Spawner_Editor && sp != QEDefOf.QE_ZoneCore),
+                        t => t.uiIcon,
+                        t => t.label.Colorize(ColorLibrary.SkyBlue) + "(" + t.thingClass.Name.Translate() + ")",
+                        t =>
+                        {
+                            if (t.MadeFromStuff)
+                            {
+                                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                                    new TextureSelectDrawer<ThingDef>(
+                                        GenStuff.AllowedStuffsFor(t).ToList(),
+                                        s => s.uiIcon,
+                                        s => s.label,
+                                        s => this.customThing = GameTools.MakeThingWithoutID(t, s),
+                                        s => s.graphic?.Color ?? Color.white,
+                                        (s, r) => Widgets.DefIcon(r, s, null)),
+                                    "SelectStuff".Translate()));
+                            }
+                            else
+                            {
+                                this.customThing = GameTools.MakeThingWithoutID(t);
+                            }
+                        },
+                        t => t.graphic?.Color ?? Color.white,
+                        (t, r) => Widgets.DefIcon(r, t, null)),
+                    "Select".Translate()));
             }
             y += 30f;
             if (this.customThing != null) 
@@ -721,26 +729,32 @@ namespace QuestEditor_Library
                     false))
             {
                 Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                    Designator_CQFTools.Basespawnable.FindAll(sp =>
-                        sp != QEDefOf.QE_Spawner_Editor && sp != QEDefOf.QE_ZoneCore),
-                    t => t.uiIcon, t => t.label.Colorize(ColorLibrary.SkyBlue) 
-                                        + "(" + t.thingClass.Name.Translate() + ")", "Select".Translate(),
-                    t =>
-                    {
-                        string label = t.label;
-                        if (t.MadeFromStuff)
+                    new TextureSelectDrawer<ThingDef>(
+                        Designator_CQFTools.Basespawnable.FindAll(sp => sp != QEDefOf.QE_Spawner_Editor && sp != QEDefOf.QE_ZoneCore),
+                        t => t.uiIcon,
+                        t => t.label.Colorize(ColorLibrary.SkyBlue) + "(" + t.thingClass.Name.Translate() + ")",
+                        t =>
                         {
-                            Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(t).ToList(),
-                                s => s.uiIcon, s => s.label , "SelectStuff".Translate(),
-                                s => { this.customThing = GameTools.MakeThingWithoutID(t, s); },
-                                s => s.graphic?.Color ?? Color.white, (s, r) =>
-                                    Widgets.DefIcon(r, s, null)));
-                        }
-                        else
-                        {
-                            this.customThing = GameTools.MakeThingWithoutID(t);
-                        }
-                    }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)));
+                            if (t.MadeFromStuff)
+                            {
+                                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                                    new TextureSelectDrawer<ThingDef>(
+                                        GenStuff.AllowedStuffsFor(t).ToList(),
+                                        s => s.uiIcon,
+                                        s => s.label,
+                                        s => this.customThing = GameTools.MakeThingWithoutID(t, s),
+                                        s => s.graphic?.Color ?? Color.white,
+                                        (s, r) => Widgets.DefIcon(r, s, null)),
+                                    "SelectStuff".Translate()));
+                            }
+                            else
+                            {
+                                this.customThing = GameTools.MakeThingWithoutID(t);
+                            }
+                        },
+                        t => t.graphic?.Color ?? Color.white,
+                        (t, r) => Widgets.DefIcon(r, t, null)),
+                    "Select".Translate()));
             }
 
             y += 30f;
@@ -1029,10 +1043,10 @@ namespace QuestEditor_Library
             Rect rect = new Rect(x, y, 350f, 25f);
             if (Widgets.ButtonText(rect, "GivenHediff".Translate() + this.hediff?.label, false))
             {
-                Find.WindowStack.Add(new Dialog_Select<HediffDef>(DefDatabase<HediffDef>.AllDefsListForReading, null, t => t.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<HediffDef>(new TextSelectDrawer<HediffDef>(DefDatabase<HediffDef>.AllDefsListForReading, t => t.label, t =>
                 {
                     this.hediff = t;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line<float>(y, "SeverityOfHediff".Translate(), ref this.severity, ref this.buffer, x);
@@ -1119,11 +1133,10 @@ namespace QuestEditor_Library
                     "CQFAbilityDef".Translate(this.ability?.label),
                     false))
             {
-                Find.WindowStack.Add(new Dialog_Select<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, null,
-                    t => t.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<AbilityDef>(new TextSelectDrawer<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, t => t.label, t =>
                     {
                         this.ability = t;
-                    }));
+                    }, null, null, null, null, null, null), "Select".Translate()));
             }
 
             y += 30f;
@@ -1178,11 +1191,11 @@ namespace QuestEditor_Library
             });
             if (Widgets.ButtonText(rect, "RequiredTrait".Translate(this.trait?.degreeDatas.Find(d => d.degree == this.degree)?.label),false))
             {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, null, t => t.Value.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
                 {
                     this.trait = t.Key;
                     this.degree = t.Value.degree;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
         }
@@ -1246,11 +1259,11 @@ namespace QuestEditor_Library
             });
             if (Widgets.ButtonText(rect, "RequiredTrait".Translate(this.trait?.degreeDatas.Find(d => d.degree == this.degree)?.label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, null, t => t.Value.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
                 {
                     this.trait = t.Key;
                     this.degree = t.Value.degree;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
         }
@@ -1316,11 +1329,10 @@ namespace QuestEditor_Library
                     "GiveTrait".Translate(this.trait?.defName),
                     false))
             {
-                Find.WindowStack.Add(new Dialog_Select<TraitDef>(DefDatabase<TraitDef>.AllDefsListForReading, null,
-                    t => t.defName, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<TraitDef>(new TextSelectDrawer<TraitDef>(DefDatabase<TraitDef>.AllDefsListForReading, t => t.defName, t =>
                     {
                         this.trait = t;
-                    },null,null, t =>
+                    }, null, t =>
                     {
                         StringBuilder tip = new StringBuilder();
                        foreach (var traitDegreeData in t.degreeDatas)
@@ -1328,7 +1340,7 @@ namespace QuestEditor_Library
                            tip.AppendLine(traitDegreeData.label);
                        }
                         return tip.ToString().Trim();
-                    }));
+                    }, null, null, null, null), "Select".Translate()));
             } 
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y,"InitDegree".Translate(),
@@ -1515,10 +1527,8 @@ namespace QuestEditor_Library
             if (Widgets.ButtonText(rect, "CQF_MoteDef".Translate(this.mote?.defName), false))
             {
                 Find.WindowStack.Add(
-                    new Dialog_Select<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll(d
-                        => d.category == ThingCategory.Mote),null,
-                        d => d.defName,"Select".Translate()
-                        , d => this.mote = d));
+                    new Dialog_Select<ThingDef>(new TextSelectDrawer<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll(d
+                        => d.category == ThingCategory.Mote), d => d.defName, d => this.mote = d, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             CQFEditorTools.DrawVector(ref y, "MoteOffset".Translate(), ref this.off, ref buffer, ref buffer2, ref buffer3, x, 40f); 
@@ -1659,7 +1669,7 @@ namespace QuestEditor_Library
             });
             if (Widgets.ButtonText(rect, "CQF_ThoughtDef".Translate(this.thought?.stages.Count > this.stage ? this.thought?.stages[this.stage].label : ""), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<ThoughtDef, ThoughtStage>>(stagets, null, t => t.Value?.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<ThoughtDef, ThoughtStage>>(new TextSelectDrawer<KeyValuePair<ThoughtDef, ThoughtStage>>(stagets, t => t.Value?.label, t =>
                    {
                        this.thought = t.Key;
                        if (t.Key.stages.Contains(t.Value))
@@ -1670,7 +1680,7 @@ namespace QuestEditor_Library
                        {
                            Log.Message("CQF Action Gain Mood Error:A thoughtstage without thought");
                        }
-                   }));
+                   }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
         }
@@ -2399,10 +2409,10 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
             Rect rect = new Rect(x, y, 150f, 25f);
             if (Widgets.ButtonText(rect, "RequiredFaction".Translate(this.faction?.label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<FactionDef>(DefDatabase<FactionDef>.AllDefsListForReading, null, t => t.label, "Select".Translate(), t =>
+                Find.WindowStack.Add(new Dialog_Select<FactionDef>(new TextSelectDrawer<FactionDef>(DefDatabase<FactionDef>.AllDefsListForReading, t => t.label, t =>
                 {
                     this.faction = t;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "durationTicks".Translate(), ref this.durationTicks, ref this.buffer, x, 150f);
@@ -2448,7 +2458,7 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
             Rect rect = new Rect(x, y, 260f, 25f);
             if (Widgets.ButtonText(rect, "CQF_DutyMapDef".Translate(this.dutyMap?.defName ?? "Null"), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, null, d => d.defName, "Select".Translate(), d => this.dutyMap = d));
+                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(new TextSelectDrawer<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, d => d.defName, d => this.dutyMap = d, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyMapNodeId".Translate(), ref this.toNodeId, x, 150f);
@@ -2509,7 +2519,7 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
             Rect rect = new Rect(x, y, 260f, 25f);
             if (Widgets.ButtonText(rect, "CQF_DutyMapDef".Translate(this.dutyMap?.defName ?? "Null"), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, null, d => d.defName, "Select".Translate(), d => this.dutyMap = d));
+                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(new TextSelectDrawer<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, d => d.defName, d => this.dutyMap = d, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 320f, 25f), "CQF_DutyMapUseStartNode".Translate(), ref this.useStartNode);

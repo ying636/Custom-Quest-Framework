@@ -69,7 +69,7 @@ namespace QuestEditor_Library
         private void OpenSelectDialog(ThingData data)
         {
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWeapon).ToList();
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(defs, def => def.uiIcon, def => def.label, "CQF_PawnEditor_Select".Translate(), def =>
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs, def => def.uiIcon, def => def.label, def =>
             {
                 if (def.MadeFromStuff)
                 {
@@ -77,15 +77,15 @@ namespace QuestEditor_Library
                     return;
                 }
                 this.SetThingData(data, def, null);
-            }, def => def.graphic?.Color ?? Color.white));
+            }, def => def.graphic?.Color ?? Color.white, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
 
         private void OpenStuffDialog(ThingData data, ThingDef def)
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(def).ToList(), stuff => stuff.uiIcon, stuff => stuff.label, "CQF_PawnEditor_SelectStuff".Translate(), stuff =>
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(GenStuff.AllowedStuffsFor(def).ToList(), stuff => stuff.uiIcon, stuff => stuff.label, stuff =>
             {
                 this.SetThingData(data, def, stuff);
-            }, stuff => stuff.graphic?.Color ?? Color.white));
+            }, stuff => stuff.graphic?.Color ?? Color.white, null, null, null, null, null, null), "CQF_PawnEditor_SelectStuff".Translate()));
         }
 
         private void SetThingData(ThingData data, ThingDef def, ThingDef stuff)

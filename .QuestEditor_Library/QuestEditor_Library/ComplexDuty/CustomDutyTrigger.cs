@@ -66,49 +66,6 @@ namespace QuestEditor_Library
         private string buffer;
     }
 
-    public class CustomDutyTrigger_Conditions : CustomDutyTrigger
-    {
-        public override bool Triggered(Pawn pawn, CustomDutyMap runtime, Quest quest, Dictionary<string, TargetInfo> targets)
-        {
-            Dictionary<string, TargetInfo> contextTargets = targets ?? new Dictionary<string, TargetInfo>();
-            if (!contextTargets.ContainsKey("Target"))
-            {
-                contextTargets = new Dictionary<string, TargetInfo>(contextTargets)
-                {
-                    ["Target"] = new TargetInfo(pawn)
-                };
-            }
-            return this.conditions.NullOrEmpty() || this.conditions.All(condition => condition.Satisfied(contextTargets, out _, quest));
-        }
-
-        public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x + 5f, this.conditions, inRect, "Conditions".Translate(), condition => condition.GetType().Name.Translate());
-        }
-
-        public override XElement SaveToXElement(string nodeName)
-        {
-            XElement result = base.SaveToXElement(nodeName);
-            if (!this.conditions.NullOrEmpty())
-            {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "conditions"));
-            }
-            return result;
-        }
-
-        public override void ExposeData()
-        {
-            Scribe_Collections.Look(ref this.conditions, "conditions", LookMode.Deep);
-            if (Scribe.mode == LoadSaveMode.PostLoadInit && this.conditions == null)
-            {
-                this.conditions = new List<DialogCondition>();
-            }
-        }
-
-        public List<DialogCondition> conditions = new List<DialogCondition>();
-    }
-
     public class CustomDutyTrigger_Damaged : CustomDutyTrigger
     {
         public override bool Triggered(Pawn pawn, CustomDutyMap runtime, Quest quest, Dictionary<string, TargetInfo> targets)

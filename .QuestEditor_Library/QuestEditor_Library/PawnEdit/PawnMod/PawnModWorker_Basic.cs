@@ -26,7 +26,7 @@ namespace QuestEditor_Library
             this.EndRow(ref y);
             if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_PawnKind".Translate(this.ValueOrNone(data.kindDef?.label))))
             {
-                Find.WindowStack.Add(new Dialog_Select<PawnKindDef>(DefDatabase<PawnKindDef>.AllDefsListForReading, null, kind => kind.label, "CQF_PawnEditor_SelectPawnKind".Translate(), kind => data.kindDef = kind));
+                this.OpenPawnKindSelector(kind => data.kindDef = kind);
             }
             if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Faction".Translate() + this.ValueOrNone(data.faction?.label)))
             {
@@ -40,6 +40,50 @@ namespace QuestEditor_Library
             data.unique = ParseHelper.FromString<bool>(node["unique"]?.InnerText ?? "false");
             data.kindDef = DefDatabase<PawnKindDef>.GetNamedSilentFail(node["kindDef"]?.InnerText);
             data.faction = DefDatabase<FactionDef>.GetNamedSilentFail(node["faction"]?.InnerText);
+        }
+
+        private void OpenPawnKindSelector(Action<PawnKindDef> action)
+        {
+            List<PawnKindDef> kinds = DefDatabase<PawnKindDef>.AllDefsListForReading;
+            Find.WindowStack.Add(new Dialog_Select<PawnKindDef>(
+                new TextSelectDrawer<PawnKindDef>(
+                    kinds,
+                    kind => kind.label,
+                    action,
+                    null,
+                    null,
+                    null,
+                    kind => kind.defName,
+                    null,
+                    this.MakeFleshTypeFilters(kinds),
+                    this.MakeFleshTypeTips(kinds)),
+                "CQF_PawnEditor_SelectPawnKind".Translate()));
+        }
+
+        private Dictionary<string, Func<PawnKindDef, bool>> MakeFleshTypeFilters(List<PawnKindDef> kinds)
+        {
+            Dictionary<string, Func<PawnKindDef, bool>> result = new Dictionary<string, Func<PawnKindDef, bool>>();
+            foreach (FleshTypeDef fleshType in kinds.Select(this.FleshTypeFor).Where(type => type != null).Distinct())
+            {
+                FleshTypeDef capturedType = fleshType;
+                result[capturedType.LabelCap] = kind => this.FleshTypeFor(kind) == capturedType;
+            }
+            return result;
+        }
+
+        private Dictionary<string, string> MakeFleshTypeTips(List<PawnKindDef> kinds)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            foreach (FleshTypeDef fleshType in kinds.Select(this.FleshTypeFor).Where(type => type != null).Distinct())
+            {
+                result[fleshType.LabelCap] = fleshType.description;
+            }
+            return result;
+        }
+
+        private FleshTypeDef FleshTypeFor(PawnKindDef kind)
+        {
+            return kind?.RaceProps?.FleshType;
         }
     }
 }

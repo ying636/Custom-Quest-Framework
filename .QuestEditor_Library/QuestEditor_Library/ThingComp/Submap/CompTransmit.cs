@@ -63,12 +63,10 @@ namespace QuestEditor_Library
                         };
                     }
                 }
-                Find.WindowStack.Add(new Dialog_Select<Building_TransmitReceiver>(receivers,null,r => r.Label
-                , "CQF_SetReceiverText".Translate()
-                    ,t => this.receiver = t,null,null,null,null,new List<ExtraOption>() 
+                Find.WindowStack.Add(new Dialog_Select<Building_TransmitReceiver>(new TextSelectDrawer<Building_TransmitReceiver>(receivers, r => r.Label, t => this.receiver = t, null, null, null, null, new List<ExtraOption>() 
                     {
                     new ExtraOption("Null".Translate(),null,() => this.receiver = null)
-                    }));
+                    }, null), "CQF_SetReceiverText".Translate()));
             }
             };
             yield break;

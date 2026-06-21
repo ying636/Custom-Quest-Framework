@@ -55,7 +55,7 @@ namespace QuestEditor_Library
         {
             if (this.DrawSelectRow(ref y, inRect, x, label))
             {
-                Find.WindowStack.Add(new Dialog_Select<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefsListForReading, null, backstory => backstory.title, "CQF_PawnEditor_Select".Translate(), action));
+                Find.WindowStack.Add(new Dialog_Select<BackstoryDef>(new TextSelectDrawer<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefsListForReading, backstory => backstory.title, action, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
             }
         }
     }

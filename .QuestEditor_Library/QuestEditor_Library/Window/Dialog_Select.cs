@@ -10,24 +10,10 @@ namespace QuestEditor_Library
 {
     public class Dialog_Select<T> : Window
     {
-        public Dialog_Select(List<T> ts, Func<T, Texture2D> getTexture, Func<T, string> getText, string title, Action<T> acceptAction, Func<T, Color> getColor = null,
-            Action<T, Rect> drawAction = null, Func<T, string> getTip = null, Func<T, int> getPriority = null,
-            List<ExtraOption> extraOptions = null, Func<T, string> getRawText = null, Dictionary<string, Func<T, bool>> typeFilters = null,
-            Dictionary<string, string> typeTips = null)
+        public Dialog_Select(SelectDrawer<T> drawer, string title)
         {
-            this.ts = ts;
-            this.getTexture = getTexture;
-            this.getText = getText;
-            this.acceptAction = acceptAction;
+            this.drawer = drawer;
             this.title = title;
-            this.getColor = getColor;
-            this.drawAction = drawAction;
-            this.getTip = getTip;
-            this.getPriority = getPriority;
-            this.extraOptions = extraOptions;
-            this.getRawText = getRawText;
-            this.typeFilters = typeFilters;
-            this.typeTips = typeTips;
             this.forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
             this.closeOnAccept = false;
             this.closeOnCancel = false;
@@ -37,21 +23,18 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
+        protected override float Margin => DialogMargin;
+
         public void UpdateTs()
         {
-            List<T> result = this.ts.Where(this.CanShowItem).ToList();
-            if (this.getPriority != null)
-            {
-                result.SortBy(this.getPriority);
-            }
-            this.items = result;
+            string selectedType = this.selectedType?.type;
+            this.drawer.UpdateTypes(this.MatchesSearch);
+            this.selectedType = selectedType == null ? null : this.drawer.types.FirstOrDefault(type => type.type == selectedType);
         }
-
-        protected override float Margin => DialogMargin;
 
         public override void DoWindowContents(Rect inRect)
         {
-            if (!this.items.Any())
+            if (this.drawer.ts == null)
             {
                 this.UpdateTs();
             }
@@ -69,7 +52,7 @@ namespace QuestEditor_Library
             Rect viewRect = new Rect(0f, 0f, inRect.width - ScrollbarWidth, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             float contentHeight = 0f;
-            contentHeight = this.DrawItems(this.items, viewRect, contentHeight);
+            contentHeight = this.DrawItems(viewRect, contentHeight);
             contentHeight = this.DrawExtraOptions(contentHeight, viewRect);
             Widgets.EndScrollView();
             this.height = contentHeight;
@@ -77,12 +60,12 @@ namespace QuestEditor_Library
 
         private float DrawTypeFilter(float y, float width, float selectWidth)
         {
-            if (this.typeFilters == null)
+            if (this.drawer.types.NullOrEmpty())
             {
                 return y;
             }
 
-            string selectedTypeText = this.selectedTypeFilter ?? "CQF_DialogSelectAllTypes".Translate().ToString();
+            string selectedTypeText = this.selectedType?.type ?? "CQF_DialogSelectAllTypes".Translate().ToString();
             Rect rect = new Rect(this.GetCenteredX(selectWidth, width), y, selectWidth, TypeFilterHeight);
             Text.Font = GameFont.Medium;
             if (Widgets.ButtonText(rect, "CQF_DialogSelectType".Translate(selectedTypeText), 
@@ -91,7 +74,7 @@ namespace QuestEditor_Library
                 Find.WindowStack.Add(new FloatMenu(this.GetTypeFilterOptions()));
             }
             Text.Font = GameFont.Small;
-            string tip = this.GetSelectedTypeTip();
+            string tip = this.selectedType?.tip;
             if (!tip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(rect, tip);
@@ -110,44 +93,19 @@ namespace QuestEditor_Library
             return y + RowSpacing;
         }
 
-        private float DrawItems(List<T> items, Rect viewRect, float contentHeight)
+        private float DrawItems(Rect viewRect, float contentHeight)
         {
-            float x = this.getTexture != null ? this.GetFirstIconX(viewRect.width) : this.GetCenteredX(TextRowWidth, viewRect.width);
-            float y = contentHeight;
-            foreach (T t in items)
-            {
-                Rect rect = new Rect(x, y, this.getTexture != null ? IconSize : TextRowWidth, RowHeight);
-                if (this.getTexture != null)
-                {
-                    this.DrawTextureItem(t, rect);
-                    x += IconSpacing;
-                    if (x + IconSize > viewRect.width)
-                    {
-                        x = this.GetFirstIconX(viewRect.width);
-                        y += RowSpacing;
-                    }
-                }
-                else
-                {
-                    y = this.DrawTextItem(t, rect, y);
-                }
-                TooltipHandler.TipRegion(rect, this.GetTip(t));
-            }
-            if (this.getTexture != null && x > 0f)
-            {
-                y += RowSpacing;
-            }
-            return y;
+            return this.drawer.DrawItems(viewRect, contentHeight, () => this.Close(), this.selectedType?.ts ?? this.drawer.ts);
         }
 
         private float DrawExtraOptions(float y, Rect viewRect)
         {
-            if (this.extraOptions == null)
+            if (this.drawer.extraOptions == null)
             {
                 return y;
             }
 
-            foreach (var option in this.extraOptions)
+            foreach (var option in this.drawer.extraOptions)
             {
                 Rect rect = new Rect(this.GetCenteredX(TextRowWidth, viewRect.width), y, TextRowWidth, RowHeight);
                 if (Widgets.ButtonText(rect, option.text, false, true, option.color))
@@ -166,107 +124,26 @@ namespace QuestEditor_Library
             return Mathf.Max(0f, (parentWidth - width) / 2f);
         }
 
-        private float GetFirstIconX(float width)
-        {
-            return this.GetCenteredX(this.GetIconRowWidth(width), width);
-        }
-
-        private float GetIconRowWidth(float width)
-        {
-            int columnCount = Mathf.Max(1, Mathf.FloorToInt((width + IconSpacing - IconSize) / IconSpacing));
-            return (columnCount - 1) * IconSpacing + IconSize;
-        }
-
-        private void DrawTextureItem(T t, Rect rect)
-        {
-            if (this.getColor != null && this.getColor(t) is Color color)
-            {
-                GUI.color = color;
-            }
-
-            if (this.drawAction != null)
-            {
-                this.drawAction(t, rect);
-                if (Widgets.ButtonInvisible(rect))
-                {
-                    this.AcceptAndClose(t);
-                }
-            }
-            else if (this.getTexture(t) is Texture2D tex)
-            {
-                if (Widgets.ButtonImage(rect, tex, GUI.color))
-                {
-                    this.AcceptAndClose(t);
-                }
-            }
-            else if (Widgets.ButtonInvisible(rect))
-            {
-                this.AcceptAndClose(t);
-            }
-            GUI.color = Color.white;
-        }
-
-        private float DrawTextItem(T t, Rect rect, float y)
-        {
-            string label = this.getText(t) ?? "";
-            rect.height = Text.CalcHeight(label, rect.width);
-            Color color = this.getColor == null || this.getColor(t) == null ? Widgets.NormalOptionColor : this.getColor(t);
-            if (Widgets.ButtonText(rect, label, false, true, color))
-            {
-                this.AcceptAndClose(t);
-            }
-            return y + rect.height + 5f;
-        }
-
-        private void AcceptAndClose(T t)
-        {
-            this.acceptAction(t);
-            this.Close();
-        }
-
         private List<FloatMenuOption> GetTypeFilterOptions()
         {
             List<FloatMenuOption> options = new List<FloatMenuOption>
             {
                 new FloatMenuOption("CQF_DialogSelectAllTypes".Translate(), delegate
                 {
-                    this.selectedTypeFilter = null;
+                    this.selectedType = null;
                     this.UpdateTs();
                 })
             };
-            foreach (string filterLabel in this.typeFilters.Keys)
+            foreach (SelectType<T> type in this.drawer.types)
             {
-                string label = filterLabel;
-                options.Add(new FloatMenuOption(label, delegate
+                SelectType<T> capturedType = type;
+                options.Add(new FloatMenuOption(capturedType.type, delegate
                 {
-                    this.selectedTypeFilter = label;
+                    this.selectedType = capturedType;
                     this.UpdateTs();
                 }));
             }
             return options;
-        }
-
-        private string GetSelectedTypeTip()
-        {
-            if (this.typeTips == null || this.selectedTypeFilter == null)
-            {
-                return null;
-            }
-            return this.typeTips.TryGetValue(this.selectedTypeFilter, out string tip) ? tip : null;
-        }
-
-        private bool CanShowItem(T t)
-        {
-            return this.PassesTypeFilter(t) && this.MatchesSearch(t);
-        }
-
-        private bool PassesTypeFilter(T t)
-        {
-            if (this.typeFilters == null || this.selectedTypeFilter == null)
-            {
-                return true;
-            }
-            return this.typeFilters.TryGetValue(this.selectedTypeFilter, out Func<T, bool> filter) && filter != null && filter(t);
         }
 
         private bool MatchesSearch(T t)
@@ -276,25 +153,15 @@ namespace QuestEditor_Library
                 return true;
             }
 
-            string text = this.getText(t);
+            SelectItem<T> item = this.drawer.ItemFor(t);
+            string text = item.text;
             if (!string.IsNullOrEmpty(text) && text.IndexOf(this.terms, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return true;
             }
 
-            string raw = this.getRawText?.Invoke(t);
+            string raw = item.rawText;
             return !string.IsNullOrEmpty(raw) && raw.IndexOf(this.terms, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        private string GetTip(T t)
-        {
-            StringBuilder tip = new StringBuilder();
-            tip.AppendLine(this.getText(t));
-            if (this.getTip != null)
-            {
-                tip.AppendLine(this.getTip(t));
-            }
-            return tip.ToString().Trim();
         }
 
         private string GetTip(ExtraOption option)
@@ -310,24 +177,11 @@ namespace QuestEditor_Library
 
         public string title;
         public string terms = "";
-        public List<T> items = new List<T>();
-        public List<T> ts;
-        public Action<T> acceptAction;
-        public Func<T, Texture2D> getTexture;
-        public Func<T, Color> getColor;
-        public Func<T, string> getText;
-        public Func<T, string> getRawText;
-        public Func<T, string> getTip;
-        public Dictionary<string, Func<T, bool>> typeFilters;
-        public Dictionary<string, string> typeTips;
-        public string selectedTypeFilter;
-        public List<ExtraOption> extraOptions = new List<ExtraOption>();
-        public Action<T, Rect> drawAction;
+        public SelectDrawer<T> drawer;
+        public SelectType<T> selectedType;
         public Vector2 pos = Vector2.zero;
         public float height;
 
-        private const float IconSize = 30f;
-        private const float IconSpacing = 35f;
         private const float DialogMargin = 10f;
         private const float RowHeight = 25f;
         private const float RowSpacing = 30f;
@@ -337,7 +191,333 @@ namespace QuestEditor_Library
         private const float TypeFilterHeight = 35f;
         private const float TypeFilterSpacing = 40f;
         private const float TitleHeight = 35f;
-        private Func<T, int> getPriority = null;
+    }
+
+    public abstract class SelectDrawer<T>
+    {
+        protected SelectDrawer(List<T> ts, Func<T, string> getText, Action<T> acceptAction, Func<T, Color> getColor = null,
+            Func<T, string> getTip = null, Func<T, int> getPriority = null, Func<T, string> getRawText = null,
+            List<ExtraOption> extraOptions = null, Dictionary<string, Func<T, bool>> typeFilters = null,
+            Dictionary<string, string> typeTips = null)
+        {
+            this.sourceTs = ts;
+            this.getText = getText;
+            this.acceptAction = acceptAction;
+            this.getColor = getColor;
+            this.getTip = getTip;
+            this.getPriority = getPriority;
+            this.getRawText = getRawText;
+            this.extraOptions = extraOptions;
+            this.rawTypeFilters = typeFilters;
+            this.typeTips = typeTips;
+        }
+
+        public abstract float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts);
+
+        public void UpdateTypes(Func<T, bool> canShowItem)
+        {
+            this.ts = this.FilterAndSort(this.sourceTs, canShowItem);
+            this.types.Clear();
+            if (this.rawTypeFilters == null)
+            {
+                return;
+            }
+            foreach (KeyValuePair<string, Func<T, bool>> filter in this.rawTypeFilters)
+            {
+                string type = filter.Key;
+                Func<T, bool> canUse = filter.Value;
+                this.types.Add(new SelectType<T>
+                {
+                    type = type,
+                    tip = this.typeTips != null && this.typeTips.TryGetValue(type, out string tip) ? tip : null,
+                    ts = canUse == null ? new List<T>() : this.FilterAndSort(this.sourceTs.Where(canUse), canShowItem)
+                });
+            }
+        }
+
+        public string GetText(T t)
+        {
+            return this.ItemFor(t).text;
+        }
+
+        public string GetRawText(T t)
+        {
+            return this.ItemFor(t).rawText;
+        }
+
+        public void Sort(List<T> ts)
+        {
+            if (this.getPriority != null)
+            {
+                ts.SortBy(t => this.ItemFor(t).priority);
+            }
+        }
+
+        public SelectItem<T> ItemFor(T t)
+        {
+            if (!this.cachedItems.TryGetValue(t, out SelectItem<T> item))
+            {
+                item = this.CacheItem(t);
+                this.cachedItems[t] = item;
+            }
+            return item;
+        }
+
+        protected virtual SelectItem<T> CacheItem(T t)
+        {
+            string text = this.getText?.Invoke(t) ?? "";
+            string extraTip = this.getTip?.Invoke(t);
+            StringBuilder tip = new StringBuilder();
+            tip.AppendLine(text);
+            if (extraTip != null)
+            {
+                tip.AppendLine(extraTip);
+            }
+            return new SelectItem<T>
+            {
+                value = t,
+                text = text,
+                rawText = this.getRawText?.Invoke(t),
+                tip = tip.ToString().Trim(),
+                color = this.getColor?.Invoke(t),
+                priority = this.getPriority?.Invoke(t) ?? 0
+            };
+        }
+
+        protected void BuildCache()
+        {
+            this.cachedItems.Clear();
+            foreach (T t in this.sourceTs)
+            {
+                this.cachedItems[t] = this.CacheItem(t);
+            }
+            this.UpdateTypes(t => true);
+        }
+
+        protected float GetCenteredX(float width, float parentWidth)
+        {
+            return Mathf.Max(0f, (parentWidth - width) / 2f);
+        }
+
+        protected void AcceptAndClose(T t, Action closeAction)
+        {
+            this.acceptAction(t);
+            closeAction();
+        }
+
+        private List<T> FilterAndSort(IEnumerable<T> source, Func<T, bool> canShowItem)
+        {
+            List<T> result = source.Where(canShowItem).ToList();
+            this.Sort(result);
+            return result;
+        }
+
+        private readonly Func<T, string> getText;
+        private readonly Action<T> acceptAction;
+        private readonly Func<T, Color> getColor;
+        private readonly Func<T, string> getTip;
+        private readonly Func<T, int> getPriority;
+        private readonly Func<T, string> getRawText;
+        private readonly Dictionary<string, Func<T, bool>> rawTypeFilters;
+        private readonly Dictionary<string, string> typeTips;
+        private readonly List<T> sourceTs;
+
+        public List<ExtraOption> extraOptions;
+        public List<SelectType<T>> types = new List<SelectType<T>>();
+        public List<T> ts;
+        private readonly Dictionary<T, SelectItem<T>> cachedItems = new Dictionary<T, SelectItem<T>>();
+    }
+
+    public class SelectType<T>
+    {
+        public string type;
+        public string tip;
+        public List<T> ts;
+    }
+
+    public class SelectItem<T>
+    {
+        public T value;
+        public string text;
+        public string rawText;
+        public string tip;
+        public Color? color;
+        public int priority;
+        public Texture2D texture;
+    }
+
+    public class TextSelectDrawer<T> : SelectDrawer<T>
+    {
+        public TextSelectDrawer(List<T> ts, Func<T, string> getText, Action<T> acceptAction, Func<T, Color> getColor = null,
+            Func<T, string> getTip = null, Func<T, int> getPriority = null, Func<T, string> getRawText = null,
+            List<ExtraOption> extraOptions = null, Dictionary<string, Func<T, bool>> typeFilters = null,
+            Dictionary<string, string> typeTips = null)
+            : base(ts, getText, acceptAction, getColor, getTip, getPriority, getRawText, extraOptions, typeFilters, typeTips)
+        {
+            this.BuildCache();
+        }
+
+        public override float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts)
+        {
+            float y = contentHeight;
+            foreach (T t in ts)
+            {
+                SelectItem<T> item = this.ItemFor(t);
+                Rect rect = new Rect(this.GetCenteredX(TextRowWidth, viewRect.width), y, TextRowWidth, RowHeight);
+                string label = item.text;
+                rect.height = Text.CalcHeight(label, rect.width);
+                Color color = item.color ?? Widgets.NormalOptionColor;
+                if (Widgets.ButtonText(rect, label, false, true, color))
+                {
+                    this.AcceptAndClose(item.value, closeAction);
+                }
+                TooltipHandler.TipRegion(rect, item.tip);
+                y += rect.height + TextRowSpacing;
+            }
+            return y;
+        }
+
+        private const float RowHeight = 25f;
+        private const float TextRowSpacing = 5f;
+        private const float TextRowWidth = 500f;
+    }
+
+    public class TextureSelectDrawer<T> : SelectDrawer<T>
+    {
+        public TextureSelectDrawer(List<T> ts, Func<T, Texture2D> getTexture, Func<T, string> getText, Action<T> acceptAction,
+            Func<T, Color> getColor = null, Action<T, Rect> drawAction = null, Func<T, string> getTip = null,
+            Func<T, int> getPriority = null, Func<T, string> getRawText = null, List<ExtraOption> extraOptions = null,
+            Dictionary<string, Func<T, bool>> typeFilters = null, Dictionary<string, string> typeTips = null)
+            : base(ts, getText, acceptAction, getColor, getTip, getPriority, getRawText, extraOptions, typeFilters, typeTips)
+        {
+            this.getTexture = getTexture;
+            this.drawAction = drawAction;
+            this.BuildCache();
+        }
+
+        protected virtual float ItemHeight => IconSize;
+
+        protected virtual float ItemSpacingX => IconSpacing;
+
+        protected virtual float ItemWidth => IconSize;
+
+        protected virtual float RowSpacing => IconRowSpacing;
+
+        public override float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts)
+        {
+            float x = this.GetFirstX(viewRect.width);
+            float y = contentHeight;
+            foreach (T t in ts)
+            {
+                SelectItem<T> item = this.ItemFor(t);
+                Rect rect = new Rect(x, y, this.ItemWidth, this.ItemHeight);
+                this.DrawItem(item, rect, closeAction);
+                TooltipHandler.TipRegion(rect, item.tip);
+                x += this.ItemSpacingX;
+                if (x + this.ItemWidth > viewRect.width)
+                {
+                    x = this.GetFirstX(viewRect.width);
+                    y += this.RowSpacing;
+                }
+            }
+            if (x > 0f)
+            {
+                y += this.RowSpacing;
+            }
+            return y;
+        }
+
+        protected virtual Rect GetImageRect(Rect rect)
+        {
+            return rect;
+        }
+
+        protected virtual SelectItem<T> CacheItem(T t)
+        {
+            SelectItem<T> item = base.CacheItem(t);
+            item.texture = this.getTexture?.Invoke(t);
+            return item;
+        }
+
+        protected virtual void DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
+        {
+            Color color = item.color ?? Color.white;
+            Color oldColor = GUI.color;
+            GUI.color = color;
+            Rect imageRect = this.GetImageRect(rect);
+            if (this.drawAction != null)
+            {
+                this.drawAction(item.value, imageRect);
+            }
+            else if (item.texture is Texture2D tex)
+            {
+                Widgets.DrawTextureFitted(imageRect, tex, 1f);
+            }
+            GUI.color = oldColor;
+            if (Widgets.ButtonInvisible(rect))
+            {
+                this.AcceptAndClose(item.value, closeAction);
+            }
+        }
+
+        protected float GetFirstX(float width)
+        {
+            return this.GetCenteredX(this.GetRowWidth(width), width);
+        }
+
+        private float GetRowWidth(float width)
+        {
+            int columnCount = Mathf.Max(1, Mathf.FloorToInt((width + this.ItemSpacingX - this.ItemWidth) / this.ItemSpacingX));
+            return (columnCount - 1) * this.ItemSpacingX + this.ItemWidth;
+        }
+
+        private readonly Func<T, Texture2D> getTexture;
+        private readonly Action<T, Rect> drawAction;
+
+        private const float IconSize = 30f;
+        private const float IconSpacing = 35f;
+        private const float IconRowSpacing = 30f;
+    }
+
+    public class LabeledTextureSelectDrawer<T> : TextureSelectDrawer<T>
+    {
+        public LabeledTextureSelectDrawer(List<T> ts, Func<T, Texture2D> getTexture, Func<T, string> getText, Action<T> acceptAction,
+            Func<T, Color> getColor = null, Action<T, Rect> drawAction = null, Func<T, string> getTip = null,
+            Func<T, int> getPriority = null, Func<T, string> getRawText = null, List<ExtraOption> extraOptions = null,
+            Dictionary<string, Func<T, bool>> typeFilters = null, Dictionary<string, string> typeTips = null)
+            : base(ts, getTexture, getText, acceptAction, getColor, drawAction, getTip, getPriority, getRawText, extraOptions, typeFilters, typeTips)
+        {
+        }
+
+        protected override float ItemHeight => LabeledItemHeight;
+
+        protected override float ItemSpacingX => LabeledItemSpacingX;
+
+        protected override float ItemWidth => LabeledItemWidth;
+
+        protected override float RowSpacing => LabeledRowSpacing;
+
+        protected override Rect GetImageRect(Rect rect)
+        {
+            return new Rect(rect.x + (rect.width - IconSize) / 2f, rect.y, IconSize, IconSize);
+        }
+
+        protected override void DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
+        {
+            base.DrawItem(item, rect, closeAction);
+            TextAnchor oldAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.UpperCenter;
+            Widgets.Label(new Rect(rect.x, rect.y + IconSize + LabelGap, rect.width, LabelHeight), item.text);
+            Text.Anchor = oldAnchor;
+        }
+
+        private const float IconSize = 30f;
+        private const float LabelGap = 3f;
+        private const float LabelHeight = 35f;
+        private const float LabeledItemHeight = 68f;
+        private const float LabeledItemSpacingX = 90f;
+        private const float LabeledItemWidth = 80f;
+        private const float LabeledRowSpacing = 75f;
     }
 
     public class ExtraOption 

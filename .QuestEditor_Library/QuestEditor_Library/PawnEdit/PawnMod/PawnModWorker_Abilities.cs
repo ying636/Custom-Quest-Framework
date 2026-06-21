@@ -75,7 +75,7 @@ namespace QuestEditor_Library
 
         private void OpenAbilitySelector(Action<AbilityDef> action)
         {
-            Find.WindowStack.Add(new Dialog_Select<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, null, ability => ability.label, "CQF_PawnEditor_Select".Translate(), action));
+            Find.WindowStack.Add(new Dialog_Select<AbilityDef>(new LabeledTextureSelectDrawer<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, ability => ability.uiIcon, ability => ability.label, action, null, null, null, null, ability => ability.defName, null, null), "CQF_PawnEditor_Select".Translate()));
         }
 
         private void RemoveDuplicates(List<AbilityData> abilities)

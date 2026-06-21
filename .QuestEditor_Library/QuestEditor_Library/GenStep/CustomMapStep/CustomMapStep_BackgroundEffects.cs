@@ -28,15 +28,7 @@ public class CustomMapStep_BackgroundEffects : CustomMapStep
         y += 35f;
         CQFEditorTools.DrawButtonForList_UseIcon(y, this.backgroundEffects, def => def.LabelCap, () =>
         {
-            Find.WindowStack.Add(new Dialog_Select<CustomMapBackgroundEffectDef>(
-                DefDatabase<CustomMapBackgroundEffectDef>.AllDefsListForReading,
-                null,
-                def => def.LabelCap,
-                "CQF_MapBackgroundSelectDynamicEffect".Translate(),
-                def => this.backgroundEffects.Add(def),
-                null,
-                null,
-                def => def.description));
+            Find.WindowStack.Add(new Dialog_Select<CustomMapBackgroundEffectDef>(new TextSelectDrawer<CustomMapBackgroundEffectDef>(DefDatabase<CustomMapBackgroundEffectDef>.AllDefsListForReading, def => def.LabelCap, def => this.backgroundEffects.Add(def), null, def => def.description, null, null, null, null), "CQF_MapBackgroundSelectDynamicEffect".Translate()));
         }, x + 235f);
         y += 35f;
         foreach (CustomMapBackgroundEffectDef effect in this.backgroundEffects.Where(effect => effect != null))

@@ -127,10 +127,10 @@ namespace QuestEditor_Library
             {
                 new ExtraOption("CQF_PawnEditor_None".Translate(), null, () => data.nameMaker = null)
             };
-            Find.WindowStack.Add(new Dialog_Select<RulePackDef>(this.PawnNameMakers(pawnDef), null, this.NameMakerLabel, "CQF_PawnEditor_NameMaker".Translate(""), maker =>
+            Find.WindowStack.Add(new Dialog_Select<RulePackDef>(new TextSelectDrawer<RulePackDef>(this.PawnNameMakers(pawnDef), this.NameMakerLabel, maker =>
             {
                 data.nameMaker = maker;
-            }, null, null, null, this.NameMakerPriority(pawnDef, data), extraOptions, maker => maker.defName));
+            }, null, null, this.NameMakerPriority(pawnDef, data), maker => maker.defName, extraOptions, null), "CQF_PawnEditor_NameMaker".Translate("")));
         }
 
         private List<RulePackDef> PawnNameMakers(ComplexPawnDef pawnDef)

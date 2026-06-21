@@ -151,9 +151,7 @@ public class PawnSpawnData : IExposable, ISaveable, IDrawable
         {
             if (Widgets.ButtonText(new Rect(20f + x, y, 250f, 25f), "QE_PawnKind".Translate(this.kind?.label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<PawnKindDef>(
-                    DefDatabase<PawnKindDef>.AllDefs.ToList(),null,k => k.label,"Select".Translate()
-                    , (k) => this.kind = k));
+                Find.WindowStack.Add(new Dialog_Select<PawnKindDef>(new TextSelectDrawer<PawnKindDef>(DefDatabase<PawnKindDef>.AllDefs.ToList(), k => k.label, (k) => this.kind = k, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
         }
@@ -161,9 +159,7 @@ public class PawnSpawnData : IExposable, ISaveable, IDrawable
         {
             Widgets.Label(new Rect(16f + x, y, 150f, 25f), "InventoryThing".Translate());
             CQFEditorTools.DrawButtonForList_UseIcon(y, this.inventoryThings, t2 => t2.thing.label + "x" + t2.count,
-() => Find.WindowStack.Add(new Dialog_Select<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((c) => c.category == ThingCategory.Item && !c.IsCorpse),
-c => c.uiIcon, c => c.label, "Select".Translate(),
-(d) => this.inventoryThings.Add(new CQFThingDefCount() { thing = d }))), 340f, 25f, 40f);
+() => Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((c) => c.category == ThingCategory.Item && !c.IsCorpse), c => c.uiIcon, c => c.label, (d) => this.inventoryThings.Add(new CQFThingDefCount() { thing = d }), null, null, null, null, null, null, null), "Select".Translate())), 340f, 25f, 40f);
             y += 30f;
             Widgets.DrawLine(new Vector2(16f + x, y), new Vector2(465f + x, y), ColorLibrary.SkyBlue, 2.5f);
             foreach (CQFThingDefCount thing in this.inventoryThings)
@@ -176,8 +172,7 @@ c => c.uiIcon, c => c.label, "Select".Translate(),
             y += 45f;
             Widgets.Label(new Rect(16f + x, y, 150f, 25f), "InventoryThingCategorys".Translate());
             CQFEditorTools.DrawButtonForList_UseIcon(y, this.inventoryCategorys, t2 => t2.category.label + "x" + t2.count,
-() => Find.WindowStack.Add(new Dialog_Select<ThingCategoryDef>(DefDatabase<ThingCategoryDef>.AllDefsListForReading.FindAll((c) => c.defName != "Corpses" && !c.Parents.Contains(ThingCategoryDefOf.Corpses) && c != ThingCategoryDefOf.Animals), c => c.icon, c => c.label, "Select".Translate(),
-          (d) => this.inventoryCategorys.Add(new CQFThingCategoryCount() { category = d }))), 340f, 25f, 40f);
+() => Find.WindowStack.Add(new Dialog_Select<ThingCategoryDef>(new TextureSelectDrawer<ThingCategoryDef>(DefDatabase<ThingCategoryDef>.AllDefsListForReading.FindAll((c) => c.defName != "Corpses" && !c.Parents.Contains(ThingCategoryDefOf.Corpses) && c != ThingCategoryDefOf.Animals), c => c.icon, c => c.label, (d) => this.inventoryCategorys.Add(new CQFThingCategoryCount() { category = d }), null, null, null, null, null, null, null), "Select".Translate())), 340f, 25f, 40f);
             y += 30f;
             Widgets.DrawLine(new Vector2(16f + x, y), new Vector2(465f + x, y), ColorLibrary.SkyBlue, 2f);
             foreach (CQFThingCategoryCount cetegory in this.inventoryCategorys)

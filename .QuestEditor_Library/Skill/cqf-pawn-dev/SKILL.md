@@ -44,7 +44,6 @@ description: "CQF 实体/NPC 开发 skill。用于 QuestEditor_Library 的 Compl
 - 显示优先用 `label`，没有则用 `defName`。
 - XML 交叉引用保存 `defName`。
 - 新建实体默认男性，除非用户修改。
-- 肤色为空表示使用基因/原版默认逻辑。
 - 旧版平铺字段需要兼容迁移到 `PawnModData_*`。
 
 禁止事项：
@@ -115,7 +114,9 @@ XML 保存形态应类似：
 
 - 服装和武器改动要显示在立绘上。
 - 发型、身体、肤色、基因、hediff、skill、trait、ability 改动要尽量即时显示。
-- 肤色默认由基因优先；只有用户明确设置自定义肤色时才覆盖。
+- 人形肤色默认由基因优先；只有用户明确设置自定义肤色时才覆盖。
+- 非人形动物的随机颜色/外观通常来自 `PawnKindDef.alternateGraphics`，由 `PawnGraphicUtils.TryGetAlternate` 按 `pawn.thingIDNumber` 稳定随机选择。
+- 不要把动物颜色当作 `CompColorable` 或通用 `DrawColor` 处理；`CompColorable` 是物品染色路径。
 
 ## 现有模块约定
 
@@ -136,7 +137,8 @@ XML 保存形态应类似：
 - 保存发型、发色、肤色、头型、身体类型。
 - 发型显示使用 `label`。
 - 身体类型显示使用 defName 翻译，无法翻译时显示原文。
-- 肤色为空表示基因/默认。
+- 肤色为空表示使用基因/默认。
+- 动物颜色不是通用 `DrawColor` 或 `CompColorable`；原版动物随机外观通常由 `PawnKindDef.alternateGraphics` 的贴图/颜色变体限定，后续应作为外观模块扩展处理。
 
 基因模块：
 

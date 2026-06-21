@@ -265,7 +265,7 @@ namespace QuestEditor_Library
                     defaultLabel = "SetMapDef",
                     action = () =>
                     {
-                        Find.WindowStack.Add(new Dialog_Select<CustomMapDataDef>(DefDatabase<CustomMapDataDef>.AllDefsListForReading,null,d => d.label,"Select".Translate(),d => this.mapDef = d));
+                        Find.WindowStack.Add(new Dialog_Select<CustomMapDataDef>(new TextSelectDrawer<CustomMapDataDef>(DefDatabase<CustomMapDataDef>.AllDefsListForReading, d => d.label, d => this.mapDef = d, null, null, null, null, null, null), "Select".Translate()));
                     }
                 };
                 yield return new Command_Action()

@@ -37,8 +37,10 @@
   <CQF_PawnEditor_HeadType>头型：{0}</CQF_PawnEditor_HeadType>
   <CQF_PawnEditor_SelectSkinColor>肤色：{0}</CQF_PawnEditor_SelectSkinColor>
   <CQF_PawnEditor_GeneSkinColor>基因默认</CQF_PawnEditor_GeneSkinColor>
+  <CQF_PawnEditor_DefaultSkinColor>默认</CQF_PawnEditor_DefaultSkinColor>
   <CQF_PawnEditor_CustomSkinColor>自定义</CQF_PawnEditor_CustomSkinColor>
   <CQF_PawnEditor_UseGeneSkinColor>使用基因/默认肤色</CQF_PawnEditor_UseGeneSkinColor>
+  <CQF_PawnEditor_UseDefaultSkinColor>使用默认肤色</CQF_PawnEditor_UseDefaultSkinColor>
   <CQF_PawnEditor_Xenotype>基因模板：{0}</CQF_PawnEditor_Xenotype>
   <CQF_PawnEditor_SelectXenotype>选择基因模板</CQF_PawnEditor_SelectXenotype>
   <CQF_PawnEditor_CustomGenes>自定义基因</CQF_PawnEditor_CustomGenes>

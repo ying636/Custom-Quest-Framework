@@ -16,6 +16,7 @@ using System.IO;
 using Unity.Collections;
 using RimWorld.Planet;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace QuestEditor_Library
@@ -24,6 +25,8 @@ namespace QuestEditor_Library
     public static class CQFEditorTools
     {
         public static readonly Texture2D TipIcon = ContentFinder<Texture2D>.Get("UI/TipIcon", true);
+        private static readonly HashSet<string> foldedConditionKeys = new HashSet<string>();
+
         public static List<string> TargetTexts => new List<string>()
         { "Interviewee", "Interviewer", "CustomThing", "Trigger", "Captured", "Position","Inner","Target" };
         public static List<ThingDef> MapExitDefs
@@ -121,8 +124,7 @@ namespace QuestEditor_Library
         public static void OpenDutySelect(Action<DutyDef> acceptAction)
         {
             List<DutyDef> duties = DefDatabase<DutyDef>.AllDefsListForReading;
-            Find.WindowStack.Add(new Dialog_Select<DutyDef>(duties, null, CQFEditorTools.DutyLabel, "Select".Translate(), acceptAction,
-                null, null, CQFEditorTools.DutyTip, CQFEditorTools.DutyPriority, null, duty => duty.defName, CQFEditorTools.MakeDutyModFilters(duties)));
+            Find.WindowStack.Add(new Dialog_Select<DutyDef>(new TextSelectDrawer<DutyDef>(duties, CQFEditorTools.DutyLabel, acceptAction, null, CQFEditorTools.DutyTip, CQFEditorTools.DutyPriority, duty => duty.defName, null, CQFEditorTools.MakeDutyModFilters(duties), null), "Select".Translate()));
         }
 
         public static string DutyLabel(DutyDef duty)
@@ -344,10 +346,19 @@ namespace QuestEditor_Library
                 typeFilters[label] = action => action.ActionCategory == capturedCategory;
                 typeTips[label] = CQFEditorTools.GetCQFActionCategoryTip(category);
             }
-            Find.WindowStack.Add(new Dialog_Select<CQFAction>(CQFEditorTools.GetCQFActions(), null, t => t.GetType().Name.Translate(), "Select".Translate(),
-                action => acceptAction(action.GetType()),
-                null, null, t => (t.GetType().Name + "_Tip").CanTranslate() ? (t.GetType().Name + "_Tip").Translate().ToString() : "", null, null, null,
-                typeFilters, typeTips));
+            Find.WindowStack.Add(new Dialog_Select<CQFAction>(
+                new TextSelectDrawer<CQFAction>(
+                    CQFEditorTools.GetCQFActions(),
+                    t => t.GetType().Name.Translate(),
+                    action => acceptAction(action.GetType()),
+                    null,
+                    t => (t.GetType().Name + "_Tip").CanTranslate() ? (t.GetType().Name + "_Tip").Translate().ToString() : "",
+                    null,
+                    null,
+                    null,
+                    typeFilters,
+                    typeTips),
+                "Select".Translate()));
         }
 
         public static List<Type> GetCQFActionTypes()
@@ -964,6 +975,165 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             y += 25f;
             CQFEditorTools.DrawButtonForList(ref y, list, getText, addAction);
         }
+
+        public static void DrawCQFConditionList(ref float y, float x, float width, Rect inRect, string title, List<DialogCondition> conditions)
+        {
+            DrawFoldableConditionHeader(ref y, x, width, title, FoldKey(conditions, title), out bool foldout, () =>
+            {
+                Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), type => type.Name.Translate(), type =>
+                {
+                    conditions.Add((DialogCondition)Activator.CreateInstance(type));
+                }, null, null, null, type => type.Name, null, null), "CQF_SelectDialogCondition".Translate()));
+            }, () => CQFEditorTools.DrawFloatMenu(conditions, condition => conditions.Remove(condition), condition => condition.GetType().Name.Translate()));
+
+            if (!foldout)
+            {
+                y += 8f;
+                return;
+            }
+            if (conditions.Any())
+            {
+                for (int i = 0; i < conditions.Count; i++)
+                {
+                    DialogCondition condition = conditions[i];
+                    float itemStartY = y;
+                    Widgets.DrawBoxSolid(new Rect(x + 4f, y, width - 8f, 1f), new Color(0.22f, 0.28f, 0.34f, 0.85f));
+                    y += 8f;
+                    DrawCQFCondition(ref y, x + 10f, width - 20f, inRect, condition);
+                    Widgets.DrawBox(new Rect(x + 4f, itemStartY, width - 8f, y - itemStartY + 2f), 1, QuestEditor_Dialog.blueTex);
+                    y += 8f;
+                }
+            }
+            else
+            {
+                Widgets.Label(new Rect(x + 10f, y + 2f, width - 20f, 25f), "CQF_DutyMapNoOptions".Translate().Colorize(Color.gray));
+                y += 30f;
+            }
+            y += 8f;
+        }
+
+        private static void DrawCQFCondition(ref float y, float x, float width, Rect inRect, DialogCondition condition)
+        {
+            string foldKey = FoldKey(condition);
+            Rect headerRect = new Rect(x, y, width, 30f);
+            if (condition is DialogCondition_WithSubConditions)
+            {
+                Widgets.DrawHighlight(headerRect);
+            }
+            Rect foldRect = new Rect(x, y + 2f, 24f, 24f);
+            bool foldout = !foldedConditionKeys.Contains(foldKey);
+            if (Widgets.ButtonText(foldRect, foldout ? "-" : "+", false))
+            {
+                ToggleFold(foldKey, foldout);
+            }
+            if (condition is DialogCondition_WithSubConditions subCondition)
+            {
+                DrawConditionBase(ref y, x + 30f, condition, width - 30f);
+                if (!foldout)
+                {
+                    return;
+                }
+                DrawSubCondition(ref y, x + 30f, width - 30f, inRect, subCondition);
+                return;
+            }
+            if (!foldout)
+            {
+                DrawConditionTitle(ref y, x + 30f, condition, width - 30f);
+                return;
+            }
+            condition.Draw(ref y, inRect, x + 30f);
+        }
+
+        private static void DrawSubCondition(ref float y, float x, float width, Rect inRect, DialogCondition_WithSubConditions condition)
+        {
+            DrawConditionBase(ref y, x, condition);
+            if (condition.AllowMultipleChildConditions)
+            {
+                DrawCQFConditionList(ref y, x + 5f, width - 5f, inRect, "CQF_SubConditions".Translate(), condition.ChildConditions);
+                return;
+            }
+            DrawSingleSubCondition(ref y, x, width, inRect, condition.ChildConditions);
+        }
+
+        private static void DrawSingleSubCondition(ref float y, float x, float width, Rect inRect, List<DialogCondition> conditions)
+        {
+            DialogCondition child = conditions.FirstOrDefault();
+            if (Widgets.ButtonText(new Rect(x, y, Mathf.Min(260f, width), 25f), child?.GetType().Name.Translate() ?? "CQF_SelectDialogCondition".Translate(), false))
+            {
+                Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), type => type.Name.Translate(), type =>
+                {
+                    conditions.Clear();
+                    conditions.Add((DialogCondition)Activator.CreateInstance(type));
+                }, null, null, null, type => type.Name, null, null), "CQF_SelectDialogCondition".Translate()));
+            }
+            y += 30f;
+            if (child != null)
+            {
+                DrawCQFCondition(ref y, x + 10f, width - 10f, inRect, child);
+            }
+        }
+
+        private static void DrawConditionBase(ref float y, float x, DialogCondition condition, float width = 250f)
+        {
+            DrawConditionTitle(ref y, x, condition, width);
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFFailReason".Translate(), ref condition.failReason, x, 100f);
+            y += 30f;
+        }
+
+        private static void DrawConditionTitle(ref float y, float x, DialogCondition condition, float width = 250f)
+        {
+            Rect rect = new Rect(x, y, Mathf.Min(width, 250f), 25f);
+            Widgets.Label(rect, condition.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
+            if ((condition.GetType().Name + "_Tip").CanTranslate())
+            {
+                TooltipHandler.TipRegion(rect, (condition.GetType().Name + "_Tip").Translate());
+            }
+            y += 30f;
+        }
+
+        private static void DrawFoldableConditionHeader(ref float y, float x, float width, string label, string foldKey, out bool foldout, Action addAction, Action removeAction)
+        {
+            Widgets.DrawHighlight(new Rect(x - 4f, y - 2f, width + 8f, 32f));
+            Text.Font = GameFont.Medium;
+            foldout = !foldedConditionKeys.Contains(foldKey);
+            Rect foldRect = new Rect(x, y + 3f, 24f, 24f);
+            if (Widgets.ButtonText(foldRect, foldout ? "-" : "+", false))
+            {
+                ToggleFold(foldKey, foldout);
+                foldout = !foldout;
+            }
+            Widgets.Label(new Rect(x + 30f, y, width - 120f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Text.Font = GameFont.Small;
+            Rect buttonRect = new Rect(x + width - 60f, y + 2f, 25f, 25f);
+            if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
+            {
+                addAction();
+            }
+            buttonRect.x += 30f;
+            if (Widgets.ButtonImage(buttonRect, TexButton.Delete))
+            {
+                removeAction();
+            }
+            y += 38f;
+        }
+
+        private static void ToggleFold(string key, bool wasOpen)
+        {
+            if (wasOpen)
+            {
+                foldedConditionKeys.Add(key);
+            }
+            else
+            {
+                foldedConditionKeys.Remove(key);
+            }
+        }
+
+        private static string FoldKey(object owner, string suffix = null)
+        {
+            return RuntimeHelpers.GetHashCode(owner) + (suffix ?? string.Empty);
+        }
+
         public static void DrawSelectColorButtons(ref float y,string label,Color color,Action<Color> apply,float x = 200f) 
         { 
             Rect colorRect = new Rect(x, y, 30f, 30f);
@@ -1574,21 +1744,33 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
     {
         public void OpenSelectDialog()
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(Designator_SpawnThing.Bespawnable,
-t => t.uiIcon, t => t.label, "Select".Translate(),
-t =>
-{
-    this.def = t;
-    this.hitPoint = t.BaseMaxHitPoints;
-    if (t.MadeFromStuff)
-    {
-        Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(t).ToList(), s => s.uiIcon, s => s.label, "SelectStuff".Translate(), s =>
-        {
-            this.stuff = s;
-            this.hitPoint = (int)(t.BaseMaxHitPoints * (s.stuffProps.statFactors.Find(s2 => s2.stat == StatDefOf.MaxHitPoints) is StatModifier stat ? stat.value : 1f));
-        }, t2 => t2.graphic?.Color ?? Color.white));
-    }
-}, t => t.graphic?.Color ?? Color.white));
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                new TextureSelectDrawer<ThingDef>(
+                    Designator_SpawnThing.Bespawnable,
+                    t => t.uiIcon,
+                    t => t.label,
+                    t =>
+                    {
+                        this.def = t;
+                        this.hitPoint = t.BaseMaxHitPoints;
+                        if (t.MadeFromStuff)
+                        {
+                            Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                                new TextureSelectDrawer<ThingDef>(
+                                    GenStuff.AllowedStuffsFor(t).ToList(),
+                                    s => s.uiIcon,
+                                    s => s.label,
+                                    s =>
+                                    {
+                                        this.stuff = s;
+                                        this.hitPoint = (int)(t.BaseMaxHitPoints * (s.stuffProps.statFactors.Find(s2 => s2.stat == StatDefOf.MaxHitPoints) is StatModifier stat ? stat.value : 1f));
+                                    },
+                                    t2 => t2.graphic?.Color ?? Color.white),
+                                "SelectStuff".Translate()));
+                        }
+                    },
+                    t => t.graphic?.Color ?? Color.white),
+                "Select".Translate()));
         }
         public ThingData() { }
         public ThingData(Thing thing, IntVec3 pos)

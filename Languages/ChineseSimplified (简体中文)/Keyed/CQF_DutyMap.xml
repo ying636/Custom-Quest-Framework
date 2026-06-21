@@ -10,6 +10,10 @@
   <CQF_DutyType>职责类型：{0}</CQF_DutyType>
   <CQF_DutyMapTransition>职责切换</CQF_DutyMapTransition>
   <CQF_DutyTransitionTriggers>切换触发器</CQF_DutyTransitionTriggers>
+  <CQF_DutyTransitionConditions>切换条件</CQF_DutyTransitionConditions>
+  <CQF_DutySelectNode>选择职责节点</CQF_DutySelectNode>
+  <CQF_SelectDialogCondition>选择条件</CQF_SelectDialogCondition>
+  <CQF_SubConditions>子条件</CQF_SubConditions>
   <CQF_DutyMapFromNode>起点节点：</CQF_DutyMapFromNode>
   <CQF_DutyMapToNode>目标节点：</CQF_DutyMapToNode>
   <CQF_AddTransition>添加切换</CQF_AddTransition>

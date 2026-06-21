@@ -85,10 +85,10 @@ namespace QuestEditor_Library
         {
             List<KeyValuePair<TraitDef, TraitDegreeData>> stagets = new List<KeyValuePair<TraitDef, TraitDegreeData>>();
             DefDatabase<TraitDef>.AllDefsListForReading.ForEach(t => t.degreeDatas.ForEach(s => stagets.Add(new KeyValuePair<TraitDef, TraitDegreeData>(t, s))));
-            Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, null, t => t.Value.label, "CQF_PawnEditor_Select".Translate(), t =>
+            Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
             {
                 action(new TraitData() { def = t.Key, degree = t.Value.degree, chance = 1f });
-            }));
+            }, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
     }
 }

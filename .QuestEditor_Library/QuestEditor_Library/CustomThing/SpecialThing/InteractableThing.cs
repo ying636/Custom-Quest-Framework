@@ -268,8 +268,6 @@ namespace QuestEditor_Library
             }
             Text.Font = GameFont.Small;
             y += 32f;
-            Widgets.DrawLine(new Vector2(15f, y), new Vector2(width - 35f, y), ColorLibrary.SkyBlue, 1f);
-            y += 10f;
             return copyRect;
         }
 
@@ -581,8 +579,8 @@ namespace QuestEditor_Library
                 }
                 TooltipHandler.TipRegion(toggleRect, "Hide".Translate());
                 y += 30f;
-                this.DrawSubHeader(ref y, x + 8f, width - 16f, "If".Translate(), () => Find.WindowStack.Add(new Dialog_Select<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), null, c => c.Name.Translate(), "Select".Translate(), c =>
-                    this.conditions.Add((DialogCondition)Activator.CreateInstance(c)))), () => CQFEditorTools.DrawFloatMenu(this.conditions, c => this.conditions.Remove(c), c => c.GetType().Name.Translate()));
+                this.DrawSubHeader(ref y, x + 8f, width - 16f, "If".Translate(), () => Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), c => c.Name.Translate(), c =>
+                    this.conditions.Add((DialogCondition)Activator.CreateInstance(c)), null, null, null, null, null, null), "Select".Translate())), () => CQFEditorTools.DrawFloatMenu(this.conditions, c => this.conditions.Remove(c), c => c.GetType().Name.Translate()));
                 foreach (DialogCondition c in this.conditions)
                 {
                     float itemY = y;

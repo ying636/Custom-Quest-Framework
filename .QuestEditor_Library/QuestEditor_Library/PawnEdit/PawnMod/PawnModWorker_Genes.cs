@@ -24,7 +24,8 @@ namespace QuestEditor_Library
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
             PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Xenotype".Translate(this.ValueOrNone(data.xenotype?.LabelCap))))
+            this.EnsureXenotype(data);
+            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Xenotype".Translate(data.xenotype.LabelCap)))
             {
                 this.OpenXenotypeSelector(data);
             }
@@ -40,6 +41,7 @@ namespace QuestEditor_Library
         public override void ModifyGenerationRequest(ComplexPawnDef pawnDef, ref PawnGenerationRequest request)
         {
             PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
+            this.EnsureXenotype(data);
             if (ModsConfig.BiotechActive && data.xenotype != null)
             {
                 request.ForcedXenotype = data.xenotype;
@@ -53,6 +55,7 @@ namespace QuestEditor_Library
                 return;
             }
             PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
+            this.EnsureXenotype(data);
             if (data.xenotype != null && pawn.genes.Xenotype != data.xenotype)
             {
                 pawn.genes.SetXenotype(data.xenotype);
@@ -64,6 +67,7 @@ namespace QuestEditor_Library
         {
             PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
             data.xenotype = DefDatabase<XenotypeDef>.GetNamedSilentFail(node["xenotype"]?.InnerText);
+            this.EnsureXenotype(data);
             data.customGenes.Clear();
             XmlNode customGenesNode = node.SelectSingleNode("customGenes");
             if (customGenesNode == null)
@@ -159,19 +163,17 @@ namespace QuestEditor_Library
 
         private void OpenXenotypeSelector(PawnModData_Genes data)
         {
-            List<ExtraOption> extraOptions = new List<ExtraOption>
-            {
-                new ExtraOption("CQF_PawnEditor_None".Translate(), null, () => data.xenotype = null)
-            };
-            Find.WindowStack.Add(new Dialog_Select<XenotypeDef>(DefDatabase<XenotypeDef>.AllDefsListForReading, null, xenotype => xenotype.LabelCap, "CQF_PawnEditor_SelectXenotype".Translate(), xenotype =>
+            this.EnsureXenotype(data);
+            Find.WindowStack.Add(new Dialog_Select<XenotypeDef>(new TextureSelectDrawer<XenotypeDef>(DefDatabase<XenotypeDef>.AllDefsListForReading, xenotype => BaseContent.WhiteTex, xenotype => xenotype.LabelCap, xenotype =>
             {
                 data.xenotype = xenotype;
-            }, null, null, xenotype => xenotype.descriptionShort ?? xenotype.description, xenotype => -Mathf.RoundToInt(xenotype.displayPriority * 1000f), extraOptions, xenotype => xenotype.defName));
+                this.EnsureXenotype(data);
+            }, null, (xenotype, rect) => this.DrawXenotypeIcon(xenotype, rect), xenotype => xenotype.descriptionShort ?? xenotype.description, xenotype => -Mathf.RoundToInt(xenotype.displayPriority * 1000f), xenotype => xenotype.defName, null, null), "CQF_PawnEditor_SelectXenotype".Translate()));
         }
 
         private void OpenGeneSelector(Action<GeneDef> action)
         {
-            Find.WindowStack.Add(new Dialog_Select<GeneDef>(DefDatabase<GeneDef>.AllDefsListForReading, null, this.GeneLabel, "CQF_PawnEditor_SelectGene".Translate(), action, null, null, gene => gene.description, gene => Mathf.RoundToInt(gene.displayOrderInCategory * 1000f), null, gene => gene.defName));
+            Find.WindowStack.Add(new Dialog_Select<GeneDef>(new LabeledTextureSelectDrawer<GeneDef>(DefDatabase<GeneDef>.AllDefsListForReading, gene => BaseContent.WhiteTex, this.GeneLabel, action, null, (gene, rect) => this.DrawGeneIcon(gene, rect), gene => gene.description, gene => Mathf.RoundToInt(gene.displayOrderInCategory * 1000f), gene => gene.defName, null, null), "CQF_PawnEditor_SelectGene".Translate()));
         }
 
         private void RemoveDuplicateGenes(List<GeneDef> genes)
@@ -194,6 +196,24 @@ namespace QuestEditor_Library
         private string GeneLabel(GeneDef gene)
         {
             return gene?.label ?? "CQF_PawnEditor_None".Translate();
+        }
+
+        private void EnsureXenotype(PawnModData_Genes data)
+        {
+            if (data.xenotype == null)
+            {
+                data.xenotype = XenotypeDefOf.Baseliner;
+            }
+        }
+
+        private void DrawXenotypeIcon(XenotypeDef xenotype, Rect rect)
+        {
+            Widgets.DefIcon(rect, xenotype);
+        }
+
+        private void DrawGeneIcon(GeneDef gene, Rect rect)
+        {
+            Widgets.DefIcon(rect, gene);
         }
 
         private readonly Dictionary<Pawn, HashSet<GeneDef>> appliedCustomGenes = new Dictionary<Pawn, HashSet<GeneDef>>();

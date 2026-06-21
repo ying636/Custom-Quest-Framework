@@ -383,11 +383,11 @@ namespace QuestEditor_Library
             {
                 TraitData data = list[i];
                 CQFEditorTools.DrawSelectablePercent(y, data.def?.DataAtDegree(data.degree)?.label, ref data.chance, ref data.buffer, () =>
-                    Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, null, t => t.Value.label, "CQF_PawnEditor_Select".Translate(), t =>
+                    Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
                     {
                         data.def = t.Key;
                         data.degree = t.Value.degree;
-                    })), x + 5f);
+                    }, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate())), x + 5f);
                 y += 30f;
             }
             y += 5f;
@@ -397,10 +397,10 @@ namespace QuestEditor_Library
             }
             y += 10f;
             CQFEditorTools.DrawButtonForList(ref y, list, t => t.def?.DataAtDegree(t.degree)?.label,
-                () => Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, null, t => t.Value.label, "CQF_PawnEditor_Select".Translate(), t =>
+                () => Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
                 {
                     list.Add(new TraitData() { def = t.Key, degree = t.Value.degree, chance = 1f });
-                })), x - 5f, width - 70f, new Vector2(70f, 25f));
+                }, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate())), x - 5f, width - 70f, new Vector2(70f, 25f));
         }
 
         public XElement SaveToXElement(string nodeName)

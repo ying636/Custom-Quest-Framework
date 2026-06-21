@@ -69,9 +69,7 @@ namespace QuestEditor_Library
                 }
                 yield return new FloatMenuOption("Select".Translate(), () =>
                  {
-                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(Designator_SpawnThing.bespawnable,
-            x => x.uiIcon, x => x.label, "Select".Translate(),
-            x =>
+                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_SpawnThing.bespawnable, x => x.uiIcon, x => x.label, x =>
             {
                 Designator_SpawnThing.thing = x; 
                 string label = x.label;
@@ -94,21 +92,29 @@ namespace QuestEditor_Library
                 this.defaultDesc = x.description;
                 if (x.MadeFromStuff)
                 {
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(x).ToList(), s => s.uiIcon, s => s.label, "SelectStuff".Translate(), s =>
-                    {
-                        stuff = s;
-                        this.defaultLabel = s.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
-                        if (x.graphicData.onGroundRandomRotateAngle > 0.01f)
-                        {
-                            this.icon = Widgets.GetIconFor(x, s);
-                        }
-                        else
-                        {
-                            this.icon = x.GetUIIconForStuff(s);
-                        }
-                    },t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)));
+                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                        new TextureSelectDrawer<ThingDef>(
+                            GenStuff.AllowedStuffsFor(x).ToList(),
+                            s => s.uiIcon,
+                            s => s.label,
+                            s =>
+                            {
+                                stuff = s;
+                                this.defaultLabel = s.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
+                                if (x.graphicData.onGroundRandomRotateAngle > 0.01f)
+                                {
+                                    this.icon = Widgets.GetIconFor(x, s);
+                                }
+                                else
+                                {
+                                    this.icon = x.GetUIIconForStuff(s);
+                                }
+                            },
+                            t => t.graphic?.Color ?? Color.white,
+                            (t, r) => Widgets.DefIcon(r, t, null)),
+                        "SelectStuff".Translate()));
                 }
-            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)));
+            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)), "Select".Translate()));
                  });
                 yield break;
             }

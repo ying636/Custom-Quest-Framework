@@ -37,8 +37,10 @@
   <CQF_PawnEditor_HeadType>Head type:{0}</CQF_PawnEditor_HeadType>
   <CQF_PawnEditor_SelectSkinColor>Skin color:{0}</CQF_PawnEditor_SelectSkinColor>
   <CQF_PawnEditor_GeneSkinColor>gene default</CQF_PawnEditor_GeneSkinColor>
+  <CQF_PawnEditor_DefaultSkinColor>default</CQF_PawnEditor_DefaultSkinColor>
   <CQF_PawnEditor_CustomSkinColor>custom</CQF_PawnEditor_CustomSkinColor>
   <CQF_PawnEditor_UseGeneSkinColor>Use gene/default skin color</CQF_PawnEditor_UseGeneSkinColor>
+  <CQF_PawnEditor_UseDefaultSkinColor>Use default skin color</CQF_PawnEditor_UseDefaultSkinColor>
   <CQF_PawnEditor_Xenotype>Xenotype:{0}</CQF_PawnEditor_Xenotype>
   <CQF_PawnEditor_SelectXenotype>Select xenotype</CQF_PawnEditor_SelectXenotype>
   <CQF_PawnEditor_CustomGenes>Custom genes</CQF_PawnEditor_CustomGenes>

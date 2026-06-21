@@ -40,14 +40,12 @@ namespace QuestEditor_Library
                 );
                 yield return new FloatMenuOption("Select".Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Dialog_Select<TerrainDef>(DefDatabase<TerrainDef>.AllDefsListForReading,
-           x => x.uiIcon, x => x.label, "Select".Translate(),
-           x =>
+                    Find.WindowStack.Add(new Dialog_Select<TerrainDef>(new TextureSelectDrawer<TerrainDef>(DefDatabase<TerrainDef>.AllDefsListForReading, x => x.uiIcon, x => x.label, x =>
            {
                Designator_Terrain.terrain = x;
                this.defaultLabel = x.label;
                this.icon = x.GetUIIconForStuff(null);
-           }, t => t.DrawColor, (t, r) => Widgets.DefIcon(r, t, null,1,null,false, t.DrawColor)));
+           }, t => t.DrawColor, (t, r) => Widgets.DefIcon(r, t, null,1,null,false, t.DrawColor), null, null, null, null, null), "Select".Translate()));
                 });
                 yield break;
             }

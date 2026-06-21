@@ -187,21 +187,34 @@ namespace QuestEditor_Library
                 options.Add(new FloatMenuOption("Select".Translate(), () =>
                 {
                     this.reserveThing = new ThingData();
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(Designator_SpawnThing.Bespawnable,
-           t => t.uiIcon, t => t.label, "Select".Translate(),
-           t =>
-           {
-               this.reserveThing.def = t;
-               this.reserveThing.hitPoint = t.BaseMaxHitPoints;
-               if (t.MadeFromStuff)
-               {
-                   Find.WindowStack.Add(new Dialog_Select<ThingDef>(GenStuff.AllowedStuffsFor(t).ToList(), s => s.uiIcon, s => s.label, "SelectStuff".Translate(), s =>
-                   {
-                       this.reserveThing.stuff = s;
-                       this.reserveThing.hitPoint = (int)(t.BaseMaxHitPoints * (s.stuffProps.statFactors.Find(s2 => s2.stat == StatDefOf.MaxHitPoints) is StatModifier stat ? stat.value : 1f));
-                   }, t2 => t2.graphic?.Color ?? Color.white,(d, r) => Widgets.DefIcon(r,d, null)));
-               }
-           }, t => t.graphic?.Color ?? Color.white));
+                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                        new TextureSelectDrawer<ThingDef>(
+                            Designator_SpawnThing.Bespawnable,
+                            t => t.uiIcon,
+                            t => t.label,
+                            t =>
+                            {
+                                this.reserveThing.def = t;
+                                this.reserveThing.hitPoint = t.BaseMaxHitPoints;
+                                if (t.MadeFromStuff)
+                                {
+                                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                                        new TextureSelectDrawer<ThingDef>(
+                                            GenStuff.AllowedStuffsFor(t).ToList(),
+                                            s => s.uiIcon,
+                                            s => s.label,
+                                            s =>
+                                            {
+                                                this.reserveThing.stuff = s;
+                                                this.reserveThing.hitPoint = (int)(t.BaseMaxHitPoints * (s.stuffProps.statFactors.Find(s2 => s2.stat == StatDefOf.MaxHitPoints) is StatModifier stat ? stat.value : 1f));
+                                            },
+                                            t2 => t2.graphic?.Color ?? Color.white,
+                                            (d, r) => Widgets.DefIcon(r, d, null)),
+                                        "SelectStuff".Translate()));
+                                }
+                            },
+                            t => t.graphic?.Color ?? Color.white),
+                        "Select".Translate()));
                 }));
                 Find.WindowStack.Add(new FloatMenu(options));
             }

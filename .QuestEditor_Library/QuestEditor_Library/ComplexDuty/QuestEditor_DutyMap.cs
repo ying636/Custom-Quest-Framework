@@ -11,6 +11,8 @@ namespace QuestEditor_Library
 {
     public class QuestEditor_DutyMap : Page
     {
+        public static DutyMapDef CurrentEditingDutyMap => QuestEditor_DutyMap.curDutyMap;
+
         public QuestEditor_DutyMap()
         {
             this.preventCameraMotion = false;
@@ -381,8 +383,9 @@ namespace QuestEditor_Library
                 this.hoveredTransition = null;
                 return;
             }
-            if ((ev.type != EventType.MouseMove && ev.type != EventType.MouseDown && ev.type != EventType.MouseDrag) || !viewRect.Contains(ev.mousePosition))
+            if (!viewRect.Contains(ev.mousePosition))
             {
+                this.hoveredTransition = null;
                 return;
             }
             this.hoveredTransition = this.FindHoveredTransition(ev.mousePosition);

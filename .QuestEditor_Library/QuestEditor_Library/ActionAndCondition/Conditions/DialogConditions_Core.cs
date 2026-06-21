@@ -59,6 +59,35 @@ namespace QuestEditor_Library
         [NoTranslate]
         public string failReason;
     }
+
+    public abstract class DialogCondition_WithSubConditions : DialogCondition
+    {
+        public abstract List<DialogCondition> ChildConditions { get; }
+
+        public virtual bool AllowMultipleChildConditions => true;
+
+        public override void Draw(ref float y, Rect inRect, float x)
+        {
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.ChildConditions, inRect, "Conditions".Translate());
+            y += 30f;
+        }
+
+        protected XElement SaveChildConditions(string nodeName)
+        {
+            return CQFEditorTools.SaveList_Saveable(this.ChildConditions, nodeName);
+        }
+
+        protected void ExposeChildConditions(ref List<DialogCondition> conditions, string label)
+        {
+            Scribe_Collections.Look(ref conditions, label, LookMode.Deep);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && conditions == null)
+            {
+                conditions = new List<DialogCondition>();
+            }
+        }
+    }
+
     public class DialogCondition_Bool : DialogCondition
     {
         public override void ExposeData()
@@ -262,24 +291,20 @@ namespace QuestEditor_Library
         public string targetKey;
         public bool needSpawned = true; 
     }
-    public class DialogCondition_And : DialogCondition
+    public class DialogCondition_And : DialogCondition_WithSubConditions
     {
+        public override List<DialogCondition> ChildConditions => this.condition;
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.condition, "condition"));
+            result.Add(this.SaveChildConditions("condition"));
             return result;
-        }
-        public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.condition, inRect, "Conditions".Translate());
-            y += 30f;
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
-            string r = "";
-            if (this.condition.Exists(c => !c.Satisfied(targets, out r, quest)))
+            string r = null;
+            if (this.ChildConditions.Exists(c => !c.Satisfied(targets, out r, quest)))
             {
                 reason = r;
                 return false;
@@ -290,28 +315,25 @@ namespace QuestEditor_Library
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(ref this.condition, "DialogCondition_condition",LookMode.Deep);
+            this.ExposeChildConditions(ref this.condition, "DialogCondition_condition");
         }
         public List<DialogCondition> condition = new List<DialogCondition>();
     }
-    public class DialogCondition_Or : DialogCondition
+
+    public class DialogCondition_Or : DialogCondition_WithSubConditions
     {
+        public override List<DialogCondition> ChildConditions => this.condition;
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.condition, "condition"));
+            result.Add(this.SaveChildConditions("condition"));
             return result;
-        }
-        public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.condition, inRect, "Conditions".Translate());
-            y += 30f;
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
-            string r = "";
-            if (this.condition.Exists(c => c.Satisfied(targets, out r, quest)))
+            string r = null;
+            if (this.ChildConditions.Exists(c => c.Satisfied(targets, out r, quest)))
             {
                 reason = null;
                 return true;
@@ -323,29 +345,36 @@ namespace QuestEditor_Library
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(ref this.condition, "DialogCondition_condition",LookMode.Deep);
+            this.ExposeChildConditions(ref this.condition, "DialogCondition_condition");
         }
         public List<DialogCondition> condition = new List<DialogCondition>();
     }
-    public class DialogCondition_Reversal : DialogCondition
+
+    public class DialogCondition_Reversal : DialogCondition_WithSubConditions
     {
+        public override List<DialogCondition> ChildConditions => this.condition;
+
+        public override bool AllowMultipleChildConditions => false;
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(this.condition.SaveToXElement("condition"));
+            if (this.condition.Any())
+            {
+                result.Add(this.condition[0].SaveToXElement("condition"));
+            }
             return result;
-        }
-        public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x,ref y,typeof(DialogCondition).AllSubclassesNonAbstract(),t => this.condition = (DialogCondition)Activator.CreateInstance(t),t => t.Name.Translate());
-            this.condition?.Draw(ref y,inRect,x);
-            y += 30f;
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
-            string r = "";
-            if (this.condition.Satisfied(targets, out r, quest))
+            DialogCondition child = this.condition.FirstOrDefault();
+            if (child == null)
+            {
+                reason = null;
+                return true;
+            }
+            string r = null;
+            if (child.Satisfied(targets, out r, quest))
             {
                 reason = this.failReason.Translate();
                 return false;
@@ -356,9 +385,18 @@ namespace QuestEditor_Library
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look(ref this.condition, "condition");
+            DialogCondition child = this.condition.FirstOrDefault();
+            Scribe_Deep.Look(ref child, "condition");
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                this.condition = new List<DialogCondition>();
+                if (child != null)
+                {
+                    this.condition.Add(child);
+                }
+            }
         }
-        public DialogCondition condition;
+        public List<DialogCondition> condition = new List<DialogCondition>();
     }
     public class DialogCondition_QuestIsGenerated : DialogCondition
     {

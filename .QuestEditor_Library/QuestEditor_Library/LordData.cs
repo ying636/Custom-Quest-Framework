@@ -94,8 +94,14 @@ namespace QuestEditor_Library
             {
                 if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordJob".Translate(this.lordJob.Name.CanTranslate() ? this.lordJob.Name.Translate().ToString() : this.lordJob.Name), false))
                 {
-                    Find.WindowStack.Add(new Dialog_Select<Type>(typeof(LordJob).AllSubclassesNonAbstract(), null, (t) => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name, "Select".Translate()
-                        , t => this.lordJob = t, null, null, (t) => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""));
+                    Find.WindowStack.Add(new Dialog_Select<Type>(
+                        new TextSelectDrawer<Type>(
+                            typeof(LordJob).AllSubclassesNonAbstract(),
+                            t => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name,
+                            t => this.lordJob = t,
+                            null,
+                            t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""),
+                        "Select".Translate()));
                 }
             }
             else 
@@ -115,12 +121,18 @@ namespace QuestEditor_Library
             {
                 List<Type> types = typeof(LordJobData).AllSubclassesNonAbstract().ListFullCopy();
                 types.Add(typeof(LordJobData));
-                Find.WindowStack.Add(new Dialog_Select<Type>(types, null, (t) => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name, "Select".Translate()
-        , t =>
-        {
-            this.lordData.lordJobData = (LordJobData)Activator.CreateInstance(t);
-            this.lordData.lordJobData.lordData = this.lordData;
-        }, null, null, (t) => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""));
+                Find.WindowStack.Add(new Dialog_Select<Type>(
+                    new TextSelectDrawer<Type>(
+                        types,
+                        t => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name,
+                        t =>
+                        {
+                            this.lordData.lordJobData = (LordJobData)Activator.CreateInstance(t);
+                            this.lordData.lordJobData.lordData = this.lordData;
+                        },
+                        null,
+                        t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""),
+                    "Select".Translate()));
             }
             if ((this.GetType().Name + "_Tip").CanTranslate())
             {
@@ -162,7 +174,7 @@ namespace QuestEditor_Library
         {
             if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordData_DutyMap".Translate(this.dutyMap?.defName ?? "Null"), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, null, d => d.defName, "Select".Translate(), d => this.dutyMap = d));
+                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(new TextSelectDrawer<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, d => d.defName, d => this.dutyMap = d, null, null, null, null, null, null), "Select".Translate()));
             }
             y += 30f;
             if (this.dutyMap != null && this.dutyMap.nodes.Any())

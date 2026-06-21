@@ -24,7 +24,7 @@ namespace QuestEditor_Library
             Rect output = new Rect(x, y, 520f, 30f);
             if (Widgets.ButtonText(output, "SelectOutputMod".Translate(Page_QuestEditor.ModData.Name),false)) 
             {
-                Find.WindowStack.Add(new Dialog_Select<ModMetaData>(ModLister.AllInstalledMods.ToList(),null,m => m.Name,"Select".Translate(),m =>
+                Find.WindowStack.Add(new Dialog_Select<ModMetaData>(new TextSelectDrawer<ModMetaData>(ModLister.AllInstalledMods.ToList(), m => m.Name, m =>
                 {
                     string path = m.RootDir.FullName;
                     if (!Directory.Exists(path + @"\Quests"))
@@ -53,7 +53,7 @@ namespace QuestEditor_Library
                         Directory.CreateDirectory(questPath + @"\Data");
                     }
                     Page_QuestEditor.modData = m;
-                }));
+                }, null, null, null, null, null, null), "Select".Translate()));
             }
             TooltipHandler.TipRegion(output, "OutputModTip".Translate());
 
