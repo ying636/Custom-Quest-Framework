@@ -110,10 +110,25 @@
   <CQF_DutyEnum_LocomotionUrgency_Jog>Jog</CQF_DutyEnum_LocomotionUrgency_Jog>
   <CQF_DutyEnum_LocomotionUrgency_Sprint>Sprint</CQF_DutyEnum_LocomotionUrgency_Sprint>
   <CQF_DutyNode_ThinkNode_Priority>Priority node</CQF_DutyNode_ThinkNode_Priority>
+  <CQF_DutyNode_ThinkNode_Priority_Tip>Tries child nodes in order. Once an earlier child issues a job, later children are not checked.</CQF_DutyNode_ThinkNode_Priority_Tip>
+  <CQF_DutyNode_JobGiver_Wait>Guard wait</CQF_DutyNode_JobGiver_Wait>
+  <CQF_DutyNode_JobGiver_Wait_Tip>Reads a guard position from the enabled databases by target key first, then falls back to legacy LordJob_Custom position data. While waiting, it periodically rechecks higher-priority behavior.</CQF_DutyNode_JobGiver_Wait_Tip>
+  <CQF_DutyNode_JobGiver_Patrol>Legacy patrol</CQF_DutyNode_JobGiver_Patrol>
+  <CQF_DutyNode_JobGiver_Patrol_Tip>Issues the legacy patrol job using route data stored on LordJob_Custom.</CQF_DutyNode_JobGiver_Patrol_Tip>
+  <CQF_DutyNode_JobGiver_ExitSubMapAndExitMap>Exit submap and map</CQF_DutyNode_JobGiver_ExitSubMapAndExitMap>
+  <CQF_DutyNode_JobGiver_ExitSubMapAndExitMap_Tip>Prioritizes the current submap exit. If none is available, finds a normal map-edge exit and leaves the map.</CQF_DutyNode_JobGiver_ExitSubMapAndExitMap_Tip>
+  <CQF_DutyNode_JobGiver_MoveToNewLevel>Move to new level</CQF_DutyNode_JobGiver_MoveToNewLevel>
+  <CQF_DutyNode_JobGiver_MoveToNewLevel_Tip>Uses the multilevel lord movement request to find a portal path to the target map and enter it.</CQF_DutyNode_JobGiver_MoveToNewLevel_Tip>
   <CQF_DutyNode_JobGiver_PatrolMove>Patrol move</CQF_DutyNode_JobGiver_PatrolMove>
+  <CQF_DutyNode_JobGiver_PatrolMove_Tip>Reads a patrol route by map route key and moves to the route point indicated by the runtime duty-map index.</CQF_DutyNode_JobGiver_PatrolMove_Tip>
   <CQF_DutyNode_JobGiver_GotoTarget>Go to database target</CQF_DutyNode_JobGiver_GotoTarget>
+  <CQF_DutyNode_JobGiver_GotoTarget_Tip>Reads a cell or thing from the enabled databases by target key and moves to it.</CQF_DutyNode_JobGiver_GotoTarget_Tip>
   <CQF_DutyNode_JobGiver_RepairTarget>Repair database target</CQF_DutyNode_JobGiver_RepairTarget>
+  <CQF_DutyNode_JobGiver_RepairTarget_Tip>Reads a building target by key and issues repair work when it can be repaired, reserved, and is not marked for deconstruction or mining.</CQF_DutyNode_JobGiver_RepairTarget_Tip>
   <CQF_DutyNode_JobGiver_PatrolObserve>Patrol observe</CQF_DutyNode_JobGiver_PatrolObserve>
+  <CQF_DutyNode_JobGiver_PatrolObserve_Tip>Looks left and right at the current patrol point. It tries combat first, entering combat when enemies are found.</CQF_DutyNode_JobGiver_PatrolObserve_Tip>
+  <CQF_DutyNode_JobGiver_TargetBase>Database target base</CQF_DutyNode_JobGiver_TargetBase>
+  <CQF_DutyNode_JobGiver_TargetBase_Tip>Base behavior for reading targets from the duty-map runtime, quest, temporary, or global database. Usually not used directly as a node.</CQF_DutyNode_JobGiver_TargetBase_Tip>
   <CQF_DutyNode_JobGiver_PlayWithGoldenCube>Play with golden cube</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
   <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>Prepare caravan: collect pawns</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
   <CQFAction_Pawn_RunDutyMapTransition>Pawn action: run duty map transition</CQFAction_Pawn_RunDutyMapTransition>

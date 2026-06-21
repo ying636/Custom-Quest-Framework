@@ -100,10 +100,10 @@
   <TargetIsntLikeHumanOrTargetIsNull>目标并非类人生物或者不存在</TargetIsntLikeHumanOrTargetIsNull>
   <!-- EN: Target name: -->
   <DialogueTarget>目标名称：</DialogueTarget>
-  <!-- EN: Interviewee -->
-  <Interviewee>被交谈者</Interviewee>
-  <!-- EN: Interviewer -->
-  <Interviewer>交谈者</Interviewer>
+  <!-- EN: Interviewee (player) -->
+  <Interviewee>玩家</Interviewee>
+  <!-- EN: Interviewer (NPC) -->
+  <Interviewer>NPC对话者</Interviewer>
   <!-- EN: Custom thing -->
   <CustomThing>自定义事物</CustomThing>
   <!-- EN: Trigger -->

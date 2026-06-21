@@ -225,7 +225,7 @@ namespace QuestEditor_Library
             }
             return result;
         }
-        // public Dialog_NodeTree CreateDialog(Thing interviewee, Thing interviewer,Quest quest = null)
+        // public Dialog_NodeTree CreateDialog(Thing interviewer, Thing interviewee,Quest quest = null)
         // {   
         //     quest = quest ?? GameTools.GetQuestFromThing(interviewer) ?? GameTools.GetQuestFromThing(interviewee);
         //     Dictionary<int, DiaNode> nodes = new Dictionary<int, DiaNode>();
@@ -316,12 +316,12 @@ namespace QuestEditor_Library
         //     return result;
         // }
 
-        public CQFDialogTreeWindow CreateCQFDialog(Thing interviewee, Thing interviewer, Quest quest = null)
+        public CQFDialogTreeWindow CreateCQFDialog(Thing interviewer, Thing interviewee, Quest quest = null)
         {
             quest = quest ?? GameTools.GetQuestFromThing(interviewer) ?? GameTools.GetQuestFromThing(interviewee);
             string title = GameTools.GetDialogText(this.title, interviewer, interviewee, this, quest);
             CQFDialogTreeWindow result = new CQFDialogTreeWindow(
-                title,interviewee,interviewer, quest,this);
+                title,interviewer,interviewee, quest,this);
             return result;
         }
 

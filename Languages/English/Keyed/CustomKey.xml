@@ -26,6 +26,6 @@
     <CQF_Look>Look</CQF_Look>
     <CQF_IsDeveloping>The front area is under development</CQF_IsDeveloping>
 
-    <CQF_Dialog_Talk>Talk with {INTERVIEWEE_nameDef}</CQF_Dialog_Talk>
+    <CQF_Dialog_Talk>Talk with {INTERVIEWER_nameDef}</CQF_Dialog_Talk>
 
 </LanguageData>

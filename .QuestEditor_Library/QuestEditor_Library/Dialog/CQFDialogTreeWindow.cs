@@ -6,7 +6,7 @@ namespace QuestEditor_Library;
 
 public class CQFDialogTreeWindow : Window
 {
-    public CQFDialogTreeWindow(string title,Thing interviewee, Thing interviewer,Quest quest
+    public CQFDialogTreeWindow(string title,Thing interviewer, Thing interviewee,Quest quest
     , DialogTreeDef tree)
     {
         this.title = title; 
@@ -16,8 +16,8 @@ public class CQFDialogTreeWindow : Window
         this.closeOnCancel = false; 
         this.soundAppear = SoundDefOf.CommsWindow_Open;
         this.soundClose = SoundDefOf.CommsWindow_Close; 
-        this.interviewee = interviewee;
         this.interviewer = interviewer;
+        this.interviewee = interviewee;
         this.quest = quest;
         this.tree = tree;
         this.GoToNode(0);

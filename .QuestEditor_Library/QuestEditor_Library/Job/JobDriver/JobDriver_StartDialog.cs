@@ -22,10 +22,10 @@ namespace QuestEditor_Library
                 initAction = () => 
                 {
                     if(GameComponent_Editor.Instance.Dialogs.TryGetValue(this.TargetThingA,out DialogManagerDef manager)
-                       && manager.GetTree(this.pawn,this.TargetThingA) is DialogTreeDef dialog)
+                       && manager.GetTree(this.TargetThingA,this.pawn) is DialogTreeDef dialog)
                     {
-                        Find.WindowStack.Add(dialog.CreateCQFDialog(this.pawn,
-                            this.TargetThingA,GameTools.GetQuestFromThing(this.TargetThingA)));
+                        Find.WindowStack.Add(dialog.CreateCQFDialog(this.TargetThingA,
+                            this.pawn,GameTools.GetQuestFromThing(this.TargetThingA)));
                     }
                 }
                 ,

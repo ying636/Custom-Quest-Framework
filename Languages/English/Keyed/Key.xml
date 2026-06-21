@@ -196,7 +196,7 @@ SiteName: SiteName-></RuleTip>
   <DialogManagerDefName>Manager def name:</DialogManagerDefName>
   <Conditions>Condtions:</Conditions>
 <FullBody>full body</FullBody>
-<DefaultDialogKey>Talk with {Interviewee_nameDef}</DefaultDialogKey>
+<DefaultDialogKey>Talk with {Interviewer_nameDef}</DefaultDialogKey>
 
   <PawnSpawnActions>Pawn spawn actions:</PawnSpawnActions>
 

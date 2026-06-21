@@ -620,7 +620,7 @@ namespace QuestEditor_Library
                 interviewee = target2.Thing;
             }
             Find.WindowStack.Add(this.dialog.GetTree(interviewer, interviewee)?.CreateCQFDialog(
-                interviewee, interviewer, quest));
+                interviewer, interviewee, quest));
         }
         public override XElement SaveToXElement(string nodeName)
         {

@@ -157,7 +157,7 @@
   <DialogManagerDefName>管理者名：</DialogManagerDefName>
   <Conditions>条件：</Conditions>
   <FullBody>全身</FullBody>
-  <DefaultDialogKey>对话与{Interviewee_nameDef}</DefaultDialogKey>
+  <DefaultDialogKey>与{Interviewer_nameDef}对话</DefaultDialogKey>
   <PawnSpawnActions>实体生成后行为：</PawnSpawnActions>
   <ITab_CustomThing>自定义事物</ITab_CustomThing>
   <GenerateCustomMap>生成自定义地图</GenerateCustomMap>

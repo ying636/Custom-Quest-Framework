@@ -34,7 +34,7 @@ namespace QuestEditor_Library
             if (pawn.CanReach(thing, PathEndMode.Touch, Danger.Deadly))
             {
                 Dictionary<Thing, DialogManagerDef> dialogs = GameComponent_Editor.Instance.Dialogs;
-                if (dialogs != null && dialogs.TryGetValue(thing, out DialogManagerDef manager) && manager.GetTree(pawn, thing) is DialogTreeDef def)
+                if (dialogs != null && dialogs.TryGetValue(thing, out DialogManagerDef manager) && manager.GetTree(thing, pawn) is DialogTreeDef def)
                 {
                     if (def.requireNonHostile && thing.HostileTo(pawn))
                     {
@@ -42,11 +42,11 @@ namespace QuestEditor_Library
                     }
                     else
                     {
-                        yield return (new FloatMenuOption(GameTools.GetDialogText(def.dialogReportKey, pawn, thing, def, GameTools.GetQuestFromThing(thing)), () =>
+                        yield return (new FloatMenuOption(GameTools.GetDialogText(def.dialogReportKey, thing, pawn, def, GameTools.GetQuestFromThing(thing)), () =>
                         {
                             pawn.jobs.StopAll();
                             Job job = JobMaker.MakeJob(QEDefOf.QE_StartDialog, thing);
-                            job.reportStringOverride = GameTools.GetDialogText(def.dialogReportKey, pawn, thing, def, GameTools.GetQuestFromThing(thing));
+                            job.reportStringOverride = GameTools.GetDialogText(def.dialogReportKey, thing, pawn, def, GameTools.GetQuestFromThing(thing));
                             pawn.jobs.StartJob(job);
                         }));
                     }

@@ -22,7 +22,7 @@ namespace QuestEditor_Library
         {
             if (this.Props.triggerSignal != null && signal == this.Props.triggerSignal) 
             {
-                this.Props.dialog?.CreateCQFDialog(null,this.parent,GameTools.GetQuestFromThing(this.parent));
+                this.Props.dialog?.CreateCQFDialog(this.parent,null,GameTools.GetQuestFromThing(this.parent));
             }
         }
     }

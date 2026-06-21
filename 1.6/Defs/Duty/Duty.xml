@@ -31,8 +31,8 @@
         <thinkNode Class="ThinkNode_Priority">
             <subNodes>
                 <li Class="JobGiver_AIFightEnemies">
-                    <targetAcquireRadius>10</targetAcquireRadius>
-                    <targetKeepRadius>30</targetKeepRadius>
+                    <targetAcquireRadius>30</targetAcquireRadius>
+                    <targetKeepRadius>45</targetKeepRadius>
                 </li>
                 <li Class="QuestEditor_Library.JobGiver_Wait" />
             </subNodes>

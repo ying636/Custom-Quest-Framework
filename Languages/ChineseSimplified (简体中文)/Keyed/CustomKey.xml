@@ -43,7 +43,7 @@
     <!-- EN: The front area is under development -->
   <CQF_IsDeveloping>前面的区域正在开发中...</CQF_IsDeveloping>
 
-    <!-- EN: Talk with {INTERVIEWEE_nameDef} -->
-  <CQF_Dialog_Talk>与{Interviewee_nameDef}交谈</CQF_Dialog_Talk>
+    <!-- EN: Talk with {INTERVIEWER_nameDef} -->
+  <CQF_Dialog_Talk>与{Interviewer_nameDef}交谈</CQF_Dialog_Talk>
 
 </LanguageData>

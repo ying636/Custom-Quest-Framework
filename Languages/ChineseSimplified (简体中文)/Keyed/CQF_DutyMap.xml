@@ -111,10 +111,25 @@
   <CQF_DutyEnum_LocomotionUrgency_Jog>慢跑</CQF_DutyEnum_LocomotionUrgency_Jog>
   <CQF_DutyEnum_LocomotionUrgency_Sprint>冲刺</CQF_DutyEnum_LocomotionUrgency_Sprint>
   <CQF_DutyNode_ThinkNode_Priority>优先级节点</CQF_DutyNode_ThinkNode_Priority>
+  <CQF_DutyNode_ThinkNode_Priority_Tip>按子节点顺序尝试发放工作，前面的节点成功后不会继续检查后面的节点。</CQF_DutyNode_ThinkNode_Priority_Tip>
+  <CQF_DutyNode_JobGiver_Wait>站岗等待</CQF_DutyNode_JobGiver_Wait>
+  <CQF_DutyNode_JobGiver_Wait_Tip>优先按目标 key 从数据库读取站岗位置；取不到时兼容旧版 LordJob_Custom 的位置数据。等待期间会周期性重新检查更高优先级行为。</CQF_DutyNode_JobGiver_Wait_Tip>
+  <CQF_DutyNode_JobGiver_Patrol>旧版巡逻</CQF_DutyNode_JobGiver_Patrol>
+  <CQF_DutyNode_JobGiver_Patrol_Tip>使用旧版 LordJob_Custom 的巡逻路径数据发放巡逻工作。</CQF_DutyNode_JobGiver_Patrol_Tip>
+  <CQF_DutyNode_JobGiver_ExitSubMapAndExitMap>离开子地图并离开地图</CQF_DutyNode_JobGiver_ExitSubMapAndExitMap>
+  <CQF_DutyNode_JobGiver_ExitSubMapAndExitMap_Tip>优先前往当前子地图出口；没有子地图出口时，寻找普通地图边缘并离开地图。</CQF_DutyNode_JobGiver_ExitSubMapAndExitMap_Tip>
+  <CQF_DutyNode_JobGiver_MoveToNewLevel>前往新层级</CQF_DutyNode_JobGiver_MoveToNewLevel>
+  <CQF_DutyNode_JobGiver_MoveToNewLevel_Tip>根据多层级 Lord 的移动需求，寻找通往目标地图的传送门并进入。</CQF_DutyNode_JobGiver_MoveToNewLevel_Tip>
   <CQF_DutyNode_JobGiver_PatrolMove>行进</CQF_DutyNode_JobGiver_PatrolMove>
+  <CQF_DutyNode_JobGiver_PatrolMove_Tip>从地图路径 key 读取巡逻点，按职责图运行时数据库中的索引前往下一个巡逻点。</CQF_DutyNode_JobGiver_PatrolMove_Tip>
   <CQF_DutyNode_JobGiver_GotoTarget>前往数据库目标</CQF_DutyNode_JobGiver_GotoTarget>
+  <CQF_DutyNode_JobGiver_GotoTarget_Tip>按目标 key 从启用的数据库中读取位置或 Thing，并前往该目标。</CQF_DutyNode_JobGiver_GotoTarget_Tip>
   <CQF_DutyNode_JobGiver_RepairTarget>修理数据库目标</CQF_DutyNode_JobGiver_RepairTarget>
+  <CQF_DutyNode_JobGiver_RepairTarget_Tip>按目标 key 从数据库中读取建筑目标，在可修理、可预定且未被拆除/开采时发放修理工作。</CQF_DutyNode_JobGiver_RepairTarget_Tip>
   <CQF_DutyNode_JobGiver_PatrolObserve>观察</CQF_DutyNode_JobGiver_PatrolObserve>
+  <CQF_DutyNode_JobGiver_PatrolObserve_Tip>到达当前巡逻点后左右观察；观察前会优先尝试战斗，发现敌人则进入战斗。</CQF_DutyNode_JobGiver_PatrolObserve_Tip>
+  <CQF_DutyNode_JobGiver_TargetBase>数据库目标基类</CQF_DutyNode_JobGiver_TargetBase>
+  <CQF_DutyNode_JobGiver_TargetBase_Tip>用于从职责图运行时、任务、临时或全局数据库读取目标的行为基类，通常不直接作为节点使用。</CQF_DutyNode_JobGiver_TargetBase_Tip>
   <CQF_DutyNode_JobGiver_PlayWithGoldenCube>玩金方块</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
   <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>准备商队：集合角色</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
   <CQFAction_Pawn_RunDutyMapTransition>角色行为：触发职责图切换</CQFAction_Pawn_RunDutyMapTransition>

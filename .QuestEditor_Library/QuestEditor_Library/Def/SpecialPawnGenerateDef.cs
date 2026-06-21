@@ -49,7 +49,7 @@ namespace QuestEditor_Library
             pawns.ForEach(p =>
             {
                 targets.Clear();
-                targets.Add("Interviewee", p);
+                targets.Add("Interviewer", p);
                 var ds = dialogs.ToList().FindAll(d => 
                     (d.Key.genrationConditions == null 
                      || !d.Key.genrationConditions.Exists(c => 

@@ -976,7 +976,9 @@ namespace QuestEditor_Library
         private string ThinkNodeTypeTip(Type type)
         {
             string modName = this.ThinkNodeModName(type);
-            return "CQF_DutyThinkNodeMod".Translate(modName, type.FullName);
+            string source = "CQF_DutyThinkNodeMod".Translate(modName, type.FullName);
+            string tipKey = "CQF_DutyNode_" + type.Name + "_Tip";
+            return tipKey.CanTranslate() ? tipKey.Translate() + "\n\n" + source : source;
         }
 
         private int ThinkNodeTypePriority(Type type)

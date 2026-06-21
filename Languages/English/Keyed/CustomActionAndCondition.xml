@@ -59,8 +59,8 @@
   <TargetIsntPawn>Target isn't pawn</TargetIsntPawn>
   <TargetIsntLikeHumanOrTargetIsNull>Target isn't like human or target is null</TargetIsntLikeHumanOrTargetIsNull>
   <DialogueTarget>Target name:</DialogueTarget>
-  <Interviewee>Interviewee</Interviewee>
-  <Interviewer>Interviewer</Interviewer>
+  <Interviewee>Interviewee (player)</Interviewee>
+  <Interviewer>Interviewer (NPC)</Interviewer>
   <CustomThing>Custom thing</CustomThing>
   <Trigger>Trigger</Trigger>
   <Captured>Captured</Captured>
