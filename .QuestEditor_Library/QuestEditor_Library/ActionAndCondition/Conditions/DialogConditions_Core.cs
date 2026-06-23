@@ -62,7 +62,15 @@ namespace QuestEditor_Library
 
     public abstract class DialogCondition_WithSubConditions : DialogCondition
     {
-        public abstract List<DialogCondition> ChildConditions { get; }
+        public virtual List<DialogCondition> ChildConditions => null;
+
+        public virtual DialogCondition ChildCondition
+        {
+            get => null;
+            set
+            {
+            }
+        }
 
         public virtual bool AllowMultipleChildConditions => true;
 
@@ -352,29 +360,32 @@ namespace QuestEditor_Library
 
     public class DialogCondition_Reversal : DialogCondition_WithSubConditions
     {
-        public override List<DialogCondition> ChildConditions => this.condition;
-
         public override bool AllowMultipleChildConditions => false;
+
+        public override DialogCondition ChildCondition
+        {
+            get => this.condition;
+            set => this.condition = value;
+        }
 
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            if (this.condition.Any())
+            if (this.condition != null)
             {
-                result.Add(this.condition[0].SaveToXElement("condition"));
+                result.Add(this.condition.SaveToXElement("condition"));
             }
             return result;
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
-            DialogCondition child = this.condition.FirstOrDefault();
-            if (child == null)
+            if (this.condition == null)
             {
                 reason = null;
                 return true;
             }
             string r = null;
-            if (child.Satisfied(targets, out r, quest))
+            if (this.condition.Satisfied(targets, out r, quest))
             {
                 reason = this.failReason.Translate();
                 return false;
@@ -385,18 +396,9 @@ namespace QuestEditor_Library
         public override void ExposeData()
         {
             base.ExposeData();
-            DialogCondition child = this.condition.FirstOrDefault();
-            Scribe_Deep.Look(ref child, "condition");
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
-            {
-                this.condition = new List<DialogCondition>();
-                if (child != null)
-                {
-                    this.condition.Add(child);
-                }
-            }
+            Scribe_Deep.Look(ref this.condition, "condition");
         }
-        public List<DialogCondition> condition = new List<DialogCondition>();
+        public DialogCondition condition;
     }
     public class DialogCondition_QuestIsGenerated : DialogCondition
     {

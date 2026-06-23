@@ -1052,18 +1052,17 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                 DrawCQFConditionList(ref y, x + 5f, width - 5f, inRect, "CQF_SubConditions".Translate(), condition.ChildConditions);
                 return;
             }
-            DrawSingleSubCondition(ref y, x, width, inRect, condition.ChildConditions);
+            DrawSingleSubCondition(ref y, x, width, inRect, condition);
         }
 
-        private static void DrawSingleSubCondition(ref float y, float x, float width, Rect inRect, List<DialogCondition> conditions)
+        private static void DrawSingleSubCondition(ref float y, float x, float width, Rect inRect, DialogCondition_WithSubConditions condition)
         {
-            DialogCondition child = conditions.FirstOrDefault();
+            DialogCondition child = condition.ChildCondition;
             if (Widgets.ButtonText(new Rect(x, y, Mathf.Min(260f, width), 25f), child?.GetType().Name.Translate() ?? "CQF_SelectDialogCondition".Translate(), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), type => type.Name.Translate(), type =>
                 {
-                    conditions.Clear();
-                    conditions.Add((DialogCondition)Activator.CreateInstance(type));
+                    condition.ChildCondition = (DialogCondition)Activator.CreateInstance(type);
                 }, null, null, null, type => type.Name, null, null), "CQF_SelectDialogCondition".Translate()));
             }
             y += 30f;
