@@ -13,7 +13,7 @@ public class SectionLayer_CQFCustomTerrainEdges : SectionLayer
         this.relevantChangeTypes = MapMeshFlagDefOf.Terrain;
     }
 
-    public override bool Visible => DebugViewSettings.drawTerrain && (this.Background?.enableTerrainEdges ?? false);
+    public override bool Visible => DebugViewSettings.drawTerrain && (this.Background?.enableTerrainEdges  == true);
 
     public override void Regenerate()
     {

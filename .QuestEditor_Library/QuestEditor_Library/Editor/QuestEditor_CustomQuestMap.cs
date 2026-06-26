@@ -30,12 +30,12 @@ namespace QuestEditor_Library
             Widgets.TextFieldNumeric<int>(new Rect((inRect.width / 2) + 5f, y, 70f, 20f), ref this.mapSize.z, ref this.bufferz);
             y += 35f;
             Rect backgroundMapRect = new Rect(10f, y, inRect.width - 20f, 25f);
-            Widgets.CheckboxLabeled(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMap".Translate(), ref this.enableTerrainEdges);
+            Widgets.CheckboxLabeled(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMap".Translate(), ref this.enableBackground);
             TooltipHandler.TipRegion(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMapTip".Translate());
             y += 35f;
             if (Widgets.ButtonText(new Rect(10f, y, 100f, 38f), "OK".Translate()))
             {
-                GenerateMap(this.mapSize, null, this.enableTerrainEdges);
+                GenerateMap(this.mapSize, null, this.enableBackground);
                 this.Close();
             }
             if (Widgets.ButtonText(new Rect(inRect.width - 110f, y, 100f, 38f), "Load".Translate()))
@@ -96,10 +96,10 @@ namespace QuestEditor_Library
                 if (def == null && enableTerrainEdges)
                 {
                     MapComponent_CustomMapData comp = map.GetComponent<MapComponent_CustomMapData>();
-                    comp.background ??= new CustomMapBackgroundData();
+                    comp.background = new CustomMapBackgroundData();
                     comp.background.enableTerrainEdges = true;
-                    map.mapDrawer.RegenerateEverythingNow();
                 }
+
                 def?.disdestroy?.ForEach(d =>
                 {
                     if (!map.designationManager.HasMapDesignationAt(d)) 
@@ -127,7 +127,7 @@ namespace QuestEditor_Library
         public IntVec3 mapSize = IntVec3.Zero;
         public string buffer;
         public string bufferz;
-        public bool enableTerrainEdges;
+        public bool enableBackground;
         private static readonly Vector2 size = new Vector2(260f, 235f);
     }
 }

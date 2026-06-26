@@ -9,5 +9,8 @@
 
   <!-- EN: Glazed glass -->
   <QE_GlazedGlass.label>琉璃</QE_GlazedGlass.label>
+
+  <!-- EN: Transparent water -->
+  <CQF_TransparentWater.label>透明水</CQF_TransparentWater.label>
   
 </LanguageData>

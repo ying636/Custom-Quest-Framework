@@ -43,8 +43,7 @@ public class MapDrawLayer_CQFCustomBackground : MapDrawLayer
     private const int BackgroundRenderQueue = 1900;
 
     private void MakeBackgroundGeometry(CustomMapBackgroundData background, LayerSubMesh subMesh)
-    {
-        // drawSize 为 0 时默认覆盖整张地图，避免每张图都必须手填尺寸。
+    { 
         Vector2 size = background.drawSize == Vector2.zero
             ? new Vector2(base.Map.Size.x, base.Map.Size.z)
             : background.drawSize;
