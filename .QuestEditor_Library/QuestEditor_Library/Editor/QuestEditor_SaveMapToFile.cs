@@ -175,7 +175,7 @@ namespace QuestEditor_Library
                 Messages.Message("SaveInNonEditorMap".Translate(), MessageTypeDefOf.CautionInput);
                 return;
             }
-            string path = Page_QuestEditor.Path + @"\Map\" + QuestEditor_SaveMapToFile.def.defName + ".xml";
+            string path = Path.Combine(Page_QuestEditor.Path, "Map", QuestEditor_SaveMapToFile.def.defName + ".xml");
             LongEventHandler.QueueLongEvent((Action)(() =>
             {
                 saveAction();

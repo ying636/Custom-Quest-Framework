@@ -34,14 +34,15 @@ namespace QuestEditor_Library
         {
             get
             {
-                if (!Directory.Exists(ModData.RootDir.FullName + @"\Quests"))
+                string questPath = System.IO.Path.Combine(ModData.RootDir.FullName, "Quests");
+                if (!Directory.Exists(questPath))
                 {
-                    Directory.CreateDirectory(ModData.RootDir.FullName + @"\Quests");
+                    Directory.CreateDirectory(questPath);
                 }
-                return ModData.RootDir.FullName + @"\Quests";
+                return questPath;
             }
         }
-        public static string RulePath => Page_QuestEditor.questPath + @"\Rule\";
+        public static string RulePath => System.IO.Path.Combine(Page_QuestEditor.questPath, "Rule");
         public QuestScriptDef CurQuestData
         {
             get 
@@ -654,7 +655,7 @@ namespace QuestEditor_Library
         {
             if (ModLister.AllInstalledMods.ToList().Find((x) => x.PackageIdPlayerFacing == "HaiLuan.CustomQuestFramework") is ModMetaData data)
             {
-                Page_QuestEditor.questPath = data.RootDir.FullName + @"\Quests";
+                Page_QuestEditor.questPath = System.IO.Path.Combine(data.RootDir.FullName, "Quests");
             }
             else
             {

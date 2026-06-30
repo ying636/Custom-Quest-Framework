@@ -32,7 +32,7 @@ namespace QuestEditor_Library
         def.defName = d;
         def.datas = this.map.replaces.ListFullCopy();
         DefDatabase<ReplacementDataDef>.Add(def);
-        string path = Page_QuestEditor.Path + @"\Data\" + d + ".xml";
+        string path = Path.Combine(Page_QuestEditor.Path, "Data", d + ".xml");
         XElement defsxml = new XElement("Defs");
         XElement defXml = new XElement("QuestEditor_Library.ReplacementDataDef");
         defXml.Add(new XElement("defName", d));

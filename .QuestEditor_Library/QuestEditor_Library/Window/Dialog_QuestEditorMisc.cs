@@ -26,32 +26,13 @@ namespace QuestEditor_Library
             {
                 Find.WindowStack.Add(new Dialog_Select<ModMetaData>(new TextSelectDrawer<ModMetaData>(ModLister.AllInstalledMods.ToList(), m => m.Name, m =>
                 {
-                    string path = m.RootDir.FullName;
-                    if (!Directory.Exists(path + @"\Quests"))
-                    {
-                        Directory.CreateDirectory(path + @"\Quests");
-                    }
-                    string questPath = path + @"\Quests";
-                    if (!Directory.Exists(questPath + @"\Map"))
-                    {
-                        Directory.CreateDirectory(questPath + @"\Map");
-                    }
-                    if (!Directory.Exists(questPath + @"\Rule"))
-                    {
-                        Directory.CreateDirectory(questPath + @"\Rule");
-                    }
-                    if (!Directory.Exists(questPath + @"\Group"))
-                    {
-                        Directory.CreateDirectory(questPath + @"\Group");
-                    }
-                    if (!Directory.Exists(questPath + @"\DialogTree"))
-                    {
-                        Directory.CreateDirectory(questPath + @"\DialogTree");
-                    }
-                    if (!Directory.Exists(questPath + @"\Data"))
-                    {
-                        Directory.CreateDirectory(questPath + @"\Data");
-                    }
+                    string questPath = Path.Combine(m.RootDir.FullName, "Quests");
+                    Directory.CreateDirectory(questPath);
+                    Directory.CreateDirectory(Path.Combine(questPath, "Map"));
+                    Directory.CreateDirectory(Path.Combine(questPath, "Rule"));
+                    Directory.CreateDirectory(Path.Combine(questPath, "Group"));
+                    Directory.CreateDirectory(Path.Combine(questPath, "DialogTree"));
+                    Directory.CreateDirectory(Path.Combine(questPath, "Data"));
                     Page_QuestEditor.modData = m;
                 }, null, null, null, null, null, null), "Select".Translate()));
             }

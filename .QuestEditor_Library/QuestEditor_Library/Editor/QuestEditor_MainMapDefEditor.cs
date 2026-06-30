@@ -53,7 +53,7 @@ namespace QuestEditor_Library
             {
                 try
                 {
-                    string dir = Page_QuestEditor.Path + @"\Map";
+                    string dir = Path.Combine(Page_QuestEditor.Path, "Map");
                     Directory.CreateDirectory(dir);
                     string path = dir + @"\" + this.CurDef.defName + ".xml";
                     XElement defs = new XElement("Defs");

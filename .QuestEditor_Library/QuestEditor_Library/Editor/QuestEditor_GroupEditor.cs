@@ -1,6 +1,7 @@
 ﻿using RimWorld;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +44,7 @@ namespace QuestEditor_Library
             {
                 List<GroupDataDef> groups = new List<GroupDataDef>();
                 groups.AddRange(DefDatabase<GroupDataDef>.AllDefsListForReading);
-                groups.AddRange(CQFEditorTools.GetObject<GroupDataDef>(Page_QuestEditor.Path + @"\Group\", "//QuestEditor_Library.GroupDataDef"));
+                groups.AddRange(CQFEditorTools.GetObject<GroupDataDef>(Path.Combine(Page_QuestEditor.Path, "Group"), "//QuestEditor_Library.GroupDataDef"));
                 CQFEditorTools.DrawFloatMenu<GroupDataDef>(groups, (x) =>
                 {
                     QuestEditor_GroupEditor.data = x;
@@ -54,7 +55,7 @@ namespace QuestEditor_Library
             {
                 try
                 {
-                    string path = Page_QuestEditor.Path + @"\Group\" + QuestEditor_GroupEditor.data.defName + ".xml";
+                    string path = Path.Combine(Page_QuestEditor.Path, "Group", QuestEditor_GroupEditor.data.defName + ".xml");
                     XElement defs = new XElement("Defs");
                     XElement tree = QuestEditor_GroupEditor.data.SaveToXElement("QuestEditor_Library.GroupDataDef");
                     defs.Add(tree);

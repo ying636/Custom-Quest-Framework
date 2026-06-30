@@ -293,7 +293,7 @@ namespace QuestEditor_Library
             }
         }
 
-        private static string SaveDir => Page_QuestEditor.Path + @"\Pawn";
+        private static string SaveDir => Path.Combine(Page_QuestEditor.Path, "Pawn");
 
         public float height;
         public Vector2 scrollPos = Vector2.zero;

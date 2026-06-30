@@ -63,7 +63,7 @@ namespace QuestEditor_Library
             {
                 try
                 {
-                    string path = Page_QuestEditor.Path + @"\DialogTree\" + this.Manager.defName + ".xml";
+                    string path = Path.Combine(Page_QuestEditor.Path, "DialogTree", this.Manager.defName + ".xml");
                     XElement defs = new XElement("Defs");
                     XElement tree = this.Manager.SaveToXElement("QuestEditor_Library.DialogManagerDef");
                     defs.Add(tree);

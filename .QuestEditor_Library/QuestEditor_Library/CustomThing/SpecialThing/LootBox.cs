@@ -119,7 +119,7 @@ namespace QuestEditor_Library
                         def.defName = this.lootBoxName;
                         def.loots = this.loots;
                         DefDatabase<LootDataDef>.Add(def);
-                        string path = Page_QuestEditor.Path + @"\Data\" + this.lootBoxName + ".xml";
+                        string path = Path.Combine(Page_QuestEditor.Path, "Data", this.lootBoxName + ".xml");
                         XElement defs = new XElement("Defs");
                         XElement defXml = new XElement("QuestEditor_Library.LootDataDef");
                         XElement lootsXml = new XElement("loots");

@@ -187,12 +187,12 @@ namespace QuestEditor_Library
             {
                 try
                 {
-                    string path = Page_QuestEditor.Path + @"\DialogTree\" + this.CurTree.defName + ".xml";
+                    string path = Path.Combine(Page_QuestEditor.Path, "DialogTree", this.CurTree.defName + ".xml");
                     XElement defs = new XElement("Defs");
                     XElement tree = this.CurTree.SaveToXElement("QuestEditor_Library.DialogTreeDef");
                     defs.Add(tree);
                     defs.Save(path);
-                    string path_Text = Page_QuestEditor.Path + @"\DialogTree\" + this.CurTree.defName + "_Text.xml";
+                    string path_Text = Path.Combine(Page_QuestEditor.Path, "DialogTree", this.CurTree.defName + "_Text.xml");
                     XElement defs_Text = new XElement("LanguageData");
                     defs_Text.Add(new XText("\n\n"));
                     List<string> traned = new List<string>();

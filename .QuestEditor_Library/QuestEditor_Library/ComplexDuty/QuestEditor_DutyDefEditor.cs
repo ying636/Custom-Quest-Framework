@@ -776,9 +776,9 @@ namespace QuestEditor_Library
                 }
                 this.PrepareThinkNodeTree(this.CurDef.thinkNode, null);
                 this.PrepareThinkNodeTree(this.CurDef.constantThinkNode, null);
-                string directory = Page_QuestEditor.Path + @"\Duty";
+                string directory = Path.Combine(Page_QuestEditor.Path, "Duty");
                 Directory.CreateDirectory(directory);
-                string path = directory + @"\" + this.CurDef.defName + ".xml";
+                string path = Path.Combine(directory, this.CurDef.defName + ".xml");
                 XElement defs = new XElement("Defs");
                 defs.Add(this.SaveToXElement());
                 defs.Save(path);

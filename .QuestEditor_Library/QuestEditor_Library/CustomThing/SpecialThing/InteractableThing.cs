@@ -121,7 +121,7 @@ namespace QuestEditor_Library
                         def.label = o.interactionText;
                         def.interactions = new List<InteractionOperation>() { o };
                         DefDatabase<InteractionDataDef>.Add(def);
-                        string path = Page_QuestEditor.Path + @"\Data\" + o.interactionText + ".xml";
+                        string path = Path.Combine(Page_QuestEditor.Path, "Data", o.interactionText + ".xml");
                         XElement defs = new XElement("Defs");
                         XElement defXml = new XElement("QuestEditor_Library.InteractionDataDef");
                         XElement interactionDataDefXml = new XElement("interactions");

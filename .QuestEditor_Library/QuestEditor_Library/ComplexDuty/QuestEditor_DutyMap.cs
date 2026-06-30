@@ -528,9 +528,9 @@ namespace QuestEditor_Library
                     Messages.Message("NoName".Translate(), MessageTypeDefOf.CautionInput);
                     return;
                 }
-                string directory = Page_QuestEditor.Path + @"\Duty";
+                string directory = System.IO.Path.Combine(Page_QuestEditor.Path, "Duty");
                 System.IO.Directory.CreateDirectory(directory);
-                string path = directory + @"\" + this.CurDutyMap.defName + ".xml";
+                string path = System.IO.Path.Combine(directory, this.CurDutyMap.defName + ".xml");
                 XElement defs = new XElement("Defs");
                 defs.Add(this.CurDutyMap.SaveToXElement("QuestEditor_Library.DutyMapDef"));
                 defs.Save(path);
