@@ -367,7 +367,7 @@
   <!-- EN: Map -->
   <CQF_MapBackgroundDrawScope_Map>地图</CQF_MapBackgroundDrawScope_Map>
   <!-- EN: Camera visible area -->
-  <CQF_MapBackgroundDrawScope_CameraVisible>相机可视范围</CQF_MapBackgroundDrawScope_CameraVisible>
+  <CQF_MapBackgroundDrawScope_CameraVisible>全景背景</CQF_MapBackgroundDrawScope_CameraVisible>
   <!-- EN: Background fit mode: -->
   <CQF_MapBackgroundFitMode>背景适配模式：</CQF_MapBackgroundFitMode>
   <!-- EN: Tile -->
