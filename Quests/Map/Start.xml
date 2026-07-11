@@ -28,6 +28,8 @@
           <texPath>UI/CQF/MapBackgroup/StarrySky</texPath>
           <color>RGBA(1.000, 1.000, 1.000, 1.000)</color>
           <alpha>1</alpha>
+          <drawScope>CameraVisible</drawScope>
+          <fitMode>Cover</fitMode>
           <enableTerrainEdges>true</enableTerrainEdges> 
           <backgroundEffects>
             <li>CQF_BackgroundEffect_BlinkStars</li>

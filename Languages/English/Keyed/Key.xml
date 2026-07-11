@@ -468,7 +468,15 @@ SiteName: SiteName-></RuleTip>
   <MainMapConditionsTip>Conditions that must pass for this candidate to be selected. Leave empty only for the intended fallback candidate.</MainMapConditionsTip>
   <CQF_MapBackgroundTexturePath>Background texture path:</CQF_MapBackgroundTexturePath>
   <CQF_MapBackgroundAlpha>Background alpha:</CQF_MapBackgroundAlpha>
+  <CQF_MapBackgroundDrawScope>Background draw scope:</CQF_MapBackgroundDrawScope>
+  <CQF_MapBackgroundDrawScope_Map>Map</CQF_MapBackgroundDrawScope_Map>
+  <CQF_MapBackgroundDrawScope_CameraVisible>Camera visible area</CQF_MapBackgroundDrawScope_CameraVisible>
+  <CQF_MapBackgroundFitMode>Background fit mode:</CQF_MapBackgroundFitMode>
+  <CQF_MapBackgroundFitMode_Tile>Tile</CQF_MapBackgroundFitMode_Tile>
+  <CQF_MapBackgroundFitMode_Stretch>Stretch</CQF_MapBackgroundFitMode_Stretch>
+  <CQF_MapBackgroundFitMode_Cover>Cover</CQF_MapBackgroundFitMode_Cover>
   <CQF_MapBackgroundDrawSize>Background draw size:</CQF_MapBackgroundDrawSize>
+  <CQF_MapBackgroundScale>Background scale:</CQF_MapBackgroundScale>
   <CQF_MapBackgroundOffset>Background offset:</CQF_MapBackgroundOffset>
   <CQF_MapBackgroundColor>Background color</CQF_MapBackgroundColor>
   <CQF_MapBackgroundPreview>Background preview</CQF_MapBackgroundPreview>

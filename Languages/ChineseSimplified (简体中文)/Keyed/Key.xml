@@ -362,7 +362,23 @@
   <MainMapConditionsTip>这个候选项被选中前必须通过的条件。只有预期作为兜底的候选项才应留空。</MainMapConditionsTip>
   <CQF_MapBackgroundTexturePath>背景贴图路径：</CQF_MapBackgroundTexturePath>
   <CQF_MapBackgroundAlpha>背景透明度：</CQF_MapBackgroundAlpha>
+  <!-- EN: Background draw scope: -->
+  <CQF_MapBackgroundDrawScope>背景绘制范围：</CQF_MapBackgroundDrawScope>
+  <!-- EN: Map -->
+  <CQF_MapBackgroundDrawScope_Map>地图</CQF_MapBackgroundDrawScope_Map>
+  <!-- EN: Camera visible area -->
+  <CQF_MapBackgroundDrawScope_CameraVisible>相机可视范围</CQF_MapBackgroundDrawScope_CameraVisible>
+  <!-- EN: Background fit mode: -->
+  <CQF_MapBackgroundFitMode>背景适配模式：</CQF_MapBackgroundFitMode>
+  <!-- EN: Tile -->
+  <CQF_MapBackgroundFitMode_Tile>平铺</CQF_MapBackgroundFitMode_Tile>
+  <!-- EN: Stretch -->
+  <CQF_MapBackgroundFitMode_Stretch>拉伸</CQF_MapBackgroundFitMode_Stretch>
+  <!-- EN: Cover -->
+  <CQF_MapBackgroundFitMode_Cover>覆盖</CQF_MapBackgroundFitMode_Cover>
   <CQF_MapBackgroundDrawSize>背景绘制尺寸：</CQF_MapBackgroundDrawSize>
+  <!-- EN: Background scale: -->
+  <CQF_MapBackgroundScale>背景缩放：</CQF_MapBackgroundScale>
   <CQF_MapBackgroundOffset>背景偏移：</CQF_MapBackgroundOffset>
   <CQF_MapBackgroundColor>背景颜色</CQF_MapBackgroundColor>
   <CQF_MapBackgroundPreview>背景预览</CQF_MapBackgroundPreview>
