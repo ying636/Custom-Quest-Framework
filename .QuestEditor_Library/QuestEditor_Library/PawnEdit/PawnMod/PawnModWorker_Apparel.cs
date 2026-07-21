@@ -34,12 +34,17 @@ namespace QuestEditor_Library
                 Rect iconRect = new Rect(layerRect.xMax + 8f, row.y + 4f, 28f, 28f);
                 if (data?.def?.uiIcon != null)
                 {
-                    Widgets.DrawTextureFitted(iconRect, data.def.uiIcon, 1f);
+                    Widgets.DefIcon(iconRect, data.def, this.StuffFor(data.def, data.stuff));
                 }
-                Rect buttonRect = new Rect(iconRect.xMax + 8f, row.y + 3f, row.width - iconRect.width - layerRect.width - 32f, 30f);
+                float deleteWidth = data?.def == null ? 0f : 76f;
+                Rect buttonRect = new Rect(iconRect.xMax + 8f, row.y + 3f, row.xMax - iconRect.xMax - deleteWidth - 16f, 30f);
                 if (this.DrawTextButton(buttonRect, this.ThingLabel(data)))
                 {
                     this.OpenLayerSelectDialog(modData.apparels, layer);
+                }
+                if (data?.def != null && this.DrawCommandText(new Rect(row.xMax - 76f, row.y + 3f, 68f, 30f), "CQF_PawnEditor_Delete".Translate()))
+                {
+                    this.ClearLayer(modData.apparels, layer);
                 }
                 y += 42f;
             }
@@ -78,23 +83,15 @@ namespace QuestEditor_Library
 
         private void OpenLayerSelectDialog(List<ThingData> apparels, ApparelLayerDef layer)
         {
-            List<ThingDef> defs = new List<ThingDef> { null };
-            defs.AddRange(DefDatabase<ThingDef>.AllDefsListForReading.Where(def => this.ApparelInLayer(def, layer)));
+            List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => this.ApparelInLayer(def, layer)).ToList();
             ThingData data = this.ApparelForLayer(apparels, layer) ?? new ThingData();
             this.OpenSelectDialog(data, defs, () => this.SetLayerApparel(apparels, layer, data));
         }
 
         private void OpenSelectDialog(ThingData data, List<ThingDef> defs, Action onSelected = null)
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs, def => def?.uiIcon, def => def?.label ?? "CQF_PawnEditor_None".Translate().ToString(), def =>
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(defs, def => def.uiIcon, def => def.label, def =>
             {
-                if (def == null)
-                {
-                    data.def = null;
-                    data.stuff = null;
-                    onSelected?.Invoke();
-                    return;
-                }
                 if (def.MadeFromStuff)
                 {
                     this.OpenStuffDialog(data, def, onSelected);
@@ -102,7 +99,7 @@ namespace QuestEditor_Library
                 }
                 this.SetThingData(data, def, null);
                 onSelected?.Invoke();
-            }, def => def?.graphic?.Color ?? Color.white, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
+            }, def => def.MadeFromStuff ? def.GetColorForStuff(GenStuff.DefaultStuffFor(def)) : def.uiIconColor, null, null, null, def => def.defName, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
 
         private List<ApparelLayerDef> AvailableLayers()
@@ -160,11 +157,11 @@ namespace QuestEditor_Library
 
         private void OpenStuffDialog(ThingData data, ThingDef def, Action onSelected)
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(GenStuff.AllowedStuffsFor(def).ToList(), stuff => stuff.uiIcon, stuff => stuff.label, stuff =>
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(GenStuff.AllowedStuffsFor(def).ToList(), stuff => stuff.uiIcon, stuff => stuff.label, stuff =>
             {
                 this.SetThingData(data, def, stuff);
                 onSelected?.Invoke();
-            }, stuff => stuff.graphic?.Color ?? Color.white, null, null, null, null, null, null), "CQF_PawnEditor_SelectStuff".Translate()));
+            }, stuff => stuff.uiIconColor, null, null, null, stuff => stuff.defName, null, null, null), "CQF_PawnEditor_SelectStuff".Translate()));
         }
 
         private void SetThingData(ThingData data, ThingDef def, ThingDef stuff)

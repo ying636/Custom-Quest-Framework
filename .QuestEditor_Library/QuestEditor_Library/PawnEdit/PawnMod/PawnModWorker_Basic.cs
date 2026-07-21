@@ -66,7 +66,8 @@ namespace QuestEditor_Library
             foreach (FleshTypeDef fleshType in kinds.Select(this.FleshTypeFor).Where(type => type != null).Distinct())
             {
                 FleshTypeDef capturedType = fleshType;
-                result[capturedType.LabelCap] = kind => this.FleshTypeFor(kind) == capturedType;
+                string filterLabel = this.FleshTypeLabel(capturedType);
+                result[filterLabel] = kind => this.FleshTypeFor(kind) == capturedType;
             }
             return result;
         }
@@ -76,9 +77,20 @@ namespace QuestEditor_Library
             Dictionary<string, string> result = new Dictionary<string, string>();
             foreach (FleshTypeDef fleshType in kinds.Select(this.FleshTypeFor).Where(type => type != null).Distinct())
             {
-                result[fleshType.LabelCap] = fleshType.description;
+                string filterLabel = this.FleshTypeLabel(fleshType);
+                result[filterLabel] = fleshType.description;
             }
             return result;
+        }
+
+        private string FleshTypeLabel(FleshTypeDef fleshType)
+        {
+            if (!fleshType.LabelCap.NullOrEmpty())
+            {
+                return fleshType.LabelCap;
+            }
+            string key = "CQF_PawnEditor_FleshType_" + fleshType.defName;
+            return key.CanTranslate() ? key.Translate() : fleshType.defName;
         }
 
         private FleshTypeDef FleshTypeFor(PawnKindDef kind)

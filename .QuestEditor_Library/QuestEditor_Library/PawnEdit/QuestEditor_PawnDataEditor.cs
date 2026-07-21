@@ -111,7 +111,7 @@ namespace QuestEditor_Library
             Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Modules".Translate().Colorize(ColorLibrary.PaleBlue));
             Text.Font = GameFont.Small;
             y += 38f;
-            List<PawnModDef> mods = this.CurDef.AvailableMods();
+            List<PawnModDef> mods = this.VisibleMods();
             this.EnsureSelectedMod(mods);
             foreach (PawnModDef mod in mods)
             {
@@ -142,7 +142,7 @@ namespace QuestEditor_Library
         private void DrawCurrentModule(Rect rect)
         {
             Widgets.DrawMenuSection(rect);
-            List<PawnModDef> mods = this.CurDef.AvailableMods();
+            List<PawnModDef> mods = this.VisibleMods();
             this.EnsureSelectedMod(mods);
             PawnModDef mod = mods.FirstOrDefault(def => def.defName == this.selectedModDefName);
             if (mod == null)
@@ -256,6 +256,14 @@ namespace QuestEditor_Library
             {
                 this.selectedModDefName = mods[0].defName;
             }
+        }
+
+        private List<PawnModDef> VisibleMods()
+        {
+            List<PawnModDef> mods = this.CurDef.AvailableMods();
+            return this.CurDef.KindDef == null
+                ? mods.Where(mod => mod.Worker is PawnModWorker_Basic).ToList()
+                : mods;
         }
 
         private string PawnDisplayName(ComplexPawnDef def)

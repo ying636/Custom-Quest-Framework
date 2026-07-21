@@ -20,6 +20,13 @@
   <CQF_PawnEditor_Modules>模块</CQF_PawnEditor_Modules>
   <CQF_PawnEditor_PawnKind>实体类型：{0}</CQF_PawnEditor_PawnKind>
   <CQF_PawnEditor_SelectPawnKind>选择实体类型</CQF_PawnEditor_SelectPawnKind>
+  <CQF_PawnEditor_FleshType_Normal>有机体</CQF_PawnEditor_FleshType_Normal>
+  <CQF_PawnEditor_FleshType_Mechanoid>机械族</CQF_PawnEditor_FleshType_Mechanoid>
+  <CQF_PawnEditor_FleshType_Insectoid>虫族</CQF_PawnEditor_FleshType_Insectoid>
+  <CQF_PawnEditor_FleshType_EntityMechanical>机械实体</CQF_PawnEditor_FleshType_EntityMechanical>
+  <CQF_PawnEditor_FleshType_EntityFlesh>血肉实体</CQF_PawnEditor_FleshType_EntityFlesh>
+  <CQF_PawnEditor_FleshType_Fleshbeast>血肉兽</CQF_PawnEditor_FleshType_Fleshbeast>
+  <CQF_PawnEditor_FleshType_Drone>无人机</CQF_PawnEditor_FleshType_Drone>
   <CQF_PawnEditor_Faction>派系：</CQF_PawnEditor_Faction>
   <CQF_PawnEditor_Name>名字：</CQF_PawnEditor_Name>
   <CQF_PawnEditor_BioAge>生理年龄：</CQF_PawnEditor_BioAge>

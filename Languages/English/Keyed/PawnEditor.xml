@@ -20,6 +20,13 @@
   <CQF_PawnEditor_Modules>Modules</CQF_PawnEditor_Modules>
   <CQF_PawnEditor_PawnKind>Pawn kind:{0}</CQF_PawnEditor_PawnKind>
   <CQF_PawnEditor_SelectPawnKind>Select pawn kind</CQF_PawnEditor_SelectPawnKind>
+  <CQF_PawnEditor_FleshType_Normal>Organic</CQF_PawnEditor_FleshType_Normal>
+  <CQF_PawnEditor_FleshType_Mechanoid>Mechanoid</CQF_PawnEditor_FleshType_Mechanoid>
+  <CQF_PawnEditor_FleshType_Insectoid>Insectoid</CQF_PawnEditor_FleshType_Insectoid>
+  <CQF_PawnEditor_FleshType_EntityMechanical>Mechanical entity</CQF_PawnEditor_FleshType_EntityMechanical>
+  <CQF_PawnEditor_FleshType_EntityFlesh>Flesh entity</CQF_PawnEditor_FleshType_EntityFlesh>
+  <CQF_PawnEditor_FleshType_Fleshbeast>Fleshbeast</CQF_PawnEditor_FleshType_Fleshbeast>
+  <CQF_PawnEditor_FleshType_Drone>Drone</CQF_PawnEditor_FleshType_Drone>
   <CQF_PawnEditor_Faction>Faction:</CQF_PawnEditor_Faction>
   <CQF_PawnEditor_Name>Name:</CQF_PawnEditor_Name>
   <CQF_PawnEditor_BioAge>Biological age:</CQF_PawnEditor_BioAge>

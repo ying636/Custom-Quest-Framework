@@ -200,7 +200,7 @@ namespace QuestEditor_Library
             List<ExtraOption> extraOptions = null, Dictionary<string, Func<T, bool>> typeFilters = null,
             Dictionary<string, string> typeTips = null)
         {
-            this.sourceTs = ts;
+            this.sourceTs = ts?.Where(t => t is not null).ToList() ?? new List<T>();
             this.getText = getText;
             this.acceptAction = acceptAction;
             this.getColor = getColor;
@@ -432,7 +432,7 @@ namespace QuestEditor_Library
             return rect;
         }
 
-        protected virtual SelectItem<T> CacheItem(T t)
+        protected override SelectItem<T> CacheItem(T t)
         {
             SelectItem<T> item = base.CacheItem(t);
             item.texture = this.getTexture?.Invoke(t);
