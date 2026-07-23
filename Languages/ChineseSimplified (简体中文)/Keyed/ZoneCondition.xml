@@ -2,6 +2,7 @@
 <LanguageData>
     <!-- EN: Zone condition:Size -->
   <ZoneCondition_Size>区域条件：大小</ZoneCondition_Size>
+  <ZoneCondition_Size_Tip>只有地图部件的宽度和长度都落在设定范围内时才满足。</ZoneCondition_Size_Tip>
     <!-- EN: Width(X): -->
   <RangeOfX>宽度范围(X)：</RangeOfX>
     <!-- EN: Height(Z): -->
@@ -9,6 +10,7 @@
 
     <!-- EN: Zone condition:Tag -->
   <ZoneCondition_Tag>区域条件：标签</ZoneCondition_Tag>
+  <ZoneCondition_Tag_Tip>地图部件至少拥有一个指定地图标签时满足。</ZoneCondition_Tag_Tip>
 
     <!-- EN: Zone condition:Wealth -->
   <ZoneCondition_Wealth>区域条件：财富</ZoneCondition_Wealth>
@@ -22,7 +24,7 @@
     <!-- EN: Zone condition:Core tag -->
   <ZoneCondition_CoreTag>区域条件：核心标签</ZoneCondition_CoreTag>
     <!-- EN: During generation, only the core with corresponding tag will be selected as the "docking core" for generation -->
-  <ZoneCondition_CoreTag_Tip>在生成时只会选择有相应标签的核心作为“对接核心”进行生成</ZoneCondition_CoreTag_Tip>
+  <ZoneCondition_CoreTag_Tip>未勾选“反转结果”时，拥有指定标签的核心会被排除；勾选后则只接受拥有指定标签的核心作为“对接核心”。</ZoneCondition_CoreTag_Tip>
     <!-- EN: Core tags: -->
   <CoreTags>核心标签：</CoreTags>
     <!-- EN: Invert result: -->
@@ -30,9 +32,11 @@
 
     <!-- EN: Zone condition:Invert -->
   <ZoneCondition_Invert>区域条件：反转</ZoneCondition_Invert>
+  <ZoneCondition_Invert_Tip>将子条件的满足结果反转。</ZoneCondition_Invert_Tip>
 
     <!-- EN: Zone condition:Meme -->
   <ZoneCondition_FactionMeme>区域条件：模因</ZoneCondition_FactionMeme>
+  <ZoneCondition_FactionMeme_Tip>当所选派系的主意识形态包含指定模因时满足。</ZoneCondition_FactionMeme_Tip>
     <!-- EN: Requried meme:{0} -->
   <RequiredMeme>需求模因：{0}</RequiredMeme>
 

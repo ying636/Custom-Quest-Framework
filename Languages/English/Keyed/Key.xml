@@ -307,12 +307,18 @@ SiteName: SiteName-></RuleTip>
 
   <ZoneGenerationConditions>Zone generation conditions:</ZoneGenerationConditions>
   <CoreZoneRotation>Core direction:{0}</CoreZoneRotation>
-  <CoreZoneRotationTip>It is the direction of the core relative to the centre of the zone.</CoreZoneRotationTip>
+  <CoreZoneRotationTip>The core direction relative to the zone centre. Choose Centre to make this the central core, which does not dock to another core.</CoreZoneRotationTip>
 
   <GenerationKey>Generation key:</GenerationKey>
+  <GenerationKeyTip>Shares a generation counter between zone cores; the counter increases only after a map part is generated successfully.</GenerationKeyTip>
   <ProhibitRotatingDocking>Prohibit rotating docking:</ProhibitRotatingDocking>
+  <ProhibitRotatingDockingTip>When enabled, the docking core cannot be rotated clockwise or counterclockwise to fit the zone.</ProhibitRotatingDockingTip>
   <ProhibitFlippingDocking>Prohibit flipping docking:</ProhibitFlippingDocking>
+  <ProhibitFlippingDockingTip>When enabled, the docking core cannot be mirror-flipped while keeping the same facing.</ProhibitFlippingDockingTip>
   <DestroyThingsWhenGeneration>Destroy things when generation:</DestroyThingsWhenGeneration>
+  <DestroyThingsWhenGenerationTip>Before generating a map part, destroys existing things in the generation area that are allowed to be destroyed; disdestroy areas are preserved.</DestroyThingsWhenGenerationTip>
+  <CoreTagsTip>Stored on this core when the map part is saved; other zone cores can include or exclude it with core-tag conditions.</CoreTagsTip>
+  <ZoneGenerationConditionsTip>The map part is selected only when all conditions pass. Docking cores must also pass conditions evaluated specifically for cores.</ZoneGenerationConditionsTip>
 
   <MapPartGenerationLimit>Map part generation limit</MapPartGenerationLimit>
   <MapPartGenerationLimit_Tip>When the zone core is generating, it will increase the counter corresponding to the generation key by one, and once it reaches the upper limit, it willn't generate part.</MapPartGenerationLimit_Tip>

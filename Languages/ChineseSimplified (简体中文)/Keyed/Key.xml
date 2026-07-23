@@ -242,11 +242,17 @@
   <OutOfVanillaRange>超出原版范围，最大为{0}</OutOfVanillaRange>
   <ZoneGenerationConditions>区域生成条件：</ZoneGenerationConditions>
   <CoreZoneRotation>核心方向：{0}</CoreZoneRotation>
-  <CoreZoneRotationTip>为核心相对于区域中心的方向。</CoreZoneRotationTip>
+  <CoreZoneRotationTip>核心相对于区域中心的方向；选择“中心”时作为区域中心核心，不需要与其他核心对接。</CoreZoneRotationTip>
   <GenerationKey>生成密匙：</GenerationKey>
+  <GenerationKeyTip>用于对多个区域核心共享生成次数计数；只有成功生成地图部件后才会增加计数。</GenerationKeyTip>
   <ProhibitRotatingDocking>禁止旋转对接：</ProhibitRotatingDocking>
+  <ProhibitRotatingDockingTip>启用后，对接核心不能通过顺时针或逆时针旋转来适配区域。</ProhibitRotatingDockingTip>
   <ProhibitFlippingDocking>禁止镜像对接：</ProhibitFlippingDocking>
+  <ProhibitFlippingDockingTip>启用后，对接核心不能以相同朝向镜像翻转来适配区域。</ProhibitFlippingDockingTip>
   <DestroyThingsWhenGeneration>生成时销毁事物：</DestroyThingsWhenGeneration>
+  <DestroyThingsWhenGenerationTip>生成地图部件前，清除生成区域内允许被销毁的既有事物；被标记为禁止摧毁的区域不受影响。</DestroyThingsWhenGenerationTip>
+  <CoreTagsTip>保存地图部件时写入该核心的标签；其他区域核心可用核心标签条件将其纳入或排除对接候选。</CoreTagsTip>
+  <ZoneGenerationConditionsTip>所有条件都满足时才会选择该地图部件；对接核心还必须满足针对核心的条件。</ZoneGenerationConditionsTip>
   <MapPartGenerationLimit>地图部分生成限制</MapPartGenerationLimit>
   <MapPartGenerationLimit_Tip>当区域核心生成时，会使其生成密匙对应的计数器加一，到达上限后不再生成</MapPartGenerationLimit_Tip>
   <CustomMapEnterDirection>进入方向：{0}</CustomMapEnterDirection>
