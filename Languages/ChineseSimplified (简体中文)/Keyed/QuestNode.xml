@@ -60,6 +60,14 @@
   <ArriveMap>抵达地图时</ArriveMap>
   <!-- EN: Save Map To File -->
   <SaveMapToFile>保存地图到本地</SaveMapToFile>
+  <!-- EN: Basic information -->
+  <CQF_MapSave_BasicInformation>基本信息</CQF_MapSave_BasicInformation>
+  <!-- EN: Generation -->
+  <CQF_MapSave_Generation>生成设置</CQF_MapSave_Generation>
+  <!-- EN: Map content -->
+  <CQF_MapSave_MapContent>地图内容</CQF_MapSave_MapContent>
+  <!-- EN: Data tools -->
+  <CQF_MapSave_DataTools>数据工具</CQF_MapSave_DataTools>
 
   <!-- EN: World object def of site: -->
   <WorldObjectDefOfSite>站点的定义：</WorldObjectDefOfSite>

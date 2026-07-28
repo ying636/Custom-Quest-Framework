@@ -397,6 +397,10 @@ add(p3))));
             this.replaces.ToList().ForEach(t => result.replaces.Add(t));
             result.generationActions = new List<GenerationAction>();
             this.generationActions.ToList().ForEach(t => result.generationActions.Add(t));
+            result.preCustomSteps = new List<CustomMapStep>();
+            this.preCustomSteps.ForEach(t => result.preCustomSteps.Add(t));
+            result.customSteps = new List<CustomMapStep>();
+            this.customSteps.ForEach(t => result.customSteps.Add(t));
             result.origin = this.Origin;
             return result;
         }
@@ -775,6 +779,10 @@ add(p3))));
             {
                 result.Add(CQFEditorTools.SaveList_Saveable(this.zoneCores, "zoneCores"));
             }
+            if (this.preCustomSteps.Any())
+            {
+                result.Add(CQFEditorTools.SaveList_Saveable(this.preCustomSteps, "preCustomSteps"));
+            }
             if (this.customSteps.Any())
             {
                 result.Add(CQFEditorTools.SaveList_Saveable(this.customSteps, "customSteps"));
@@ -917,6 +925,7 @@ add(p3))));
         public Dictionary<ColorDef, List<CellRect>> terrainsColorRect = new Dictionary<ColorDef, List<CellRect>>();
         public List<ThingData> thingDatas = new List<ThingData>();
         public List<GenerationAction> generationActions = new List<GenerationAction>();
+        public List<CustomMapStep> preCustomSteps = new List<CustomMapStep>();
         public List<CustomMapStep> customSteps = new List<CustomMapStep>();
         public List<string> tags = new List<string>();
         public ThingData reserveThing = null;
@@ -1006,113 +1015,19 @@ add(p3))));
         }  
         public virtual void Draw(ref float y, Rect inRect, float x)
         {
-            y += 5f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "DataName".Translate(),ref this.dataName,x,250f); 
-            y += 30f;
-            Widgets.Label(new Rect(x, y + 7f, 1020f,25f), "ThingReplacement".Translate().Colorize(ColorLibrary.SkyBlue));
+            float width = inRect.width - x - 12f;
+            Rect nameSection = new Rect(x, y, width, 78f);
+            Widgets.DrawMenuSection(nameSection);
+            Widgets.Label(new Rect(x + 12f, y + 8f, width - 24f, 25f),
+                "DataName".Translate().Colorize(ColorLibrary.PaleBlue));
+            this.dataName = Widgets.TextField(new Rect(x + 12f, y + 39f, width - 24f, 27f), this.dataName);
+            y = nameSection.yMax + 10f;
 
-            List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => !t.IsCorpse && t.category != ThingCategory.Mote && t.category != ThingCategory.Projectile && t.category != ThingCategory.Pawn && t.category != ThingCategory.Ethereal && t.category != ThingCategory.Attachment);
-            CQFEditorTools.DrawButtonWithIcon(y,() => 
-            {
-                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                    new TextureSelectDrawer<ThingDef>(
-                        defs,
-                        t => t.uiIcon,
-                        t => t.label,
-                        t => Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                            new TextureSelectDrawer<ThingDef>(
-                                defs,
-                                t2 => t2.uiIcon,
-                                t2 => t2.label,
-                                t2 => this.replaceThings.Add(t.defName, t2.defName),
-                                t2 => t2.graphicData == null ? Color.white : t2.graphicData.color),
-                            "SelectThingDefToReplace".Translate())),
-                        t => t.graphicData == null ? Color.white : t.graphicData.color),
-                    "SelectReplacedThing".Translate()));
-            },() => CQFEditorTools.DrawFloatMenu(this.replaceThings.ToList(),t => this.replaceThings.Remove(t.Key),t => ThingDef.Named(t.Key).label + "," + ThingDef.Named(t.Value).label),inRect.width - 100f);
-            y += 30f;
-            foreach (KeyValuePair<string, string> t in this.replaceThings)
-            {
-                ThingDef ta = ThingDef.Named(t.Key);
-                ThingDef tb = ThingDef.Named(t.Value);
-                Rect rect = new Rect(x, y, 30f, 30f);
-                Widgets.DefIcon(rect, ta);
-                rect.x += 35f;
-                Widgets.DrawTextureFitted(rect, QuestEditor_SaveMapToFile.arrowIcon, 1f);
-                rect.x += 35f;
-                Widgets.DefIcon(rect, tb);
-                y += 35f;
-            }
-            y += 10f;
-            Widgets.Label(new Rect(x, y + 7f, 1020f, 25f), "StuffReplacement".Translate().Colorize(ColorLibrary.SkyBlue));
-            List<ThingDef> stuffs = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(d => d.IsStuff);
-            CQFEditorTools.DrawButtonWithIcon(y, () =>
-            {
-                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                    new TextureSelectDrawer<ThingDef>(
-                        stuffs,
-                        t => t.uiIcon,
-                        t => t.label,
-                        t => Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                            new TextureSelectDrawer<ThingDef>(
-                                stuffs,
-                                t2 => t2.uiIcon,
-                                t2 => t2.label,
-                                t2 => this.replaceStuffs.Add(t.defName, t2.defName),
-                                t2 => t2.graphicData == null ? Color.white : t2.graphicData.color),
-                            "SelectThingDefToReplace".Translate())),
-                        t => t.graphicData == null ? Color.white : t.graphicData.color),
-                    "SelectReplacedThing".Translate()));
-            }, () => CQFEditorTools.DrawFloatMenu(this.replaceStuffs.ToList(), t => this.replaceStuffs.Remove(t.Key), t => ThingDef.Named(t.Key).label + "," + ThingDef.Named(t.Value).label), inRect.width - 100f);
-            y += 30f;
-            foreach (KeyValuePair<string, string> t in this.replaceStuffs)
-            {
-                ThingDef ta = ThingDef.Named(t.Key);
-                ThingDef tb = ThingDef.Named(t.Value);
-                Rect rect = new Rect(x, y, 30f, 30f);
-                Widgets.DefIcon(rect, ta);
-                rect.x += 35f;
-                Widgets.DrawTextureFitted(rect, QuestEditor_SaveMapToFile.arrowIcon, 1f);
-                rect.x += 35f;
-                Widgets.DefIcon(rect, tb);
-                y += 35f;
-            }
-            y += 10f;
-            Widgets.Label(new Rect(x, y + 7f, 1020f, 25f), "TerrainReplacement".Translate().Colorize(ColorLibrary.SkyBlue));
-            CQFEditorTools.DrawButtonWithIcon(y, () =>
-            {
-                Find.WindowStack.Add(new Dialog_Select<TerrainDef>(
-                    new TextureSelectDrawer<TerrainDef>(
-                        DefDatabase<TerrainDef>.AllDefsListForReading,
-                        t => t.uiIcon,
-                        t => t.label,
-                        t => Find.WindowStack.Add(new Dialog_Select<TerrainDef>(
-                            new TextureSelectDrawer<TerrainDef>(
-                                DefDatabase<TerrainDef>.AllDefsListForReading,
-                                t2 => t2.uiIcon,
-                                t2 => t2.label,
-                                t2 => this.replaceTerrains.Add(t.defName, t2.defName),
-                                t2 => t2.DrawColor,
-                                (t2, r) => Widgets.DefIcon(r, t2, null, 1, null, false, t2.DrawColor)),
-                            "SelectTerrainDefToReplace".Translate())),
-                        t => t.DrawColor,
-                        (t, r) => Widgets.DefIcon(r, t, null, 1, null, false, t.DrawColor)),
-                    "SelectReplacedTerrain".Translate()));
-            }, () => CQFEditorTools.DrawFloatMenu(this.replaceTerrains.ToList(), t => this.replaceTerrains.Remove(t.Key),t => TerrainDef.Named(t.Key).label + "," + TerrainDef.Named(t.Value).label), inRect.width - 100f);
-            y += 30f;
-            foreach (KeyValuePair<string, string> t in this.replaceTerrains)
-            {
-                TerrainDef ta = TerrainDef.Named(t.Key);
-                TerrainDef tb = TerrainDef.Named(t.Value);
-                Rect rect = new Rect(x, y, 30f, 30f);
-                Widgets.DefIcon(rect, ta);
-                rect.x += 35f;
-                Widgets.DrawTextureFitted(rect, QuestEditor_SaveMapToFile.arrowIcon, 1f);
-                rect.x += 35f;
-                Widgets.DefIcon(rect, tb);
-                y += 35f;
-            }
-            y += 15f;
+            this.DrawThingReplacementSection(ref y, x, width, "ThingReplacement".Translate(),
+                this.replaceThings, this.OpenThingReplacementSelector);
+            this.DrawThingReplacementSection(ref y, x, width, "StuffReplacement".Translate(),
+                this.replaceStuffs, this.OpenStuffReplacementSelector);
+            this.DrawTerrainReplacementSection(ref y, x, width);
         }
         public virtual XElement SaveToXElement(string nodeName)
         {
@@ -1193,6 +1108,155 @@ add(p3))));
                     }
                     ; break;
             }
+        }
+
+        private void DrawThingReplacementSection(ref float y, float x, float width, string title,
+            Dictionary<string, string> replacements, Action addAction)
+        {
+            float sectionHeight = 50f + Math.Max(1, replacements.Count) * 42f;
+            Rect sectionRect = new Rect(x, y, width, sectionHeight);
+            Widgets.DrawMenuSection(sectionRect);
+            this.DrawReplacementHeader(y, x, width, title, addAction,
+                () => CQFEditorTools.DrawFloatMenu(replacements.ToList(),
+                    pair => replacements.Remove(pair.Key), this.GetThingReplacementLabel));
+
+            float rowY = y + 42f;
+            if (!replacements.Any())
+            {
+                Widgets.Label(new Rect(x + 14f, rowY + 5f, width - 28f, 25f), "-");
+            }
+            foreach (KeyValuePair<string, string> pair in replacements)
+            {
+                ThingDef source = DefDatabase<ThingDef>.GetNamedSilentFail(pair.Key);
+                ThingDef target = DefDatabase<ThingDef>.GetNamedSilentFail(pair.Value);
+                this.DrawReplacementRow(new Rect(x + 10f, rowY, width - 20f, 36f),
+                    source, source?.label ?? pair.Key, target, target?.label ?? pair.Value);
+                rowY += 42f;
+            }
+            y = sectionRect.yMax + 10f;
+        }
+
+        private void DrawTerrainReplacementSection(ref float y, float x, float width)
+        {
+            float sectionHeight = 50f + Math.Max(1, this.replaceTerrains.Count) * 42f;
+            Rect sectionRect = new Rect(x, y, width, sectionHeight);
+            Widgets.DrawMenuSection(sectionRect);
+            this.DrawReplacementHeader(y, x, width, "TerrainReplacement".Translate(),
+                this.OpenTerrainReplacementSelector,
+                () => CQFEditorTools.DrawFloatMenu(this.replaceTerrains.ToList(),
+                    pair => this.replaceTerrains.Remove(pair.Key), this.GetTerrainReplacementLabel));
+
+            float rowY = y + 42f;
+            if (!this.replaceTerrains.Any())
+            {
+                Widgets.Label(new Rect(x + 14f, rowY + 5f, width - 28f, 25f), "-");
+            }
+            foreach (KeyValuePair<string, string> pair in this.replaceTerrains)
+            {
+                TerrainDef source = DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Key);
+                TerrainDef target = DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Value);
+                this.DrawReplacementRow(new Rect(x + 10f, rowY, width - 20f, 36f),
+                    source, source?.label ?? pair.Key, target, target?.label ?? pair.Value);
+                rowY += 42f;
+            }
+            y = sectionRect.yMax + 10f;
+        }
+
+        private void DrawReplacementHeader(float y, float x, float width, string title,
+            Action addAction, Action removeAction)
+        {
+            Widgets.Label(new Rect(x + 12f, y + 9f, width - 96f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Rect addRect = new Rect(x + width - 72f, y + 6f, 28f, 28f);
+            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            {
+                addAction();
+            }
+            TooltipHandler.TipRegion(addRect, "Add".Translate());
+            Rect removeRect = new Rect(x + width - 36f, y + 6f, 28f, 28f);
+            if (Widgets.ButtonImage(removeRect, TexButton.Delete))
+            {
+                removeAction();
+            }
+            TooltipHandler.TipRegion(removeRect, "Remove".Translate());
+        }
+
+        private void DrawReplacementRow(Rect rect, Def source, string sourceLabel, Def target, string targetLabel)
+        {
+            Widgets.DrawHighlightIfMouseover(rect);
+            float sideWidth = (rect.width - 58f) / 2f;
+            Rect sourceIconRect = new Rect(rect.x + 4f, rect.y + 3f, 30f, 30f);
+            if (source != null)
+            {
+                Widgets.DefIcon(sourceIconRect, source);
+            }
+            Widgets.Label(new Rect(sourceIconRect.xMax + 6f, rect.y + 6f, sideWidth - 40f, 25f), sourceLabel);
+
+            Rect arrowRect = new Rect(rect.center.x - 14f, rect.y + 4f, 28f, 28f);
+            Widgets.DrawTextureFitted(arrowRect, QuestEditor_SaveMapToFile.arrowIcon, 1f);
+
+            Rect targetIconRect = new Rect(rect.center.x + 20f, rect.y + 3f, 30f, 30f);
+            if (target != null)
+            {
+                Widgets.DefIcon(targetIconRect, target);
+            }
+            Widgets.Label(new Rect(targetIconRect.xMax + 6f, rect.y + 6f, sideWidth - 40f, 25f), targetLabel);
+            TooltipHandler.TipRegion(rect, sourceLabel + " -> " + targetLabel);
+        }
+
+        private string GetThingReplacementLabel(KeyValuePair<string, string> pair)
+        {
+            return (DefDatabase<ThingDef>.GetNamedSilentFail(pair.Key)?.label ?? pair.Key) + " -> " +
+                (DefDatabase<ThingDef>.GetNamedSilentFail(pair.Value)?.label ?? pair.Value);
+        }
+
+        private string GetTerrainReplacementLabel(KeyValuePair<string, string> pair)
+        {
+            return (DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Key)?.label ?? pair.Key) + " -> " +
+                (DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Value)?.label ?? pair.Value);
+        }
+
+        private void OpenThingReplacementSelector()
+        {
+            List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(t => !t.IsCorpse &&
+                t.category != ThingCategory.Mote && t.category != ThingCategory.Projectile &&
+                t.category != ThingCategory.Pawn && t.category != ThingCategory.Ethereal &&
+                t.category != ThingCategory.Attachment);
+            this.OpenThingReplacementSelector(defs, this.replaceThings);
+        }
+
+        private void OpenStuffReplacementSelector()
+        {
+            this.OpenThingReplacementSelector(
+                DefDatabase<ThingDef>.AllDefsListForReading.FindAll(def => def.IsStuff), this.replaceStuffs);
+        }
+
+        private void OpenThingReplacementSelector(List<ThingDef> defs, Dictionary<string, string> replacements)
+        {
+            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs,
+                def => def.uiIcon, def => def.label,
+                source => Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs,
+                    def => def.uiIcon, def => def.label,
+                    target => replacements[source.defName] = target.defName,
+                    def => def.graphicData == null ? Color.white : def.graphicData.color),
+                    "SelectThingDefToReplace".Translate())),
+                def => def.graphicData == null ? Color.white : def.graphicData.color),
+                "SelectReplacedThing".Translate()));
+        }
+
+        private void OpenTerrainReplacementSelector()
+        {
+            List<TerrainDef> terrains = DefDatabase<TerrainDef>.AllDefsListForReading;
+            Find.WindowStack.Add(new Dialog_Select<TerrainDef>(new TextureSelectDrawer<TerrainDef>(terrains,
+                def => def.uiIcon, def => def.label,
+                source => Find.WindowStack.Add(new Dialog_Select<TerrainDef>(new TextureSelectDrawer<TerrainDef>(terrains,
+                    def => def.uiIcon, def => def.label,
+                    target => this.replaceTerrains[source.defName] = target.defName,
+                    def => def.DrawColor,
+                    (def, rect) => Widgets.DefIcon(rect, def, null, 1f, null, false, def.DrawColor)),
+                    "SelectTerrainDefToReplace".Translate())),
+                def => def.DrawColor,
+                (def, rect) => Widgets.DefIcon(rect, def, null, 1f, null, false, def.DrawColor)),
+                "SelectReplacedTerrain".Translate()));
         }
 
         public string dataName;

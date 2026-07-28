@@ -48,6 +48,14 @@ namespace QuestEditor_Library
                     def.mapPartGenerationLimit.ForEach(l => generatedLimit_Key.SetOrAdd(l.key, l.limit));
                     faction = GameTools.GetFaction(def.faction, map); 
                 }
+                CustomSitePartParams customParams = new CustomSitePartParams()
+                {
+                    quest = quest,
+                    mapData = def,
+                    isSubMap = isSubMap
+                };
+                def.preCustomSteps.ForEach(s => s.Generate(map, def, customParams));
+                quest = customParams.quest;
                 string questId = quest == null ? "0" : quest?.id.ToString();
                 List<IntVec3> disgenerate2 = new List<IntVec3>();
                 CustomMapDataDef origin = def.Origin;
@@ -111,7 +119,8 @@ namespace QuestEditor_Library
                 }
                 GenStep_CustomMap.AddPawnDataToLord(map, def, center);
                 map.GetComponent<MapComponent_CustomMapData>().questTag = "Quest" + questId;
-                def.customSteps.ForEach(s => s.Generate(map, def, new CustomSitePartParams() { quest = quest }));
+                customParams.quest = quest;
+                def.customSteps.ForEach(s => s.Generate(map, def, customParams));
                 if (!isGenerateByCore)
                 {
                     if (!load && def.reserveThing is ThingData data && !CQFEditorTools.disgenerateByCore)

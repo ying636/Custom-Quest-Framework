@@ -8,9 +8,14 @@ public class CustomMapStep_GenStepDef : CustomMapStep
 {
     public override void Draw(ref float y, Rect inRect, float x)
     {
-        if (Widgets.ButtonText(new Rect(x,y,520f,30f), "CQF_GenStepDef".Translate(step?.label ?? step?.defName), false))
+        float width = inRect.width - x - 12f;
+        Widgets.Label(new Rect(x, y, width, 30f), "CustomMapStep_GenStepDef".Translate().Colorize(ColorLibrary.SkyBlue));
+        y += 35f;
+        if (Widgets.ButtonText(new Rect(x, y, width, 30f),
+                this.step?.label ?? this.step?.defName ?? "CQF_NotSelected".Translate(), false))
         {
-            CQFEditorTools.DrawFloatMenu(DefDatabase<GenStepDef>.AllDefsListForReading, g => step = g, g => g.label ?? g.defName);
+            CQFEditorTools.DrawFloatMenu(DefDatabase<GenStepDef>.AllDefsListForReading,
+                g => this.step = g, g => g.label ?? g.defName);
         }
         y += 35f;
     }

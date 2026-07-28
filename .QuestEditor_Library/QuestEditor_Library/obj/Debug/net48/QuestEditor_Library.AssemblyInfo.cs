@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuestEditor_Library")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc0a47b7375a42580c54c22d13e4845f935e2324")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+722d74e57b5788858e676ca18e068a4629ace3c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuestEditor_Library")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuestEditor_Library")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

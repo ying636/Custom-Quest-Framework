@@ -56,9 +56,13 @@ public class CustomMapStep_MapPart : CustomMapStep
 
     public override void Draw(ref float y, Rect inRect, float x)
     {
+        Widgets.Label(new Rect(x, y, inRect.width - x - 12f, 30f),
+            "CustomMapStep_MapPart".Translate().Colorize(ColorLibrary.SkyBlue));
+        y += 35f;
         CQFEditorTools.DrawIntRange(ref y, "GenerationCount".Translate(), ref count, ref buffer, ref buffer2, x, 60f);
         this.set.Draw(ref y, inRect, x);
     }
+
     public override XElement SaveToXElement(string nodeName)
     {
         XElement result = base.SaveToXElement(nodeName);

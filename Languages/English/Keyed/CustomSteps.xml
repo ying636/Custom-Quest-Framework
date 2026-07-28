@@ -3,6 +3,17 @@
 
 
   <CustomSteps>Custom steps:</CustomSteps>
+  <CustomMapPreSteps>Pre-generation steps:</CustomMapPreSteps>
+  <CustomMapPreSteps_Tip>Runs before the map content is generated. Steps can change the quest bound to this generation.</CustomMapPreSteps_Tip>
+  <CustomSteps_Tip>Runs after the main map content has been generated.</CustomSteps_Tip>
+  <CustomMapStep_StartQuest>Step: Start quest</CustomMapStep_StartQuest>
+  <CustomMapStep_StartQuestWithQuest>Step: Start quest - {0}</CustomMapStep_StartQuestWithQuest>
+  <CQF_StartQuest_SendLetter>Send available letter</CQF_StartQuest_SendLetter>
+  <CQF_MapGeneratorLabel>Map generator</CQF_MapGeneratorLabel>
+  <CQF_MapFaction_None>None</CQF_MapFaction_None>
+  <CQF_MapEnterDirectionLabel>Enter direction</CQF_MapEnterDirectionLabel>
+  <CQF_NotSelected>Not selected</CQF_NotSelected>
+  <CQF_None>None</CQF_None>
   <CustomMapStep_GenStepDef>Step:GenStepDef</CustomMapStep_GenStepDef>
   <CQF_GenStepDef>GenStepDef:{0}</CQF_GenStepDef>
 

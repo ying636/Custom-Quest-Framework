@@ -3,6 +3,28 @@
 
     <!-- EN: Custom steps: -->
     <CustomSteps>额外生成步骤：</CustomSteps>
+    <!-- EN: Pre-generation steps: -->
+    <CustomMapPreSteps>生成前步骤：</CustomMapPreSteps>
+    <!-- EN: Runs before the map content is generated. Steps can change the quest bound to this generation. -->
+    <CustomMapPreSteps_Tip>在地图内容生成前执行，步骤可以更改本次生成绑定的任务。</CustomMapPreSteps_Tip>
+    <!-- EN: Runs after the main map content has been generated. -->
+    <CustomSteps_Tip>在地图主体内容生成后执行。</CustomSteps_Tip>
+    <!-- EN: Step: Start quest -->
+    <CustomMapStep_StartQuest>步骤：开始任务</CustomMapStep_StartQuest>
+    <!-- EN: Step: Start quest - {0} -->
+    <CustomMapStep_StartQuestWithQuest>步骤：开始任务 - {0}</CustomMapStep_StartQuestWithQuest>
+    <!-- EN: Send available letter -->
+    <CQF_StartQuest_SendLetter>发送任务可用信件</CQF_StartQuest_SendLetter>
+    <!-- EN: Map generator -->
+    <CQF_MapGeneratorLabel>地图生成器</CQF_MapGeneratorLabel>
+    <!-- EN: None -->
+    <CQF_MapFaction_None>无</CQF_MapFaction_None>
+    <!-- EN: Enter direction -->
+    <CQF_MapEnterDirectionLabel>进入方向</CQF_MapEnterDirectionLabel>
+    <!-- EN: Not selected -->
+    <CQF_NotSelected>未选择</CQF_NotSelected>
+    <!-- EN: None -->
+    <CQF_None>无</CQF_None>
     <!-- EN: Step:GenStepDef -->
     <CustomMapStep_GenStepDef>步骤：步骤定义</CustomMapStep_GenStepDef>
     <!-- EN: GenStepDef:{0} -->

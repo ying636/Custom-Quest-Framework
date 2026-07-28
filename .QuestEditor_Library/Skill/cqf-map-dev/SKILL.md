@@ -7,6 +7,9 @@ description: "Detailed skill for building CQF maps, submaps, zone layouts, inter
 
 用于 `CQF` 地图、子地图、区域拼装、地图交互、地图事件、地图任务联动的详细 Skill。
 
+本 Mod 的地图 Skill 源文件位于：
+`D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\Skill\cqf-map-dev\SKILL.md`
+
 本 Skill 的目标是让 AI 在处理地图需求时，不只是“知道类名”，而是能自己产出一套完整地图方案，包括：
 - 地图结构
 - 子地图与入口出口
@@ -231,6 +234,43 @@ AI 设计地图时，先明确：
 - 这张图是否要支持随机拼装
 - 这张图是否有专属入口出口
 - 这张图是否需要多阶段事件
+
+### 生成前步骤与任务绑定
+
+`CustomMapDataDef` 同时提供两个 `CustomMapStep` 列表：
+
+- `preCustomSteps`：在结构内容生成前运行。
+- `customSteps`：在结构内容生成后运行。
+
+两者都直接使用 `CustomMapStep`，不要为生成前步骤建立独立基类。编辑器通过列表字段的泛型类型枚举所有 `CustomMapStep` 子类，因此现有步骤可以按需要配置在任一时机。
+
+`GenStep_CustomMap.SpawnCustomMap` 的关键顺序：
+
+1. 创建共享的 `CustomSitePartParams`，写入调用方传入的 `quest`、当前 `mapData` 和 `isSubMap`。
+2. 依次执行 `preCustomSteps`。
+3. 从共享参数重新读取 `quest`，再计算 `questId`。
+4. 使用更新后的任务生成建筑、CustomThing、Pawn、Lord、区域、GenerationAction 和任务标签。
+5. 生成主体结束后执行 `customSteps`。
+
+需要让地图或结构在生成时创建新任务，并让本次生成内容绑定该任务时，使用：
+
+```xml
+<preCustomSteps>
+  <li Class="QuestEditor_Library.CustomMapStep_StartQuest">
+    <quest>MyMod_QuestScriptDef</quest>
+    <sendAvailableLetter>true</sendAvailableLetter>
+  </li>
+</preCustomSteps>
+```
+
+`CustomMapStep_StartQuest` 使用当前地图的任务事件点数生成任务，并将结果写入共享的 `CustomSitePartParams.quest`。后续内容由现有生成流程统一获得 `Quest{id}` 标签和任务引用，不要在步骤中逐个补标签。
+
+注意：
+
+- `CustomMapStep_StartQuest` 必须放在 `preCustomSteps` 中才能绑定随后生成的内容。
+- 如果放在 `customSteps`，任务仍会创建，但已经生成的内容不会反向绑定。
+- 这种“结构生成主动创建任务”的需求应配置在 `CustomMapDataDef`，不要把具体任务硬编码进开局剧本项。
+- 新增生成步骤时优先继续继承 `CustomMapStep`，通过放入不同列表选择运行时机。
 
 ### CustomMapGenerationSet
 

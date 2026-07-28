@@ -18,11 +18,15 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
+        public override Vector2 InitialSize => new Vector2(620f, 620f);
+
         public override void DoWindowContents(Rect inRect)
         {
-            Widgets.BeginScrollView(new Rect(0f,0f, inRect.width, inRect.height), ref this.pos, new Rect(0f, 0f, inRect.width - 20f, this.height + 10f));
+            Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height);
+            Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(this.height + 10f, inRect.height));
+            Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             float y = 0f;
-            this.iDrawable.Draw(ref y,inRect,0f);
+            this.iDrawable.Draw(ref y, viewRect, 0f);
             this.height = y;
             Widgets.EndScrollView();
         }
@@ -30,6 +34,6 @@ namespace QuestEditor_Library
         public string buffer;
         public float height;
         public Vector2 pos = Vector2.zero;
-        IDrawable iDrawable = null;
+        private IDrawable iDrawable;
     }
 }

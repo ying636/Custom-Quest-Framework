@@ -32,6 +32,10 @@
   <SelectEndType>Select End Type:</SelectEndType>
   <ArriveMap>Arrive Map</ArriveMap>
   <SaveMapToFile>Save Map To File</SaveMapToFile>
+  <CQF_MapSave_BasicInformation>Basic information</CQF_MapSave_BasicInformation>
+  <CQF_MapSave_Generation>Generation</CQF_MapSave_Generation>
+  <CQF_MapSave_MapContent>Map content</CQF_MapSave_MapContent>
+  <CQF_MapSave_DataTools>Data tools</CQF_MapSave_DataTools>
 
   <WorldObjectDefOfSite>World object def of site:</WorldObjectDefOfSite>
   <WorldObjectDefOfSite_Tip>World object must inherit from CustomSite. This can be left empty to use CQF's built-in world object by default.</WorldObjectDefOfSite_Tip>
