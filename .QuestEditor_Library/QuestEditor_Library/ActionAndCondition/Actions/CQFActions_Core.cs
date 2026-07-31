@@ -312,7 +312,7 @@ namespace QuestEditor_Library
         public float chance;
         public CQFAction action;
     }
-    public class CQFAction_SentSignal : CQFAction
+    public class CQFAction_SentSignal : CQFAction_Target
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
@@ -346,7 +346,19 @@ namespace QuestEditor_Library
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            List<string> signalParts = new List<string>();
+            Dictionary<string, TargetInfo> signalTargets = targets == null
+                ? new Dictionary<string, TargetInfo>()
+                : new Dictionary<string, TargetInfo>(targets);
+            Dictionary<string, TargetInfo> selectedTargets = GameTools.GetTargets(targets, quest, this.targetsText);
+            foreach (KeyValuePair<string, TargetInfo> target in selectedTargets)
+            {
+                signalTargets[target.Key] = target.Value;
+            }
+            this.RealWork(signalTargets, quest);
+        }
+
+        public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
+        {
             if (quest != null)
             {
                 if (DebugSettings.godMode)
@@ -360,10 +372,20 @@ namespace QuestEditor_Library
             {
                 s = $"Quest{quest.id}." + s;
             }
-            Find.SignalManager.SendSignal(new Signal(s));
+
+            SignalArgs receivedArgs = default;
+            foreach (KeyValuePair<string, TargetInfo> target in targets)
+            {
+                if (target.Value.HasThing)
+                {
+                    receivedArgs.Add(target.Value.Thing.Named(target.Key));
+                }
+            }
+            Find.SignalManager.SendSignal(new Signal(s, receivedArgs));
         }
         public override void ExposeData()
         {
+            base.ExposeData();
             Scribe_Values.Look(ref this.signal, "CQFAction_SentSignal_signal");
             Scribe_Values.Look(ref this.addQuestPrefix, "CQFAction_SentSignal_addQuestPrefix");
             Scribe_Values.Look(ref this.signalIsOnlyValidInPart, "CQFAction_SentSignal_signalIsOnlyValidInPart");

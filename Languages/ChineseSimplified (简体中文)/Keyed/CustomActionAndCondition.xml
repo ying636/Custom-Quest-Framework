@@ -351,6 +351,12 @@
   <CQFMessage>消息：</CQFMessage>
   <!-- EN: Message type: {0} -->
   <CQFMessageType>消息类型：{0}</CQFMessageType>
+  <!-- EN: Action: add quest description -->
+  <CQFAction_AddQuestDescription>行为：添加任务描述</CQFAction_AddQuestDescription>
+  <!-- EN: Append text to the current quest description. Named arguments use the keys of targets obtained by this action and work with action targets, quest database targets, and targets restored from signal receivedArgs. -->
+  <CQFAction_AddQuestDescription_Tip>将文本追加到当前任务描述。命名参数以本行为获取目标所用的密匙为密匙，同时支持行为目标、任务数据库目标和从信号 receivedArgs 恢复的目标。</CQFAction_AddQuestDescription_Tip>
+  <!-- EN: Quest description: -->
+  <CQFQuestDescription>任务描述：</CQFQuestDescription>
   <!-- EN: Big threat -->
   <ThreatBig>大型威胁</ThreatBig>
   <!-- EN: Small threat -->

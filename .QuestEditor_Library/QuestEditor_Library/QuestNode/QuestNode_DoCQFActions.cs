@@ -39,9 +39,26 @@ public class QuestPart_DoCQFActions : QuestPart
         base.Notify_QuestSignalReceived(signal);
         if (signal.tag == this.inSignal)
         {
-            foreach (var cqfAction in this.actions)
+            Dictionary<string, TargetInfo> receivedTargets = new Dictionary<string, TargetInfo>();
+            foreach (NamedArgument receivedArg in signal.args.Args)
             {
-                cqfAction.Work([],this.quest);
+                if (receivedArg.label.NullOrEmpty())
+                {
+                    continue;
+                }
+                if (receivedArg.arg is TargetInfo target)
+                {
+                    receivedTargets[receivedArg.label] = target;
+                }
+                else if (receivedArg.arg is Thing thing)
+                {
+                    receivedTargets[receivedArg.label] = thing;
+                }
+            }
+
+            foreach (CQFAction cqfAction in this.actions)
+            {
+                cqfAction.Work(receivedTargets, this.quest);
             }
         }
     }

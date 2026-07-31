@@ -202,6 +202,9 @@
   <CQFAction_Message>Action: send message</CQFAction_Message>
   <CQFMessage>Message:</CQFMessage>
   <CQFMessageType>Message type: {0}</CQFMessageType>
+  <CQFAction_AddQuestDescription>Action: add quest description</CQFAction_AddQuestDescription>
+  <CQFAction_AddQuestDescription_Tip>Append text to the current quest description. Named arguments use the keys of targets obtained by this action and work with action targets, quest database targets, and targets restored from signal receivedArgs.</CQFAction_AddQuestDescription_Tip>
+  <CQFQuestDescription>Quest description:</CQFQuestDescription>
   <ThreatBig>Big threat</ThreatBig>
   <ThreatSmall>Small threat</ThreatSmall>
   <PawnDeath>Pawn death</PawnDeath>
