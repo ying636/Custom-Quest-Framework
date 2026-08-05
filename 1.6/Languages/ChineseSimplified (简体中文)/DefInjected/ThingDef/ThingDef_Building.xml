@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: Fixed wall -->
+  <QF_MiracleWall.label>固定的墙</QF_MiracleWall.label>
+  <!-- EN: An impassable wall capable of holding up a roof. It cannot be damaged or destroyed. -->
+  <QF_MiracleWall.description>一道不可通过且可支撑屋顶的固定墙，无法受到伤害或摧毁。</QF_MiracleWall.description>
+
+  <!-- EN: Fixed door -->
+  <QF_MiracleDoor.label>固定的门</QF_MiracleDoor.label>
+  <!-- EN: A special door that cannot be broken by brute force. -->
+  <QF_MiracleDoor.description>一个特殊的门，无法靠蛮力破坏。</QF_MiracleDoor.description>
+</LanguageData>

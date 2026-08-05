@@ -52,7 +52,16 @@ namespace QuestEditor_Library
             typeof(Spawner), typeof(InteractableThing),typeof(CustomDoor), typeof(CustomMapEntrance), typeof(CustomMapExit) ,typeof(ZoneCore)};
         public static bool IsCQFTool(ThingDef def) 
         {
-            return ToolTypes.Exists(t => def.thingClass == t || def.thingClass.IsSubclassOf(t));
+            return IsSpecialBuilding(def)
+                || ToolTypes.Exists(t => def.thingClass == t || def.thingClass.IsSubclassOf(t));
+        }
+        public static bool IsSpecialBuilding(ThingDef def)
+        {
+            return def.defName == "QF_MiracleWall" || def.defName == "QF_MiracleDoor";
+        }
+        public static string GetCQFToolTypeLabel(ThingDef def)
+        {
+            return IsSpecialBuilding(def) ? "CQFSpecialBuilding".Translate() : def.thingClass.Name.Translate();
         }
         public override IEnumerable<FloatMenuOption> RightClickFloatMenuOptions
         {
@@ -60,7 +69,7 @@ namespace QuestEditor_Library
             {
                 yield return new FloatMenuOption("Select".Translate(), () =>
                  {
-                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CQFTools.Basespawnable, x => x.uiIcon, x => x.label + $"({x.thingClass.Name.Translate()})", x =>
+                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CQFTools.Basespawnable, x => x.uiIcon, x => x.label + $"({Designator_CQFTools.GetCQFToolTypeLabel(x)})", x =>
             {
                 Designator_CQFTools.thing = x;
                 this.iconProportions = x.graphicData.drawSize.RotatedBy(x.defaultPlacingRot);

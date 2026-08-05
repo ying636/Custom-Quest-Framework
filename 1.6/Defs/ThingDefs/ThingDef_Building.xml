@@ -745,8 +745,8 @@
 
     <ThingDef ParentName="BuildingBase">
         <defName>QF_MiracleWall</defName>
-        <label>Miracle wall</label>
-        <description>An impassable wall. Capable of holding up a roof.It is a miracle, indestructible , Undamageable.</description>
+        <label>Fixed wall</label>
+        <description>An impassable wall capable of holding up a roof. It cannot be damaged or destroyed.</description>
         <thingClass>Building</thingClass>
         <category>Building</category>
         <drawerType>MapMeshOnly</drawerType>
@@ -810,6 +810,29 @@
             <li>Stony</li>
         </stuffCategories>
         <useHitPoints>false</useHitPoints>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomDoorBase">
+        <defName>QF_MiracleDoor</defName>
+        <label>Fixed door</label>
+        <description>A special door that cannot be broken by brute force.</description>
+        <statBases>
+            <WorkToBuild>850</WorkToBuild>
+            <Flammability>0</Flammability>
+        </statBases>
+        <graphicData>
+            <texPath>Things/Building/Door/DoorSimple_Mover</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+            <damageData>
+                <enabled>false</enabled>
+            </damageData>
+        </graphicData>
+        <uiIconPath>Things/Building/Door/DoorSimple_MenuIcon</uiIconPath>
+        <costStuffCount>25</costStuffCount>
+        <useHitPoints>false</useHitPoints>
+        <building>
+            <isStuffableAirtight>true</isStuffableAirtight>
+        </building>
     </ThingDef>
 
     <ThingDef ParentName="CustomThingBase">
