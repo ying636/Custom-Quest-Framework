@@ -210,6 +210,14 @@
   <OpeningActions>打开时行为：</OpeningActions>
   <OpeningActionsTip>打开时执行的行为，目标密匙：Inner为内部的事物</OpeningActionsTip>
   <OpeningConditions>打开条件：</OpeningConditions>
+  <!-- EN: Actions executed after the door opens. -->
+  <CustomDoorOpeningActionsTip>门打开后执行的行为。</CustomDoorOpeningActionsTip>
+  <!-- EN: All configured conditions must be satisfied before a pawn can open the door. -->
+  <CustomDoorOpeningConditionsTip>角色必须满足全部条件才能打开这扇门。</CustomDoorOpeningConditionsTip>
+  <!-- EN: No opening actions configured. -->
+  <CustomDoorNoActions>尚未设置打开行为。</CustomDoorNoActions>
+  <!-- EN: No opening conditions configured. -->
+  <CustomDoorNoConditions>尚未设置打开条件。</CustomDoorNoConditions>
   <TrapEditor>陷阱编辑器</TrapEditor>
   <TrapEditorDesc>用于编辑陷阱。</TrapEditorDesc>
   <CQFSetFaction>设置派系：{0}</CQFSetFaction>
@@ -399,6 +407,17 @@
   <MapBackgroundImage_Mod>模组：</MapBackgroundImage_Mod>
   <MapBackgroundImage_All>全部</MapBackgroundImage_All>
   <MapBackgroundImage_Search>搜索：</MapBackgroundImage_Search>
+
+  <!-- EN: Special building -->
+  <CQFSpecialBuilding>特殊建筑</CQFSpecialBuilding>
+  <!-- EN: Fixed wall -->
+  <CQFFixedWallLabel>固定的墙</CQFFixedWallLabel>
+  <!-- EN: An impassable wall capable of holding up a roof. It cannot be damaged or destroyed. -->
+  <CQFFixedWallDescription>一道不可通过且可支撑屋顶的固定墙，无法受到伤害或摧毁。</CQFFixedWallDescription>
+  <!-- EN: Fixed door -->
+  <CQFFixedDoorLabel>固定的门</CQFFixedDoorLabel>
+  <!-- EN: A special door that cannot be broken by brute force. -->
+  <CQFFixedDoorDescription>一个特殊的门，无法靠蛮力破坏。</CQFFixedDoorDescription>
 
 </LanguageData>
 

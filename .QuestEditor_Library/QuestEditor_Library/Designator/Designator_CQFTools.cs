@@ -57,7 +57,7 @@ namespace QuestEditor_Library
         }
         public static bool IsSpecialBuilding(ThingDef def)
         {
-            return def.defName == "QF_MiracleWall" || def.defName == "QF_MiracleDoor";
+            return def.defName == "QF_MiracleWall";
         }
         public static string GetCQFToolTypeLabel(ThingDef def)
         {

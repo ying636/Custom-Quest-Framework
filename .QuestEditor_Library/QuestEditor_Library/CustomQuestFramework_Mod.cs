@@ -14,6 +14,7 @@ namespace QuestEditor_Library
         public CustomQuestFramework_Mod(ModContentPack content) : base(content)
         {
             this.setting = this.GetSettings<CustomQuestFramework_ModSetting>();
+            LongEventHandler.ExecuteWhenFinished(ApplySpecialBuildingTranslations);
         }
         public override string SettingsCategory()
         {
@@ -22,6 +23,16 @@ namespace QuestEditor_Library
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Widgets.CheckboxLabeled(new Rect(inRect.x, inRect.y, inRect.width, 30f), "ShowCQF".Translate(), ref this.setting.showCQF);
+        }
+        private static void ApplySpecialBuildingTranslations()
+        {
+            ThingDef fixedWall = DefDatabase<ThingDef>.GetNamed("QF_MiracleWall");
+            fixedWall.label = "CQFFixedWallLabel".Translate();
+            fixedWall.description = "CQFFixedWallDescription".Translate();
+
+            ThingDef fixedDoor = DefDatabase<ThingDef>.GetNamed("QF_MiracleDoor");
+            fixedDoor.label = "CQFFixedDoorLabel".Translate();
+            fixedDoor.description = "CQFFixedDoorDescription".Translate();
         }
         public CustomQuestFramework_ModSetting setting = null;
     }

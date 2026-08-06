@@ -80,7 +80,7 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 | 轨道远古堡垒墙 | `OrbitalAncientFortifiedWall` | **Core** | `1x1` | 否 | — | 不可建造 |
 | 远古防爆门 | `AncientBlastDoor` | **Core** | `1x1` | 否 | — | 不可建造 |
 | 固定的墙 | `QF_MiracleWall` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | 无耐久、不可摧毁；CQFTool 中显示为“特殊建筑” |
-| 固定的门 | `QF_MiracleDoor` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | `CustomDoor`；无法靠蛮力破坏、不可燃；CQFTool 中显示为“特殊建筑” |
+| 固定的门 | `QF_MiracleDoor` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | `CustomDoor`；无法靠蛮力破坏、不可燃；CQFTool 中显示为 `CustomDoor` |
 | 可交互墙 | `QF_StrangeWall` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | InteractableThing |
 | 灰色墙 | `GrayWall` | **Anomaly** | `1x1` | 否 | — | |
 | 灰色门 | `GrayDoor` | **Anomaly** | `1x1` | 否 | — | |

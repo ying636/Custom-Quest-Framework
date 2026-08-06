@@ -260,6 +260,10 @@ SiteName: SiteName-></RuleTip>
   <OpeningActions>Opening actions:</OpeningActions>
   <OpeningActionsTip>The actions executed when opened, with the target key: "Inner" being an internal thing</OpeningActionsTip>
   <OpeningConditions>Opening conditions:</OpeningConditions>
+  <CustomDoorOpeningActionsTip>Actions executed after the door opens.</CustomDoorOpeningActionsTip>
+  <CustomDoorOpeningConditionsTip>All configured conditions must be satisfied before a pawn can open the door.</CustomDoorOpeningConditionsTip>
+  <CustomDoorNoActions>No opening actions configured.</CustomDoorNoActions>
+  <CustomDoorNoConditions>No opening conditions configured.</CustomDoorNoConditions>
 
   <TrapEditor>Trap editor</TrapEditor>
   <TrapEditorDesc>Used to edit traps.</TrapEditorDesc>
@@ -497,6 +501,12 @@ SiteName: SiteName-></RuleTip>
   <MapBackgroundImage_Mod>Mod:</MapBackgroundImage_Mod>
   <MapBackgroundImage_All>All</MapBackgroundImage_All>
   <MapBackgroundImage_Search>Search:</MapBackgroundImage_Search>
+
+  <CQFSpecialBuilding>Special building</CQFSpecialBuilding>
+  <CQFFixedWallLabel>Fixed wall</CQFFixedWallLabel>
+  <CQFFixedWallDescription>An impassable wall capable of holding up a roof. It cannot be damaged or destroyed.</CQFFixedWallDescription>
+  <CQFFixedDoorLabel>Fixed door</CQFFixedDoorLabel>
+  <CQFFixedDoorDescription>A special door that cannot be broken by brute force.</CQFFixedDoorDescription>
 
 </LanguageData>
 
