@@ -13,11 +13,16 @@ namespace QuestEditor_Library
         public CustomThingData_CustomMapExit(CustomMapExit thing, IntVec3 pos) : base(thing, pos) 
         {
             this.exitName = thing.exitName;
+            this.enterActions = thing.enterActions.ListFullCopy();
         }
         public override XElement SaveToXElement(string nodeName) 
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(new XElement("exitName", this.exitName));
+            if (this.enterActions.Any())
+            {
+                result.Add(CQFEditorTools.SaveList_Saveable(this.enterActions, "enterActions"));
+            }
             return result;
         }
         public override Thing SpawnThing(Map map, Quest quest, out List<Thing> things
@@ -30,6 +35,16 @@ namespace QuestEditor_Library
                 return null;
             }
             customMapExit.exitName = this.exitName;
+            foreach (CQFAction action in this.enterActions)
+            {
+                CQFAction copiedAction = action.Copy();
+                if (!load && copiedAction is CQFAction_SentSignal signal && signal.signalIsOnlyValidInPart && def != null &&
+                    GenStep_CustomMap.generatedCount.TryGetValue(def.Origin, out int value))
+                {
+                    signal.signal += def.defName + value.ToString();
+                }
+                customMapExit.enterActions.Add(copiedAction);
+            }
             if (map.Parent is MapParent_Custom parent && parent.entrance is CustomMapEntrance entrance && entrance.exitName == this.exitName)
             {
                 entrance.exit = customMapExit;
@@ -45,10 +60,16 @@ namespace QuestEditor_Library
         {
             base.ExposeData();
             Scribe_Values.Look(ref this.exitName, "exitName");
+            Scribe_Collections.Look(ref this.enterActions, "enterActions", LookMode.Deep);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && this.enterActions == null)
+            {
+                this.enterActions = new List<CQFAction>();
+            }
         }
 
 
         [NoTranslate]
         public string exitName;
+        public List<CQFAction> enterActions = new List<CQFAction>();
     }
 }

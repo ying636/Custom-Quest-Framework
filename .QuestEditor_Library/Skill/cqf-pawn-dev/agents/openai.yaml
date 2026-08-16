@@ -1,4 +1,4 @@
 interface:
-  display_name: "CQF Pawn Dev"
-  short_description: "CQF pawn, lord, duty development"
-  default_prompt: "Use $cqf-pawn-dev to update a CQF pawn editor module or pawn spawn flow."
+  display_name: "CQF NPC"
+  short_description: "开发 CQF 实体、生成数据、Lord 与职责图系统"
+  default_prompt: "使用 $cqf-pawn-dev 开发或排查 CQF 的 NPC 实体数据与职责图行为。"

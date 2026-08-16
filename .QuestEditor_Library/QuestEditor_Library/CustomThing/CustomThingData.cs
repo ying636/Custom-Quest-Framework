@@ -42,6 +42,10 @@ namespace QuestEditor_Library
                 {
                     this.customDescription = compText.customDescription;
                 }
+                if (compText.useCustomInspectText)
+                {
+                    this.customInspectText = compText.customInspectText;
+                }
             }
             if (thing.TryGetComp<CompColorable>() is CompColorable color)
             {
@@ -162,6 +166,11 @@ namespace QuestEditor_Library
                     compText.customDescription = load ? this.customDescription : this.customDescription.Translate().ToString();
 
                 }
+                if (this.customInspectText != null)
+                {
+                    compText.useCustomInspectText = true;
+                    compText.customInspectText = load ? this.customInspectText : this.customInspectText.Translate().ToString();
+                }
             }
             if (result.TryGetComp<CompColorable>() is CompColorable color)
             {
@@ -225,6 +234,10 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("customDescription", this.customDescription));
             }
+            if (this.customInspectText != null)
+            {
+                result.Add(new XElement("customInspectText", this.customInspectText));
+            }
             if (this.color != Color.white)
             {
                 result.Add(new XElement("color", this.color.ToString()));
@@ -253,6 +266,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.storedEnergy, "storedEnergy"); 
             Scribe_Values.Look(ref this.customName, "customName"); 
             Scribe_Values.Look(ref this.customDescription, "customDescription");
+            Scribe_Values.Look(ref this.customInspectText, "customInspectText");
             Scribe_Collections.Look(ref this.comps, "comps",LookMode.Deep);
         }
 
@@ -268,6 +282,7 @@ namespace QuestEditor_Library
 
         public string customName = null;
         public string customDescription = null;
+        public string customInspectText = null;
         public List<ActionComp> comps = new List<ActionComp>();
     }
 }

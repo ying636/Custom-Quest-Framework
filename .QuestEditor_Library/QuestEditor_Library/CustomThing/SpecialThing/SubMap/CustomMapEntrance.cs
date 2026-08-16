@@ -116,33 +116,15 @@ namespace QuestEditor_Library
             }
             Enter(thing);
         }
+        public override void OnEntered(Pawn pawn)
+        {
+            base.OnEntered(pawn);
+            this.TriggerEnterActions(pawn);
+        }
         public void Swtich(bool value) 
         {
             this.opended = value;
             this.Map.mapDrawer.MapMeshDirty(this.Position,MapMeshFlagDefOf.Things);
-        }
-        private void Enter(Thing thing)
-        {
-            if (thing == null || this.exit == null ||
-                this.exit.Position == null || this.exit.Map == null)
-            {
-                return;
-            }  
-            this.thereIsPawnIsEntering = true;
-            if (thing.Spawned)
-            {
-                thing.DeSpawn();
-            }
-            GenSpawn.Spawn(thing, this.exit.Position, this.exit.Map);
-            if (thing is Pawn pawn)
-            {
-                this.OnEntered(pawn);
-            }
-            this.thereIsPawnIsEntering = false;
-            if (this.exit.Position.Fogged(this.exit.Map))
-            {
-                FloodFillerFog.FloodUnfog(this.exit.Position, this.exit.Map);
-            }
         }
         public CustomThingData GetData(IntVec3 pos)
         {
@@ -159,15 +141,23 @@ namespace QuestEditor_Library
         }
         public override string GetInspectString()
         {
-            string result = base.GetInspectString();
+            StringBuilder result = new StringBuilder(base.GetInspectString());
             if (this.mapDef != null)
             {
-                result +="EntranceToSubMap".Translate(this.MapName);
+                if (result.Length > 0)
+                {
+                    result.AppendLine();
+                }
+                result.Append("EntranceToSubMap".Translate(this.MapName));
             } else if (this.CustomMap != null && this.CustomMap.Parent is MapParent_Custom custom && this.CustomMap.Parent.Spawned && !this.CustomMap.Parent.Destroyed) 
             {
-                result += "EntranceToSubMap".Translate(custom.MapName);
+                if (result.Length > 0)
+                {
+                    result.AppendLine();
+                }
+                result.Append("EntranceToSubMap".Translate(custom.MapName));
             }
-            return result.Trim();
+            return result.ToString().Trim();
         }
         public override bool IsEnterable(out string reason)
         {
@@ -180,24 +170,30 @@ namespace QuestEditor_Library
         }
         public virtual void DrawTab()
         {
-            Widgets.BeginScrollView(new Rect(7f, 25f, 475f, 590f), ref this.scrollPos, new Rect(7f, 10f, 475f, this.height));
-            Widgets.DrawBox(new Rect(8f, 10f, 470f, this.height), 1, QuestEditor_Dialog.blueTex);
-            float y = 20f;
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(15f, y, 900f, 38f), "CustomMap".Translate().Colorize(ColorLibrary.SkyBlue));
-            Text.Font = GameFont.Small;
-            y += 40f;
-            Rect rect = new Rect(15f, y, 430f, 30f);
-            if (Widgets.ButtonText(rect,"CurCustomMap".Translate(this.MapName),false))
+            Rect outRect = new Rect(0f, 0f, 540f, 590f);
+            float width = outRect.width - 40f;
+            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.height + 10f));
+            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
+            float x = 10f;
+            float y = 10f;
+
+            this.DrawSectionHeader(ref y, x, width, "CQF_PortalMapSection".Translate(), "CQF_PortalMapSectionTip".Translate());
+            string mapLabel = this.mapDef == null ? "Null".Translate().ToString() : this.mapDef.label;
+            Rect rect = new Rect(x + 8f, y, width - 16f, 30f);
+            if (Widgets.ButtonText(rect, "CurCustomMap".Translate(mapLabel), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, (x) => this.mapDef = x, (x) => x.label);
             }
             y += 35f;
-            Widgets.CheckboxLabeled(new Rect(15f,y,350f,25f), "DefaultOpened".Translate(), ref this.opended);
+
+            this.DrawSectionHeader(ref y, x, width, "CQF_PortalSettingsSection".Translate(), "CQF_PortalSettingsSectionTip".Translate());
+            Widgets.CheckboxLabeled(new Rect(x + 8f, y, width - 16f, 25f), "DefaultOpened".Translate(), ref this.opended);
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y,"ExitName".Translate(),ref this.exitName,15f,150f);
+            CQFEditorTools.DrawLabelAndText_Line(y, "ExitName".Translate(), ref this.exitName, x + 8f, 150f);
             y += 30f;
-            this.height = y + 5f;
+
+            this.DrawActionSection(ref y, x, width, this.enterActions);
+            this.height = y + 10f;
             Widgets.EndScrollView();
         }
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
@@ -358,6 +354,11 @@ namespace QuestEditor_Library
             Scribe_Defs.Look(ref this.mapDef, "CQF_CustomMapEntrance_mapDef");
             Scribe_References.Look(ref this.exit, "CQF_CustomMapEntrance_exit");
             Scribe_References.Look(ref this.customMap, "CQF_CustomMapEntrance_customMap");
+            Scribe_Collections.Look(ref this.enterActions, "enterActions", LookMode.Deep);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit && this.enterActions == null)
+            {
+                this.enterActions = new List<CQFAction>();
+            }
         }
 
         public override Map GetOtherMap()
@@ -374,6 +375,114 @@ namespace QuestEditor_Library
             return this.exit == null ? IntVec3.Invalid : this.exit.Position;
         }
 
+        protected void DrawActionSection(ref float y, float x, float width, List<CQFAction> actions)
+        {
+            this.DrawSectionHeader(ref y, x, width, "CQF_PortalEnterActions".Translate(), "CQF_PortalEnterActionsTip".Translate(),
+                () => CQFEditorTools.OpenCQFActionSelect(type => actions.Add((CQFAction)Activator.CreateInstance(type))),
+                () => CQFEditorTools.DrawFloatMenu(actions, action => actions.Remove(action), action => action.GetType().Name.Translate()),
+                actions.Any());
+            if (actions.Any())
+            {
+                foreach (CQFAction action in actions)
+                {
+                    Rect rowRect = new Rect(x + 8f, y, width - 16f, 28f);
+                    Widgets.DrawHighlightIfMouseover(rowRect);
+                    if (Widgets.ButtonText(rowRect, action.GetType().Name.Translate(), false))
+                    {
+                        Find.WindowStack.Add(new Dialog_EditIDrawable(action));
+                    }
+                    y += 32f;
+                }
+            }
+            else
+            {
+                this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_PortalNoActions".Translate());
+            }
+            y += 8f;
+        }
+
+        protected void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null,
+            Action addAction = null, Action removeAction = null, bool canRemove = false)
+        {
+            Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
+            Widgets.DrawHighlight(headerRect);
+            Rect labelRect = new Rect(x + 8f, y + 4f, width - 84f, 25f);
+            Widgets.Label(labelRect, label.Colorize(ColorLibrary.SkyBlue));
+            if (!tip.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(labelRect, tip);
+            }
+            if (addAction != null)
+            {
+                Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
+                if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
+                {
+                    addAction();
+                }
+                TooltipHandler.TipRegion(buttonRect, "Add".Translate());
+                buttonRect.x += 30f;
+                if (Widgets.ButtonImage(buttonRect, TexButton.Delete) && canRemove)
+                {
+                    removeAction?.Invoke();
+                }
+                TooltipHandler.TipRegion(buttonRect, "Remove".Translate());
+            }
+            y += 38f;
+        }
+
+        protected void DrawEmptyState(ref float y, float x, float width, string label)
+        {
+            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
+            y += 32f;
+        }
+
+        private void Enter(Thing thing)
+        {
+            if (thing == null || this.exit == null ||
+                this.exit.Position == null || this.exit.Map == null)
+            {
+                return;
+            }
+            this.thereIsPawnIsEntering = true;
+            if (thing.Spawned)
+            {
+                thing.DeSpawn();
+            }
+            GenSpawn.Spawn(thing, this.exit.Position, this.exit.Map);
+            if (thing is Pawn pawn)
+            {
+                this.OnEntered(pawn);
+            }
+            this.thereIsPawnIsEntering = false;
+            if (this.exit.Position.Fogged(this.exit.Map))
+            {
+                FloodFillerFog.FloodUnfog(this.exit.Position, this.exit.Map);
+            }
+            if (!(thing is Pawn))
+            {
+                this.TriggerEnterActions(thing);
+            }
+        }
+
+        private void TriggerEnterActions(Thing thing)
+        {
+            Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>
+            {
+                ["Trigger"] = thing,
+                ["CustomThing"] = this
+            };
+            Quest quest = GameTools.GetQuestFromThing(this);
+            foreach (CQFAction action in this.enterActions)
+            {
+                if (action == null)
+                {
+                    Log.Error("CQF custom map entrance contains a null enter action: " + this.ThingID);
+                    continue;
+                }
+                action.Work(targets, quest);
+            }
+        }
+
         public bool opended = true;
         public float height = 0f;
         public Vector2 scrollPos;
@@ -384,8 +493,8 @@ namespace QuestEditor_Library
         protected Map customMap;
         protected CustomMapDataDef mapDef;
         public string questID = null;
-        private CompCustomText textComp = null;
-
+        public List<CQFAction> enterActions = new List<CQFAction>();
         public bool thereIsPawnIsEntering = false;
+        private CompCustomText textComp = null;
     }
 }

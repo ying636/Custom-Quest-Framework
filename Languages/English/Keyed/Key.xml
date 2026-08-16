@@ -207,6 +207,19 @@ SiteName: SiteName-></RuleTip>
   <CurCustomMap>Cur custom map:{0}</CurCustomMap>
   <ExitName>Exit name:</ExitName>
   <CustomMapExit>Custom map exit</CustomMapExit>
+  <CQF_PortalMapSection>Map settings</CQF_PortalMapSection>
+  <CQF_PortalMapSectionTip>Select the custom map generated and entered through this entrance.</CQF_PortalMapSectionTip>
+  <CQF_PortalSettingsSection>Portal settings</CQF_PortalSettingsSection>
+  <CQF_PortalSettingsSectionTip>Configure the link name and available settings for this portal.</CQF_PortalSettingsSectionTip>
+  <CQF_PortalEnterActions>Actions on entry</CQF_PortalEnterActions>
+  <CQF_PortalEnterActionsTip>Executed after a thing successfully enters the other map. The Trigger target key is the entering thing, and CustomThing is this entrance or exit.</CQF_PortalEnterActionsTip>
+  <CQF_PortalNoActions>No actions have been configured.</CQF_PortalNoActions>
+  <CQF_ChanceMapPoolSection>Map definition pool</CQF_ChanceMapPoolSection>
+  <CQF_ChanceTagPoolSection>Map tag pool</CQF_ChanceTagPoolSection>
+  <CQF_ChanceNoMapDefs>No map definitions have been added.</CQF_ChanceNoMapDefs>
+  <CQF_ChanceNoTags>No map tags have been added.</CQF_ChanceNoTags>
+  <CQF_ChanceCopySettingsTip>Copy the link name and chance pools.</CQF_ChanceCopySettingsTip>
+  <CQF_ChancePasteSettingsTip>Paste the copied link name and chance pools.</CQF_ChancePasteSettingsTip>
 
   <CustomMapDef>MapDef:{0}</CustomMapDef>
   <MapDefWithChance>Map Defs:</MapDefWithChance>
@@ -507,6 +520,15 @@ SiteName: SiteName-></RuleTip>
   <CQFFixedWallDescription>An impassable wall capable of holding up a roof. It cannot be damaged or destroyed.</CQFFixedWallDescription>
   <CQFFixedDoorLabel>Fixed door</CQFFixedDoorLabel>
   <CQFFixedDoorDescription>A special door that cannot be broken by brute force.</CQFFixedDoorDescription>
+
+  <UseCustomInspectText>Use custom inspect text:</UseCustomInspectText>
+  <CQF_CustomInspectText>Custom inspect text:</CQF_CustomInspectText>
+  <CQFAction_SetCustomName>Set custom name</CQFAction_SetCustomName>
+  <CQFAction_SetCustomName_Tip>Sets the custom name of each target that has CompCustomText.</CQFAction_SetCustomName_Tip>
+  <CQFAction_SetCustomDescription>Set custom description</CQFAction_SetCustomDescription>
+  <CQFAction_SetCustomDescription_Tip>Sets the custom description of each target that has CompCustomText.</CQFAction_SetCustomDescription_Tip>
+  <CQFAction_SetCustomInspectText>Set custom inspect text</CQFAction_SetCustomInspectText>
+  <CQFAction_SetCustomInspectText_Tip>Sets the inspect text of each target that has CompCustomText.</CQFAction_SetCustomInspectText_Tip>
 
 </LanguageData>
 

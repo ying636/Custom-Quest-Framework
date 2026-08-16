@@ -107,7 +107,7 @@ namespace QuestEditor_Library
                     Messages.Message("NoName".Translate(), MessageTypeDefOf.CautionInput);
                     return;
                 }
-                string xmlPath = this.path + QuestEditor_CreateNewRlueDef.curRule.ruleName + ".xml";
+                string xmlPath = Path.Combine(this.path, QuestEditor_CreateNewRlueDef.curRule.ruleName + ".xml");
                 XDocument ruleXml = new XDocument();
                 XElement root = DirectXmlSaver.XElementFromObject(QuestEditor_CreateNewRlueDef.curRule, typeof(RuleData), "RuleText");
                 ruleXml.Add(root);

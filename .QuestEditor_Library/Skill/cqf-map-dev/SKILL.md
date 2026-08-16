@@ -135,6 +135,32 @@ AI 做 CQF 地图时，必须同时考虑这五层。
 - 任务描述
 - 中英双语键
 
+## 正式任务地图质量规则
+
+### 测试 Def 与隐藏触发器
+
+- `QE_CustomTrap` 和 `QE_TriggerTrap` 不是同一个 ThingDef。前者使用 `CustomTrap`，是普通测试陷阱，正式地图禁止使用。
+- `QE_TriggerTrap` 使用 `CustomTrap_Dev`，正常模式隐藏、开发者模式显示调试标记。只在隐藏献祭点或确有必要的不可见逻辑触发中使用，不得作为可见建筑。
+- 名称或描述明确带有 `Custom ...`、`... for testing` 的编辑器测试 Def 不得直接进入正式地图。可见交互物应定义正式 Mod ThingDef，并优先复用原版或 CQF 正式贴图与功能类。
+
+### 剧情与高潮
+
+- 入口信息、环境痕迹、可选记录、玩法变化和最终结果要形成递进揭示，后续内容应改变或加深玩家对前文的理解。
+- 最终敌人、危险房间或反转必须由前面的线索、空间和行为逐步铺垫。不要突然塞入一个与主题缺乏因果联系的敌人房间充当高潮。
+- 分支必须同时改变剧情含义、风险和结果，不能只是选择不同数量的战利品。
+
+### 交互可达性与破坏分支
+
+- 每个关键交互都要从玩家预期接近的一侧实测。嵌墙设备、通风口和门控装置必须按实际旋转检查 `interactionCellOffset`、交互格阻挡、菜单可见性和失败提示。
+- 必要线索或操作不能依赖一个玩家无法抵达的交互格。若外侧不能直接操作，应在外侧提供清晰反馈，或设置可达的替代交互点。
+- 普通墙和门可以被攻击或拆除，锁门本身不能保证路线约束。关键房间要么使用符合设定的不可破坏结构，要么为破墙、破门和绕行实现有反馈、有代价、能正确推进或结束任务的正式分支。
+
+### 主要结构地形
+
+- 世界任务可以使用随机世界地块，但主要建筑、关键房间、通道、门口和交互格必须在 `CustomMapDataDef` 中铺设明确的 `terrain`，不能依赖世界地块原生地形。
+- 地形覆盖至少包括建筑实际占格、出入口、必要站立位和一圈合理的连接缓冲，防止水域或其他不可通行地形切断主体结构。
+- 完成前在不同世界地块实测，确认水域、泥地和沙地不会覆盖主体地板，也不会使入口、出口或关键交互失效。
+
 ## 地图系统总览
 
 CQF 地图体系的核心概念：
@@ -169,6 +195,80 @@ CQF 地图体系的核心概念：
 - `ZoneCore` 决定“地图部件怎么拼”
 - `Entrance / Exit` 决定“怎么进出”
 - `QuestNode / CQFAction` 决定“何时生成”
+
+### 主要地图 / MainSite 生命周期
+
+CQF 1.6 的主要地图由 `MainSite` 世界对象承载，长期状态应保存在 `MainSite` 或 `MainMapWorldComponent`，不要只依赖运行中的 `Map`。
+
+核心约定：
+- `MainSite.killed` 默认 `false`。如果设为 `true`，`MainSite.Notify_MyMapRemoved` 会在主要站点地图离开/移除后销毁对应世界站点。
+- 主要站点销毁统一走 `MainMapWorldComponent.DestroyMainSite(MainSite site, bool destroyMap = true, bool notifyPlayer = true)`，这样会同步移除地图、销毁世界对象并清理索引。
+- 需要通过脚本 Key 销毁主要站点时使用 `CQFAction_DestroyMainSite`。Key 可以指向数据库中记录的主要站点地图目标，也可以直接填写站点的 `MainMapKey`（格式如 `MainMap:ID`）或 ID。
+- 需要读取主要站点访问次数时使用 `CQFAction_RecordMainSiteVisitCount`，它会把 `MainSite.visitCount` 写入指定数据库。
+- 倒计时销毁主要站点地图使用 `CQF_DestroyMainSiteCountdown` 这个 `GameConditionDef`，运行类为 `GameCondition_DestroyMainSite`。它的 label 带 `{0}`，会显示剩余时间，结束后销毁当前地图及其 `MainSite`。
+
+### 自定义地图生成时的临时数据库
+
+`GameComponent_Editor.TemporaryDatabase` 是自定义地图生成、战利品箱、交互物等短生命周期脚本共享的临时 `QuestData`。
+
+生成规则：
+- 普通自定义地图生成开始时调用 `GameTools.ResetTemporaryTargets()`，赋予一个新的临时数据库。
+- 普通自定义地图生成结束并清理生成状态时调用 `GameTools.ClearTemporaryTargets()`。
+- 区域核心（`isGenerateByCore`）生成不 reset/clear 临时数据库，避免打断外层地图生成过程中的临时数据。
+- 战利品箱打开、可交互物执行后，如果不处于地图生成中，清理临时数据库。
+
+### 地图背景与动态背景特效
+
+CQF 1.6 的自定义地图背景由 `MapComponent_CustomMapData.background` 管理。背景图本体由 `CustomMapStep_MapBackground` 编辑和应用；动态背景特效已从背景图步骤中拆出，由独立的 `CustomMapStep_BackgroundEffects` 编辑和应用。
+
+核心类型：
+- `CustomMapBackgroundData`：保存背景贴图、颜色、透明度、绘制尺寸、偏移、是否为背景地图（`enableTerrainEdges`）以及启用的背景特效 Def 列表。动态特效不再需要单独启用字段，列表非空即可绘制。
+- `MapDrawLayer_CQFCustomBackground`：绘制静态背景图，应位于地形下方。
+- `SectionLayer_CQFCustomTerrainEdges`：CQF 自己的地形边缘层，由背景数据里的“是否为背景地图”开关控制；读取地形自己的 `spaceEdgeGraphicData`，不要依赖原版只在太空地图启用的 `SectionLayer_TerrainEdges`。
+  - `ModExtension_CQFTerrainEdges`：挂在 `TerrainDef` 上的 CQF 地形边缘扩展。目前包含 `drawLoops`，用于决定某个地形是否启用原版机械族/太空平台那种外侧 loop 绘制。普通边缘默认按方向使用 `Flat` / `LoopLeft` / `LoopRight` / `LoopSingle` 贴图，不需要额外开关。
+- `CustomMapBackgroundEffectDef`：可扩展的背景特效 Def，描述 worker 类型、贴图、生成间隔、生命周期、尺寸、透明度、速度、旋转、最大粒子数等参数。
+- `MapDrawLayer_CQFCustomBackgroundEffects`：动态背景特效绘制层，画在背景图上方、地形下方。
+- `BackgroundEffectWorker`：动态背景特效 worker 基类；新增效果时优先新建 worker + Def，不要把具体效果写死进 `CustomMapBackgroundData`。
+
+全景背景约定：
+- 全景背景不要另建独立 CustomMapStep，优先并入 `CustomMapBackgroundData`，用绘制范围区分：`drawScope=Map` 仍按地图尺寸绘制，`drawScope=CameraVisible` 按相机可视范围绘制。
+- `CameraVisible` 背景不要走 `MapDrawLayer` 缓存网格生成大静态平面；应在 `MapDrawLayer_CQFCustomBackground.DrawLayer()` 中按当前 `Find.Camera.orthographicSize` 和 `Find.Camera.aspect` 每帧绘制 `MeshPool.plane10`，参考原版 `GravshipRenderer.DrawLayer`。
+- 原版地图外灰色区域来自 `MapEdgeClipDrawer.DrawClippers`，执行顺序在 `mapDrawer.DrawMapMesh()` 之后，且使用 `AltitudeLayer.WorldClipper` / `ShaderDatabase.MetaOverlay`。如果要让全景背景显示在地图外，给 `Map.DrawMapClippers` getter 加小范围 Harmony postfix：仅当当前地图背景 `Enabled && DrawOnCameraVisibleArea` 时返回 `false`。
+- 避免把一张纹理极端拉伸成大静态平面。`CameraVisible` 背景应支持 `fitMode`：`Tile` 平铺、`Stretch` 单张拉伸、`Cover` 单张等比覆盖并裁切边缘。默认保留 `Tile` 以兼容旧数据；整张星图类背景用 `Cover`。
+- `Tile` 模式用 `texture.wrapMode=Repeat`，按可视宽高 / tileSize 设置 `material.mainTextureScale`，并按相机世界坐标设置 `mainTextureOffset`，这样移动相机时背景连续平铺。`Stretch/Cover` 用 `Clamp`；`Cover` 根据贴图宽高比与相机宽高比计算 UV scale/offset，保证不变形。
+- Quest 星图背景示例：`<drawScope>CameraVisible</drawScope>` + `<fitMode>Cover</fitMode>`。
+内置背景特效：
+- `CQF_BackgroundEffect_BlinkStars`：闪烁星辰。
+- `CQF_BackgroundEffect_Meteors`：流星。
+
+贴图约定：
+- 动态背景特效贴图放在 `Textures/Effect/MapBackgroundEffects/...`，Def 路径写作 `Effect/MapBackgroundEffects/...`，不要再放到 `Textures/UI` 下，也不要额外加 `CQF` 中间目录。
+  - `C:\Users\HaiLu\Downloads\星空\星空` 和 `C:\Users\HaiLu\Downloads\星空 (1)\星空` 是动态星空特效素材来源；其中星空背景图已有，不要再复制 `星空.png` / `Starfield.png`，只复制和使用星星、流星等动态特效贴图。
+- 资源路径使用英文目录/文件名，避免拼音作为 defName；defName 使用英文语义名。
+
+背景地图地形约定：
+  - `QE_EtherealVoid` 是纯透明虚无地形，贴图使用 `UI/Null`，用于露出底下背景；不要把它改成不透明。它应像深水/太空一样不可通行，使用 `passability=Impassable`、较高 `pathCost`，且不要给 Light/Medium/Heavy 等普通承载 affordances。
+- `QE_Null` 和 `QE_EtherealVoid` 都应避免污染贴图露出，污染贴图使用 `UI/Null`，并按需要设置不可污染。
+  - `QE_GlazedGlass` 是琉璃地形，`defName` 使用英文语义名，不使用拼音；贴图来自 `C:\Users\HaiLu\Downloads\玻璃\玻璃`，当前资源放在 `Textures/Terrains/GlazedGlass/`。
+  - 透明地形如果要按贴图 alpha 显示，应使用透明类 shader；琉璃当前使用 `customShader=Transparent`，并使用 `edgeType=Hard` 避免 `TerrainFadeRough` 的噪声遮罩导致斑点。
+  - CQF 地形边缘默认只有南侧/底边使用厚的 `Flat` 贴图，北/西/东侧使用 `LoopSingle` / `LoopLeft` / `LoopRight` 这些独立方向贴图；不要把厚底边贴图旋转过去画其他三边。有特殊需求时直接替换对应方向贴图。
+  - `SectionLayer_CQFCustomTerrainEdges` 会把 `QE_Null` / `QE_EtherealVoid` 当作背景空地处理，从而让相邻的 `spaceEdgeGraphicData` 地形能显示边框。
+  - loop 边缘不是背景地图全局开关，而是 `TerrainDef` 级接口。需要机械族/太空平台外沿效果时，在地形上添加：
+```xml
+<modExtensions>
+  <li Class="QuestEditor_Library.ModExtension_CQFTerrainEdges">
+    <drawLoops>true</drawLoops>
+  </li>
+</modExtensions>
+```
+不需要外沿 loop 的地形不要加该扩展，避免出现离开平台的额外长线。
+
+扩展原则：
+- CQF 是框架，背景特效系统必须 Def 驱动。
+- 新增背景特效时，优先添加一个 `BackgroundEffectWorker_xxx` 和一个 `QuestEditor_Library.CustomMapBackgroundEffectDef`。
+- 流星贴图默认按“尖端方向朝上”使用；当前 `Meteor1..5.png` 已做过文件级上下翻转来匹配这个约定。`BackgroundEffectWorker_Meteor` 里随机到的角度应同时代表显示旋转和尖端移动方向，移动方向使用 `Quaternion.AngleAxis(angle, Vector3.up) * Vector3.forward`，不要再用额外的 `angle - 90` 之类偏移硬凑视觉方向。默认流星 Def 可使用 `rotationRange=0~360`，让地图四条边外侧都有机会生成流星，并按尖端方向穿过地图。流星生命周期应按地图对角线、边界留白和速度动态计算，确保能走完整张地图；默认尺寸较小，当前 `scaleRange=0.67~1.5`。
+- 不要直接使用原版 `Fleck/Mote` 做地图背景，因为它们通常位于地图表面视觉层，不适合“只在透明地形下露出”的背景效果。
+- 可参考原版 `MapDrawLayer_OrbitalDebris` 的全景背景绘制结构，但不要复用其 Odyssey/太空地图限制。
 
 ## 什么时候用哪种地图生成方式
 
@@ -414,12 +514,51 @@ AI 使用时要明确：
   <rotation>(0,0,0)</rotation>         <!-- Rot4，默认 North -->
   <customName>CustomNameKey</customName>       <!-- 可选：显示文本走翻译 key -->
   <customDescription>CustomDescKey</customDescription>  <!-- 可选：显示文本走翻译 key -->
+  <customInspectText>CustomInspectTextKey</customInspectText>  <!-- 可选：选中物体后的检查文本 key -->
   <color>(1,1,1,1)</color>            <!-- 可选 -->
   <comps>...</comps>                  <!-- 可选：ActionComp 列表 -->
 </li>
 ```
 
 > ⚠️ **stuff 是必填陷阱**：CQF 预制建筑大多有 `stuffCategories`（QE_Cabinet/QE_Bookshelf/QE_Crate/QE_TreasureChest/QE_PressurePlate/QE_Sarcophagus 等），**全部需要写 `<stuff>`**。不写会报 `MakeThing error: ... is madeFromStuff but stuff=null`。只有 `QE_Flash`、`QE_SubMap_Burrow`、`QE_CustomMapEntrance` 等没有 stuffCategories 的才不需要。
+
+### CompCustomText — 自定义名称、描述与检查文本
+
+`CompCustomText` 为带有该组件的 Thing 提供三类运行时文本：
+
+| CustomThingData 字段 | CompCustomText 字段 | 显示位置 |
+|----------------------|---------------------|----------|
+| `customName` | `useCustomName` + `customName` | 物体名称 |
+| `customDescription` | `useCustomDescription` + `customDescription` | 信息页描述 |
+| `customInspectText` | `useCustomInspectText` + `customInspectText` | 选中物体时的 Inspect 面板 |
+
+使用规则：
+- 目标 ThingDef 必须包含 `CompCustomText`；没有组件时，自定义字段不会生效，三个修改行为会明确记录错误。
+- 编辑器的“自定义文本”页签可分别启用三个字段；名称使用单行输入，描述和检查文本支持多行输入。
+- `CustomThingData` 保存地图 XML 时只写已启用的文本；生成新地图对象时把字段当翻译 Key 调用 `Translate()`，从存档恢复时保留已保存的实际文本。
+- Mod XML 中优先填写翻译 Key，并在中英 `Keyed` 中提供同名条目；英文也可以直接填写原文。
+- `CompCustomText.CompInspectStringExtra()` 不应返回尾随换行或空白。原版 `ThingWithComps` 会在不同组件的 Inspect 文本之间自动插入换行，并在开发者模式报告尾随空白错误。
+- Thing 子类如果在 `base.GetInspectString()` 后继续追加自己的文本，必须先判断已有内容并使用 `AppendLine()` 分隔；不要直接 `result += text`，否则会与 `customInspectText` 或其他组件文本粘在同一行。
+
+ThingDef 组件示例：
+```xml
+<comps>
+  <li>
+    <compClass>QuestEditor_Library.CompCustomText</compClass>
+  </li>
+</comps>
+```
+
+CustomThingData 示例：
+```xml
+<li Class="QuestEditor_Library.CustomThingData_InteractableThing">
+  <def>MyInteractableThing</def>
+  <position>(10,0,10)</position>
+  <customName>MyThing_Name</customName>
+  <customDescription>MyThing_Description</customDescription>
+  <customInspectText>MyThing_InspectText</customInspectText>
+</li>
+```
 
 ### 自定义事物默认传递目标速查
 
@@ -634,6 +773,11 @@ Pawn 生成点。数据存在 `CustomMapDataDef.pawns` 字典中，不在物件 
   <mapDefWithChance>                   <!-- 按定义随机选 -->
     <li><def>SK_Ruins</def><chance>1</chance></li>
   </mapDefWithChance>
+  <enterActions>                       <!-- 成功进入子地图后执行 -->
+    <li Class="QuestEditor_Library.CQFAction_SentSignal">
+      <signal>EnteredRuins</signal>
+    </li>
+  </enterActions>
 </li>
 ```
 
@@ -641,10 +785,14 @@ Pawn 生成点。数据存在 `CustomMapDataDef.pawns` 字典中，不在物件 
 - `QE_CustomMapEntrance_Chance` 用 `<tagWithChance>`/`<mapDefWithChance>` 随机选
 
 默认传递目标：
-- 入口自身没有专属 `openingActions`；若给入口挂 `CompActionWorker`，按组件规则传入 `CustomThing`
+- `enterActions` 在进入者成功传送到另一张地图后执行，每次实际进入都会触发一次
+- `Trigger`：本次进入者，可以是 Pawn 或其他允许通过入口的 Thing
+- `CustomThing`：触发传送的 `CustomMapEntrance`
+- 若给入口额外挂 `CompActionWorker`，组件行为仍按组件自己的触发规则执行
 - 通过 `CQFAction_ActivateCustomMap`、`CQFAction_SwtichEntranceStatus` 等动作操作入口时，通常需要在动作的 `targetsText` 中指定入口 key
 
 使用要点：
+- RimWorld 1.6 的右键进入由原版 `JobDriver_EnterPortal` 完成，成功传送后调用入口的 `OnEntered(Pawn)`；入口运行时行为必须挂在 `OnEntered`，不能只挂在旧的 `TryEnter` / 自定义 JobDriver 路径
 - 入口要跨对象联动时，先把入口记录到数据库，再由信号或动作引用
 - `LinkEntranceAndExit` 使用 `entranceText` / `exitText` 指向已记录的入口与出口
 
@@ -657,6 +805,11 @@ Pawn 生成点。数据存在 `CustomMapDataDef.pawns` 字典中，不在物件 
   <def>QE_Exit</def>
   <position>(23,0,42)</position>
   <exitName>MyExit</exitName>           <!-- 与入口关联 -->
+  <enterActions>                       <!-- 成功离开子地图后执行 -->
+    <li Class="QuestEditor_Library.CQFAction_SentSignal">
+      <signal>ExitedRuins</signal>
+    </li>
+  </enterActions>
   <comps>
     <li Class="QuestEditor_Library.ActionComp">
       <compName>EnableOnSignal</compName>
@@ -670,12 +823,16 @@ Pawn 生成点。数据存在 `CustomMapDataDef.pawns` 字典中，不在物件 
 出口默认开放，挂 `<comps>+Signal` 可让出口初始关闭、信号激活。
 
 默认传递目标：
-- 出口自身没有专属 `openingActions`；若给出口挂 `CompActionWorker`，按组件规则传入 `CustomThing`
+- `enterActions` 在进入者成功传送到另一张地图后执行，每次实际进入都会触发一次
+- `Trigger`：本次进入者，可以是 Pawn 或其他允许通过出口的 Thing
+- `CustomThing`：触发传送的 `CustomMapExit`
+- 若给出口额外挂 `CompActionWorker`，组件行为仍按组件自己的触发规则执行
 - 被其他动作操作时，通常需要先记录出口 key，再通过 `targetsText` 或专用字段引用
 
 使用要点：
+- RimWorld 1.6 的右键离开同样经过原版 `JobDriver_EnterPortal`，成功传送后调用出口的 `OnEntered(Pawn)`；出口运行时行为必须挂在 `OnEntered`，不能只挂在旧的 `Exit(Thing)` 路径
 - 出口和入口联动时优先记录 `Entrance` / `Exit` 两个稳定 key
-- 出口激活一般用信号或组件，不要假设出口移动 Pawn 时会给动作链传入 `Trigger`
+- 需要对进入者执行行为时，直接在 `enterActions` 中使用 `Trigger` 密匙
 
 ### CustomDoor (CustomThingData_CustomDoor)
 
@@ -2342,10 +2499,13 @@ type 可选：PositiveEvent / NegativeEvent / NeutralEvent / ThreatBig / ThreatS
 **CQFAction_ConsumeInInventory** — 消耗目标背包中的物品
 ```xml
 <li Class="QuestEditor_Library.CQFAction_ConsumeInInventory">
+  <targetsText>
+    <li>Trigger</li>
+  </targetsText>
   <requirations>
     <li Class="QuestEditor_Library.CQFThingDefCount">
       <thing>Steel</thing>
-      <count>5~10</count>
+      <count>5</count>
     </li>
   </requirations>
 </li>
@@ -2357,6 +2517,43 @@ type 可选：PositiveEvent / NegativeEvent / NeutralEvent / ThreatBig / ThreatS
   <!-- 自定义替换逻辑 -->
 </li>
 ```
+
+**CQFAction_SetCustomName** — 修改目标的自定义名称
+```xml
+<li Class="QuestEditor_Library.CQFAction_SetCustomName">
+  <targetsText>
+    <li>CustomThing</li>
+  </targetsText>
+  <text>MyThing_NewName</text>         <!-- 翻译 Key 或英文原文 -->
+</li>
+```
+
+**CQFAction_SetCustomDescription** — 修改目标的自定义描述
+```xml
+<li Class="QuestEditor_Library.CQFAction_SetCustomDescription">
+  <targetsText>
+    <li>CustomThing</li>
+  </targetsText>
+  <text>MyThing_NewDescription</text>  <!-- 翻译 Key 或英文原文 -->
+</li>
+```
+
+**CQFAction_SetCustomInspectText** — 修改目标的 Inspect 文本
+```xml
+<li Class="QuestEditor_Library.CQFAction_SetCustomInspectText">
+  <targetsText>
+    <li>CustomThing</li>
+  </targetsText>
+  <text>MyThing_NewInspectText</text>  <!-- 翻译 Key 或英文原文，可包含多行 -->
+</li>
+```
+
+三个行为的共同规则：
+- `ActionCategory` 均为 `ThingChange`。
+- 只对 `targetsText` 找到且带有 `CompCustomText` 的 Thing 生效，并自动启用对应的 `useCustom...` 开关。
+- `text` 在执行时调用 `Translate()`；需要双语时提供 Keyed 翻译。
+- `text` 为空、目标不是 Thing 或目标缺少 `CompCustomText` 时会记录错误，不会静默跳过。
+- 行为适合在交互结果、信号动作、组件触发动作或任务节点中动态更新物体提示。
 
 **CQFAction_AddThingActionTrigger** — 给目标附加被动触发动作
 ```xml
@@ -2467,15 +2664,18 @@ CQFAction_Target 的子类通过 `targetsText` 指定目标来源。常用 key�
 **DialogCondition_Inventory** — 检查背包物品
 ```xml
 <li Class="QuestEditor_Library.DialogCondition_Inventory">
+  <targetText>Trigger</targetText>
   <requirations>
     <li Class="QuestEditor_Library.CQFThingDefCount">
       <thing>Steel</thing>
-      <count>5~10</count>
+      <count>5</count>
     </li>
   </requirations>
   <failReason>Missing items</failReason>
 </li>
 ```
+
+库存条件与消耗配对时必须使用相同的固定 `count`。两者会各自调用一次 `RandomInRange`，范围数量可能导致检查值与实际消耗值不一致。
 
 **DialogCondition_ThingInPosition** — 检查目标是否在指定位置
 ```xml
@@ -2645,3 +2845,11 @@ CQFAction_Target 的子类通过 `targetsText` 指定目标来源。常用 key�
 - 让 AI 可以独立设计 CQF 地图
 - 让 AI 可以把地图、交互、陷阱、战利品箱、条件、行为、对话、信号接成完整流程
 - 让 AI 不用每次重查源码才能生产地图
+
+## 固定任务地图与对话回归规则
+
+- 大型固定任务地图默认使用 `QuestNode_Root_CustomMap` / `QuestNode_RandomCustomMap` 的 `<replaceMapGeneration>true</replaceMapGeneration>`，避免自定义结构与原版 `GenStep` 混合生成。
+- 开启完整接管后，先在 `CustomMapDataDef.terrainsRect` 铺满整张地图的基础可通行地形（通常是 `Soil`），再按顺序覆盖道路、建筑地板、农田、入口、出口和关键站立位。不能把主体结构的可达性寄托给世界地块原生地形。
+- `DialogOption` 的结果如果没有 `<nextIndex>`，`CQFDialogTreeWindow` 会在动作执行后关闭。任何需要玩家看到后续回应、确认状态变化或继续选择的选项，都必须显式跳到存在的回应节点；最终回应再提供 `End` 选项关闭窗口。
+- 使用 `dialogReportKey` 生成右键选项时，`{0}` 是被点击目标，文案应使用命令式动词，例如 `Talk to {0}` / `与{0}交流`，不要写成泛化的系统提示。
+- `CustomMapDataDef.size` 表示格数，不是最大坐标。涉及 `CellRect.FromLimits` 时，末端必须使用 `center + (size - 1)`；尤其是 `fogged=false` 的固定地图，否则会访问 `(size.x, ..., size.z)` 的越界格。

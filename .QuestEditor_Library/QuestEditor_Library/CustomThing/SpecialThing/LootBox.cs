@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -70,14 +71,26 @@ namespace QuestEditor_Library
 
         public override string GetInspectString()
         {
-            string result = base.GetInspectString();
+            StringBuilder result = new StringBuilder(base.GetInspectString());
             if (Prefs.DevMode)
             {
-                result += base.GetInspectString() + "LootDatas".Translate();
-                this.loots.ForEach(x => result += " " + x.dataName);
+                if (result.Length > 0)
+                {
+                    result.AppendLine();
+                }
+                result.Append("LootDatas".Translate());
+                foreach (LootData loot in this.loots)
+                {
+                    result.Append(' ');
+                    result.Append(loot.dataName);
+                }
             }
-            result += "CQF_OpenLootbox".Translate(this.openReport.Translate());
-            return result.Trim();
+            if (result.Length > 0)
+            {
+                result.AppendLine();
+            }
+            result.Append("CQF_OpenLootbox".Translate(this.openReport.Translate()).ToString().Trim());
+            return result.ToString().Trim();
         }
         public void DrawTab() 
         {

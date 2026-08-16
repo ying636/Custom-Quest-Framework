@@ -165,6 +165,19 @@
   <CurCustomMap>当前自定义地图：{0}</CurCustomMap>
   <ExitName>出口名字：</ExitName>
   <CustomMapExit>自定义出口</CustomMapExit>
+  <CQF_PortalMapSection>地图设置</CQF_PortalMapSection>
+  <CQF_PortalMapSectionTip>选择通过该入口生成并进入的自定义地图。</CQF_PortalMapSectionTip>
+  <CQF_PortalSettingsSection>出入口设置</CQF_PortalSettingsSection>
+  <CQF_PortalSettingsSectionTip>设置该入口或出口的连接名称及可用选项。</CQF_PortalSettingsSectionTip>
+  <CQF_PortalEnterActions>进入时行为</CQF_PortalEnterActions>
+  <CQF_PortalEnterActionsTip>事物成功进入另一张地图后执行。目标密匙 Trigger 为进入者，CustomThing 为该入口或出口。</CQF_PortalEnterActionsTip>
+  <CQF_PortalNoActions>尚未配置进入时行为。</CQF_PortalNoActions>
+  <CQF_ChanceMapPoolSection>地图定义池</CQF_ChanceMapPoolSection>
+  <CQF_ChanceTagPoolSection>地图标签池</CQF_ChanceTagPoolSection>
+  <CQF_ChanceNoMapDefs>尚未添加地图定义。</CQF_ChanceNoMapDefs>
+  <CQF_ChanceNoTags>尚未添加地图标签。</CQF_ChanceNoTags>
+  <CQF_ChanceCopySettingsTip>复制连接名称和几率池。</CQF_ChanceCopySettingsTip>
+  <CQF_ChancePasteSettingsTip>粘贴已复制的连接名称和几率池。</CQF_ChancePasteSettingsTip>
   <CustomMapDef>地图定义：{0}</CustomMapDef>
   <MapDefWithChance>地图定义：</MapDefWithChance>
   <MapDefWithChance_Tip>生成时会生成一个含有地图定义和其概率的生成池，根据每个定义的概率来抽取一个进行生成。</MapDefWithChance_Tip>
@@ -418,6 +431,15 @@
   <CQFFixedDoorLabel>固定的门</CQFFixedDoorLabel>
   <!-- EN: A special door that cannot be broken by brute force. -->
   <CQFFixedDoorDescription>一个特殊的门，无法靠蛮力破坏。</CQFFixedDoorDescription>
+
+  <UseCustomInspectText>使用自定义检查文本：</UseCustomInspectText>
+  <CQF_CustomInspectText>自定义检查文本：</CQF_CustomInspectText>
+  <CQFAction_SetCustomName>设置自定义名称</CQFAction_SetCustomName>
+  <CQFAction_SetCustomName_Tip>设置所有带有 CompCustomText 的目标的自定义名称。</CQFAction_SetCustomName_Tip>
+  <CQFAction_SetCustomDescription>设置自定义描述</CQFAction_SetCustomDescription>
+  <CQFAction_SetCustomDescription_Tip>设置所有带有 CompCustomText 的目标的自定义描述。</CQFAction_SetCustomDescription_Tip>
+  <CQFAction_SetCustomInspectText>设置自定义检查文本</CQFAction_SetCustomInspectText>
+  <CQFAction_SetCustomInspectText_Tip>设置所有带有 CompCustomText 的目标的检查文本。</CQFAction_SetCustomInspectText_Tip>
 
 </LanguageData>
 

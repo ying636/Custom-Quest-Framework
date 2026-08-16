@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -58,10 +59,26 @@ namespace QuestEditor_Library
         }
         public override string GetInspectString()
         {
-            string result = base.GetInspectString();
-            this.AllInteraction.ForEach(x => result += " " + x.interactionText);
-            result += "CQF_InteracteThing".Translate();
-            return result.Trim();
+            StringBuilder result = new StringBuilder(base.GetInspectString());
+            if (!Prefs.DevMode)
+            {
+                return result.ToString().Trim();
+            }
+
+            foreach (InteractionOperation interaction in this.AllInteraction)
+            {
+                if (result.Length > 0)
+                {
+                    result.AppendLine();
+                }
+                result.Append(interaction.interactionText);
+            }
+            if (result.Length > 0)
+            {
+                result.AppendLine();
+            }
+            result.Append("CQF_InteracteThing".Translate().ToString().Trim());
+            return result.ToString().Trim();
         }
         public InteractionOperation GetCurOperation(string operationText) 
         {

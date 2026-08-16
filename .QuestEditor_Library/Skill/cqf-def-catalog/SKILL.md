@@ -30,6 +30,15 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 - `MetalTile` → 正确是 `MetalTile`（TerrainDef，label 为"steel tile"）
 - ❌ `SteelTile` 不存在！不是 TerrainDef，也不是 ThingDef
 
+制作条件分支、技能交互、布尔状态、延迟动作、信号陷阱或任务完成信号时，先阅读 [CQF 进阶交互与信号](references/cqf-advanced-actions.md)。其中记录了 `targetText`、严格技能比较、任务信号前缀、三坐标位置和中心占格等容易静默失效的规则。
+
+### CQF 测试 Def 禁用规则
+
+- 不要在正式游戏地图中直接使用名称或描述明确为 `Custom ...`、`... for testing` 的 CQF 编辑器测试 Def，例如 `QE_LootBox`、`QE_InteractableThing`、`QE_CustomMapEntrance`、`QE_CustomMapExit`、`CQF_CustomDoor`。
+- 正式交互建筑应继承 CQF 抽象基类或使用对应 `thingClass` 定义自己的 Mod Def，并复用合适的原版贴图、`graphicClass` 和尺寸。
+- `QE_CustomTrap` 与 `QE_TriggerTrap` 是两个不同的 ThingDef，禁止混用。`QE_CustomTrap` 使用 `CustomTrap`，是名称和描述均明确用于测试的普通自定义陷阱，正式地图禁止使用。
+- `QE_TriggerTrap` 使用 `CustomTrap_Dev`，正常模式隐藏、开发者模式显示调试标记。它只允许用于设计上明确需要的隐藏献祭点或必要的不可见逻辑触发器，不得作为玩家可见建筑。
+
 ### Stuff 核心规则
 
 | 规则 | 说明 | 反例 |
@@ -44,7 +53,7 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 
 > ⚠️ **如何判断一个 ThingDef 是否需要 `<stuff>`**：看它的 XML 定义里有没有 `<stuffCategories>` 节点。**有就必须写 `<stuff>`**，没有则可以不写。
 > 
-> 常见错误：认为固定墙或固定门不需要 material（❌ `QF_MiracleWall`、`QF_MiracleDoor` 都继承了 `<stuffCategories>`），或者根据 defName 或 label 判断。**唯一标准是 ThingDef XML 中是否存在或继承 `<stuffCategories>`**。
+> 常见错误：认为 "不可摧毁墙" 就不需要 material（❌ `QF_MiracleWall` 自身定义了 `<stuffCategories>`），或者根据 defName 或 label 判断。**唯一标准是 ThingDef XML 中是否存在 `<stuffCategories>`**。
 
 ## 前缀约定速查
 
@@ -53,7 +62,7 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 | 前缀 | 来源 | 示例 | 说明 |
 |------|------|------|------|
 | 无前缀 | **Core** 原版 | `Wall`, `Steel`, `Concrete` | 原版核心内容，无需任何 DLC |
-| `QF_` | **CQF** | `QF_MiracleWall`, `QF_MiracleDoor`, `QF_StrangeWall` | CQF 提供的特殊功能物件 |
+| `QF_` | **CQF** | `QF_MiracleWall`, `QF_StrangeWall` | CQF 提供的特殊功能物件 |
 | `QE_` | **CQF** | `QE_LootBox`, `QE_Flash`, `QE_Bookshelf` | CQF 的核心框架物件（交互、箱子、陷阱、入口出口等） |
 | `CQF_` | **CQF** | `CQF_CryptosleepCasket`, `CQF_CustomDoor` | CQF 的复合物件 | 
 | `US_` | **非常规生存 Mod** | `US_Map_GoldenParadise` | 其他 Mod 的自定义内容，非 CQF 通用 |
@@ -79,8 +88,7 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 | 远古堡垒墙 | `AncientFortifiedWall` | **Core** | `1x1` | 否 | — | 不可建造 |
 | 轨道远古堡垒墙 | `OrbitalAncientFortifiedWall` | **Core** | `1x1` | 否 | — | 不可建造 |
 | 远古防爆门 | `AncientBlastDoor` | **Core** | `1x1` | 否 | — | 不可建造 |
-| 固定的墙 | `QF_MiracleWall` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | 无耐久、不可摧毁；CQFTool 中显示为“特殊建筑” |
-| 固定的门 | `QF_MiracleDoor` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | `CustomDoor`；无法靠蛮力破坏、不可燃；CQFTool 中显示为 `CustomDoor` |
+| 不可摧毁墙 | `QF_MiracleWall` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | 不可摧毁 |
 | 可交互墙 | `QF_StrangeWall` | **CQF** | `1x1` | 是 | Metallic/Woody/Stony | InteractableThing |
 | 灰色墙 | `GrayWall` | **Anomaly** | `1x1` | 否 | — | |
 | 灰色门 | `GrayDoor` | **Anomaly** | `1x1` | 否 | — | |
@@ -418,9 +426,9 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 |---------|-----------|------|----------------|----------|------|
 | `QE_InteractableThing` | `InteractableThing` | `1x1` | 否 | — | 通用交互点：技能检测、条件分支、操作菜单 |
 | `QE_Flash` | `InteractableThing` | `1x1` | 否 | — | 隐形触发器：透明不可见，带闪烁粒子 |
-| `QE_LootBox` | `LootBox` | `1x1` | 否 | — | 通用战利品箱：按 LootData 概率抽奖 |
-| `QE_CustomTrap` | `CustomTrap` | `1x1` | 否 | — | 通用陷阱：StepOn/Signal/Tick/Damage 触发 |
-| `QE_TriggerTrap` | `CustomTrap_Dev` | `1x1` | 否 | — | 开发者陷阱，仅调试用 |
+| `QE_LootBox` | `LootBox` | `1x1` | 否 | — | 编辑器测试 Def；正式地图应自定义 LootBox Def |
+| `QE_CustomTrap` | `CustomTrap` | `1x1` | 否 | — | 测试用普通自定义陷阱；正式地图禁止使用 |
+| `QE_TriggerTrap` | `CustomTrap_Dev` | `1x1` | 否 | — | 正常模式隐藏；仅作隐藏献祭点或必要的不可见逻辑触发器 |
 | `QE_CaptureNet` | `CustomTrap_Capture` | `1x1` | 是 | Fabric/Leathery | 捕获网：踩中后捕获 Pawn |
 | `QE_StoneBurrow` | `CustomTrap` | `1x1` | 否 | — | 石头掩体陷阱 |
 | `QE_PressurePlate` | `CustomTrap` | `1x1` | 是 | Metallic/Woody/Stony | 压力板：StepOn 触发 |
@@ -460,10 +468,9 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 | `QE_Sarcophagus` | `LootBox` | `1x2` | 是 | Woody/Metallic/Stony | 棺材（战利品箱） |
 | `QE_Cage` | `CustomContainer` | `1x1` | 是 | Metallic/Woody/Stony | 笼子（捕获容器） |
 | `QE_LargeCage` | `CustomContainer` | `2x2` | 是 | Metallic/Woody/Stony | 大笼子（捕获大型 Pawn） |
-| `QF_MiracleWall` | `Building` | `1x1` | 是 | Metallic/Woody/Stony | 固定的墙；无耐久、不可摧毁 |
-| `QF_MiracleDoor` | `CustomDoor` | `1x1` | 是 | Metallic/Woody/Stony | 固定的门；无法靠蛮力破坏、不可燃 |
+| `QF_MiracleWall` | `Building` | `1x1` | 是 | Metallic/Woody/Stony | 不可摧毁墙 |
 | `QF_StrangeWall` | `InteractableThing` | `1x1` | 是 | Metallic/Woody/Stony | 可交互墙 |
-| `CQF_CustomDoor` | `CustomDoor` | `1x1` | 是 | Metallic/Woody/Stony | 自定义门（信号/条件开启） |
+| `CQF_CustomDoor` | `CustomDoor` | `1x1` | 是 | Metallic/Woody/Stony | 编辑器通用测试门；正式地图应继承 `CustomDoorBase` 自定义 Def |
 
 ### 5.3 CQF 陷阱类
 
@@ -473,7 +480,8 @@ description: "RimWorld 原版 + CQF 有效 defName 速查表。编写 CQF 地图
 | `QE_StoneBurrow` | `CustomTrap` | `1x1` | 否 | — | 石头掩体陷阱 |
 | `QE_PressurePlate` | `CustomTrap` | `1x1` | 是 | Metallic/Woody/Stony | 压力板：StepOn 触发 |
 | `QE_StonePressurePlate` | `CustomTrap` | `1x1` | 是 | Stony | 石质压力板 |
-| `QE_CustomTrap` | `CustomTrap` | `1x1` | 否 | — | 通用陷阱 |
+| `QE_CustomTrap` | `CustomTrap` | `1x1` | 否 | — | 测试用普通自定义陷阱；正式地图禁止使用 |
+| `QE_TriggerTrap` | `CustomTrap_Dev` | `1x1` | 否 | — | 正常模式隐藏；仅作隐藏献祭点或必要的不可见逻辑触发器 |
 
 ---
 

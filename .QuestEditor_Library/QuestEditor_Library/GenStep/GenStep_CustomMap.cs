@@ -577,7 +577,8 @@ namespace QuestEditor_Library
             UnfogMapFromEdge(map);
             if (!def.fogged)
             {
-                var end = center + def.size;
+                // CellRect.FromLimits 包含末端坐标；地图尺寸是格数，因此末端必须减一。
+                var end = center + new IntVec3(def.size.x - 1, def.size.y - 1, def.size.z - 1);
                 end.y = 1;
                 foreach (var c in CellRect.FromLimits(center,end).Cells)
                 {
