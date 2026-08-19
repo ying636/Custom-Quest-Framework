@@ -154,19 +154,13 @@ namespace QuestEditor_Library
             switch (rotDir)
             {
                 case RotationDirection.Opposite:
-                    if (coreRotation.AsVector2.x != 0)
-                    {
-                        int var = this.minX;
-                        this.minX = this.maxX;
-                        this.maxX = var;
-                    }
-                    else 
-                    {
-                        int var2 = this.minZ;
-                        this.minZ = this.maxZ;
-                        this.maxZ = var2;
-                    }
-                ; break;
+                    int oldMinX = this.minX;
+                    int oldMinZ = this.minZ;
+                    this.minX = this.maxX;
+                    this.maxX = oldMinX;
+                    this.minZ = this.maxZ;
+                    this.maxZ = oldMinZ;
+                    break;
                 case RotationDirection.Counterclockwise:
                     int var3 = this.maxZ;
                     this.maxZ = this.maxX;

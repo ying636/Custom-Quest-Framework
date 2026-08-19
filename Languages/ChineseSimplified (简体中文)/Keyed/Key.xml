@@ -237,8 +237,59 @@
   <CQFSetFactionDesc>设置所选事物为指定派系。</CQFSetFactionDesc>
   <CQFSetStyle>设置风格：{0}</CQFSetStyle>
   <CQFSetStyleDesc>设置所选事物为指定风格。</CQFSetStyleDesc>
+  <CQFSetHitPoints>设置生命值：{0}</CQFSetHitPoints>
+  <CQFSetHitPointsDesc>设置所选事物的生命值。右键可以切换模式。</CQFSetHitPointsDesc>
+  <CQF_SetHitPointsPercentage>百分比</CQF_SetHitPointsPercentage>
+  <CQF_SetHitPointsPercentagePrompt>将生命值设置为 {0}%</CQF_SetHitPointsPercentagePrompt>
+  <CQF_SetHitPointsNoTarget>此位置没有可设置生命值的事物。</CQF_SetHitPointsNoTarget>
+  <CQF_PinWindow>固定窗口</CQF_PinWindow>
+  <CQF_UnpinWindow>取消固定窗口</CQF_UnpinWindow>
   <CQFSpawnThing>生成：{0}</CQFSpawnThing>
   <CQFSpawnThingTip>提示：右键可以打开菜单选择要生成的事物。</CQFSpawnThingTip>
+  <CQF_OpenFloatingPalette>打开游离窗口</CQF_OpenFloatingPalette>
+  <CQF_ThingPalette>事物快速选择</CQF_ThingPalette>
+  <CQF_TerrainPalette>地形快速选择</CQF_TerrainPalette>
+  <CQF_RecentSelections>快速选择栏</CQF_RecentSelections>
+  <CQF_AllSelections>选择界面</CQF_AllSelections>
+  <CQF_NoRecentSelections>暂无最近选择</CQF_NoRecentSelections>
+  <CQF_BlueprintDesignator>蓝图：{0}</CQF_BlueprintDesignator>
+  <CQF_BlueprintDesignatorEmpty>蓝图</CQF_BlueprintDesignatorEmpty>
+  <CQF_BlueprintDesignatorDesc>放置自定义地图蓝图。右键可以打开蓝图游离窗口。</CQF_BlueprintDesignatorDesc>
+  <CQF_BlueprintPalette>蓝图快速选择</CQF_BlueprintPalette>
+  <CQF_SaveBlueprint>保存蓝图</CQF_SaveBlueprint>
+  <CQF_SaveBlueprintDesc>框选当前地图区域并保存为内存蓝图。</CQF_SaveBlueprintDesc>
+  <CQF_BlueprintAutoName>蓝图{0}</CQF_BlueprintAutoName>
+  <CQF_ImportLoadedMaps>导入已加载地图</CQF_ImportLoadedMaps>
+  <CQF_SelectBlueprintImports>选择要导入为蓝图的地图</CQF_SelectBlueprintImports>
+  <CQF_SelectAll>全选搜索结果</CQF_SelectAll>
+  <CQF_ClearSelection>清空选择</CQF_ClearSelection>
+  <CQF_ImportSelected>导入所选</CQF_ImportSelected>
+  <CQF_SelectedBlueprintCount>已选：{0} / {1}</CQF_SelectedBlueprintCount>
+  <CQF_NoMatchingLoadedMaps>没有符合搜索条件的已加载地图。</CQF_NoMatchingLoadedMaps>
+  <CQF_NoBlueprintsSelectedForImport>尚未选择要导入的地图蓝图。</CQF_NoBlueprintsSelectedForImport>
+  <CQF_BlueprintImportTooltip>{0}&#10;Def：{1}&#10;尺寸：{2}</CQF_BlueprintImportTooltip>
+  <CQF_NoLoadedMapsToImport>没有可导入的已加载地图。</CQF_NoLoadedMapsToImport>
+  <CQF_ImportedLoadedMaps>已导入 {0} 个地图蓝图。</CQF_ImportedLoadedMaps>
+  <CQF_BlueprintSourceImported>本局导入的地图</CQF_BlueprintSourceImported>
+  <CQF_BlueprintPreviewSize>尺寸：{0} × {1}</CQF_BlueprintPreviewSize>
+  <CQF_BlueprintSavedInMemory>蓝图“{0}”已保存到内存。</CQF_BlueprintSavedInMemory>
+  <CQF_BlueprintSaveFailed>保存蓝图失败：{0}</CQF_BlueprintSaveFailed>
+  <CQF_BlueprintInvalidName>蓝图没有有效的 defName，无法导出。</CQF_BlueprintInvalidName>
+  <CQF_BlueprintOverwriteXml>文件已存在，是否覆盖？&#10;{0}</CQF_BlueprintOverwriteXml>
+  <CQF_BlueprintExportFailed>导出蓝图 XML 失败：{0}</CQF_BlueprintExportFailed>
+  <CQF_BlueprintEmptySelection>没有可保存的地图格。</CQF_BlueprintEmptySelection>
+  <CQF_NoBlueprints>暂无蓝图</CQF_NoBlueprints>
+  <CQF_DeleteBlueprint>删除蓝图</CQF_DeleteBlueprint>
+  <CQF_SaveBlueprintXml>将蓝图保存为 XML</CQF_SaveBlueprintXml>
+  <CQF_BlueprintSourceMemory>内存蓝图</CQF_BlueprintSourceMemory>
+  <CQF_BlueprintTooltip>{0}&#10;Def：{1}&#10;尺寸：{2}&#10;来源：{3}&#10;&#10;{4}</CQF_BlueprintTooltip>
+  <CQF_NoBlueprintSelected>尚未选择蓝图。</CQF_NoBlueprintSelected>
+  <CQF_BlueprintOutOfBounds>蓝图超出地图边界。</CQF_BlueprintOutOfBounds>
+  <CQF_BlueprintPlacementFailed>放置蓝图“{0}”失败，请查看日志。</CQF_BlueprintPlacementFailed>
+  <CQF_BlueprintMouseAttachment>{0} | 旋转：{1}</CQF_BlueprintMouseAttachment>
+  <CQF_RotateBlueprintClockwise>顺时针旋转蓝图</CQF_RotateBlueprintClockwise>
+  <CQF_RotateBlueprintCounterclockwise>逆时针旋转蓝图</CQF_RotateBlueprintCounterclockwise>
+  <CQF_NoCurrentMap>当前没有可操作的地图。</CQF_NoCurrentMap>
   <CQFToolsTip>提示：右键以选择自定义事物。</CQFToolsTip>
   <ExtraKinds>额外种类：</ExtraKinds>
   <ExtraKindsTip>生成时会一同生成的其他实体种类，其派系、状态等参数是通用的。</ExtraKindsTip>

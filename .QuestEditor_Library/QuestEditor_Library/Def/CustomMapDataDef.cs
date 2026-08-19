@@ -213,7 +213,7 @@ add(p3))));
             });
             result.zoneCores.ForEach(c => 
             {
-                if (c is CustomThingData_ZoneCore core &&(direction != RotationDirection.Opposite || core.coreRotation == rot || core.coreRotation == rot.Opposite))
+                if (c is CustomThingData_ZoneCore core)
                 {
                     //if (Prefs.DevMode)
                     //{
@@ -253,14 +253,8 @@ add(p3))));
         }
         public void OppositeRotate(Rot4 rot)
         {
-            if (rot.AsVector2.x != 0)
-            {
-                this.ChangePosition(new IntVec3(-1, 1, 1), (v, p) => new IntVec3(-p.x, p.y, p.z));
-            }
-            else
-            {
-                this.ChangePosition(new IntVec3(1, 1, -1), (v, p) => new IntVec3(p.x, p.y, -p.z));
-            }
+            this.ChangePosition(new IntVec3(-1, 1, -1),
+                (v, p) => new IntVec3(-p.x, p.y, -p.z));
         }
         public CustomMapDataDef GetNewDataUseNewOrigih(IntVec3 posInMap, Rot4 rot)
         {

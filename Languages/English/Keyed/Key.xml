@@ -287,8 +287,60 @@ SiteName: SiteName-></RuleTip>
   <CQFSetStyle>Set style:{0}</CQFSetStyle>
   <CQFSetStyleDesc>Set the style for selected things.</CQFSetStyleDesc>
 
+  <CQFSetHitPoints>Set hit points: {0}</CQFSetHitPoints>
+  <CQFSetHitPointsDesc>Set the hit points of selected things. Right click to switch modes.</CQFSetHitPointsDesc>
+  <CQF_SetHitPointsPercentage>Percentage</CQF_SetHitPointsPercentage>
+  <CQF_SetHitPointsPercentagePrompt>Set hit points to {0}%</CQF_SetHitPointsPercentagePrompt>
+  <CQF_SetHitPointsNoTarget>No thing with hit points at this location.</CQF_SetHitPointsNoTarget>
+  <CQF_PinWindow>Pin window</CQF_PinWindow>
+  <CQF_UnpinWindow>Unpin window</CQF_UnpinWindow>
+
   <CQFSpawnThing>Spawn: {0}</CQFSpawnThing>
   <CQFSpawnThingTip>Tip: Right click to open the menu and select the thing to generate.</CQFSpawnThingTip>
+  <CQF_OpenFloatingPalette>Open floating palette</CQF_OpenFloatingPalette>
+  <CQF_ThingPalette>Thing palette</CQF_ThingPalette>
+  <CQF_TerrainPalette>Terrain palette</CQF_TerrainPalette>
+  <CQF_RecentSelections>Recent selections</CQF_RecentSelections>
+  <CQF_AllSelections>All selections</CQF_AllSelections>
+  <CQF_NoRecentSelections>No recent selections</CQF_NoRecentSelections>
+  <CQF_BlueprintDesignator>Blueprint: {0}</CQF_BlueprintDesignator>
+  <CQF_BlueprintDesignatorEmpty>Blueprint</CQF_BlueprintDesignatorEmpty>
+  <CQF_BlueprintDesignatorDesc>Place custom map blueprints. Right click to open the floating blueprint palette.</CQF_BlueprintDesignatorDesc>
+  <CQF_BlueprintPalette>Blueprint palette</CQF_BlueprintPalette>
+  <CQF_SaveBlueprint>Save blueprint</CQF_SaveBlueprint>
+  <CQF_SaveBlueprintDesc>Select an area of the current map and save it as an in-memory blueprint.</CQF_SaveBlueprintDesc>
+  <CQF_BlueprintAutoName>Blueprint {0}</CQF_BlueprintAutoName>
+  <CQF_ImportLoadedMaps>Import loaded maps</CQF_ImportLoadedMaps>
+  <CQF_SelectBlueprintImports>Select maps to import as blueprints</CQF_SelectBlueprintImports>
+  <CQF_SelectAll>Select all results</CQF_SelectAll>
+  <CQF_ClearSelection>Clear selection</CQF_ClearSelection>
+  <CQF_ImportSelected>Import selected</CQF_ImportSelected>
+  <CQF_SelectedBlueprintCount>Selected: {0} / {1}</CQF_SelectedBlueprintCount>
+  <CQF_NoMatchingLoadedMaps>No loaded maps match the search.</CQF_NoMatchingLoadedMaps>
+  <CQF_NoBlueprintsSelectedForImport>No map blueprints are selected.</CQF_NoBlueprintsSelectedForImport>
+  <CQF_BlueprintImportTooltip>{0}&#10;Def: {1}&#10;Size: {2}</CQF_BlueprintImportTooltip>
+  <CQF_NoLoadedMapsToImport>No loaded maps are available to import.</CQF_NoLoadedMapsToImport>
+  <CQF_ImportedLoadedMaps>Imported {0} map blueprints.</CQF_ImportedLoadedMaps>
+  <CQF_BlueprintSourceImported>Imported this session</CQF_BlueprintSourceImported>
+  <CQF_BlueprintPreviewSize>Size: {0} x {1}</CQF_BlueprintPreviewSize>
+  <CQF_BlueprintSavedInMemory>Blueprint "{0}" was saved in memory.</CQF_BlueprintSavedInMemory>
+  <CQF_BlueprintSaveFailed>Failed to save blueprint: {0}</CQF_BlueprintSaveFailed>
+  <CQF_BlueprintInvalidName>The blueprint has no valid defName and cannot be exported.</CQF_BlueprintInvalidName>
+  <CQF_BlueprintOverwriteXml>The file already exists. Overwrite it?&#10;{0}</CQF_BlueprintOverwriteXml>
+  <CQF_BlueprintExportFailed>Failed to export blueprint XML: {0}</CQF_BlueprintExportFailed>
+  <CQF_BlueprintEmptySelection>No map cells were selected.</CQF_BlueprintEmptySelection>
+  <CQF_NoBlueprints>No blueprints</CQF_NoBlueprints>
+  <CQF_DeleteBlueprint>Delete blueprint</CQF_DeleteBlueprint>
+  <CQF_SaveBlueprintXml>Save blueprint as XML</CQF_SaveBlueprintXml>
+  <CQF_BlueprintSourceMemory>In-memory blueprint</CQF_BlueprintSourceMemory>
+  <CQF_BlueprintTooltip>{0}&#10;Def: {1}&#10;Size: {2}&#10;Source: {3}&#10;&#10;{4}</CQF_BlueprintTooltip>
+  <CQF_NoBlueprintSelected>No blueprint is selected.</CQF_NoBlueprintSelected>
+  <CQF_BlueprintOutOfBounds>The blueprint extends beyond the map boundary.</CQF_BlueprintOutOfBounds>
+  <CQF_BlueprintPlacementFailed>Failed to place blueprint "{0}". Check the log for details.</CQF_BlueprintPlacementFailed>
+  <CQF_BlueprintMouseAttachment>{0} | Rotation: {1}</CQF_BlueprintMouseAttachment>
+  <CQF_RotateBlueprintClockwise>Rotate blueprint clockwise</CQF_RotateBlueprintClockwise>
+  <CQF_RotateBlueprintCounterclockwise>Rotate blueprint counterclockwise</CQF_RotateBlueprintCounterclockwise>
+  <CQF_NoCurrentMap>There is no current map to operate on.</CQF_NoCurrentMap>
   <CQFToolsTip>Tip: Right click to select a custom thing.</CQFToolsTip>
 
   <ExtraKinds>Extra kinds</ExtraKinds>

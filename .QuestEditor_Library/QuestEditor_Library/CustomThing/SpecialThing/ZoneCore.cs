@@ -108,7 +108,8 @@ namespace QuestEditor_Library
             Rot4 coreRotaion = this.coreRotation;
             if (core is CustomThingData_ZoneCore && core.size is CoreSize coreSize && !coreSize.IsEmpty)
             {
-                RotationDirection direction = Rot4.GetRelativeRotation(this.coreRotation.Opposite, core.coreRotation);
+                RotationDirection direction = Rot4.GetRelativeRotation(
+                    core.coreRotation, this.coreRotation.Opposite);
                 CoreSize coreSize2 = coreSize.GetCopy();
                 coreSize2.Rotate(this.coreRotation, direction);
                 rect = CellRect.FromLimits(generatePos.x - coreSize2.minX, generatePos.z - coreSize2.minZ, generatePos.x + coreSize2.maxX, generatePos.z + coreSize2.maxZ);
