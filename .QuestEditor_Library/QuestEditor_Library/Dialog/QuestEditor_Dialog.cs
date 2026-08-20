@@ -307,11 +307,6 @@ namespace QuestEditor_Library
             string dialogDirectory = Path.Combine(Page_QuestEditor.Path, "DialogTree");
             Directory.CreateDirectory(dialogDirectory);
             language.Save(Path.Combine(dialogDirectory, this.CurTree.defName + "_Text.xml"));
-
-            string languageFolder = LanguageDatabase.activeLanguage?.folderName ?? LanguageDatabase.DefaultLangFolderName;
-            string languageDirectory = Path.Combine(Page_QuestEditor.ModData.RootDir.FullName, "Languages", languageFolder, "Keyed", "DialogTree");
-            Directory.CreateDirectory(languageDirectory);
-            language.Save(Path.Combine(languageDirectory, this.CurTree.defName + ".xml"));
         }
 
         private void CompileTextElement(XElement element, string key, XElement language)
