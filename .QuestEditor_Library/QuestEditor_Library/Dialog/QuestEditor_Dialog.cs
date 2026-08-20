@@ -192,7 +192,8 @@ namespace QuestEditor_Library
                     XElement defs = new XElement("Defs");
                     XElement tree;
                     XElement language = new XElement("LanguageData");
-                    if (this.CurTree.autoCompileTextKey)
+                    bool autoCompileTextKey = CustomQuestFramework_ModSetting.setting?.autoCompileDialogTextKey ?? true;
+                    if (autoCompileTextKey)
                     {
                         tree = this.BuildCompiledTreeXml(out language);
                     }
@@ -202,7 +203,7 @@ namespace QuestEditor_Library
                     }
                     defs.Add(tree);
                     defs.Save(path);
-                    if (this.CurTree.autoCompileTextKey)
+                    if (autoCompileTextKey)
                     {
                         this.SaveCompiledLanguageFile(language);
                     }

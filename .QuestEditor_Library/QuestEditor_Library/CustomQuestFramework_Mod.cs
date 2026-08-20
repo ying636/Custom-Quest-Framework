@@ -23,6 +23,7 @@ namespace QuestEditor_Library
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Widgets.CheckboxLabeled(new Rect(inRect.x, inRect.y, inRect.width, 30f), "ShowCQF".Translate(), ref this.setting.showCQF);
+            Widgets.CheckboxLabeled(new Rect(inRect.x, inRect.y + 35f, inRect.width, 30f), "AutoCompileDialogTextKey".Translate(), ref this.setting.autoCompileDialogTextKey);
         }
         private static void ApplySpecialBuildingTranslations()
         {
@@ -47,9 +48,11 @@ namespace QuestEditor_Library
         {
             base.ExposeData();
             Scribe_Values.Look(ref this.showCQF, "showCQF");
+            Scribe_Values.Look(ref this.autoCompileDialogTextKey, "autoCompileDialogTextKey", true);
         }
 
         public bool showCQF = true;
+        public bool autoCompileDialogTextKey = true;
         public static CustomQuestFramework_ModSetting setting;
     }
  

@@ -32,8 +32,6 @@ namespace QuestEditor_Library
                 TooltipHandler.TipRegion(tip, "DialogReportKeyTip".Translate());
             }
             y += 30f;
-            Widgets.CheckboxLabeled(new Rect(0f, y, 300f, 25f), "AutoCompileDialogTextKey".Translate(), ref this.def.autoCompileTextKey);
-            y += 30f;
             CQFEditorTools.DrawEditableStringList(this.def.extraThingRefers,ref y,"ExtraThingRefer".Translate());
         }
 
