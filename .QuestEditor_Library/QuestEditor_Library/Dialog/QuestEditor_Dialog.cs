@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using RimWorld;
@@ -189,70 +190,22 @@ namespace QuestEditor_Library
                 {
                     string path = Path.Combine(Page_QuestEditor.Path, "DialogTree", this.CurTree.defName + ".xml");
                     XElement defs = new XElement("Defs");
-                    XElement tree = this.CurTree.SaveToXElement("QuestEditor_Library.DialogTreeDef");
+                    XElement tree;
+                    XElement language = new XElement("LanguageData");
+                    if (this.CurTree.autoCompileTextKey)
+                    {
+                        tree = this.BuildCompiledTreeXml(out language);
+                    }
+                    else
+                    {
+                        tree = this.CurTree.SaveToXElement("QuestEditor_Library.DialogTreeDef");
+                    }
                     defs.Add(tree);
                     defs.Save(path);
-                    string path_Text = Path.Combine(Page_QuestEditor.Path, "DialogTree", this.CurTree.defName + "_Text.xml");
-                    XElement defs_Text = new XElement("LanguageData");
-                    defs_Text.Add(new XText("\n\n"));
-                    List<string> traned = new List<string>();
-                    if (!this.CurTree.title.NullOrEmpty())
+                    if (this.CurTree.autoCompileTextKey)
                     {
-                        string titleText = "TODO";
-                        if (this.CurTree.title.CanTranslate())
-                        {
-                            titleText = this.CurTree.title.Translate().Resolve();
-                            traned.Add(this.CurTree.title);
-                        }
-                        defs_Text.Add(new XElement(this.CurTree.title, titleText));
+                        this.SaveCompiledLanguageFile(language);
                     }
-                    defs_Text.Add(new XText("\n\n"));
-                    
-                    this.CurTree.nodeMoulds.ToList().ForEach(m =>
-                    {
-                        if (!traned.Contains(m.Value.text))
-                        {
-                            string text = "TODO";
-                            if (m.Value.text.CanTranslate())
-                            {
-                                text = m.Value.text.Translate().Resolve();;
-                                traned.Add(m.Value.text);
-                            }
-
-                            defs_Text.Add(new XElement(m.Value.text, text));   
-                        }
-                        m.Value.extraText.ForEach(t =>
-                        {
-                            if (!traned.Contains(t))
-                            {
-                                string text = "TODO";
-                                if (t.CanTranslate())
-                                {
-                                    text = t.Translate().Resolve();;
-                                    traned.Add(m.Value.text);
-                                }
-
-                                defs_Text.Add(new XElement(t, text));   
-                            }
-                        });
-                        m.Value.options.ForEach(t2 =>
-                        {
-                            if (!traned.Contains(t2.text))
-                            {
-                                string text = "TODO";
-                                if (t2.text.CanTranslate())
-                                {
-                                    text = t2.text.Translate().Resolve();;
-                                    traned.Add(t2.text);
-                                }
-
-                                defs_Text.Add(new XElement(t2.text, text));
-                            }
-
-                        });
-                        defs_Text.Add(new XText("\n\n"));
-                    });
-                    defs_Text.Save(path_Text);
 
                     CQFQuestDefBootstrap.HotLoadDialogTreeDef(this.CurTree);
 
@@ -280,6 +233,103 @@ namespace QuestEditor_Library
                 };
                 Find.WindowStack.Add(dialog);
             }
+        }
+
+        private XElement BuildCompiledTreeXml(out XElement language)
+        {
+            XElement result = new XElement(this.CurTree.SaveToXElement("QuestEditor_Library.DialogTreeDef"));
+            language = new XElement("LanguageData");
+            this.CompileTextElement(result.Element("title"), this.MakeTextKey("Title"), language);
+            this.CompileTextElement(result.Element("dialogReportKey"), this.MakeTextKey("Report"), language);
+            XElement idleNodes = result.Element("idleNodes");
+            if (idleNodes != null)
+            {
+                foreach (XElement idleNode in idleNodes.Elements("li"))
+                {
+                    this.CompileNodeElement(idleNode, language);
+                }
+            }
+            XElement nodeMoulds = result.Element("nodeMoulds");
+            if (nodeMoulds != null)
+            {
+                foreach (XElement nodeEntry in nodeMoulds.Elements("li"))
+                {
+                    XElement nodeKey = nodeEntry.Element("key");
+                    XElement nodeValue = nodeEntry.Element("value");
+                    if (nodeKey == null || nodeValue == null || !int.TryParse(nodeKey.Value, out int nodeIndex))
+                    {
+                        continue;
+                    }
+                    this.CompileNodeElement(nodeValue, language, nodeIndex);
+                }
+            }
+            return result;
+        }
+
+        private void CompileNodeElement(XElement node, XElement language, int? nodeIndex = null)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            int index = nodeIndex ?? (int.TryParse(node.Element("index")?.Value, out int parsedIndex) ? parsedIndex : -1);
+            if (index < 0)
+            {
+                return;
+            }
+            string nodePrefix = this.MakeTextKey("Node_" + index);
+            this.CompileTextElement(node.Element("text"), nodePrefix + "_Text", language);
+            XElement extraText = node.Element("extraText");
+            if (extraText != null)
+            {
+                int extraIndex = 0;
+                foreach (XElement extra in extraText.Elements("li"))
+                {
+                    this.CompileTextElement(extra, nodePrefix + "_Extra_" + extraIndex, language);
+                    extraIndex++;
+                }
+            }
+            XElement options = node.Element("options");
+            if (options != null)
+            {
+                int optionIndex = 0;
+                foreach (XElement option in options.Elements("li"))
+                {
+                    this.CompileTextElement(option.Element("text"), nodePrefix + "_Option_" + optionIndex, language);
+                    optionIndex++;
+                }
+            }
+        }
+
+        private void SaveCompiledLanguageFile(XElement language)
+        {
+            string languageFolder = LanguageDatabase.activeLanguage?.folderName ?? LanguageDatabase.DefaultLangFolderName;
+            string directory = Path.Combine(Page_QuestEditor.ModData.RootDir.FullName, "Languages", languageFolder, "Keyed", "DialogTree");
+            Directory.CreateDirectory(directory);
+            string path = Path.Combine(directory, this.CurTree.defName + ".xml");
+            language.Save(path);
+        }
+
+        private void CompileTextElement(XElement element, string key, XElement language)
+        {
+            if (element == null || element.Value.NullOrEmpty())
+            {
+                return;
+            }
+            string source = element.Value;
+            string translated = source.CanTranslate() ? source.Translate().Resolve() : source;
+            element.Value = key;
+            if (language.Element(key) == null)
+            {
+                language.Add(new XElement(key, translated));
+            }
+        }
+
+        private string MakeTextKey(string suffix)
+        {
+            string defName = this.CurTree.defName.NullOrEmpty() ? "Unnamed" : this.CurTree.defName;
+            string safeName = new string(defName.Select(c => char.IsLetterOrDigit(c) ? c : '_').ToArray());
+            return "CQF_Dialog_" + safeName + "_" + suffix;
         }
 
         public float width;

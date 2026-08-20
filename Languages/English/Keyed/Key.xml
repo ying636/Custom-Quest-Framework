@@ -139,6 +139,7 @@ SiteName: SiteName-></RuleTip>
   <ExtraDialogText>Extra text</ExtraDialogText>
   <DialogReportKey>Dialog report key</DialogReportKey>
   <DialogReportKeyTip>Dialog report key tip</DialogReportKeyTip>
+  <AutoCompileDialogTextKey>Automatically compile dialog text keys</AutoCompileDialogTextKey>
   <DialogOptions>Dialog options</DialogOptions>
   <OptionText>Option text</OptionText>
   <NextNode>Next node: {0}</NextNode>

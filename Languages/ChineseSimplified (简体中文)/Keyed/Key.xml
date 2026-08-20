@@ -111,6 +111,7 @@
   <ExtraDialogText>额外文本</ExtraDialogText>
   <DialogReportKey>交谈文本：</DialogReportKey>
   <DialogReportKeyTip>右键目标时出现的交谈选项的文本。</DialogReportKeyTip>
+  <AutoCompileDialogTextKey>自动编译对话文本 Key</AutoCompileDialogTextKey>
   <DialogOptions>选项:</DialogOptions>
   <OptionText>选项文本：</OptionText>
   <NextNode>下个节点：{0}</NextNode>

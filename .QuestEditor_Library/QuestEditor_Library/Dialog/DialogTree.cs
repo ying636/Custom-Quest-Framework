@@ -332,6 +332,10 @@ namespace QuestEditor_Library
             result.Add(new XElement("title", this.title));
             result.Add(new XElement("requireNonHostile", this.requireNonHostile));
             result.Add(new XElement("dialogReportKey", this.dialogReportKey));
+            if (this.autoCompileTextKey)
+            {
+                result.Add(new XElement("autoCompileTextKey", true));
+            }
             result.Add(new XElement("curIndex", this.curIndex));
             if (this.idleNodes.Any())
             {
@@ -358,6 +362,7 @@ namespace QuestEditor_Library
         public string title = "DefaultDialogKey";
         public string dialogReportKey = "DefaultDialogKey";
         public bool requireNonHostile = true;
+        public bool autoCompileTextKey = false;
         public int curIndex = 1;
         public List<string> extraThingRefers = new List<string>();
         public List<DialogNode> idleNodes = new List<DialogNode>();
