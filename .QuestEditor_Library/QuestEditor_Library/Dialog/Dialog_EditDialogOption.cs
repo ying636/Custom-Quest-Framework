@@ -27,13 +27,13 @@ namespace QuestEditor_Library
         public override void Notify_ClickOutsideWindow()
         {
         }
+        public override Vector2 InitialSize => new Vector2(560f, 560f);
         public override void DoWindowContents(Rect inRect)
         {
-            DialogTreeDef tree = this.parent.CurTree;
-            Widgets.BeginScrollView(inRect, ref this.scrollPosition, new Rect(0f, 0f, inRect.width - 20f, this.height));
-            this.height = this.option.Draw(inRect, parent, node);
+            Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, this.height + 20f));
+            Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
+            this.height = this.option.Draw(viewRect, this.parent, this.node);
             Widgets.EndScrollView();
- 
         }
 
         public float height = 0f;

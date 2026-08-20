@@ -24,4 +24,14 @@
   <DialogImage_None>无</DialogImage_None>
   <!-- EN: Not selected -->
   <DialogImage_NotSelected>未选择</DialogImage_NotSelected> 
+  <!-- EN: No dialog images configured. -->
+  <CQF_NoDialogImages>尚未设置对话图片。</CQF_NoDialogImages>
+  <!-- EN: No dialog options configured. -->
+  <CQF_NoDialogOptions>尚未设置对话选项。</CQF_NoDialogOptions>
+  <!-- EN: No dialog conditions configured. -->
+  <CQF_NoDialogConditions>尚未设置对话条件。</CQF_NoDialogConditions>
+  <!-- EN: No dialog results configured. -->
+  <CQF_NoDialogResults>尚未设置对话结果。</CQF_NoDialogResults>
+  <!-- EN: No dialog actions configured. -->
+  <CQF_NoDialogActions>尚未设置对话行为。</CQF_NoDialogActions>
 </LanguageData>
