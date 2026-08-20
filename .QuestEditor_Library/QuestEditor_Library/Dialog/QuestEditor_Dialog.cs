@@ -304,11 +304,14 @@ namespace QuestEditor_Library
 
         private void SaveCompiledLanguageFile(XElement language)
         {
+            string dialogDirectory = Path.Combine(Page_QuestEditor.Path, "DialogTree");
+            Directory.CreateDirectory(dialogDirectory);
+            language.Save(Path.Combine(dialogDirectory, this.CurTree.defName + "_Text.xml"));
+
             string languageFolder = LanguageDatabase.activeLanguage?.folderName ?? LanguageDatabase.DefaultLangFolderName;
-            string directory = Path.Combine(Page_QuestEditor.ModData.RootDir.FullName, "Languages", languageFolder, "Keyed", "DialogTree");
-            Directory.CreateDirectory(directory);
-            string path = Path.Combine(directory, this.CurTree.defName + ".xml");
-            language.Save(path);
+            string languageDirectory = Path.Combine(Page_QuestEditor.ModData.RootDir.FullName, "Languages", languageFolder, "Keyed", "DialogTree");
+            Directory.CreateDirectory(languageDirectory);
+            language.Save(Path.Combine(languageDirectory, this.CurTree.defName + ".xml"));
         }
 
         private void CompileTextElement(XElement element, string key, XElement language)
@@ -318,11 +321,14 @@ namespace QuestEditor_Library
                 return;
             }
             string source = element.Value;
-            string translated = source.CanTranslate() ? source.Translate().Resolve() : source;
+            if (source.CanTranslate())
+            {
+                return;
+            }
             element.Value = key;
             if (language.Element(key) == null)
             {
-                language.Add(new XElement(key, translated));
+                language.Add(new XElement(key, source));
             }
         }
 
