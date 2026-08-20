@@ -286,7 +286,7 @@ namespace QuestEditor_Library
                 int extraIndex = 0;
                 foreach (XElement extra in extraText.Elements("li"))
                 {
-                    this.CompileTextElement(extra, nodePrefix + "_Extra_" + extraIndex, language);
+                    this.CompileTextElement(extra, nodePrefix + "_Extra_" + extraIndex + "_Text", language);
                     extraIndex++;
                 }
             }
@@ -296,7 +296,7 @@ namespace QuestEditor_Library
                 int optionIndex = 0;
                 foreach (XElement option in options.Elements("li"))
                 {
-                    this.CompileTextElement(option.Element("text"), nodePrefix + "_Option_" + optionIndex, language);
+                    this.CompileTextElement(option.Element("text"), nodePrefix + "_Option_" + optionIndex + "_Text", language);
                     optionIndex++;
                 }
             }
