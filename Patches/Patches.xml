@@ -16,6 +16,7 @@
 			<li>QuestEditor_Library.Designator_SetFaction</li>
 			<li>QuestEditor_Library.Designator_SetStyle</li>
 			<li>QuestEditor_Library.Designator_SetHitPoints</li>
+			<li>QuestEditor_Library.Designator_SetQuality</li>
 			<li>QuestEditor_Library.Designator_Blueprint</li>
 			<li>QuestEditor_Library.Designator_Paste</li>
 			<li>QuestEditor_Library.Designator_SaveZoneAsDef</li>

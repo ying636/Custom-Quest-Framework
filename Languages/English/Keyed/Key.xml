@@ -293,6 +293,11 @@ SiteName: SiteName-></RuleTip>
   <CQF_SetHitPointsPercentage>Percentage</CQF_SetHitPointsPercentage>
   <CQF_SetHitPointsPercentagePrompt>Set hit points to {0}%</CQF_SetHitPointsPercentagePrompt>
   <CQF_SetHitPointsNoTarget>No thing with hit points at this location.</CQF_SetHitPointsNoTarget>
+  <CQFSetQuality>Set quality: {0}</CQFSetQuality>
+  <CQFSetQualityDesc>Set the quality of selected things. Right click to switch between fixed, upgrade, and downgrade modes.</CQFSetQualityDesc>
+  <CQF_SetQualityNoTarget>No thing with quality can be set at this location.</CQF_SetQualityNoTarget>
+  <CQF_UpgradeQuality>Upgrade quality</CQF_UpgradeQuality>
+  <CQF_DowngradeQuality>Downgrade quality</CQF_DowngradeQuality>
   <CQF_PinWindow>Pin window</CQF_PinWindow>
   <CQF_UnpinWindow>Unpin window</CQF_UnpinWindow>
 

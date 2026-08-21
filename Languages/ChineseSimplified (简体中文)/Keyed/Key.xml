@@ -243,6 +243,11 @@
   <CQF_SetHitPointsPercentage>百分比</CQF_SetHitPointsPercentage>
   <CQF_SetHitPointsPercentagePrompt>将生命值设置为 {0}%</CQF_SetHitPointsPercentagePrompt>
   <CQF_SetHitPointsNoTarget>此位置没有可设置生命值的事物。</CQF_SetHitPointsNoTarget>
+  <CQFSetQuality>设置品质：{0}</CQFSetQuality>
+  <CQFSetQualityDesc>设置所选事物的品质。右键可以切换固定、升级或降级模式。</CQFSetQualityDesc>
+  <CQF_SetQualityNoTarget>此位置没有可设置品质的事物。</CQF_SetQualityNoTarget>
+  <CQF_UpgradeQuality>升级品质</CQF_UpgradeQuality>
+  <CQF_DowngradeQuality>降级品质</CQF_DowngradeQuality>
   <CQF_PinWindow>固定窗口</CQF_PinWindow>
   <CQF_UnpinWindow>取消固定窗口</CQF_UnpinWindow>
   <CQFSpawnThing>生成：{0}</CQFSpawnThing>
