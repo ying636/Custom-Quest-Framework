@@ -535,6 +535,10 @@ namespace QuestEditor_Library
             {
                 Find.WindowStack.Add(new QuestEditor_DutyMap());
             }
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), miscIcon, "CQF_QuestBookEditor"))
+            {
+                Find.WindowStack.Add(new QuestEditor_QuestBook());
+            }
             if (Page_QuestEditor.DrawToolButton(NextToolRect(), mainMapDefEditorIcon, "MainMapDefEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_MainMapDefEditor());

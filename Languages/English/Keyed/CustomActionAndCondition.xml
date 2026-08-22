@@ -454,6 +454,8 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFActionCategory_VisualEffect_Tip>Actions that create visual effects or motes. Damage-causing actions are not included here.</CQFActionCategory_VisualEffect_Tip>
   <CQFActionCategory_DialogEvent>Dialog and event</CQFActionCategory_DialogEvent>
   <CQFActionCategory_DialogEvent_Tip>Actions that show messages, start dialogs, manage dialog managers, start quests or incidents, or end the game.</CQFActionCategory_DialogEvent_Tip>
+  <CQFActionCategory_QuestBook>Quest book actions</CQFActionCategory_QuestBook>
+  <CQFActionCategory_QuestBook_Tip>Actions that start or open quest books, control quest book steps, or deliver rewards to a colony.</CQFActionCategory_QuestBook_Tip>
   <CQFActionCategory_MainMap>Main map</CQFActionCategory_MainMap>
   <CQFActionCategory_MainMap_Tip>Actions for MainMap and main-site state, such as destroying sites, recording visits, or clearing cached main pawns.</CQFActionCategory_MainMap_Tip>
   <CQFActionCategory_EventArea>Event area</CQFActionCategory_EventArea>

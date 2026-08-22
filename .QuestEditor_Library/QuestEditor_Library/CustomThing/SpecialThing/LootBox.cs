@@ -632,6 +632,8 @@ namespace QuestEditor_Library
     }
     public abstract class CQFThingData : IExposable , ISaveable,IDrawable
     {
+        public virtual bool CanSelectStuff => true;
+
         public static void OpenLootThingSelectWindow(Action<ThingDef> action)
         {
             List<ThingDef> defs = SelectableLootThings();
@@ -714,13 +716,16 @@ namespace QuestEditor_Library
             Widgets.Label(new Rect(113f + x, y + 5f, 35f, 35f), "~");
             Widgets.TextFieldNumeric<int>(new Rect(125f + x, y, 35f, 35f), ref max, ref this.bufferMax);
             this.count = new IntRange(min, max);
-            Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
-            if (Widgets.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
+            if (this.CanSelectStuff)
             {
-                CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>()
-                {new FloatMenuOption("Null".Translate(),() => this.stuff = null)});
+                Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
+                if (Widgets.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
+                {
+                    CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>()
+                    {new FloatMenuOption("Null".Translate(),() => this.stuff = null)});
+                }
+                TooltipHandler.TipRegion(rect, "CQFStuffTip".Translate());
             }
-            TooltipHandler.TipRegion(rect, "CQFStuffTip".Translate());
             y += 35f;
         }
         public void DrawWithSingleCount(ref float y, Rect inRect, float x)
@@ -730,13 +735,16 @@ namespace QuestEditor_Library
             int min = this.count.min;
             Widgets.TextFieldNumeric<int>(new Rect(75f + x, y, 35f, 35f), ref min, ref this.bufferMin);
             this.count = new IntRange(min, min);
-            Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
-            if (Widgets.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
+            if (this.CanSelectStuff)
             {
-                CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>()
-                {new FloatMenuOption("Null".Translate(),() => this.stuff = null)});
+                Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
+                if (Widgets.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
+                {
+                    CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>()
+                    {new FloatMenuOption("Null".Translate(),() => this.stuff = null)});
+                }
+                TooltipHandler.TipRegion(rect, "CQFStuffTip".Translate());
             }
-            TooltipHandler.TipRegion(rect, "CQFStuffTip".Translate());
             y += 30f;
         }
         public abstract void DrawIcon(ref float y);
@@ -769,6 +777,8 @@ namespace QuestEditor_Library
     }
     public class CQFThingDefCount : CQFThingData
     {
+        public override bool CanSelectStuff => thing?.MadeFromStuff == true;
+
         public override ThingRequest GetRequest()
         {
             return ThingRequest.ForDef(this.thing);

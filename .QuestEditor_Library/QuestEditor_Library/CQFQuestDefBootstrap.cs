@@ -55,6 +55,12 @@ namespace QuestEditor_Library
             ReplaceDef(currentDef, currentDef);
         }
 
+        public static void HotLoadQuestBookDef(QuestBookDef currentDef)
+        {
+            ReplaceDef(currentDef, currentDef);
+            GameComponent_QuestBook.Instance?.RefreshDefinition(currentDef);
+        }
+
         private static void LoadAll()
         {
             string questPath = Page_QuestEditor.Path;
@@ -70,6 +76,7 @@ namespace QuestEditor_Library
             LoadDefs(Path.Combine(questPath, "Pawn"), "//QuestEditor_Library.ComplexPawnDef", DefDatabase<ComplexPawnDef>.AllDefsListForReading, LoadComplexPawnDef, def => DefDatabase<ComplexPawnDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Duty"), "//DutyDef", DefDatabase<DutyDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyDef>(node, false), def => DefDatabase<DutyDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Duty"), "//QuestEditor_Library.DutyMapDef", DefDatabase<DutyMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyMapDef>(node, false), def => DefDatabase<DutyMapDef>.Add(def));
+            LoadDefs(Path.Combine(questPath, "QuestBook"), "//QuestEditor_Library.QuestBookDef", DefDatabase<QuestBookDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<QuestBookDef>(node, false), def => DefDatabase<QuestBookDef>.Add(def));
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
             foreach (LoadedDefInfo loadedDef in CQFQuestDefBootstrap.loadedDefs)
             {

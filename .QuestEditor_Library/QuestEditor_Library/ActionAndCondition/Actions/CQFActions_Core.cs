@@ -32,6 +32,7 @@ namespace QuestEditor_Library
         Faction,
         VisualEffect,
         DialogEvent,
+        QuestBook,
         MainMap,
         EventArea,
         Misc

@@ -755,6 +755,8 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFActionCategory_DialogEvent>对话事件</CQFActionCategory_DialogEvent>
   <!-- EN: Actions that show messages, start dialogs, manage dialog managers, start quests or incidents, or end the game. -->
   <CQFActionCategory_DialogEvent_Tip>显示消息、启动对话、管理对话管理器、启动任务或事件、结束游戏的行为。</CQFActionCategory_DialogEvent_Tip>
+  <CQFActionCategory_QuestBook>任务书行为</CQFActionCategory_QuestBook>
+  <CQFActionCategory_QuestBook_Tip>开始或打开任务书、控制任务书步骤，以及向殖民地发放奖励的行为。</CQFActionCategory_QuestBook_Tip>
   <!-- EN: 11. Main map -->
   <CQFActionCategory_MainMap>主要地图</CQFActionCategory_MainMap>
   <!-- EN: Actions for MainMap and main-site state, such as destroying sites, recording visits, or clearing cached main pawns. -->
