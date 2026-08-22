@@ -56,6 +56,8 @@
   <CQF_QuestBook_State_Completed>已完成</CQF_QuestBook_State_Completed>
   <CQF_QuestBook_State_Failed>已失败</CQF_QuestBook_State_Failed>
   <CQF_QuestBook_State_Skipped>已跳过</CQF_QuestBook_State_Skipped>
+  <CQF_QuestBook_StepCompletedLabel>{0}完成</CQF_QuestBook_StepCompletedLabel>
+  <CQF_QuestBook_StepCompletedText>{0}已经完成&#xA;&#xA;{1}</CQF_QuestBook_StepCompletedText>
   <QuestBookDef>任务书定义</QuestBookDef>
   <CQF_QuestBook_BoundQuest>绑定任务</CQF_QuestBook_BoundQuest>
   <CQF_QuestBook_NextSteps>后续步骤</CQF_QuestBook_NextSteps>

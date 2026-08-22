@@ -56,6 +56,8 @@
   <CQF_QuestBook_State_Completed>Completed</CQF_QuestBook_State_Completed>
   <CQF_QuestBook_State_Failed>Failed</CQF_QuestBook_State_Failed>
   <CQF_QuestBook_State_Skipped>Skipped</CQF_QuestBook_State_Skipped>
+  <CQF_QuestBook_StepCompletedLabel>{0} completed</CQF_QuestBook_StepCompletedLabel>
+  <CQF_QuestBook_StepCompletedText>{0} has been completed.&#xA;&#xA;{1}</CQF_QuestBook_StepCompletedText>
   <QuestBookDef>Quest Book Definition</QuestBookDef>
   <CQF_QuestBook_BoundQuest>Bound quest</CQF_QuestBook_BoundQuest>
   <CQF_QuestBook_NextSteps>Next steps</CQF_QuestBook_NextSteps>

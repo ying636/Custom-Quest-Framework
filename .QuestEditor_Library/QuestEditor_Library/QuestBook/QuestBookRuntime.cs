@@ -423,6 +423,13 @@ namespace QuestEditor_Library
                 return;
             }
             stepState.status = QuestBookStepStatus.Completed;
+            Find.LetterStack.ReceiveLetter(
+                "CQF_QuestBook_StepCompletedLabel".Translate(stepDef.Label),
+                "CQF_QuestBook_StepCompletedText".Translate(stepDef.Label, stepDef.Description),
+                LetterDefOf.PositiveEvent,
+                LookTargets.Invalid,
+                null,
+                boundQuest);
             if (!stepDef.rewards.NullOrEmpty())
             {
                 CQFRewardDelivery.TryDrop(stepDef.rewards, boundQuest);
