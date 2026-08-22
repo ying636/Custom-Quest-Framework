@@ -1,0 +1,7 @@
+interface:
+  display_name: "CQF任务书开发"
+  short_description: "开发和维护 CQF 任务书系统与编辑器"
+  default_prompt: "使用 $cqf-quest-book-dev 开发、调试或扩展 CQF 任务书功能。"
+
+policy:
+  allow_implicit_invocation: true
