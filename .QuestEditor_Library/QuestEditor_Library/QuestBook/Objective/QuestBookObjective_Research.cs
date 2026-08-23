@@ -23,9 +23,8 @@ namespace QuestEditor_Library
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
         {
-            DrawDetectionSection(ref y, inRect, 1, card =>
+            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
             {
-                float rowY = card.y + 84f;
                 DrawRowLabel(card, rowY, "CQF_QuestBook_TargetResearch");
                 string label = TargetResearch == null ? "CQF_QuestBook_None".Translate().ToString() : TargetResearch.LabelCap;
                 Rect button = new Rect(card.x + 184f, rowY, card.width - 198f, 28f);
@@ -38,6 +37,7 @@ namespace QuestEditor_Library
                         projects, def => def.LabelCap, def => TargetResearch = def, null, def => def.description,
                         null, def => def.defName, null, null), "CQF_QuestBook_TargetResearch".Translate()));
                 }
+                rowY += 36f;
             });
         }
 

@@ -19,13 +19,14 @@ namespace QuestEditor_Library
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
         {
-            DrawDetectionSection(ref y, inRect, 1, card => DrawTargetCountField(card, card.y + 84f));
+            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) => DrawTargetCountField(card, ref rowY));
         }
 
-        protected void DrawTargetCountField(Rect card, float y)
+        protected void DrawTargetCountField(Rect card, ref float y)
         {
             DrawRowLabel(card, y, "CQF_QuestBook_TargetCount");
             Widgets.TextFieldNumeric<int>(new Rect(card.x + 184f, y, card.width - 198f, 28f), ref targetCount, ref countBuffer, 1);
+            y += 36f;
         }
 
         public override void ExposeData()

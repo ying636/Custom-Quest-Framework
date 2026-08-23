@@ -141,16 +141,31 @@ namespace QuestEditor_Library
             });
         }
 
-        protected void DrawDetectionSection(ref float y, Rect inRect, int fieldCount, Action<Rect> contentDrawer)
+        protected delegate void DetectionContentDrawer(Rect card, ref float y);
+
+        protected void DrawDetectionSection(ref float y, Rect inRect, DetectionContentDrawer contentDrawer)
         {
-            DrawSection(ref y, inRect.width - 16f, "CQF_QuestBook_ObjectiveDetection", 52f + fieldCount * 36f + 10f, card =>
-            {
-                float rowY = card.y + 48f;
-                Widgets.Label(new Rect(card.x + 14f, rowY + 2f, 164f, 24f), "CQF_QuestBook_ObjectiveType".Translate());
-                Widgets.Label(new Rect(card.x + 184f, rowY + 2f, card.width - 198f, 24f), GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-                rowY += 36f;
-                contentDrawer(card);
-            });
+            float startY = y;
+            float width = inRect.width - 16f;
+            float measuredY = startY + 84f;
+            bool previousEnabled = GUI.enabled;
+            Color previousColor = GUI.color;
+            GUI.enabled = false;
+            GUI.color = Color.clear;
+            contentDrawer(new Rect(8f, startY, width, 0f), ref measuredY);
+            GUI.color = previousColor;
+            GUI.enabled = previousEnabled;
+
+            float cardHeight = measuredY - startY + 10f;
+            Rect card = new Rect(8f, startY, width, cardHeight);
+            Widgets.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), "CQF_QuestBook_ObjectiveDetection".Translate().Colorize(ColorLibrary.PaleBlue));
+            float rowY = card.y + 48f;
+            Widgets.Label(new Rect(card.x + 14f, rowY + 2f, 164f, 24f), "CQF_QuestBook_ObjectiveType".Translate());
+            Widgets.Label(new Rect(card.x + 184f, rowY + 2f, card.width - 198f, 24f), GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
+            rowY += 36f;
+            contentDrawer(card, ref rowY);
+            y = card.yMax + 12f;
         }
 
         protected void DrawSection(ref float y, float width, string titleKey, float height, Action<Rect> contentDrawer)

@@ -37,13 +37,12 @@ namespace QuestEditor_Library
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
         {
-            DrawDetectionSection(ref y, inRect, 2, card =>
+            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
             {
-                float rowY = card.y + 84f;
-                DrawTargetCountField(card, rowY);
-                rowY += 36f;
+                DrawTargetCountField(card, ref rowY);
                 DrawRowLabel(card, rowY, "CQF_QuestBook_TriggerSignal");
                 signal = Widgets.TextField(new Rect(card.x + 184f, rowY, card.width - 198f, 28f), signal ?? string.Empty);
+                rowY += 36f;
             });
         }
 
