@@ -70,9 +70,19 @@
   <CQFAction_FailQuestBookStep>Action: fail quest book step</CQFAction_FailQuestBookStep>
   <CQFAction_OpenQuestBook>Action: open quest book</CQFAction_OpenQuestBook>
   <CQFAction_StartQuestBook>Action: start quest book</CQFAction_StartQuestBook>
+  <CQF_QuestBook_ActionStep>Select step: {0}</CQF_QuestBook_ActionStep>
+  <CQF_QuestBook_ActionBook>Select quest book: {0}</CQF_QuestBook_ActionBook>
+  <CQF_QuestBook_SelectBookFirst>Select a quest book first.</CQF_QuestBook_SelectBookFirst>
+  <CQF_QuestBook_NoStepsAvailable>No steps are available to select.</CQF_QuestBook_NoStepsAvailable>
+  <CQF_QuestBook_ActionOpenDescription>Open the quest book bound to the current quest.</CQF_QuestBook_ActionOpenDescription>
+  <CQF_QuestBook_ActionStartQuestBook>Quest book definition: {0}</CQF_QuestBook_ActionStartQuestBook>
   <CQF_QuestBook_StepDataName>Step data name</CQF_QuestBook_StepDataName>
   <CQF_QuestBook_StepName>Step name</CQF_QuestBook_StepName>
   <CQF_QuestBook_StepDescription>Step description</CQF_QuestBook_StepDescription>
+  <CQF_QuestBook_DetailImage>Step detail image</CQF_QuestBook_DetailImage>
+  <CQF_QuestBook_SelectDetailImage>Select detail image</CQF_QuestBook_SelectDetailImage>
+  <CQF_QuestBook_NoDetailImages>No detail images have been added.</CQF_QuestBook_NoDetailImages>
+  <CQF_QuestBook_RemoveDetailImageTip>Remove this detail image</CQF_QuestBook_RemoveDetailImageTip>
   <CQF_QuestBook_RewardInfo>Reward display information</CQF_QuestBook_RewardInfo>
   <CQF_QuestBook_RewardInfoName>Reward name</CQF_QuestBook_RewardInfoName>
   <CQF_QuestBook_RewardInfoDescription>Reward tooltip description</CQF_QuestBook_RewardInfoDescription>
@@ -128,6 +138,7 @@
   <CQF_QuestBook_StepRewards>Step rewards</CQF_QuestBook_StepRewards>
   <CQF_QuestBook_CustomRewards>Custom rewards</CQF_QuestBook_CustomRewards>
   <CQF_QuestBook_Rewards>Rewards</CQF_QuestBook_Rewards>
+  <CQF_QuestBook_NoRewards>No rewards have been added.</CQF_QuestBook_NoRewards>
   <CQF_QuestBook_SelectRewardThing>Select reward item or building</CQF_QuestBook_SelectRewardThing>
   <CQF_QuestBook_AddRewardTip>Add reward</CQF_QuestBook_AddRewardTip>
   <CQF_QuestBook_RemoveRewardTip>Remove reward</CQF_QuestBook_RemoveRewardTip>

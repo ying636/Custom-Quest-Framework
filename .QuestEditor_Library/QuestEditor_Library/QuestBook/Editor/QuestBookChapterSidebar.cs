@@ -106,7 +106,6 @@ namespace QuestEditor_Library
                 {
                     chapter.steps.Add(new QuestBookStep
                     {
-                        id = chapter.id + "_step_" + (chapter.steps.Count + 1),
                         labelKey = "CQF_QuestBook_Step".Translate().ToString()
                     });
                     SelectedChapter = chapter;

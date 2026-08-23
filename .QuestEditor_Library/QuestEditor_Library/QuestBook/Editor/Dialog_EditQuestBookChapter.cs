@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
@@ -6,9 +7,10 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditQuestBookChapter : Window
     {
-        public Dialog_EditQuestBookChapter(QuestBookChapter chapter)
+        public Dialog_EditQuestBookChapter(QuestBookChapter chapter, QuestBookDef book)
         {
             this.chapter = chapter;
+            this.book = book;
             if (chapter.labelKey.CanTranslate())
             {
                 chapter.labelKey = chapter.labelKey.Translate().ToString();
@@ -50,9 +52,14 @@ namespace QuestEditor_Library
         private void DrawActions(ref float y, float x, float width, string title, List<CQFAction> actions)
         {
             CQFEditorTools.DrawActionList_UseWindow(ref y, x, actions, new Rect(0f, 0f, width, 140f), title, action => action.GetType().Name.Translate());
+            foreach (CQFAction_QuestBookStep action in actions.OfType<CQFAction_QuestBookStep>())
+            {
+                action.SetEditorBook(book);
+            }
             y += 10f;
         }
 
         private readonly QuestBookChapter chapter;
+        private readonly QuestBookDef book;
     }
 }

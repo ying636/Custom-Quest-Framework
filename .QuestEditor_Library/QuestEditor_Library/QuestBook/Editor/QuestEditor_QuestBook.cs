@@ -16,8 +16,8 @@ namespace QuestEditor_Library
             doCloseX = true;
             absorbInputAroundWindow = false;
             curDef = new QuestBookDef();
-            nodeCanvas.OpenStepEditor = step => Find.WindowStack.Add(new Dialog_EditQuestBookStep(step));
-            chapterSidebar.OpenChapterEditor = chapter => Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter));
+            nodeCanvas.OpenStepEditor = step => Find.WindowStack.Add(new Dialog_EditQuestBookStep(step, curDef));
+            chapterSidebar.OpenChapterEditor = chapter => Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter, curDef));
         }
 
         public override string PageTitle => "CQF_QuestBookEditor".Translate().Colorize(ColorLibrary.SkyBlue);
@@ -45,7 +45,7 @@ namespace QuestEditor_Library
             Widgets.Label(new Rect(chapterHeader.x + chapterHeader.width - 108f, chapterHeader.y + 8f, 72f, 22f), "CQF_QuestBook_StepCount".Translate(chapter.steps.Count).Colorize(Color.gray));
             if (Widgets.ButtonText(new Rect(chapterHeader.xMax - 34f, chapterHeader.y + 5f, 28f, 28f), "...", false))
             {
-                Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter));
+                Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter, curDef));
             }
             Rect canvasRect = new Rect(chapterHeader.x, chapterHeader.yMax + 8f, chapterHeader.width, inRect.height - 184f);
             nodeCanvas.Draw(canvasRect, curDef, null, true, chapter);
@@ -111,7 +111,6 @@ namespace QuestEditor_Library
             };
             chapter.steps.Add(new QuestBookStep
             {
-                id = chapter.id + "_step_1",
                 labelKey = "CQF_QuestBook_Step".Translate().ToString()
             });
             curDef.chapters.Add(chapter);

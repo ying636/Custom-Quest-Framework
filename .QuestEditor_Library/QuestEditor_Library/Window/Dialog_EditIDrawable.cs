@@ -10,9 +10,10 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditIDrawable : Window
     {
-        public Dialog_EditIDrawable(IDrawable iDrawable)
+        public Dialog_EditIDrawable(IDrawable iDrawable, QuestBookDef questBook = null)
         {
             this.iDrawable = iDrawable;
+            this.questBook = questBook;
             this.forcePause = true;
             this.closeOnClickedOutside = false;
             this.doCloseX = true;
@@ -26,6 +27,10 @@ namespace QuestEditor_Library
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(this.height + 10f, inRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             float y = 0f;
+            if (questBook != null && iDrawable is CQFAction_QuestBookStep questBookStepAction)
+            {
+                questBookStepAction.SetEditorBook(questBook);
+            }
             this.iDrawable.Draw(ref y, viewRect, 0f);
             this.height = y;
             Widgets.EndScrollView();
@@ -35,5 +40,6 @@ namespace QuestEditor_Library
         public float height;
         public Vector2 pos = Vector2.zero;
         private IDrawable iDrawable;
+        private readonly QuestBookDef questBook;
     }
 }

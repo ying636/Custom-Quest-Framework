@@ -9,9 +9,10 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditQuestBookStep : Window
     {
-        public Dialog_EditQuestBookStep(QuestBookStep step)
+        public Dialog_EditQuestBookStep(QuestBookStep step, QuestBookDef book)
         {
             this.step = step;
+            this.book = book;
             if (step.labelKey.CanTranslate())
             {
                 step.labelKey = step.labelKey.Translate().ToString();
@@ -36,10 +37,10 @@ namespace QuestEditor_Library
             Widgets.BeginScrollView(scrollRect, ref scrollPosition, contentRect);
             float y = 8f;
             DrawSectionTitle(ref y, contentWidth, "CQF_QuestBook_StepProperties".Translate());
-            DrawTextField(ref y, contentWidth, "CQF_QuestBook_StepDataName".Translate(), ref step.id);
             DrawTextField(ref y, contentWidth, "CQF_QuestBook_StepName".Translate(), ref step.labelKey);
             DrawTextField(ref y, contentWidth, "CQF_QuestBook_StepDescription".Translate(), ref step.descriptionKey);
             y += 8f;
+            DrawDetailImageCard(ref y, contentWidth);
             DrawIconCard(ref y, contentWidth);
             DrawRewardInfoCard(ref y, contentWidth);
             DrawObjectiveCard(ref y, contentWidth);
@@ -81,6 +82,54 @@ namespace QuestEditor_Library
             DrawTextButton(new Rect(buttonX, card.y + 72f, 150f, 28f), "CQF_QuestBook_SelectImageIcon", SelectImageIcon);
             DrawTextButton(new Rect(buttonX, card.y + 106f, 100f, 28f), "CQF_QuestBook_Clear", ClearIcon);
             y += cardHeight + 10f;
+        }
+
+        private void DrawDetailImageCard(ref float y, float width)
+        {
+            step.detailImagePaths ??= new List<string>();
+            float cardHeight = GetDetailImageCardHeight();
+            Rect card = new Rect(8f, y, width - 16f, cardHeight);
+            Widgets.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_DetailImage".Translate().Colorize(ColorLibrary.PaleBlue));
+            Rect addRect = new Rect(card.xMax - 42f, card.y + 5f, 28f, 28f);
+            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            {
+                SelectDetailImage();
+            }
+            TooltipHandler.TipRegion(addRect, "CQF_QuestBook_SelectDetailImage".Translate());
+            float rowY = card.y + 40f;
+            if (step.detailImagePaths.NullOrEmpty())
+            {
+                Widgets.Label(new Rect(card.x + 12f, rowY + 14f, card.width - 24f, 22f), "CQF_QuestBook_NoDetailImages".Translate().Colorize(Color.gray));
+            }
+            foreach (string path in step.detailImagePaths.ToList())
+            {
+                Rect rowRect = new Rect(card.x + 12f, rowY, card.width - 24f, DetailImageRowHeight);
+                Widgets.DrawBoxSolid(rowRect, new Color(0.08f, 0.1f, 0.12f, 0.72f));
+                Widgets.DrawHighlightIfMouseover(rowRect);
+                Rect previewRect = new Rect(rowRect.x + 6f, rowRect.y + 6f, 112f, rowRect.height - 12f);
+                Widgets.DrawBox(previewRect, 1);
+                Texture2D texture = path.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(path, false);
+                if (texture != null)
+                {
+                    Widgets.DrawTextureFitted(previewRect.ContractedBy(4f), texture, 1f);
+                }
+                Widgets.Label(new Rect(previewRect.xMax + 12f, rowRect.y + 12f, rowRect.width - 164f, 22f), path.Colorize(Color.gray));
+                Rect deleteRect = new Rect(rowRect.xMax - 34f, rowRect.y + 10f, 28f, 28f);
+                if (Widgets.ButtonImage(deleteRect, TexButton.Delete))
+                {
+                    step.detailImagePaths.Remove(path);
+                    break;
+                }
+                TooltipHandler.TipRegion(deleteRect, "CQF_QuestBook_RemoveDetailImageTip".Translate());
+                rowY += DetailImageRowHeight + 6f;
+            }
+            y += cardHeight + 10f;
+        }
+
+        private float GetDetailImageCardHeight()
+        {
+            return 48f + (step.detailImagePaths.NullOrEmpty() ? 58f : step.detailImagePaths.Count * (DetailImageRowHeight + 6f));
         }
 
         private void DrawRewardInfoCard(ref float y, float width)
@@ -198,6 +247,18 @@ namespace QuestEditor_Library
                 step.iconPath = path;
                 step.iconThing = null;
             }, step.iconPath));
+        }
+
+        private void SelectDetailImage()
+        {
+            Find.WindowStack.Add(new Dialog_SelectDialogImage(path =>
+            {
+                step.detailImagePaths ??= new List<string>();
+                if (!step.detailImagePaths.Contains(path))
+                {
+                    step.detailImagePaths.Add(path);
+                }
+            }));
         }
 
         private void ClearIcon()
@@ -329,7 +390,7 @@ namespace QuestEditor_Library
             {
                 if (Widgets.ButtonText(new Rect(card.x + 12f, rowY, card.width - 24f, 26f), action.GetType().Name.Translate(), false))
                 {
-                    Find.WindowStack.Add(new Dialog_EditIDrawable(action));
+                    Find.WindowStack.Add(new Dialog_EditIDrawable(action, book));
                 }
                 rowY += 30f;
             }
@@ -369,8 +430,9 @@ namespace QuestEditor_Library
         private float CalculateContentHeight(float contentWidth)
         {
             float height = 8f + 42f;
-            height += 3f * (62f + 8f);
+            height += 2f * (62f + 8f);
             height += 8f;
+            height += GetDetailImageCardHeight() + 10f;
             height += 142f + 10f;
             height += GetRewardInfoCardHeight(contentWidth) + 10f;
             height += GetObjectiveCardHeight() + 10f;
@@ -411,7 +473,9 @@ namespace QuestEditor_Library
         }
 
         private readonly QuestBookStep step;
+        private readonly QuestBookDef book;
         private Vector2 scrollPosition;
+        private const float DetailImageRowHeight = 92f;
         private static readonly Texture2D nodeFrame = ContentFinder<Texture2D>.Get("UI/QuestBook/NodeFrame", true);
     }
 }

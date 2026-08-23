@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace QuestEditor_Library
 {
     public class QuestBookStep : IExposable, ISaveable
     {
-        public string id;
+        public string id = "step_" + Guid.NewGuid().ToString("N");
         [NoTranslate]
         public string labelKey;
         [NoTranslate]
@@ -26,6 +27,8 @@ namespace QuestEditor_Library
         public ThingDef iconThing;
         [NoTranslate]
         public string iconPath;
+        [NoTranslate]
+        public List<string> detailImagePaths = new List<string>();
 
         public string Label => labelKey.NullOrEmpty() ? id : labelKey.CanTranslate() ? labelKey.Translate().ToString() : labelKey;
 
@@ -48,6 +51,8 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref position, "position");
             Scribe_Defs.Look(ref iconThing, "iconThing");
             Scribe_Values.Look(ref iconPath, "iconPath");
+            Scribe_Collections.Look(ref detailImagePaths, "detailImagePaths", LookMode.Value);
+            detailImagePaths ??= new List<string>();
         }
 
         public XElement SaveToXElement(string nodeName)
@@ -103,6 +108,10 @@ namespace QuestEditor_Library
             if (!iconPath.NullOrEmpty())
             {
                 result.Add(new XElement("iconPath", iconPath));
+            }
+            if (!detailImagePaths.NullOrEmpty())
+            {
+                result.Add(CQFEditorTools.SaveList(detailImagePaths, "detailImagePaths"));
             }
             return result;
         }

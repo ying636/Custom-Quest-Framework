@@ -467,7 +467,6 @@ namespace QuestEditor_Library
         {
             chapter.steps.Add(new QuestBookStep
             {
-                id = chapter.id + "_step_" + (chapter.steps.Count + 1),
                 labelKey = "CQF_QuestBook_Step".Translate().ToString(),
                 position = position
             });
@@ -483,7 +482,6 @@ namespace QuestEditor_Library
             }
             QuestBookStep next = new QuestBookStep
             {
-                id = source.id + "_next_" + (chapter.steps.Count + 1),
                 labelKey = "CQF_QuestBook_Step".Translate().ToString(),
                 position = position
             };

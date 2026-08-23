@@ -72,15 +72,35 @@ namespace QuestEditor_Library
             Widgets.Label(new Rect(textX, card.y + 36f, textWidth, 22f), "CQF_QuestBook_State".Translate(stateKey.Translate()).Colorize(GetStateColor(state?.status)));
             if (!step.Description.NullOrEmpty())
             {
-                Widgets.Label(new Rect(textX, card.y + 60f, textWidth, height - 70f), step.Description);
+                float descriptionHeight = Text.CalcHeight(step.Description, textWidth);
+                Widgets.Label(new Rect(textX, card.y + 60f, textWidth, descriptionHeight), step.Description);
+            }
+            List<Texture2D> detailImages = GetDetailImages();
+            if (detailImages.Any())
+            {
+                float descriptionHeight = step.Description.NullOrEmpty() ? 0f : Text.CalcHeight(step.Description, textWidth);
+                float imageY = card.y + 74f + descriptionHeight;
+                foreach (Texture2D detailImage in detailImages)
+                {
+                    Rect imageRect = new Rect(textX, imageY, textWidth, DetailImageHeight);
+                    Widgets.DrawBox(imageRect, 1);
+                    Widgets.DrawTextureFitted(imageRect.ContractedBy(4f), detailImage, 1f);
+                    imageY += DetailImageHeight + 12f;
+                }
             }
             y += height + CardGap;
         }
 
         private float GetStepCardHeight(float width)
         {
-            if (step.Description.NullOrEmpty()) return 80f;
-            return Mathf.Max(80f, 70f + Text.CalcHeight(step.Description, width - 112f));
+            float textWidth = width - 112f;
+            float height = Mathf.Max(80f, 70f + (step.Description.NullOrEmpty() ? 0f : Text.CalcHeight(step.Description, textWidth)));
+            int detailImageCount = GetDetailImages().Count;
+            if (detailImageCount > 0)
+            {
+                height += detailImageCount * (DetailImageHeight + 12f);
+            }
+            return height;
         }
 
         private void DrawRewardCard(ref float y, float width)
@@ -233,6 +253,15 @@ namespace QuestEditor_Library
             Widgets.DrawTextureFitted(rect, TexButton.Info, 1f);
         }
 
+        private List<Texture2D> GetDetailImages()
+        {
+            return (step.detailImagePaths ?? new List<string>())
+                .Where(path => !path.NullOrEmpty())
+                .Select(path => ContentFinder<Texture2D>.Get(path, false))
+                .Where(texture => texture != null)
+                .ToList();
+        }
+
         private static string GetRewardLabel(CQFThingDefCount reward)
         {
             return reward?.thing == null ? "CQF_QuestBook_RewardInvalid".Translate() : reward.thing.LabelCap + " x" + reward.count.min;
@@ -253,6 +282,7 @@ namespace QuestEditor_Library
         private const float CardGap = 8f;
         private const float RowGap = 6f;
         private const float RewardRowHeight = 54f;
+        private const float DetailImageHeight = 180f;
         private static readonly Texture2D nodeFrame = ContentFinder<Texture2D>.Get("UI/QuestBook/NodeFrame", true);
     }
 }

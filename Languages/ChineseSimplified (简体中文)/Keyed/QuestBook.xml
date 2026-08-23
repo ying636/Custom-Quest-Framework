@@ -70,9 +70,19 @@
   <CQFAction_FailQuestBookStep>行为：使任务书步骤失败</CQFAction_FailQuestBookStep>
   <CQFAction_OpenQuestBook>行为：打开任务书</CQFAction_OpenQuestBook>
   <CQFAction_StartQuestBook>行为：开始任务书</CQFAction_StartQuestBook>
+  <CQF_QuestBook_ActionStep>选择步骤：{0}</CQF_QuestBook_ActionStep>
+  <CQF_QuestBook_ActionBook>选择任务书：{0}</CQF_QuestBook_ActionBook>
+  <CQF_QuestBook_SelectBookFirst>请先选择任务书。</CQF_QuestBook_SelectBookFirst>
+  <CQF_QuestBook_NoStepsAvailable>当前没有可选择的步骤。</CQF_QuestBook_NoStepsAvailable>
+  <CQF_QuestBook_ActionOpenDescription>打开当前任务绑定的任务书。</CQF_QuestBook_ActionOpenDescription>
+  <CQF_QuestBook_ActionStartQuestBook>任务书定义：{0}</CQF_QuestBook_ActionStartQuestBook>
   <CQF_QuestBook_StepDataName>步骤数据名字</CQF_QuestBook_StepDataName>
   <CQF_QuestBook_StepName>步骤名字</CQF_QuestBook_StepName>
   <CQF_QuestBook_StepDescription>步骤描述</CQF_QuestBook_StepDescription>
+  <CQF_QuestBook_DetailImage>步骤详细图片</CQF_QuestBook_DetailImage>
+  <CQF_QuestBook_SelectDetailImage>选择详细图片</CQF_QuestBook_SelectDetailImage>
+  <CQF_QuestBook_NoDetailImages>尚未添加详细图片。</CQF_QuestBook_NoDetailImages>
+  <CQF_QuestBook_RemoveDetailImageTip>移除这张详细图片</CQF_QuestBook_RemoveDetailImageTip>
   <CQF_QuestBook_RewardInfo>奖励展示信息</CQF_QuestBook_RewardInfo>
   <CQF_QuestBook_RewardInfoName>奖励名称</CQF_QuestBook_RewardInfoName>
   <CQF_QuestBook_RewardInfoDescription>奖励提示描述</CQF_QuestBook_RewardInfoDescription>
@@ -128,6 +138,7 @@
   <CQF_QuestBook_StepRewards>步骤奖励</CQF_QuestBook_StepRewards>
   <CQF_QuestBook_CustomRewards>自定义奖励</CQF_QuestBook_CustomRewards>
   <CQF_QuestBook_Rewards>奖励</CQF_QuestBook_Rewards>
+  <CQF_QuestBook_NoRewards>尚未添加奖励。</CQF_QuestBook_NoRewards>
   <CQF_QuestBook_SelectRewardThing>选择奖励物品或建筑</CQF_QuestBook_SelectRewardThing>
   <CQF_QuestBook_AddRewardTip>添加奖励</CQF_QuestBook_AddRewardTip>
   <CQF_QuestBook_RemoveRewardTip>移除奖励</CQF_QuestBook_RemoveRewardTip>
