@@ -259,7 +259,7 @@ namespace QuestEditor_Library
             Rect addRect = new Rect(titleRect.xMax + 8f, card.y + 5f, 28f, 28f);
             if (Widgets.ButtonImage(addRect, TexButton.Plus))
             {
-                step.objectives.Add(new QuestBookObjective_Signal());
+                OpenObjectiveTypeSelector();
             }
             TooltipHandler.TipRegion(addRect, "CQF_QuestBook_AddObjectiveTip".Translate());
             float modeLabelWidth = Text.CalcSize("CQF_QuestBook_CompletionMode".Translate()).x;
@@ -283,14 +283,7 @@ namespace QuestEditor_Library
                 string objectiveLabel = objective.Label;
                 if (Widgets.ButtonText(row, string.Empty, false))
                 {
-                    Find.WindowStack.Add(new Dialog_EditQuestBookObjective(objective, replacement =>
-                    {
-                        int objectiveIndex = step.objectives.IndexOf(objective);
-                        if (objectiveIndex >= 0)
-                        {
-                            step.objectives[objectiveIndex] = replacement;
-                        }
-                    }));
+                    Find.WindowStack.Add(new Dialog_EditQuestBookObjective(objective));
                 }
                 Rect iconRect = new Rect(row.x + 4f, row.y + 3f, 24f, 24f);
                 DrawObjectiveIcon(objective, iconRect);
@@ -304,6 +297,35 @@ namespace QuestEditor_Library
                 rowY += 38f;
             }
             y += cardHeight + 10f;
+        }
+
+        private void OpenObjectiveTypeSelector()
+        {
+            List<Type> objectiveTypes = typeof(QuestBookObjective).AllSubclassesNonAbstract()
+                .OrderBy(type => type.Name)
+                .ToList();
+            Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(
+                objectiveTypes,
+                type => type.Name.Translate(),
+                type => CreateObjective(type),
+                null,
+                null,
+                null,
+                type => type.Name,
+                null,
+                null), "CQF_QuestBook_AddObjective".Translate()));
+        }
+
+        private void CreateObjective(Type type)
+        {
+            QuestBookObjective objective = Activator.CreateInstance(type) as QuestBookObjective;
+            if (objective == null)
+            {
+                Log.Error("CQF task book objective type could not be created: " + type);
+                return;
+            }
+            step.objectives.Add(objective);
+            Find.WindowStack.Add(new Dialog_EditQuestBookObjective(objective));
         }
 
         private static void DrawObjectiveIcon(QuestBookObjective objective, Rect rect)

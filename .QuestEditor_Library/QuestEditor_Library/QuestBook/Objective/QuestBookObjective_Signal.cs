@@ -35,10 +35,16 @@ namespace QuestEditor_Library
             return true;
         }
 
-        public override void Draw(ref float y, Rect inRect, float x)
+        public override void DrawSpecial(ref float y, Rect inRect, float x)
         {
-            CQFEditorTools.DrawFieldAndText(ref y, "CQF_QuestBook_TriggerSignal".Translate(), ref signal, x, 320f);
-            base.Draw(ref y, inRect, x);
+            DrawDetectionSection(ref y, inRect, 2, card =>
+            {
+                float rowY = card.y + 84f;
+                DrawTargetCountField(card, rowY);
+                rowY += 36f;
+                DrawRowLabel(card, rowY, "CQF_QuestBook_TriggerSignal");
+                signal = Widgets.TextField(new Rect(card.x + 184f, rowY, card.width - 198f, 28f), signal ?? string.Empty);
+            });
         }
 
         public override void ExposeData()

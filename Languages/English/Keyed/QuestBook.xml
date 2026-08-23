@@ -22,6 +22,7 @@
   <CQF_QuestBook_Optional>Optional objective</CQF_QuestBook_Optional>
   <CQF_QuestBook_WorkerClass>Objective worker</CQF_QuestBook_WorkerClass>
   <CQF_QuestBook_ObjectiveType>Objective type</CQF_QuestBook_ObjectiveType>
+  <CQF_QuestBook_AddObjective>Add objective</CQF_QuestBook_AddObjective>
   <CQF_QuestBook_None>None</CQF_QuestBook_None>
   <QuestBookObjective_Signal>Signal objective</QuestBookObjective_Signal>
   <QuestBookObjective_Resource>Resource objective</QuestBookObjective_Resource>

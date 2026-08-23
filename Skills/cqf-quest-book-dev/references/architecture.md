@@ -104,6 +104,7 @@ QuestBookDef
 | `labelKey` | `string` | 目标名称或翻译 Key |
 | `descriptionKey` | `string` | 目标描述或翻译 Key |
 | `iconPath` | `string` | 目标图标贴图路径 |
+| `iconManuallySelected` | `bool` | 是否锁定手动选择的目标图标；为 `false` 时选择事物目标可以自动同步图标 |
 | `optional` | `bool` | 是否为可选目标 |
 
 ### 共通接口
@@ -118,7 +119,7 @@ QuestBookDef
 | `GetThingTargets()` | `IEnumerable<ThingDef>` | 编辑器中的事物目标列表 |
 | `Process(progress, signal)` | `bool` | 信号到达时处理进度 |
 | `Check(progress)` | `bool` | 周期或手动检查进度；只有 `RequiresCheck=true` 的目标会被运行时调用 |
-| `Draw(ref y, inRect, x)` | `void` | 绘制目标类型的编辑字段，并推进 `y` |
+| `Draw(ref y, inRect, x)` | `void` | 绘制目标编辑内容，并在绘制完成后推进 `y` |
 
 目标 XML 使用对象的 `Class` 属性保存具体子类类型，因此目标列表可以保存不同的目标子类。
 
@@ -179,9 +180,11 @@ QuestBookDef
 
 ## 7. 目标编辑绘制
 
-`QuestBookObjective.Draw(ref y, Rect inRect, float x)` 是目标子类的编辑器扩展点。目标类型自己的输入字段在这个方法中绘制，绘制完成后把 `y` 推进到下一行；后续界面继续使用新的 `y`。
+`QuestBookObjective.Draw(ref y, Rect inRect, float x)` 是目标编辑器的完整入口，基类在这里绘制名称、描述、图标、完成规则和通用布局，并调用 `DrawSpecial(ref y, Rect inRect, float x)`。目标子类只通过 `DrawSpecial` 绘制专属检测内容。事物选择器只存在于 `QuestBookObjective_ThingTarget`，研究选择器只存在于 `QuestBookObjective_Research`，其他目标不会显示目标选择控件。绘制完成后推进 `y`，详细窗口只负责提供滚动容器，不再自行拼接目标字段。
 
-当前目标编辑窗口同时显示通用目标字段和子类字段。目标类型选择后，编辑器创建新的 `QuestBookObjective_*` 实例，并将通用字段写入新实例。
+目标类型在步骤编辑器点击“添加目标”时通过 `Dialog_Select<Type>` 选择。选择后创建对应的 `QuestBookObjective_*` 实例并加入步骤，打开详细窗口后不再允许切换目标类型。
+
+目标编辑窗口只提供滚动容器并调用目标的 `Draw`。窗口使用目标本次绘制结束后的 `y` 保存内容高度，不使用与目标类型无关的固定超大高度，因此不同目标类型的窗口内容区域会按实际绘制结果适配。目标选择事物后，仅当 `iconManuallySelected=false` 时才会把事物贴图同步到 `iconPath`；手动选择事物贴图或已加载图片会将该字段设为 `true`，清除图标会恢复自动同步状态。
 
 ## 8. 奖励和行为
 
@@ -249,7 +252,7 @@ QuestBookDef
 | `QuestBookNodeCanvas` | 当前章节步骤节点、位置、视图和链接 |
 | `Dialog_EditQuestBookChapter` | 章节属性 |
 | `Dialog_EditQuestBookStep` | 步骤属性、目标、奖励和行为 |
-| `Dialog_EditQuestBookObjective` | 目标通用属性和目标子类参数 |
+| `Dialog_EditQuestBookObjective` | 提供滚动容器并调用目标自身的绘制接口 |
 | `Dialog_EditQuestBookRewardInfo` | 奖励展示信息 |
 | `Dialog_QuestBookStepInfo` | 运行时步骤详情 |
 

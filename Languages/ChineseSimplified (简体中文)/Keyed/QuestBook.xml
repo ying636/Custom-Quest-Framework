@@ -22,6 +22,7 @@
   <CQF_QuestBook_Optional>可选目标</CQF_QuestBook_Optional>
   <CQF_QuestBook_WorkerClass>目标检查器</CQF_QuestBook_WorkerClass>
   <CQF_QuestBook_ObjectiveType>目标类型</CQF_QuestBook_ObjectiveType>
+  <CQF_QuestBook_AddObjective>添加目标</CQF_QuestBook_AddObjective>
   <CQF_QuestBook_None>无</CQF_QuestBook_None>
   <QuestBookObjective_Signal>信号目标</QuestBookObjective_Signal>
   <QuestBookObjective_Resource>资源目标</QuestBookObjective_Resource>

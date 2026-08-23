@@ -17,10 +17,15 @@ namespace QuestEditor_Library
             set => targetCount = Math.Max(1, value);
         }
 
-        public override void Draw(ref float y, Rect inRect, float x)
+        public override void DrawSpecial(ref float y, Rect inRect, float x)
         {
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_QuestBook_TargetCount".Translate(), ref targetCount, ref countBuffer, x, 320f);
-            y += 30f;
+            DrawDetectionSection(ref y, inRect, 1, card => DrawTargetCountField(card, card.y + 84f));
+        }
+
+        protected void DrawTargetCountField(Rect card, float y)
+        {
+            DrawRowLabel(card, y, "CQF_QuestBook_TargetCount");
+            Widgets.TextFieldNumeric<int>(new Rect(card.x + 184f, y, card.width - 198f, 28f), ref targetCount, ref countBuffer, 1);
         }
 
         public override void ExposeData()

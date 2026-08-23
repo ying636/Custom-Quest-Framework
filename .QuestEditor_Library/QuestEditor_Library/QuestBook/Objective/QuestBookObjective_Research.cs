@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using RimWorld.QuestGen;
+using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library
@@ -16,6 +19,26 @@ namespace QuestEditor_Library
         {
             get => targetResearch;
             set => targetResearch = value;
+        }
+
+        public override void DrawSpecial(ref float y, Rect inRect, float x)
+        {
+            DrawDetectionSection(ref y, inRect, 1, card =>
+            {
+                float rowY = card.y + 84f;
+                DrawRowLabel(card, rowY, "CQF_QuestBook_TargetResearch");
+                string label = TargetResearch == null ? "CQF_QuestBook_None".Translate().ToString() : TargetResearch.LabelCap;
+                Rect button = new Rect(card.x + 184f, rowY, card.width - 198f, 28f);
+                if (Widgets.ButtonText(button, label, false, true))
+                {
+                    List<ResearchProjectDef> projects = DefDatabase<ResearchProjectDef>.AllDefsListForReading
+                        .OrderBy(def => def.label)
+                        .ToList();
+                    Find.WindowStack.Add(new Dialog_Select<ResearchProjectDef>(new TextSelectDrawer<ResearchProjectDef>(
+                        projects, def => def.LabelCap, def => TargetResearch = def, null, def => def.description,
+                        null, def => def.defName, null, null), "CQF_QuestBook_TargetResearch".Translate()));
+                }
+            });
         }
 
         public override bool Process(QuestBookObjectiveProgress progress, Signal signal)
