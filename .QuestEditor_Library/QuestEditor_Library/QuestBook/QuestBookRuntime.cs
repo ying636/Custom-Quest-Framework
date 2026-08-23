@@ -320,7 +320,7 @@ namespace QuestEditor_Library
                     {
                         continue;
                     }
-                    objectiveDef.Worker?.Process(objectiveDef, objectiveState, signal);
+                    objectiveDef?.Process(objectiveState, signal);
                 }
                 TryCompleteStep(stepState, stepDef, targets);
             }
@@ -483,18 +483,23 @@ namespace QuestEditor_Library
                 Log.Error("CQF task book step is missing: " + stepState.stepId);
                 return false;
             }
+            bool hasCheckableObjective = false;
             for (int objectiveIndex = 0; objectiveIndex < stepDef.objectives.Count; objectiveIndex++)
             {
                 QuestBookObjective objective = stepDef.objectives[objectiveIndex];
                 QuestBookObjectiveProgress progress = GetObjectiveProgress(stepState.stepId, objectiveIndex);
-                if (progress == null || progress.completed || objective.Worker == null)
+                if (progress == null || progress.completed)
                 {
                     continue;
                 }
-                objective.Worker.Check(objective, progress);
+                if (objective?.RequiresCheck == true)
+                {
+                    hasCheckableObjective = true;
+                    objective.Check(progress);
+                }
             }
             TryCompleteStep(stepState, stepDef, new Dictionary<string, TargetInfo>());
-            return true;
+            return hasCheckableObjective;
         }
 
         private void RunActions(List<CQFAction> actions, Quest quest, Dictionary<string, TargetInfo> targets = null)

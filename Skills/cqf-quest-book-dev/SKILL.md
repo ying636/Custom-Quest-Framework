@@ -1,25 +1,28 @@
 ---
 name: cqf-quest-book-dev
-description: Explain the CQF Quest Book system and architecture, including object hierarchy, runtime state flow, objective checks, rewards, task binding, editor structure, and hot reload.
+description: CQF 任务书系统的架构、对象、字段参数、运行时状态、目标子类、奖励和编辑器参考。
 metadata:
-  short-description: CQF任务书系统与架构说明
+  short-description: CQF任务书系统参考
 ---
 
-# CQF任务书系统
+# CQF 任务书系统
 
-这是 CQF 任务书系统的架构说明技能。用于回答“系统有哪些对象、对象如何嵌套、运行时如何运作、编辑器如何对应数据、目标如何完成、奖励如何发放”等问题，也用于基于现有架构扩展任务书功能。
+这是一份 CQF 任务书系统参考资料，内容包括任务书对象层级、定义字段、运行时实例、目标检查、步骤奖励、Quest 绑定、编辑器结构以及目标子类的绘制扩展点。
 
-## 阅读顺序
+完整对象和参数说明位于 [references/architecture.md](references/architecture.md)。
 
-1. 先阅读 [references/architecture.md](references/architecture.md)，了解完整对象层级和生命周期。
-2. 需要修改代码时，再根据架构中的“代码对应关系”定位 `.QuestEditor_Library/QuestEditor_Library/QuestBook/` 文件。
-3. 涉及目标检查、奖励投递、任务绑定或热加载时，只阅读参考文档中对应章节，不要重新发明一套任务书模型。
+任务书的基本关系是：
 
-## 核心结论
+```text
+QuestBookDef
+└── QuestBookChapter
+    └── QuestBookStep
+        ├── QuestBookObjective
+        │   └── QuestBookObjective_* 子类
+        ├── 实际奖励
+        ├── 奖励展示信息
+        ├── 步骤行为
+        └── 后续步骤链接
+```
 
-- 任务书由章节组成，章节由步骤组成，步骤内部包含目标和奖励；章节与步骤不是同一层级。
-- 定义对象描述任务书内容，实例对象保存存档中的进度；编辑器编辑定义，运行时读取实例和定义共同绘制界面。
-- 目标由独立 Worker 检查，信号目标即时响应，资源、建筑、研究目标按周期检查。
-- 步骤完成时先确认完成模式，再发放实际奖励、执行步骤行为并激活后续步骤。
-- 奖励展示信息只负责给玩家看的图标、名称和 Tip 描述；实际奖励由 `CQFThingData` 数据发放。
-- 任务书可以绑定原版 Quest，也可以由 `autoStart` 自动创建实例；完成和失败的实例仍然可以查看。
+定义描述任务书内容，运行时实例和状态对象描述玩家当前进度。章节是组织层级，步骤是节点，目标属于步骤内部。目标的检查、参数和编辑绘制由 `QuestBookObjective` 的具体子类负责，不再通过独立 Worker 委托。

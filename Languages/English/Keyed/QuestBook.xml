@@ -21,11 +21,12 @@
   <CQF_QuestBook_CheckInterval>Check interval</CQF_QuestBook_CheckInterval>
   <CQF_QuestBook_Optional>Optional objective</CQF_QuestBook_Optional>
   <CQF_QuestBook_WorkerClass>Objective worker</CQF_QuestBook_WorkerClass>
+  <CQF_QuestBook_ObjectiveType>Objective type</CQF_QuestBook_ObjectiveType>
   <CQF_QuestBook_None>None</CQF_QuestBook_None>
-  <QuestBookObjectiveWorker_Signal>Signal objective</QuestBookObjectiveWorker_Signal>
-  <QuestBookObjectiveWorker_Resource>Resource objective</QuestBookObjectiveWorker_Resource>
-  <QuestBookObjectiveWorker_Building>Building objective</QuestBookObjectiveWorker_Building>
-  <QuestBookObjectiveWorker_Research>Research objective</QuestBookObjectiveWorker_Research>
+  <QuestBookObjective_Signal>Signal objective</QuestBookObjective_Signal>
+  <QuestBookObjective_Resource>Resource objective</QuestBookObjective_Resource>
+  <QuestBookObjective_Building>Building objective</QuestBookObjective_Building>
+  <QuestBookObjective_Research>Research objective</QuestBookObjective_Research>
   <CQF_QuestBook_NoName>Enter a def name first.</CQF_QuestBook_NoName>
   <CQF_QuestBook_SaveSucceed>Saved: {0}</CQF_QuestBook_SaveSucceed>
   <CQF_QuestBook_NodeId>ID: {0}</CQF_QuestBook_NodeId>
@@ -63,7 +64,17 @@
   <CQF_QuestBook_NextSteps>Next steps</CQF_QuestBook_NextSteps>
   <CQF_QuestBook_StepProperties>Step properties</CQF_QuestBook_StepProperties>
   <CQF_QuestBook_NodeIcon>Node icon</CQF_QuestBook_NodeIcon>
-  <CQF_QuestBook_SelectThingIcon>Select item/building icon</CQF_QuestBook_SelectThingIcon>
+  <CQF_QuestBook_SelectThingIcon>Select thing texture</CQF_QuestBook_SelectThingIcon>
+  <CQF_QuestBook_PawnTexture>Pawn</CQF_QuestBook_PawnTexture>
+  <CQF_QuestBook_TextureCategoryEntity>Entities</CQF_QuestBook_TextureCategoryEntity>
+  <CQF_QuestBook_TextureCategoryBuilding>Buildings</CQF_QuestBook_TextureCategoryBuilding>
+  <CQF_QuestBook_TextureCategoryItem>Items</CQF_QuestBook_TextureCategoryItem>
+  <CQF_QuestBook_TextureCategoryFloor>Floors</CQF_QuestBook_TextureCategoryFloor>
+  <CQF_QuestBook_TextureCategoryOther>Other</CQF_QuestBook_TextureCategoryOther>
+  <CQF_QuestBook_DirectionSouth>South</CQF_QuestBook_DirectionSouth>
+  <CQF_QuestBook_DirectionEast>East</CQF_QuestBook_DirectionEast>
+  <CQF_QuestBook_DirectionNorth>North</CQF_QuestBook_DirectionNorth>
+  <CQF_QuestBook_DirectionWest>West</CQF_QuestBook_DirectionWest>
   <CQF_QuestBook_SelectImageIcon>Select loaded image</CQF_QuestBook_SelectImageIcon>
   <CQF_QuestBook_ObjectiveIcon>Objective icon</CQF_QuestBook_ObjectiveIcon>
   <CQFAction_CompleteQuestBookStep>Action: complete quest book step</CQFAction_CompleteQuestBookStep>

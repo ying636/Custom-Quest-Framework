@@ -9,9 +9,10 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditQuestBookObjective : Window
     {
-        public Dialog_EditQuestBookObjective(QuestBookObjective objective)
+        public Dialog_EditQuestBookObjective(QuestBookObjective objective, System.Action<QuestBookObjective> replaceAction = null)
         {
             this.objective = objective;
+            this.replaceAction = replaceAction;
             if (objective.labelKey.CanTranslate())
             {
                 objective.labelKey = objective.labelKey.Translate().ToString();
@@ -62,16 +63,9 @@ namespace QuestEditor_Library
         {
             Rect card = BeginSection(ref y, width, GetDetectionSectionHeight(), "CQF_QuestBook_ObjectiveDetection");
             float rowY = card.y + SectionHeaderHeight;
-            DrawWorkerSelector(card, ref rowY);
-            if (objective.workerClass == typeof(QuestBookObjectiveWorker_Signal))
-            {
-                DrawTextField(card, ref rowY, "CQF_QuestBook_TriggerSignal", ref objective.signal, false);
-            }
+            DrawObjectiveSelector(card, ref rowY);
             DrawTargetSelector(card, ref rowY);
-            if (objective.workerClass != typeof(QuestBookObjectiveWorker_Research))
-            {
-                DrawNumberField(card, ref rowY, "CQF_QuestBook_TargetCount", ref objective.targetCount, ref targetCountBuffer, 1);
-            }
+            objective.Draw(ref rowY, card, card.x + FieldPadding);
         }
 
         private void DrawIconSection(ref float y, float width)
@@ -94,18 +88,7 @@ namespace QuestEditor_Library
 
         private void SelectThingIcon()
         {
-            List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading
-                .Where(def => def.uiIcon != null && !def.uiIcon.NullOrBad() && def.uiIcon != BaseContent.PlaceholderImage
-                    && def.category != ThingCategory.Mote && def.mote == null && def.projectile == null
-                    && def.skyfaller == null && def.pawnFlyer == null && def.gas == null && def.filth == null)
-                .OrderBy(def => def.label)
-                .ToList();
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(
-                defs, def => def.uiIcon, def => def.label, selected =>
-                {
-                    objective.iconThing = selected;
-                    objective.iconPath = null;
-                }, null, (def, rect) => Widgets.DefIcon(rect, def)), "CQF_QuestBook_SelectThingIcon".Translate()));
+            QuestBookTextureEntry.OpenSelect(path => objective.iconPath = path, "CQF_QuestBook_SelectThingIcon");
         }
 
         private void SelectImageIcon()
@@ -113,23 +96,16 @@ namespace QuestEditor_Library
             Find.WindowStack.Add(new Dialog_SelectDialogImage(path =>
             {
                 objective.iconPath = path;
-                objective.iconThing = null;
             }, objective.iconPath));
         }
 
         private void ClearIcon()
         {
-            objective.iconThing = null;
             objective.iconPath = null;
         }
 
         private static void DrawObjectiveIcon(QuestBookObjective objective, Rect rect)
         {
-            if (objective.iconThing != null)
-            {
-                Widgets.DefIcon(rect, objective.iconThing);
-                return;
-            }
             if (!objective.iconPath.NullOrEmpty())
             {
                 Texture2D texture = ContentFinder<Texture2D>.Get(objective.iconPath, false);
@@ -139,9 +115,9 @@ namespace QuestEditor_Library
                     return;
                 }
             }
-            if (objective.targetThingDef != null)
+            if (objective.TargetThingDef != null)
             {
-                Widgets.DefIcon(rect, objective.targetThingDef);
+                Widgets.DefIcon(rect, objective.TargetThingDef);
                 return;
             }
             Widgets.DrawTextureFitted(rect, TexButton.Info, 1f);
@@ -171,46 +147,29 @@ namespace QuestEditor_Library
             y += rowHeight;
         }
 
-        private void DrawNumberField(Rect card, ref float y, string labelKey, ref int value, ref string buffer, int minimum)
+        private void DrawObjectiveSelector(Rect card, ref float y)
         {
-            Widgets.Label(new Rect(card.x + FieldPadding, y + 2f, LabelWidth, 24f), labelKey.Translate());
-            Rect field = new Rect(card.x + FieldPadding + LabelWidth, y, card.width - LabelWidth - FieldPadding * 2f, 28f);
-            if (buffer == null)
-            {
-                buffer = value.ToString();
-            }
-            string text = Widgets.TextField(field, buffer);
-            if (text != buffer)
-            {
-                buffer = text;
-                if (int.TryParse(buffer, out int parsed) && parsed >= minimum)
-                {
-                    value = parsed;
-                }
-            }
-            if (!int.TryParse(buffer, out int current) || current < minimum)
-            {
-                Widgets.DrawBox(field, 1, invalidFieldTexture);
-                TooltipHandler.TipRegion(field, "CQF_QuestBook_PositiveNumberRequired".Translate());
-            }
-            y += FieldRowHeight;
-        }
-
-        private void DrawWorkerSelector(Rect card, ref float y)
-        {
-            Widgets.Label(new Rect(card.x + FieldPadding, y + 2f, LabelWidth, 24f), "CQF_QuestBook_ObjectiveChecker".Translate());
-            string workerName = objective.workerClass == null ? "CQF_QuestBook_None".Translate() : objective.workerClass.Name.Translate();
+            Widgets.Label(new Rect(card.x + FieldPadding, y + 2f, LabelWidth, 24f), "CQF_QuestBook_ObjectiveType".Translate());
+            string objectiveName = objective.GetType().Name.Translate();
             Rect button = new Rect(card.x + FieldPadding + LabelWidth, y, card.width - LabelWidth - FieldPadding * 2f, 28f);
-                if (Widgets.ButtonText(button, workerName, false, true))
+                if (Widgets.ButtonText(button, objectiveName, false, true))
                 {
-                    List<Type> workers = typeof(QuestBookObjectiveWorker).AllSubclassesNonAbstract();
-                    Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(workers,
+                    List<Type> objectiveTypes = typeof(QuestBookObjective).AllSubclassesNonAbstract();
+                    Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(objectiveTypes,
                         type => type.Name.Translate(), type =>
                         {
-                            objective.workerClass = type;
-                            objective.signal = null;
-                            objective.targetThingDef = null;
-                            objective.targetResearch = null;
+                            QuestBookObjective replacement = Activator.CreateInstance(type) as QuestBookObjective;
+                            if (replacement == null)
+                            {
+                                Log.Error("CQF task book objective type could not be created: " + type);
+                                return;
+                            }
+                            replacement.labelKey = objective.labelKey;
+                            replacement.descriptionKey = objective.descriptionKey;
+                            replacement.iconPath = objective.iconPath;
+                            replacement.optional = objective.optional;
+                            replaceAction?.Invoke(replacement);
+                            objective = replacement;
                         }, null, null, null, type => type.Name, null, null), "CQF_QuestBook_ObjectiveChecker".Translate()));
                 }
             y += FieldRowHeight;
@@ -218,35 +177,34 @@ namespace QuestEditor_Library
 
         private void DrawTargetSelector(Rect card, ref float y)
         {
-            if (objective.workerClass == typeof(QuestBookObjectiveWorker_Resource) || objective.workerClass == typeof(QuestBookObjectiveWorker_Building))
+            if (objective.UsesThingTarget)
             {
                 Widgets.Label(new Rect(card.x + FieldPadding, y + 2f, LabelWidth, 24f), "CQF_QuestBook_TargetThing".Translate());
-                string label = objective.targetThingDef == null ? "CQF_QuestBook_None".Translate() : objective.targetThingDef.LabelCap;
+                string label = objective.TargetThingDef == null ? "CQF_QuestBook_None".Translate() : objective.TargetThingDef.LabelCap;
                 Rect button = new Rect(card.x + FieldPadding + LabelWidth, y, card.width - LabelWidth - FieldPadding * 2f, 28f);
                 if (Widgets.ButtonText(button, label, false, true))
                 {
-                    IEnumerable<ThingDef> defs = objective.workerClass == typeof(QuestBookObjectiveWorker_Building)
-                        ? DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.building != null)
-                        : DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.CountAsResource);
-                    List<ThingDef> selectableDefs = defs
-                        .Where(def => def.uiIcon != null
-                            && !def.uiIcon.NullOrBad()
-                            && def.uiIcon != BaseContent.PlaceholderImage
-                            && def.category != ThingCategory.Mote
-                            && def.mote == null)
+                    List<ThingDef> selectableDefs = objective.GetThingTargets()
+                        .Where(def => QuestBookTextureEntry.GetThingTexturePath(def) != null)
                         .OrderBy(def => def.label)
                         .ToList();
                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(
-                        selectableDefs, def => def.uiIcon, def => def.label, def => objective.targetThingDef = def,
-                        null, (def, rect) => Widgets.DefIcon(rect, def)), "CQF_QuestBook_TargetThing".Translate()));
+                        selectableDefs,
+                        def => ContentFinder<Texture2D>.Get(QuestBookTextureEntry.GetThingTexturePath(def), false),
+                        def => def.label,
+                        def =>
+                        {
+                            objective.TargetThingDef = def;
+                            objective.iconPath = QuestBookTextureEntry.GetThingTexturePath(def);
+                        }), "CQF_QuestBook_TargetThing".Translate()));
                 }
                 y += FieldRowHeight;
                 return;
             }
-            if (objective.workerClass == typeof(QuestBookObjectiveWorker_Research))
+            if (objective.UsesResearchTarget)
             {
                 Widgets.Label(new Rect(card.x + FieldPadding, y + 2f, LabelWidth, 24f), "CQF_QuestBook_TargetResearch".Translate());
-                string label = objective.targetResearch == null ? "CQF_QuestBook_None".Translate() : objective.targetResearch.LabelCap;
+                string label = objective.TargetResearch == null ? "CQF_QuestBook_None".Translate() : objective.TargetResearch.LabelCap;
                 Rect button = new Rect(card.x + FieldPadding + LabelWidth, y, card.width - LabelWidth - FieldPadding * 2f, 28f);
                 if (Widgets.ButtonText(button, label, false, true))
                 {
@@ -254,7 +212,7 @@ namespace QuestEditor_Library
                         .OrderBy(def => def.label)
                         .ToList();
                     Find.WindowStack.Add(new Dialog_Select<ResearchProjectDef>(new TextSelectDrawer<ResearchProjectDef>(
-                        projects, def => def.LabelCap, def => objective.targetResearch = def, null, def => def.description,
+                        projects, def => def.LabelCap, def => objective.TargetResearch = def, null, def => def.description,
                         null, def => def.defName, null, null), "CQF_QuestBook_TargetResearch".Translate()));
                 }
                 y += FieldRowHeight;
@@ -276,17 +234,15 @@ namespace QuestEditor_Library
         private float GetDetectionSectionHeight()
         {
             int rowCount = 1;
-            if (objective.workerClass == typeof(QuestBookObjectiveWorker_Signal))
+            if (objective.UsesSignal)
             {
                 rowCount++;
             }
-            if (objective.workerClass == typeof(QuestBookObjectiveWorker_Resource)
-                || objective.workerClass == typeof(QuestBookObjectiveWorker_Building)
-                || objective.workerClass == typeof(QuestBookObjectiveWorker_Research))
+            if (objective.UsesThingTarget || objective.UsesResearchTarget)
             {
                 rowCount++;
             }
-            if (objective.workerClass != typeof(QuestBookObjectiveWorker_Research))
+            if (objective.UsesTargetCount)
             {
                 rowCount++;
             }
@@ -302,9 +258,8 @@ namespace QuestEditor_Library
         private const float SectionGap = 12f;
         private const float SectionHeaderHeight = 46f;
         private const float ToggleRowHeight = 30f;
-        private static readonly Texture2D invalidFieldTexture = SolidColorMaterials.NewSolidColorTexture(new Color(0.75f, 0.2f, 0.2f, 0.9f));
-        private readonly QuestBookObjective objective;
+        private QuestBookObjective objective;
+        private readonly System.Action<QuestBookObjective> replaceAction;
         private Vector2 scrollPosition;
-        private string targetCountBuffer;
     }
 }

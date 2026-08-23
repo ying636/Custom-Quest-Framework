@@ -41,7 +41,6 @@ namespace QuestEditor_Library
             DrawIcon(iconRect.ContractedBy(10f));
             if (Widgets.ButtonImage(new Rect(iconRect.x, iconRect.yMax + 6f, 26f, 26f), TexButton.Delete))
             {
-                info.iconThing = null;
                 info.iconPath = null;
             }
             TooltipHandler.TipRegion(new Rect(iconRect.x, iconRect.yMax + 6f, 26f, 26f), "CQF_QuestBook_Clear".Translate());
@@ -65,11 +64,6 @@ namespace QuestEditor_Library
 
         private void DrawIcon(Rect rect)
         {
-            if (info.iconThing != null)
-            {
-                Widgets.DefIcon(rect, info.iconThing);
-                return;
-            }
             Texture2D texture = info.iconPath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(info.iconPath, false);
             if (texture != null)
             {
@@ -79,20 +73,7 @@ namespace QuestEditor_Library
 
         private void SelectThingIcon()
         {
-            List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading
-                .Where(def => def.uiIcon != null && !def.uiIcon.NullOrBad() && def.uiIcon != BaseContent.PlaceholderImage
-                    && def.category != ThingCategory.Mote && def.mote == null && def.projectile == null
-                    && def.skyfaller == null && def.pawnFlyer == null && def.gas == null && def.filth == null
-                    && def.thingClass != null && !typeof(Mote).IsAssignableFrom(def.thingClass))
-                .OrderBy(def => def.label)
-                .ToList();
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(
-                defs, def => def.uiIcon, def => def.label,
-                selected =>
-                {
-                    info.iconThing = selected;
-                    info.iconPath = null;
-                }, null, (def, rect) => Widgets.DrawTextureFitted(rect, def.uiIcon, 1f)), "CQF_QuestBook_SelectThingIcon".Translate()));
+            QuestBookTextureEntry.OpenSelect(path => info.iconPath = path, "CQF_QuestBook_SelectThingIcon");
         }
 
         private void SelectImageIcon()
@@ -100,7 +81,6 @@ namespace QuestEditor_Library
             Find.WindowStack.Add(new Dialog_SelectDialogImage(path =>
             {
                 info.iconPath = path;
-                info.iconThing = null;
             }, info.iconPath));
         }
 

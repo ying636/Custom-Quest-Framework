@@ -24,7 +24,6 @@ namespace QuestEditor_Library
         [NoTranslate]
         public List<string> nextStepIds = new List<string>();
         public Vector2 position = Vector2.zero;
-        public ThingDef iconThing;
         [NoTranslate]
         public string iconPath;
         [NoTranslate]
@@ -49,7 +48,6 @@ namespace QuestEditor_Library
             Scribe_Collections.Look(ref onSkipActions, "onSkipActions", LookMode.Deep);
             Scribe_Collections.Look(ref nextStepIds, "nextStepIds", LookMode.Value);
             Scribe_Values.Look(ref position, "position");
-            Scribe_Defs.Look(ref iconThing, "iconThing");
             Scribe_Values.Look(ref iconPath, "iconPath");
             Scribe_Collections.Look(ref detailImagePaths, "detailImagePaths", LookMode.Value);
             detailImagePaths ??= new List<string>();
@@ -100,10 +98,6 @@ namespace QuestEditor_Library
             if (position != Vector2.zero)
             {
                 result.Add(new XElement("position", position));
-            }
-            if (iconThing != null)
-            {
-                result.Add(new XElement("iconThing", iconThing.defName));
             }
             if (!iconPath.NullOrEmpty())
             {

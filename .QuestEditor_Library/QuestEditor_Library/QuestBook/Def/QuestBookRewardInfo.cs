@@ -10,13 +10,12 @@ namespace QuestEditor_Library
 
         public string Description => descriptionKey.NullOrEmpty() ? string.Empty : descriptionKey.CanTranslate() ? descriptionKey.Translate().ToString() : descriptionKey;
 
-        public bool HasContent => !Label.NullOrEmpty() || !Description.NullOrEmpty() || iconThing != null || !iconPath.NullOrEmpty();
+        public bool HasContent => !Label.NullOrEmpty() || !Description.NullOrEmpty() || !iconPath.NullOrEmpty();
 
         public void ExposeData()
         {
             Scribe_Values.Look(ref labelKey, "labelKey");
             Scribe_Values.Look(ref descriptionKey, "descriptionKey");
-            Scribe_Defs.Look(ref iconThing, "iconThing");
             Scribe_Values.Look(ref iconPath, "iconPath");
         }
 
@@ -27,10 +26,6 @@ namespace QuestEditor_Library
             if (!descriptionKey.NullOrEmpty())
             {
                 result.Add(new XElement("descriptionKey", descriptionKey));
-            }
-            if (iconThing != null)
-            {
-                result.Add(new XElement("iconThing", iconThing.defName));
             }
             if (!iconPath.NullOrEmpty())
             {
@@ -43,7 +38,6 @@ namespace QuestEditor_Library
         public string labelKey;
         [NoTranslate]
         public string descriptionKey;
-        public ThingDef iconThing;
         [NoTranslate]
         public string iconPath;
 

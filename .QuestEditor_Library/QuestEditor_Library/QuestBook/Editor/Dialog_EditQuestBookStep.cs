@@ -188,11 +188,6 @@ namespace QuestEditor_Library
 
         private static void DrawRewardInfoIcon(QuestBookRewardInfo info, Rect rect)
         {
-            if (info.iconThing != null)
-            {
-                Widgets.DefIcon(rect, info.iconThing);
-                return;
-            }
             if (!info.iconPath.NullOrEmpty())
             {
                 Texture2D texture = ContentFinder<Texture2D>.Get(info.iconPath, false);
@@ -213,31 +208,7 @@ namespace QuestEditor_Library
 
         private void SelectThingIcon()
         {
-            Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(
-                DefDatabase<ThingDef>.AllDefsListForReading
-                    .Where(def => def.uiIcon != null
-                        && !def.uiIcon.NullOrBad()
-                        && def.uiIcon != BaseContent.PlaceholderImage
-                        && def.category != ThingCategory.Mote
-                        && def.mote == null
-                        && def.projectile == null
-                        && def.skyfaller == null
-                        && def.pawnFlyer == null
-                        && def.gas == null
-                        && def.filth == null
-                        && def.thingClass != null
-                        && !typeof(Mote).IsAssignableFrom(def.thingClass))
-                    .OrderBy(def => def.label)
-                    .ToList(),
-                def => def.uiIcon,
-                def => def.label,
-                selected =>
-                {
-                    step.iconThing = selected;
-                    step.iconPath = null;
-                },
-                null,
-                (def, rect) => Widgets.DrawTextureFitted(rect, def.uiIcon, 1f)), "CQF_QuestBook_SelectThingIcon".Translate()));
+            QuestBookTextureEntry.OpenSelect(path => step.iconPath = path, "CQF_QuestBook_SelectThingIcon");
         }
 
         private void SelectImageIcon()
@@ -245,7 +216,6 @@ namespace QuestEditor_Library
             Find.WindowStack.Add(new Dialog_SelectDialogImage(path =>
             {
                 step.iconPath = path;
-                step.iconThing = null;
             }, step.iconPath));
         }
 
@@ -263,17 +233,11 @@ namespace QuestEditor_Library
 
         private void ClearIcon()
         {
-            step.iconThing = null;
             step.iconPath = null;
         }
 
         private void DrawIcon(Rect rect)
         {
-            if (step.iconThing != null)
-            {
-                Widgets.DefIcon(rect, step.iconThing);
-                return;
-            }
             if (!step.iconPath.NullOrEmpty())
             {
                 Texture2D texture = ContentFinder<Texture2D>.Get(step.iconPath, false);
@@ -295,7 +259,7 @@ namespace QuestEditor_Library
             Rect addRect = new Rect(titleRect.xMax + 8f, card.y + 5f, 28f, 28f);
             if (Widgets.ButtonImage(addRect, TexButton.Plus))
             {
-                step.objectives.Add(new QuestBookObjective());
+                step.objectives.Add(new QuestBookObjective_Signal());
             }
             TooltipHandler.TipRegion(addRect, "CQF_QuestBook_AddObjectiveTip".Translate());
             float modeLabelWidth = Text.CalcSize("CQF_QuestBook_CompletionMode".Translate()).x;
@@ -319,7 +283,14 @@ namespace QuestEditor_Library
                 string objectiveLabel = objective.Label;
                 if (Widgets.ButtonText(row, string.Empty, false))
                 {
-                    Find.WindowStack.Add(new Dialog_EditQuestBookObjective(objective));
+                    Find.WindowStack.Add(new Dialog_EditQuestBookObjective(objective, replacement =>
+                    {
+                        int objectiveIndex = step.objectives.IndexOf(objective);
+                        if (objectiveIndex >= 0)
+                        {
+                            step.objectives[objectiveIndex] = replacement;
+                        }
+                    }));
                 }
                 Rect iconRect = new Rect(row.x + 4f, row.y + 3f, 24f, 24f);
                 DrawObjectiveIcon(objective, iconRect);
@@ -337,11 +308,6 @@ namespace QuestEditor_Library
 
         private static void DrawObjectiveIcon(QuestBookObjective objective, Rect rect)
         {
-            if (objective.iconThing != null)
-            {
-                Widgets.DefIcon(rect, objective.iconThing);
-                return;
-            }
             if (!objective.iconPath.NullOrEmpty())
             {
                 Texture2D texture = ContentFinder<Texture2D>.Get(objective.iconPath, false);
@@ -351,9 +317,9 @@ namespace QuestEditor_Library
                     return;
                 }
             }
-            if (objective.targetThingDef != null)
+            if (objective.TargetThingDef != null)
             {
-                Widgets.DefIcon(rect, objective.targetThingDef);
+                Widgets.DefIcon(rect, objective.TargetThingDef);
                 return;
             }
             Widgets.DrawTextureFitted(rect, TexButton.Info, 1f);

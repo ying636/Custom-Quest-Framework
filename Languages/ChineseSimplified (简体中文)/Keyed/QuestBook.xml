@@ -21,11 +21,12 @@
   <CQF_QuestBook_CheckInterval>检查间隔</CQF_QuestBook_CheckInterval>
   <CQF_QuestBook_Optional>可选目标</CQF_QuestBook_Optional>
   <CQF_QuestBook_WorkerClass>目标检查器</CQF_QuestBook_WorkerClass>
+  <CQF_QuestBook_ObjectiveType>目标类型</CQF_QuestBook_ObjectiveType>
   <CQF_QuestBook_None>无</CQF_QuestBook_None>
-  <QuestBookObjectiveWorker_Signal>信号目标</QuestBookObjectiveWorker_Signal>
-  <QuestBookObjectiveWorker_Resource>资源目标</QuestBookObjectiveWorker_Resource>
-  <QuestBookObjectiveWorker_Building>建筑目标</QuestBookObjectiveWorker_Building>
-  <QuestBookObjectiveWorker_Research>研究目标</QuestBookObjectiveWorker_Research>
+  <QuestBookObjective_Signal>信号目标</QuestBookObjective_Signal>
+  <QuestBookObjective_Resource>资源目标</QuestBookObjective_Resource>
+  <QuestBookObjective_Building>建筑目标</QuestBookObjective_Building>
+  <QuestBookObjective_Research>研究目标</QuestBookObjective_Research>
   <CQF_QuestBook_NoName>请先填写定义名称。</CQF_QuestBook_NoName>
   <CQF_QuestBook_SaveSucceed>已保存：{0}</CQF_QuestBook_SaveSucceed>
   <CQF_QuestBook_NodeId>标识：{0}</CQF_QuestBook_NodeId>
@@ -63,7 +64,17 @@
   <CQF_QuestBook_NextSteps>后续步骤</CQF_QuestBook_NextSteps>
   <CQF_QuestBook_StepProperties>步骤属性</CQF_QuestBook_StepProperties>
   <CQF_QuestBook_NodeIcon>节点图标</CQF_QuestBook_NodeIcon>
-  <CQF_QuestBook_SelectThingIcon>选择物品/建筑图标</CQF_QuestBook_SelectThingIcon>
+  <CQF_QuestBook_SelectThingIcon>选择事物贴图</CQF_QuestBook_SelectThingIcon>
+  <CQF_QuestBook_PawnTexture>Pawn</CQF_QuestBook_PawnTexture>
+  <CQF_QuestBook_TextureCategoryEntity>实体</CQF_QuestBook_TextureCategoryEntity>
+  <CQF_QuestBook_TextureCategoryBuilding>建筑</CQF_QuestBook_TextureCategoryBuilding>
+  <CQF_QuestBook_TextureCategoryItem>物品</CQF_QuestBook_TextureCategoryItem>
+  <CQF_QuestBook_TextureCategoryFloor>地板</CQF_QuestBook_TextureCategoryFloor>
+  <CQF_QuestBook_TextureCategoryOther>其他</CQF_QuestBook_TextureCategoryOther>
+  <CQF_QuestBook_DirectionSouth>南</CQF_QuestBook_DirectionSouth>
+  <CQF_QuestBook_DirectionEast>东</CQF_QuestBook_DirectionEast>
+  <CQF_QuestBook_DirectionNorth>北</CQF_QuestBook_DirectionNorth>
+  <CQF_QuestBook_DirectionWest>西</CQF_QuestBook_DirectionWest>
   <CQF_QuestBook_SelectImageIcon>选择已加载图片</CQF_QuestBook_SelectImageIcon>
   <CQF_QuestBook_ObjectiveIcon>目标图标</CQF_QuestBook_ObjectiveIcon>
   <CQFAction_CompleteQuestBookStep>行为：完成任务书步骤</CQFAction_CompleteQuestBookStep>

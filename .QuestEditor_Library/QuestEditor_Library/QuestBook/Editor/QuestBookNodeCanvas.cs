@@ -231,11 +231,6 @@ namespace QuestEditor_Library
 
         private void DrawIcon(QuestBookStep step, Rect rect)
         {
-            if (step.iconThing != null)
-            {
-                Widgets.DefIcon(rect, step.iconThing);
-                return;
-            }
             Texture2D texture = step.iconPath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(step.iconPath, false);
             if (texture != null)
             {

@@ -439,7 +439,7 @@ namespace QuestEditor_Library
             return item;
         }
 
-        protected virtual void DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
+        protected virtual float DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
         {
             Color color = item.color ?? Color.white;
             Color oldColor = GUI.color;
@@ -458,6 +458,7 @@ namespace QuestEditor_Library
             {
                 this.AcceptAndClose(item.value, closeAction);
             }
+            return rect.height;
         }
 
         protected float GetFirstX(float width)
@@ -497,27 +498,53 @@ namespace QuestEditor_Library
 
         protected override float RowSpacing => LabeledRowSpacing;
 
+        public override float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts)
+        {
+            float x = this.GetFirstX(viewRect.width);
+            float y = contentHeight;
+            float rowHeight = 0f;
+            foreach (T t in ts)
+            {
+                SelectItem<T> item = this.ItemFor(t);
+                Rect rect = new Rect(x, y, ItemWidth, 0f);
+                float itemHeight = this.DrawItem(item, rect, closeAction);
+                TooltipHandler.TipRegion(rect, item.tip);
+                rowHeight = Mathf.Max(rowHeight, itemHeight);
+                x += ItemSpacingX;
+                if (x + ItemWidth > viewRect.width)
+                {
+                    x = this.GetFirstX(viewRect.width);
+                    y += rowHeight + RowSpacing;
+                    rowHeight = 0f;
+                }
+            }
+            return y + rowHeight + RowSpacing;
+        }
+
         protected override Rect GetImageRect(Rect rect)
         {
             return new Rect(rect.x + (rect.width - IconSize) / 2f, rect.y, IconSize, IconSize);
         }
 
-        protected override void DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
+        protected override float DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
         {
+            float labelHeight = Mathf.Max(1f, Text.CalcHeight(item.text, ItemWidth));
+            float itemHeight = IconSize + LabelGap + labelHeight;
+            rect.height = itemHeight;
             base.DrawItem(item, rect, closeAction);
             TextAnchor oldAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.UpperCenter;
-            Widgets.Label(new Rect(rect.x, rect.y + IconSize + LabelGap, rect.width, LabelHeight), item.text);
+            Widgets.Label(new Rect(rect.x, rect.y + IconSize + LabelGap, rect.width, rect.height - IconSize - LabelGap), item.text);
             Text.Anchor = oldAnchor;
+            return itemHeight;
         }
 
         private const float IconSize = 30f;
         private const float LabelGap = 3f;
-        private const float LabelHeight = 35f;
         private const float LabeledItemHeight = 68f;
         private const float LabeledItemSpacingX = 90f;
         private const float LabeledItemWidth = 80f;
-        private const float LabeledRowSpacing = 75f;
+        private const float LabeledRowSpacing = 20f;
     }
 
     public class ExtraOption 

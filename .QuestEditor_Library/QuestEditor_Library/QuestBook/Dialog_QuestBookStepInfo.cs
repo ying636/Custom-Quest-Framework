@@ -178,7 +178,7 @@ namespace QuestEditor_Library
                 float rowHeight = Mathf.Max(50f, Text.CalcHeight(objective.Label, card.width - 118f) + 16f);
                 Rect row = DrawListRow(card, rowY, rowHeight);
                 Widgets.DrawHighlightIfMouseover(row);
-                string count = objective.workerClass != typeof(QuestBookObjectiveWorker_Research) && objective.targetCount > 1 ? " (" + (progress?.currentCount ?? 0) + "/" + objective.targetCount + ")" : string.Empty;
+                string count = objective.UsesTargetCount && objective.TargetCount > 1 ? " (" + (progress?.currentCount ?? 0) + "/" + objective.TargetCount + ")" : string.Empty;
                 Rect iconRect = new Rect(row.x + 8f, row.y + 7f, 36f, 36f);
                 DrawObjectiveIcon(objective, iconRect);
                 Widgets.Label(new Rect(iconRect.xMax + 12f, row.y + (row.height - 24f) / 2f, row.width - 100f, 24f), objective.Label + count);
@@ -217,25 +217,18 @@ namespace QuestEditor_Library
         {
             Widgets.DrawTextureFitted(rect, nodeFrame, 1f);
             Rect iconRect = rect.ContractedBy(10f);
-            if (step.iconThing != null) { Widgets.DefIcon(iconRect, step.iconThing); return; }
             Texture2D texture = step.iconPath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(step.iconPath, false);
             if (texture != null) Widgets.DrawTextureFitted(iconRect, texture, 1f);
         }
 
         private static void DrawRewardInfoIcon(Rect rect, QuestBookRewardInfo info)
         {
-            if (info.iconThing != null) { Widgets.DefIcon(rect, info.iconThing); return; }
             Texture2D texture = info.iconPath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(info.iconPath, false);
             if (texture != null) Widgets.DrawTextureFitted(rect, texture, 1f);
         }
 
         private static void DrawObjectiveIcon(QuestBookObjective objective, Rect rect)
         {
-            if (objective.iconThing != null)
-            {
-                Widgets.DefIcon(rect, objective.iconThing);
-                return;
-            }
             if (!objective.iconPath.NullOrEmpty())
             {
                 Texture2D texture = ContentFinder<Texture2D>.Get(objective.iconPath, false);
@@ -245,9 +238,9 @@ namespace QuestEditor_Library
                     return;
                 }
             }
-            if (objective.targetThingDef != null)
+            if (objective.TargetThingDef != null)
             {
-                Widgets.DefIcon(rect, objective.targetThingDef);
+                Widgets.DefIcon(rect, objective.TargetThingDef);
                 return;
             }
             Widgets.DrawTextureFitted(rect, TexButton.Info, 1f);
