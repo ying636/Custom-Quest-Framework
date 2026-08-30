@@ -97,10 +97,7 @@ namespace QuestEditor_Library
 
         private void OpenCustomCountSlider()
         {
-            Find.WindowStack.Add(new Dialog_Slider(
-                value => "CQF_SetThingCountCustomPrompt".Translate(value),
-                1,
-                9999,
+            Find.WindowStack.Add(new Dialog_SetThingCount(
                 value =>
                 {
                     this.customCount = value;
