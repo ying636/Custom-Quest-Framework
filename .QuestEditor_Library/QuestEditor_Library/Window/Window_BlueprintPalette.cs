@@ -14,7 +14,7 @@ namespace QuestEditor_Library
             this.designator = designator;
             this.layer = WindowLayer.GameUI;
             this.closeOnAccept = false;
-            this.closeOnCancel = true;
+            this.closeOnCancel = false;
             this.doCloseX = false;
             this.draggable = true;
             this.preventCameraMotion = false;

@@ -298,6 +298,22 @@ SiteName: SiteName-></RuleTip>
   <CQF_SetQualityNoTarget>No thing with quality can be set at this location.</CQF_SetQualityNoTarget>
   <CQF_UpgradeQuality>Upgrade quality</CQF_UpgradeQuality>
   <CQF_DowngradeQuality>Downgrade quality</CQF_DowngradeQuality>
+  <CQFSetPlantGrowth>Set plant maturity: {0}%</CQFSetPlantGrowth>
+  <CQFSetPlantGrowthDesc>Set the maturity of selected plants. Right click to adjust maturity.</CQFSetPlantGrowthDesc>
+  <CQF_SetPlantGrowthPercentage>Maturity percentage</CQF_SetPlantGrowthPercentage>
+  <CQF_SetPlantGrowthPercentagePrompt>Set plant maturity to {0}%</CQF_SetPlantGrowthPercentagePrompt>
+  <CQF_SetPlantGrowthNoTarget>No plant with adjustable maturity at this location.</CQF_SetPlantGrowthNoTarget>
+  <CQFSetThingCount>Set item count: {0}</CQFSetThingCount>
+  <CQFSetThingCountDesc>Set the stack count of selected items. Right click to switch between custom and adjustment modes.</CQFSetThingCountDesc>
+  <CQF_SetThingCountCustom>Custom count</CQF_SetThingCountCustom>
+  <CQF_SetThingCountCustomPrompt>Set item count to {0}</CQF_SetThingCountCustomPrompt>
+  <CQF_SetThingCountAdd1>+1</CQF_SetThingCountAdd1>
+  <CQF_SetThingCountSubtract1>-1</CQF_SetThingCountSubtract1>
+  <CQF_SetThingCountAdd10>+10</CQF_SetThingCountAdd10>
+  <CQF_SetThingCountSubtract10>-10</CQF_SetThingCountSubtract10>
+  <CQF_SetThingCountAdd75>+75</CQF_SetThingCountAdd75>
+  <CQF_SetThingCountSubtract75>-75</CQF_SetThingCountSubtract75>
+  <CQF_SetThingCountNoTarget>No stackable item with adjustable count at this location.</CQF_SetThingCountNoTarget>
   <CQF_PinWindow>Pin window</CQF_PinWindow>
   <CQF_UnpinWindow>Unpin window</CQF_UnpinWindow>
 

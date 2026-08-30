@@ -248,6 +248,22 @@
   <CQF_SetQualityNoTarget>此位置没有可设置品质的事物。</CQF_SetQualityNoTarget>
   <CQF_UpgradeQuality>升级品质</CQF_UpgradeQuality>
   <CQF_DowngradeQuality>降级品质</CQF_DowngradeQuality>
+  <CQFSetPlantGrowth>设置植物成熟度：{0}%</CQFSetPlantGrowth>
+  <CQFSetPlantGrowthDesc>设置所选植物的成熟度。右键可以调整成熟度。</CQFSetPlantGrowthDesc>
+  <CQF_SetPlantGrowthPercentage>成熟度百分比</CQF_SetPlantGrowthPercentage>
+  <CQF_SetPlantGrowthPercentagePrompt>将植物成熟度设置为 {0}%</CQF_SetPlantGrowthPercentagePrompt>
+  <CQF_SetPlantGrowthNoTarget>此位置没有可设置成熟度的植物。</CQF_SetPlantGrowthNoTarget>
+  <CQFSetThingCount>设置物品数量：{0}</CQFSetThingCount>
+  <CQFSetThingCountDesc>设置所选物品的堆叠数量。右键可以切换自定义或增减模式。</CQFSetThingCountDesc>
+  <CQF_SetThingCountCustom>自定义数量</CQF_SetThingCountCustom>
+  <CQF_SetThingCountCustomPrompt>将物品数量设置为 {0}</CQF_SetThingCountCustomPrompt>
+  <CQF_SetThingCountAdd1>+1</CQF_SetThingCountAdd1>
+  <CQF_SetThingCountSubtract1>-1</CQF_SetThingCountSubtract1>
+  <CQF_SetThingCountAdd10>+10</CQF_SetThingCountAdd10>
+  <CQF_SetThingCountSubtract10>-10</CQF_SetThingCountSubtract10>
+  <CQF_SetThingCountAdd75>+75</CQF_SetThingCountAdd75>
+  <CQF_SetThingCountSubtract75>-75</CQF_SetThingCountSubtract75>
+  <CQF_SetThingCountNoTarget>此位置没有可设置数量的可堆叠物品。</CQF_SetThingCountNoTarget>
   <CQF_PinWindow>固定窗口</CQF_PinWindow>
   <CQF_UnpinWindow>取消固定窗口</CQF_UnpinWindow>
   <CQFSpawnThing>生成：{0}</CQFSpawnThing>
