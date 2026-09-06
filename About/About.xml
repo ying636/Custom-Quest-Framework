@@ -3,6 +3,7 @@
 	<name>Custom Quest Framework</name>
 	<author>HaiLuan</author>
 	<packageId>HaiLuan.CustomQuestFramework</packageId>
+	<modVersion>2.1</modVersion>
 	<supportedVersions>
 		<li>1.4</li>
 		<li>1.5</li>
@@ -32,6 +33,6 @@
          Hmmm,My English is not very good and I am unable to write a detailed tutorial, but I have created some custom quest mods as a example.   
 
 
-		 version:1.0.0      
+		 version:2.1      
 	</description>
 </ModMetaData>
