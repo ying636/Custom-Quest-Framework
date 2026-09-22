@@ -61,19 +61,18 @@ SiteName: SiteName-></RuleTip>
   <ManageRoute>Manage route</ManageRoute>
   <AddRoute>Add route</AddRoute>
   <RemoveRoute>Remove route</RemoveRoute>
-  <CurRoute>Cur route</CurRoute>
+  <CurRoute>Cur route {0}</CurRoute>
   <SaveToFile>Save to file</SaveToFile>
-  <SaveSucceed>Save succeed</SaveSucceed>
+  <SaveSucceed>Saved: {0}</SaveSucceed>
   <NoName>No name</NoName>
   <SaveInNonEditorMap>Save in non editor map</SaveInNonEditorMap>
   <CQF_SaveWholeMap>Save whole map</CQF_SaveWholeMap>
   <LoadRule>Load rule</LoadRule>
 <ITab_Spawner>Spawner</ITab_Spawner>
-<GenerationChance>Generation chance:</GenerationChance>
 <RandomHostile>Random hostile</RandomHostile>
   <RandomAlly>Random ally</RandomAlly>
   <RandomNeutral>Random neutral</RandomNeutral>
-<DutyType>Duty type</DutyType>
+<DutyType>Duty type {0}</DutyType>
 <SelectRotation>Select rotation</SelectRotation>
   <Defend>Guard</Defend>
   <InventoryThing>Inventory thing</InventoryThing>
@@ -148,7 +147,7 @@ SiteName: SiteName-></RuleTip>
   <IdleNode>Idle node</IdleNode>
   <Null>Null</Null>
 
-  <DialogTree>Dialog tree</DialogTree>
+  <DialogTree>Dialog tree {0}</DialogTree>
   <Misc>Misc</Misc>
   <RepeatableDialog>Repeatable dialog</RepeatableDialog>
   <RequireNonHostile>Requires non hostile</RequireNonHostile>
@@ -604,5 +603,6 @@ SiteName: SiteName-></RuleTip>
   <CQFAction_SetCustomInspectText>Set custom inspect text</CQFAction_SetCustomInspectText>
   <CQFAction_SetCustomInspectText_Tip>Sets the inspect text of each target that has CompCustomText.</CQFAction_SetCustomInspectText_Tip>
 
+  <CQF_ActionComp_InvalidTickInterval>CQF_ActionComp_InvalidTickInterval</CQF_ActionComp_InvalidTickInterval>
 </LanguageData>
 

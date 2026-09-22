@@ -77,7 +77,14 @@ namespace QuestEditor_Library
             LoadDefs(Path.Combine(questPath, "Duty"), "//DutyDef", DefDatabase<DutyDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyDef>(node, false), def => DefDatabase<DutyDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Duty"), "//QuestEditor_Library.DutyMapDef", DefDatabase<DutyMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyMapDef>(node, false), def => DefDatabase<DutyMapDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "QuestBook"), "//QuestEditor_Library.QuestBookDef", DefDatabase<QuestBookDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<QuestBookDef>(node, false), def => DefDatabase<QuestBookDef>.Add(def));
-            DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
+            try
+            {
+                DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
+            }
+            catch (System.Exception exception)
+            {
+                Log.Error($"CQF_QuestCrossReferenceLoadError: path={questPath}, exception={exception}");
+            }
             foreach (LoadedDefInfo loadedDef in CQFQuestDefBootstrap.loadedDefs)
             {
                 ValidateDef(loadedDef);
@@ -90,19 +97,49 @@ namespace QuestEditor_Library
             {
                 return;
             }
-            foreach (FileInfo file in new DirectoryInfo(path).GetFiles("*.xml"))
+            FileInfo[] files;
+            try
+            {
+                files = new DirectoryInfo(path).GetFiles("*.xml");
+            }
+            catch (System.Exception exception)
+            {
+                Log.Error($"CQF_QuestDirectoryLoadError: path={path}, type={typeof(T).Name}, exception={exception}");
+                return;
+            }
+            foreach (FileInfo file in files)
             {
                 XmlDocument xml = new XmlDocument();
-                xml.Load(file.FullName);
+                try
+                {
+                    xml.Load(file.FullName);
+                }
+                catch (System.Exception exception)
+                {
+                    Log.Error($"CQF_QuestFileLoadError: path={file.FullName}, type={typeof(T).Name}, exception={exception}");
+                    continue;
+                }
                 foreach (XmlNode xmlNode in xml.SelectNodes(xpath))
                 {
-                    T def = loadAction(xmlNode);
-                    if (def == null || def.defName.NullOrEmpty() || loadedDefs.Any(d => d.defName == def.defName))
+                    try
                     {
-                        continue;
+                        T def = loadAction(xmlNode);
+                        if (def == null || def.defName.NullOrEmpty())
+                        {
+                            Log.Error($"CQF_QuestDefLoadError: path={file.FullName}, type={typeof(T).Name}, node={xmlNode.OuterXml}");
+                            continue;
+                        }
+                        if (loadedDefs.Any(d => d.defName == def.defName))
+                        {
+                            continue;
+                        }
+                        addAction(def);
+                        CQFQuestDefBootstrap.loadedDefs.Add(new LoadedDefInfo(def, file.FullName));
                     }
-                    addAction(def);
-                    CQFQuestDefBootstrap.loadedDefs.Add(new LoadedDefInfo(def, file.FullName));
+                    catch (System.Exception exception)
+                    {
+                        Log.Error($"CQF_QuestDefLoadError: path={file.FullName}, type={typeof(T).Name}, defName={xmlNode["defName"]?.InnerText}, exception={exception}");
+                    }
                 }
             }
         }
@@ -156,9 +193,16 @@ namespace QuestEditor_Library
 
         private static void ValidateDef(LoadedDefInfo loadedDef)
         {
-            foreach (string error in loadedDef.def.ConfigErrors())
+            try
             {
-                Log.Error($"CQF loaded def config error in {loadedDef.source}: {loadedDef.def.GetType().Name} '{loadedDef.def.defName}': {error}");
+                foreach (string error in loadedDef.def.ConfigErrors())
+                {
+                    Log.Error($"CQF loaded def config error in {loadedDef.source}: {loadedDef.def.GetType().Name} '{loadedDef.def.defName}': {error}");
+                }
+            }
+            catch (System.Exception exception)
+            {
+                Log.Error($"CQF_QuestDefValidationError: path={loadedDef.source}, type={loadedDef.def.GetType().Name}, defName={loadedDef.def.defName}, exception={exception}");
             }
         }
 

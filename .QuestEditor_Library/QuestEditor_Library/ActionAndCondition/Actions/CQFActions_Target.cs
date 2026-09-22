@@ -1607,7 +1607,7 @@ namespace QuestEditor_Library
             base.Draw(ref y, inRect, x);
 
             Rect rect = new Rect(x, y, 350f, 25f);
-            if (Widgets.ButtonText(rect, "DamageType".Translate() + this.damage?.label, false))
+            if (Widgets.ButtonText(rect, "CQF_DamageType".Translate() + this.damage?.label, false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<DamageDef>.AllDefsListForReading, d => this.damage = d, d => d.label);
             }

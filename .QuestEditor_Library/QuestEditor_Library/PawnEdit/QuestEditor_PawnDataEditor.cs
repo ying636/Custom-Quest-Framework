@@ -19,8 +19,17 @@ namespace QuestEditor_Library
 
         public override string PageTitle => "CQF_PawnEditor_Title".Translate().Colorize(ColorLibrary.SkyBlue);
 
+        public override void PreOpen()
+        {
+            base.PreOpen();
+            this.previewDirty = true;
+            this.nextPreviewCheckTime = 0f;
+            this.nextModCheckTime = 0f;
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
+            this.RefreshMods();
             base.DrawPageTitle(inRect);
             this.DrawButtons(inRect);
             Rect mainRect = new Rect(5f, 76f, inRect.width - 10f, inRect.height - 84f);
@@ -159,7 +168,17 @@ namespace QuestEditor_Library
             Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
             float y = 8f;
-            mod.Worker.Draw(this.CurDef, ref y, viewRect, 8f);
+            bool previousChanged = GUI.changed;
+            GUI.changed = false;
+            try
+            {
+                mod.Worker.Draw(this.CurDef, ref y, viewRect, 8f);
+            }
+            finally
+            {
+                this.previewDirty |= GUI.changed && UnityEngine.Event.current.type != EventType.Layout && UnityEngine.Event.current.type != EventType.Repaint;
+                GUI.changed |= previousChanged;
+            }
             this.height = y + 20f;
             Widgets.EndScrollView();
         }
@@ -221,6 +240,13 @@ namespace QuestEditor_Library
             {
                 return;
             }
+            float now = Time.realtimeSinceStartup;
+            if (!this.previewDirty && QuestEditor_PawnDataEditor.previewApplyKey != null && now < this.nextPreviewCheckTime)
+            {
+                return;
+            }
+            this.previewDirty = false;
+            this.nextPreviewCheckTime = now + 0.2f;
             string key = this.GetPreviewApplyKey();
             if (key == QuestEditor_PawnDataEditor.previewApplyKey)
             {
@@ -234,15 +260,19 @@ namespace QuestEditor_Library
 
         private string GetPreviewApplyKey()
         {
-            List<string> parts = this.CurDef.modDatas
-                .Where(data => data != null)
-                .Select(data => data.SaveToXElement("li").ToString(SaveOptions.DisableFormatting))
-                .ToList();
-            foreach (PawnModDef mod in this.CurDef.AvailableMods())
+            this.previewKeyParts.Clear();
+            foreach (PawnModData data in this.CurDef.modDatas)
             {
-                parts.AddRange(mod.Worker.GetPreviewApplyKeyParts(this.CurDef));
+                if (data != null)
+                {
+                    this.previewKeyParts.Add(data.SaveToXElement("li").ToString(SaveOptions.DisableFormatting));
+                }
             }
-            return string.Join("|", parts);
+            foreach (PawnModDef mod in this.availableMods)
+            {
+                this.previewKeyParts.AddRange(mod.Worker.GetPreviewApplyKeyParts(this.CurDef));
+            }
+            return string.Join("|", this.previewKeyParts);
         }
 
         private void EnsureSelectedMod(List<PawnModDef> mods)
@@ -260,10 +290,26 @@ namespace QuestEditor_Library
 
         private List<PawnModDef> VisibleMods()
         {
-            List<PawnModDef> mods = this.CurDef.AvailableMods();
-            return this.CurDef.KindDef == null
-                ? mods.Where(mod => mod.Worker is PawnModWorker_Basic).ToList()
-                : mods;
+            return this.visibleMods;
+        }
+
+        private void RefreshMods()
+        {
+            float now = Time.realtimeSinceStartup;
+            PawnKindDef kindDef = this.CurDef.KindDef;
+            int defCount = DefDatabase<PawnModDef>.AllDefsListForReading.Count;
+            if (this.modPawnDef == this.CurDef && this.modKindDef == kindDef && this.modDefCount == defCount && now < this.nextModCheckTime)
+            {
+                return;
+            }
+            this.modPawnDef = this.CurDef;
+            this.modKindDef = kindDef;
+            this.modDefCount = defCount;
+            this.nextModCheckTime = now + 0.2f;
+            this.availableMods = this.CurDef.AvailableMods();
+            this.visibleMods = kindDef == null
+                ? this.availableMods.Where(mod => mod.Worker is PawnModWorker_Basic).ToList()
+                : this.availableMods;
         }
 
         private string PawnDisplayName(ComplexPawnDef def)
@@ -306,6 +352,15 @@ namespace QuestEditor_Library
         public float height;
         public Vector2 scrollPos = Vector2.zero;
         private string selectedModDefName;
+        private bool previewDirty = true;
+        private float nextPreviewCheckTime;
+        private float nextModCheckTime;
+        private ComplexPawnDef? modPawnDef;
+        private PawnKindDef? modKindDef;
+        private int modDefCount = -1;
+        private List<PawnModDef> availableMods = new List<PawnModDef>();
+        private List<PawnModDef> visibleMods = new List<PawnModDef>();
+        private readonly List<string> previewKeyParts = new List<string>();
         private static Pawn previewPawn;
         private static string previewKey;
         private static string previewApplyKey;

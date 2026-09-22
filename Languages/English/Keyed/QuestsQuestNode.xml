@@ -130,11 +130,6 @@
 
     <!--QuestNode_Divide-->
     <QuestNode_Divide>QuestNode_Divide</QuestNode_Divide>
-    <value1>Value1</value1>
-    <value2>Value2</value2>
-    <storeAs>Store As</storeAs>
-    <myTypeShort>My Type Short</myTypeShort>
-    <selectionWeight>Selection Weight</selectionWeight>
 
     <!--QuestNode_MultiplyRange-->
     <QuestNode_MultiplyRange>QuestNode_MultiplyRange</QuestNode_MultiplyRange>
@@ -144,20 +139,15 @@
 
     <!--QuestNode_EqualOrFail-->
     <QuestNode_EqualOrFail>QuestNode_EqualOrFail</QuestNode_EqualOrFail>
-    <compareAs>Compare As</compareAs>
-    <node>Node</node>
 
     <!--QuestNode_Greater-->
     <QuestNode_Greater>QuestNode_Greater</QuestNode_Greater>
-    <elseNode>Else Node</elseNode>
 
     <!--QuestNode_IsInList-->
     <QuestNode_IsInList>QuestNode_IsInList</QuestNode_IsInList>
-    <value>Value</value>
 
     <!--QuestNode_IsSet-->
     <QuestNode_IsSet>QuestNode_IsSet</QuestNode_IsSet>
-    <name>Name</name>
 
     <!--QuestNode_AddTag-->
     <QuestNode_AddTag>QuestNode_AddTag</QuestNode_AddTag>
@@ -167,14 +157,9 @@
 
     <!--QuestNode_AllSignalsActivable-->
     <QuestNode_AllSignalsActivable>QuestNode_AllSignalsActivable</QuestNode_AllSignalsActivable>
-    <inSignals>In Signals</inSignals>
-    <outSignals>Out Signals</outSignals>
-    <signalListenMode>Signal Listen Mode</signalListenMode>
 
     <!--QuestNode_AnySignalActivable-->
     <QuestNode_AnySignalActivable>QuestNode_AnySignalActivable</QuestNode_AnySignalActivable>
-    <inSignalEnable>In Signal Enable</inSignalEnable>
-    <inSignalDisable>In Signal Disable</inSignalDisable>
 
     <!--QuestNode_Chance-->
     <QuestNode_Chance>QuestNode_Chance</QuestNode_Chance>
@@ -188,7 +173,7 @@
 
     <!--QuestNode_End-->
     <QuestNode_End>QuestNode_End</QuestNode_End>
-    <outcome>Outcome</outcome>
+    <outcome>Outcome {0}</outcome>
     <goodwillChangeAmount>Goodwill Change Amount</goodwillChangeAmount>
     <goodwillChangeFactionOf>Goodwill Change Faction Of</goodwillChangeFactionOf>
     <goodwillChangeReason>Goodwill Change Reason</goodwillChangeReason>
@@ -209,7 +194,6 @@
 
     <!--QuestNode_Sequence-->
     <QuestNode_Sequence>Quest Node:Sequence</QuestNode_Sequence>
-    <nodes>Nodes</nodes>
 
     <!--QuestNode_Set-->
     <QuestNode_Set>Quest Node:Set</QuestNode_Set>
@@ -219,22 +203,16 @@
     <QuestNode_Signal>Quest Node:Signal</QuestNode_Signal>
     <QuestNode_Signal_Tip>This node is used to receive signals from quest and execute the behavior that its signalnode and emits outsignals.
     Note: signalnode must have a receiving signal entry to function properly. Otherwise, it cannot take effect normally.</QuestNode_Signal_Tip>
-    <inSignal>In Signal</inSignal>
     <SignalNode>Trigger node:</SignalNode>
 
     <!--QuestNode_SubScript-->
     <QuestNode_SubScript>QuestNode_SubScript</QuestNode_SubScript>
-    <prefix>Prefix</prefix>
-    <allowNonPrefixedLookup>Allow Non Prefixed Lookup</allowNonPrefixedLookup>
-    <parms>Parms</parms>
-    <returnVarNames>Return Var Names</returnVarNames>
 
     <!--QuestNode_Log-->
     <QuestNode_Log>QuestNode_Log</QuestNode_Log>
 
     <!--QuestNode_RuntimeLog-->
     <QuestNode_RuntimeLog>QuestNode_RuntimeLog</QuestNode_RuntimeLog>
-    <message>Message:</message>
 
     <!--QuestNode_GenerateMonumentMarker-->
     <QuestNode_GenerateMonumentMarker>QuestNode_GenerateMonumentMarker</QuestNode_GenerateMonumentMarker>
@@ -245,28 +223,11 @@
 
     <!--QuestNode_GeneratePawn-->
     <QuestNode_GeneratePawn>QuestNode_GeneratePawn</QuestNode_GeneratePawn>
-    <addToList>Add To List</addToList>
 
     <!--QuestNode_GeneratePawnRandDevelopmentStage-->
     <QuestNode_GeneratePawnRandDevelopmentStage>QuestNode_GeneratePawnRandDevelopmentStage</QuestNode_GeneratePawnRandDevelopmentStage>
     <childChance>Child Chance</childChance>
     <adultChance>Adult Chance</adultChance>
-    <addToLists>Add To Lists</addToLists>
-    <kindDef>Kind Def</kindDef>
-    <faction>Faction</faction>
-    <forbidAnyTitle>Forbid Any Title</forbidAnyTitle>
-    <ensureNonNumericName>Ensure Non Numeric Name</ensureNonNumericName>
-    <forcedTraits>Forced Traits</forcedTraits>
-    <prohibitedTraits>Prohibited Traits</prohibitedTraits>
-    <extraPawnForExtraRelationChance>Extra Pawn For Extra Relation Chance</extraPawnForExtraRelationChance>
-    <relationWithExtraPawnChanceFactor>Relation With Extra Pawn Chance Factor</relationWithExtraPawnChanceFactor>
-    <allowAddictions>Allow Addictions</allowAddictions>
-    <biocodeWeaponChance>Biocode Weapon Chance</biocodeWeaponChance>
-    <biocodeApparelChance>Biocode Apparel Chance</biocodeApparelChance>
-    <mustBeCapableOfViolence>Must Be Capable Of Violence</mustBeCapableOfViolence>
-    <isChild>Is Child</isChild>
-    <allowPregnant>Allow Pregnant</allowPregnant>
-    <fixedGender>Fixed Gender</fixedGender>
 
     <!--QuestNode_GenerateShuttle-->
     <QuestNode_GenerateShuttle>QuestNode_GenerateShuttle</QuestNode_GenerateShuttle>
@@ -288,7 +249,6 @@
 
     <!--QuestNode_GenerateThing-->
     <QuestNode_GenerateThing>QuestNode_GenerateThing</QuestNode_GenerateThing>
-    <def>Def</def>
     <stackCount>Stack Count</stackCount>
 
     <!--QuestNode_GenerateThingSet-->
@@ -303,7 +263,6 @@
     <!--QuestNode_GenerateTransportShip-->
     <QuestNode_GenerateTransportShip>QuestNode_GenerateTransportShip</QuestNode_GenerateTransportShip>
     <shipThing>Ship Thing</shipThing>
-    <contents>Contents</contents>
 
     <!--QuestNode_AddShipJob-->
     <QuestNode_AddShipJob>QuestNode_AddShipJob</QuestNode_AddShipJob>
@@ -311,9 +270,6 @@
     <!--QuestNode_AddShipJob_Arrive-->
     <QuestNode_AddShipJob_Arrive>QuestNode_AddShipJob_Arrive</QuestNode_AddShipJob_Arrive>
     <landingCell>Landing Cell</landingCell>
-    <transportShip>Transport Ship</transportShip>
-    <jobDef>Job Def</jobDef>
-    <shipJobStartMode>Ship Job Start Mode</shipJobStartMode>
 
     <!--QuestNode_AddShipJob_Wait-->
     <QuestNode_AddShipJob_Wait>QuestNode_AddShipJob_Wait</QuestNode_AddShipJob_Wait>
@@ -331,7 +287,6 @@
     <!--QuestNode_SendTransportShipAwayOnCleanup-->
     <QuestNode_SendTransportShipAwayOnCleanup>QuestNode_SendTransportShipAwayOnCleanup</QuestNode_SendTransportShipAwayOnCleanup>
     <unloadContents>Unload Contents</unloadContents>
-    <unsatisfiedDropMode>Unsatisfied Drop Mode</unsatisfiedDropMode>
 
     <!--QuestNode_EvaluateSimpleCurve-->
     <QuestNode_EvaluateSimpleCurve>QuestNode_EvaluateSimpleCurve</QuestNode_EvaluateSimpleCurve>
@@ -352,7 +307,6 @@
     <QuestNode_GetColonistCountFromColonyPercentage>QuestNode_GetColonistCountFromColonyPercentage</QuestNode_GetColonistCountFromColonyPercentage>
     <colonyPercentage>Colony Percentage</colonyPercentage>
     <mustHaveFreeColonistsAvailableCount>Must Have Free Colonists Available Count</mustHaveFreeColonistsAvailableCount>
-    <minAge>Min Age</minAge>
 
     <!--QuestNode_GetFreeColonistsCount-->
     <QuestNode_GetFreeColonistsCount>QuestNode_GetFreeColonistsCount</QuestNode_GetFreeColonistsCount>
@@ -403,9 +357,7 @@
 
     <!--QuestNode_GetLargestClearArea-->
     <QuestNode_GetLargestClearArea>QuestNode_GetLargestClearArea</QuestNode_GetLargestClearArea>
-    <map>Map</map>
     <failIfSmaller>Fail If Smaller</failIfSmaller>
-    <max>Max</max>
 
     <!--QuestNode_GetMap-->
     <QuestNode_GetMap>QuestNode_GetMap</QuestNode_GetMap>
@@ -420,7 +372,6 @@
 
     <!--QuestNode_GetMonumentRequiredResourcesString-->
     <QuestNode_GetMonumentRequiredResourcesString>QuestNode_GetMonumentRequiredResourcesString</QuestNode_GetMonumentRequiredResourcesString>
-    <monumentMarker>Monument Marker</monumentMarker>
 
     <!--QuestNode_GetMonumentSketch-->
     <QuestNode_GetMonumentSketch>QuestNode_GetMonumentSketch</QuestNode_GetMonumentSketch>
@@ -437,7 +388,6 @@
 
     <!--QuestNode_GetNearestHomeMapOf-->
     <QuestNode_GetNearestHomeMapOf>QuestNode_GetNearestHomeMapOf</QuestNode_GetNearestHomeMapOf>
-    <mapOf>Map Of</mapOf>
 
     <!--QuestNode_GetPawn-->
     <QuestNode_GetPawn>QuestNode_GetPawn</QuestNode_GetPawn>
@@ -469,15 +419,12 @@
     <maxCountThreeStar>Max Count Three Star</maxCountThreeStar>
     <pointsCurve>Points Curve</pointsCurve>
     <chancesCurve>Chances Curve</chancesCurve>
-    <roundRandom>Round Random</roundRandom>
 
     <!--QuestNode_GetPawnKind-->
     <QuestNode_GetPawnKind>QuestNode_GetPawnKind</QuestNode_GetPawnKind>
-    <options>Options</options>
 
     <!--QuestNode_GetPawnsWithRoyalTitle-->
     <QuestNode_GetPawnsWithRoyalTitle>QuestNode_GetPawnsWithRoyalTitle</QuestNode_GetPawnsWithRoyalTitle>
-    <storeCountAs>Store Count As</storeCountAs>
     <storePawnsLabelAs>Store Pawns Label As</storePawnsLabelAs>
 
     <!--QuestNode_GetPlantPlayerCanHarvest-->
@@ -490,17 +437,12 @@
 
     <!--QuestNode_GetRandomByCurve-->
     <QuestNode_GetRandomByCurve>QuestNode_GetRandomByCurve</QuestNode_GetRandomByCurve>
-    <curve>Curve</curve>
-    <min>Min</min>
 
     <!--QuestNode_GetRandomFactionForSite-->
     <QuestNode_GetRandomFactionForSite>QuestNode_GetRandomFactionForSite</QuestNode_GetRandomFactionForSite>
-    <sitePartDefs>Site Part Defs</sitePartDefs>
-    <mustBeHostileToFactionOf>Must Be Hostile To Faction Of</mustBeHostileToFactionOf>
 
     <!--QuestNode_GetRandomInRangeFloat-->
     <QuestNode_GetRandomInRangeFloat>QuestNode_GetRandomInRangeFloat</QuestNode_GetRandomInRangeFloat>
-    <range>Range</range>
 
     <!--QuestNode_GetRandomInRangeForChallengeRating-->
     <QuestNode_GetRandomInRangeForChallengeRating>QuestNode_GetRandomInRangeForChallengeRating</QuestNode_GetRandomInRangeForChallengeRating>
@@ -523,12 +465,10 @@
     <!--QuestNode_GetSitePartDefsByTagsAndFaction-->
     <QuestNode_GetSitePartDefsByTagsAndFaction>QuestNode_GetSitePartDefsByTagsAndFaction</QuestNode_GetSitePartDefsByTagsAndFaction>
     <sitePartsTags>Site Parts Tags</sitePartsTags>
-    <storeFactionAs>Store Faction As</storeFactionAs>
 
     <!--QuestNode_GetSiteThreatPoints-->
     <QuestNode_GetSiteThreatPoints>QuestNode_GetSiteThreatPoints</QuestNode_GetSiteThreatPoints>
     <site>Site</site>
-    <sitePartsParams>Site Parts Params</sitePartsParams>
 
     <!--QuestNode_GetSiteTile-->
     <QuestNode_GetSiteTile>QuestNode_GetSiteTile</QuestNode_GetSiteTile>
@@ -542,7 +482,6 @@
     <storeProductionItemStuffAs>Store Production Item Stuff As</storeProductionItemStuffAs>
     <storeProductionItemCountAs>Store Production Item Count As</storeProductionItemCountAs>
     <storeProductionItemLabelAs>Store Production Item Label As</storeProductionItemLabelAs>
-    <pointsToRequiredWorkCurve>Points To Required Work Curve</pointsToRequiredWorkCurve>
     <pointsToMaxItemMarketValueCurve>Points To Max Item Market Value Curve</pointsToMaxItemMarketValueCurve>
     <maxMarketValueFactor>Max Market Value Factor</maxMarketValueFactor>
     <minStuffCommonality>Min Stuff Commonality</minStuffCommonality>
@@ -572,26 +511,21 @@
 
     <!--QuestNode_AssaultColony-->
     <QuestNode_AssaultColony>QuestNode_AssaultColony</QuestNode_AssaultColony>
-    <pawns>Pawns</pawns>
 
     <!--QuestNode_VisitColony-->
     <QuestNode_VisitColony>QuestNode_VisitColony</QuestNode_VisitColony>
 
     <!--QuestNode_HasRoyalTitleInCurrentFaction-->
     <QuestNode_HasRoyalTitleInCurrentFaction>QuestNode_HasRoyalTitleInCurrentFaction</QuestNode_HasRoyalTitleInCurrentFaction>
-    <pawn>Pawn</pawn>
 
     <!--QuestNode_IsFactionHostileToPlayer-->
     <QuestNode_IsFactionHostileToPlayer>QuestNode_IsFactionHostileToPlayer</QuestNode_IsFactionHostileToPlayer>
-    <factionOf>Faction Of</factionOf>
 
     <!--QuestNode_IsOfFaction-->
     <QuestNode_IsOfFaction>QuestNode_IsOfFaction</QuestNode_IsOfFaction>
-    <thing>Thing</thing>
 
     <!--QuestNode_ModIsActive-->
     <QuestNode_ModIsActive>QuestNode_ModIsActive</QuestNode_ModIsActive>
-    <modID>Mod I D</modID>
 
     <!--QuestNode_AddContentsToShuttle-->
     <QuestNode_AddContentsToShuttle>QuestNode_AddContentsToShuttle</QuestNode_AddContentsToShuttle>
@@ -611,7 +545,6 @@
 
     <!--QuestNode_AddPassageOffworldReward-->
     <QuestNode_AddPassageOffworldReward>QuestNode_AddPassageOffworldReward</QuestNode_AddPassageOffworldReward>
-    <inSignalChoiceUsed>In Signal Choice Used</inSignalChoiceUsed>
 
     <!--QuestNode_AddPawnReward-->
     <QuestNode_AddPawnReward>QuestNode_AddPawnReward</QuestNode_AddPawnReward>
@@ -633,7 +566,6 @@
     <!--QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle-->
     <QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle</QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>
     <goodwillChange>Goodwill Change</goodwillChange>
-    <reason>Reason</reason>
 
     <!--QuestNode_ChangeHeir-->
     <QuestNode_ChangeHeir>QuestNode_ChangeHeir</QuestNode_ChangeHeir>
@@ -651,7 +583,6 @@
 
     <!--QuestNode_DestroyOrPassToWorld-->
     <QuestNode_DestroyOrPassToWorld>QuestNode_DestroyOrPassToWorld</QuestNode_DestroyOrPassToWorld>
-    <things>Things</things>
 
     <!--QuestNode_DestroyWorldObject-->
     <QuestNode_DestroyWorldObject>QuestNode_DestroyWorldObject</QuestNode_DestroyWorldObject>
@@ -664,7 +595,6 @@
     <!--QuestNode_DropPods-->
     <QuestNode_DropPods>QuestNode_DropPods</QuestNode_DropPods>
     <useTradeDropSpot>Use Trade Drop Spot</useTradeDropSpot>
-    <sendStandardLetter>Send Standard Letter</sendStandardLetter>
     <thingsToExcludeFromHyperlinks>Things To Exclude From Hyperlinks</thingsToExcludeFromHyperlinks>
 
     <!--QuestNode_EndGame-->
@@ -691,10 +621,7 @@
 
     <!--QuestNode_GiveNearPawn-->
     <QuestNode_GiveNearPawn>QuestNode_GiveNearPawn</QuestNode_GiveNearPawn>
-    <contentsDefs>Contents Defs</contentsDefs>
     <nearPawn>Near Pawn</nearPawn>
-    <joinPlayer>Join Player</joinPlayer>
-    <makePrisoners>Make Prisoners</makePrisoners>
     <customDropPodsLetterLabel>Custom Drop Pods Letter Label</customDropPodsLetterLabel>
     <customDropPodsLetterText>Custom Drop Pods Letter Text</customDropPodsLetterText>
     <customCaravanInventoryLetterLabel>Custom Caravan Inventory Letter Label</customCaravanInventoryLetterLabel>
@@ -706,10 +633,6 @@
 
     <!--QuestNode_GiveRewards-->
     <QuestNode_GiveRewards>QuestNode_GiveRewards</QuestNode_GiveRewards>
-    <customLetterLabel>Custom Letter Label</customLetterLabel>
-    <customLetterText>Custom Letter Text</customLetterText>
-    <customLetterLabelRules>Custom Letter Label Rules</customLetterLabelRules>
-    <customLetterTextRules>Custom Letter Text Rules</customLetterTextRules>
     <useDifficultyFactor>Use Difficulty Factor</useDifficultyFactor>
     <nodeIfChosenPawnSignalUsed>Node If Chosen Pawn Signal Used</nodeIfChosenPawnSignalUsed>
     <variants>Variants</variants>
@@ -720,10 +643,6 @@
 
     <!--QuestNode_GiveRoyalFavorAndDevelopmentPoints-->
     <QuestNode_GiveRoyalFavorAndDevelopmentPoints>QuestNode_GiveRoyalFavorAndDevelopmentPoints</QuestNode_GiveRoyalFavorAndDevelopmentPoints>
-    <giveTo>Give To</giveTo>
-    <giveToAccepter>Give To Accepter</giveToAccepter>
-    <amount>Amount</amount>
-    <isSingleReward>Is Single Reward</isSingleReward>
 
     <!--QuestNode_GiveTechprints-->
     <QuestNode_GiveTechprints>QuestNode_GiveTechprints</QuestNode_GiveTechprints>
@@ -732,23 +651,17 @@
 
     <!--QuestNode_GuardianShipDelay-->
     <QuestNode_GuardianShipDelay>QuestNode_GuardianShipDelay</QuestNode_GuardianShipDelay>
-    <outSignalComplete>Out Signal Complete</outSignalComplete>
-    <delayTicks>Delay Ticks</delayTicks>
 
     <!--QuestNode_InspectString-->
     <QuestNode_InspectString>QuestNode_InspectString</QuestNode_InspectString>
-    <targets>Targets</targets>
-    <inspectString>Inspect String</inspectString>
 
     <!--QuestNode_Leave-->
     <QuestNode_Leave>QuestNode_Leave</QuestNode_Leave>
-    <inSignalRemovePawn>In Signal Remove Pawn</inSignalRemovePawn>
     <leaveOnCleanup>Leave On Cleanup</leaveOnCleanup>
 
     <!--QuestNode_LendColonistsToFaction-->
     <QuestNode_LendColonistsToFaction>QuestNode_LendColonistsToFaction</QuestNode_LendColonistsToFaction>
     <outSignalColonistsDied>Out Signal Colonists Died</outSignalColonistsDied>
-    <shuttle>Shuttle</shuttle>
     <lendColonistsToFactionOf>Lend Colonists To Faction Of</lendColonistsToFactionOf>
     <returnLentColonistsInTicks>Return Lent Colonists In Ticks</returnLentColonistsInTicks>
 
@@ -774,17 +687,13 @@
     <!--QuestNode_Message-->
     <QuestNode_Message>Node:Message</QuestNode_Message>
     <messageType>Message Type:</messageType>
-    <text>Text:</text>
-    <lookTargets>Look Targets:</lookTargets>
 
     <!--QuestNode_MoodBelow-->
     <QuestNode_MoodBelow>QuestNode_MoodBelow</QuestNode_MoodBelow>
-    <outSignal>Out Signal</outSignal>
     <threshold>Threshold</threshold>
 
     <!--QuestNode_NoWorldObject-->
     <QuestNode_NoWorldObject>QuestNode_NoWorldObject</QuestNode_NoWorldObject>
-    <worldObject>World Object</worldObject>
 
     <!--QuestNode_Notify_PlayerRaidedSomeone-->
     <QuestNode_Notify_PlayerRaidedSomeone>QuestNode_Notify_PlayerRaidedSomeone</QuestNode_Notify_PlayerRaidedSomeone>
@@ -794,7 +703,6 @@
     <!--QuestNode_PawnsArrive-->
     <QuestNode_PawnsArrive>QuestNode_PawnsArrive</QuestNode_PawnsArrive>
     <customLetterDef>Custom Letter Def</customLetterDef>
-    <rewardDetailsHidden>Reward Details Hidden</rewardDetailsHidden>
 
     <!--QuestNode_PawnsKilled-->
     <QuestNode_PawnsKilled>QuestNode_PawnsKilled</QuestNode_PawnsKilled>
@@ -804,11 +712,9 @@
     <!--QuestNode_PlantsHarvested-->
     <QuestNode_PlantsHarvested>QuestNode_PlantsHarvested</QuestNode_PlantsHarvested>
     <plant>Plant</plant>
-    <count>Count</count>
 
     <!--QuestNode_QuestUnique-->
     <QuestNode_QuestUnique>QuestNode_QuestUnique</QuestNode_QuestUnique>
-    <tag>Tag</tag>
     <storeProcessedTagAs>Store Processed Tag As</storeProcessedTagAs>
 
     <!--QuestNode_RecordHistoryEvent-->
@@ -817,8 +723,6 @@
 
     <!--QuestNode_RemoveMemoryThought-->
     <QuestNode_RemoveMemoryThought>QuestNode_RemoveMemoryThought</QuestNode_RemoveMemoryThought>
-    <otherPawn>Other Pawn</otherPawn>
-    <addToLookTargets>Add To Look Targets</addToLookTargets>
 
     <!--QuestNode_RequirementsToAcceptColonistWithTitle-->
     <QuestNode_RequirementsToAcceptColonistWithTitle>QuestNode_RequirementsToAcceptColonistWithTitle</QuestNode_RequirementsToAcceptColonistWithTitle>
@@ -829,15 +733,12 @@
 
     <!--QuestNode_SendShuttleAwayOnCleanup-->
     <QuestNode_SendShuttleAwayOnCleanup>QuestNode_SendShuttleAwayOnCleanup</QuestNode_SendShuttleAwayOnCleanup>
-    <dropEverything>Drop Everything</dropEverything>
 
     <!--QuestNode_SetChallengeRating-->
     <QuestNode_SetChallengeRating>QuestNode_SetChallengeRating</QuestNode_SetChallengeRating>
-    <challengeRating>Challenge Rating</challengeRating>
 
     <!--QuestNode_SetItemStashContents-->
     <QuestNode_SetItemStashContents>QuestNode_SetItemStashContents</QuestNode_SetItemStashContents>
-    <items>Items</items>
     <categories>Categories</categories>
 
     <!--QuestNode_SetRoyalTitle-->
@@ -846,7 +747,6 @@
 
     <!--QuestNode_SetTicksUntilAcceptanceExpiry-->
     <QuestNode_SetTicksUntilAcceptanceExpiry>QuestNode_SetTicksUntilAcceptanceExpiry</QuestNode_SetTicksUntilAcceptanceExpiry>
-    <ticks>Ticks</ticks>
 
     <!--QuestNode_ShuttleDelay-->
     <QuestNode_ShuttleDelay>QuestNode_ShuttleDelay</QuestNode_ShuttleDelay>
@@ -858,7 +758,6 @@
 
     <!--QuestNode_SpawnMechCluster-->
     <QuestNode_SpawnMechCluster>QuestNode_SpawnMechCluster</QuestNode_SpawnMechCluster>
-    <dropSpot>Drop Spot</dropSpot>
 
     <!--QuestNode_SpawnSkyfaller-->
     <QuestNode_SpawnSkyfaller>QuestNode_SpawnSkyfaller</QuestNode_SpawnSkyfaller>
@@ -889,12 +788,6 @@
     <!--QuestNode_WorldObjectTimeout-->
     <QuestNode_WorldObjectTimeout>QuestNode_WorldObjectTimeout</QuestNode_WorldObjectTimeout>
     <destroyOnCleanup>Destroy On Cleanup</destroyOnCleanup>
-    <expiryInfoPart>Expiry Info Part</expiryInfoPart>
-    <expiryInfoPartTip>Expiry Info Part Tip</expiryInfoPartTip>
-    <inspectStringTargets>Inspect String Targets</inspectStringTargets>
-    <delayTicksRange>Delay Ticks Range</delayTicksRange>
-    <isQuestTimeout>Is Quest Timeout</isQuestTimeout>
-    <reactivatable>Reactivatable</reactivatable>
 
     <!--QuestNode_Root_BestowingCeremony-->
     <QuestNode_Root_BestowingCeremony>QuestNode_Root_BestowingCeremony</QuestNode_Root_BestowingCeremony>
@@ -947,22 +840,18 @@
     <QuestNode_TradeRequest_GetRequestedThing>QuestNode_TradeRequest_GetRequestedThing</QuestNode_TradeRequest_GetRequestedThing>
     <storeThingAs>Store Thing As</storeThingAs>
     <storeThingCountAs>Store Thing Count As</storeThingCountAs>
-    <storeMarketValueAs>Store Market Value As</storeMarketValueAs>
     <storeHasQualityAs>Store Has Quality As</storeHasQualityAs>
     <dontRequest>Dont Request</dontRequest>
 
     <!--QuestNode_TradeRequest_RandomOfferDuration-->
     <QuestNode_TradeRequest_RandomOfferDuration>QuestNode_TradeRequest_RandomOfferDuration</QuestNode_TradeRequest_RandomOfferDuration>
-    <settlement>Settlement</settlement>
     <storeEstimatedTravelTimeAs>Store Estimated Travel Time As</storeEstimatedTravelTimeAs>
 
     <!--QuestNode_ResolveQuestDescription-->
     <QuestNode_ResolveQuestDescription>QuestNode_ResolveQuestDescription</QuestNode_ResolveQuestDescription>
-    <rules>Rules</rules>
 
     <!--QuestNode_ResolveQuestName-->
     <QuestNode_ResolveQuestName>QuestNode_ResolveQuestName</QuestNode_ResolveQuestName>
-    <TextRoot>Text Root</TextRoot>
 
     <!--QuestNode_ResolveTextNow-->
     <QuestNode_ResolveTextNow>QuestNode_ResolveTextNow</QuestNode_ResolveTextNow>
@@ -977,8 +866,6 @@
     <intervalTicks>Interval Ticks</intervalTicks>
     <randomIncidents>Random Incidents</randomIncidents>
     <startOffsetTicks>Start Offset Ticks</startOffsetTicks>
-    <duration>Duration</duration>
-    <points>Points</points>
 
     <!--QuestNode_GameCondition-->
     <QuestNode_GameCondition>QuestNode_GameCondition</QuestNode_GameCondition>
@@ -993,7 +880,6 @@
 
     <!--QuestNode_Incident-->
     <QuestNode_Incident>QuestNode_Incident</QuestNode_Incident>
-    <incidentDef>Incident Def</incidentDef>
 
     <!--QuestNode_Infestation-->
     <QuestNode_Infestation>QuestNode_Infestation</QuestNode_Infestation>
@@ -1001,14 +887,11 @@
 
     <!--QuestNode_ManhunterPack-->
     <QuestNode_ManhunterPack>QuestNode_ManhunterPack</QuestNode_ManhunterPack>
-    <walkInSpot>Walk In Spot</walkInSpot>
     <animalCount>Animal Count</animalCount>
 
     <!--QuestNode_Raid-->
     <QuestNode_Raid>QuestNode_Raid</QuestNode_Raid>
-    <arrivalMode>Arrival Mode</arrivalMode>
     <raidPawnKind>Raid Pawn Kind</raidPawnKind>
-    <canTimeoutOrFlee>Can timeout or flee</canTimeoutOrFlee>
     <inSignalLeave>In Signal Leave</inSignalLeave>
 
     <!--QuestNode_RandomRaid-->

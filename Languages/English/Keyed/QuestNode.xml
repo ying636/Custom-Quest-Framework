@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
 
-  <QuestNode_RandomCustomMap>Node:Random Custom Map</QuestNode_RandomCustomMap>
 
 
   <planetLayer>Planet Layer:{0}</planetLayer>
@@ -58,7 +57,6 @@
   <SelectTrueNode>Select True Node</SelectTrueNode>
   <SelectFalseNode>Select False Node</SelectFalseNode>
 
-  <text>text:</text>
   <SelectLetterType>Select letter type</SelectLetterType>
 
   <True>True</True>

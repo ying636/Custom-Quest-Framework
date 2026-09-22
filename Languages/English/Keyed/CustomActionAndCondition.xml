@@ -55,7 +55,7 @@
   <CQFXenotypeDef>Xenotype: {0}</CQFXenotypeDef>
 
   <DialogCondition_Skill>Condition: skill</DialogCondition_Skill>
-  <SkillIsntsatisfied>Skill isn't satisfied</SkillIsntsatisfied>
+  <SkillIsntsatisfied>Skill isn't satisfied {0}</SkillIsntsatisfied>
   <TargetIsntPawn>Target isn't pawn</TargetIsntPawn>
   <TargetIsntLikeHumanOrTargetIsNull>Target isn't like human or target is null</TargetIsntLikeHumanOrTargetIsNull>
   <DialogueTarget>Target name:</DialogueTarget>
@@ -72,10 +72,10 @@
   <RequiredLevel>Required level</RequiredLevel>
   <NeedToBeGreater>Needs to be greater</NeedToBeGreater>
   <DialogCondition_Hediff>Condition: hediff</DialogCondition_Hediff>
-  <TargetHasntRequired>Target hasn't required</TargetHasntRequired>
+  <TargetHasntRequired>Target hasn't required {0}</TargetHasntRequired>
   <RequiredHediff>Required hediff</RequiredHediff>
   <RequiredSeverity>Required severity</RequiredSeverity>
-  <HediffIsntsatisfied>Hediff isn't satisfied</HediffIsntsatisfied>
+  <HediffIsntsatisfied>Hediff isn't satisfied {0}</HediffIsntsatisfied>
 
   <DialogCondition_Trait>Condition: trait</DialogCondition_Trait>
   <TargetHasntRequiredTrait>Target hasn't required {0} trait</TargetHasntRequiredTrait>
@@ -186,7 +186,7 @@
   <InteractionActions>Interaction action:</InteractionActions>
 
   <CQFAction_TakeDamage>Action: take damage</CQFAction_TakeDamage>
-  <DamageType>Damage type:</DamageType>
+  <CQF_DamageType>Damage type:</CQF_DamageType>
   <DamageAmount>Damage amount:</DamageAmount>
 
 
@@ -331,7 +331,6 @@ Interacte interactive things</RecordToTemporaryBase_Tip>
 
   <CQFAction_AddQuestTag>Action:add quest tag</CQFAction_AddQuestTag>
   <CQFAction_AddQuestTag_Tip>Add quest tag to the target, and things with quest tag can send signals</CQFAction_AddQuestTag_Tip>
-  <QuestTag>Quest tag:</QuestTag>
 
   <CQFAction_SetRelation>Action:set relation</CQFAction_SetRelation>
   <CQF_RelationDef>Relation:{0}</CQF_RelationDef>

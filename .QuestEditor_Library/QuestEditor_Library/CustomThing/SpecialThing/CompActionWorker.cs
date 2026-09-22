@@ -52,7 +52,8 @@ namespace QuestEditor_Library
             base.CompTick();
             this.comps?.ForEach(s =>
             {
-                if (s.mode == ActionTriggerMode.Tick && this.parent.IsHashIntervalTick(s.tick))
+                if (s.mode == ActionTriggerMode.Tick && s.ValidateTickInterval(this.parent.ThingID)
+                    && this.parent.IsHashIntervalTick(s.tick))
                 {
                     s.actions.ForEach(a => a.Work(this.GetTargetThis(),this.Quest));
                 }
@@ -105,6 +106,8 @@ namespace QuestEditor_Library
 
     public class ActionComp : IExposable, ISaveable, IDrawable
     {
+        public bool HasValidTickInterval => this.mode != ActionTriggerMode.Tick || this.tick > 0;
+
         public ActionComp Copy()
         {
             XElement x = this.SaveToXElement("ActionComp");
@@ -152,6 +155,11 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawLabelAndText_Line(y, "TickToTrigger".Translate(), ref this.tick,ref this.buffer, x);
                 TooltipHandler.TipRegion(new Rect(x,y,150f,25f), "TickToTriggerTip".Translate());
                 y += 30f;
+                if (!this.HasValidTickInterval)
+                {
+                    Widgets.Label(new Rect(x, y, inRect.width - x, 25f), "CQF_ActionComp_InvalidTickInterval".Translate().Colorize(Color.red));
+                    y += 30f;
+                }
             }
             CQFEditorTools.DrawActionList(ref y,x,this.actions,inRect, "InteractionActions".Translate());
         }
@@ -164,10 +172,23 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.signalIsOnlyValidInPart, "signalIsOnlyValidInPart");
             Scribe_Values.Look(ref this.tick, "tick");
             Scribe_Collections.Look(ref this.actions, "actions",LookMode.Deep);
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                this.ValidateTickInterval("PostLoadInit");
+            }
+        }
+
+        public void PostLoad()
+        {
+            this.ValidateTickInterval("XML");
         }
 
         public XElement SaveToXElement(string nodeName)
         {
+            if (!this.HasValidTickInterval)
+            {
+                throw new InvalidOperationException($"CQF_ActionComp_InvalidTickInterval: compName={this.compName}, tick={this.tick}");
+            }
             XElement result = new XElement(nodeName);
             result.Add(new XElement("compName",this.compName));
             result.Add(new XElement("mode", this.mode));
@@ -186,6 +207,21 @@ namespace QuestEditor_Library
             return result;
         }
 
+        public bool ValidateTickInterval(string context)
+        {
+            if (this.HasValidTickInterval)
+            {
+                this.invalidTickIntervalReported = false;
+                return true;
+            }
+            if (!this.invalidTickIntervalReported)
+            {
+                Log.Error($"CQF_ActionComp_InvalidTickInterval: compName={this.compName}, tick={this.tick}, context={context}");
+                this.invalidTickIntervalReported = true;
+            }
+            return false;
+        }
+
         public string buffer;
         [NoTranslate]
         public string compName = "Undefined";
@@ -197,6 +233,9 @@ namespace QuestEditor_Library
         public List<CQFAction> actions = new List<CQFAction>();
 
         public List<ActionTriggerMode> allowedActions;
+
+        [Unsaved]
+        private bool invalidTickIntervalReported;
     }
 
     public enum ActionTriggerMode : byte

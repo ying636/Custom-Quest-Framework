@@ -148,15 +148,39 @@ namespace QuestEditor_Library
         public override void GameComponentTick()
         {
             base.GameComponentTick();
-            this.Request.ForEach(r =>
+            this.readyRequests.Clear();
+            foreach (ExecutiveRequest request in this.Request)
             {
-                r.delayTime--;
-                if (r.delayTime <= 0) 
+                if (request == null)
                 {
-                    r.Execute();
+                    Log.Error("[CQF] GameComponent_Editor.GameComponentTick: null ExecutiveRequest.");
+                    continue;
                 }
-            });
-            this.Request.RemoveAll(r => r.delayTime <= 0);
+                request.delayTime--;
+                if (request.delayTime <= 0)
+                {
+                    this.readyRequests.Add(request);
+                }
+            }
+            this.Request.RemoveAll(r => r == null || r.delayTime <= 0);
+            try
+            {
+                foreach (ExecutiveRequest request in this.readyRequests)
+                {
+                    try
+                    {
+                        request.Execute();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"[CQF] ExecutiveRequest.Execute: {request.GetType().FullName}, tick={Find.TickManager.TicksGame}, {ex}");
+                    }
+                }
+            }
+            finally
+            {
+                this.readyRequests.Clear();
+            }
             this.CACDS.RemoveAll(r => Find.TickManager.TicksGame - r.Value.curTick >= r.Value.time);
         }
         public override void GameComponentUpdate()
@@ -165,29 +189,44 @@ namespace QuestEditor_Library
             {
                 if (Find.World?.renderer?.wantedMode == WorldRenderMode.None)
                 {
-                    this.Dialogs.ToList().ForEach(d =>
+                    this.dialogDrawBuffer.Clear();
+                    foreach (KeyValuePair<Thing, DialogManagerDef> dialog in this.Dialogs)
                     {
-                        if (d.Key != null && d.Key.Spawned && d.Key.Map == Find.CurrentMap && d.Value != null && !d.Key.Fogged())
+                        if (dialog.Key != null && dialog.Key.Spawned && dialog.Key.Map == Find.CurrentMap && dialog.Value != null)
                         {
-                            Vector3 drawPos = d.Key.DrawPos;
-                            drawPos.y = BaseAlt;
-                            if (d.Key is Pawn)
-                            {
-                                drawPos.x += (float)d.Key.def.size.x - 0.52f;
-                                drawPos.z += (float)d.Key.def.size.z - 0.45f;
-                            }
-                            float num = ((float)Math.Sin((double)((Time.realtimeSinceStartup + 397f * (float)(
-            d.Key.thingIDNumber % 571)) * 4f)) + 1f) * 0.5f;
-                            num = 0.3f + num * 0.7f;
-                            Material material = FadedMaterialPool.FadedVersionOf(
-                                GetDialogIconMaterial(d.Value.iconColor), num);
-                            Color c = d.Value.iconColor;
-                            c.a = material.color.a;
-                            material.color = c;
-                            drawBatch.DrawMesh(MeshPool.plane05,
-                                Matrix4x4.TRS(drawPos, Quaternion.identity, Vector3.one * 1.2f), material, 0, true);
+                            this.dialogDrawBuffer.Add(dialog);
                         }
-                    });
+                    }
+                    try
+                    {
+                        foreach (KeyValuePair<Thing, DialogManagerDef> d in this.dialogDrawBuffer)
+                        {
+                            if (d.Key.Spawned && d.Key.Map == Find.CurrentMap && !d.Key.Fogged())
+                            {
+                                Vector3 drawPos = d.Key.DrawPos;
+                                drawPos.y = BaseAlt;
+                                if (d.Key is Pawn)
+                                {
+                                    drawPos.x += (float)d.Key.def.size.x - 0.52f;
+                                    drawPos.z += (float)d.Key.def.size.z - 0.45f;
+                                }
+                                float num = ((float)Math.Sin((double)((Time.realtimeSinceStartup + 397f * (float)(
+                d.Key.thingIDNumber % 571)) * 4f)) + 1f) * 0.5f;
+                                num = 0.3f + num * 0.7f;
+                                Material material = FadedMaterialPool.FadedVersionOf(
+                                    GetDialogIconMaterial(d.Value.iconColor), num);
+                                Color c = d.Value.iconColor;
+                                c.a = material.color.a;
+                                material.color = c;
+                                drawBatch.DrawMesh(MeshPool.plane05,
+                                    Matrix4x4.TRS(drawPos, Quaternion.identity, Vector3.one * 1.2f), material, 0, true);
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        this.dialogDrawBuffer.Clear();
+                    }
                     if (showCells)
                     {
                         GenDraw.DrawFieldEdges(GenStep_CustomMap.disgenerate, Color.red);
@@ -270,6 +309,8 @@ namespace QuestEditor_Library
         private static readonly float BaseAlt = AltitudeLayer.MetaOverlays.AltitudeFor() - 0.243243232f;
 
         private DrawBatch drawBatch = new DrawBatch();
+        private readonly List<ExecutiveRequest> readyRequests = new List<ExecutiveRequest>();
+        private readonly List<KeyValuePair<Thing, DialogManagerDef>> dialogDrawBuffer = new List<KeyValuePair<Thing, DialogManagerDef>>();
     }
     public class CD : IExposable
     {

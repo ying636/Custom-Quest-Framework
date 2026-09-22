@@ -36,7 +36,7 @@ namespace QuestEditor_Library
                 {
                     continue;
                 }
-                if (runtime.nextTickTransitionTick > tick)
+                if (runtime.nextTickTransitionTick < 0 || runtime.nextTickTransitionTick > tick)
                 {
                     continue;
                 }
@@ -174,28 +174,25 @@ namespace QuestEditor_Library
             string current = runtime.currentNodeId.NullOrEmpty() ? runtime.dutyMap.StartNode?.nodeId : runtime.currentNodeId;
             if (current.NullOrEmpty())
             {
+                runtime.nextTickTransitionTick = -1;
                 return false;
             }
             Quest contextQuest = quest ?? this.Quest;
-            Dictionary<string, TargetInfo> targets = this.MakeTargets(pawn);
-            bool tried = false;
+            Dictionary<string, TargetInfo>? targets = null;
             foreach (DutyMapTransition transition in runtime.dutyMap.TransitionsFrom(current))
             {
                 if (transition.triggers?.Any(trigger => trigger is CustomDutyTrigger_TickInterval) != true)
                 {
                     continue;
                 }
-                tried = true;
+                targets ??= this.MakeTargets(pawn);
                 if (transition.CanTransition(pawn, runtime, contextQuest, targets))
                 {
                     this.ChangeNode(pawn, transition.toNodeId, contextQuest);
                     return true;
                 }
             }
-            if (tried)
-            {
-                this.RefreshTickTransition(pawn, contextQuest);
-            }
+            this.RefreshTickTransition(pawn, contextQuest);
             return false;
         }
 

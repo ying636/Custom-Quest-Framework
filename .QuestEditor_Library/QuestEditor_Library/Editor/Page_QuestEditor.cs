@@ -535,7 +535,7 @@ namespace QuestEditor_Library
             {
                 Find.WindowStack.Add(new QuestEditor_DutyMap());
             }
-            if (Page_QuestEditor.DrawToolButton(NextToolRect(), miscIcon, "CQF_QuestBookEditor"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), questBookEditorIcon, "CQF_QuestBookEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_QuestBook());
             }
@@ -678,6 +678,7 @@ namespace QuestEditor_Library
         public Vector2 scrollPos = Vector2.zero;
         public static readonly Texture2D miscIcon = ContentFinder<Texture2D>.Get("UI/Icon_Edit", true);
         public static readonly Texture2D loadQuestIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/LoadQuest", true);
+        public static readonly Texture2D questBookEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/QuestBookEditor", true);
         public static readonly Texture2D ruleCreaterIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/RuleCreater", true);
         public static readonly Texture2D customQuestMapIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/CustomQuestMap", true);
         public static readonly Texture2D pawnEditorIcon = ContentFinder<Texture2D>.Get("UI/QuestEditor/PawnEditor", true);

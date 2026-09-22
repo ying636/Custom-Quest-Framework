@@ -43,7 +43,7 @@ Suffer damage from player faction: TookDamageFromPlayer
 Leaving Map: LeftMap
 
 When spawning, the spawned pawn will be recorded in the &quot;quest database&quot;, and its &quot;key&quot; is its data name</PawnDataNameTip>
-  <PawnRotation>Pawn rotation</PawnRotation>
+  <PawnRotation>Pawn rotation {0}</PawnRotation>
   <PawnHediffs>Hediffs: </PawnHediffs>
   <PawnSpawnDataHediff>Hediff: {0}</PawnSpawnDataHediff>
   <PawnSpawnDataHediffPart>Part: {0}</PawnSpawnDataHediffPart>

@@ -43,7 +43,7 @@
   <RemoveRoute>移除路径</RemoveRoute>
   <CurRoute>当前路径：{0}</CurRoute>
   <SaveToFile>保存为文档</SaveToFile>
-  <SaveSucceed>保存成功，路径为{0}</SaveSucceed>
+  <SaveSucceed>已保存：{0}</SaveSucceed>
   <NoName>缺少名字</NoName>
   <SaveInNonEditorMap>在非编辑器地图保存</SaveInNonEditorMap>
   <CQF_SaveWholeMap>保存整个地图</CQF_SaveWholeMap>
@@ -514,5 +514,11 @@
   <CQFAction_SetCustomInspectText>设置自定义检查文本</CQFAction_SetCustomInspectText>
   <CQFAction_SetCustomInspectText_Tip>设置所有带有 CompCustomText 的目标的检查文本。</CQFAction_SetCustomInspectText_Tip>
 
+  <CurRotMode>CurRotMode {0}</CurRotMode>
+  <Dessicated>Dessicated</Dessicated>
+  <ActionTriggerMode_Down>ActionTriggerMode_Down</ActionTriggerMode_Down>
+  <CQF_SetReceiverDesc>CQF_SetReceiverDesc</CQF_SetReceiverDesc>
+  <Fail>已失败</Fail>
+  <CQF_ActionComp_InvalidTickInterval>CQF_ActionComp_InvalidTickInterval</CQF_ActionComp_InvalidTickInterval>
 </LanguageData>
 

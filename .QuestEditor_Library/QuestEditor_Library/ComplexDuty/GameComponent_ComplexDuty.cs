@@ -57,6 +57,10 @@ namespace QuestEditor_Library
                 runtime.currentNodeId = dutyMap.StartNode?.nodeId;
             }
             runtime.lastTransitionTick = Find.TickManager.TicksGame;
+            if (job == null)
+            {
+                runtime.nextTickTransitionTick = runtime.lastTransitionTick;
+            }
             job?.ApplyDuty(pawn, quest);
             job?.TryRunTickTransition(pawn, quest);
         }

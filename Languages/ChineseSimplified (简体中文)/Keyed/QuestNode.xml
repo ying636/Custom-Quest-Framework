@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
 
-  <!-- EN: Node:Random Custom Map -->
-  <QuestNode_RandomCustomMap>节点：生成随机地图</QuestNode_RandomCustomMap>
 
 
   <!-- EN: Planet Layer:{0} -->
@@ -106,8 +104,6 @@
   <!-- EN: Select False Node -->
   <SelectFalseNode>选择假节点</SelectFalseNode>
 
-  <!-- EN: text: -->
-  <text>文本：</text>
   <!-- EN: Select letter type -->
   <SelectLetterType>选择信封类型</SelectLetterType>
 

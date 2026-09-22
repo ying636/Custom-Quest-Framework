@@ -162,7 +162,6 @@
   <CheckInterval>检查间隔</CheckInterval>
   <WorkerClass>目标检查器</WorkerClass>
   <Optional>可选目标</Optional>
-  <SaveSucceed>已保存：{0}</SaveSucceed>
   <QuestBookQuestVisibility_QuestAndBook>任务与任务书</QuestBookQuestVisibility_QuestAndBook>
   <QuestBookQuestVisibility_BookOnly>仅任务书</QuestBookQuestVisibility_BookOnly>
   <QuestBookQuestVisibility_QuestOnly>仅任务</QuestBookQuestVisibility_QuestOnly>

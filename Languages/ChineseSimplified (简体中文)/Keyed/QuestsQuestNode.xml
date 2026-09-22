@@ -252,16 +252,6 @@
     <!--QuestNode_Divide-->
     <!-- EN: QuestNode_Divide -->
   <QuestNode_Divide>节点：相除</QuestNode_Divide>
-    <!-- EN: Value1 -->
-  <value1>值1</value1>
-    <!-- EN: Value2 -->
-  <value2>值2：</value2>
-    <!-- EN: Store As -->
-  <storeAs>密匙为：</storeAs>
-    <!-- EN: My Type Short -->
-  <myTypeShort>类型：</myTypeShort>
-    <!-- EN: Selection Weight -->
-  <selectionWeight>选择权重：</selectionWeight>
 
     <!--QuestNode_MultiplyRange-->
     <!-- EN: QuestNode_MultiplyRange -->
@@ -274,28 +264,18 @@
     <!--QuestNode_EqualOrFail-->
     <!-- EN: QuestNode_EqualOrFail -->
   <QuestNode_EqualOrFail>节点：匹配或失败</QuestNode_EqualOrFail>
-    <!-- EN: Compare As -->
-  <compareAs>比较为：</compareAs>
-    <!-- EN: Node -->
-  <node>节点：</node>
 
     <!--QuestNode_Greater-->
     <!-- EN: QuestNode_Greater -->
   <QuestNode_Greater>节点：更大</QuestNode_Greater>
-    <!-- EN: Else Node -->
-  <elseNode>其他节点：</elseNode>
 
     <!--QuestNode_IsInList-->
     <!-- EN: QuestNode_IsInList -->
   <QuestNode_IsInList>节点：在列表</QuestNode_IsInList>
-    <!-- EN: Value -->
-  <value>值：</value>
 
     <!--QuestNode_IsSet-->
     <!-- EN: QuestNode_IsSet -->
   <QuestNode_IsSet>节点：已设置</QuestNode_IsSet>
-    <!-- EN: Name -->
-  <name>名字：</name>
 
     <!--QuestNode_AddTag-->
     <!-- EN: QuestNode_AddTag -->
@@ -308,20 +288,10 @@
     <!--QuestNode_AllSignalsActivable-->
     <!-- EN: QuestNode_AllSignalsActivable -->
   <QuestNode_AllSignalsActivable>QuestNode_AllSignalsActivable</QuestNode_AllSignalsActivable>
-    <!-- EN: In Signals -->
-  <inSignals>接受信号：</inSignals>
-    <!-- EN: Out Signals -->
-  <outSignals>输出信号：</outSignals>
-    <!-- EN: Signal Listen Mode -->
-  <signalListenMode>信号接受模式：</signalListenMode>
 
     <!--QuestNode_AnySignalActivable-->
     <!-- EN: QuestNode_AnySignalActivable -->
   <QuestNode_AnySignalActivable>QuestNode_AnySignalActivable</QuestNode_AnySignalActivable>
-    <!-- EN: In Signal Enable -->
-  <inSignalEnable>接受启用信号：</inSignalEnable>
-    <!-- EN: In Signal Disable -->
-  <inSignalDisable>接受禁用信号：</inSignalDisable>
 
     <!--QuestNode_Chance-->
     <!-- EN: QuestNode_Chance -->
@@ -372,8 +342,6 @@
     <!--QuestNode_Sequence-->
     <!-- EN: Quest Node:Sequence -->
   <QuestNode_Sequence>节点集合</QuestNode_Sequence>
-    <!-- EN: Nodes -->
-  <nodes>节点：</nodes>
 
     <!--QuestNode_Set-->
     <!-- EN: Quest Node:Set -->
@@ -387,22 +355,12 @@
     <!-- EN: This node is used to receive signals from quest and execute the behavior that its signalnode and emits outsignals.
     Note: signalnode must have a receiving signal entry to function properly. Otherwise, it cannot take effect normally. -->
   <QuestNode_Signal_Tip>这个节点用于接受任务中发出的信号并执行其触发节点的行为并发出信号。\n    注：触发节点必须有接收信号词条才能正常运作。否则无法正常生效。</QuestNode_Signal_Tip>
-    <!-- EN: In Signal -->
-  <inSignal>触发信号：</inSignal>
     <!-- EN: Trigger node: -->
   <SignalNode>触发节点：</SignalNode>
 
     <!--QuestNode_SubScript-->
     <!-- EN: QuestNode_SubScript -->
   <QuestNode_SubScript>QuestNode_SubScript</QuestNode_SubScript>
-    <!-- EN: Prefix -->
-  <prefix>前缀：</prefix>
-    <!-- EN: Allow Non Prefixed Lookup -->
-  <allowNonPrefixedLookup>允许无前缀查找：</allowNonPrefixedLookup>
-    <!-- EN: Parms -->
-  <parms>参数：</parms>
-    <!-- EN: Return Var Names -->
-  <returnVarNames>返回变量名字：</returnVarNames>
 
     <!--QuestNode_Log-->
     <!-- EN: QuestNode_Log -->
@@ -411,8 +369,6 @@
     <!--QuestNode_RuntimeLog-->
     <!-- EN: QuestNode_RuntimeLog -->
   <QuestNode_RuntimeLog>QuestNode_RuntimeLog</QuestNode_RuntimeLog>
-    <!-- EN: Message: -->
-  <message>信息：</message>
 
     <!--QuestNode_GenerateMonumentMarker-->
     <!-- EN: QuestNode_GenerateMonumentMarker -->
@@ -427,8 +383,6 @@
     <!--QuestNode_GeneratePawn-->
     <!-- EN: QuestNode_GeneratePawn -->
   <QuestNode_GeneratePawn>QuestNode_GeneratePawn</QuestNode_GeneratePawn>
-    <!-- EN: Add To List -->
-  <addToList>添加到列表：</addToList>
 
     <!--QuestNode_GeneratePawnRandDevelopmentStage-->
     <!-- EN: QuestNode_GeneratePawnRandDevelopmentStage -->
@@ -437,38 +391,6 @@
   <childChance>Child Chance</childChance>
     <!-- EN: Adult Chance -->
   <adultChance>Adult Chance</adultChance>
-    <!-- EN: Add To Lists -->
-  <addToLists>添加到多个列表：</addToLists>
-    <!-- EN: Kind Def -->
-  <kindDef>实体种类定义：</kindDef>
-    <!-- EN: Faction -->
-  <faction>派系：</faction>
-    <!-- EN: Forbid Any Title -->
-  <forbidAnyTitle>禁止任何标题：</forbidAnyTitle>
-    <!-- EN: Ensure Non Numeric Name -->
-  <ensureNonNumericName>确保非数字名字：</ensureNonNumericName>
-    <!-- EN: Forced Traits -->
-  <forcedTraits>强制特性：</forcedTraits>
-    <!-- EN: Prohibited Traits -->
-  <prohibitedTraits>禁用特征：</prohibitedTraits>
-    <!-- EN: Extra Pawn For Extra Relation Chance -->
-  <extraPawnForExtraRelationChance>额外关系概率的额外实体：</extraPawnForExtraRelationChance>
-    <!-- EN: Relation With Extra Pawn Chance Factor -->
-  <relationWithExtraPawnChanceFactor>与额外实体概率因素的关系：</relationWithExtraPawnChanceFactor>
-    <!-- EN: Allow Addictions -->
-  <allowAddictions>允许上瘾：</allowAddictions>
-    <!-- EN: Biocode Weapon Chance -->
-  <biocodeWeaponChance>生物编码武器概率：</biocodeWeaponChance>
-    <!-- EN: Biocode Apparel Chance -->
-  <biocodeApparelChance>生物编码装备概率：</biocodeApparelChance>
-    <!-- EN: Must Be Capable Of Violence -->
-  <mustBeCapableOfViolence>必须具备暴力能力：</mustBeCapableOfViolence>
-    <!-- EN: Is Child -->
-  <isChild>是孩童：</isChild>
-    <!-- EN: Allow Pregnant -->
-  <allowPregnant>允许怀孕：</allowPregnant>
-    <!-- EN: Fixed Gender -->
-  <fixedGender>强制性别：</fixedGender>
 
     <!--QuestNode_GenerateShuttle-->
     <!-- EN: QuestNode_GenerateShuttle -->
@@ -505,8 +427,6 @@
     <!--QuestNode_GenerateThing-->
     <!-- EN: QuestNode_GenerateThing -->
   <QuestNode_GenerateThing>QuestNode_GenerateThing</QuestNode_GenerateThing>
-    <!-- EN: Def -->
-  <def>定义：</def>
     <!-- EN: Stack Count -->
   <stackCount>数量：</stackCount>
 
@@ -529,8 +449,6 @@
   <QuestNode_GenerateTransportShip>QuestNode_GenerateTransportShip</QuestNode_GenerateTransportShip>
     <!-- EN: Ship Thing -->
   <shipThing>Ship Thing</shipThing>
-    <!-- EN: Contents -->
-  <contents>内容：</contents>
 
     <!--QuestNode_AddShipJob-->
     <!-- EN: QuestNode_AddShipJob -->
@@ -541,12 +459,6 @@
   <QuestNode_AddShipJob_Arrive>QuestNode_AddShipJob_Arrive</QuestNode_AddShipJob_Arrive>
     <!-- EN: Landing Cell -->
   <landingCell>Landing Cell</landingCell>
-    <!-- EN: Transport Ship -->
-  <transportShip>运输飞船：</transportShip>
-    <!-- EN: Job Def -->
-  <jobDef>行为定义：</jobDef>
-    <!-- EN: Ship Job Start Mode -->
-  <shipJobStartMode>飞船行为开始模式：</shipJobStartMode>
 
     <!--QuestNode_AddShipJob_Wait-->
     <!-- EN: QuestNode_AddShipJob_Wait -->
@@ -573,8 +485,6 @@
   <QuestNode_SendTransportShipAwayOnCleanup>QuestNode_SendTransportShipAwayOnCleanup</QuestNode_SendTransportShipAwayOnCleanup>
     <!-- EN: Unload Contents -->
   <unloadContents>Unload Contents</unloadContents>
-    <!-- EN: Unsatisfied Drop Mode -->
-  <unsatisfiedDropMode>不满足的掉落模式：</unsatisfiedDropMode>
 
     <!--QuestNode_EvaluateSimpleCurve-->
     <!-- EN: QuestNode_EvaluateSimpleCurve -->
@@ -607,8 +517,6 @@
   <colonyPercentage>Colony Percentage</colonyPercentage>
     <!-- EN: Must Have Free Colonists Available Count -->
   <mustHaveFreeColonistsAvailableCount>Must Have Free Colonists Available Count</mustHaveFreeColonistsAvailableCount>
-    <!-- EN: Min Age -->
-  <minAge>最小年龄：</minAge>
 
     <!--QuestNode_GetFreeColonistsCount-->
     <!-- EN: QuestNode_GetFreeColonistsCount -->
@@ -691,12 +599,8 @@
     <!--QuestNode_GetLargestClearArea-->
     <!-- EN: QuestNode_GetLargestClearArea -->
   <QuestNode_GetLargestClearArea>QuestNode_GetLargestClearArea</QuestNode_GetLargestClearArea>
-    <!-- EN: Map -->
-  <map>地图：</map>
     <!-- EN: Fail If Smaller -->
   <failIfSmaller>Fail If Smaller</failIfSmaller>
-    <!-- EN: Max -->
-  <max>最大：</max>
 
     <!--QuestNode_GetMap-->
     <!-- EN: QuestNode_GetMap -->
@@ -717,8 +621,6 @@
     <!--QuestNode_GetMonumentRequiredResourcesString-->
     <!-- EN: QuestNode_GetMonumentRequiredResourcesString -->
   <QuestNode_GetMonumentRequiredResourcesString>QuestNode_GetMonumentRequiredResourcesString</QuestNode_GetMonumentRequiredResourcesString>
-    <!-- EN: Monument Marker -->
-  <monumentMarker>纪念碑标签：</monumentMarker>
 
     <!--QuestNode_GetMonumentSketch-->
     <!-- EN: QuestNode_GetMonumentSketch -->
@@ -745,8 +647,6 @@
     <!--QuestNode_GetNearestHomeMapOf-->
     <!-- EN: QuestNode_GetNearestHomeMapOf -->
   <QuestNode_GetNearestHomeMapOf>QuestNode_GetNearestHomeMapOf</QuestNode_GetNearestHomeMapOf>
-    <!-- EN: Map Of -->
-  <mapOf>地图被属于：</mapOf>
 
     <!--QuestNode_GetPawn-->
     <!-- EN: QuestNode_GetPawn -->
@@ -805,20 +705,14 @@
   <pointsCurve>Points Curve</pointsCurve>
     <!-- EN: Chances Curve -->
   <chancesCurve>Chances Curve</chancesCurve>
-    <!-- EN: Round Random -->
-  <roundRandom>随机环绕：</roundRandom>
 
     <!--QuestNode_GetPawnKind-->
     <!-- EN: QuestNode_GetPawnKind -->
   <QuestNode_GetPawnKind>QuestNode_GetPawnKind</QuestNode_GetPawnKind>
-    <!-- EN: Options -->
-  <options>选项：</options>
 
     <!--QuestNode_GetPawnsWithRoyalTitle-->
     <!-- EN: QuestNode_GetPawnsWithRoyalTitle -->
   <QuestNode_GetPawnsWithRoyalTitle>QuestNode_GetPawnsWithRoyalTitle</QuestNode_GetPawnsWithRoyalTitle>
-    <!-- EN: Store Count As -->
-  <storeCountAs>存储计数为：</storeCountAs>
     <!-- EN: Store Pawns Label As -->
   <storePawnsLabelAs>Store Pawns Label As</storePawnsLabelAs>
 
@@ -839,24 +733,14 @@
     <!--QuestNode_GetRandomByCurve-->
     <!-- EN: QuestNode_GetRandomByCurve -->
   <QuestNode_GetRandomByCurve>QuestNode_GetRandomByCurve</QuestNode_GetRandomByCurve>
-    <!-- EN: Curve -->
-  <curve>曲线：</curve>
-    <!-- EN: Min -->
-  <min>最小值：</min>
 
     <!--QuestNode_GetRandomFactionForSite-->
     <!-- EN: QuestNode_GetRandomFactionForSite -->
   <QuestNode_GetRandomFactionForSite>QuestNode_GetRandomFactionForSite</QuestNode_GetRandomFactionForSite>
-    <!-- EN: Site Part Defs -->
-  <sitePartDefs>站点部件定义：</sitePartDefs>
-    <!-- EN: Must Be Hostile To Faction Of -->
-  <mustBeHostileToFactionOf>必须敌对派系：</mustBeHostileToFactionOf>
 
     <!--QuestNode_GetRandomInRangeFloat-->
     <!-- EN: QuestNode_GetRandomInRangeFloat -->
   <QuestNode_GetRandomInRangeFloat>QuestNode_GetRandomInRangeFloat</QuestNode_GetRandomInRangeFloat>
-    <!-- EN: Range -->
-  <range>范围：</range>
 
     <!--QuestNode_GetRandomInRangeForChallengeRating-->
     <!-- EN: QuestNode_GetRandomInRangeForChallengeRating -->
@@ -893,16 +777,12 @@
   <QuestNode_GetSitePartDefsByTagsAndFaction>QuestNode_GetSitePartDefsByTagsAndFaction</QuestNode_GetSitePartDefsByTagsAndFaction>
     <!-- EN: Site Parts Tags -->
   <sitePartsTags>Site Parts Tags</sitePartsTags>
-    <!-- EN: Store Faction As -->
-  <storeFactionAs>存储派系为：</storeFactionAs>
 
     <!--QuestNode_GetSiteThreatPoints-->
     <!-- EN: QuestNode_GetSiteThreatPoints -->
   <QuestNode_GetSiteThreatPoints>QuestNode_GetSiteThreatPoints</QuestNode_GetSiteThreatPoints>
     <!-- EN: Site -->
   <site>Site</site>
-    <!-- EN: Site Parts Params -->
-  <sitePartsParams>站点部件参数：</sitePartsParams>
 
     <!--QuestNode_GetSiteTile-->
     <!-- EN: QuestNode_GetSiteTile -->
@@ -925,8 +805,6 @@
   <storeProductionItemCountAs>Store Production Item Count As</storeProductionItemCountAs>
     <!-- EN: Store Production Item Label As -->
   <storeProductionItemLabelAs>Store Production Item Label As</storeProductionItemLabelAs>
-    <!-- EN: Points To Required Work Curve -->
-  <pointsToRequiredWorkCurve>点数-所需工作曲线：</pointsToRequiredWorkCurve>
     <!-- EN: Points To Max Item Market Value Curve -->
   <pointsToMaxItemMarketValueCurve>Points To Max Item Market Value Curve</pointsToMaxItemMarketValueCurve>
     <!-- EN: Max Market Value Factor -->
@@ -981,8 +859,6 @@
     <!--QuestNode_AssaultColony-->
     <!-- EN: QuestNode_AssaultColony -->
   <QuestNode_AssaultColony>QuestNode_AssaultColony</QuestNode_AssaultColony>
-    <!-- EN: Pawns -->
-  <pawns>殖民者：</pawns>
 
     <!--QuestNode_VisitColony-->
     <!-- EN: QuestNode_VisitColony -->
@@ -991,26 +867,18 @@
     <!--QuestNode_HasRoyalTitleInCurrentFaction-->
     <!-- EN: QuestNode_HasRoyalTitleInCurrentFaction -->
   <QuestNode_HasRoyalTitleInCurrentFaction>QuestNode_HasRoyalTitleInCurrentFaction</QuestNode_HasRoyalTitleInCurrentFaction>
-    <!-- EN: Pawn -->
-  <pawn>角色：</pawn>
 
     <!--QuestNode_IsFactionHostileToPlayer-->
     <!-- EN: QuestNode_IsFactionHostileToPlayer -->
   <QuestNode_IsFactionHostileToPlayer>QuestNode_IsFactionHostileToPlayer</QuestNode_IsFactionHostileToPlayer>
-    <!-- EN: Faction Of -->
-  <factionOf>所属派系：</factionOf>
 
     <!--QuestNode_IsOfFaction-->
     <!-- EN: QuestNode_IsOfFaction -->
   <QuestNode_IsOfFaction>QuestNode_IsOfFaction</QuestNode_IsOfFaction>
-    <!-- EN: Thing -->
-  <thing>物品：</thing>
 
     <!--QuestNode_ModIsActive-->
     <!-- EN: QuestNode_ModIsActive -->
   <QuestNode_ModIsActive>QuestNode_ModIsActive</QuestNode_ModIsActive>
-    <!-- EN: Mod I D -->
-  <modID>模组ID：</modID>
 
     <!--QuestNode_AddContentsToShuttle-->
     <!-- EN: QuestNode_AddContentsToShuttle -->
@@ -1039,8 +907,6 @@
     <!--QuestNode_AddPassageOffworldReward-->
     <!-- EN: QuestNode_AddPassageOffworldReward -->
   <QuestNode_AddPassageOffworldReward>QuestNode_AddPassageOffworldReward</QuestNode_AddPassageOffworldReward>
-    <!-- EN: In Signal Choice Used -->
-  <inSignalChoiceUsed>选择使用时信号：</inSignalChoiceUsed>
 
     <!--QuestNode_AddPawnReward-->
     <!-- EN: QuestNode_AddPawnReward -->
@@ -1073,8 +939,6 @@
   <QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle</QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>
     <!-- EN: Goodwill Change -->
   <goodwillChange>Goodwill Change</goodwillChange>
-    <!-- EN: Reason -->
-  <reason>原因：</reason>
 
     <!--QuestNode_ChangeHeir-->
     <!-- EN: QuestNode_ChangeHeir -->
@@ -1101,8 +965,6 @@
     <!--QuestNode_DestroyOrPassToWorld-->
     <!-- EN: QuestNode_DestroyOrPassToWorld -->
   <QuestNode_DestroyOrPassToWorld>QuestNode_DestroyOrPassToWorld</QuestNode_DestroyOrPassToWorld>
-    <!-- EN: Things -->
-  <things>物品：</things>
 
     <!--QuestNode_DestroyWorldObject-->
     <!-- EN: QuestNode_DestroyWorldObject -->
@@ -1121,8 +983,6 @@
   <QuestNode_DropPods>QuestNode_DropPods</QuestNode_DropPods>
     <!-- EN: Use Trade Drop Spot -->
   <useTradeDropSpot>Use Trade Drop Spot</useTradeDropSpot>
-    <!-- EN: Send Standard Letter -->
-  <sendStandardLetter>发送标准信件：</sendStandardLetter>
     <!-- EN: Things To Exclude From Hyperlinks -->
   <thingsToExcludeFromHyperlinks>Things To Exclude From Hyperlinks</thingsToExcludeFromHyperlinks>
 
@@ -1165,14 +1025,8 @@
     <!--QuestNode_GiveNearPawn-->
     <!-- EN: QuestNode_GiveNearPawn -->
   <QuestNode_GiveNearPawn>QuestNode_GiveNearPawn</QuestNode_GiveNearPawn>
-    <!-- EN: Contents Defs -->
-  <contentsDefs>内容定义：</contentsDefs>
     <!-- EN: Near Pawn -->
   <nearPawn>Near Pawn</nearPawn>
-    <!-- EN: Join Player -->
-  <joinPlayer>加入玩家：</joinPlayer>
-    <!-- EN: Make Prisoners -->
-  <makePrisoners>变为俘虏：</makePrisoners>
     <!-- EN: Custom Drop Pods Letter Label -->
   <customDropPodsLetterLabel>Custom Drop Pods Letter Label</customDropPodsLetterLabel>
     <!-- EN: Custom Drop Pods Letter Text -->
@@ -1193,14 +1047,6 @@
     <!--QuestNode_GiveRewards-->
     <!-- EN: QuestNode_GiveRewards -->
   <QuestNode_GiveRewards>QuestNode_GiveRewards</QuestNode_GiveRewards>
-    <!-- EN: Custom Letter Label -->
-  <customLetterLabel>自定义信件标题：</customLetterLabel>
-    <!-- EN: Custom Letter Text -->
-  <customLetterText>自定义信件内容：</customLetterText>
-    <!-- EN: Custom Letter Label Rules -->
-  <customLetterLabelRules>自定义标题规则：</customLetterLabelRules>
-    <!-- EN: Custom Letter Text Rules -->
-  <customLetterTextRules>自定义内容规则：</customLetterTextRules>
     <!-- EN: Use Difficulty Factor -->
   <useDifficultyFactor>Use Difficulty Factor</useDifficultyFactor>
     <!-- EN: Node If Chosen Pawn Signal Used -->
@@ -1217,14 +1063,6 @@
     <!--QuestNode_GiveRoyalFavorAndDevelopmentPoints-->
     <!-- EN: QuestNode_GiveRoyalFavorAndDevelopmentPoints -->
   <QuestNode_GiveRoyalFavorAndDevelopmentPoints>QuestNode_GiveRoyalFavorAndDevelopmentPoints</QuestNode_GiveRoyalFavorAndDevelopmentPoints>
-    <!-- EN: Give To -->
-  <giveTo>给予给：</giveTo>
-    <!-- EN: Give To Accepter -->
-  <giveToAccepter>给予接收者：</giveToAccepter>
-    <!-- EN: Amount -->
-  <amount>数量：</amount>
-    <!-- EN: Is Single Reward -->
-  <isSingleReward>是否单一奖励：</isSingleReward>
 
     <!--QuestNode_GiveTechprints-->
     <!-- EN: QuestNode_GiveTechprints -->
@@ -1237,24 +1075,14 @@
     <!--QuestNode_GuardianShipDelay-->
     <!-- EN: QuestNode_GuardianShipDelay -->
   <QuestNode_GuardianShipDelay>QuestNode_GuardianShipDelay</QuestNode_GuardianShipDelay>
-    <!-- EN: Out Signal Complete -->
-  <outSignalComplete>完成时输出信号：</outSignalComplete>
-    <!-- EN: Delay Ticks -->
-  <delayTicks>延迟Tick：</delayTicks>
 
     <!--QuestNode_InspectString-->
     <!-- EN: QuestNode_InspectString -->
   <QuestNode_InspectString>QuestNode_InspectString</QuestNode_InspectString>
-    <!-- EN: Targets -->
-  <targets>目标：</targets>
-    <!-- EN: Inspect String -->
-  <inspectString>检视字符串：</inspectString>
 
     <!--QuestNode_Leave-->
     <!-- EN: QuestNode_Leave -->
   <QuestNode_Leave>QuestNode_Leave</QuestNode_Leave>
-    <!-- EN: In Signal Remove Pawn -->
-  <inSignalRemovePawn>移除角色时信号：</inSignalRemovePawn>
     <!-- EN: Leave On Cleanup -->
   <leaveOnCleanup>Leave On Cleanup</leaveOnCleanup>
 
@@ -1263,8 +1091,6 @@
   <QuestNode_LendColonistsToFaction>QuestNode_LendColonistsToFaction</QuestNode_LendColonistsToFaction>
     <!-- EN: Out Signal Colonists Died -->
   <outSignalColonistsDied>Out Signal Colonists Died</outSignalColonistsDied>
-    <!-- EN: Shuttle -->
-  <shuttle>穿梭机：</shuttle>
     <!-- EN: Lend Colonists To Faction Of -->
   <lendColonistsToFactionOf>Lend Colonists To Faction Of</lendColonistsToFactionOf>
     <!-- EN: Return Lent Colonists In Ticks -->
@@ -1309,24 +1135,16 @@
   <QuestNode_Message>节点：信息</QuestNode_Message>
     <!-- EN: Message Type: -->
   <messageType>信息类型：</messageType>
-    <!-- EN: Text: -->
-  <text>文本：</text>
-    <!-- EN: Look Targets: -->
-  <lookTargets>查看目标：</lookTargets>
 
     <!--QuestNode_MoodBelow-->
     <!-- EN: QuestNode_MoodBelow -->
   <QuestNode_MoodBelow>QuestNode_MoodBelow</QuestNode_MoodBelow>
-    <!-- EN: Out Signal -->
-  <outSignal>输出信号：</outSignal>
     <!-- EN: Threshold -->
   <threshold>Threshold</threshold>
 
     <!--QuestNode_NoWorldObject-->
     <!-- EN: QuestNode_NoWorldObject -->
   <QuestNode_NoWorldObject>QuestNode_NoWorldObject</QuestNode_NoWorldObject>
-    <!-- EN: World Object -->
-  <worldObject>世界物体：</worldObject>
 
     <!--QuestNode_Notify_PlayerRaidedSomeone-->
     <!-- EN: QuestNode_Notify_PlayerRaidedSomeone -->
@@ -1341,8 +1159,6 @@
   <QuestNode_PawnsArrive>QuestNode_PawnsArrive</QuestNode_PawnsArrive>
     <!-- EN: Custom Letter Def -->
   <customLetterDef>Custom Letter Def</customLetterDef>
-    <!-- EN: Reward Details Hidden -->
-  <rewardDetailsHidden>隐藏奖励细节：</rewardDetailsHidden>
 
     <!--QuestNode_PawnsKilled-->
     <!-- EN: QuestNode_PawnsKilled -->
@@ -1357,14 +1173,10 @@
   <QuestNode_PlantsHarvested>QuestNode_PlantsHarvested</QuestNode_PlantsHarvested>
     <!-- EN: Plant -->
   <plant>Plant</plant>
-    <!-- EN: Count -->
-  <count>数量：</count>
 
     <!--QuestNode_QuestUnique-->
     <!-- EN: QuestNode_QuestUnique -->
   <QuestNode_QuestUnique>节点：唯一性任务</QuestNode_QuestUnique>
-    <!-- EN: Tag -->
-  <tag>标签：</tag>
     <!-- EN: Store Processed Tag As -->
   <storeProcessedTagAs>已处理的标签的密匙为：</storeProcessedTagAs>
 
@@ -1377,10 +1189,6 @@
     <!--QuestNode_RemoveMemoryThought-->
     <!-- EN: QuestNode_RemoveMemoryThought -->
   <QuestNode_RemoveMemoryThought>QuestNode_RemoveMemoryThought</QuestNode_RemoveMemoryThought>
-    <!-- EN: Other Pawn -->
-  <otherPawn>其他角色：</otherPawn>
-    <!-- EN: Add To Look Targets -->
-  <addToLookTargets>添加到查看目标：</addToLookTargets>
 
     <!--QuestNode_RequirementsToAcceptColonistWithTitle-->
     <!-- EN: QuestNode_RequirementsToAcceptColonistWithTitle -->
@@ -1395,20 +1203,14 @@
     <!--QuestNode_SendShuttleAwayOnCleanup-->
     <!-- EN: QuestNode_SendShuttleAwayOnCleanup -->
   <QuestNode_SendShuttleAwayOnCleanup>QuestNode_SendShuttleAwayOnCleanup</QuestNode_SendShuttleAwayOnCleanup>
-    <!-- EN: Drop Everything -->
-  <dropEverything>丢弃所有物品：</dropEverything>
 
     <!--QuestNode_SetChallengeRating-->
     <!-- EN: QuestNode_SetChallengeRating -->
   <QuestNode_SetChallengeRating>QuestNode_SetChallengeRating</QuestNode_SetChallengeRating>
-    <!-- EN: Challenge Rating -->
-  <challengeRating>挑战评级：</challengeRating>
 
     <!--QuestNode_SetItemStashContents-->
     <!-- EN: QuestNode_SetItemStashContents -->
   <QuestNode_SetItemStashContents>QuestNode_SetItemStashContents</QuestNode_SetItemStashContents>
-    <!-- EN: Items -->
-  <items>物品：</items>
     <!-- EN: Categories -->
   <categories>Categories</categories>
 
@@ -1421,8 +1223,6 @@
     <!--QuestNode_SetTicksUntilAcceptanceExpiry-->
     <!-- EN: QuestNode_SetTicksUntilAcceptanceExpiry -->
   <QuestNode_SetTicksUntilAcceptanceExpiry>QuestNode_SetTicksUntilAcceptanceExpiry</QuestNode_SetTicksUntilAcceptanceExpiry>
-    <!-- EN: Ticks -->
-  <ticks>Tick：</ticks>
 
     <!--QuestNode_ShuttleDelay-->
     <!-- EN: QuestNode_ShuttleDelay -->
@@ -1439,8 +1239,6 @@
     <!--QuestNode_SpawnMechCluster-->
     <!-- EN: QuestNode_SpawnMechCluster -->
   <QuestNode_SpawnMechCluster>QuestNode_SpawnMechCluster</QuestNode_SpawnMechCluster>
-    <!-- EN: Drop Spot -->
-  <dropSpot>投放位置：</dropSpot>
 
     <!--QuestNode_SpawnSkyfaller-->
     <!-- EN: QuestNode_SpawnSkyfaller -->
@@ -1489,18 +1287,6 @@
   <QuestNode_WorldObjectTimeout>节点：世界对象超时</QuestNode_WorldObjectTimeout>
     <!-- EN: Destroy On Cleanup -->
   <destroyOnCleanup>清理时摧毁：</destroyOnCleanup>
-    <!-- EN: Expiry Info Part -->
-  <expiryInfoPart>过期信息部分：</expiryInfoPart>
-    <!-- EN: Expiry Info Part Tip -->
-  <expiryInfoPartTip>过期信息提示：</expiryInfoPartTip>
-    <!-- EN: Inspect String Targets -->
-  <inspectStringTargets>检视字符串目标：</inspectStringTargets>
-    <!-- EN: Delay Ticks Range -->
-  <delayTicksRange>延迟Tick范围：</delayTicksRange>
-    <!-- EN: Is Quest Timeout -->
-  <isQuestTimeout>是否任务超时：</isQuestTimeout>
-    <!-- EN: Reactivatable -->
-  <reactivatable>可重新激活：</reactivatable>
 
     <!--QuestNode_Root_BestowingCeremony-->
     <!-- EN: QuestNode_Root_BestowingCeremony -->
@@ -1585,8 +1371,6 @@
   <storeThingAs>Store Thing As</storeThingAs>
     <!-- EN: Store Thing Count As -->
   <storeThingCountAs>Store Thing Count As</storeThingCountAs>
-    <!-- EN: Store Market Value As -->
-  <storeMarketValueAs>存储市场价值为：</storeMarketValueAs>
     <!-- EN: Store Has Quality As -->
   <storeHasQualityAs>Store Has Quality As</storeHasQualityAs>
     <!-- EN: Dont Request -->
@@ -1595,22 +1379,16 @@
     <!--QuestNode_TradeRequest_RandomOfferDuration-->
     <!-- EN: QuestNode_TradeRequest_RandomOfferDuration -->
   <QuestNode_TradeRequest_RandomOfferDuration>QuestNode_TradeRequest_RandomOfferDuration</QuestNode_TradeRequest_RandomOfferDuration>
-    <!-- EN: Settlement -->
-  <settlement>定居点：</settlement>
     <!-- EN: Store Estimated Travel Time As -->
   <storeEstimatedTravelTimeAs>Store Estimated Travel Time As</storeEstimatedTravelTimeAs>
 
     <!--QuestNode_ResolveQuestDescription-->
     <!-- EN: QuestNode_ResolveQuestDescription -->
   <QuestNode_ResolveQuestDescription>QuestNode_ResolveQuestDescription</QuestNode_ResolveQuestDescription>
-    <!-- EN: Rules -->
-  <rules>规则：</rules>
 
     <!--QuestNode_ResolveQuestName-->
     <!-- EN: QuestNode_ResolveQuestName -->
   <QuestNode_ResolveQuestName>QuestNode_ResolveQuestName</QuestNode_ResolveQuestName>
-    <!-- EN: Text Root -->
-  <TextRoot>文本根：</TextRoot>
 
     <!--QuestNode_ResolveTextNow-->
     <!-- EN: QuestNode_ResolveTextNow -->
@@ -1633,10 +1411,6 @@
   <randomIncidents>Random Incidents</randomIncidents>
     <!-- EN: Start Offset Ticks -->
   <startOffsetTicks>Start Offset Ticks</startOffsetTicks>
-    <!-- EN: Duration -->
-  <duration>持续时间：</duration>
-    <!-- EN: Points -->
-  <points>点数：</points>
 
     <!--QuestNode_GameCondition-->
     <!-- EN: QuestNode_GameCondition -->
@@ -1659,8 +1433,6 @@
     <!--QuestNode_Incident-->
     <!-- EN: QuestNode_Incident -->
   <QuestNode_Incident>QuestNode_Incident</QuestNode_Incident>
-    <!-- EN: Incident Def -->
-  <incidentDef>事件定义：</incidentDef>
 
     <!--QuestNode_Infestation-->
     <!-- EN: QuestNode_Infestation -->
@@ -1671,20 +1443,14 @@
     <!--QuestNode_ManhunterPack-->
     <!-- EN: QuestNode_ManhunterPack -->
   <QuestNode_ManhunterPack>QuestNode_ManhunterPack</QuestNode_ManhunterPack>
-    <!-- EN: Walk In Spot -->
-  <walkInSpot>进入位置：</walkInSpot>
     <!-- EN: Animal Count -->
   <animalCount>Animal Count</animalCount>
 
     <!--QuestNode_Raid-->
     <!-- EN: QuestNode_Raid -->
   <QuestNode_Raid>节点：袭击</QuestNode_Raid>
-    <!-- EN: Arrival Mode -->
-  <arrivalMode>抵达模式：</arrivalMode>
     <!-- EN: Raid Pawn Kind -->
   <raidPawnKind>袭击实体种类：</raidPawnKind>
-    <!-- EN: Can timeout or flee -->
-  <canTimeoutOrFlee>允许超时或者逃跑：</canTimeoutOrFlee>
     <!-- EN: In Signal Leave -->
   <inSignalLeave>接受离开信号：</inSignalLeave>
 

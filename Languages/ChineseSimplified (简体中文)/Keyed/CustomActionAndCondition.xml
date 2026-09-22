@@ -326,7 +326,7 @@
   <!-- EN: Action: take damage -->
   <CQFAction_TakeDamage>行为：造成伤害</CQFAction_TakeDamage>
   <!-- EN: Damage type: -->
-  <DamageType>伤害类型：</DamageType>
+  <CQF_DamageType>伤害类型：</CQF_DamageType>
   <!-- EN: Damage amount: -->
   <DamageAmount>伤害量：</DamageAmount>
 
@@ -571,8 +571,6 @@ Interacte interactive things -->
   <CQFAction_AddQuestTag>行为：添加任务标签</CQFAction_AddQuestTag>
   <!-- EN: Add quest tag to the target, and things with quest tag can send signals -->
   <CQFAction_AddQuestTag_Tip>给目标事物添加任务标签，拥有任务标签的事物会发出信号</CQFAction_AddQuestTag_Tip>
-  <!-- EN: Quest tag: -->
-  <QuestTag>Quest Tag</QuestTag>
 
   <!-- EN: Action:set relation -->
   <CQFAction_SetRelation>行为：设置关系</CQFAction_SetRelation>

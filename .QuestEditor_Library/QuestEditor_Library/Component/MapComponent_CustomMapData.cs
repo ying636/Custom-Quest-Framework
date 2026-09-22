@@ -265,18 +265,30 @@ namespace QuestEditor_Library
             {
                 return;
             }
-            List<CQFEventArea> triggeredAreas = new List<CQFEventArea>();
             Quest quest = GameTools.GetQuestFromMap(this.map);
-            foreach (CQFEventArea area in this.EventAreas)
+            this.eventAreaCheckBuffer.Clear();
+            this.eventAreaCheckBuffer.AddRange(this.EventAreas);
+            try
             {
-                if (area.TryTrigger(this.map, quest))
+                foreach (CQFEventArea area in this.eventAreaCheckBuffer)
                 {
-                    triggeredAreas.Add(area);
+                    if (!this.EventAreas.Contains(area))
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        area.TryTrigger(this.map, quest);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"[CQF] CQFEventArea.TryTrigger: key={area?.key}, map={this.map.uniqueID}, {ex}");
+                    }
                 }
             }
-            foreach (CQFEventArea area in triggeredAreas)
+            finally
             {
-                this.EventAreas.Remove(area);
+                this.eventAreaCheckBuffer.Clear();
             }
         }
         private void RebuildEventAreaPawnCache()
@@ -319,6 +331,8 @@ namespace QuestEditor_Library
         {
             return map.GetComponent<MapComponent_CustomMapData>();
         }
+
+        private readonly List<CQFEventArea> eventAreaCheckBuffer = new List<CQFEventArea>();
     }
     public class LordWithName : IExposable
     {
@@ -424,6 +438,7 @@ namespace QuestEditor_Library
                 }
                 if (this.cellSet.Contains(pawn.Position))
                 {
+                    MapComponent_CustomMapData.GetComp(map).EventAreas.Remove(this);
                     this.Trigger(pawn, map, quest);
                     return true;
                 }
@@ -491,7 +506,14 @@ namespace QuestEditor_Library
             };
             foreach (CQFAction action in this.actions)
             {
-                action.Work(targets, quest);
+                try
+                {
+                    action.Work(targets, quest);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"[CQF] CQFEventArea.Trigger: key={this.key}, map={map.uniqueID}, action={action?.GetType().FullName}, {ex}");
+                }
             }
         }
 

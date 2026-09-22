@@ -15,7 +15,7 @@ namespace QuestEditor_Library
         {
             doCloseX = true;
             absorbInputAroundWindow = false;
-            curDef = new QuestBookDef();
+            curDef ??= new QuestBookDef();
             nodeCanvas.OpenStepEditor = step => Find.WindowStack.Add(new Dialog_EditQuestBookStep(step, curDef));
             chapterSidebar.OpenChapterEditor = chapter => Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter, curDef));
         }

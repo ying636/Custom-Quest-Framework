@@ -7,12 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Assemblies</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\1.6\Assemblies</OutputPath>
+  <PropertyGroup>
+    <OutputPath Condition=" '$(OutputPath)' == '' ">$(MSBuildThisFileDirectory)..\..\1.6\Assemblies\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

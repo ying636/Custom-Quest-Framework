@@ -162,7 +162,6 @@
   <CheckInterval>Check interval</CheckInterval>
   <WorkerClass>Objective worker</WorkerClass>
   <Optional>Optional</Optional>
-  <SaveSucceed>Saved: {0}</SaveSucceed>
   <QuestBookQuestVisibility_QuestAndBook>Quest and book</QuestBookQuestVisibility_QuestAndBook>
   <QuestBookQuestVisibility_BookOnly>Book only</QuestBookQuestVisibility_BookOnly>
   <QuestBookQuestVisibility_QuestOnly>Quest only</QuestBookQuestVisibility_QuestOnly>
