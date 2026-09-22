@@ -330,6 +330,7 @@ namespace QuestEditor_Library
             Widgets.CheckboxLabeled(rect, "AddQuestPrefix".Translate(), ref this.addQuestPrefix);
             TooltipHandler.TipRegion(rect, "AddQuestPrefixTip".Translate());
             y += 30f;
+            CQFSignalEditor.DrawSignalLinks(ref y, inRect, x, this);
         }
         public override XElement SaveToXElement(string nodeName)
         {

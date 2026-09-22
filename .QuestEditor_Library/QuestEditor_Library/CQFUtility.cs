@@ -16,7 +16,6 @@ using System.IO;
 using Unity.Collections;
 using RimWorld.Planet;
 using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace QuestEditor_Library
@@ -25,7 +24,6 @@ namespace QuestEditor_Library
     public static class CQFEditorTools
     {
         public static readonly Texture2D TipIcon = ContentFinder<Texture2D>.Get("UI/TipIcon", true);
-        private static readonly HashSet<string> foldedConditionKeys = new HashSet<string>();
 
         public static List<string> TargetTexts => new List<string>()
         { "Interviewee", "Interviewer", "CustomThing", "Trigger", "Captured", "Position","Inner","Target" };
@@ -727,22 +725,16 @@ namespace QuestEditor_Library
         }
         public static void DrawActionList_UseWindow(ref float y, float x, List<CQFAction> list, Rect inRect, string title, Func<CQFAction, string> getString)
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            y += 30f;
-            foreach (CQFAction d in list)
-            {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), getString(d), false))
-                {
-                    Find.WindowStack.Add(new Dialog_EditIDrawable(d));
-                }
-                y += 30f;
-            }
-            y += 5f;
-            CQFEditorTools.DrawButtonForList(ref y,list, a => a.GetType().Name.Translate(), 10, 150f);
+            CQFActionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, list);
         }
         public static void DrawIDrawList_UseWindow<T>(ref float y, float x, List<T> list, 
             Rect inRect, string title, Func<T, string> getString,Action<T> extraAction = null) where T : IDrawable
         {
+            if (list is List<DialogCondition> conditions && extraAction == null)
+            {
+                CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions);
+                return;
+            }
             Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
             y += 30f;
             foreach (T d in list)
@@ -771,6 +763,11 @@ namespace QuestEditor_Library
         public static void DrawIDrawList_UseWindow<T>(ref float y, float x, List<T> list, Rect inRect, string title
             ,Action addaction,Func<T, string> getString) where T : IDrawable
         {
+            if (list is List<DialogCondition> conditions)
+            {
+                CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions, addaction);
+                return;
+            }
             Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
             y += 30f;
             foreach (T d in list)
@@ -887,38 +884,15 @@ namespace QuestEditor_Library
         }
         public static void DrawActionList(ref float y, float x, List<CQFAction> list, Rect inRect, string title, bool drawLine = true,string tip = null)
         {
-            Rect titleRect = new Rect(x, y, 255f, 25f);
-            Widgets.Label(titleRect, title.Colorize(ColorLibrary.PaleBlue));
-            if (tip != null) 
-            {
-                TooltipHandler.TipRegion(titleRect, tip);
-            }
-            CQFEditorTools.DrawButtonWithIcon(y,
-                () => CQFEditorTools.OpenCQFActionSelect(t => list.Add((CQFAction)Activator.CreateInstance(t))),
-                () => CQFEditorTools.DrawFloatMenu(list,a => list.Remove(a),a => a.GetType().Name.Translate()),inRect.width - 150f,30f);
-            y += 30f;
-            Vector2 start = new Vector2(x, y);
-            Vector2 end = new Vector2(inRect.width - (x * 2) - 10f, y);
-            if (drawLine) 
-            {
-                Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
-            }
-            foreach (IDrawable d in list)
-            {
-                y += 3f;
-                d.Draw(ref y, inRect, x);
-                y += 3f;
-                start.y = y;
-                end.y = y;
-                if (drawLine)
-                {
-                    Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
-                }
-            }
-            y += 5f;
+            CQFActionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, list, tip);
         }
         public static void DrawIDrawList<T>(ref float y, float x, List<T> list, Rect inRect, string title) where T : IDrawable
         {
+            if (list is List<DialogCondition> conditions)
+            {
+                CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions);
+                return;
+            }
             Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
             CQFEditorTools.DrawButtonForList_UseIcon(y, list, d => d.GetType().Name.Translate(), () => CQFEditorTools.DrawFloatMenu(typeof(T).AllSubclassesNonAbstract(), a =>
 list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width - 150f);
@@ -939,6 +913,11 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         }
         public static void DrawIDrawList<T>(ref float y, float x, List<T> list, Rect inRect, string title, Action addAction, Func<T, string> getText) where T : IDrawable
         {
+            if (list is List<DialogCondition> conditions)
+            {
+                CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions, addAction);
+                return;
+            }
             Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
             CQFEditorTools.DrawButtonForList_UseIcon(y, list, d => getText(d), () => addAction(), x + 220f);
             y += 30f;
@@ -978,159 +957,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
 
         public static void DrawCQFConditionList(ref float y, float x, float width, Rect inRect, string title, List<DialogCondition> conditions)
         {
-            DrawFoldableConditionHeader(ref y, x, width, title, FoldKey(conditions, title), out bool foldout, () =>
-            {
-                Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), type => type.Name.Translate(), type =>
-                {
-                    conditions.Add((DialogCondition)Activator.CreateInstance(type));
-                }, null, null, null, type => type.Name, null, null), "CQF_SelectDialogCondition".Translate()));
-            }, () => CQFEditorTools.DrawFloatMenu(conditions, condition => conditions.Remove(condition), condition => condition.GetType().Name.Translate()));
-
-            if (!foldout)
-            {
-                y += 8f;
-                return;
-            }
-            if (conditions.Any())
-            {
-                for (int i = 0; i < conditions.Count; i++)
-                {
-                    DialogCondition condition = conditions[i];
-                    float itemStartY = y;
-                    Widgets.DrawBoxSolid(new Rect(x + 4f, y, width - 8f, 1f), new Color(0.22f, 0.28f, 0.34f, 0.85f));
-                    y += 8f;
-                    DrawCQFCondition(ref y, x + 10f, width - 20f, inRect, condition);
-                    Widgets.DrawBox(new Rect(x + 4f, itemStartY, width - 8f, y - itemStartY + 2f), 1, QuestEditor_Dialog.blueTex);
-                    y += 8f;
-                }
-            }
-            else
-            {
-                Widgets.Label(new Rect(x + 10f, y + 2f, width - 20f, 25f), "CQF_DutyMapNoOptions".Translate().Colorize(Color.gray));
-                y += 30f;
-            }
-            y += 8f;
-        }
-
-        private static void DrawCQFCondition(ref float y, float x, float width, Rect inRect, DialogCondition condition)
-        {
-            string foldKey = FoldKey(condition);
-            Rect headerRect = new Rect(x, y, width, 30f);
-            if (condition is DialogCondition_WithSubConditions)
-            {
-                Widgets.DrawHighlight(headerRect);
-            }
-            Rect foldRect = new Rect(x, y + 2f, 24f, 24f);
-            bool foldout = !foldedConditionKeys.Contains(foldKey);
-            if (Widgets.ButtonText(foldRect, foldout ? "-" : "+", false))
-            {
-                ToggleFold(foldKey, foldout);
-            }
-            if (condition is DialogCondition_WithSubConditions subCondition)
-            {
-                DrawConditionBase(ref y, x + 30f, condition, width - 30f);
-                if (!foldout)
-                {
-                    return;
-                }
-                DrawSubCondition(ref y, x + 30f, width - 30f, inRect, subCondition);
-                return;
-            }
-            if (!foldout)
-            {
-                DrawConditionTitle(ref y, x + 30f, condition, width - 30f);
-                return;
-            }
-            condition.Draw(ref y, inRect, x + 30f);
-        }
-
-        private static void DrawSubCondition(ref float y, float x, float width, Rect inRect, DialogCondition_WithSubConditions condition)
-        {
-            DrawConditionBase(ref y, x, condition);
-            if (condition.AllowMultipleChildConditions)
-            {
-                DrawCQFConditionList(ref y, x + 5f, width - 5f, inRect, "CQF_SubConditions".Translate(), condition.ChildConditions);
-                return;
-            }
-            DrawSingleSubCondition(ref y, x, width, inRect, condition);
-        }
-
-        private static void DrawSingleSubCondition(ref float y, float x, float width, Rect inRect, DialogCondition_WithSubConditions condition)
-        {
-            DialogCondition child = condition.ChildCondition;
-            if (Widgets.ButtonText(new Rect(x, y, Mathf.Min(260f, width), 25f), child?.GetType().Name.Translate() ?? "CQF_SelectDialogCondition".Translate(), false))
-            {
-                Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), type => type.Name.Translate(), type =>
-                {
-                    condition.ChildCondition = (DialogCondition)Activator.CreateInstance(type);
-                }, null, null, null, type => type.Name, null, null), "CQF_SelectDialogCondition".Translate()));
-            }
-            y += 30f;
-            if (child != null)
-            {
-                DrawCQFCondition(ref y, x + 10f, width - 10f, inRect, child);
-            }
-        }
-
-        private static void DrawConditionBase(ref float y, float x, DialogCondition condition, float width = 250f)
-        {
-            DrawConditionTitle(ref y, x, condition, width);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFFailReason".Translate(), ref condition.failReason, x, 100f);
-            y += 30f;
-        }
-
-        private static void DrawConditionTitle(ref float y, float x, DialogCondition condition, float width = 250f)
-        {
-            Rect rect = new Rect(x, y, Mathf.Min(width, 250f), 25f);
-            Widgets.Label(rect, condition.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            if ((condition.GetType().Name + "_Tip").CanTranslate())
-            {
-                TooltipHandler.TipRegion(rect, (condition.GetType().Name + "_Tip").Translate());
-            }
-            y += 30f;
-        }
-
-        private static void DrawFoldableConditionHeader(ref float y, float x, float width, string label, string foldKey, out bool foldout, Action addAction, Action removeAction)
-        {
-            Widgets.DrawHighlight(new Rect(x - 4f, y - 2f, width + 8f, 32f));
-            Text.Font = GameFont.Medium;
-            foldout = !foldedConditionKeys.Contains(foldKey);
-            Rect foldRect = new Rect(x, y + 3f, 24f, 24f);
-            if (Widgets.ButtonText(foldRect, foldout ? "-" : "+", false))
-            {
-                ToggleFold(foldKey, foldout);
-                foldout = !foldout;
-            }
-            Widgets.Label(new Rect(x + 30f, y, width - 120f, 30f), label.Colorize(ColorLibrary.SkyBlue));
-            Text.Font = GameFont.Small;
-            Rect buttonRect = new Rect(x + width - 60f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
-            {
-                addAction();
-            }
-            buttonRect.x += 30f;
-            if (Widgets.ButtonImage(buttonRect, TexButton.Delete))
-            {
-                removeAction();
-            }
-            y += 38f;
-        }
-
-        private static void ToggleFold(string key, bool wasOpen)
-        {
-            if (wasOpen)
-            {
-                foldedConditionKeys.Add(key);
-            }
-            else
-            {
-                foldedConditionKeys.Remove(key);
-            }
-        }
-
-        private static string FoldKey(object owner, string suffix = null)
-        {
-            return RuntimeHelpers.GetHashCode(owner) + (suffix ?? string.Empty);
+            CQFConditionListEditor.Draw(ref y, x, width, inRect, title, conditions);
         }
 
         public static void DrawSelectColorButtons(ref float y,string label,Color color,Action<Color> apply,float x = 200f) 
@@ -1429,6 +1256,10 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                         target = t.Value;
                     }
                 });
+            }
+            if (!target.IsValid)
+            {
+                target = MapComponent_CQFTargets.Resolve(targets, quest, targetText);
             }
             if (target == null && GameTools.GetTargetFromQuestDatabase(quest, targetText) is TargetInfo target2)
             {
@@ -1774,6 +1605,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         public ThingData() { }
         public ThingData(Thing thing, IntVec3 pos)
         {
+            this.targetKeys = thing.Map?.GetComponent<MapComponent_CQFTargets>().GetKeys(thing) ?? new List<string>();
             this.def = thing.def;
             this.rotation = thing.Rotation;
             this.position = pos;
@@ -1855,7 +1687,15 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             {
                 b.ChangePaint(this.colorDef);
             }
-            return GenSpawn.Spawn(thing, pos, map, forcedRot ?? this.rotation);
+            Thing spawned = GenSpawn.Spawn(thing, pos, map, forcedRot ?? this.rotation);
+            if (spawned != null && !this.targetKeys.NullOrEmpty())
+            {
+                foreach (string key in this.targetKeys)
+                {
+                    map.GetComponent<MapComponent_CQFTargets>().TryRegister(key, spawned);
+                }
+            }
+            return spawned;
         }
         public XElement SaveToXElement(string nodeName)
         {
@@ -1865,6 +1705,10 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             }
             XElement result = new XElement(nodeName);
             result.Add(new XElement("def", this.def?.defName));
+            if (!this.targetKeys.NullOrEmpty())
+            {
+                result.Add(CQFEditorTools.SaveList(this.targetKeys, "targetKeys"));
+            }
             if (this.stuff != null)
             {
                 result.Add(new XElement("stuff", this.stuff?.defName));
@@ -1938,6 +1782,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             result.colorDef = this.colorDef;
             result.allPositions = this.allPositions.ListFullCopy();
             result.allRect = this.allRect.ListFullCopy();
+            result.targetKeys = this.targetKeys?.ToList() ?? new List<string>();
             return result;
         }
         public void ExposeData()
@@ -1956,11 +1801,12 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             Scribe_Values.Look(ref this.quality, "quality");
             Scribe_Collections.Look(ref this.allPositions, "positions", LookMode.Value);
             Scribe_Collections.Look(ref this.allRect, "allRect", LookMode.Value);
+            Scribe_Collections.Look(ref this.targetKeys, "targetKeys", LookMode.Value);
         }
 
         public bool Equals_Def(ThingData data)
         {
-            return data.def == this.def && data.stuff == this.stuff && data.style == this.style && data.faction == this.faction && data.rotation == this.rotation && data.count == this.count
+            return data.targetKeys.NullOrEmpty() && this.targetKeys.NullOrEmpty() && data.def == this.def && data.stuff == this.stuff && data.style == this.style && data.faction == this.faction && data.rotation == this.rotation && data.count == this.count
                && data.hitPoint == this.hitPoint && this.growth == data.growth && this.storedEnergy == data.storedEnergy && this.color == data.color && this.colorDef == data.colorDef;
         }
 
@@ -1979,6 +1825,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         public float growth = 0f;
         public int hitPoint = -1;
         public float storedEnergy;
+        public List<string> targetKeys = new List<string>();
     }
     public class RuleData
     {

@@ -149,6 +149,7 @@ namespace QuestEditor_Library
                 Widgets.CheckboxLabeled(rect, "SignalOnlyIsValidInPart".Translate(),ref this.signalIsOnlyValidInPart);
                 TooltipHandler.TipRegion(rect, "SignalOnlyIsValidInPartTip".Translate());
                 y += 30f;
+                CQFSignalEditor.DrawSignalLinks(ref y, inRect, x, this);
             }
             if (this.mode == ActionTriggerMode.Tick)
             {

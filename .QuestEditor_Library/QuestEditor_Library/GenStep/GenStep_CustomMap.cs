@@ -41,6 +41,10 @@ namespace QuestEditor_Library
             try
             {
                 List<Thing> result = new List<Thing>();
+                if (!map.GetComponent<MapComponent_CQFTargets>().CanRegisterDefinition(def))
+                {
+                    return result;
+                }
                 if (!isGenerateByCore)
                 {
                     GameTools.isGeneratingMap = true;
@@ -174,27 +178,37 @@ namespace QuestEditor_Library
             , GenStepParams parms,IntVec3 centre,bool load = false)
         {
             List<Thing> result = new List<Thing>();
-
-            foreach (CustomThingData data in def.customThings)
+            MapComponent_CQFTargets targets = map.GetComponent<MapComponent_CQFTargets>();
+            List<Action> previous = targets.BeginTargetRegistration();
+            bool completed = false;
+            try
             {
-                if (data as CustomThingData_ZoneCore == null)
+                foreach (CustomThingData data in def.customThings)
                 {
-                    IntVec3 pos = data.position + centre;
-                    if (!pos.InBounds(map))
+                    if (data as CustomThingData_ZoneCore == null)
                     {
-                        continue;
-                    }
-                    Thing t = data.SpawnThing(map, quest, out List<Thing> ts, centre, load, def, (d, s) =>
+                        IntVec3 pos = data.position + centre;
+                        if (!pos.InBounds(map))
+                        {
+                            continue;
+                        }
+                        Thing t = data.SpawnThing(map, quest, out List<Thing> ts, centre, load, def, (d, s) =>
                         {
                             return load ? d : GenStep_CustomMap.GetDef(d, def, s);
                         });
-                    result.Add(t);
-                    result.AddRange(ts);
-                    if (t != null && t.def.CanHaveFaction && t.Faction == null && faction != null)
-                    {
-                        t.SetFaction(faction);
+                        result.Add(t);
+                        result.AddRange(ts);
+                        if (t != null && t.def.CanHaveFaction && t.Faction == null && faction != null)
+                        {
+                            t.SetFaction(faction);
+                        }
                     }
                 }
+                completed = true;
+            }
+            finally
+            {
+                targets.FinishTargetRegistration(previous, completed);
             }
             return result;
         }

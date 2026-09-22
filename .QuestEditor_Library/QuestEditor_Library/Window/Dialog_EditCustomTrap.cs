@@ -19,7 +19,10 @@ namespace QuestEditor_Library
         {
             float y = 10f;
             Widgets.BeginScrollView(new Rect(0f, 0f, inRect.width, inRect.height), ref this.pos, new Rect(0f, 0f, inRect.width, this.height + 10f));
-            this.trap.Draw(ref y,inRect,10f);
+            using (new CQFEditorContext(this.trap))
+            {
+                this.trap.Draw(ref y,inRect,10f);
+            }
             Widgets.EndScrollView();
             this.height = y + 5f;
         }

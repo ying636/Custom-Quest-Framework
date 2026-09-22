@@ -28,7 +28,7 @@ namespace QuestEditor_Library
                     ActionComp c = comp.comps[i];
                     if (Widgets.ButtonText(new Rect(10f, y, 150f, 25f), c.compName, false))
                     {
-                        Find.WindowStack.Add(new QuestEditor_EditActionComp(c));
+                        Find.WindowStack.Add(new QuestEditor_EditActionComp(c, thing));
                     }
                     y += 30f;
                 };

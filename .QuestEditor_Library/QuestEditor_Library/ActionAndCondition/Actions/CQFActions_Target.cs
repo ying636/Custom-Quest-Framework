@@ -25,19 +25,30 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            TooltipHandler.TipRegion(new Rect(x, y, 150f, 25f), "CQFTargetTextTip".Translate());
-            CQFEditorTools.DrawSelectableStringList(this.targetsText, ref y, (rect, text, index) =>
-              {
-                  string text2 = text;
-                  CQFEditorTools.DrawSelectableText(rect.y + 4.5f, "DialogueTarget".Translate(), ref text2, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts,
-                      t =>
-                      {
-                          text2 = t;
-                          this.targetsText[index] = t;
-                      }, t => t.Translate()), x + 5f, 150f);
-                  this.targetsText[index] = text2;
-              }, null, "CQFTargetTextTip".Translate(), true, x, 320f);
-            y += 20f;
+            this.targetsText ??= new List<string>();
+            for (int index = 0; index < this.targetsText.Count; index++)
+            {
+                int capturedIndex = index;
+                Rect targetRect = new Rect(inRect.x, inRect.y, inRect.width - 78f, inRect.height);
+                float startY = y;
+                CQFTargetSelectionSession.DrawField(ref y, targetRect, x, this.targetsText[index], value =>
+                {
+                    if (capturedIndex < this.targetsText.Count)
+                    {
+                        this.targetsText[capturedIndex] = value;
+                    }
+                });
+                if (Widgets.ButtonText(new Rect(inRect.width - 78f, startY, 70f, 25f), "Remove".Translate()))
+                {
+                    this.targetsText.RemoveAt(index);
+                    break;
+                }
+            }
+            if (Widgets.ButtonText(new Rect(x, y, 140f, 26f), "Add".Translate()))
+            {
+                this.targetsText.Add(string.Empty);
+            }
+            y += 36f;
         }
         public override XElement SaveToXElement(string nodeName)
         {

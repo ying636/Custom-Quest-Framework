@@ -20,7 +20,10 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
-            this.iDrawable.DrawTab();
+            using (new CQFEditorContext(this.iDrawable as Thing))
+            {
+                this.iDrawable.DrawTab();
+            }
         }
 
         IDrawTabable iDrawable = null;

@@ -71,12 +71,42 @@ namespace QuestEditor_Library
                 }
             }
         }
+        public override void DesignateMultiCell(IEnumerable<IntVec3> cells)
+        {
+            List<Thing> targets = cells.Where(c => c.InBounds(Find.CurrentMap))
+                .Select(c => c.GetThingList(Find.CurrentMap).Find(t => this.pasteActionComp
+                    ? t.TryGetComp<CompActionWorker>() != null : this.type.IsAssignableFrom(t.GetType())))
+                .Where(t => t != null).Distinct().ToList();
+            if (!this.pasteActionComp && this.type == typeof(InteractableThing))
+            {
+                if (targets.Any())
+                {
+                    Find.WindowStack.Add(new Dialog_CQFInteractionPaste(targets.Cast<InteractableThing>(),
+                        CQFEditorTools.operations, CQFEditorTools.operationDefs));
+                }
+            }
+            else
+            {
+                foreach (Thing target in targets)
+                {
+                    if (this.pasteActionComp)
+                    {
+                        target.TryGetComp<CompActionWorker>().PasteSingleComp();
+                    }
+                    else if (target is IPastableData pastable)
+                    {
+                        pastable.PasteData();
+                    }
+                }
+            }
+            this.Finalize(targets.Any());
+        }
+
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
             return loc.InBounds(Find.CurrentMap) &&
-                   loc.GetThingList(Find.CurrentMap).Exists(t => this.type.IsAssignableFrom(t.GetType())
-                                                                 || (this.pasteActionComp && t.TryGetComp<CompActionWorker>()
-                                                                     != null));
+                   loc.GetThingList(Find.CurrentMap).Exists(t => this.pasteActionComp
+                       ? t.TryGetComp<CompActionWorker>() != null : this.type.IsAssignableFrom(t.GetType()));
         }
 
         public Type type = typeof(LootBox);

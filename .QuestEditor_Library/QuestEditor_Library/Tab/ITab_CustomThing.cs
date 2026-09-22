@@ -34,7 +34,10 @@ namespace QuestEditor_Library
         protected override bool StillValid => DebugSettings.godMode;
         protected override void FillTab()
         {
-            this?.Thing?.DrawTab();
+            using (new CQFEditorContext(this.Thing as Thing))
+            {
+                this.Thing?.DrawTab();
+            }
         }
 
         public Thing thing;

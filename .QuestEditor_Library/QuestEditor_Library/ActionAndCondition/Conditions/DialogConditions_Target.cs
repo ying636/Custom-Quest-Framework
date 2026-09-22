@@ -31,15 +31,23 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "DialogueTarget".Translate(), ref this.targetText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts,
-            t =>
-            {
-                this.targetText = t;
-            }, t => t.Translate()), x, 150f);
-            y += 30f;
+            CQFTargetSelectionSession.DrawField(ref y, inRect, x, this.targetText, value => this.targetText = value);
         }
         public virtual bool GetTarget(Dictionary<string, TargetInfo> targets, out Thing targetResult, out string reason, Quest quest)
         {
+            TargetInfo resolved = GameTools.GetTarget(targets, quest, this.targetText);
+            if (resolved.HasThing && !resolved.Thing.Destroyed)
+            {
+                targetResult = resolved.Thing;
+                reason = null;
+                return true;
+            }
+            if (this.targetText.NullOrEmpty())
+            {
+                targetResult = null;
+                reason = "TargetIsntPawn".Translate();
+                return false;
+            }
             string[] ts = this.targetText.Split(new char[] { '.' });
             if (ts.Count() >= 2 && int.TryParse(ts.Last(), out int index0) && GameTools.GetTargetWithIndex(quest, ts.First(), index0) is TargetInfo target && target.Thing is Thing targetP)
             {
@@ -53,7 +61,7 @@ namespace QuestEditor_Library
                 reason = null;
                 return true;
             }
-            if (targets.TryGetValue(this.targetText, out TargetInfo t4))
+            if (targets != null && targets.TryGetValue(this.targetText, out TargetInfo t4))
             {
                 reason = null;
                 targetResult = t4.Thing;

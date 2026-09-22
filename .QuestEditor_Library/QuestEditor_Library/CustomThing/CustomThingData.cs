@@ -14,6 +14,7 @@ namespace QuestEditor_Library
         public CustomThingData() { }
         public CustomThingData(Thing thing,IntVec3 pos) 
         {
+            this.targetKeys = thing.Map?.GetComponent<MapComponent_CQFTargets>().GetKeys(thing) ?? new List<string>();
             this.def = thing.def;
             this.stuff = thing.Stuff;
             this.style = thing.StyleDef;
@@ -85,6 +86,13 @@ namespace QuestEditor_Library
             if (map != null)
             {
                 GenSpawn.Spawn(result, pos, map, rot != null ? rot.Value : this.rotation);
+                if (!this.targetKeys.NullOrEmpty())
+                {
+                    foreach (string key in this.targetKeys)
+                    {
+                        map.GetComponent<MapComponent_CQFTargets>().TryRegister(key, result);
+                    }
+                }
             }
             result.StyleDef = this.style;
             if (this.faction != null)
@@ -142,13 +150,21 @@ namespace QuestEditor_Library
                         });
                     });
 
-                    comp.comps?.ForEach(s =>
+                    Action generationAction = () => comp.comps?.ForEach(s =>
                     {
                         if (s.mode == ActionTriggerMode.MapGeneration)
                         {
                             s.actions.ForEach(a => a.Work(comp.GetTargetThis(),quest));
                         }
                     });
+                    if (map != null)
+                    {
+                        map.GetComponent<MapComponent_CQFTargets>().AfterTargetRegistration(generationAction);
+                    }
+                    else
+                    {
+                        generationAction();
+                    }
                 }
             }
             if (result.TryGetComp<CompCustomText>() is CompCustomText compText)
@@ -202,6 +218,10 @@ namespace QuestEditor_Library
             }
             result.SetAttributeValue("Class", this.GetType().FullName);
             result.Add(new XElement("def", this.def.defName));
+            if (!this.targetKeys.NullOrEmpty())
+            {
+                result.Add(CQFEditorTools.SaveList(this.targetKeys, "targetKeys"));
+            }
             if (this.rotation != Rot4.North)
             {
                 result.Add(new XElement("rotation", this.rotation));
@@ -268,6 +288,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.customDescription, "customDescription");
             Scribe_Values.Look(ref this.customInspectText, "customInspectText");
             Scribe_Collections.Look(ref this.comps, "comps",LookMode.Deep);
+            Scribe_Collections.Look(ref this.targetKeys, "targetKeys", LookMode.Value);
         }
 
         public ThingDef def;
@@ -284,5 +305,6 @@ namespace QuestEditor_Library
         public string customDescription = null;
         public string customInspectText = null;
         public List<ActionComp> comps = new List<ActionComp>();
+        public List<string> targetKeys = new List<string>();
     }
 }
