@@ -25,15 +25,15 @@ namespace QuestEditor_Library
     [HarmonyPatch(typeof(DebugWindowsOpener), "DrawButtons")]
     public class Patch_AddQuestEditorInDebug
     {
-        [HarmonyPrefix]
-        static bool PreFix(WidgetRow ___widgetRow)
+        [HarmonyPostfix]
+        static void PostFix(WidgetRow ___widgetRow, ref float ___widgetRowFinalX)
         {
             if ((CustomQuestFramework_ModSetting.setting == null ||
                 CustomQuestFramework_ModSetting.setting.showCQF) && ___widgetRow.ButtonIcon(TexButton.NewFile, "SaveMapToFile".Translate(), null, null, null, true, -1f))
             {
                 Find.WindowStack.Add(new QuestEditor_SaveMapToFile());
             }
-            return true;
+            ___widgetRowFinalX = ___widgetRow.FinalX;
         }
     }
 }

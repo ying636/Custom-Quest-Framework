@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -320,7 +320,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "OutSignal".Translate(), ref this.signal, x, 350f);
+            CQFSignalEditor.DrawBookField(y, "OutSignal".Translate(), this.signal, value => this.signal = value, x, 350f, inRect.width - x - 12f);
             y += 30f;
             Rect rect = new Rect(x, y, 250f, 25f);
             Widgets.CheckboxLabeled(rect, "SignalOnlyIsValidInPart".Translate(), ref this.signalIsOnlyValidInPart);
@@ -330,7 +330,6 @@ namespace QuestEditor_Library
             Widgets.CheckboxLabeled(rect, "AddQuestPrefix".Translate(), ref this.addQuestPrefix);
             TooltipHandler.TipRegion(rect, "AddQuestPrefixTip".Translate());
             y += 30f;
-            CQFSignalEditor.DrawSignalLinks(ref y, inRect, x, this);
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -615,9 +614,9 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => this.dialog = m, m => m.defName);
             }
             y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "Interviewer".Translate(), ref this.interviewerText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.interviewerText = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "Interviewer".Translate(), this.interviewerText, value => this.interviewerText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "Interviewee".Translate(), ref this.intervieeText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.intervieeText = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "Interviewee".Translate(), this.intervieeText, value => this.intervieeText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -679,9 +678,9 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawFloatMenu(DefDatabase<PawnRelationDef>.AllDefsListForReading, m => this.relation = m, m => m.label);
             }
             y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "TargetA".Translate(), ref this.targetA, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.targetA = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "TargetA".Translate(), this.targetA, value => this.targetA = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "TargetB".Translate(), ref this.targetB, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.targetB = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "TargetB".Translate(), this.targetB, value => this.targetB = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -741,13 +740,9 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "EntranceKey".Translate(), ref this.entranceText,
-                () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.entranceText = t,
-                    t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "EntranceKey".Translate(), this.entranceText, value => this.entranceText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "ExitKey".Translate(), ref this.exitText,
-                () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.exitText = t,
-                    t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "ExitKey".Translate(), this.exitText, value => this.exitText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
 
@@ -812,9 +807,9 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "skipedTargetText".Translate(), ref this.skipedTargetText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.skipedTargetText = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "targetLocationText".Translate(), ref this.targetLocationText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.targetLocationText = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "targetLocationText".Translate(), this.targetLocationText, value => this.targetLocationText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -890,7 +885,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "skipedTargetText".Translate(), ref this.skipedTargetText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.skipedTargetText = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
             y += 30f; 
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -997,8 +992,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "MainSiteKey".Translate(), ref this.key,
-                () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.key = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), this.key, value => this.key = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
 
@@ -1032,8 +1026,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "MainSiteKey".Translate(), ref this.key,
-                () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.key = t, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), this.key, value => this.key = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "RecordKeyOfData".Translate(), ref this.recordKey, x, 150f);
             y += 30f;

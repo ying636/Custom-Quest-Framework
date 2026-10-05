@@ -9,33 +9,45 @@ namespace QuestEditor_Library
 {
     public static class CQFSignalEditor
     {
-        public static void DrawSignalLinks(ref float y, Rect inRect, float x, object owner)
+        public static void OpenBook()
         {
-            if (Widgets.ButtonText(new Rect(x, y, Mathf.Max(180f, Mathf.Min(320f, inRect.width - x - 12f)), 28f), "CQF_MapSignals_Title".Translate()))
+            Window_CQFSignalBook? window = Find.WindowStack.WindowOfType<Window_CQFSignalBook>();
+            if (window == null)
             {
-                Map? map = CQFEditorContext.Map ?? Find.CurrentMap;
-                CustomMapDataDef? definition = Find.WindowStack.WindowOfType<QuestEditor_SaveMapToFile>() == null ? null : QuestEditor_SaveMapToFile.def;
-                Find.WindowStack.Add(new Dialog_CQFSignalSelector(owner, (signal, part, quest) =>
-                {
-                    if (owner is CQFAction_SentSignal action)
-                    {
-                        action.signal = signal;
-                        action.signalIsOnlyValidInPart = part;
-                        action.addQuestPrefix = quest;
-                    }
-                    else if (owner is TrapComp trap)
-                    {
-                        trap.inSignal = signal;
-                        trap.signalIsOnlyValidInPart = part;
-                    }
-                    else if (owner is ActionComp comp)
-                    {
-                        comp.signal = signal;
-                        comp.signalIsOnlyValidInPart = part;
-                    }
-                }, map, definition));
+                Find.WindowStack.Add(new Window_CQFSignalBook());
             }
-            y += 34f;
+        }
+
+        public static void DrawBookField(Rect rect, string? value, Action<string> selected)
+        {
+            DrawBookField(rect.y, "Signal".Translate(), value, selected, rect.x, rect.width, rect.width);
+        }
+
+        public static void DrawBookField(float y, string label, string? value, Action<string> selected, float x, float fieldWidth, float width)
+        {
+            float labelWidth = Mathf.Min(Text.CalcSize(label).x + 2f, Mathf.Max(100f, width * 0.45f));
+            DrawBookField(new Rect(x, y, labelWidth, 25f),
+                new Rect(x + labelWidth + 5f, y, Mathf.Max(60f, Mathf.Min(fieldWidth, width - labelWidth - 5f)), 25f),
+                label, value, selected);
+        }
+
+        public static void DrawBookField(Rect labelRect, Rect fieldRect, string label, string? value, Action<string> selected)
+        {
+            if (Widgets.ButtonText(labelRect, label, drawBackground: false, overrideTextAnchor: TextAnchor.MiddleLeft))
+            {
+                List<FloatMenuOption> options = CQFSignalBook.Signals
+                    .Select(signal => new FloatMenuOption(signal, () => selected(signal))).ToList();
+                options.Add(new FloatMenuOption("Remove".Translate(), () => selected(string.Empty)));
+                options.Add(new FloatMenuOption("CQF_SignalBook_Title".Translate(), OpenBook));
+                Find.WindowStack.Add(new FloatMenu(options));
+            }
+            TooltipHandler.TipRegion(labelRect, "CQF_SignalBook_SelectSignal".Translate());
+            string previous = value ?? string.Empty;
+            string edited = Widgets.TextField(fieldRect, previous);
+            if (edited != previous)
+            {
+                selected(edited);
+            }
         }
 
         public static void DrawInteractionSummary(ref float y, Rect inRect, float x, InteractionOperation operation)

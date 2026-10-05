@@ -264,13 +264,15 @@ namespace QuestEditor_Library
                         QuestEndOutcome.Success }, (o) => nodeEnd.outcome = o, (o) => o.ToString().Translate());
                 }
                 y += 45f;
-                CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "InSignal".Translate(), ref nodeEnd.inSignal, x, 150f);
+                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), nodeEnd.inSignal.ToString(), value => nodeEnd.inSignal = new SlateRef<string>(value), x, 150f, inRect.width - x - 12f);
                 y += 30f;
                 custom = false;
             }
             if (node is QuestNode_Signal signal)
             {
-                CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "InSignal".Translate(), ref signal.inSignal, x, 120f);
+                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), signal.inSignal.ToString(), value => signal.inSignal = new SlateRef<string>(value), x, 120f, inRect.width - x - 12f);
+                y += 30f;
+                CQFSignalEditor.DrawBookField(y, "inSignalDisable".Translate(), signal.inSignalDisable.ToString(), value => signal.inSignalDisable = new SlateRef<string>(value), x, 150f, inRect.width - x - 12f);
                 y += 30f;
                 Widgets.Label(new Rect(x, y, 150f, 25f), "SignalNode".Translate());
                 y += 30f;
@@ -296,7 +298,7 @@ namespace QuestEditor_Library
                 }
 
                 string key = "Node" + signal.GetHashCode();
-                CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "outSignals".Translate(), ref signal.outSignals, x, 100f);
+                CQFSignalEditor.DrawBookField(y, "outSignals".Translate(), signal.outSignals.ToString(), value => signal.outSignals = new SlateRef<IEnumerable<string>>(value), x, 100f, inRect.width - x - 12f);
                 y += 30f;
                 custom = false;
                 y += 10f;
@@ -307,6 +309,24 @@ namespace QuestEditor_Library
                 {
                     object value = field.GetValue(node);
                     string key = node.GetHashCode() + field.Name;
+                    if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0 && field.FieldType == typeof(string))
+                    {
+                        CQFSignalEditor.DrawBookField(y, field.Name.Translate(), value as string, selected => field.SetValue(node, selected), x, 150f, inRect.width - x - 12f);
+                        y += 30f;
+                        continue;
+                    }
+                    if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0
+                        && (field.FieldType == typeof(List<string>) || field.FieldType == typeof(IEnumerable<string>) || field.FieldType == typeof(string[])))
+                    {
+                        string display = value is IEnumerable<string> values ? string.Join(", ", values) : string.Empty;
+                        CQFSignalEditor.DrawBookField(y, field.Name.Translate(), display, selected =>
+                        {
+                            string[] replacement = selected.Length == 0 ? Array.Empty<string>() : new[] { selected };
+                            field.SetValue(node, field.FieldType == typeof(string[]) ? (object)replacement : replacement.ToList());
+                        }, x, 150f, inRect.width - x - 12f);
+                        y += 30f;
+                        continue;
+                    }
                     if (value == null) 
                     {
                         continue;
@@ -382,6 +402,13 @@ namespace QuestEditor_Library
                         string slateRef = (string)slateRefField.GetValue(value);      
                         Type slateType = typeof(SlateRef<>).MakeGenericType(new Type[] { type.GenericTypeArguments[0] });
                         Type genericType = type.GenericTypeArguments[0];
+                        if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0
+                            && (genericType == typeof(string) || genericType == typeof(IEnumerable<string>) || genericType == typeof(List<string>)))
+                        {
+                            CQFSignalEditor.DrawBookField(y, field.Name.Translate(), slateRef, selected => field.SetValue(node, Activator.CreateInstance(slateType, new object[] { selected })), x, 150f, inRect.width - x - 12f);
+                            y += 30f;
+                            continue;
+                        }
                         if (genericType == typeof(bool) || genericType == typeof(bool?))
                         {
                             CQFEditorTools.DrawSelectableText(y, field.Name.Translate(), ref slateRef, () => CQFEditorTools.DrawFloatMenu(new List<bool>() { true, false }, b => field.SetValue(node, genericType == typeof(bool?) ? new SlateRef<bool?>(b.ToString()) : (object)new SlateRef<bool>(b.ToString())), b => b.ToString().Translate()), x + 20f, 150f);

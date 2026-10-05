@@ -340,11 +340,8 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectableText(y, "PositionName".Translate(), ref this.positionName, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts,
-            t =>
-            {
-                this.positionName = t;
-            }, t => t.Translate()), x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "PositionName".Translate(), this.positionName,
+                value => this.positionName = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)

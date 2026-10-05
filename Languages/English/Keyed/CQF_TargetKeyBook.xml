@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_TargetKeyBook_Title>Target key book</CQF_TargetKeyBook_Title>
+  <CQF_TargetKeyBook_SaveConfiguration>Save configuration</CQF_TargetKeyBook_SaveConfiguration>
+  <CQF_TargetKeyBook_LoadConfiguration>Load configuration</CQF_TargetKeyBook_LoadConfiguration>
+  <CQF_TargetKeyBook_SetDefaultConfiguration>Set as default configuration</CQF_TargetKeyBook_SetDefaultConfiguration>
+  <CQF_TargetKeyBook_DefaultConfiguration>Default configuration</CQF_TargetKeyBook_DefaultConfiguration>
+  <CQF_TargetKeyBook_ConfigurationName>Configuration name</CQF_TargetKeyBook_ConfigurationName>
+  <CQF_TargetKeyBook_AddKey>Add entry</CQF_TargetKeyBook_AddKey>
+  <CQF_TargetKeyBook_CurrentConfiguration>Current configuration</CQF_TargetKeyBook_CurrentConfiguration>
+  <CQF_TargetKeyBook_NoConfigurations>No saved configurations</CQF_TargetKeyBook_NoConfigurations>
+  <CQF_TargetKeyBook_Error>Target key book operation failed</CQF_TargetKeyBook_Error>
+  <CQF_TargetKeyBook_InvalidConfiguration>The target key book configuration is invalid or damaged.</CQF_TargetKeyBook_InvalidConfiguration>
+  <CQF_TargetKeyBook_InvalidConfigurationName>Enter a configuration name without invalid filename characters or spaces at either end.</CQF_TargetKeyBook_InvalidConfigurationName>
+  <CQF_TargetKeyBook_InvalidKey>Target keys must not be blank, duplicated, or have spaces at either end.</CQF_TargetKeyBook_InvalidKey>
+  <CQF_TargetKeyBook_OpenDescription>Open the target key book to edit shared key names and save or load configurations. Bind keys to objects separately on each map.</CQF_TargetKeyBook_OpenDescription>
+  <CQF_TargetKeyBook_SelectKey>Click to choose a key from the target key book. The text field remains editable.</CQF_TargetKeyBook_SelectKey>
+  <CQF_TargetKeyBook_ClearDefaultConfiguration>Clear default</CQF_TargetKeyBook_ClearDefaultConfiguration>
+</LanguageData>

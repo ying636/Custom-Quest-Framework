@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_SignalBook_Title>信号本</CQF_SignalBook_Title>
+  <CQF_SignalBook_SaveConfiguration>保存配置</CQF_SignalBook_SaveConfiguration>
+  <CQF_SignalBook_LoadConfiguration>读取配置</CQF_SignalBook_LoadConfiguration>
+  <CQF_SignalBook_SetDefaultConfiguration>设为默认配置</CQF_SignalBook_SetDefaultConfiguration>
+  <CQF_SignalBook_DefaultConfiguration>默认配置</CQF_SignalBook_DefaultConfiguration>
+  <CQF_SignalBook_ConfigurationName>配置名称</CQF_SignalBook_ConfigurationName>
+  <CQF_SignalBook_AddSignal>添加词条</CQF_SignalBook_AddSignal>
+  <CQF_SignalBook_CurrentConfiguration>当前配置</CQF_SignalBook_CurrentConfiguration>
+  <CQF_SignalBook_NoConfigurations>暂无已保存的配置</CQF_SignalBook_NoConfigurations>
+  <CQF_SignalBook_Error>信号本操作失败</CQF_SignalBook_Error>
+  <CQF_SignalBook_InvalidConfiguration>信号本配置无效或已损坏。</CQF_SignalBook_InvalidConfiguration>
+  <CQF_SignalBook_InvalidConfigurationName>请输入配置名称，不要使用文件名非法字符或首尾空格。</CQF_SignalBook_InvalidConfigurationName>
+  <CQF_SignalBook_InvalidSignal>信号名称不能为空或重复。</CQF_SignalBook_InvalidSignal>
+  <CQF_SignalBook_OpenDescription>打开信号本，编辑共用信号，并保存或读取配置。</CQF_SignalBook_OpenDescription>
+  <CQF_SignalBook_SelectSignal>点击从信号本选择信号；也可以直接在文本框中编辑。</CQF_SignalBook_SelectSignal>
+  <CQF_SignalBook_ClearDefaultConfiguration>取消默认</CQF_SignalBook_ClearDefaultConfiguration>
+</LanguageData>

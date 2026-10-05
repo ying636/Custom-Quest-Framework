@@ -49,6 +49,11 @@ namespace QuestEditor_Library
                     }
                     y += 10f;
                 }
+                else if (reference.Kind == "CQF_EditorSignal")
+                {
+                    CQFSignalEditor.DrawBookField(new Rect(0f, y, viewRect.width, 30f), reference.Value, value => reference.Value = value);
+                    y += 43f;
+                }
                 else
                 {
                     reference.Value = Widgets.TextField(new Rect(0f, y, viewRect.width, 30f), reference.Value);

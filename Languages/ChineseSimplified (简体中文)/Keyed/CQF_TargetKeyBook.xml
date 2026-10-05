@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_TargetKeyBook_Title>目标键本</CQF_TargetKeyBook_Title>
+  <CQF_TargetKeyBook_SaveConfiguration>保存配置</CQF_TargetKeyBook_SaveConfiguration>
+  <CQF_TargetKeyBook_LoadConfiguration>读取配置</CQF_TargetKeyBook_LoadConfiguration>
+  <CQF_TargetKeyBook_SetDefaultConfiguration>设为默认配置</CQF_TargetKeyBook_SetDefaultConfiguration>
+  <CQF_TargetKeyBook_DefaultConfiguration>默认配置</CQF_TargetKeyBook_DefaultConfiguration>
+  <CQF_TargetKeyBook_ConfigurationName>配置名称</CQF_TargetKeyBook_ConfigurationName>
+  <CQF_TargetKeyBook_AddKey>添加词条</CQF_TargetKeyBook_AddKey>
+  <CQF_TargetKeyBook_CurrentConfiguration>当前配置</CQF_TargetKeyBook_CurrentConfiguration>
+  <CQF_TargetKeyBook_NoConfigurations>暂无已保存的配置</CQF_TargetKeyBook_NoConfigurations>
+  <CQF_TargetKeyBook_Error>目标键本操作失败</CQF_TargetKeyBook_Error>
+  <CQF_TargetKeyBook_InvalidConfiguration>目标键本配置无效或已损坏。</CQF_TargetKeyBook_InvalidConfiguration>
+  <CQF_TargetKeyBook_InvalidConfigurationName>请输入配置名称，不要使用文件名非法字符或首尾空格。</CQF_TargetKeyBook_InvalidConfigurationName>
+  <CQF_TargetKeyBook_InvalidKey>目标键不能为空、重复或带有首尾空格。</CQF_TargetKeyBook_InvalidKey>
+  <CQF_TargetKeyBook_OpenDescription>打开目标键本，编辑共用键名，并保存或读取配置。各张地图需要分别绑定目标物体。</CQF_TargetKeyBook_OpenDescription>
+  <CQF_TargetKeyBook_SelectKey>点击从目标键本选择键名；也可以直接在文本框中编辑。</CQF_TargetKeyBook_SelectKey>
+  <CQF_TargetKeyBook_ClearDefaultConfiguration>取消默认</CQF_TargetKeyBook_ClearDefaultConfiguration>
+</LanguageData>

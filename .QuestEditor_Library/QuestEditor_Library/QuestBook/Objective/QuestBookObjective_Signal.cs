@@ -40,8 +40,8 @@ namespace QuestEditor_Library
             DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
             {
                 DrawTargetCountField(card, ref rowY);
-                DrawRowLabel(card, rowY, "CQF_QuestBook_TriggerSignal");
-                signal = Widgets.TextField(new Rect(card.x + 184f, rowY, card.width - 198f, 28f), signal ?? string.Empty);
+                CQFSignalEditor.DrawBookField(new Rect(card.x + 14f, rowY, 164f, 28f),
+                    new Rect(card.x + 184f, rowY, card.width - 198f, 28f), "CQF_QuestBook_TriggerSignal".Translate(), signal, value => signal = value);
                 rowY += 36f;
             });
         }

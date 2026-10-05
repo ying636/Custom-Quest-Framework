@@ -25,6 +25,8 @@
 			<li>QuestEditor_Library.Designator_Disgenerate</li>
 			<li>QuestEditor_Library.Designator_Disdestroy</li>
 			<li>QuestEditor_Library.Designator_CustomLord</li>
+			<li>QuestEditor_Library.Designator_CQFSignalBook</li>
+			<li>QuestEditor_Library.Designator_CQFTargetKeyBook</li>
 		</value>
 	</Operation>
 

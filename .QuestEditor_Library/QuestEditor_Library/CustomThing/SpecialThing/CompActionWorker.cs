@@ -143,13 +143,12 @@ namespace QuestEditor_Library
             y += 30f;
             if (this.mode == ActionTriggerMode.Signal) 
             {
-                CQFEditorTools.DrawLabelAndText_Line(y, "InSignal".Translate(), ref this.signal, x,150f);
+                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), this.signal, value => this.signal = value, x, 150f, inRect.width - x - 12f);
                 y += 30f;
                 Rect rect = new Rect(x, y, 350f, 25f);
                 Widgets.CheckboxLabeled(rect, "SignalOnlyIsValidInPart".Translate(),ref this.signalIsOnlyValidInPart);
                 TooltipHandler.TipRegion(rect, "SignalOnlyIsValidInPartTip".Translate());
                 y += 30f;
-                CQFSignalEditor.DrawSignalLinks(ref y, inRect, x, this);
             }
             if (this.mode == ActionTriggerMode.Tick)
             {

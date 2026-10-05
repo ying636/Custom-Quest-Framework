@@ -19,12 +19,8 @@ namespace QuestEditor_Library
         public static void DrawField(ref float y, Rect inRect, float x, string value, Action<string> assign)
         {
             float width = Mathf.Max(210f, inRect.width - x - 12f);
-            Widgets.Label(new Rect(x, y, 110f, 25f), "DialogueTarget".Translate());
-            string edited = Widgets.TextField(new Rect(x + 114f, y, width - 114f, 25f), value ?? string.Empty);
-            if (edited != value)
-            {
-                assign(edited);
-            }
+            CQFTargetKeyEditor.DrawBookField(new Rect(x, y, 110f, 25f),
+                new Rect(x + 114f, y, width - 114f, 25f), "DialogueTarget".Translate(), value, assign);
             y += 29f;
             Map map = CQFEditorContext.Map ?? Find.CurrentMap;
             Thing source = CQFEditorContext.SourceThing;
@@ -39,10 +35,10 @@ namespace QuestEditor_Library
             {
                 new CQFTargetSelectionSession(map, source, assign).Begin();
             }
-            GUI.enabled = oldEnabled && map != null && !edited.NullOrEmpty();
+            GUI.enabled = oldEnabled && map != null && !value.NullOrEmpty();
             if (Widgets.ButtonText(new Rect(x + (buttonWidth + 4f) * 2f, y, buttonWidth, 25f), "CQF_TargetLocate".Translate()))
             {
-                Locate(ResolveEditorTarget(map, source, edited));
+                Locate(ResolveEditorTarget(map, source, value));
             }
             GUI.enabled = oldEnabled;
             y += 34f;

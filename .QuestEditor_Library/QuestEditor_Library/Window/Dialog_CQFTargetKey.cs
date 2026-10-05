@@ -25,7 +25,9 @@ namespace QuestEditor_Library
         {
             Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 32f), "CQF_TargetRegisterKey".Translate());
             Widgets.Label(new Rect(0f, 40f, inRect.width, 30f), this.target.LabelCap + " " + this.target.Position);
-            this.key = Widgets.TextField(new Rect(0f, 78f, inRect.width, 30f), this.key);
+            CQFTargetKeyEditor.DrawBookField(new Rect(0f, 78f, 110f, 30f),
+                new Rect(118f, 78f, inRect.width - 118f, 30f), "TargetKey".Translate(), this.key,
+                value => this.key = value, allowContextKeys: false);
             if (!this.error.NullOrEmpty())
             {
                 Widgets.Label(new Rect(0f, 115f, inRect.width, 46f), this.error.Colorize(Color.red));

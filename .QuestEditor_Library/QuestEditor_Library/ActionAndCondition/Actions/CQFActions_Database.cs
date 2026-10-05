@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using RimWorld;
@@ -54,7 +54,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "RecordKeyOfData".Translate(), ref this.recordKey, x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "RecordKeyOfData".Translate(), this.recordKey, value => this.recordKey = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
         }
 
@@ -111,7 +111,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "RecordKeyOfData".Translate(), ref this.recordKey, x, 150f);
+            CQFTargetKeyEditor.DrawBookField(y, "RecordKeyOfData".Translate(), this.recordKey, value => this.recordKey = value, x, 150f, inRect.width - x - 20f);
             y += 30f;
             Rect rect = new Rect(x, y, 350f, 25f);
             Widgets.CheckboxLabeled(rect, "RecordToTemporaryBase".Translate(), ref this.recordToTemporaryBase);

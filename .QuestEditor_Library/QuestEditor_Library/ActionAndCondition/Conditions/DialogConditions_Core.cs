@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -203,7 +203,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "TargetKey".Translate(), ref this.targetKey, x, 100f);
+            CQFTargetKeyEditor.DrawBookField(y, "TargetKey".Translate(), this.targetKey, value => this.targetKey = value, x, 100f, inRect.width - x - 20f);
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 200f, 25f), "NeedSpawned".Translate(), ref this.needSpawned);
             y += 30f;
@@ -275,7 +275,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "TargetKey".Translate(), ref this.targetKey, x, 100f);
+            CQFTargetKeyEditor.DrawBookField(y, "TargetKey".Translate(), this.targetKey, value => this.targetKey = value, x, 100f, inRect.width - x - 20f);
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x, y, 200f, 25f), "NeedSpawned".Translate(), ref this.needSpawned);
             y += 30f; 

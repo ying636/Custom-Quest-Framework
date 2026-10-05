@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_SignalBook_Title>Signal book</CQF_SignalBook_Title>
+  <CQF_SignalBook_SaveConfiguration>Save configuration</CQF_SignalBook_SaveConfiguration>
+  <CQF_SignalBook_LoadConfiguration>Load configuration</CQF_SignalBook_LoadConfiguration>
+  <CQF_SignalBook_SetDefaultConfiguration>Set as default configuration</CQF_SignalBook_SetDefaultConfiguration>
+  <CQF_SignalBook_DefaultConfiguration>Default configuration</CQF_SignalBook_DefaultConfiguration>
+  <CQF_SignalBook_ConfigurationName>Configuration name</CQF_SignalBook_ConfigurationName>
+  <CQF_SignalBook_AddSignal>Add entry</CQF_SignalBook_AddSignal>
+  <CQF_SignalBook_CurrentConfiguration>Current configuration</CQF_SignalBook_CurrentConfiguration>
+  <CQF_SignalBook_NoConfigurations>No saved configurations</CQF_SignalBook_NoConfigurations>
+  <CQF_SignalBook_Error>Signal book operation failed</CQF_SignalBook_Error>
+  <CQF_SignalBook_InvalidConfiguration>The signal book configuration is invalid or damaged.</CQF_SignalBook_InvalidConfiguration>
+  <CQF_SignalBook_InvalidConfigurationName>Enter a configuration name without invalid filename characters or spaces at either end.</CQF_SignalBook_InvalidConfigurationName>
+  <CQF_SignalBook_InvalidSignal>Signal names must not be blank or duplicated.</CQF_SignalBook_InvalidSignal>
+  <CQF_SignalBook_OpenDescription>Open the signal book to edit shared signals and save or load configurations.</CQF_SignalBook_OpenDescription>
+  <CQF_SignalBook_SelectSignal>Click to choose a signal from the signal book. The text field remains editable.</CQF_SignalBook_SelectSignal>
+  <CQF_SignalBook_ClearDefaultConfiguration>Clear default</CQF_SignalBook_ClearDefaultConfiguration>
+</LanguageData>

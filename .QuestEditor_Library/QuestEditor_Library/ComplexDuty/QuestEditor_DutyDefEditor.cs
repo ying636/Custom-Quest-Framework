@@ -333,6 +333,14 @@ namespace QuestEditor_Library
             Widgets.DrawHighlightIfMouseover(rowRect);
             Rect labelRect = new Rect(rowRect.x + 4f, rowRect.y + 4f, Mathf.Min(210f, rowRect.width * 0.38f), 24f);
             Rect controlRect = new Rect(labelRect.xMax + 12f, rowRect.y + 2f, rowRect.xMax - labelRect.xMax - 16f, 24f);
+            if (fieldType == typeof(string) && (key.EndsWith(".targetKey", StringComparison.Ordinal)
+                || key.EndsWith(".focusTarget", StringComparison.Ordinal) || key.EndsWith(".focusSecondTarget", StringComparison.Ordinal)
+                || key.EndsWith(".focusThirdTarget", StringComparison.Ordinal)))
+            {
+                CQFTargetKeyEditor.DrawBookField(labelRect, controlRect, label, value as string, selected => setValue(selected));
+                y += 32f;
+                return;
+            }
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(labelRect, label.Colorize(new Color(0.78f, 0.8f, 0.82f)));
             Text.Anchor = TextAnchor.UpperLeft;

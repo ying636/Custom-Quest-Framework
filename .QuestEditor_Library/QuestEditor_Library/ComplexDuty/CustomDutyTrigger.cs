@@ -85,7 +85,7 @@ namespace QuestEditor_Library
         public override void Draw(ref float y, Rect inRect, float x)
         {
             base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "InSignal".Translate(), ref this.signal, x, 150f);
+            CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), this.signal, value => this.signal = value, x, 150f, inRect.width - x - 12f);
             y += 30f;
             Rect rect = new Rect(x, y, 260f, 25f);
             Widgets.CheckboxLabeled(rect, "CQF_DutySignalAddQuestPrefix".Translate(), ref this.addQuestPrefix);

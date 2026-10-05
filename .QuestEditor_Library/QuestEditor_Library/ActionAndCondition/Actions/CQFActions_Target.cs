@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -2247,7 +2247,7 @@ CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
             y += 30f;
             if (this.state == MentalStateDefOf.SocialFighting)
             {
-                CQFEditorTools.DrawSelectableText(y, "stateTargetText".Translate(), ref this.stateTargetText, () => CQFEditorTools.DrawFloatMenu(CQFEditorTools.TargetTexts, t => this.stateTargetText = t, t => t.Translate()), x, 150f);
+                CQFTargetKeyEditor.DrawBookField(y, "stateTargetText".Translate(), this.stateTargetText, value => this.stateTargetText = value, x, 150f, inRect.width - x - 20f);
                 y += 30f;
             }
         }

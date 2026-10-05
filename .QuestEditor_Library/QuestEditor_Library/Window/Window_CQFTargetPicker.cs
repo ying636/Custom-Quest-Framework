@@ -51,6 +51,22 @@ namespace QuestEditor_Library
                 this.DrawEntry(ref y, viewRect.width, key, label, target);
             }
             y += 10f;
+            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetKeyBook_Title".Translate().Colorize(ColorLibrary.SkyBlue));
+            y += 30f;
+            foreach (string key in CQFTargetKeyBook.Keys)
+            {
+                if (this.Matches(key))
+                {
+                    TargetInfo target = key == "CustomThing" && this.source != null ? new TargetInfo(this.source)
+                        : this.entries.Find(entry => entry.key == key)?.target ?? TargetInfo.Invalid;
+                    this.DrawEntry(ref y, viewRect.width, key, key, target);
+                }
+            }
+            if (Widgets.ButtonText(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetKeyBook_Title".Translate()))
+            {
+                CQFTargetKeyEditor.OpenBook();
+            }
+            y += 40f;
             Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetMapEntries".Translate().Colorize(ColorLibrary.SkyBlue));
             y += 30f;
             foreach (TargetWithKey entry in this.entries)
