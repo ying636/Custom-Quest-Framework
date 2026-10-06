@@ -29,7 +29,7 @@ namespace QuestEditor_Library
         public bool TryRegister(string key, Thing thing, bool reportErrors = true)
         {
             if (thing == null || !thing.Spawned || thing.Map != this.map || key.NullOrEmpty() ||
-                key != key.Trim() || CQFEditorTools.TargetTexts.Contains(key))
+                key != key.Trim() || CQFTargetNames.Reserved.Contains(key))
             {
                 if (reportErrors)
                 {
@@ -65,7 +65,7 @@ namespace QuestEditor_Library
                 }
                 foreach (string key in collection)
                 {
-                    if (key.NullOrEmpty() || key != key.Trim() || CQFEditorTools.TargetTexts.Contains(key))
+                    if (key.NullOrEmpty() || key != key.Trim() || CQFTargetNames.Reserved.Contains(key))
                     {
                         this.ReportError("CQF_TargetKeyInvalid", key ?? string.Empty);
                         return false;

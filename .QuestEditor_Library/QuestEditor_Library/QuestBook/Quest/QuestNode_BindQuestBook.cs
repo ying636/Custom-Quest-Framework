@@ -24,10 +24,17 @@ namespace QuestEditor_Library
         }
 
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            CQFEditorTools.DrawSelectButton(x, ref y, "QuestBookDef".Translate(), DefDatabase<QuestBookDef>.AllDefsListForReading, def => bookDef = def, def => def.defName);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_BindQuestBook.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public SlateRef<QuestBookDef> bookDef;
     }
 }

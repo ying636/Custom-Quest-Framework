@@ -16,4 +16,10 @@
   <CQF_SignalBook_OpenDescription>Open the signal book to edit shared signals and save or load configurations.</CQF_SignalBook_OpenDescription>
   <CQF_SignalBook_SelectSignal>Click to choose a signal from the signal book. The text field remains editable.</CQF_SignalBook_SelectSignal>
   <CQF_SignalBook_ClearDefaultConfiguration>Clear default</CQF_SignalBook_ClearDefaultConfiguration>
+  <CQF_SignalBook_NewConfiguration>New configuration</CQF_SignalBook_NewConfiguration>
+  <CQF_SignalBook_UnsavedConfiguration>Unsaved configuration</CQF_SignalBook_UnsavedConfiguration>
+  <CQF_SignalBook_DefaultIndicator>(default)</CQF_SignalBook_DefaultIndicator>
+  <CQF_SignalBook_SelectConfiguration>Click to choose and load a saved configuration. An asterisk marks unsaved changes.</CQF_SignalBook_SelectConfiguration>
+  <CQF_SignalBook_NoDefaultConfiguration>None</CQF_SignalBook_NoDefaultConfiguration>
+  <CQF_SignalBook_ConfigurationExists>A configuration with this name already exists. Enter another name.</CQF_SignalBook_ConfigurationExists>
 </LanguageData>

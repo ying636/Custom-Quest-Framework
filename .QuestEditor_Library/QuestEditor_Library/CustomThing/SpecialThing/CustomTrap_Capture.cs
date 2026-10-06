@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,23 +30,17 @@ namespace QuestEditor_Library
 			}
 		}
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-			CQFEditorTools.DrawLabelAndText_Line(y, "TrapName".Translate(), ref this.trapName, x, 250f);
-			y += 30f;
-			CQFEditorTools.DrawLabelAndText_Line(y, "DisarmReport".Translate(),ref this.disarmReport,x,100f);
-			y += 30f; 
-			CQFEditorTools.DrawLabelAndText_Line(y, "TickToDisarm".Translate(), ref this.tickToDisarm,ref this.buffer,x, 100f);
-			y += 30f;
-			CQFEditorTools.DrawActionList(ref y,x,this.disarmActions,inRect, "DisarmActions".Translate().Colorize(ColorLibrary.SkyBlue));
-			y += 30f;
-			CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, this.trapComps,
-				inRect, "TrapComps".Translate().Colorize(ColorLibrary.LightBlue), () =>
-				{
-					CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => this.trapComps.Add(new TrapComp() { mode = m }), m => ("ActionTriggerMode_" + m.ToString()).Translate());
-
-				}, c => ("ActionTriggerMode_" + c.mode.ToString()).Translate());
-
-		}
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomTrap_Capture.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void DynamicDrawPhaseAt(DrawPhase phase, Vector3 drawLoc, bool flip = false)
 		{
 			if (this.HasPawn)

@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +21,12 @@ namespace QuestEditor_Library
             }
         }
         public void PasteSingleComp() 
+
         {
-            if (CQFEditorTools.actionComp != null)
+            object[] arguments = new object[]
             {
-                this.comps.Add(CQFEditorTools.actionComp.Copy());
-            }
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CompActionWorker.PasteSingleComp()", this, arguments);
         }
         public Dictionary<string, TargetInfo> GetTargetThis() 
         {
@@ -117,53 +118,17 @@ namespace QuestEditor_Library
             return result;
         }
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            CQFEditorTools.DrawLabelAndText_Line(y,"CompName".Translate(),ref this.compName,x,100f);
-            Rect rectCP = new Rect(380f, y, 25f, 25f);
-            if (Widgets.ButtonImage(rectCP, TexButton.Copy))
-            {
-                CQFEditorTools.actionComp = this.Copy();
-            }
-            TooltipHandler.TipRegion(rectCP, "Copy".Translate());
-            y += 30f;
-            if (Widgets.ButtonText(new Rect(x,y,600f,25f),
-                    "CQFActionTriggerMode".Translate(("ActionTriggerMode_" + this.mode.ToString()).Translate().ToString()),false)) 
-            {
-                var actions = new List<ActionTriggerMode>()
-                { ActionTriggerMode.Signal, ActionTriggerMode.Tick,
-                    ActionTriggerMode.Damaged,ActionTriggerMode.Destroy
-                    ,ActionTriggerMode.MapGeneration,ActionTriggerMode.Open};
-                if (this.allowedActions != null)
-                {
-                    actions = this.allowedActions;
-                }
-                CQFEditorTools.DrawFloatMenu(actions,
-                    m => this.mode = m,m => ("ActionTriggerMode_" + m.ToString()).Translate().ToString());
-            }
-            y += 30f;
-            if (this.mode == ActionTriggerMode.Signal) 
-            {
-                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), this.signal, value => this.signal = value, x, 150f, inRect.width - x - 12f);
-                y += 30f;
-                Rect rect = new Rect(x, y, 350f, 25f);
-                Widgets.CheckboxLabeled(rect, "SignalOnlyIsValidInPart".Translate(),ref this.signalIsOnlyValidInPart);
-                TooltipHandler.TipRegion(rect, "SignalOnlyIsValidInPartTip".Translate());
-                y += 30f;
-            }
-            if (this.mode == ActionTriggerMode.Tick)
-            {
-                CQFEditorTools.DrawLabelAndText_Line(y, "TickToTrigger".Translate(), ref this.tick,ref this.buffer, x);
-                TooltipHandler.TipRegion(new Rect(x,y,150f,25f), "TickToTriggerTip".Translate());
-                y += 30f;
-                if (!this.HasValidTickInterval)
-                {
-                    Widgets.Label(new Rect(x, y, inRect.width - x, 25f), "CQF_ActionComp_InvalidTickInterval".Translate().Colorize(Color.red));
-                    y += 30f;
-                }
-            }
-            CQFEditorTools.DrawActionList(ref y,x,this.actions,inRect, "InteractionActions".Translate());
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ActionComp.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.compName, "compName");

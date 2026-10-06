@@ -18,17 +18,28 @@ namespace QuestEditor_Library
         }
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
-        {
-            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) => DrawTargetCountField(card, ref rowY));
-        }
 
-        protected void DrawTargetCountField(Rect card, ref float y)
         {
-            DrawRowLabel(card, y, "CQF_QuestBook_TargetCount");
-            Widgets.TextFieldNumeric<int>(new Rect(card.x + 184f, y, card.width - 198f, 28f), ref targetCount, ref countBuffer, 1);
-            y += 36f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective_TargetCount.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        protected internal void DrawTargetCountField(Rect card, ref float y)
 
+        {
+            object[] arguments = new object[]
+            {
+                card,
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective_TargetCount.DrawTargetCountField(None:UnityEngine.Rect,Ref:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void ExposeData()
         {
             base.ExposeData();
@@ -41,7 +52,6 @@ namespace QuestEditor_Library
             result.Add(new XElement("targetCount", TargetCount));
             return result;
         }
-
-        private string countBuffer;
+        internal string countBuffer;
     }
 }

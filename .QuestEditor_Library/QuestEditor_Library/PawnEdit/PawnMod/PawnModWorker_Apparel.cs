@@ -21,35 +21,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_Apparel modData = pawnDef.DataFor<PawnModData_Apparel>();
-            this.RemoveDuplicateLayers(modData.apparels);
-            foreach (ApparelLayerDef layer in this.AvailableLayers())
-            {
-                Rect row = new Rect(x, y, inRect.width - x - 20f, 36f);
-                Widgets.DrawLightHighlight(row);
-                ThingData data = this.ApparelForLayer(modData.apparels, layer);
-                Rect layerRect = new Rect(row.x + 8f, row.y + 6f, 120f, 24f);
-                Widgets.Label(layerRect, this.LayerLabel(layer).Colorize(ColorLibrary.PaleBlue));
-                Rect iconRect = new Rect(layerRect.xMax + 8f, row.y + 4f, 28f, 28f);
-                if (data?.def?.uiIcon != null)
-                {
-                    Widgets.DefIcon(iconRect, data.def, this.StuffFor(data.def, data.stuff));
-                }
-                float deleteWidth = data?.def == null ? 0f : 76f;
-                Rect buttonRect = new Rect(iconRect.xMax + 8f, row.y + 3f, row.xMax - iconRect.xMax - deleteWidth - 16f, 30f);
-                if (this.DrawTextButton(buttonRect, this.ThingLabel(data)))
-                {
-                    this.OpenLayerSelectDialog(modData.apparels, layer);
-                }
-                if (data?.def != null && this.DrawCommandText(new Rect(row.xMax - 76f, row.y + 3f, 68f, 30f), "CQF_PawnEditor_Delete".Translate()))
-                {
-                    this.ClearLayer(modData.apparels, layer);
-                }
-                y += 42f;
-            }
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Apparel.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void ApplyToPawn(ComplexPawnDef pawnDef, Pawn pawn, bool preview)
         {
             if (pawn.apparel == null)
@@ -80,8 +63,7 @@ namespace QuestEditor_Library
                 pawnDef.DataFor<PawnModData_Apparel>().apparels = this.LoadSaveableList<ThingData>(node["apparels"]);
             }
         }
-
-        private void OpenLayerSelectDialog(List<ThingData> apparels, ApparelLayerDef layer)
+        internal void OpenLayerSelectDialog(List<ThingData> apparels, ApparelLayerDef layer)
         {
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => this.ApparelInLayer(def, layer)).ToList();
             ThingData data = this.ApparelForLayer(apparels, layer) ?? new ThingData();
@@ -101,8 +83,7 @@ namespace QuestEditor_Library
                 onSelected?.Invoke();
             }, def => def.MadeFromStuff ? def.GetColorForStuff(GenStuff.DefaultStuffFor(def)) : def.uiIconColor, null, null, null, def => def.defName, null, null, null), "CQF_PawnEditor_Select".Translate()));
         }
-
-        private List<ApparelLayerDef> AvailableLayers()
+        internal List<ApparelLayerDef> AvailableLayers()
         {
             return DefDatabase<ThingDef>.AllDefsListForReading
                 .Where(def => def.IsApparel && !def.apparel.layers.NullOrEmpty())
@@ -117,8 +98,7 @@ namespace QuestEditor_Library
         {
             return def != null && def.IsApparel && def.apparel?.LastLayer == layer;
         }
-
-        private ThingData ApparelForLayer(List<ThingData> apparels, ApparelLayerDef layer)
+        internal ThingData ApparelForLayer(List<ThingData> apparels, ApparelLayerDef layer)
         {
             return apparels?.FirstOrDefault(data => this.ApparelInLayer(data?.def, layer));
         }
@@ -131,13 +111,11 @@ namespace QuestEditor_Library
                 apparels.Add(data);
             }
         }
-
-        private void ClearLayer(List<ThingData> apparels, ApparelLayerDef layer)
+        internal void ClearLayer(List<ThingData> apparels, ApparelLayerDef layer)
         {
             apparels.RemoveAll(data => this.ApparelInLayer(data?.def, layer));
         }
-
-        private void RemoveDuplicateLayers(List<ThingData> apparels)
+        internal void RemoveDuplicateLayers(List<ThingData> apparels)
         {
             HashSet<ApparelLayerDef> layers = new HashSet<ApparelLayerDef>();
             for (int i = apparels.Count - 1; i >= 0; i--)
@@ -149,8 +127,7 @@ namespace QuestEditor_Library
                 }
             }
         }
-
-        private string LayerLabel(ApparelLayerDef layer)
+        internal string LayerLabel(ApparelLayerDef layer)
         {
             return layer.label.NullOrEmpty() ? layer.defName : layer.label;
         }
@@ -170,8 +147,7 @@ namespace QuestEditor_Library
             data.hitPoint = def.BaseMaxHitPoints;
             data.stuff = def.MadeFromStuff ? stuff : null;
         }
-
-        private string ThingLabel(ThingData data)
+        internal string ThingLabel(ThingData data)
         {
             if (data?.def == null)
             {
@@ -183,8 +159,7 @@ namespace QuestEditor_Library
             }
             return data.def.label;
         }
-
-        private ThingDef StuffFor(ThingDef def, ThingDef stuff)
+        internal ThingDef StuffFor(ThingDef def, ThingDef stuff)
         {
             return def.MadeFromStuff ? stuff ?? GenStuff.DefaultStuffFor(def) : null;
         }

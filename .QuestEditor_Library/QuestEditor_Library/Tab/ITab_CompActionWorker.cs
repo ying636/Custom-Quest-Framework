@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -15,35 +15,19 @@ namespace QuestEditor_Library
             this.labelKey = "ITab_CompActionWorker";
             this.tutorTag = "CompActionWorker";
         }
-        public override bool IsVisible => DebugSettings.godMode;
-        protected override bool StillValid => DebugSettings.godMode;
-        protected override void FillTab()
-        {
-            Widgets.BeginScrollView(new Rect(5f, 5f,490,590f), ref this.scrollPos, new Rect(0f, 0f,490f, this.height));
-            float y = 10f;
-            if (this.SelObject is Thing thing && thing.TryGetComp<CompActionWorker>() is CompActionWorker comp) 
-            {
-                for (int i = 0; i < comp.comps.Count; i++)
-                {
-                    ActionComp c = comp.comps[i];
-                    if (Widgets.ButtonText(new Rect(10f, y, 150f, 25f), c.compName, false))
-                    {
-                        Find.WindowStack.Add(new QuestEditor_EditActionComp(c, thing));
-                    }
-                    y += 30f;
-                };
-                Rect rect = new Rect(332.5f, y, 25f, 25f);
-                if (Widgets.ButtonImage(rect, TexButton.Paste))
-                {
-                    comp.PasteSingleComp();
-                }
-                TooltipHandler.TipRegion(rect, "Paste".Translate());
-                CQFEditorTools.DrawButtonForList(ref y,comp.comps,c => c.compName);
-            }
-            Widgets.EndScrollView();
-            this.height = y;
-        }
+        internal object CQFSelectedObject => this.SelObject;
+        internal Vector2 CQFSize => this.size;
 
+        public override bool IsVisible => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
+        protected override bool StillValid => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
+        protected override void FillTab()
+
+        {
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ITab_CompActionWorker.FillTab()", this, arguments);
+        }
         public Vector2 scrollPos = Vector2.zero;
         public float height =0f;
     }

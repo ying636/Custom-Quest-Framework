@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using RimWorld.Planet;
 using RimWorld;
@@ -127,7 +127,7 @@ namespace QuestEditor_Library
                 def.customSteps.ForEach(s => s.Generate(map, def, customParams));
                 if (!isGenerateByCore)
                 {
-                    if (!load && def.reserveThing is ThingData data && !CQFEditorTools.disgenerateByCore)
+                    if (!load && def.reserveThing is ThingData data && !CQFMapGenerationState.DisgenerateByCore)
                     {
                         map.AllCells.ToList().ForEach(c =>
                         {
@@ -138,7 +138,7 @@ namespace QuestEditor_Library
                         });
                     }
                     PostGenerateMap(quest);
-                    if (DebugTools.clearGenerationData)
+                    if (CQFMapGenerationState.ClearGenerationData)
                     {
                         GameTools.isGeneratingMap = false;
                         GameTools.ClearTemporaryTargets();
@@ -629,6 +629,3 @@ namespace QuestEditor_Library
         public static List<ExecutiveRequest> requests = new List<ExecutiveRequest>();
     }
 }
-
-
-

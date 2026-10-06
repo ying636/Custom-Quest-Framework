@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +14,17 @@ namespace QuestEditor_Library
     public class CQFFilter : ISaveable, IDrawable, IExposable
     {
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            throw new NotImplementedException();
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFFilter.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public void ExposeData()
         {
             throw new NotImplementedException();

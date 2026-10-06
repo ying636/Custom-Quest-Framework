@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -55,11 +55,11 @@ namespace QuestEditor_Library
             }
             if (this.conditions != null && this.conditions.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "conditions"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.conditions, "conditions"));
             }
             if (this.coreTags != null && this.coreTags.Any())
             {
-                result.Add(CQFEditorTools.SaveList(this.coreTags, "coreTags"));
+                result.Add(CQFSerialization.SaveList(this.coreTags, "coreTags"));
             }
             return result;
         }
@@ -78,7 +78,7 @@ namespace QuestEditor_Library
             core.coreTags = this.coreTags;
             core.size = this.size;
             core.destroyThings = this.destroyThings;
-            if (!load && !CQFEditorTools.disgenerateByCore)
+            if (!load && !CQFMapGenerationState.DisgenerateByCore)
             {
                 var ts2 = core.GenerateZone(getStuff, quest, this.generationKey != null
                     && GenStep_CustomMap.generatedCount_Key.TryGetValue(this.generationKey, out int count) && GenStep_CustomMap.generatedLimit_Key.TryGetValue(this.generationKey, out int limit)

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -33,27 +33,13 @@ namespace QuestEditor_Library
         }
 
         public void DrawTab()
-        {
-            Widgets.BeginScrollView(new Rect(7f, 25f, 475f, 590f), ref this.scrollPos, new Rect(7f, 10f, 475f, this.height));
-            float y = 10f;
-            float initY = y;
-            foreach (PawnSpawnData pawnData in this.pawns)
-            {
-                Rect rectData = new Rect(17f, y + 3f, 450f, 25f);
-                if (Widgets.ButtonText(rectData, pawnData.dataName, false))
-                {
-                    Find.WindowStack.Add(new Dialog_EditIDrawable(pawnData));
-                }
-                y += 30f;
-            }
-            Widgets.DrawBox(new Rect(7f, initY,350f, y - initY), 1, QuestEditor_Dialog.blueTex);
-            y += 10f;
-            CQFEditorTools.DrawButtonForPawnData(y, this.pawns);
-            y += 40f;
-            this.height = y + 15f;
-            Widgets.EndScrollView();
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.Spawner.DrawTab()", this, arguments);
+        }
         public override void ExposeData()
         {
             base.ExposeData();
@@ -65,5 +51,3 @@ namespace QuestEditor_Library
         public List<PawnSpawnData> pawns = new List<PawnSpawnData>();
     }
 }
-
-

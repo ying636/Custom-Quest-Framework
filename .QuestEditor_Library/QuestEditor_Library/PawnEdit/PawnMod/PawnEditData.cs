@@ -161,7 +161,7 @@ namespace QuestEditor_Library
             }
             if (!this.customGenes.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList(this.customGenes, "customGenes"));
+                result.Add(CQFSerialization.SaveList(this.customGenes, "customGenes"));
             }
             return result;
         }
@@ -201,7 +201,7 @@ namespace QuestEditor_Library
             XElement result = base.SaveToXElement(nodeName);
             if (!this.traits.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.traits, "traits"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.traits, "traits"));
             }
             return result;
         }
@@ -218,7 +218,7 @@ namespace QuestEditor_Library
             XElement result = base.SaveToXElement(nodeName);
             if (!this.skills.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.skills, "skills"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.skills, "skills"));
             }
             return result;
         }
@@ -235,7 +235,7 @@ namespace QuestEditor_Library
             XElement result = base.SaveToXElement(nodeName);
             if (!this.abilities.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.abilities, "abilities"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.abilities, "abilities"));
             }
             return result;
         }
@@ -252,7 +252,7 @@ namespace QuestEditor_Library
             XElement result = base.SaveToXElement(nodeName);
             if (!this.apparels.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.apparels, "apparels"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.apparels, "apparels"));
             }
             return result;
         }
@@ -286,7 +286,7 @@ namespace QuestEditor_Library
             XElement result = base.SaveToXElement(nodeName);
             if (!this.hediffs.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.hediffs, "hediffs"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.hediffs, "hediffs"));
             }
             return result;
         }
@@ -320,7 +320,7 @@ namespace QuestEditor_Library
             XElement result = base.SaveToXElement(nodeName);
             if (!this.actionTriggers.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.actionTriggers, "actionTriggers"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.actionTriggers, "actionTriggers"));
             }
             return result;
         }
@@ -353,56 +353,21 @@ namespace QuestEditor_Library
     public class TraitData : ISaveable
     {
         public static void DrawList(List<TraitData> list, ref float y, string title = null, string tip = null, bool needBox = false, float x = 10f, float defaultWidth = 180f)
-        {
-            List<KeyValuePair<TraitDef, TraitDegreeData>> stagets = new List<KeyValuePair<TraitDef, TraitDegreeData>>();
-            DefDatabase<TraitDef>.AllDefsListForReading.ForEach(t =>
-            {
-                t.degreeDatas.ForEach(s =>
-                {
-                    stagets.Add(new KeyValuePair<TraitDef, TraitDegreeData>(t, s));
-                });
-            });
-            float initY = y;
-            float width = defaultWidth;
-            if (title != null)
-            {
-                y += 5f;
-                Text.Font = GameFont.Medium;
-                Rect rectTitle = new Rect(x + 10, y, 1020f, 35f);
-                Widgets.Label(rectTitle, title);
-                if (tip != null)
-                {
-                    TooltipHandler.TipRegionByKey(rectTitle, tip);
-                }
-                Text.Font = GameFont.Small;
-                y += 40f;
-                float textWidth = Text.CalcSize(title).x + 20f;
-                width = textWidth > width ? textWidth : width;
-            }
-            for (int i = 0; i < list.Count; i++)
-            {
-                TraitData data = list[i];
-                CQFEditorTools.DrawSelectablePercent(y, data.def?.DataAtDegree(data.degree)?.label, ref data.chance, ref data.buffer, () =>
-                    Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
-                    {
-                        data.def = t.Key;
-                        data.degree = t.Value.degree;
-                    }, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate())), x + 5f);
-                y += 30f;
-            }
-            y += 5f;
-            if (needBox)
-            {
-                Widgets.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
-            }
-            y += 10f;
-            CQFEditorTools.DrawButtonForList(ref y, list, t => t.def?.DataAtDegree(t.degree)?.label,
-                () => Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
-                {
-                    list.Add(new TraitData() { def = t.Key, degree = t.Value.degree, chance = 1f });
-                }, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate())), x - 5f, width - 70f, new Vector2(70f, 25f));
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                list,
+                y,
+                title,
+                tip,
+                needBox,
+                x,
+                defaultWidth
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.TraitData.DrawList(None:System.Collections.Generic.List<QuestEditor_Library.TraitData>,Ref:float,None:string,None:string,None:bool,None:float,None:float)", null, arguments);
+            y = (float)arguments[1];
+        }
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -482,7 +447,7 @@ namespace QuestEditor_Library
             XElement result = new XElement(nodeName);
             result.Add(new XElement("key", this.key));
             result.Add(new XElement("mode", this.mode));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
 

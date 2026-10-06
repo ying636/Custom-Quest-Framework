@@ -24,36 +24,17 @@ namespace QuestEditor_Library
         }
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
-        {
-            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
-            {
-                DrawRowLabel(card, rowY, "CQF_QuestBook_TargetThing");
-                string label = TargetThingDef == null ? "CQF_QuestBook_None".Translate().ToString() : TargetThingDef.LabelCap;
-                Rect button = new Rect(card.x + 184f, rowY, card.width - 198f, 28f);
-                if (Widgets.ButtonText(button, label, false, true))
-                {
-                    List<ThingDef> selectableDefs = GetThingTargets()
-                        .Where(def => def != null && QuestBookTextureEntry.GetThingTexturePath(def) != null)
-                        .OrderBy(def => def.label)
-                        .ToList();
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(
-                        selectableDefs,
-                        def => ContentFinder<Texture2D>.Get(QuestBookTextureEntry.GetThingTexturePath(def), false),
-                        def => def.LabelCap,
-                        def =>
-                        {
-                            TargetThingDef = def;
-                            if (!iconManuallySelected)
-                            {
-                                iconPath = QuestBookTextureEntry.GetThingTexturePath(def);
-                            }
-                        }), "CQF_QuestBook_TargetThing".Translate()));
-                }
-                rowY += 36f;
-                DrawTargetCountField(card, ref rowY);
-            });
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective_ThingTarget.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void ExposeData()
         {
             base.ExposeData();

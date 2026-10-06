@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -26,15 +26,15 @@ namespace QuestEditor_Library
             }
             if (this.openingConditions.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.openingConditions, "openingConditions"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.openingConditions, "openingConditions"));
             }
             if (this.openingActions.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.openingActions, "openingActions"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.openingActions, "openingActions"));
             }
             if (this.innerThings.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.innerThings, "innerThings"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.innerThings, "innerThings"));
             }
             return result;
         }

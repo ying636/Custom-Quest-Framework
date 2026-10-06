@@ -5,7 +5,7 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public class CustomMapStep_MapBackground : CustomMapStep
+    public class CustomMapStep_MapBackground : CustomMapStep
 {
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
@@ -25,11 +25,17 @@ public class CustomMapStep_MapBackground : CustomMapStep
     }
 
     public override void Draw(ref float y, Rect inRect, float x)
-    {
-        this.background ??= new CustomMapBackgroundData();
-        this.background.Draw(ref y, inRect, x);
-    }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_MapBackground.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
     public override XElement SaveToXElement(string nodeName)
     {
         XElement result = base.SaveToXElement(nodeName);

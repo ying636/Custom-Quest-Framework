@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using RimWorld.QuestGen;
@@ -129,4 +129,3 @@ namespace QuestEditor_Library
     }
 
 }
-

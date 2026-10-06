@@ -11,14 +11,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.QuestBook;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            Rect descriptionRect = new Rect(x, y, Mathf.Max(280f, inRect.width - x - 12f), 38f);
-            Widgets.DrawMenuSection(descriptionRect);
-            Widgets.Label(new Rect(descriptionRect.x + 12f, descriptionRect.y + 9f, descriptionRect.width - 24f, 22f), "CQF_QuestBook_ActionOpenDescription".Translate().Colorize(ColorLibrary.PaleBlue));
-            y += descriptionRect.height + 8f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_OpenQuestBook.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             QuestBookInstance instance = GameComponent_QuestBook.Instance?.FindByQuest(quest);

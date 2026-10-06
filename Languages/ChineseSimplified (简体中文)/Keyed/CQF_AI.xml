@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_AI_Open>AI 助手</CQF_AI_Open>
+  <CQF_AI_EmptyChat>想一起做点什么？</CQF_AI_EmptyChat>
+  <CQF_AI_InputHint>输入消息…</CQF_AI_InputHint>
+  <CQF_AI_Options>对话选项</CQF_AI_Options>
+  <CQF_AI_SendHint>发送消息（Ctrl+Enter）</CQF_AI_SendHint>
+  <CQF_AI_Stop>停止生成</CQF_AI_Stop>
+  <CQF_AI_RequestFailed>请求未完成，悬停查看详情。</CQF_AI_RequestFailed>
+  <CQF_AI_OpenHint>打开 AI 聊天浮窗，可一边对话一边操作编辑器。</CQF_AI_OpenHint>
+  <CQF_AI_Settings>AI 设置</CQF_AI_Settings>
+  <CQF_AI_GenerateText>编写文案</CQF_AI_GenerateText>
+  <CQF_AI_GenerateTextHint>允许为编辑内容编写新文案。关闭时仅使用已有文本、指令中提供的文本或占位符，不影响普通聊天回复。</CQF_AI_GenerateTextHint>
+  <CQF_AI_Unnamed>未命名的 {0}</CQF_AI_Unnamed>
+  <CQF_AI_Collapse>收起聊天，正在进行的请求会继续执行</CQF_AI_Collapse>
+  <CQF_AI_Expand>展开聊天</CQF_AI_Expand>
+  <CQF_AI_TargetChanged>编辑对象已切换，上一条请求已停止。</CQF_AI_TargetChanged>
+  <CQF_AI_AppliedLive>修改已显示在编辑器中，可在此撤销；请通过编辑器保存。</CQF_AI_AppliedLive>
+  <CQF_AI_NotLoaded>编辑器未加载。请在 CQF Mod 设置中启用编辑器并重启游戏，以使用 AI 功能。</CQF_AI_NotLoaded>
+  <CQF_AI_Chat>交流</CQF_AI_Chat>
+  <CQF_AI_Resources>资源</CQF_AI_Resources>
+  <CQF_AI_Changes>修改预览</CQF_AI_Changes>
+  <CQF_AI_NoTarget>交流与资源查询</CQF_AI_NoTarget>
+  <CQF_AI_Target>编辑对象：{0}</CQF_AI_Target>
+  <CQF_AI_SelectTarget>选择编辑对象</CQF_AI_SelectTarget>
+  <CQF_AI_New>新建 CQF 内容</CQF_AI_New>
+  <CQF_AI_Assistant>AI</CQF_AI_Assistant>
+  <CQF_AI_Player>玩家</CQF_AI_Player>
+  <CQF_AI_Tool>工具信息</CQF_AI_Tool>
+  <CQF_AI_Send>发送</CQF_AI_Send>
+  <CQF_AI_Edit>允许编辑</CQF_AI_Edit>
+  <CQF_AI_EditHint>允许 AI 修改已打开的 CQF 编辑器中选中的内容。此设置可随时更改；没有编辑对象时，AI 仅进行聊天和资源查询。</CQF_AI_EditHint>
+  <CQF_AI_ClearChat>清空会话</CQF_AI_ClearChat>
+  <CQF_AI_Type>资源类型</CQF_AI_Type>
+  <CQF_AI_Search>查询</CQF_AI_Search>
+  <CQF_AI_Previous>上一页</CQF_AI_Previous>
+  <CQF_AI_Next>下一页</CQF_AI_Next>
+  <CQF_AI_ModOverview>已加载 Mod 概览</CQF_AI_ModOverview>
+  <CQF_AI_NoDraft>暂无可预览的修改。</CQF_AI_NoDraft>
+  <CQF_AI_Before>修改前</CQF_AI_Before>
+  <CQF_AI_After>修改后</CQF_AI_After>
+  <CQF_AI_Apply>应用修改</CQF_AI_Apply>
+  <CQF_AI_Applied>修改已应用。</CQF_AI_Applied>
+  <CQF_AI_Undone>修改已撤销。</CQF_AI_Undone>
+  <CQF_AI_GenerateMap>生成编辑地图</CQF_AI_GenerateMap>
+  <CQF_AI_Replied>已收到回复。</CQF_AI_Replied>
+  <CQF_AI_StaleTarget>编辑对象已发生变化或编辑器已关闭，请基于最新内容重新发送指令。</CQF_AI_StaleTarget>
+  <CQF_AI_UnknownType>未知或不支持的数据类型</CQF_AI_UnknownType>
+  <CQF_AI_UnknownField>未知或不可编辑的字段</CQF_AI_UnknownField>
+  <CQF_AI_InvalidValue>字段值无效</CQF_AI_InvalidValue>
+  <CQF_AI_InvalidChanges>修改操作无效</CQF_AI_InvalidChanges>
+  <CQF_AI_InvalidPath>数据路径无效</CQF_AI_InvalidPath>
+  <CQF_AI_DuplicateKey>字典键已存在</CQF_AI_DuplicateKey>
+  <CQF_AI_MapRequired>此操作需要地图草稿</CQF_AI_MapRequired>
+  <CQF_AI_MapBounds>地图尺寸无效，或坐标超出地图范围</CQF_AI_MapBounds>
+  <CQF_AI_MissingResource>引用的资源尚未加载</CQF_AI_MissingResource>
+  <CQF_AI_InvalidQuery>资源查询无效</CQF_AI_InvalidQuery>
+  <CQF_AI_QueryRoot>查询根节点必须为 queries，且不能带属性或文本。</CQF_AI_QueryRoot>
+  <CQF_AI_QueryCount>每批查询必须包含 1 至 8 条查询。</CQF_AI_QueryCount>
+  <CQF_AI_QueryUnknown>不支持查询节点 {0}，仅支持 defs、images、schema、object。</CQF_AI_QueryUnknown>
+  <CQF_AI_QueryBody>查询 {0} 必须通过属性传参，不接受子节点或文本。</CQF_AI_QueryBody>
+  <CQF_AI_QueryAttributes>查询 {0} 不接受属性 {1}，允许的属性为：{2}。</CQF_AI_QueryAttributes>
+  <CQF_AI_QueryType>查询 {0} 需要在 type 属性中提供完整 CLR 类型名。</CQF_AI_QueryType>
+  <CQF_AI_QueryName>object 查询需要在 name 属性中提供准确的 defName。</CQF_AI_QueryName>
+  <CQF_AI_QuerySearch>查询关键词不能超过 100 个字符。</CQF_AI_QuerySearch>
+  <CQF_AI_QueryOffset>offset 必须为 0 至 100000 之间的整数。</CQF_AI_QueryOffset>
+  <CQF_AI_QueryRetrying>查询格式不符，正在让 AI 纠正（{0}/8）…</CQF_AI_QueryRetrying>
+  <CQF_AI_InvalidResponse>AI 返回格式无效</CQF_AI_InvalidResponse>
+  <CQF_AI_ReadOnly>编辑权限已关闭，请在 AI 设置中启用“允许编辑”后修改当前对象。</CQF_AI_ReadOnly>
+  <CQF_AI_NoEditingTarget>已允许编辑，但当前没有可编辑对象。请载入游戏地图，或打开对应的 CQF 编辑器。</CQF_AI_NoEditingTarget>
+  <CQF_AI_LiveMapOperationRequired>当前地图需要使用实时地图操作，不支持调整地图尺寸或直接修改地图信息字段。</CQF_AI_LiveMapOperationRequired>
+  <CQF_AI_LiveMapBlocked>目标位置有其他对象阻挡，请先读取区域，或明确移除需要替换的对象。</CQF_AI_LiveMapBlocked>
+  <CQF_AI_LiveThingMissing>找不到此地图对象，请重新读取当前区域以获取实际对象 ID。</CQF_AI_LiveThingMissing>
+  <CQF_AI_AppliedMap>修改已应用到当前地图，可在此撤销本次任务；保存游戏即可保留修改。</CQF_AI_AppliedMap>
+  <CQF_AI_UndoConflict>本次修改涉及的对象或格子已发生变化，或编辑对象已不可用。为保留最新状态，当前无法撤销。</CQF_AI_UndoConflict>
+  <CQF_AI_InvalidLinks>节点或步骤链接无效</CQF_AI_InvalidLinks>
+  <CQF_AI_InvalidName>请使用有效的 Def 名称；新定义需要 CQF_ 前缀</CQF_AI_InvalidName>
+  <CQF_AI_TextNotAllowed>尚未允许生成新的内容文案</CQF_AI_TextNotAllowed>
+  <CQF_AI_Depth>数据嵌套层级超过限制</CQF_AI_Depth>
+  <CQF_AI_Cycle>发现不支持的对象循环引用</CQF_AI_Cycle>
+  <CQF_AI_ContextTooLarge>会话或数据过大，请清空会话或选择更小的编辑对象</CQF_AI_ContextTooLarge>
+  <CQF_AI_UseNativeSave>请在此对象的 CQF 编辑器中保存</CQF_AI_UseNativeSave>
+  <CQF_AI_ApplyMismatch>编辑器实际状态与请求的修改不一致，已回滚本次操作。</CQF_AI_ApplyMismatch>
+  <CQF_AI_InvalidTool>工具不存在或工具参数无效</CQF_AI_InvalidTool>
+  <CQF_AI_NativeTools>使用原生工具调用</CQF_AI_NativeTools>
+  <CQF_AI_NativeToolsHint>模型和接口支持工具调用时，使用结构化函数调用。不支持工具调用的兼容接口可关闭此项，改用 XML 工具协议。</CQF_AI_NativeToolsHint>
+  <CQF_AI_PortalLinked>此出入口已有运行时关联，目标地图和出口标识需要与关联对象一起修改。</CQF_AI_PortalLinked>
+  <CQF_AI_ReadTooLarge>请求的数据过大，请读取更具体的字段路径或减小分页数量。</CQF_AI_ReadTooLarge>
+  <CQF_AI_ToolLimit>本次任务已达到工具调用上限。已应用的修改仍可查看和撤销。</CQF_AI_ToolLimit>
+  <CQF_AI_ToolRetrying>工具操作被拒绝，正在让 AI 修正（{0}/24）…</CQF_AI_ToolRetrying>
+  <CQF_AI_ToolWorking>正在读取、编辑并核对结果（{0}/24）…</CQF_AI_ToolWorking>
+  <CQF_AI_RollbackMismatch>修改失败，原始状态也未能完整恢复。请检查编辑器当前内容和错误日志。</CQF_AI_RollbackMismatch>
+  <CQF_AI_UsageBrief>本次 {0} · 会话 {1} tokens</CQF_AI_UsageBrief>
+  <CQF_AI_UsageUnknown>未提供</CQF_AI_UsageUnknown>
+  <CQF_AI_UsageDetails>本次任务：输入 {0}，输出 {1}；{2} 次回复未提供有效用量。
+当前会话：输入 {3}，输出 {4}；{5} 次回复未提供有效用量。
+统计来自接口，包含已完成的工具调用轮次。+? 表示累计值不完整；缺失用量不会按零计算。取消请求可能产生费用，但没有返回用量。清空会话会重置计数。</CQF_AI_UsageDetails>
+  <CQF_AI_InvalidUsage>接口返回的 token 用量无效。本次回复仍可使用，但用量标记为未提供。</CQF_AI_InvalidUsage>
+</LanguageData>

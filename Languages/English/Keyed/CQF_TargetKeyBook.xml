@@ -16,4 +16,10 @@
   <CQF_TargetKeyBook_OpenDescription>Open the target key book to edit shared key names and save or load configurations. Bind keys to objects separately on each map.</CQF_TargetKeyBook_OpenDescription>
   <CQF_TargetKeyBook_SelectKey>Click to choose a key from the target key book. The text field remains editable.</CQF_TargetKeyBook_SelectKey>
   <CQF_TargetKeyBook_ClearDefaultConfiguration>Clear default</CQF_TargetKeyBook_ClearDefaultConfiguration>
+  <CQF_TargetKeyBook_NewConfiguration>New configuration</CQF_TargetKeyBook_NewConfiguration>
+  <CQF_TargetKeyBook_UnsavedConfiguration>Unsaved configuration</CQF_TargetKeyBook_UnsavedConfiguration>
+  <CQF_TargetKeyBook_DefaultIndicator>(default)</CQF_TargetKeyBook_DefaultIndicator>
+  <CQF_TargetKeyBook_SelectConfiguration>Click to choose and load a saved configuration. An asterisk marks unsaved changes.</CQF_TargetKeyBook_SelectConfiguration>
+  <CQF_TargetKeyBook_NoDefaultConfiguration>None</CQF_TargetKeyBook_NoDefaultConfiguration>
+  <CQF_TargetKeyBook_ConfigurationExists>A configuration with this name already exists. Enter another name.</CQF_TargetKeyBook_ConfigurationExists>
 </LanguageData>

@@ -11,12 +11,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.ThingChange;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_CustomDescription".Translate(), ref this.text, x, 240f);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetCustomDescription.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (this.text.NullOrEmpty())

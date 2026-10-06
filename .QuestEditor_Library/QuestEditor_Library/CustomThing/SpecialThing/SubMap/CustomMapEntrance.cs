@@ -169,32 +169,12 @@ namespace QuestEditor_Library
             return base.IsEnterable(out reason);
         }
         public virtual void DrawTab()
+
         {
-            Rect outRect = new Rect(0f, 0f, 540f, 590f);
-            float width = outRect.width - 40f;
-            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.height + 10f));
-            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
-            float x = 10f;
-            float y = 10f;
-
-            this.DrawSectionHeader(ref y, x, width, "CQF_PortalMapSection".Translate(), "CQF_PortalMapSectionTip".Translate());
-            string mapLabel = this.mapDef == null ? "Null".Translate().ToString() : this.mapDef.label;
-            Rect rect = new Rect(x + 8f, y, width - 16f, 30f);
-            if (Widgets.ButtonText(rect, "CurCustomMap".Translate(mapLabel), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, (x) => this.mapDef = x, (x) => x.label);
-            }
-            y += 35f;
-
-            this.DrawSectionHeader(ref y, x, width, "CQF_PortalSettingsSection".Translate(), "CQF_PortalSettingsSectionTip".Translate());
-            Widgets.CheckboxLabeled(new Rect(x + 8f, y, width - 16f, 25f), "DefaultOpened".Translate(), ref this.opended);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "ExitName".Translate(), ref this.exitName, x + 8f, 150f);
-            y += 30f;
-
-            this.DrawActionSection(ref y, x, width, this.enterActions);
-            this.height = y + 10f;
-            Widgets.EndScrollView();
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapEntrance.DrawTab()", this, arguments);
         }
         public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
         {
@@ -375,67 +355,50 @@ namespace QuestEditor_Library
             return this.exit == null ? IntVec3.Invalid : this.exit.Position;
         }
 
-        protected void DrawActionSection(ref float y, float x, float width, List<CQFAction> actions)
-        {
-            this.DrawSectionHeader(ref y, x, width, "CQF_PortalEnterActions".Translate(), "CQF_PortalEnterActionsTip".Translate(),
-                () => CQFEditorTools.OpenCQFActionSelect(type => actions.Add((CQFAction)Activator.CreateInstance(type))),
-                () => CQFEditorTools.DrawFloatMenu(actions, action => actions.Remove(action), action => action.GetType().Name.Translate()),
-                actions.Any());
-            if (actions.Any())
-            {
-                foreach (CQFAction action in actions)
-                {
-                    Rect rowRect = new Rect(x + 8f, y, width - 16f, 28f);
-                    Widgets.DrawHighlightIfMouseover(rowRect);
-                    if (Widgets.ButtonText(rowRect, action.GetType().Name.Translate(), false))
-                    {
-                        Find.WindowStack.Add(new Dialog_EditIDrawable(action));
-                    }
-                    y += 32f;
-                }
-            }
-            else
-            {
-                this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_PortalNoActions".Translate());
-            }
-            y += 8f;
-        }
+        protected internal void DrawActionSection(ref float y, float x, float width, List<CQFAction> actions)
 
-        protected void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null,
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                actions
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapEntrance.DrawActionSection(Ref:float,None:float,None:float,None:System.Collections.Generic.List<QuestEditor_Library.CQFAction>)", this, arguments);
+            y = (float)arguments[0];
+        }
+        protected internal void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null,
             Action addAction = null, Action removeAction = null, bool canRemove = false)
-        {
-            Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
-            Widgets.DrawHighlight(headerRect);
-            Rect labelRect = new Rect(x + 8f, y + 4f, width - 84f, 25f);
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.SkyBlue));
-            if (!tip.NullOrEmpty())
-            {
-                TooltipHandler.TipRegion(labelRect, tip);
-            }
-            if (addAction != null)
-            {
-                Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-                if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
-                {
-                    addAction();
-                }
-                TooltipHandler.TipRegion(buttonRect, "Add".Translate());
-                buttonRect.x += 30f;
-                if (Widgets.ButtonImage(buttonRect, TexButton.Delete) && canRemove)
-                {
-                    removeAction?.Invoke();
-                }
-                TooltipHandler.TipRegion(buttonRect, "Remove".Translate());
-            }
-            y += 38f;
-        }
 
-        protected void DrawEmptyState(ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
-            y += 32f;
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label,
+                tip,
+                addAction,
+                removeAction,
+                canRemove
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapEntrance.DrawSectionHeader(Ref:float,None:float,None:float,None:string,None:string,None:System.Action,None:System.Action,None:bool)", this, arguments);
+            y = (float)arguments[0];
         }
+        protected internal void DrawEmptyState(ref float y, float x, float width, string label)
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapEntrance.DrawEmptyState(Ref:float,None:float,None:float,None:string)", this, arguments);
+            y = (float)arguments[0];
+        }
         private void Enter(Thing thing)
         {
             if (thing == null || this.exit == null ||
@@ -491,7 +454,7 @@ namespace QuestEditor_Library
         public string exitName;
         public CustomMapExit exit;    
         protected Map customMap;
-        protected CustomMapDataDef mapDef;
+        protected internal CustomMapDataDef mapDef;
         public string questID = null;
         public List<CQFAction> enterActions = new List<CQFAction>();
         public bool thereIsPawnIsEntering = false;

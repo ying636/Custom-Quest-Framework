@@ -1,10 +1,10 @@
-﻿using RimWorld;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
 
-public class CustomHediff : HediffWithComps
+    public class CustomHediff : HediffWithComps
 {
     public Quest Quest
     {
@@ -12,13 +12,13 @@ public class CustomHediff : HediffWithComps
     }
 
     public void PasteSingleComp()
-    {
-        if (CQFEditorTools.actionComp != null)
-        {
-            this.comps.Add(CQFEditorTools.actionComp.Copy());
-        }
-    }
 
+        {
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomHediff.PasteSingleComp()", this, arguments);
+        }
     public override string Label  => this.overridedLabel ?? base.Label;
     public override string Description  => this.overridedDescription ?? base.Description;
     public override Color LabelColor => this.overridedColor ?? base.LabelColor;

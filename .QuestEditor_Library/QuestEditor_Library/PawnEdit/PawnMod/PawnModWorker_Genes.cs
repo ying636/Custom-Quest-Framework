@@ -22,22 +22,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
-            this.EnsureXenotype(data);
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Xenotype".Translate(data.xenotype.LabelCap)))
-            {
-                this.OpenXenotypeSelector(data);
-            }
-            if (data.xenotype != null && !data.xenotype.descriptionShort.NullOrEmpty())
-            {
-                Rect rect = new Rect(x, y, inRect.width - x - 20f, 60f);
-                Widgets.Label(rect, data.xenotype.descriptionShort);
-                this.EndRow(ref y, 66f);
-            }
-            this.DrawCustomGenes(data, ref y, inRect, x);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Genes.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void ModifyGenerationRequest(ComplexPawnDef pawnDef, ref PawnGenerationRequest request)
         {
             PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
@@ -92,44 +88,19 @@ namespace QuestEditor_Library
                 yield return gene?.defName;
             }
         }
+        internal void DrawCustomGenes(PawnModData_Genes data, ref float y, Rect inRect, float x)
 
-        private void DrawCustomGenes(PawnModData_Genes data, ref float y, Rect inRect, float x)
         {
-            List<GeneDef> customGenes = data.customGenes;
-            Rect labelRect = new Rect(x, y + 3f, 150f, 25f);
-            Widgets.Label(labelRect, "CQF_PawnEditor_CustomGenes".Translate().Colorize(ColorLibrary.PaleBlue));
-            Rect addRect = new Rect(labelRect.xMax + 8f, y, 90f, 30f);
-            if (this.DrawCommandText(addRect, "CQF_PawnEditor_Add".Translate()))
+            object[] arguments = new object[]
             {
-                this.OpenGeneSelector(gene => customGenes.Add(gene));
-            }
-            Rect deleteRect = new Rect(addRect.xMax + 10f, y, 90f, 30f);
-            if (this.DrawCommandText(deleteRect, "CQF_PawnEditor_Delete".Translate()) && customGenes.Any())
-            {
-                CQFEditorTools.DrawFloatMenu(customGenes, gene => customGenes.Remove(gene), this.GeneLabel);
-            }
-            y += 42f;
-            this.RemoveDuplicateGenes(customGenes);
-            foreach (GeneDef gene in customGenes)
-            {
-                Rect row = new Rect(x, y, inRect.width - x - 20f, 36f);
-                Widgets.DrawLightHighlight(row);
-                Rect buttonRect = new Rect(row.x + 8f, row.y + 3f, row.width - 16f, 30f);
-                if (this.DrawTextButton(buttonRect, this.GeneLabel(gene)))
-                {
-                    this.OpenGeneSelector(newGene =>
-                    {
-                        int index = customGenes.IndexOf(gene);
-                        if (index >= 0)
-                        {
-                            customGenes[index] = newGene;
-                        }
-                    });
-                }
-                y += 42f;
-            }
+                data,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Genes.DrawCustomGenes(None:QuestEditor_Library.PawnModData_Genes,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
         }
-
         private void ApplyCustomGenes(PawnModData_Genes data, Pawn pawn)
         {
             this.RemoveDuplicateGenes(data.customGenes);
@@ -160,8 +131,7 @@ namespace QuestEditor_Library
             }
             this.appliedCustomGenes[pawn] = applied;
         }
-
-        private void OpenXenotypeSelector(PawnModData_Genes data)
+        internal void OpenXenotypeSelector(PawnModData_Genes data)
         {
             this.EnsureXenotype(data);
             Find.WindowStack.Add(new Dialog_Select<XenotypeDef>(new TextureSelectDrawer<XenotypeDef>(DefDatabase<XenotypeDef>.AllDefsListForReading, xenotype => BaseContent.WhiteTex, xenotype => xenotype.LabelCap, xenotype =>
@@ -170,13 +140,11 @@ namespace QuestEditor_Library
                 this.EnsureXenotype(data);
             }, null, (xenotype, rect) => this.DrawXenotypeIcon(xenotype, rect), xenotype => xenotype.descriptionShort ?? xenotype.description, xenotype => -Mathf.RoundToInt(xenotype.displayPriority * 1000f), xenotype => xenotype.defName, null, null), "CQF_PawnEditor_SelectXenotype".Translate()));
         }
-
-        private void OpenGeneSelector(Action<GeneDef> action)
+        internal void OpenGeneSelector(Action<GeneDef> action)
         {
             Find.WindowStack.Add(new Dialog_Select<GeneDef>(new LabeledTextureSelectDrawer<GeneDef>(DefDatabase<GeneDef>.AllDefsListForReading, gene => BaseContent.WhiteTex, this.GeneLabel, action, null, (gene, rect) => this.DrawGeneIcon(gene, rect), gene => gene.description, gene => Mathf.RoundToInt(gene.displayOrderInCategory * 1000f), gene => gene.defName, null, null), "CQF_PawnEditor_SelectGene".Translate()));
         }
-
-        private void RemoveDuplicateGenes(List<GeneDef> genes)
+        internal void RemoveDuplicateGenes(List<GeneDef> genes)
         {
             if (genes == null)
             {
@@ -192,13 +160,11 @@ namespace QuestEditor_Library
                 }
             }
         }
-
-        private string GeneLabel(GeneDef gene)
+        internal string GeneLabel(GeneDef gene)
         {
             return gene?.label ?? "CQF_PawnEditor_None".Translate();
         }
-
-        private void EnsureXenotype(PawnModData_Genes data)
+        internal void EnsureXenotype(PawnModData_Genes data)
         {
             if (data.xenotype == null)
             {

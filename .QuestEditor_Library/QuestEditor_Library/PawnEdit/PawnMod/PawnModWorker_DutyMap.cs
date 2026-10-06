@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using RimWorld;
@@ -16,22 +16,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_DutyMap data = pawnDef.DataFor<PawnModData_DutyMap>();
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_DutyMap".Translate(this.ValueOrNone(data.dutyMap?.defName))))
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<DutyMapDef>.AllDefsListForReading, dutyMap => data.dutyMap = dutyMap, dutyMap => dutyMap.defName);
-            }
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_DutyMapStartNode".Translate(this.ValueOrNone(data.dutyMapStartNodeId))))
-            {
-                DutyMapDef map = data.dutyMap;
-                if (map != null)
-                {
-                    CQFEditorTools.DrawFloatMenu(map.nodes, node => data.dutyMapStartNodeId = node.nodeId, node => node.nodeId);
-                }
-            }
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_DutyMap.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
         {
             PawnModData_DutyMap data = pawnDef.DataFor<PawnModData_DutyMap>();
@@ -64,4 +60,3 @@ namespace QuestEditor_Library
         }
     }
 }
-

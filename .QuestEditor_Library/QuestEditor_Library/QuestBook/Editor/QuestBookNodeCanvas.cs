@@ -28,7 +28,7 @@ namespace QuestEditor_Library
                 return;
             }
             currentBook = book;
-            Widgets.DrawBox(rect, 1, QuestEditor_Dialog.blueTex);
+            Widgets.DrawBox(rect, 1);
             GUI.BeginGroup(rect);
             Dictionary<QuestBookStep, Rect> nodeRects = BuildNodeRects(book, chapter);
             DrawLinks(nodeRects);
@@ -241,6 +241,7 @@ namespace QuestEditor_Library
 
         private void HandleInput(Rect rect, QuestBookDef book, Dictionary<QuestBookStep, Rect> nodeRects, bool editable, QuestBookChapter chapter)
         {
+            if (Find.WindowStack.MouseObscuredNow) return;
             UnityEngine.Event current = UnityEngine.Event.current;
             Vector2 mouse = current.mousePosition;
             if (current.type == EventType.KeyDown && current.keyCode == KeyCode.Escape && linkingSource != null)

@@ -12,22 +12,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.EventArea;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "EventAreaKey".Translate(), ref this.key, x, 150f);
-            y += 30f;
-            Rect rect = new Rect(x, y, 350f, 25f);
-            CQFEditorTools.DrawFactionSelectableText(y, "EventAreaFaction".Translate(), ref this.faction, f => this.faction = f, 20f + x, 120f);
-            TooltipHandler.TipRegion(rect, "EventAreaFactionTip".Translate());
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "EventAreaOnlyHumanlike".Translate(), ref this.onlyHumanlike);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "EventAreaReplaceExisting".Translate(), ref this.replaceExisting);
-            y += 30f;
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_CreateEventArea.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -44,7 +39,7 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("replaceExisting", this.replaceExisting));
             }
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
 
@@ -109,12 +104,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.EventArea;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "EventAreaKey".Translate(), ref this.key, x, 150f);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_AddCellToEventArea.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -153,12 +153,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.EventArea;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "EventAreaKey".Translate(), ref this.key, x, 150f);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_DeleteEventArea.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);

@@ -82,132 +82,57 @@ namespace QuestEditor_Library
         }
 
         public virtual void Draw(ref float y, Rect inRect,float x)
+
         {
-			y += 10f;
-			CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "tile".Translate(), ref this.tile, x + 7f, 110f);
-			TooltipHandler.TipRegion(new Rect(x + 7f, y, 150f, 25f), "tile_Tip".Translate());	
-			y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "MapFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll((f) => !f.isPlayer), (f) => this.faction = f.defName, (f) => f.label, new List<FloatMenuOption>()
+            object[] arguments = new object[]
             {
-                new FloatMenuOption("RandomHostile".Translate(),() => this.faction = "RandomHostile"),
-                new FloatMenuOption("RandomAlly".Translate(),() => this.faction = "RandomAlly"),
-                new FloatMenuOption("RandomNeutral".Translate(),() => this.faction = "RandomNeutral"),
-            }), 7f + x, 120f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "SiteIconPath".Translate(), ref this.siteIconPath, x + 7f, 150f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "ExpandingIconPath".Translate(), ref this.expandingIconPath, x + 7f, 150f);
-            y += 30f;
-			Widgets.CheckboxLabeled(new Rect(x + 7f,y,300f,25f), "DisdestroyBecauseOfNoColonist".Translate(), ref this.disdestroyBecauseOfNoColonist);
-			y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 7f, y, 300f, 25f), "Reenterable".Translate(),
-				ref this.reenterable);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 7f, y, 300f, 25f),
-                "BeUnreenterableWhenAllEnemiesDefeated".Translate(), ref this.beUnreenterableWhenAllEnemiesDefeated);
-            y += 30f;
-            Rect r = new Rect(x + 7f, y, 250f, 25f);
-			Widgets.CheckboxLabeled(r, "replaceMapGeneration".Translate(), ref this.replaceMapGeneration);
-			TooltipHandler.TipRegion(r, "replaceMapGeneration_Tip".Translate());
-			y += 30f;
-			CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "StoreAsText".Translate(), ref this.storeAs, x + 7f, 100f);
-			y += 30f;
-			CQFEditorTools.DrawIntRange(ref y, "MapDistance".Translate(), ref this.distance, ref this.buffer, ref this.bufferMin, x + 7f);
-			Rect worldObjectDefRect = new Rect(x + 7f, y, 800f, 25f);
-			CQFEditorTools.DrawSelectButton(x + 7f,ref y,
-				"WorldObjectDefOfSite".Translate(this.worldObjectDef == null ? 
-				"Default".Translate().ToString()
-				: this.worldObjectDef.label),DefDatabase<WorldObjectDef>.AllDefsListForReading,
-				d => this.worldObjectDef = d,d => d.label,
-				new List<FloatMenuOption>()
-				{
-					new FloatMenuOption("Default".Translate(), () => this.worldObjectDef = null)
-				});
-			TooltipHandler.TipRegion(worldObjectDefRect, "WorldObjectDefOfSite_Tip".Translate());
-			List<PlanetLayerDef> PlanetLayerDef = DefDatabase<PlanetLayerDef>.AllDefsListForReading;
-			CQFEditorTools.DrawSelectableField(x + 7f,ref y, "planetLayer".Translate(this.planetLayer == null ?
-				null : this.planetLayer.ToString())
-				,PlanetLayerDef, d => this.planetLayer = d, d => d.label,new Vector2(120f,25f)); 
-            this.DrawBiomeFilter(ref y, inRect, x + 7f);
-            this.DrawWorldConditions(ref y, inRect, x + 7f);
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_Root_CustomMap.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawBiomeFilter(ref float y, Rect inRect, float x)
 
-		private void DrawBiomeFilter(ref float y, Rect inRect, float x)
-		{
-			this.DrawSectionHeader(
-				ref y,
-				inRect,
-				x,
-				this.enableBlack ? "BiomesBlackList".Translate() : "BiomesWhiteList".Translate(),
-				() => CQFEditorTools.DrawFloatMenu<BiomeDef>(
-					DefDatabase<BiomeDef>.AllDefs.ToList().FindAll(b => !this.blacklist.Contains(b)),
-					b => this.blacklist.Add(b),
-					b => b.label),
-				() => CQFEditorTools.DrawFloatMenu<BiomeDef>(
-					this.blacklist,
-					b => this.blacklist.Remove(b),
-					b => b.label));
-			if (this.blacklist.NullOrEmpty())
-			{
-				Widgets.Label(new Rect(x, y, 600f, 25f), "NoBiomeFilters".Translate().Colorize(Color.gray));
-				y += 30f;
-				return;
-			}
-			foreach (BiomeDef biome in this.blacklist)
-			{
-				Widgets.Label(new Rect(x, y, 600f, 25f), (biome.label ?? biome.defName).CapitalizeFirst());
-				y += 25f;
-			}
-			y += 5f;
-		}
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_Root_CustomMap.DrawBiomeFilter(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawWorldConditions(ref float y, Rect inRect, float x)
 
-		private void DrawWorldConditions(ref float y, Rect inRect, float x)
-		{
-			this.DrawSectionHeader(
-				ref y,
-				inRect,
-				x,
-				"WorldConditions".Translate(),
-				() =>
-				{
-					List<Type> types = typeof(WorldCondition).AllSubclassesNonAbstract().ToList();
-					CQFEditorTools.DrawFloatMenu(types, t => this.worldConditions.Add((WorldCondition)Activator.CreateInstance(t)), t => t.Name.Translate());
-				},
-				() => CQFEditorTools.DrawFloatMenu<WorldCondition>(this.worldConditions, d => this.worldConditions.Remove(d), this.WorldConditionLabel));
-			if (this.worldConditions.NullOrEmpty())
-			{
-				Widgets.Label(new Rect(x, y, 600f, 25f), "NoWorldConditions".Translate().Colorize(Color.gray));
-				y += 30f;
-				return;
-			}
-			foreach (WorldCondition condition in this.worldConditions)
-			{
-				if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), this.WorldConditionLabel(condition), false))
-				{
-					Find.WindowStack.Add(new Dialog_EditIDrawable(condition));
-				}
-				y += 30f;
-			}
-			y += 5f;
-		}
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_Root_CustomMap.DrawWorldConditions(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawSectionHeader(ref float y, Rect inRect, float x, string title, Action addAction, Action removeAction)
 
-		private void DrawSectionHeader(ref float y, Rect inRect, float x, string title, Action addAction, Action removeAction)
-		{
-			Widgets.Label(new Rect(x, y, 400f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-			Rect button = new Rect(x + 420f, y, 30f, 30f);
-			if (Widgets.ButtonImage(button, TexButton.Plus))
-			{
-				addAction();
-			}
-			button.x += 40f;
-			if (Widgets.ButtonImage(button, TexButton.Delete))
-			{
-				removeAction();
-			}
-			y += 30f;
-		}
-
-		private string WorldConditionLabel(WorldCondition condition)
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x,
+                title,
+                addAction,
+                removeAction
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_Root_CustomMap.DrawSectionHeader(Ref:float,None:UnityEngine.Rect,None:float,None:string,None:System.Action,None:System.Action)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal string WorldConditionLabel(WorldCondition condition)
 		{
 			string typeName = condition.GetType().Name.Translate();
 			string targetName = null;

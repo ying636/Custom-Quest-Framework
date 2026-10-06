@@ -5,26 +5,20 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public class CustomMapStep_StartQuest : CustomMapStep
+    public class CustomMapStep_StartQuest : CustomMapStep
 {
     public override void Draw(ref float y, Rect inRect, float x)
-    {
-        float width = inRect.width - x - 12f;
-        Widgets.Label(new Rect(x, y, width, 30f), "CustomMapStep_StartQuest".Translate().Colorize(ColorLibrary.SkyBlue));
-        y += 35f;
-        if (Widgets.ButtonText(new Rect(x, y, width, 30f),
-                this.quest?.label ?? this.quest?.defName ?? "CQF_NotSelected".Translate(), false))
-        {
-            CQFEditorTools.DrawFloatMenu(DefDatabase<QuestScriptDef>.AllDefsListForReading,
-                q => this.quest = q, q => q.label ?? q.defName);
-        }
-        y += 35f;
-        Rect letterRect = new Rect(x, y, width, 30f);
-        Widgets.DrawHighlightIfMouseover(letterRect);
-        Widgets.CheckboxLabeled(letterRect.ContractedBy(6f, 2f), "CQF_StartQuest_SendLetter".Translate(), ref this.sendAvailableLetter);
-        y += 35f;
-    }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_StartQuest.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
         if (this.quest == null)

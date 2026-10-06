@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,23 +103,13 @@ namespace QuestEditor_Library
             }
         }
         public void DrawTab()
+
         {
-            Rect outRect = new Rect(0f, 0f, 540f, 590f);
-            float width = outRect.width - 40f;
-            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.height + 10f));
-            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
-            float x = 10f;
-            float y = 10f;
-
-            this.DrawSectionHeader(ref y, x, width, "CQF_PortalSettingsSection".Translate(), "CQF_PortalSettingsSectionTip".Translate());
-            CQFEditorTools.DrawLabelAndText_Line(y, "ExitName".Translate(), ref this.exitName, x + 8f, 150f);
-            y += 30f;
-
-            this.DrawActionSection(ref y, x, width);
-            this.height = y + 10f;
-            Widgets.EndScrollView();
-        }
-        //public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapExit.DrawTab()", this, arguments);
+        } //public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
         //{
         //    yield return new FloatMenuOption(this.GetExitText, delegate
         //    {
@@ -173,63 +163,36 @@ namespace QuestEditor_Library
         {
             return this.entrance == null ? IntVec3.Invalid : this.entrance.Position;
         }
+        internal void DrawActionSection(ref float y, float x, float width)
 
-        private void DrawActionSection(ref float y, float x, float width)
         {
-            this.DrawSectionHeader(ref y, x, width, "CQF_PortalEnterActions".Translate(), "CQF_PortalEnterActionsTip".Translate(),
-                () => CQFEditorTools.OpenCQFActionSelect(type => this.enterActions.Add((CQFAction)Activator.CreateInstance(type))),
-                () => CQFEditorTools.DrawFloatMenu(this.enterActions, action => this.enterActions.Remove(action), action => action.GetType().Name.Translate()),
-                this.enterActions.Any());
-            if (this.enterActions.Any())
+            object[] arguments = new object[]
             {
-                foreach (CQFAction action in this.enterActions)
-                {
-                    Rect rowRect = new Rect(x + 8f, y, width - 16f, 28f);
-                    Widgets.DrawHighlightIfMouseover(rowRect);
-                    if (Widgets.ButtonText(rowRect, action.GetType().Name.Translate(), false))
-                    {
-                        Find.WindowStack.Add(new Dialog_EditIDrawable(action));
-                    }
-                    y += 32f;
-                }
-            }
-            else
-            {
-                Widgets.Label(new Rect(x + 8f, y + 4f, width - 16f, 25f), "CQF_PortalNoActions".Translate().Colorize(Color.gray));
-                y += 32f;
-            }
-            y += 8f;
+                y,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapExit.DrawActionSection(Ref:float,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
-
-        private void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null,
+        internal void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null,
             Action addAction = null, Action removeAction = null, bool canRemove = false)
-        {
-            Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
-            Widgets.DrawHighlight(headerRect);
-            Rect labelRect = new Rect(x + 8f, y + 4f, width - 84f, 25f);
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.SkyBlue));
-            if (!tip.NullOrEmpty())
-            {
-                TooltipHandler.TipRegion(labelRect, tip);
-            }
-            if (addAction != null)
-            {
-                Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-                if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
-                {
-                    addAction();
-                }
-                TooltipHandler.TipRegion(buttonRect, "Add".Translate());
-                buttonRect.x += 30f;
-                if (Widgets.ButtonImage(buttonRect, TexButton.Delete) && canRemove)
-                {
-                    removeAction?.Invoke();
-                }
-                TooltipHandler.TipRegion(buttonRect, "Remove".Translate());
-            }
-            y += 38f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label,
+                tip,
+                addAction,
+                removeAction,
+                canRemove
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapExit.DrawSectionHeader(Ref:float,None:float,None:float,None:string,None:string,None:System.Action,None:System.Action,None:bool)", this, arguments);
+            y = (float)arguments[0];
+        }
         private void TriggerEnterActions(Thing thing)
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>

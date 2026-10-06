@@ -12,7 +12,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("defName", this.defName));
             if (!this.maps.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.maps, "maps"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.maps, "maps"));
             }
             return result;
         }

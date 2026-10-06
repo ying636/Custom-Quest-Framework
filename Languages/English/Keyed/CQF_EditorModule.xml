@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_Editor_Enable>Enable editor</CQF_Editor_Enable>
+  <CQF_Editor_EnableHint>The framework always runs. Editor tools and AI editing are loaded only when this option is enabled at game startup.</CQF_Editor_EnableHint>
+  <CQF_Editor_RestartRequired>Restart RimWorld to apply this change.</CQF_Editor_RestartRequired>
+  <CQF_Editor_LoadFailed>The editor failed to load. The framework is still available. See the log for details.</CQF_Editor_LoadFailed>
+  <CQF_Editor_NotLoaded>The editor is not loaded. Enable it in CQF Mod settings and restart RimWorld.</CQF_Editor_NotLoaded>
+  <CQF_Editor_MissingFile>The editor DLL is missing.</CQF_Editor_MissingFile>
+  <CQF_Editor_VersionMismatch>The framework and editor versions do not match.</CQF_Editor_VersionMismatch>
+</LanguageData>

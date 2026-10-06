@@ -21,24 +21,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_Appearance data = pawnDef.DataFor<PawnModData_Appearance>();
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Hair".Translate(this.ValueOrNone(data.hair?.label))))
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<HairDef>.AllDefsListForReading, hair => data.hair = hair, hair => hair.label);
-            }
-            this.DrawColorRow(ref y, inRect, x, "CQF_PawnEditor_SelectHairColor".Translate(), data.hairColor ?? Color.white, color => data.hairColor = this.Opaque(color));
-            this.DrawColorRow(ref y, inRect, x, this.SkinColorLabel(data), data.skinColor, color => data.skinColor = this.Opaque(color), () => data.skinColor = null);
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_HeadType".Translate(this.ValueOrNone(data.head?.defName))))
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<HeadTypeDef>.AllDefsListForReading, head => data.head = head, head => head.defName);
-            }
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_BodyType".Translate(this.ValueOrNone(this.BodyTypeLabel(data.bodyType)))))
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<BodyTypeDef>.AllDefsListForReading, body => data.bodyType = body, this.BodyTypeLabel);
-            }
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Appearance.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void ApplyToPawn(ComplexPawnDef pawnDef, Pawn pawn, bool preview)
         {
             PawnModData_Appearance data = pawnDef.DataFor<PawnModData_Appearance>();
@@ -68,8 +62,7 @@ namespace QuestEditor_Library
             data.hairColor = node["hairColor"] == null ? Color.white : ParseHelper.FromString<Color>(node["hairColor"].InnerText);
             data.skinColor = node["skinColor"] == null ? null : ParseHelper.FromString<Color>(node["skinColor"].InnerText);
         }
-
-        private string BodyTypeLabel(BodyTypeDef bodyType)
+        internal string BodyTypeLabel(BodyTypeDef bodyType)
         {
             if (bodyType == null)
             {
@@ -77,8 +70,7 @@ namespace QuestEditor_Library
             }
             return bodyType.defName.CanTranslate() ? bodyType.defName.Translate().ToString() : bodyType.defName;
         }
-
-        private string SkinColorLabel(PawnModData_Appearance data)
+        internal string SkinColorLabel(PawnModData_Appearance data)
         {
             return "CQF_PawnEditor_SelectSkinColor".Translate(data.skinColor == null ? "CQF_PawnEditor_DefaultSkinColor".Translate() : "CQF_PawnEditor_CustomSkinColor".Translate());
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -11,10 +11,11 @@ namespace QuestEditor_Library
     {
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            foreach (Gizmo gizmo in base.GetGizmos()) 
+            foreach (Gizmo gizmo in base.GetGizmos())
             {
                 yield return gizmo;
             }
+            if (!CQFEditorBridge.IsLoaded) yield break;
             yield return new Command_Action
             {
                 defaultLabel = "DEV:Destroy this",

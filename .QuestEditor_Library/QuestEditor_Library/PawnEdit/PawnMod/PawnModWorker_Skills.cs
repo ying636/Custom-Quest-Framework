@@ -21,17 +21,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_Skills modData = pawnDef.DataFor<PawnModData_Skills>();
-            foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefsListForReading.OrderBy(def => def.listOrder))
-            {
-                SkillData data = this.DataFor(modData.skills, skill);
-                Rect row = new Rect(x, y, Mathf.Min(360f, inRect.width - x - 20f), 26f);
-                this.DrawSkillRow(skill, data, row);
-                y += 30f;
-            }
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Skills.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void ApplyToPawn(ComplexPawnDef pawnDef, Pawn pawn, bool preview)
         {
             if (pawn.skills == null)
@@ -56,8 +57,7 @@ namespace QuestEditor_Library
                 pawnDef.DataFor<PawnModData_Skills>().skills = this.LoadSaveableList<SkillData>(node["skills"]);
             }
         }
-
-        private SkillData DataFor(List<SkillData> list, SkillDef skill)
+        internal SkillData DataFor(List<SkillData> list, SkillDef skill)
         {
             SkillData result = list.FirstOrDefault(data => data.def == skill);
             if (result == null)
@@ -67,47 +67,18 @@ namespace QuestEditor_Library
             }
             return result;
         }
+        internal void DrawSkillRow(SkillDef skill, SkillData data, Rect row)
 
-        private void DrawSkillRow(SkillDef skill, SkillData data, Rect row)
         {
-            if (Mouse.IsOver(row))
+            object[] arguments = new object[]
             {
-                GUI.DrawTexture(row, TexUI.HighlightTex);
-            }
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Rect labelRect = new Rect(row.x + 6f, row.y, 100f, row.height);
-            Widgets.Label(labelRect, skill.skillLabel.CapitalizeFirst().Colorize(ColorLibrary.PaleBlue));
-
-            Rect passionRect = new Rect(labelRect.xMax, row.y + 1f, 24f, 24f);
-            Widgets.DrawLightHighlight(passionRect);
-            Widgets.DrawBox(passionRect, 1);
-            Widgets.DrawHighlightIfMouseover(passionRect);
-            if (data.passion == Passion.Minor)
-            {
-                GUI.DrawTexture(passionRect, SkillUI.PassionMinorIcon);
-            }
-            else if (data.passion == Passion.Major)
-            {
-                GUI.DrawTexture(passionRect, SkillUI.PassionMajorIcon);
-            }
-            if (Widgets.ButtonInvisible(passionRect))
-            {
-                CQFEditorTools.DrawFloatMenu(this.Passions, passion => data.passion = passion, this.PassionLabel);
-            }
-            TooltipHandler.TipRegion(passionRect, "CQF_PawnEditor_SkillPassion".Translate(this.PassionLabel(data.passion)));
-
-            Rect barRect = new Rect(passionRect.xMax + 4f, row.y + 1f, row.xMax - passionRect.xMax - 10f, 24f);
-            if (Mouse.IsOver(barRect))
-            {
-                this.UpdateLevelByMouse(data, barRect);
-            }
-            Widgets.FillableBar(barRect, Mathf.Max(0.01f, Mathf.Clamp(data.level, 0, 20) / 20f), this.SkillBarFillTex, null, false);
-            Widgets.Label(new Rect(barRect.x + 6f, barRect.y + 2f, 40f, 20f), Mathf.Clamp(data.level, 0, 20).ToStringCached());
-            TooltipHandler.TipRegion(barRect, "CQF_PawnEditor_SkillLevel".Translate());
-            Text.Anchor = TextAnchor.UpperLeft;
+                skill,
+                data,
+                row
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Skills.DrawSkillRow(None:RimWorld.SkillDef,None:QuestEditor_Library.SkillData,None:UnityEngine.Rect)", this, arguments);
         }
-
-        private void UpdateLevelByMouse(SkillData data, Rect barRect)
+        internal void UpdateLevelByMouse(SkillData data, Rect barRect)
         {
             UnityEngine.Event current = UnityEngine.Event.current;
             if (current.type != EventType.MouseDown && current.type != EventType.MouseDrag)
@@ -123,14 +94,11 @@ namespace QuestEditor_Library
             data.levelBuffer = data.level.ToString();
             current.Use();
         }
-
-        private string PassionLabel(Passion passion)
+        internal string PassionLabel(Passion passion)
         {
             return ("Passion" + passion).Translate();
         }
-
-        private List<Passion> Passions => new List<Passion> { Passion.None, Passion.Minor, Passion.Major };
-
-        private readonly Texture2D SkillBarFillTex = SolidColorMaterials.NewSolidColorTexture(new Color(1f, 1f, 1f, 0.12f));
+        internal List<Passion> Passions => new List<Passion> { Passion.None, Passion.Minor, Passion.Major };
+        internal readonly Texture2D SkillBarFillTex = SolidColorMaterials.NewSolidColorTexture(new Color(1f, 1f, 1f, 0.12f));
     }
 }

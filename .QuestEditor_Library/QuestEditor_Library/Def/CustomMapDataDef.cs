@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -727,23 +727,23 @@ add(p3))));
             }
             if (this.replaces.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.replaces, "replaces"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.replaces, "replaces"));
             }
             if (this.customThings.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.customThings, "customThings"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.customThings, "customThings"));
             }
             if (this.specialSpawnPawns.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary_Saveable_List(this.specialSpawnPawns, "specialSpawnPawns"));
+                result.Add(CQFSerialization.SaveDictionary_Saveable_List(this.specialSpawnPawns, "specialSpawnPawns"));
             }
             if (this.pawns.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary_Saveable_List(this.pawns, "pawns"));
+                result.Add(CQFSerialization.SaveDictionary_Saveable_List(this.pawns, "pawns"));
             }
             if (this.enterSpots.Any())
             {
-                result.Add(CQFEditorTools.SaveList(this.enterSpots, "enterSpots"));
+                result.Add(CQFSerialization.SaveList(this.enterSpots, "enterSpots"));
             }
             if (this.enterDirection.IsValid)
             {
@@ -751,47 +751,47 @@ add(p3))));
             }
             if (this.routes.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary_List(this.routes, "routes"));
+                result.Add(CQFSerialization.SaveDictionary_List(this.routes, "routes"));
             }
             if (this.roofRects.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary_List(this.roofRects, "roofRects"));
+                result.Add(CQFSerialization.SaveDictionary_List(this.roofRects, "roofRects"));
             }
             if (this.terrainsRect.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary_List(this.terrainsRect, "terrainsRect"));
+                result.Add(CQFSerialization.SaveDictionary_List(this.terrainsRect, "terrainsRect"));
             }
             if (!this.terrainsColorRect.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveDictionary_List(this.terrainsColorRect, "terrainsColorRect"));
+                result.Add(CQFSerialization.SaveDictionary_List(this.terrainsColorRect, "terrainsColorRect"));
             }
             if (this.thingDatas.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.thingDatas, "thingDatas"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.thingDatas, "thingDatas"));
             }
             if (this.zoneCores.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.zoneCores, "zoneCores"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.zoneCores, "zoneCores"));
             }
             if (this.preCustomSteps.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.preCustomSteps, "preCustomSteps"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.preCustomSteps, "preCustomSteps"));
             }
             if (this.customSteps.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.customSteps, "customSteps"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.customSteps, "customSteps"));
             }
             if (this.tags.Any())
             {
-                result.Add(CQFEditorTools.SaveList(this.tags, "tags"));
+                result.Add(CQFSerialization.SaveList(this.tags, "tags"));
             }
             if (this.disgenerate.Any())
             {
-                result.Add(CQFEditorTools.SaveList(this.disgenerate, "disgenerate"));
+                result.Add(CQFSerialization.SaveList(this.disgenerate, "disgenerate"));
             }
             if (this.disdestroy.Any())
             {
-                result.Add(CQFEditorTools.SaveList(this.disdestroy, "disdestroy"));
+                result.Add(CQFSerialization.SaveList(this.disdestroy, "disdestroy"));
             }
             if (this.reserveThing != null && this.reserveThing.def != null)
             {
@@ -799,15 +799,15 @@ add(p3))));
             }
             if (this.lordDatas != null && this.lordDatas.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.lordDatas, "lordDatas"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.lordDatas, "lordDatas"));
             }
             if (this.generationActions != null && this.generationActions.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.generationActions, "generationActions"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.generationActions, "generationActions"));
             }
             if (this.mapPartGenerationLimit != null && this.mapPartGenerationLimit.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.mapPartGenerationLimit, "mapPartGenerationLimit"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.mapPartGenerationLimit, "mapPartGenerationLimit"));
             }
             return result;
         }
@@ -961,7 +961,7 @@ add(p3))));
         {
             XElement result = new XElement(nodeName);
             result.Add(new XElement("pos", this.pos.ToString()));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions,"actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions,"actions"));
             return result;
         }
 
@@ -1008,20 +1008,16 @@ add(p3))));
             return def;
         }  
         public virtual void Draw(ref float y, Rect inRect, float x)
-        {
-            float width = inRect.width - x - 12f;
-            Rect nameSection = new Rect(x, y, width, 78f);
-            Widgets.DrawMenuSection(nameSection);
-            Widgets.Label(new Rect(x + 12f, y + 8f, width - 24f, 25f),
-                "DataName".Translate().Colorize(ColorLibrary.PaleBlue));
-            this.dataName = Widgets.TextField(new Rect(x + 12f, y + 39f, width - 24f, 27f), this.dataName);
-            y = nameSection.yMax + 10f;
 
-            this.DrawThingReplacementSection(ref y, x, width, "ThingReplacement".Translate(),
-                this.replaceThings, this.OpenThingReplacementSelector);
-            this.DrawThingReplacementSection(ref y, x, width, "StuffReplacement".Translate(),
-                this.replaceStuffs, this.OpenStuffReplacementSelector);
-            this.DrawTerrainReplacementSection(ref y, x, width);
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ReplaceData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual XElement SaveToXElement(string nodeName)
         {
@@ -1036,15 +1032,15 @@ add(p3))));
             }
             if (this.replaceThings.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary(this.replaceThings, "replaceThings"));
+                result.Add(CQFSerialization.SaveDictionary(this.replaceThings, "replaceThings"));
             }
             if (this.replaceTerrains.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary(this.replaceTerrains, "replaceTerrains"));
+                result.Add(CQFSerialization.SaveDictionary(this.replaceTerrains, "replaceTerrains"));
             }
             if (this.replaceStuffs.Any())
             {
-                result.Add(CQFEditorTools.SaveDictionary(this.replaceStuffs, "replaceStuffs"));
+                result.Add(CQFSerialization.SaveDictionary(this.replaceStuffs, "replaceStuffs"));
             }
             return result;
         }
@@ -1103,60 +1099,35 @@ add(p3))));
                     ; break;
             }
         }
-
-        private void DrawThingReplacementSection(ref float y, float x, float width, string title,
+        internal void DrawThingReplacementSection(ref float y, float x, float width, string title,
             Dictionary<string, string> replacements, Action addAction)
+
         {
-            float sectionHeight = 50f + Math.Max(1, replacements.Count) * 42f;
-            Rect sectionRect = new Rect(x, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
-            this.DrawReplacementHeader(y, x, width, title, addAction,
-                () => CQFEditorTools.DrawFloatMenu(replacements.ToList(),
-                    pair => replacements.Remove(pair.Key), this.GetThingReplacementLabel));
-
-            float rowY = y + 42f;
-            if (!replacements.Any())
+            object[] arguments = new object[]
             {
-                Widgets.Label(new Rect(x + 14f, rowY + 5f, width - 28f, 25f), "-");
-            }
-            foreach (KeyValuePair<string, string> pair in replacements)
-            {
-                ThingDef source = DefDatabase<ThingDef>.GetNamedSilentFail(pair.Key);
-                ThingDef target = DefDatabase<ThingDef>.GetNamedSilentFail(pair.Value);
-                this.DrawReplacementRow(new Rect(x + 10f, rowY, width - 20f, 36f),
-                    source, source?.label ?? pair.Key, target, target?.label ?? pair.Value);
-                rowY += 42f;
-            }
-            y = sectionRect.yMax + 10f;
+                y,
+                x,
+                width,
+                title,
+                replacements,
+                addAction
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ReplaceData.DrawThingReplacementSection(Ref:float,None:float,None:float,None:string,None:System.Collections.Generic.Dictionary<string, string>,None:System.Action)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawTerrainReplacementSection(ref float y, float x, float width)
 
-        private void DrawTerrainReplacementSection(ref float y, float x, float width)
         {
-            float sectionHeight = 50f + Math.Max(1, this.replaceTerrains.Count) * 42f;
-            Rect sectionRect = new Rect(x, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
-            this.DrawReplacementHeader(y, x, width, "TerrainReplacement".Translate(),
-                this.OpenTerrainReplacementSelector,
-                () => CQFEditorTools.DrawFloatMenu(this.replaceTerrains.ToList(),
-                    pair => this.replaceTerrains.Remove(pair.Key), this.GetTerrainReplacementLabel));
-
-            float rowY = y + 42f;
-            if (!this.replaceTerrains.Any())
+            object[] arguments = new object[]
             {
-                Widgets.Label(new Rect(x + 14f, rowY + 5f, width - 28f, 25f), "-");
-            }
-            foreach (KeyValuePair<string, string> pair in this.replaceTerrains)
-            {
-                TerrainDef source = DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Key);
-                TerrainDef target = DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Value);
-                this.DrawReplacementRow(new Rect(x + 10f, rowY, width - 20f, 36f),
-                    source, source?.label ?? pair.Key, target, target?.label ?? pair.Value);
-                rowY += 42f;
-            }
-            y = sectionRect.yMax + 10f;
+                y,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ReplaceData.DrawTerrainReplacementSection(Ref:float,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
-
-        private void DrawReplacementHeader(float y, float x, float width, string title,
+        internal void DrawReplacementHeader(float y, float x, float width, string title,
             Action addAction, Action removeAction)
         {
             Widgets.Label(new Rect(x + 12f, y + 9f, width - 96f, 25f), title.Colorize(ColorLibrary.PaleBlue));
@@ -1173,43 +1144,30 @@ add(p3))));
             }
             TooltipHandler.TipRegion(removeRect, "Remove".Translate());
         }
+        internal void DrawReplacementRow(Rect rect, Def source, string sourceLabel, Def target, string targetLabel)
 
-        private void DrawReplacementRow(Rect rect, Def source, string sourceLabel, Def target, string targetLabel)
         {
-            Widgets.DrawHighlightIfMouseover(rect);
-            float sideWidth = (rect.width - 58f) / 2f;
-            Rect sourceIconRect = new Rect(rect.x + 4f, rect.y + 3f, 30f, 30f);
-            if (source != null)
+            object[] arguments = new object[]
             {
-                Widgets.DefIcon(sourceIconRect, source);
-            }
-            Widgets.Label(new Rect(sourceIconRect.xMax + 6f, rect.y + 6f, sideWidth - 40f, 25f), sourceLabel);
-
-            Rect arrowRect = new Rect(rect.center.x - 14f, rect.y + 4f, 28f, 28f);
-            Widgets.DrawTextureFitted(arrowRect, QuestEditor_SaveMapToFile.arrowIcon, 1f);
-
-            Rect targetIconRect = new Rect(rect.center.x + 20f, rect.y + 3f, 30f, 30f);
-            if (target != null)
-            {
-                Widgets.DefIcon(targetIconRect, target);
-            }
-            Widgets.Label(new Rect(targetIconRect.xMax + 6f, rect.y + 6f, sideWidth - 40f, 25f), targetLabel);
-            TooltipHandler.TipRegion(rect, sourceLabel + " -> " + targetLabel);
+                rect,
+                source,
+                sourceLabel,
+                target,
+                targetLabel
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ReplaceData.DrawReplacementRow(None:UnityEngine.Rect,None:Verse.Def,None:string,None:Verse.Def,None:string)", this, arguments);
         }
-
-        private string GetThingReplacementLabel(KeyValuePair<string, string> pair)
+        internal string GetThingReplacementLabel(KeyValuePair<string, string> pair)
         {
             return (DefDatabase<ThingDef>.GetNamedSilentFail(pair.Key)?.label ?? pair.Key) + " -> " +
                 (DefDatabase<ThingDef>.GetNamedSilentFail(pair.Value)?.label ?? pair.Value);
         }
-
-        private string GetTerrainReplacementLabel(KeyValuePair<string, string> pair)
+        internal string GetTerrainReplacementLabel(KeyValuePair<string, string> pair)
         {
             return (DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Key)?.label ?? pair.Key) + " -> " +
                 (DefDatabase<TerrainDef>.GetNamedSilentFail(pair.Value)?.label ?? pair.Value);
         }
-
-        private void OpenThingReplacementSelector()
+        internal void OpenThingReplacementSelector()
         {
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.FindAll(t => !t.IsCorpse &&
                 t.category != ThingCategory.Mote && t.category != ThingCategory.Projectile &&
@@ -1217,14 +1175,12 @@ add(p3))));
                 t.category != ThingCategory.Attachment);
             this.OpenThingReplacementSelector(defs, this.replaceThings);
         }
-
-        private void OpenStuffReplacementSelector()
+        internal void OpenStuffReplacementSelector()
         {
             this.OpenThingReplacementSelector(
                 DefDatabase<ThingDef>.AllDefsListForReading.FindAll(def => def.IsStuff), this.replaceStuffs);
         }
-
-        private void OpenThingReplacementSelector(List<ThingDef> defs, Dictionary<string, string> replacements)
+        internal void OpenThingReplacementSelector(List<ThingDef> defs, Dictionary<string, string> replacements)
         {
             Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(defs,
                 def => def.uiIcon, def => def.label,
@@ -1236,8 +1192,7 @@ add(p3))));
                 def => def.graphicData == null ? Color.white : def.graphicData.color),
                 "SelectReplacedThing".Translate()));
         }
-
-        private void OpenTerrainReplacementSelector()
+        internal void OpenTerrainReplacementSelector()
         {
             List<TerrainDef> terrains = DefDatabase<TerrainDef>.AllDefsListForReading;
             Find.WindowStack.Add(new Dialog_Select<TerrainDef>(new TextureSelectDrawer<TerrainDef>(terrains,
@@ -1293,17 +1248,18 @@ add(p3))));
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            if (Widgets.ButtonText(new Rect(x,y,250f,25f),"ReplacementDef".Translate(this.def?.defName),false)) 
-            {
-                CQFEditorTools.DrawFloatMenu<ReplacementDataDef>(DefDatabase<ReplacementDataDef>.AllDefsListForReading,d => this.def = d,d => d.defName);
-            }
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ReplaceData_Def.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public ReplacementDataDef def;
         public ReplaceData data;
     }
 }
-
-

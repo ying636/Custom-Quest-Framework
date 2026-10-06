@@ -35,32 +35,17 @@ namespace QuestEditor_Library
         }
 
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            y += 5f;
-            CQFEditorTools.DrawEditableList(this.datas, ref y, (textField, t) =>
-            {
-                string buttomText = "CustomMapDef".Translate(t.data?.label);
-                if (Widgets.ButtonText(textField, buttomText, false))
-                {
-                    CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, (d) => t.data = d, (d) => d.label);
-                }
-                Rect chance = new Rect(Text.CalcSize(buttomText).x + textField.x + 10f, textField.y, 100f, 25f);
-                Widgets.Label(chance, "Chance".Translate());
-                chance.x += 80f;
-                Widgets.TextFieldPercent(chance, ref t.weight, ref t.buffer);
-            }, t => t.data?.label, "MapDefWithChance".Translate(), "MapDefWithChance_Tip".Translate(), true, 15f, 350f);
-            y += 5f;
-            CQFEditorTools.DrawEditableList(this.tags, ref y, (textField, t) =>
-            {
-                t.tag = Widgets.TextField(textField, t.tag);
-                Rect chance = new Rect(textField.width + textField.x + 10f, textField.y, 100f, 25f);
-                Widgets.Label(chance, "LootChance".Translate());
-                chance.x += 80f;
-                Widgets.TextFieldPercent(chance, ref t.weight, ref t.buffer);
-            }, t => t.tag, "TagWithChance".Translate(), "TagWithChance_Tip".Translate(), true, 15f, 350f);
-            y += 5f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapGenerationSet.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public void ExposeData()
         {
             Scribe_Collections.Look(ref this.tags, "tags",LookMode.Deep);

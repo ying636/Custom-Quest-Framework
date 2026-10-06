@@ -16,29 +16,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_Weapon modData = pawnDef.DataFor<PawnModData_Weapon>();
-            if (modData.weapon == null)
-            {
-                modData.weapon = new ThingData();
-            }
-            Rect row = new Rect(x, y, inRect.width - x - 20f, 30f);
-            Rect iconRect = new Rect(row.x, row.y + 3f, 24f, 24f);
-            if (modData.weapon.def?.uiIcon != null)
-            {
-                Widgets.DrawTextureFitted(iconRect, modData.weapon.def.uiIcon, 1f);
-            }
-            if (this.DrawTextButton(new Rect(iconRect.xMax + 8f, row.y, row.width - 120f, 30f), "CQF_PawnEditor_Weapon".Translate(this.ThingLabel(modData.weapon))))
-            {
-                this.OpenSelectDialog(modData.weapon);
-            }
-            if (this.DrawCommandText(new Rect(row.xMax - 100f, row.y, 100f, 30f), "CQF_PawnEditor_Delete".Translate()))
-            {
-                modData.weapon = null;
-            }
-            this.EndRow(ref y);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Weapon.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void ApplyToPawn(ComplexPawnDef pawnDef, Pawn pawn, bool preview)
         {
             if (pawn.equipment == null)
@@ -65,8 +54,7 @@ namespace QuestEditor_Library
                 pawnDef.DataFor<PawnModData_Weapon>().weapon = DirectXmlToObject.ObjectFromXml<ThingData>(node["weapon"], false);
             }
         }
-
-        private void OpenSelectDialog(ThingData data)
+        internal void OpenSelectDialog(ThingData data)
         {
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWeapon).ToList();
             Find.WindowStack.Add(new Dialog_Select<ThingDef>(new LabeledTextureSelectDrawer<ThingDef>(defs, def => def.uiIcon, def => def.label, def =>
@@ -94,8 +82,7 @@ namespace QuestEditor_Library
             data.hitPoint = def.BaseMaxHitPoints;
             data.stuff = def.MadeFromStuff ? stuff : null;
         }
-
-        private string ThingLabel(ThingData data)
+        internal string ThingLabel(ThingData data)
         {
             if (data?.def == null)
             {

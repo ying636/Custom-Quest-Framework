@@ -16,4 +16,10 @@
   <CQF_SignalBook_OpenDescription>打开信号本，编辑共用信号，并保存或读取配置。</CQF_SignalBook_OpenDescription>
   <CQF_SignalBook_SelectSignal>点击从信号本选择信号；也可以直接在文本框中编辑。</CQF_SignalBook_SelectSignal>
   <CQF_SignalBook_ClearDefaultConfiguration>取消默认</CQF_SignalBook_ClearDefaultConfiguration>
+  <CQF_SignalBook_NewConfiguration>新建配置</CQF_SignalBook_NewConfiguration>
+  <CQF_SignalBook_UnsavedConfiguration>未保存的配置</CQF_SignalBook_UnsavedConfiguration>
+  <CQF_SignalBook_DefaultIndicator>（默认）</CQF_SignalBook_DefaultIndicator>
+  <CQF_SignalBook_SelectConfiguration>点击选择并读取已保存的配置；星号表示有未保存的修改。</CQF_SignalBook_SelectConfiguration>
+  <CQF_SignalBook_NoDefaultConfiguration>无</CQF_SignalBook_NoDefaultConfiguration>
+  <CQF_SignalBook_ConfigurationExists>已有同名配置，请输入其他名称。</CQF_SignalBook_ConfigurationExists>
 </LanguageData>

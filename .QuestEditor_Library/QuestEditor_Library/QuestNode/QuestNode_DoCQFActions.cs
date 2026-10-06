@@ -1,11 +1,11 @@
-﻿using RimWorld;
+using RimWorld;
 using RimWorld.QuestGen;
 using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
 
-public class QuestNode_DoCQFActions : QuestNode,IDrawable
+    public class QuestNode_DoCQFActions : QuestNode,IDrawable
 {
     protected override void RunInt()
     {
@@ -16,13 +16,18 @@ public class QuestNode_DoCQFActions : QuestNode,IDrawable
         part.actions = this.actions;
     }
     public void Draw(ref float y, Rect inRect, float x)
-    { 
-        CQFSignalEditor.DrawBookField(y, "inSignal".Translate(), inSignal.ToString(), value => inSignal = new SlateRef<string>(value), x, 100f, inRect.width - x - 12f);
-        y += 30f;
-        CQFEditorTools.DrawActionList_UseWindow(ref y,x,this.actions,inRect,"TriggerActions".Translate(),
-            a => a.GetType().Name.Translate());
-    }
-    protected override bool TestRunInt(Slate slate)
+
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_DoCQFActions.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
+        protected override bool TestRunInt(Slate slate)
     {
         return true;
     }
@@ -32,7 +37,7 @@ public class QuestNode_DoCQFActions : QuestNode,IDrawable
     public List<CQFAction> actions = new List<CQFAction>();
 }
 
-public class QuestPart_DoCQFActions : QuestPart
+    public class QuestPart_DoCQFActions : QuestPart
 {
     public override void Notify_QuestSignalReceived(Signal signal)
     {

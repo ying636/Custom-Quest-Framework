@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,27 +34,23 @@ namespace QuestEditor_Library
             result.Add(new XElement("faction", this.faction));
             if (this.actions.Any()) 
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             }
             return result;
         }
 
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            CQFEditorTools.DrawLabelAndText_Line(y,"LordName".Translate(),ref this.name,x,100f);
-            y += 30f;
-            this.Data.Draw(ref y,inRect,x);
-            CQFEditorTools.DrawSelectableText(y, "MapDataFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll((f) => !f.isPlayer), (f) => this.faction = f.defName, (f) => f.label, new List<FloatMenuOption>()
-            {
-                new FloatMenuOption("RandomHostile".Translate(),() => this.faction = "RandomHostile"),
-                new FloatMenuOption("RandomAlly".Translate(),() => this.faction = "RandomAlly"),
-                new FloatMenuOption("RandomNeutral".Translate(),() => this.faction = "RandomNeutral"),
-                new FloatMenuOption("PawnDataMapFaction".Translate(),() => this.faction = "MapFaction")
-            }), x, 120f);
-            y += 30f;
-            CQFEditorTools.DrawIDrawList_UseWindow_UseIcon(ref y,x,this.actions,inRect,"ActionsAfterGeneration".Translate(),a => a.GetType().Name.Translate());
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LordData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.name,"name");
@@ -87,57 +83,28 @@ namespace QuestEditor_Library
             return result;
         }
         public virtual void Draw(ref float y, Rect inRect, float x)
+
         {
-            this.DrawName(ref y,inRect,x);
-            y += 30f;
-            if (this.JobSelectable)
+            object[] arguments = new object[]
             {
-                if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordJob".Translate(this.lordJob.Name.CanTranslate() ? this.lordJob.Name.Translate().ToString() : this.lordJob.Name), false))
-                {
-                    Find.WindowStack.Add(new Dialog_Select<Type>(
-                        new TextSelectDrawer<Type>(
-                            typeof(LordJob).AllSubclassesNonAbstract(),
-                            t => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name,
-                            t => this.lordJob = t,
-                            null,
-                            t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""),
-                        "Select".Translate()));
-                }
-            }
-            else 
-            {
-                Widgets.Label(new Rect(x, y, 350f, 25f), "CQF_LordJob".Translate(this.LordJob.Name.CanTranslate() ? this.LordJob.Name.Translate().ToString() : this.LordJob.Name));
-            }
-            y += 30f;
-            if (this.lordJob == typeof(LordJob_ComplexCustom))
-            {
-                this.DrawComplexDutyMap(ref y, x);
-            }
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LordJobData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual void DrawName(ref float y, Rect inRect, float x)
-        {      
-            Rect rect = new Rect(x, y, 250f, 25f);
-            if (Widgets.ButtonText(rect, this.GetType().Name.Translate(), false))
+
+        {
+            object[] arguments = new object[]
             {
-                List<Type> types = typeof(LordJobData).AllSubclassesNonAbstract().ListFullCopy();
-                types.Add(typeof(LordJobData));
-                Find.WindowStack.Add(new Dialog_Select<Type>(
-                    new TextSelectDrawer<Type>(
-                        types,
-                        t => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name,
-                        t =>
-                        {
-                            this.lordData.lordJobData = (LordJobData)Activator.CreateInstance(t);
-                            this.lordData.lordJobData.lordData = this.lordData;
-                        },
-                        null,
-                        t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""),
-                    "Select".Translate()));
-            }
-            if ((this.GetType().Name + "_Tip").CanTranslate())
-            {
-                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
-            }
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LordJobData.DrawName(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual XElement SaveToXElement(string nodeName)
         {
@@ -169,22 +136,18 @@ namespace QuestEditor_Library
         public LordData lordData;
         public DutyMapDef dutyMap;
         public string dutyMapStartNodeId;
+        internal void DrawComplexDutyMap(ref float y, float x)
 
-        private void DrawComplexDutyMap(ref float y, float x)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordData_DutyMap".Translate(this.dutyMap?.defName ?? "Null"), false))
+            object[] arguments = new object[]
             {
-                Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(new TextSelectDrawer<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, d => d.defName, d => this.dutyMap = d, null, null, null, null, null, null), "Select".Translate()));
-            }
-            y += 30f;
-            if (this.dutyMap != null && this.dutyMap.nodes.Any())
-            {
-                CQFEditorTools.DrawSelectableText(y, "CQF_LordData_DutyMapStartNode".Translate(), ref this.dutyMapStartNodeId, () =>
-                    CQFEditorTools.DrawFloatMenu(this.dutyMap.nodes, node => this.dutyMapStartNodeId = node.nodeId, node => node.nodeId), x, 180f);
-                y += 30f;
-            }
+                y,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LordJobData.DrawComplexDutyMap(Ref:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
-    }
+}
     public class LordJobData_DefendBase : LordJobData 
     {
         public override bool JobSelectable => false;
@@ -195,14 +158,17 @@ namespace QuestEditor_Library
                 GameTools.GetTarget(null,quest,this.targetPositionName).Cell,10);
         }
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "TargetPositionName".Translate(),ref this.targetPositionName,x,150);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "PawnDataFaction".Translate(), ref this.faction, x,150);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LordJobData_DefendBase.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void ExposeData()
         {
             base.ExposeData();

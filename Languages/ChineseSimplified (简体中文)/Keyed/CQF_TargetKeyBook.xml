@@ -16,4 +16,10 @@
   <CQF_TargetKeyBook_OpenDescription>打开目标键本，编辑共用键名，并保存或读取配置。各张地图需要分别绑定目标物体。</CQF_TargetKeyBook_OpenDescription>
   <CQF_TargetKeyBook_SelectKey>点击从目标键本选择键名；也可以直接在文本框中编辑。</CQF_TargetKeyBook_SelectKey>
   <CQF_TargetKeyBook_ClearDefaultConfiguration>取消默认</CQF_TargetKeyBook_ClearDefaultConfiguration>
+  <CQF_TargetKeyBook_NewConfiguration>新建配置</CQF_TargetKeyBook_NewConfiguration>
+  <CQF_TargetKeyBook_UnsavedConfiguration>未保存的配置</CQF_TargetKeyBook_UnsavedConfiguration>
+  <CQF_TargetKeyBook_DefaultIndicator>（默认）</CQF_TargetKeyBook_DefaultIndicator>
+  <CQF_TargetKeyBook_SelectConfiguration>点击选择并读取已保存的配置；星号表示有未保存的修改。</CQF_TargetKeyBook_SelectConfiguration>
+  <CQF_TargetKeyBook_NoDefaultConfiguration>无</CQF_TargetKeyBook_NoDefaultConfiguration>
+  <CQF_TargetKeyBook_ConfigurationExists>已有同名配置，请输入其他名称。</CQF_TargetKeyBook_ConfigurationExists>
 </LanguageData>

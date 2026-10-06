@@ -6,7 +6,7 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
+    public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
 {
     public CustomMapBackgroundData()
     {
@@ -36,34 +36,17 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
     }
 
     public void Draw(ref float y, Rect inRect, float x)
-    {
-        Widgets.Label(new Rect(x, y, inRect.width - 40f, 30f), "CustomMapStep_MapBackground".Translate().Colorize(ColorLibrary.SkyBlue));
-        y += 35f;
-        this.DrawPreview(new Rect(x, y, 430f, 240f));
-        y += 255f;
-        this.DrawPathField(ref y, x, 430f);
-        this.DrawPercentField(ref y, x);
-        this.DrawScopeField(ref y, x);
-        if (this.DrawOnCameraVisibleArea)
-        {
-            this.DrawFitModeField(ref y, x);
-            if (this.fitMode == CustomMapBackgroundFitMode.Tile)
-            {
-                this.DrawScaleField(ref y, x);
-            }
-        }
-        else
-        {
-            this.DrawVector2(ref y, "CQF_MapBackgroundDrawSize".Translate(), ref this.drawSize, ref this.bufferDrawSizeX, ref this.bufferDrawSizeY, x);
-        }
-        this.DrawVector2(ref y, "CQF_MapBackgroundOffset".Translate(), ref this.offset, ref this.bufferOffsetX, ref this.bufferOffsetY, x);
-        Rect backgroundMapRect = new Rect(x, y, 430f, 25f);
-        Widgets.CheckboxLabeled(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMap".Translate(), ref this.enableTerrainEdges);
-        TooltipHandler.TipRegion(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMapTip".Translate());
-        y += 35f;
-        CQFEditorTools.DrawSelectColorButtons(ref y, "CQF_MapBackgroundColor".Translate(), this.color, c => this.color = c, x + 120f);
-    }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
     public void ExposeData()
     {
         Scribe_Values.Look(ref this.texPath, "texPath");
@@ -114,55 +97,52 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         }
         return result;
     }
+        internal void DrawPathField(ref float y, float x, float width)
 
-    private void DrawPathField(ref float y, float x, float width)
-    {
-        Rect labelRect = new Rect(x, y, 120f, 25f);
-        if (Widgets.ButtonText(labelRect, "CQF_MapBackgroundTexturePath".Translate(), false))
         {
-            Find.WindowStack.Add(new Dialog_SelectMapBackgroundImage(path => this.texPath = path, this.texPath));
-        }
-        this.texPath = Widgets.TextField(new Rect(x + 125f, y, width - 125f, 25f), this.texPath);
-        y += 35f;
-    }
-
-    private void DrawPercentField(ref float y, float x)
-    {
-        Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundAlpha".Translate());
-        Widgets.TextFieldPercent(new Rect(x + 125f, y, 70f, 25f), ref this.alpha, ref this.bufferAlpha);
-        y += 35f;
-    }
-
-    private void DrawScopeField(ref float y, float x)
-    {
-        Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundDrawScope".Translate());
-        if (Widgets.ButtonText(new Rect(x + 125f, y, 160f, 25f), this.DrawScopeLabel, false))
-        {
-            Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
+            object[] arguments = new object[]
             {
-                new FloatMenuOption("CQF_MapBackgroundDrawScope_Map".Translate(), () => this.drawScope = CustomMapBackgroundDrawScope.Map),
-                new FloatMenuOption("CQF_MapBackgroundDrawScope_CameraVisible".Translate(), () => this.drawScope = CustomMapBackgroundDrawScope.CameraVisible)
-            }));
+                y,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.DrawPathField(Ref:float,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
-        y += 35f;
-    }
+        internal void DrawPercentField(ref float y, float x)
 
-    private void DrawFitModeField(ref float y, float x)
-    {
-        Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundFitMode".Translate());
-        if (Widgets.ButtonText(new Rect(x + 125f, y, 160f, 25f), this.FitModeLabel, false))
         {
-            Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
+            object[] arguments = new object[]
             {
-                new FloatMenuOption("CQF_MapBackgroundFitMode_Tile".Translate(), () => this.fitMode = CustomMapBackgroundFitMode.Tile),
-                new FloatMenuOption("CQF_MapBackgroundFitMode_Stretch".Translate(), () => this.fitMode = CustomMapBackgroundFitMode.Stretch),
-                new FloatMenuOption("CQF_MapBackgroundFitMode_Cover".Translate(), () => this.fitMode = CustomMapBackgroundFitMode.Cover)
-            }));
+                y,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.DrawPercentField(Ref:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
-        y += 35f;
-    }
+        internal void DrawScopeField(ref float y, float x)
 
-    private void DrawPreview(Rect rect)
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.DrawScopeField(Ref:float,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawFitModeField(ref float y, float x)
+
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.DrawFitModeField(Ref:float,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawPreview(Rect rect)
     {
         Widgets.Label(new Rect(rect.x, rect.y, rect.width, 25f), "CQF_MapBackgroundPreview".Translate().Colorize(ColorLibrary.SkyBlue));
         Rect imageRect = new Rect(rect.x, rect.y + 30f, rect.width, rect.height - 30f);
@@ -184,28 +164,36 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         }
         Widgets.DrawBox(imageRect);
     }
+        internal void DrawScaleField(ref float y, float x)
 
-    private void DrawScaleField(ref float y, float x)
-    {
-        Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundScale".Translate());
-        Widgets.TextFieldNumeric(new Rect(x + 125f, y, 70f, 25f), ref this.scale, ref this.bufferScale, 0.01f);
-        y += 35f;
-    }
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.DrawScaleField(Ref:float,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawVector2(ref float y, string label, ref Vector2 vector, ref string bufferX, ref string bufferY, float x)
 
-    private void DrawVector2(ref float y, string label, ref Vector2 vector, ref string bufferX, ref string bufferY, float x)
-    {
-        Widgets.Label(new Rect(x, y, 120f, 25f), label);
-        Rect rect = new Rect(x + 125f, y, 70f, 25f);
-        float xValue = vector.x;
-        float yValue = vector.y;
-        Widgets.TextFieldNumeric(rect, ref xValue, ref bufferX);
-        rect.x += 80f;
-        Widgets.TextFieldNumeric(rect, ref yValue, ref bufferY);
-        vector = new Vector2(xValue, yValue);
-        y += 35f;
-    }
-
-    private string DrawScopeLabel
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                label,
+                vector,
+                bufferX,
+                bufferY,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapBackgroundData.DrawVector2(Ref:float,None:string,Ref:UnityEngine.Vector2,Ref:string,Ref:string,None:float)", this, arguments);
+            y = (float)arguments[0];
+            vector = (UnityEngine.Vector2)arguments[2];
+            bufferX = (string)arguments[3];
+            bufferY = (string)arguments[4];
+        }
+        internal string DrawScopeLabel
     {
         get
         {
@@ -218,8 +206,7 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
             }
         }
     }
-
-    private string FitModeLabel
+        internal string FitModeLabel
     {
         get
         {
@@ -245,22 +232,21 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
     public Vector2 offset = Vector2.zero;
     public bool enableTerrainEdges; 
     public List<CustomMapBackgroundEffectDef> backgroundEffects = new List<CustomMapBackgroundEffectDef>();
-
-    private string bufferAlpha;
-    private string bufferScale;
-    private string bufferDrawSizeX;
-    private string bufferDrawSizeY;
-    private string bufferOffsetX;
-    private string bufferOffsetY;
+        internal string bufferAlpha;
+        internal string bufferScale;
+        internal string bufferDrawSizeX;
+        internal string bufferDrawSizeY;
+        internal string bufferOffsetX;
+        internal string bufferOffsetY;
 }
 
-public enum CustomMapBackgroundDrawScope
+    public enum CustomMapBackgroundDrawScope
 {
     Map,
     CameraVisible
 }
 
-public enum CustomMapBackgroundFitMode
+    public enum CustomMapBackgroundFitMode
 {
     Tile,
     Stretch,

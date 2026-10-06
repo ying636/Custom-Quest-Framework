@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -96,123 +96,42 @@ namespace QuestEditor_Library
             };
             return [result];
         }
-
-        public virtual float Draw(Rect inRect,QuestEditor_Dialog parent, DialogNode node)
-        {
-            float x = 8f;
-            float y = 8f;
-            float width = inRect.width - 18f;
-            Widgets.DrawHighlight(new Rect(x + 4f, y - 2f, width - 8f, 32f));
-            Widgets.Label(new Rect(x + 8f, y + 4f, width - 16f, 25f), this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            y += 40f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "OptionText".Translate(), ref this.text, x + 8f, 180f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 8f, y, width - 16f, 25f), "HideWhenDisable".Translate(),
-                ref this.hideWhenDisabled);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 8f, y, width - 16f, 25f), "removeDialogAfterSelect".Translate(),
-                ref this.removeDialogAfterSelect);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 8f, y, width - 16f, 25f), "hideFailReason".Translate(),
-                ref this.hideFailReason);
-            y += 40f;
-            List<Type> thingDatas = typeof(CQFThingData).AllSubclassesNonAbstract().ListFullCopy();
-            thingDatas.Remove(typeof(CQFThingCategoryCount));
-            this.DrawSectionHeader(ref y, x, width, "InteractionOption_RequiredThing".Translate(),
-                () => CQFEditorTools.DrawFloatMenu(thingDatas,
-                    type => CQFThingData.OpenSelectWindow(type, data => this.requiredThings.Add(data)),
-                    type => type.Name.Translate()),
-                () => CQFEditorTools.DrawFloatMenu(this.requiredThings, data => this.requiredThings.Remove(data), data => data.ToString()),
-                () => this.requiredThings.Any());
-            foreach (CQFThingData data in this.requiredThings)
-            {
-                float itemY = y;
-                data.DrawWithSingleCount(ref y, inRect, x + 16f);
-                this.DrawListItemFrame(itemY, y, x, width);
-                y += 8f;
-            }
-            if (!this.requiredThings.Any())
-            {
-                this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_NoRequiredThings".Translate());
-            }
-            y += 10f;
-            this.DrawSectionHeader(ref y, x, width, "DialogConditions".Translate(),
-                () => CQFEditorTools.DrawFloatMenu(typeof(DialogCondition).AllSubclassesNonAbstract(),
-                    type => this.conditions.Add((DialogCondition)Activator.CreateInstance(type)), type => type.Name.Translate()),
-                () => CQFEditorTools.DrawFloatMenu(this.conditions, condition => this.conditions.Remove(condition), condition => condition.GetType().Name.Translate()),
-                () => this.conditions.Any());
-            foreach (DialogCondition condition in this.conditions)
-            {
-                float itemY = y;
-                condition.Draw(ref y, inRect, x + 16f);
-                this.DrawListItemFrame(itemY, y, x, width);
-                y += 8f;
-            }
-            if (!this.conditions.Any())
-            {
-                this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_NoDialogConditions".Translate());
-            }
-            y += 10f;
-            this.DrawSectionHeader(ref y, x, width, "DialogResults".Translate(),
-                () => this.results.Add(new DialogResult()),
-                () => CQFEditorTools.DrawFloatMenu(this.results, result => this.results.Remove(result), result => result.resultName),
-                () => this.results.Any());
-            foreach (DialogResult result in this.results)
-            {
-                if (Widgets.ButtonText(new Rect(x + 8f, y, width - 16f, 30f), result.resultName, false))
-                {
-                    if (Find.WindowStack.Windows.ToList()
-                            .Find(x => x.GetType() == typeof(Dialog_EditDialogResult)) is Window window)
-                    {
-                        window.Close();
-                    }
-
-                    Find.WindowStack.Add(new Dialog_EditDialogResult(parent, result, this, node));
-                }
-                y += 34f;
-            }
-            if (!this.results.Any())
-            {
-                this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_NoDialogResults".Translate());
-            }
-            y += 10f;
-            return y;
-        }
-
-        private void DrawSectionHeader(ref float y, float x, float width, string label, Action addAction,
+        internal void DrawSectionHeader(ref float y, float x, float width, string label, Action addAction,
             Action removeAction, Func<bool> canRemove)
-        {
-            Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
-            Widgets.DrawHighlight(headerRect);
-            Widgets.Label(new Rect(x + 8f, y + 4f, width - 84f, 25f), label.Colorize(ColorLibrary.SkyBlue));
-            Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
-            {
-                addAction();
-            }
-            TooltipHandler.TipRegion(buttonRect, "Add".Translate());
-            buttonRect.x += 30f;
-            if (Widgets.ButtonImage(buttonRect, TexButton.Delete) && canRemove())
-            {
-                removeAction();
-            }
-            TooltipHandler.TipRegion(buttonRect, "Remove".Translate());
-            y += 40f;
-        }
 
-        private void DrawListItemFrame(float startY, float endY, float x, float width)
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label,
+                addAction,
+                removeAction,
+                canRemove
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogOption.DrawSectionHeader(Ref:float,None:float,None:float,None:string,None:System.Action,None:System.Action,None:System.Func<bool>)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawListItemFrame(float startY, float endY, float x, float width)
         {
             Rect rect = new Rect(x + 6f, startY - 2f, width - 12f, Mathf.Max(34f, endY - startY + 4f));
             Widgets.DrawHighlightIfMouseover(rect);
             Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), ColorLibrary.SkyBlue, 1f);
         }
+        internal void DrawEmptyState(ref float y, float x, float width, string label)
 
-        private void DrawEmptyState(ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
-            y += 32f;
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogOption.DrawEmptyState(Ref:float,None:float,None:float,None:string)", this, arguments);
+            y = (float)arguments[0];
         }
-
         public virtual float GetRequiredSpace(DialogTreeDef tree)
         {
             float result = 0f;
@@ -269,11 +188,11 @@ namespace QuestEditor_Library
             }
             if (this.results.Any()) 
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.results, "results"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.results, "results"));
             }
             if (this.requiredThings.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.requiredThings, "requiredThings"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.requiredThings, "requiredThings"));
             }
             return result;
         }

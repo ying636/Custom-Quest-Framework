@@ -29,9 +29,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFTargetSelectionSession.DrawField(ref y, inRect, x, this.targetText, value => this.targetText = value);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Target.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual bool GetTarget(Dictionary<string, TargetInfo> targets, out Thing targetResult, out string reason, Quest quest)
         {
@@ -126,19 +133,16 @@ namespace QuestEditor_Library
     public class DialogCondition_QuestState : DialogCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x,y,inRect.width,25f),"QuestState".Translate(this.state.ToString().Translate()),false)) 
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(new List<QuestState>() {QuestState.EndedFailed, QuestState.EndedSuccess , QuestState.Ongoing
-                ,QuestState.EndedOfferExpired},q => this.state = q,q => q.ToString().Translate());         
-            }
-            y += 30f; 
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFQuestDef".Translate(this.quest?.defName), false))
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<QuestScriptDef>.AllDefsListForReading, (d) => this.quest = d, (d) => d.defName);
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_QuestState.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -216,17 +220,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            Rect rect = new Rect(x, y, 150f, 25f);
-            rect = new Rect(x, y, 150f, 25f); 
-            if (Widgets.ButtonText(rect, "RequiredSkill".Translate() + this.skill?.label, false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<SkillDef>.AllDefsListForReading, s => this.skill = s, s => s.label);
-            }
-            y += 30f; 
-            CQFEditorTools.DrawLabelAndText_Line(y, "CheckModifier".Translate(), ref this.checkModifier, ref this.buffer2, x);
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_SkillCheck.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -280,17 +283,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            Rect rect = new Rect(x, y, 150f, 25f);
-            if (Widgets.ButtonText(rect, "RequiredFaction".Translate(this.faction?.label), false))
+            object[] arguments = new object[]
             {
-                Find.WindowStack.Add(new Dialog_Select<FactionDef>(new TextSelectDrawer<FactionDef>(DefDatabase<FactionDef>.AllDefsListForReading, t => t.label, t =>
-                {
-                    this.faction = t;
-                }, null, null, null, null, null, null), "Select".Translate()));
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Faction.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -338,11 +340,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "PositionName".Translate(), this.positionName,
-                value => this.positionName = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_ThingInPosition.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -409,19 +416,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            Rect rect = new Rect(x, y, 150f, 25f);
-            rect = new Rect(x, y, 150f, 25f);
-            if (Widgets.ButtonText(rect, "RequiredSkill".Translate() + this.skill?.label, false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<SkillDef>.AllDefsListForReading, s => this.skill = s, s => s.label);
-            }
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "RequiredLevel".Translate(), ref this.level, ref this.buffer, x);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 325f, 20f), "NeedToBeGreater".Translate(), ref this.needToBeGreater);
-            y += 25f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Skill.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -476,21 +480,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            Rect rect = new Rect(x, y, 150f, 25f);
-            rect = new Rect(x, y, 150f, 25f);
-            Widgets.Label(rect, "RequiredHediff".Translate() + this.hediff?.label);
-            rect.x = 160f;
-            if (Widgets.ButtonText(rect, "Select".Translate()))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<HediffDef>.AllDefsListForReading, h => this.hediff = h, h => h.label);
-            }
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line<float>(y, "RequiredSeverity".Translate(), ref this.severity, ref this.buffer, x);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 325f, 20f), "NeedToBeGreater".Translate(), ref this.needToBeGreater);
-            y += 25f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Hediff.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -554,32 +553,16 @@ namespace QuestEditor_Library
             return result; 
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            Rect rect = new Rect(x, y, 150f, 25f);
-            List<KeyValuePair<TraitDef, TraitDegreeData>> stagets = new List<KeyValuePair<TraitDef, TraitDegreeData>>();
-            DefDatabase<TraitDef>.AllDefsListForReading.ForEach(t =>
+            object[] arguments = new object[]
             {
-                t.degreeDatas.ForEach(s =>
-                {
-                    stagets.Add(new KeyValuePair<TraitDef, TraitDegreeData>(t, s));
-                });
-            });
-            if (Widgets.ButtonText(rect, "RequiredTrait".Translate(this.trait?.degreeDatas.Find(d => d.degree == this.degree)?.label), false))
-            {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
-                {
-                    this.trait = t.Key;
-                    this.degree = t.Value.degree;
-                }, null, null, null, null, null, null), "Select".Translate()));
-            }
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 325f, 20f), "NeedToBeGreater".Translate(), ref this.needToBeGreater);
-            y += 25f;
-            Rect r = new Rect(x, y, 325f, 20f);
-            Widgets.CheckboxLabeled(r, "Accurate".Translate(), ref this.accurate);
-            TooltipHandler.TipRegion(r, "Accurate_Tip".Translate());
-            y += 25f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Trait.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -643,12 +626,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFAge".Translate(), ref this.age, ref this.buffer, x);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 325f, 25f), "NeedToBeGreater".Translate(), ref this.needToBeGreater);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Age.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -733,34 +720,16 @@ namespace QuestEditor_Library
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
 
-            Rect rect = new Rect(x, y, 350f, 25f);
-            List<KeyValuePair<ThoughtDef, ThoughtStage>> stagets = new List<KeyValuePair<ThoughtDef, ThoughtStage>>();
-            DefDatabase<ThoughtDef>.AllDefsListForReading.ForEach(t =>
+        {
+            object[] arguments = new object[]
             {
-                t.stages.ForEach(s =>
-                {
-                    stagets.Add(new KeyValuePair<ThoughtDef, ThoughtStage>(t, s));
-                });
-            });
-            if (Widgets.ButtonText(rect, "CQF_ThoughtDef".Translate(this.thought?.stages.Find(s => s.untranslatedLabel == this.untranslatedLabel)?.label), false))
-            {
-                Find.WindowStack.Add(new Dialog_Select<KeyValuePair<ThoughtDef, ThoughtStage>>(new TextSelectDrawer<KeyValuePair<ThoughtDef, ThoughtStage>>(stagets, t => t.Value?.label, t =>
-                {
-                    this.thought = t.Key;
-                    if (t.Key.stages.Contains(t.Value))
-                    {
-                        this.untranslatedLabel = t.Value.untranslatedLabel;
-                    }
-                    else
-                    {
-                        Log.Message("CQF Action Gain Mood Error:A thoughtstage without thought");
-                    }
-                }, null, null, null, null, null, null), "Select".Translate()));
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Thought.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {
@@ -808,22 +777,20 @@ namespace QuestEditor_Library
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.requirations, "requirations"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.requirations, "requirations"));
             return result;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList(ref y, x, this.requirations, inRect, "RequiredThings".Translate(), () =>
-CQFEditorTools.DrawFloatMenu(new List<Type>() {typeof(CQFThingDefCount)}, t =>
-{
-    CQFThingData.OpenSelectWindow(t, d => this.requirations.Add(d));
-}, t => t.Name.Translate()), t => t.ToString(), (t, y2, rect, x2) =>
-{
-    t.DrawWithSingleCount(ref y2, rect, x2);
-    return y2;
-});
-            y += 5f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogCondition_Inventory.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool Satisfied(Dictionary<string, TargetInfo> targets, out string reason, Quest quest)
         {

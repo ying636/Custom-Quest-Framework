@@ -1,10 +1,10 @@
-﻿using System.Xml.Linq;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
 
-public class CustomMapStep_MapPart : CustomMapStep
+    public class CustomMapStep_MapPart : CustomMapStep
 {
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
@@ -55,14 +55,17 @@ public class CustomMapStep_MapPart : CustomMapStep
     }
 
     public override void Draw(ref float y, Rect inRect, float x)
-    {
-        Widgets.Label(new Rect(x, y, inRect.width - x - 12f, 30f),
-            "CustomMapStep_MapPart".Translate().Colorize(ColorLibrary.SkyBlue));
-        y += 35f;
-        CQFEditorTools.DrawIntRange(ref y, "GenerationCount".Translate(), ref count, ref buffer, ref buffer2, x, 60f);
-        this.set.Draw(ref y, inRect, x);
-    }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_MapPart.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
     public override XElement SaveToXElement(string nodeName)
     {
         XElement result = base.SaveToXElement(nodeName);

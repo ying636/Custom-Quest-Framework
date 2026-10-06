@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -230,7 +230,7 @@ namespace QuestEditor_Library
                     if (showCells)
                     {
                         GenDraw.DrawFieldEdges(GenStep_CustomMap.disgenerate, Color.red);
-                        GenDraw.DrawFieldEdges(DebugTools.cells, Color.blue);
+                        GenDraw.DrawFieldEdges(CQFMapGenerationState.Cells, Color.blue);
                     }
                     this.drawBatch.Flush();
                 }

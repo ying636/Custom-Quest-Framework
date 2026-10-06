@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-public class PawnSpawnData : IExposable, ISaveable, IDrawable
+    public class PawnSpawnData : IExposable, ISaveable, IDrawable
     {
         public virtual PawnSpawnData Copy()
         {
@@ -25,163 +25,67 @@ public class PawnSpawnData : IExposable, ISaveable, IDrawable
         }
 
         public virtual void Draw(ref float y, Rect inRect, float x)
+
         {
-            Rect rect = new Rect(16f + x, y + 10f, 500f, 45f);
-            this.DrawName(ref y, x, rect);
-            this.DrawKind(x, ref y);
-            CQFEditorTools.DrawSelectableText(y, "PawnDataFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll((f) => !f.isPlayer), (f) => this.faction = f.defName, (f) => f.label, new List<FloatMenuOption>()
+            object[] arguments = new object[]
             {
-                new FloatMenuOption("RandomHostile".Translate(),() => this.faction = "RandomHostile"),
-                new FloatMenuOption("RandomAlly".Translate(),() => this.faction = "RandomAlly"),
-                new FloatMenuOption("RandomNeutral".Translate(),() => this.faction = "RandomNeutral"),
-                new FloatMenuOption("PawnDataMapFaction".Translate(),() => this.faction = "MapFaction")
-            }), 20f + x, 120f);
-            TooltipHandler.TipRegion(new Rect(x + 20f, y, 340f, 25f), "PawnDataFactionTip".Translate());
-            y += 30f;
-            TooltipHandler.TipRegion(rect, "Copy".Translate());
-            Rect spawmType = new Rect(20f + x, y, 420f, 25f);
-            if (Widgets.ButtonText(spawmType, "SpawnType".Translate(this.spawnType.ToString().Translate()), false))
-            {
-                CQFEditorTools.DrawFloatMenu<SpawnType>(new List<SpawnType>() { SpawnType.BuildingDamaged, SpawnType.BuildingTick, SpawnType.MapGeneration, SpawnType.BuildingDestroyed }, (t) => this.spawnType = t, (t) => t.ToString().Translate());
-            }
-            if (this.spawnType == SpawnType.BuildingTick)
-            {
-                TooltipHandler.TipRegion(spawmType, "SpawnTypeTip_BuildingTick".Translate());
-                y += 30f;
-                string text_Time = "TimeToSpawn".Translate();
-                Widgets.Label(new Rect(20f + x, y, 150f, 25f), text_Time);
-                Widgets.TextFieldNumeric<int>(new Rect(Text.CalcSize(text_Time).x + x + 25f, y, 150f, 25f), ref this.timeToSpawn, ref this.buffer_time);
-            }
-            y += 30f;
-            string text_Spawn = "SpawnMessage".Translate();
-            Widgets.Label(new Rect(20f + x, y, 150f, 25f), text_Spawn);
-            this.spawnMessage = Widgets.TextField(new Rect(Text.CalcSize(text_Spawn).x + x + 25f, y, 300f, 25f), this.spawnMessage);
-            y += 30f;
-            CQFEditorTools.DrawIntRange(ref y, "QE_Count".Translate(), ref this.count, ref this.buffer, ref this.bufferMax, x + 20f);
-            Rect enable = new Rect(20f + x, y, 150f, 25f);
-            Widgets.CheckboxLabeled(enable, "EnableLord".Translate(), ref this.enableLord);
-            TooltipHandler.TipRegion(enable, new TipSignal("LordAndFactionTip".Translate()));
-            y += 30f;
-            if (this.enableLord)
-            {
-                Rect rectDuty = new Rect(20f + x, y, 250f, 25f);
-                if (Widgets.ButtonText(rectDuty,
-                    "DutyType".Translate(CQFEditorTools.DutyLabel(this.duty)), false))
-                {
-                    CQFEditorTools.OpenDutySelect(d => this.duty = d);
-                }
-                if (this.duty?.description != null && this.duty.description != "")
-                {
-                    TooltipHandler.TipRegion(rectDuty, this.duty.description);
-                }
-                if (this.duty == QEDefOf.QE_Duty_Guard && Widgets.ButtonText(new Rect(180f + x, y, 200f, 25f), "CurRoute".Translate(this.routeName), false) && Find.CurrentMap != null && Find.CurrentMap.GetComponent<MapComponent_CustomMapData>().route.Any())
-                {
-                    CQFEditorTools.DrawFloatMenu<string>(Find.CurrentMap.GetComponent<MapComponent_CustomMapData>().route.Keys.ToList(), (r) => this.routeName = r, (r) => r);
-                }
-                y += 30f;
-                if (this.duty == QEDefOf.QE_Duty_Waiter)
-                {
-                    CQFEditorTools.DrawButtonAndText(ref y, "PawnRotation".Translate(this.rotation.ToStringHuman()), "SelectRotation".Translate(), () => CQFEditorTools.DrawFloatMenu<Rot4>(new List<Rot4>() { Rot4.East, Rot4.West, Rot4.North, Rot4.South }, (r) => this.rotation = r, (r) => r.ToStringHuman()), 20f + x);
-                }
-                Rect rect2 = new Rect(20f + x, y, 150f, 25f);
-                CQFEditorTools.DrawSelectableText(y, "LordNameWithTarget".Translate(),ref this.lordDataName,
-                    () => CQFEditorTools.DrawFloatMenu(Find.CurrentMap.GetComponent<MapComponent_CustomMapData>().Lords, l => this.lordDataName = l.data.name, l => l.data.name)
-                ,x + 20f,150f);
-                TooltipHandler.TipRegion(rect2, "CustomLordNameTip".Translate());
-                y += 30f;
-            }
-            CQFEditorTools.DrawButtonAndText(ref y, "DialogTree".Translate(this.dialogManager?.defName), "Select".Translate(),
-                () => CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, (t) => this.dialogManager = t, (t) => t.defName), 20f + x);
-            y += 5f;
-            if (Widgets.ButtonText(new Rect(20f + x, y, 300f, 30f), "Misc".Translate(), false))
-            {
-                Find.WindowStack.Add(new QuestEditor_PawnDataMisc(this));
-            }
-            y += 35f;
-            this.DrawInventory(ref y, x);
-            y += 5f;
-            this.DrawCanSaveWarning(ref y, x, inRect);
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual bool CanSaveToMap()
         {
             return this.kind != null && this.count.max >= 1;
         }
 
-        protected void DrawCanSaveWarning(ref float y, float x, Rect inRect)
-        {
-            if (this.CanSaveToMap())
-            {
-                return;
-            }
-            Rect rect = new Rect(20f + x, y, Mathf.Max(360f, inRect.width - x - 60f), 44f);
-            Widgets.Label(rect, "PawnDataCannotSaveToMapWarning".Translate().Colorize(Color.red));
-            TooltipHandler.TipRegion(rect, "PawnDataCannotSaveToMapWarning".Translate());
-            y += 50f;
-        }
+        protected internal void DrawCanSaveWarning(ref float y, float x, Rect inRect)
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                inRect
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData.DrawCanSaveWarning(Ref:float,None:float,None:UnityEngine.Rect)", this, arguments);
+            y = (float)arguments[0];
+        }
         public void DrawName(ref float y, float x, Rect nameRect)
-        {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(nameRect, this.dataName.Colorize(ColorLibrary.SkyBlue));
-            nameRect.width -= 300f;
-            TooltipHandler.TipRegion(nameRect, "PawnDataNameTip".Translate());
-            Text.Font = GameFont.Small;
-            Rect rect = new Rect(370f + x, y, 30f, 30f);
-            if (Widgets.ButtonImage(rect, TexButton.Copy))
-            {
-                CQFEditorTools.data = this.Copy();
-            }
-            TooltipHandler.TipRegion(rect, "Copy".Translate());
-            Rect tipRect = new Rect(rect.xMax + 5f, y + 2.5f, 25f, 25f);
-            Widgets.ButtonImage(tipRect, CQFEditorTools.TipIcon);
-            string tipKey = this.GetType().Name + "_Tip";
-            if (tipKey.CanTranslate())
-            {
-                TooltipHandler.TipRegion(tipRect, tipKey.Translate());
-            }
-            y += 50f;
-            if (Widgets.ButtonText(new Rect(16f + x, y, 150f, 25f), "Rename".Translate()))
-            {
-                Find.WindowStack.Add(new Dialog_RenameForQE((name) => this.dataName = name));
-            }
-            y += 40f;
-        }
 
-        public virtual void DrawKind(float x, ref float y)
         {
-            if (Widgets.ButtonText(new Rect(20f + x, y, 250f, 25f), "QE_PawnKind".Translate(this.kind?.label), false))
+            object[] arguments = new object[]
             {
-                Find.WindowStack.Add(new Dialog_Select<PawnKindDef>(new TextSelectDrawer<PawnKindDef>(DefDatabase<PawnKindDef>.AllDefs.ToList(), k => k.label, (k) => this.kind = k, null, null, null, null, null, null), "Select".Translate()));
-            }
-            y += 30f;
+                y,
+                x,
+                nameRect
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData.DrawName(Ref:float,None:float,None:UnityEngine.Rect)", this, arguments);
+            y = (float)arguments[0];
+        }
+        public virtual void DrawKind(float x, ref float y)
+
+        {
+            object[] arguments = new object[]
+            {
+                x,
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData.DrawKind(None:float,Ref:float)", this, arguments);
+            y = (float)arguments[1];
         }
         public void DrawInventory(ref float y, float x = 0f)
+
         {
-            Widgets.Label(new Rect(16f + x, y, 150f, 25f), "InventoryThing".Translate());
-            CQFEditorTools.DrawButtonForList_UseIcon(y, this.inventoryThings, t2 => t2.thing.label + "x" + t2.count,
-() => Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((c) => c.category == ThingCategory.Item && !c.IsCorpse), c => c.uiIcon, c => c.label, (d) => this.inventoryThings.Add(new CQFThingDefCount() { thing = d }), null, null, null, null, null, null, null), "Select".Translate())), 340f, 25f, 40f);
-            y += 30f;
-            Widgets.DrawLine(new Vector2(16f + x, y), new Vector2(465f + x, y), ColorLibrary.SkyBlue, 2.5f);
-            foreach (CQFThingDefCount thing in this.inventoryThings)
+            object[] arguments = new object[]
             {
-                y += 5f;
-                thing.Draw(ref y, new Rect(), x);
-                y += 5f;
-            }
-            y += 20f;
-            y += 45f;
-            Widgets.Label(new Rect(16f + x, y, 150f, 25f), "InventoryThingCategorys".Translate());
-            CQFEditorTools.DrawButtonForList_UseIcon(y, this.inventoryCategorys, t2 => t2.category.label + "x" + t2.count,
-() => Find.WindowStack.Add(new Dialog_Select<ThingCategoryDef>(new TextureSelectDrawer<ThingCategoryDef>(DefDatabase<ThingCategoryDef>.AllDefsListForReading.FindAll((c) => c.defName != "Corpses" && !c.Parents.Contains(ThingCategoryDefOf.Corpses) && c != ThingCategoryDefOf.Animals), c => c.icon, c => c.label, (d) => this.inventoryCategorys.Add(new CQFThingCategoryCount() { category = d }), null, null, null, null, null, null, null), "Select".Translate())), 340f, 25f, 40f);
-            y += 30f;
-            Widgets.DrawLine(new Vector2(16f + x, y), new Vector2(465f + x, y), ColorLibrary.SkyBlue, 2f);
-            foreach (CQFThingCategoryCount cetegory in this.inventoryCategorys)
-            {
-                y += 5f;
-                cetegory.Draw(ref y, new Rect(), x);
-                y += 5f;
-            }
-            y += 45f;
+                y,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData.DrawInventory(Ref:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual XElement SaveToXElement(string nodeName)
         {
@@ -490,6 +394,3 @@ public class PawnSpawnData : IExposable, ISaveable, IDrawable
         public List<CQFThingCategoryCount> inventoryCategorys = new List<CQFThingCategoryCount>();
     }
 }
-
-
-

@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace QuestEditor_Library
             XElement result = new XElement(nodeName);
             result.Add(new XElement("defName",this.defName));
             result.Add(this.lord.SaveToXElement("lord"));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.pawns, "pawns"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.pawns, "pawns"));
             return result;
         }
 
@@ -42,5 +42,3 @@ namespace QuestEditor_Library
         public List<PawnSpawnData> pawns = new List<PawnSpawnData>();
     }
 }
-
-

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -93,129 +93,28 @@ namespace QuestEditor_Library
             return result.ToString().Trim();
         }
         public void DrawTab() 
+
         {
-            Rect outRect = new Rect(8f, 18f, 536f, 584f);
-            Rect viewRect = new Rect(0f, 0f, 516f, this.height);
-            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
-            float y = 8f;
-            this.DrawSectionHeader(ref y, viewRect.width, "LootBox".Translate());
-            CQFEditorTools.DrawLabelAndText_Line(y, "LootBoxName".Translate(), ref this.lootBoxName, 16f, 300f);
-            Rect rectCP = new Rect(448f,y,25f,25f);
-            if (Widgets.ButtonImage(rectCP, TexButton.Copy))
+            object[] arguments = new object[]
             {
-                this.CopyData();
-            }
-            TooltipHandler.TipRegion(rectCP, "Copy".Translate());
-            rectCP.x += 30f;
-            if (Widgets.ButtonImage(rectCP, TexButton.Paste))
-            {
-                PasteData();
-            }
-            TooltipHandler.TipRegion(rectCP, "Paste".Translate());
-            y += 38f;
-            Rect saveRect = this.DrawSectionHeader(ref y, viewRect.width, this.useLootDef ? "CQF_UseLootDataDef".Translate() : "CQF_CustomLootData".Translate(), !this.useLootDef, !this.useLootDef);
-            if (this.useLootDef)
-            {
-                if (Widgets.ButtonText(new Rect(16f, y, 450f, 28f), "LootDef".Translate(this.lootDef?.defName), false))
-                {
-                    CQFEditorTools.DrawFloatMenu(DefDatabase<LootDataDef>.AllDefsListForReading,d => this.lootDef = d,d => d.defName);
-                }
-                y += 38f;
-            }
-            else
-            {
-                if (Widgets.ButtonImage(saveRect, CQFEditorTools.icon_Save))
-                {
-                    LongEventHandler.QueueLongEvent(() =>
-                    {
-                        LootDataDef def = new LootDataDef();
-                        def.defName = this.lootBoxName;
-                        def.loots = this.loots;
-                        DefDatabase<LootDataDef>.Add(def);
-                        string path = Path.Combine(Page_QuestEditor.Path, "Data", this.lootBoxName + ".xml");
-                        XElement defs = new XElement("Defs");
-                        XElement defXml = new XElement("QuestEditor_Library.LootDataDef");
-                        XElement lootsXml = new XElement("loots");
-                        this.loots.ForEach(l => lootsXml.Add(l.SaveToXElement("li")));
-                        defXml.Add(new XElement("defName",this.lootBoxName)); 
-                        defXml.Add(lootsXml);
-                        defs.Add(defXml);
-                        defs.Save(path);
-                        Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
-                    },"SavingAsDef".Translate(),true,e => Log.Message(e.Message));
-                }
-                TooltipHandler.TipRegion(saveRect, "SaveAsDef".Translate());
-                float initY = y;
-                Rect rectData = new Rect(20f, y + 3f, 454f, 28f);
-                foreach (LootData data in this.loots)
-                {
-                    if (Widgets.ButtonText(rectData,data.dataName + "  " + data.chance * 100f + "%",false)) 
-                    {
-                        Find.WindowStack.Add(new Dialog_EditIDrawable(data));
-                    }
-                    TooltipHandler.TipRegion(rectData, "CQF_ClickToEdit".Translate());
-                    y += 32f;
-                    rectData.y += 32f;
-                }
-                if (!this.loots.Any())
-                {
-                    Widgets.Label(new Rect(20f, y + 4f, 454f, 25f), "CQF_NoLootData".Translate().Colorize(Color.gray));
-                    y += 32f;
-                }
-                Widgets.DrawBox(new Rect(10f, initY, 474f, y - initY), 1, QuestEditor_Dialog.blueTex);
-                y += 10f;
-                if (Widgets.ButtonText(new Rect(10f, y, 132f, 32f), "AddNewLootData".Translate()))
-                {
-                    this.loots.Add(new LootData());
-                }
-                if (Widgets.ButtonText(new Rect(156f, y, 132f, 32f), "Paste".Translate()) && CQFEditorTools.lootData != null)
-                {
-                    this.loots.Add(CQFEditorTools.lootData.Copy());
-                }
-                if (Widgets.ButtonText(new Rect(302f, y, 132f, 32f), "DeleteLootData".Translate()) && this.loots.Any())
-                {
-                    CQFEditorTools.DrawFloatMenu(this.loots, (x) => this.loots.Remove(x), (x) => x.dataName);
-                }
-                y += 44f;
-            }
-            this.DrawSectionHeader(ref y, viewRect.width, "CQF_LootSettings".Translate());
-            CQFEditorTools.DrawLabelAndText_Line(y, "JobReport".Translate(), ref this.openReport, 16f,220f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "TickToOpenLoot".Translate(), ref this.tickToOpen, ref this.buffer, 16f,220f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(16f,y,300f,25f),"DestroyAfterOpening".Translate(), ref this.destroyAfterOpening);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(16f,y,300f,25f),"OpenWhenDestroyed".Translate(), ref this.openWhenDestroyed);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(16f, y, 420f, 25f), "UseLootDef".Translate(), ref this.useLootDef);
-            y += 30f;
-            this.height = y + 15f;
-            Widgets.EndScrollView();
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootBox.DrawTab()", this, arguments);
         }
         public void PasteData()
+
         {
-            this.lootBoxName = CQFEditorTools.lootBoxName;
-            this.tickToOpen = CQFEditorTools.tickToOpen;
-            this.destroyAfterOpening = CQFEditorTools.destroyAfterOpening;
-            this.openReport = CQFEditorTools.openReport;
-            this.loots = new List<LootData>();
-            CQFEditorTools.loots.ListFullCopy().ForEach(l => this.loots.Add(l.Copy()));
-            this.buffer = CQFEditorTools.buffer;
-            this.useLootDef = CQFEditorTools.useLootDef;
-            this.lootDef = CQFEditorTools.lootDef;
-            this.openWhenDestroyed = CQFEditorTools.openWhenDestroyed;
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootBox.PasteData()", this, arguments);
         }
         public void CopyData()
+
         {
-            CQFEditorTools.lootBoxName = this.lootBoxName;
-            CQFEditorTools.tickToOpen = this.tickToOpen;
-            CQFEditorTools.destroyAfterOpening = this.destroyAfterOpening;
-            CQFEditorTools.openReport = this.openReport;
-            CQFEditorTools.buffer = this.buffer;
-            CQFEditorTools.loots = this.loots.ListFullCopy();
-            CQFEditorTools.useLootDef = this.useLootDef;
-            CQFEditorTools.lootDef = this.lootDef;
-            CQFEditorTools.openWhenDestroyed = this.openWhenDestroyed;
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootBox.CopyData()", this, arguments);
         }
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
@@ -309,31 +208,21 @@ namespace QuestEditor_Library
         {
             return new CustomThingData_LootBox(this,pos);
         }
+        internal Rect DrawSectionHeader(ref float y, float width, string label, bool drawSaveButton = false, bool skipLine = false)
 
-        private Rect DrawSectionHeader(ref float y, float width, string label, bool drawSaveButton = false, bool skipLine = false)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(10f, y, width - 20f, 30f), label.Colorize(ColorLibrary.SkyBlue));
-            Rect saveRect = Rect.zero;
-            if (drawSaveButton)
+            object[] arguments = new object[]
             {
-                float labelWidth = Text.CalcSize(label).x;
-                saveRect = new Rect(Mathf.Min(10f + labelWidth + 12f, width - 52f), y + 2f, 25f, 25f);
-            }
-            Text.Font = GameFont.Small;
-            y += 32f;
-            if (!skipLine)
-            {
-                Widgets.DrawLine(new Vector2(10f, y), new Vector2(width - 20f, y), ColorLibrary.SkyBlue, 1f);
-                y += 10f;
-            }
-            else
-            {
-                y += 3f;
-            }
-            return saveRect;
+                y,
+                width,
+                label,
+                drawSaveButton,
+                skipLine
+            };
+            object result = CQFEditorBridge.Invoke("QuestEditor_Library.LootBox.DrawSectionHeader(Ref:float,None:float,None:string,None:bool,None:bool)", this, arguments);
+            y = (float)arguments[0];
+            return (UnityEngine.Rect)result;
         }
-
         [NoTranslate]
         public string lootBoxName = "Undefined";
         public float height = 0f; 
@@ -371,159 +260,125 @@ namespace QuestEditor_Library
             return result;
         }
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            float width = inRect.width - 35f - x;
-            this.DrawHeader(ref y, x + 10f, width - 10f);
-            this.DrawBasicSettings(ref y, x, width);
-            this.DrawThingList(ref y, inRect, x, width);
-            this.DrawCategoryList(ref y, inRect, x, width);
-            this.DrawSpecialThingList(ref y, inRect, x, width);
-            this.DrawPawnList(ref y, x, width);
-            CQFEditorTools.DrawLabelAndText_Line(y, "LootChance".Translate(), ref this.chance, ref this.buffer, 16f + x);
-            y += 30f;
-        }
 
-        private void DrawHeader(ref float y, float x, float width)
         {
-            Widgets.DrawHighlight(new Rect(x - 4f, y + 4f, width + 8f, 32f));
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(x, y + 7f, width - 75f, 30f), this.dataName.Colorize(ColorLibrary.SkyBlue));
-            Text.Font = GameFont.Small;
-            Rect button = new Rect(x + width - 60f, y + 7f, 25f, 25f);
-            if (Widgets.ButtonImage(button, TexButton.Rename))
+            object[] arguments = new object[]
             {
-                Find.WindowStack.Add(new Dialog_RenameForQE(name => this.dataName = name));
-            }
-            TooltipHandler.TipRegion(button, "Rename".Translate());
-            button.x += 30f;
-            if (Widgets.ButtonImage(button, TexButton.Copy))
-            {
-                CQFEditorTools.lootData = this.Copy();
-            }
-            TooltipHandler.TipRegion(button, "Copy".Translate());
-            y += 48f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawHeader(ref float y, float x, float width)
 
-        private void DrawBasicSettings(ref float y, float x, float width)
         {
-            CQFEditorTools.DrawFieldAndText(ref y, "MessageAfterOpening".Translate(), ref this.message, x + 8f, 400f);
-            y += 40f;
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawHeader(Ref:float,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawBasicSettings(ref float y, float x, float width)
 
-        private void DrawThingList(ref float y, Rect inRect, float x, float width)
         {
-            this.DrawListHeader(ref y, x, width, "LootThings".Translate(), () => CQFThingData.OpenLootThingSelectWindow(d => this.things.Add(new CQFThingDefCount { thing = d })),
-                () => CQFEditorTools.DrawFloatMenu(this.things, t => this.things.Remove(t), t => t.thing.label + "x" + t.count));
-            float initY = y;
-            foreach (CQFThingDefCount thing in this.things)
+            object[] arguments = new object[]
             {
-                float itemY = y;
-                thing.Draw(ref y, inRect, x + 10f);
-                y += 4f;
-                this.DrawListItemFrame(itemY, y, x + 6f, width - 12f);
-                y += 8f;
-            }
-            if (!this.things.Any())
-            {
-                this.DrawEmptyState(ref y, x + 12f, width - 24f, "CQF_NoLootThings".Translate());
-            }
-            y += 10f;
+                y,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawBasicSettings(Ref:float,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawThingList(ref float y, Rect inRect, float x, float width)
 
-        private void DrawCategoryList(ref float y, Rect inRect, float x, float width)
         {
-            this.DrawListHeader(ref y, x, width, "LootCategorys".Translate(), () => CQFEditorTools.DrawFloatMenu<ThingCategoryDef>(DefDatabase<ThingCategoryDef>.AllDefsListForReading.FindAll(t2 => t2.defName != "Corpses" &&
-                    !t2.Parents.Contains(ThingCategoryDefOf.Corpses) && t2 != ThingCategoryDefOf.Animals), t2 => this.categorys.Add(new CQFThingCategoryCount() { category = t2 }), t2 => t2.label),
-                () => CQFEditorTools.DrawFloatMenu(this.categorys, t => this.categorys.Remove(t), t => t.category.label + "x" + t.count));
-            foreach (CQFThingCategoryCount cetegory in this.categorys)
+            object[] arguments = new object[]
             {
-                float itemY = y;
-                cetegory.Draw(ref y, inRect, x + 10f);
-                y += 4f;
-                this.DrawListItemFrame(itemY, y, x + 6f, width - 12f);
-                y += 8f;
-            }
-            if (!this.categorys.Any())
-            {
-                this.DrawEmptyState(ref y, x + 12f, width - 24f, "CQF_NoLootCategories".Translate());
-            }
-            y += 10f;
+                y,
+                inRect,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawThingList(Ref:float,None:UnityEngine.Rect,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawCategoryList(ref float y, Rect inRect, float x, float width)
 
-        private void DrawSpecialThingList(ref float y, Rect inRect, float x, float width)
         {
-            this.DrawListHeader(ref y, x, width, "SpecialThingData".Translate(), () => CQFEditorTools.DrawFloatMenu(typeof(CQFThingData).AllSubclassesNonAbstract().FindAll(t => t != typeof(CQFThingDefCount) && t != typeof(CQFThingCategoryCount)),
-                    t2 => this.specialThingDatas.Add((CQFThingData)Activator.CreateInstance(t2)), t2 => t2.Name.Translate()),
-                () => CQFEditorTools.DrawFloatMenu(this.specialThingDatas, t => this.specialThingDatas.Remove(t), t => t.ToString()));
-            foreach (CQFThingData data in this.specialThingDatas)
+            object[] arguments = new object[]
             {
-                float itemY = y;
-                data.Draw(ref y, inRect, x + 10f);
-                y += 4f;
-                this.DrawListItemFrame(itemY, y, x + 6f, width - 12f);
-                y += 8f;
-            }
-            if (!this.specialThingDatas.Any())
-            {
-                this.DrawEmptyState(ref y, x + 12f, width - 24f, "CQF_NoSpecialThingData".Translate());
-            }
-            y += 10f;
+                y,
+                inRect,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawCategoryList(Ref:float,None:UnityEngine.Rect,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawSpecialThingList(ref float y, Rect inRect, float x, float width)
 
-        private void DrawPawnList(ref float y, float x, float width)
         {
-            this.DrawListHeader(ref y, x, width, "LootPawn".Translate(), () => CQFEditorTools.DrawFloatMenu(typeof(PawnSpawnData).AllSubclassesNonAbstract(), t => this.pawnDatas.Add((PawnSpawnData)Activator.CreateInstance(t)), t => t.Name.Translate()),
-                () => CQFEditorTools.DrawFloatMenu(this.pawnDatas, t => this.pawnDatas.Remove(t), t => t.dataName));
-            foreach (PawnSpawnData pawnData in this.pawnDatas)
+            object[] arguments = new object[]
             {
-                float itemY = y;
-                Rect rectData = new Rect(x + 16f, y + 3f, width - 32f, 25f);
-                if (Widgets.ButtonText(rectData, pawnData.dataName, false))
-                {
-                    Find.WindowStack.Add(new Dialog_EditIDrawable(pawnData));
-                }
-                TooltipHandler.TipRegion(rectData, "CQF_ClickToEdit".Translate());
-                y += 30f;
-                this.DrawListItemFrame(itemY, y, x + 6f, width - 12f);
-                y += 8f;
-            }
-            if (!this.pawnDatas.Any())
-            {
-                this.DrawEmptyState(ref y, x + 12f, width - 24f, "CQF_NoLootPawns".Translate());
-            }
-            y += 10f;
+                y,
+                inRect,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawSpecialThingList(Ref:float,None:UnityEngine.Rect,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawPawnList(ref float y, float x, float width)
 
-        private void DrawListHeader(ref float y, float x, float width, string label, Action addAction, Action removeAction)
         {
-            Widgets.DrawHighlight(new Rect(x + 4f, y - 2f, width - 8f, 32f));
-            Widgets.Label(new Rect(x + 8f, y + 4f, width - 84f, 25f), label.Colorize(ColorLibrary.SkyBlue));
-            Rect button = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(button, TexButton.Plus))
+            object[] arguments = new object[]
             {
-                addAction();
-            }
-            TooltipHandler.TipRegion(button, "Add".Translate());
-            button.x += 30f;
-            if (Widgets.ButtonImage(button, TexButton.Delete))
-            {
-                removeAction();
-            }
-            TooltipHandler.TipRegion(button, "Remove".Translate());
-            y += 38f;
+                y,
+                x,
+                width
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawPawnList(Ref:float,None:float,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
+        internal void DrawListHeader(ref float y, float x, float width, string label, Action addAction, Action removeAction)
 
-        private void DrawListItemFrame(float startY, float endY, float x, float width)
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label,
+                addAction,
+                removeAction
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawListHeader(Ref:float,None:float,None:float,None:string,None:System.Action,None:System.Action)", this, arguments);
+            y = (float)arguments[0];
+        }
+        internal void DrawListItemFrame(float startY, float endY, float x, float width)
         {
             Rect rect = new Rect(x, startY - 2f, width, Mathf.Max(34f, endY - startY + 4f));
             Widgets.DrawHighlightIfMouseover(rect);
             Widgets.DrawLine(new Vector2(x + 6f, rect.yMax), new Vector2(x + width - 6f, rect.yMax), ColorLibrary.SkyBlue, 1f);
         }
+        internal void DrawEmptyState(ref float y, float x, float width, string label)
 
-        private void DrawEmptyState(ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
-            y += 32f;
+            object[] arguments = new object[]
+            {
+                y,
+                x,
+                width,
+                label
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.LootData.DrawEmptyState(Ref:float,None:float,None:float,None:string)", this, arguments);
+            y = (float)arguments[0];
         }
         public List<Thing> SpawnLoots(Map map, IntVec3 pos, Lord lord, Thing box,Pawn opener = null)
         {
@@ -707,45 +562,28 @@ namespace QuestEditor_Library
             return result;
         }
         public virtual void Draw(ref float y, Rect inRect, float x)
+
         {
-            this.DrawIcon(ref y);
-            Widgets.Label(new Rect(60f + x, y + 5f, 35f, 35f), "x");
-            int min = this.count.min;
-            int max = this.count.max;
-            Widgets.TextFieldNumeric<int>(new Rect(75f + x, y, 35f, 35f), ref min, ref this.bufferMin);
-            Widgets.Label(new Rect(113f + x, y + 5f, 35f, 35f), "~");
-            Widgets.TextFieldNumeric<int>(new Rect(125f + x, y, 35f, 35f), ref max, ref this.bufferMax);
-            this.count = new IntRange(min, max);
-            if (this.CanSelectStuff)
+            object[] arguments = new object[]
             {
-                Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
-                if (Widgets.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
-                {
-                    CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>()
-                    {new FloatMenuOption("Null".Translate(),() => this.stuff = null)});
-                }
-                TooltipHandler.TipRegion(rect, "CQFStuffTip".Translate());
-            }
-            y += 35f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public void DrawWithSingleCount(ref float y, Rect inRect, float x)
+
         {
-            this.DrawIcon(ref y);
-            Widgets.Label(new Rect(60f + x, y + 5f, 35f, 35f), "x");
-            int min = this.count.min;
-            Widgets.TextFieldNumeric<int>(new Rect(75f + x, y, 35f, 35f), ref min, ref this.bufferMin);
-            this.count = new IntRange(min, min);
-            if (this.CanSelectStuff)
+            object[] arguments = new object[]
             {
-                Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
-                if (Widgets.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
-                {
-                    CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>()
-                    {new FloatMenuOption("Null".Translate(),() => this.stuff = null)});
-                }
-                TooltipHandler.TipRegion(rect, "CQFStuffTip".Translate());
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData.DrawWithSingleCount(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public abstract void DrawIcon(ref float y);
         public virtual XElement SaveToXElement(string nodeName)
@@ -784,15 +622,14 @@ namespace QuestEditor_Library
             return ThingRequest.ForDef(this.thing);
         }
         public override void DrawIcon(ref float y)
+
         {
-            Rect rect = new Rect(20f, y, 35f, 35f);
-            Widgets.DefIcon(rect, this.thing, this.stuff);
-            if (Mouse.IsOver(rect))
+            object[] arguments = new object[]
             {
-                Vector3 mouse = Input.mousePosition;
-                Widgets.DrawBox(new Rect(mouse.x, mouse.y, 70f, 40f));
-                Widgets.Label(rect, this.thing.label);
-            }
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingDefCount.DrawIcon(Ref:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -827,17 +664,15 @@ namespace QuestEditor_Library
             return new ThingRequest();
         }
         public override void DrawIcon(ref float y)
-        {
-            Rect rect = new Rect(20f, y, 35f, 35f);
-            Widgets.DrawTextureFitted(new Rect(20f, y, 35f, 35f), this.category.icon, 1f);      
-            if (Mouse.IsOver(rect))
-            {
-                Vector3 mouse = Input.mousePosition;
-                Widgets.DrawBox(new Rect(mouse.x, mouse.y, 70f, 40f));
-                Widgets.Label(rect, this.category.label);
-            }
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingCategoryCount.DrawIcon(Ref:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -874,16 +709,27 @@ namespace QuestEditor_Library
             return ThingRequest.ForUndefined();
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            CQFEditorTools.DrawButtonToSelectWithoutBackground(ref y,x + 7f,"ThingSetMaker".Translate(this.set?.label ?? this.set?.defName),DefDatabase<ThingSetMakerDef>.AllDefsListForReading,d => this.set = d,d => d.label ?? d.defName);
-            CQFEditorTools.DrawFloatRange(ref y, "TotalMarketValueRange".Translate(),ref this.totalMarketValueRange,ref this.buffer,ref this.buffer2,x + 7f, 40f);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingSetMaker.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void DrawIcon(ref float y)
-        {
 
+        {
+            object[] arguments = new object[]
+            {
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingSetMaker.DrawIcon(Ref:float)", this, arguments);
+            y = (float)arguments[0];
         }
-   
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -924,23 +770,27 @@ namespace QuestEditor_Library
             return ThingRequest.ForUndefined();
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            CQFEditorTools.DrawButtonToSelectWithoutBackground(ref y, x + 7f, "QE_PawnKind".Translate(this.pawn?.label), DefDatabase<PawnKindDef>.AllDefsListForReading, d => this.pawn = d, d => d.label);
-            if (Widgets.ButtonText(new Rect(x + 7f,y,200f,30f),
-                    "CurRotMode".Translate(this.rotMode == null ? "Random".Translate() 
-                        : this.rotMode.ToString().Translate()),false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(Stages
-                    ,r => this.rotMode = r,r => r.ToString().Translate()
-                    ,[new FloatMenuOption("Random".Translate(),() => this.rotMode = null)]);
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData_Corpse.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void DrawIcon(ref float y)
+
         {
-
+            object[] arguments = new object[]
+            {
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData_Corpse.DrawIcon(Ref:float)", this, arguments);
+            y = (float)arguments[0];
         }
-
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -984,18 +834,31 @@ namespace QuestEditor_Library
             return ThingRequest.ForUndefined();
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            CQFEditorTools.DrawDefList(this.genes,"Genes".Translate(),ref y, x + 5f);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData_Genepack.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void DrawIcon(ref float y)
+
         {
-
+            object[] arguments = new object[]
+            {
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData_Genepack.DrawIcon(Ref:float)", this, arguments);
+            y = (float)arguments[0];
         }
-
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList(this.genes,"genes"));
+            result.Add(CQFSerialization.SaveList(this.genes,"genes"));
             return result;
         }
         public override string ToString()
@@ -1024,19 +887,27 @@ namespace QuestEditor_Library
             return ThingRequest.ForUndefined();
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            CQFEditorTools.DrawButtonToSelectWithoutBackground(ref y, x + 7f,
-                "CQFThingData_Value_Category".Translate(this.category?.label),
-                DefDatabase<ThingCategoryDef>.AllDefsListForReading, d => this.category = d, d => d.label ?? d.defName);
-            CQFEditorTools.DrawFloatRange(ref y, "TotalMarketValueRange".Translate(), ref this.totalMarketValueRange
-                , ref this.buffer, ref this.buffer2, x + 7f, 40f);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData_Value.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void DrawIcon(ref float y)
+
         {
-
+            object[] arguments = new object[]
+            {
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFThingData_Value.DrawIcon(Ref:float)", this, arguments);
+            y = (float)arguments[0];
         }
-
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -1124,5 +995,3 @@ namespace QuestEditor_Library
         public FloatRange totalMarketValueRange = new FloatRange(100, 1000);
     }
 }
-
-

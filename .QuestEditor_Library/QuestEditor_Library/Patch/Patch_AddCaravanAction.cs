@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
 using System;
@@ -50,4 +50,3 @@ namespace QuestEditor_Library
         }
     }
 }
-

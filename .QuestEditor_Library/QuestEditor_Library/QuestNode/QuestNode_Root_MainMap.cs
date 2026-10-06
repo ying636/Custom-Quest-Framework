@@ -40,51 +40,17 @@ namespace QuestEditor_Library
         }
 
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            y += 10f;
-            CQFEditorTools.DrawSelectButton(x + 7f, ref y, "MainMapDef".Translate(this.mainMapDef.GetValue(QuestGen.slate)?.defName), DefDatabase<MainMapDef>.AllDefsListForReading, def => this.mainMapDef = def, def => def.defName);
-            CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "tile".Translate(), ref this.tile, x + 7f, 110f);
-            TooltipHandler.TipRegion(new Rect(x + 7f, y, 150f, 25f), "tile_Tip".Translate());
-            y += 30f;
-            CQFEditorTools.DrawSelectableText(y, "MapFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll(f => !f.isPlayer), f => this.faction = f.defName, f => f.label, new List<FloatMenuOption>()
-            {
-                new FloatMenuOption("RandomHostile".Translate(), () => this.faction = "RandomHostile"),
-                new FloatMenuOption("RandomAlly".Translate(), () => this.faction = "RandomAlly"),
-                new FloatMenuOption("RandomNeutral".Translate(), () => this.faction = "RandomNeutral"),
-            }), 7f + x, 120f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "SiteIconPath".Translate(), ref this.siteIconPath, x + 7f, 150f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "ExpandingIconPath".Translate(), ref this.expandingIconPath, x + 7f, 150f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 7f, y, 300f, 25f), "DisdestroyBecauseOfNoColonist".Translate(), ref this.disdestroyBecauseOfNoColonist);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x + 7f, y, 300f, 25f), "BeUnreenterableWhenAllEnemiesDefeated".Translate(), ref this.beUnreenterableWhenAllEnemiesDefeated);
-            y += 30f;
-            Rect r = new Rect(x + 7f, y, 250f, 25f);
-            Widgets.CheckboxLabeled(r, "replaceMapGeneration".Translate(), ref this.replaceMapGeneration);
-            TooltipHandler.TipRegion(r, "replaceMapGeneration_Tip".Translate());
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "StoreAsText".Translate(), ref this.storeAs, x + 7f, 100f);
-            y += 30f;
-            CQFEditorTools.DrawIntRange(ref y, "MapDistance".Translate(), ref this.distance, ref this.buffer, ref this.bufferMin, x + 7f);
-            List<PlanetLayerDef> planetLayerDefs = DefDatabase<PlanetLayerDef>.AllDefsListForReading;
-            CQFEditorTools.DrawSelectableField(x + 7f, ref y, "planetLayer".Translate(this.planetLayer == null ? null : this.planetLayer.ToString()), planetLayerDefs, d => this.planetLayer = d, d => d.label, new Vector2(120f, 25f));
-            string listText = "";
-            this.blacklist.ForEach(b => listText = b.label + "," + listText);
-            Widgets.Label(new Rect(x + 7f, y, 300f, 60f), (this.enableBlack ? "BiomesBlackList".Translate() : "BiomesWhiteList".Translate()) + listText);
-            y += 70f;
-            if (Widgets.ButtonText(new Rect(x + 7f, y, 70f, 25f), "Add".Translate()))
-            {
-                CQFEditorTools.DrawFloatMenu<BiomeDef>(DefDatabase<BiomeDef>.AllDefs.ToList().FindAll(b => !this.blacklist.Contains(b)), b => this.blacklist.Add(b), b => b.label);
-            }
-            if (Widgets.ButtonText(new Rect(x + 70f, y, 70f, 25f), "Delete".Translate()))
-            {
-                CQFEditorTools.DrawFloatMenu<BiomeDef>(this.blacklist, b => this.blacklist.Remove(b), b => b.label);
-            }
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_Root_MainMap.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         private MainSite GetOrCreateMainSite(MainMapDef def, Quest quest, Slate slate)
         {
             if (this.reuseExistingSite)

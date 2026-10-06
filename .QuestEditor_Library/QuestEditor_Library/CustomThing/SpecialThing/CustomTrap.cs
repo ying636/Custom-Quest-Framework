@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,33 +43,16 @@ namespace QuestEditor_Library
             return result;
         }
         public virtual void Draw(ref float y, Rect inRect, float x)
-        {
-            Text.Font = GameFont.Small;
-            CQFEditorTools.DrawLabelAndText_Line(y, "TrapName".Translate(), ref this.trapName, x, 350f);
-            Rect rect = new Rect(inRect.xMax - 70f, y + 30f, 30f,30f);
-            if (Widgets.ButtonImage(rect,TexButton.Copy))
-            {
-                CQFEditorTools.copyTrapComps.Clear();
-                foreach (var trapComp in this.trapComps)
-                {
-                    CQFEditorTools.copyTrapComps.Add(trapComp.Copy());
-                }
-            } 
-            rect.x += 35f;
-            if (Widgets.ButtonImage(rect,TexButton.Paste))
-            {
-                foreach (var trapComp in CQFEditorTools.copyTrapComps)
-                {
-                    this.trapComps.Add(trapComp.Copy());
-                }
-            }
-            y += 30f;
-            CQFEditorTools.DrawIDrawList_UseWindow(ref y,x,this.TrapComps,
-                inRect,"TrapComps".Translate().Colorize(ColorLibrary.LightBlue),() => 
-                {
-                    CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => this.TrapComps.Add(new TrapComp() {mode = m}), m => ("ActionTriggerMode_" + m.ToString()).Translate());
 
-                }, c => ("ActionTriggerMode_" + c.mode.ToString()).Translate());
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomTrap.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         protected override void Tick()
         {
@@ -136,12 +119,12 @@ namespace QuestEditor_Library
             Scribe_Collections.Look(ref this.trapComps, "textComp",LookMode.Deep);
         }
         public void PasteData()
+
         {
-            this.trapComps.Clear();
-            foreach (var actionComp in CQFEditorTools.copyTrapComps)
+            object[] arguments = new object[]
             {
-                this.trapComps.Add(actionComp.Copy());
-            }
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CustomTrap.PasteData()", this, arguments);
         }
         public CustomThingData GetData(IntVec3 pos)
         {
@@ -182,33 +165,17 @@ namespace QuestEditor_Library
             });
         }
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            if (Widgets.ButtonText(new Rect(x, y, 325f, 25f), "CustomTrapMode".Translate(("ActionTriggerMode_" + this.mode.ToString()).Translate()), false))
-            {
-                CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => this.mode = m, m => ("ActionTriggerMode_" + m.ToString()).Translate());
-            }
-            y += 30f;
-            if (this.mode == ActionTriggerMode.Signal)
-            {
-                CQFSignalEditor.DrawBookField(y, "TrapInSignal".Translate(), this.inSignal, value => this.inSignal = value, x, 200f, inRect.width - x - 12f);
-                y += 30f;
-                Rect rect = new Rect(x, y, 350f, 25f);
-                Widgets.CheckboxLabeled(rect, "SignalOnlyIsValidInPart".Translate(), ref this.signalIsOnlyValidInPart);
-                TooltipHandler.TipRegion(rect, "SignalOnlyIsValidInPartTip".Translate());
-                y += 30f;
-            }
-            if (this.mode == ActionTriggerMode.Tick)
-            {
-                CQFEditorTools.DrawLabelAndText_Line(y, "TickToTrigger".Translate(), ref this.tick, ref this.buffer, x);
-                TooltipHandler.TipRegion(new Rect(x, y, 150f, 25f), "TickToTriggerTip".Translate());
-                y += 30f;
-            }
-            Widgets.CheckboxLabeled(new Rect(x, y, 250f, 25f), "TriggerWhenDamaged".Translate(), ref this.triggerWhenDamaged);  
-            TooltipHandler.TipRegion(new Rect(x, y, 125f, 30f), "CustomTrapTip".Translate());
-            y += 30f;
-            CQFEditorTools.DrawActionList(ref y, x, this.actions, inRect, "TrapActions".Translate());
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.TrapComp.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public virtual void ExposeData()
         {
             Scribe_Values.Look(ref this.triggerWhenDamaged, "triggerWhenDamaged");

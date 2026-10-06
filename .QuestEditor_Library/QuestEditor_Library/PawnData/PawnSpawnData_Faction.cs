@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,21 +13,18 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-public class PawnSpawnData_Faction : PawnSpawnData
+    public class PawnSpawnData_Faction : PawnSpawnData
     {
         public override void DrawKind(float x, ref float y)
+
         {
-            Rect rect = new Rect(20f + x, y, 250f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_PawnGroupMaker".Translate(this.kindDef?.defName), false) && !this.faction.NullOrEmpty() && FactionDef.Named(this.faction) is FactionDef factionDef && !factionDef.pawnGroupMakers.NullOrEmpty())
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(factionDef.pawnGroupMakers, (k) => this.kindDef = k.kindDef, (k) =>
-                {
-                    return k.kindDef.defName + ":" + k.commonality;
-                });
-            }
-            TooltipHandler.TipRegion(rect, "CQF_PawnGroupMaker_Tip".Translate());
-            y += 30f;
-            CQFEditorTools.DrawIntRange(ref y, "SpawmPoint".Translate(), ref this.point, ref buffer1, ref buffer2, x + 20f, 80f);
+                x,
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData_Faction.DrawKind(None:float,Ref:float)", this, arguments);
+            y = (float)arguments[1];
         }
         public override bool CanSaveToMap()
         {
@@ -122,5 +119,3 @@ public class PawnSpawnData_Faction : PawnSpawnData
         public string buffer2;
     }
 }
-
-

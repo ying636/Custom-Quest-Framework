@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +13,19 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-public class PawnSpawnData_Random : PawnSpawnData
+    public class PawnSpawnData_Random : PawnSpawnData
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            Rect rect = new Rect(16f + x, y + 10f, 500f, 45f);
-            this.DrawName(ref y, x, rect);
-            CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 16f + x, this.datas, inRect, "PawnSpawnDatas".Translate(), d => d.dataName);
-            this.DrawCanSaveWarning(ref y, x, inRect);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData_Random.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool CanSaveToMap()
         {
@@ -39,7 +44,7 @@ public class PawnSpawnData_Random : PawnSpawnData
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable<PawnSpawnData>(this.datas, "datas"));
+            result.Add(CQFSerialization.SaveList_Saveable<PawnSpawnData>(this.datas, "datas"));
             return result;
         }
         public override void ExposeData()
@@ -51,5 +56,3 @@ public class PawnSpawnData_Random : PawnSpawnData
         public List<PawnSpawnData> datas = new List<PawnSpawnData>();
     }
 }
-
-

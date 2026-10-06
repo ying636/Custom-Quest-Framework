@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using Verse.AI;
 using Verse.AI.Group;
 namespace QuestEditor_Library
 {
-public class DutyData
+    public class DutyData
     {
     }
     public class HediffInformation : ISaveable, IExposable
@@ -54,7 +54,16 @@ public class DutyData
     public class ArrivingWay : IExposable,IDrawable
     {     
         public virtual void Draw(ref float y, Rect inRect, float x)
+
         {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ArrivingWay.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual void SpawnPnaw(List<Pawn> pawns, IntVec3 position, Map map)
         {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_Editor_Enable>启用编辑器</CQF_Editor_Enable>
+  <CQF_Editor_EnableHint>框架始终运行。只有在游戏启动时启用此选项，才会加载编辑工具和 AI 编辑功能。</CQF_Editor_EnableHint>
+  <CQF_Editor_RestartRequired>请重启 RimWorld 使此修改生效。</CQF_Editor_RestartRequired>
+  <CQF_Editor_LoadFailed>编辑器加载失败，框架仍可使用。详细原因请查看日志。</CQF_Editor_LoadFailed>
+  <CQF_Editor_NotLoaded>编辑器尚未加载。请在 CQF Mod 设置中启用，并重启 RimWorld。</CQF_Editor_NotLoaded>
+  <CQF_Editor_MissingFile>找不到编辑器 DLL。</CQF_Editor_MissingFile>
+  <CQF_Editor_VersionMismatch>框架与编辑器版本不匹配。</CQF_Editor_VersionMismatch>
+</LanguageData>

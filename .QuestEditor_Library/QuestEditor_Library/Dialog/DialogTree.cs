@@ -15,58 +15,14 @@ namespace QuestEditor_Library
     public class DialogManagerDef : Def, ISaveable
     {
         public void Draw(ref float y)
+
         {
-            float last = 80f;
-            Dictionary<int, DialogTreeAndConditions> replaces = new Dictionary<int, DialogTreeAndConditions>();
-            foreach (DialogTreeAndConditions tree in this.trees)
+            object[] arguments = new object[]
             {
-                int index = this.trees.IndexOf(tree);
-                Rect rect = new Rect(10f, y, 350f, 40f);
-                Widgets.DrawBox(new Rect(5f, y - 5f, 350f, this.heights.ContainsKey(index) ? this.heights[index] - 40f : 0f), 1, QuestEditor_Dialog.blueTex);
-                y += 10f;
-                rect.height = 30f;
-                if (Widgets.ButtonText(rect, "DialogTree".Translate(tree.tree?.defName), false))
-                {
-                    CQFEditorTools.DrawFloatMenu(DefDatabase<DialogTreeDef>.AllDefsListForReading, (x) =>
-                    {
-                        replaces.Add(index, new DialogTreeAndConditions(x, tree.conditions));
-                    }, (x) => x.defName);
-                }
-                y += 30;
-                Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(10f, y, 100f, 30f), "Conditions".Translate().Colorize(ColorLibrary.SkyBlue));
-                Text.Font = GameFont.Small;
-                y += 40f;
-                foreach (DialogCondition condition in tree.conditions)
-                {
-                    condition.Draw(ref y,rect,10f);
-                }
-                y += 5f;
-                Rect button = new Rect(10f, y, 100f, 30f);
-                if (Widgets.ButtonText(button, "Add".Translate()))
-                {
-                    CQFEditorTools.DrawFloatMenu<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), (x) =>
-                    {
-                        DialogCondition c = (DialogCondition)Activator.CreateInstance(x);
-                        tree.conditions.Add(c);
-                    }, x => x.Name.Translate());
-                }
-                button.x += 110f;
-                if (Widgets.ButtonText(button, "Delete".Translate()) && tree.conditions.Any())
-                {
-                    CQFEditorTools.DrawFloatMenu<DialogCondition>(tree.conditions, (x) =>
-                    {
-                        tree.conditions.Remove(x);
-                    }, x => x.GetType().Name.Translate());
-                }
-                y += 90f;
-                this.heights.SetOrAdd(index, y - last);
-                last = y;
-            }
-            foreach (KeyValuePair<int, DialogTreeAndConditions> replace in replaces)
-            {
-                this.trees[replace.Key] = replace.Value;
-            }
+                y
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.DialogManagerDef.Draw(Ref:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public DialogTreeDef GetTree(Thing interviewer, Thing interviewee)
         {
@@ -104,14 +60,14 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("iconColor", this.iconColor));
             }
-            result.Add(CQFEditorTools.SaveList(this.tags, "tags"));
+            result.Add(CQFSerialization.SaveList(this.tags, "tags"));
             if (this.genrationConditions != null && this.genrationConditions.Any()) 
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.genrationConditions, "genrationConditions"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.genrationConditions, "genrationConditions"));
             }
             if (this.forcedTraits != null && this.forcedTraits.Any())
             {
-                result.Add(CQFEditorTools.SaveList_Saveable(this.forcedTraits, "forcedTraits"));
+                result.Add(CQFSerialization.SaveList_Saveable(this.forcedTraits, "forcedTraits"));
             }
             return result;
         }
@@ -157,66 +113,65 @@ namespace QuestEditor_Library
     }
     public class DialogTreeDef : Def, ISaveable
     {
+        public DialogTreeDef()
+        {
+            this.nodeMoulds[0].text = "CQF_Dialog_Node_0";
+        }
+
         public void Update()
         {
             this.idleNodes.Clear();
-            foreach (var keyValuePair in this.nodeMoulds)
+            HashSet<int> visited = new HashSet<int>();
+            Queue<int> pending = new Queue<int>();
+            foreach (DialogNode node in this.nodeMoulds.Values)
             {
-                if (this.IsIdleNode(keyValuePair.Value))
+                node.subNodeIndexs.Clear();
+                node.parentIndex = null;
+            }
+            if (this.nodeMoulds.ContainsKey(0))
+            {
+                visited.Add(0);
+                pending.Enqueue(0);
+            }
+            while (pending.Count > 0)
+            {
+                DialogNode node = this.nodeMoulds[pending.Dequeue()];
+                foreach (DialogResult result in node.options.SelectMany(option => option.results))
                 {
-                    this.AddIdleNode(keyValuePair.Value);
+                    if (result.nextIndex.HasValue && this.nodeMoulds.TryGetValue(result.nextIndex.Value, out DialogNode next)
+                        && visited.Add(result.nextIndex.Value))
+                    {
+                        node.subNodeIndexs.Add(result.nextIndex.Value);
+                        next.parentIndex = node.index;
+                        pending.Enqueue(result.nextIndex.Value);
+                    }
                 }
             }
+            this.idleNodes.AddRange(this.nodeMoulds.Where(pair => !visited.Contains(pair.Key)).Select(pair => pair.Value));
         }
 
         public void AddIdleNode(DialogNode node)
         {
-            this.idleNodes.Add(node);
-            node.subNodeIndexs.ForEach(i =>
-            {
-                DialogNode subNode = this.nodeMoulds[i];
-                if (this.IsIdleNode(subNode))
-                {
-                    this.AddIdleNode(subNode);
-                }
-            });
+            this.Update();
         }
         public bool IsIdleNode(DialogNode node)
         {
             return node.index != 0 && !this.nodeMoulds.Values.ToList().Exists(x => 
                 x.options.Exists(o => o.results.Exists(r => r.nextIndex == node.index)));
         }
-        public void ChangeNextNodeToOtherNode(DialogNode parent, DialogNode newNode,DialogResult result, bool isNewNode = false)
+        public void ChangeNextNodeToOtherNode(DialogNode? parent, DialogNode? newNode,DialogResult result, bool isNewNode = false)
         {
-            DialogNode oldNode = result.nextIndex == null ? null : this.nodeMoulds[result.nextIndex.Value];      
-            if (oldNode != null &&
-                parent.subNodeIndexs.Contains(oldNode.index.Value)
-                && !parent.options.Exists(o => o.results.Exists(r => r!=result
-                                                                     && r.nextIndex == result.nextIndex)))
-            {
-                parent.subNodeIndexs.Remove(oldNode.index.Value);
-                this.AddIdleNode(oldNode);
-            }
-            if (newNode != null)
-            {
-                if (newNode.index != 0 && newNode != parent && (this.idleNodes.Contains(newNode) || isNewNode))
-                {
-                    parent.subNodeIndexs.Add(newNode.index.Value);
-                }
-                if (this.idleNodes.Contains(newNode))
-                {
-                    this.idleNodes.Remove(newNode);
-                }
-                result.nextIndex = newNode.index.Value;
-            }
-            else
-            {
-                result.nextIndex = null;
-            }
+            result.nextIndex = newNode?.index;
+            this.Update();
         }
-        public DialogNode CreateNewNode(DialogNode parent)
+        public DialogNode CreateNewNode(DialogNode? parent)
         {
+            while (this.nodeMoulds.ContainsKey(this.curIndex))
+            {
+                this.curIndex++;
+            }
             DialogNode result = new DialogNode(this.curIndex);
+            result.text = "CQF_Dialog_Node_" + this.curIndex;
             this.nodeMoulds.Add(this.curIndex, result);
             this.curIndex++;
             if (parent != null)
@@ -349,7 +304,7 @@ namespace QuestEditor_Library
             }
             if (this.extraThingRefers.Any())
             {
-                result.Add(CQFEditorTools.SaveList(this.extraThingRefers, "extraThingRefers"));
+                result.Add(CQFSerialization.SaveList(this.extraThingRefers, "extraThingRefers"));
             }
             result.Add(nodes);
             return result;
@@ -416,6 +371,12 @@ namespace QuestEditor_Library
             XElement result = new XElement(nodeName);
             result.Add(new XElement("text", this.text));
             result.Add(new XElement("index", this.index));
+            if (this.editorPositionSet)
+            {
+                result.Add(new XElement("editorX", this.editorX));
+                result.Add(new XElement("editorY", this.editorY));
+                result.Add(new XElement("editorPositionSet", true));
+            }
             if (this.parentIndex != null)
             {
                 result.Add(new XElement("parentIndex", this.parentIndex));
@@ -440,7 +401,7 @@ namespace QuestEditor_Library
             }
             if (!this.extraText.NullOrEmpty()) 
             {
-                result.Add(CQFEditorTools.SaveList(this.extraText, "extraText"));
+                result.Add(CQFSerialization.SaveList(this.extraText, "extraText"));
             }
             return result;
         }
@@ -452,6 +413,9 @@ namespace QuestEditor_Library
         public List<DialogOption> options = new List<DialogOption>();
         public List<int> subNodeIndexs = new List<int>();
         public List<DialogImage> images = new List<DialogImage>();
+        public float editorX;
+        public float editorY;
+        public bool editorPositionSet;
     }
     public class DialogImage : ISaveable
     {

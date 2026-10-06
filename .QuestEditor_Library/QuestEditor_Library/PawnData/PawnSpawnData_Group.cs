@@ -13,20 +13,19 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-public class PawnSpawnData_Group : PawnSpawnData
+    public class PawnSpawnData_Group : PawnSpawnData
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            Rect rect = new Rect(20f + x, y, 250f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_PawnGroupDef".Translate(this.group?.defName), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu<GroupDataDef>(DefDatabase<GroupDataDef>.AllDefsListForReading, (k) => this.group = k, (k) =>
-                {
-                    return k.label;
-                });
-            }
-            y += 30f;
-            this.DrawCanSaveWarning(ref y, x, inRect);
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData_Group.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override bool CanSaveToMap()
         {
@@ -54,5 +53,3 @@ public class PawnSpawnData_Group : PawnSpawnData
         public GroupDataDef group;
     }
 }
-
-

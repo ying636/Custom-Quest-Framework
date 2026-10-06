@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -220,7 +220,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("def", this.def.defName));
             if (!this.targetKeys.NullOrEmpty())
             {
-                result.Add(CQFEditorTools.SaveList(this.targetKeys, "targetKeys"));
+                result.Add(CQFSerialization.SaveList(this.targetKeys, "targetKeys"));
             }
             if (this.rotation != Rot4.North)
             {

@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using RimWorld.Planet;
 using RimWorld.QuestGen;
 using System;
@@ -14,18 +14,17 @@ namespace QuestEditor_Library
     public class QuestNode_FindTileOnCoast : QuestNode, IDrawable
     {
         public void Draw(ref float y, Rect inRect, float x)
-        {
-            CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "StoreAsText".Translate(),ref this.storeAs, x,100f);
-            y += 30f;
-            CQFEditorTools.DrawIntRange(ref y, "MapDistance".Translate(),ref this.distance,ref this.buffer,ref this.bufferMin,x);
-            Func<Rot4, string> GetText = r => r == Rot4.Invalid ? "Rot_Invalid".Translate().ToString() : r.ToStringHuman().Translate().ToString();
-            if (Widgets.ButtonText(new Rect(x,y,350f,25f),"RequiredRotation".Translate(GetText(this.requiredRot)),false)) 
-            {
-                CQFEditorTools.DrawFloatMenu(new List<Rot4>() {Rot4.East,Rot4.West,Rot4.North,Rot4.South,Rot4.Invalid},r => this.requiredRot = r,r => GetText(r));
-            }
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_FindTileOnCoast.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         protected override void RunInt()
         {
             if (TileFinder.TryFindPassableTileWithTraversalDistance(Find.AnyPlayerHomeMap.Tile, this.distance.min, this.distance.max, out PlanetTile tile,

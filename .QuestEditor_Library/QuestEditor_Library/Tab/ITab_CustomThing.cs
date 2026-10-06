@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -30,16 +30,19 @@ namespace QuestEditor_Library
                 return null;
             }
         }
-        public override bool IsVisible => DebugSettings.godMode;
-        protected override bool StillValid => DebugSettings.godMode;
-        protected override void FillTab()
-        {
-            using (new CQFEditorContext(this.Thing as Thing))
-            {
-                this.Thing?.DrawTab();
-            }
-        }
+        internal object CQFSelectedObject => this.SelObject;
+        internal Vector2 CQFSize => this.size;
 
+        public override bool IsVisible => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
+        protected override bool StillValid => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
+        protected override void FillTab()
+
+        {
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ITab_CustomThing.FillTab()", this, arguments);
+        }
         public Thing thing;
     }
 }

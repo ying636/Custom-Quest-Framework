@@ -16,24 +16,18 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-        {
-            PawnModData_Basic data = pawnDef.DataFor<PawnModData_Basic>();
-            Rect row = this.DrawRowLabel(ref y, inRect, x, "CQF_PawnEditor_DefName".Translate(), 170f);
-            pawnDef.defName = Widgets.TextField(new Rect(row.x, row.y, Mathf.Min(360f, row.width), 30f), pawnDef.defName);
-            this.EndRow(ref y);
-            row = this.DrawRowLabel(ref y, inRect, x, "CQF_PawnEditor_Label".Translate(), 170f);
-            pawnDef.label = Widgets.TextField(new Rect(row.x, row.y, Mathf.Min(360f, row.width), 30f), pawnDef.label);
-            this.EndRow(ref y);
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_PawnKind".Translate(this.ValueOrNone(data.kindDef?.label))))
-            {
-                this.OpenPawnKindSelector(kind => data.kindDef = kind);
-            }
-            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Faction".Translate() + this.ValueOrNone(data.faction?.label)))
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<FactionDef>.AllDefsListForReading, faction => data.faction = faction, faction => faction.label);
-            }
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                pawnDef,
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Basic.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[1];
+        }
         public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
         {
             PawnModData_Basic data = pawnDef.DataFor<PawnModData_Basic>();
@@ -41,8 +35,7 @@ namespace QuestEditor_Library
             data.kindDef = DefDatabase<PawnKindDef>.GetNamedSilentFail(node["kindDef"]?.InnerText);
             data.faction = DefDatabase<FactionDef>.GetNamedSilentFail(node["faction"]?.InnerText);
         }
-
-        private void OpenPawnKindSelector(Action<PawnKindDef> action)
+        internal void OpenPawnKindSelector(Action<PawnKindDef> action)
         {
             List<PawnKindDef> kinds = DefDatabase<PawnKindDef>.AllDefsListForReading;
             Find.WindowStack.Add(new Dialog_Select<PawnKindDef>(

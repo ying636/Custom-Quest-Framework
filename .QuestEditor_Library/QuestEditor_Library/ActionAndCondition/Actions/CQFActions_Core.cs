@@ -51,14 +51,16 @@ namespace QuestEditor_Library
             return result;
         }
         public virtual void Draw(ref float y, Rect inRect, float x)
+
         {
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            if ((this.GetType().Name + "_Tip").CanTranslate())
+            object[] arguments = new object[]
             {
-                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual XElement SaveToXElement(string nodeName)
         {
@@ -75,19 +77,23 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "LoopCount".Translate(), ref this.loopCount, ref this.buffer, x, 150f);
-            y += 30f;
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Loop.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(new XElement("loopCount", this.loopCount));
             result.Add(new XElement("buffer", this.buffer));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -114,19 +120,23 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y,"DelayTime".Translate(),ref this.delayTime,ref this.buffer,x,150f);
-            y += 30f;
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_DelayExecute.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(new XElement("delayTime",this.delayTime));
             result.Add(new XElement("buffer", this.buffer));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -150,15 +160,21 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_PostGenerationExecute.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -178,15 +194,21 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Sequence.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -206,15 +228,21 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Random.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -234,18 +262,22 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
-            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, this.conditions, inRect, "TriggerConditions".Translate(), a => a.GetType().Name.Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Condition.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.actions, "actions"));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "conditions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.conditions, "conditions"));
             return result;
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
@@ -270,22 +302,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            if (this.action != null)
+            object[] arguments = new object[]
             {
-                Widgets.DrawLine(new Vector2(x, y), new Vector2(inRect.width, y), ColorLibrary.SkyBlue, 1f);
-                this.action.Draw(ref y, inRect, x);
-                Widgets.DrawLine(new Vector2(x, y), new Vector2(inRect.width, y), ColorLibrary.SkyBlue, 1f);
-                y += 5f;
-            }
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "SelectAction".Translate(), false))
-            {
-                CQFEditorTools.OpenCQFActionSelect(a => this.action = (CQFAction)Activator.CreateInstance(a));
-            }
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "LootChance".Translate(), ref this.chance, ref this.buffer, x, 150f);
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Chance.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -318,18 +344,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFSignalEditor.DrawBookField(y, "OutSignal".Translate(), this.signal, value => this.signal = value, x, 350f, inRect.width - x - 12f);
-            y += 30f;
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.CheckboxLabeled(rect, "SignalOnlyIsValidInPart".Translate(), ref this.signalIsOnlyValidInPart);
-            TooltipHandler.TipRegion(rect, "SignalOnlyIsValidInPartTip".Translate());
-            y += 30f;
-            rect.y += 30f;
-            Widgets.CheckboxLabeled(rect, "AddQuestPrefix".Translate(), ref this.addQuestPrefix);
-            TooltipHandler.TipRegion(rect, "AddQuestPrefixTip".Translate());
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SentSignal.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -401,13 +425,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "keyOfBoolValue".Translate(), ref this.keyOfBool, x, 350f);
-            y += 30f;
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.CheckboxLabeled(rect, "valueOfBool".Translate(), ref this.valueOfBool);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetBool.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -435,13 +462,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "keyOfBoolValue".Translate(), ref this.keyOfBool, x, 350f);
-            y += 30f;
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.CheckboxLabeled(rect, "valueOfBool".Translate(), ref this.valueOfBool);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetGlobalBool.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -469,15 +499,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref this.message, x, 240f);
-            y += 30f;
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFMessageType".Translate(this.type?.defName.Translate().ToString()), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<MessageTypeDef>.AllDefsListForReading, (d) => this.type = d, (d) => d.defName.Translate());
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Message.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -533,13 +564,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFQuestDef".Translate(this.quest?.defName), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<QuestScriptDef>.AllDefsListForReading, (d) => this.quest = d, (d) => d.defName);
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Quest.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -569,13 +603,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFIncidentDef".Translate(this.incident?.defName), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<IncidentDef>.AllDefsListForReading, (d) => this.incident = d, (d) => d.label);
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Incident.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -607,17 +644,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(this.dialog?.defName), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => this.dialog = m, m => m.defName);
-            }
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "Interviewer".Translate(), this.interviewerText, value => this.interviewerText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "Interviewee".Translate(), this.intervieeText, value => this.intervieeText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_StartDialog.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
@@ -671,17 +707,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.Pawn;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 320f, 25f), "CQF_RelationDef".Translate(this.relation?.label), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<PawnRelationDef>.AllDefsListForReading, m => this.relation = m, m => m.label);
-            }
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "TargetA".Translate(), this.targetA, value => this.targetA = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "TargetB".Translate(), this.targetB, value => this.targetB = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetRelation.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
@@ -738,14 +773,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "EntranceKey".Translate(), this.entranceText, value => this.entranceText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "ExitKey".Translate(), this.exitText, value => this.exitText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_LinkEntranceAndExit.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             CustomMapEntrance entrance = null;
@@ -805,12 +843,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "targetLocationText".Translate(), this.targetLocationText, value => this.targetLocationText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Skip.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
@@ -883,10 +925,16 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
 
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f; 
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SkipToPlayerMap.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
@@ -990,12 +1038,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), this.key, value => this.key = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_DestroyMainSite.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             MainMapWorldComponent.Component?.TryDestroyMainSiteByKey(this.key, quest, targets);
@@ -1024,20 +1077,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), this.key, value => this.key = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "RecordKeyOfData".Translate(), ref this.recordKey, x, 150f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToTemporaryBase".Translate(), ref this.recordToTemporaryBase);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToQuestBase".Translate(), ref this.recordToQuestBase);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToGlobalBase".Translate(), ref this.recordToGlobalBase);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_RecordMainSiteVisitCount.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (MainMapWorldComponent.Component == null ||
@@ -1101,4 +1151,3 @@ namespace QuestEditor_Library
         public bool recordToGlobalBase;
     }
 }
-

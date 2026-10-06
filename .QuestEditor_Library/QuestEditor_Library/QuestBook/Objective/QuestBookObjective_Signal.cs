@@ -36,16 +36,17 @@ namespace QuestEditor_Library
         }
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
-        {
-            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
-            {
-                DrawTargetCountField(card, ref rowY);
-                CQFSignalEditor.DrawBookField(new Rect(card.x + 14f, rowY, 164f, 28f),
-                    new Rect(card.x + 184f, rowY, card.width - 198f, 28f), "CQF_QuestBook_TriggerSignal".Translate(), signal, value => signal = value);
-                rowY += 36f;
-            });
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective_Signal.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void ExposeData()
         {
             base.ExposeData();

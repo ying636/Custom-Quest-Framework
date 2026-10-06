@@ -11,20 +11,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.QuestBook;
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            string selected = bookDef == null ? "CQF_QuestBook_None".Translate().ToString() : (bookDef.label.NullOrEmpty() ? bookDef.defName : bookDef.label);
-            Rect selectRect = new Rect(x, y, Mathf.Max(280f, inRect.width - x - 12f), 28f);
-            if (Widgets.ButtonText(selectRect, "CQF_QuestBook_ActionStartQuestBook".Translate(selected), false))
-            {
-                CQFEditorTools.DrawFloatMenu(
-                    DefDatabase<QuestBookDef>.AllDefsListForReading,
-                    definition => bookDef = definition,
-                    definition => definition.label.NullOrEmpty() ? definition.defName : definition.label);
-            }
-            y += selectRect.height + 8f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_StartQuestBook.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (bookDef == null)

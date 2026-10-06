@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +12,20 @@ namespace QuestEditor_Library
     public class ScenPart_GenerateCustomMap : ScenPart
     {
         public override void DoEditInterface(Listing_ScenEdit listing)
-        {
-            Rect scenPartRect = listing.GetScenPartRect(this,30f + ScenPart.RowHeight);
-            if (Widgets.ButtonText(scenPartRect,"StartMap".Translate(this.map?.label),false)) 
-            {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading,d => this.map = d,d =>d.label);
-            }
-        }
 
+        {
+            if (!CQFEditorBridge.IsLoaded)
+            {
+                Widgets.Label(listing.GetScenPartRect(this, ScenPart.RowHeight * 3f), "CQF_Editor_NotLoaded".Translate());
+                return;
+            }
+
+            object[] arguments = new object[]
+            {
+                listing
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ScenPart_GenerateCustomMap.DoEditInterface(None:Verse.Listing_ScenEdit)", this, arguments);
+        }
         public override void ExposeData()
         {
             base.ExposeData();

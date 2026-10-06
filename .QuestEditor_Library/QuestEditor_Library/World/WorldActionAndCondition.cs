@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using RimWorld;
 using RimWorld.Planet;
 using RimWorld.QuestGen;
@@ -37,16 +37,17 @@ namespace QuestEditor_Library
     public class WorldAction : ISaveable, IDrawable, IExposable
     {
         public virtual void Draw(ref float y, Rect inRect, float x)
-        {
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            if ((this.GetType().Name + "_Tip").CanTranslate())
-            {
-                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
-            }
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldAction.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public virtual XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -70,12 +71,16 @@ namespace QuestEditor_Library
             this.actions.RandomElementByWeight(a => a.Value).Key.Work(target);
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList(ref y, x, this.actions.Keys.ToList(), inRect, "TriggerActions".Translate(), () =>
-                CQFEditorTools.DrawFloatMenu(typeof(WorldAction).AllSubclassesNonAbstract(),
-                    a => this.actions.Add((WorldAction)Activator.CreateInstance(a), 1f), a => a.Name.Translate()),
-                a => a.GetType().Name.Translate());
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldAction_Chance.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -112,10 +117,16 @@ namespace QuestEditor_Library
             }
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.worldObject?.label ?? this.worldObject?.defName),
-                DefDatabase<WorldObjectDef>.AllDefsListForReading, d => this.worldObject = d, d => d.label ?? d.defName);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldAction_GenerateMapAndEnter.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -154,16 +165,16 @@ namespace QuestEditor_Library
             }
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawFactionSelectableText(y, "MapFaction".Translate(), ref this.faction, f => this.faction = f, x, 150f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SentDefeatLetter".Translate(), ref this.sentDefeatLetter);
-            y += 30f;
-            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.label ?? this.part?.defName),
-                DefDatabase<SitePartDef>.AllDefsListForReading, d => this.part = d, d => d.label ?? d.defName);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldAction_GenerateSiteAndEnter.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -231,42 +242,16 @@ namespace QuestEditor_Library
             }
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "SiteIconPath".Translate(), ref this.siteIconPath, x, 150f);
-            y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "ExpandingIconPath".Translate(), ref this.expandingIconPath, x, 150f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "ReplaceMapGeneration".Translate(), ref this.replaceMapGeneration);
-            y += 30f;
-            CQFEditorTools.DrawFactionSelectableText(y, "MapFaction".Translate(), ref this.faction, f => this.faction = f, x, 150f);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SentDefeatLetter".Translate(), ref this.sentDefeatLetter);
-            y += 30f;
-            CQFEditorTools.DrawSelectButton(x, ref y, "SitePartDef".Translate(this.part?.label ?? this.part?.defName),
-                DefDatabase<SitePartDef>.AllDefsListForReading, d => this.part = d, d => d.label ?? d.defName);
-            CQFEditorTools.DrawEditableList(this.customMapDataTags, ref y, (textField, t) =>
+            object[] arguments = new object[]
             {
-                t.tag = Widgets.TextField(textField, t.tag);
-                Rect chance = new Rect(textField.width + textField.x + 10f, textField.y, 100f, 25f);
-                Widgets.Label(chance, "LootChance".Translate());
-                chance.x += 80f;
-                Widgets.TextFieldPercent(chance, ref t.weight, ref t.buffer);
-            }, t => t.tag, "TagWithChance".Translate(), "TagWithChance_Tip".Translate(), true, x, 350f);
-            CQFEditorTools.DrawEditableList(this.customMapDatas, ref y, (textField, t) =>
-            {
-                string buttonText = "CustomMapDef".Translate(t.data?.label);
-                if (Widgets.ButtonText(textField, buttonText, false))
-                {
-                    CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, d => t.data = d, d => d.label);
-                }
-                Rect chance = new Rect(Text.CalcSize(buttonText).x + textField.x + 10f, textField.y, 100f, 25f);
-                Widgets.Label(chance, "Chance".Translate());
-                chance.x += 80f;
-                Widgets.TextFieldPercent(chance, ref t.weight, ref t.buffer);
-            }, t => t.data?.label, "MapDefWithChance".Translate(), "MapDefWithChance_Tip".Translate(), true, x, 350f);
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldAction_GenerateCustomMapAndEnter.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -274,8 +259,8 @@ namespace QuestEditor_Library
             result.Add(new XElement("siteIconPath", this.siteIconPath));
             result.Add(new XElement("expandingIconPath", this.expandingIconPath));
             result.Add(new XElement("replaceMapGeneration", this.replaceMapGeneration));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.customMapDataTags, "customMapDataTags"));
-            result.Add(CQFEditorTools.SaveList_Saveable(this.customMapDatas, "customMapDatas"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.customMapDataTags, "customMapDataTags"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.customMapDatas, "customMapDatas"));
             result.Add(new XElement("faction", this.faction));
             result.Add(new XElement("setCaravanTileAsTarget", this.setCaravanTileAsTarget));
             result.Add(new XElement("sentDefeatLetter", this.sentDefeatLetter));
@@ -334,12 +319,16 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.setCaravanTileAsTarget,"set");
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "CQFQuestDef".Translate(this.quest?.label ?? this.quest?.defName),
-                DefDatabase<QuestScriptDef>.AllDefsListForReading, d => this.quest = d, d => d.label ?? d.defName);
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref this.setCaravanTileAsTarget);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldAction_GenerateQuest.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -356,16 +345,17 @@ namespace QuestEditor_Library
     public class WorldCondition : ISaveable, IDrawable, IExposable
     {
         public virtual void Draw(ref float y, Rect inRect, float x)
-        {
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            if ((this.GetType().Name + "_Tip").CanTranslate())
-            {
-                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
-            }
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public virtual XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -386,16 +376,21 @@ namespace QuestEditor_Library
     public class WorldCondition_And : WorldCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.conditions, inRect, "WorldConditions".Translate());
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_And.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "condition"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.conditions, "condition"));
             return result;
         }
 
@@ -415,16 +410,21 @@ namespace QuestEditor_Library
     public class WorldCondition_Or : WorldCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIDrawList(ref y, x + 5f, this.conditions, inRect, "WorldConditions".Translate());
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_Or.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList_Saveable(this.conditions, "condition"));
+            result.Add(CQFSerialization.SaveList_Saveable(this.conditions, "condition"));
             return result;
         }
 
@@ -444,13 +444,17 @@ namespace QuestEditor_Library
     public class WorldCondition_Reversal : WorldCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, typeof(WorldCondition).AllSubclassesNonAbstract(), t => this.condition = (WorldCondition)Activator.CreateInstance(t), t => t.Name.Translate());
-            this.condition?.Draw(ref y, inRect, x);
-            y += 30f;
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_Reversal.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -484,16 +488,16 @@ namespace QuestEditor_Library
                 || !wo.Faction.def.isPlayer || wo.Faction.HostileTo(Find.FactionManager.OfPlayer));
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "NonHostile".Translate(), ref this.nonHostile);
-            y += 30f;
-            Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "NonPlayer".Translate(), ref this.nonPlayer);
-            y += 30f;
-            CQFEditorTools.DrawSelectButton(x, ref y, "WorldConditionFaction".Translate(this.faction?.label ?? this.faction?.defName),
-                DefDatabase<FactionDef>.AllDefsListForReading, d => this.faction = d, d => d.label);
-            CQFEditorTools.DrawSelectButton(x, ref y, "WorldObjectDef".Translate(this.objectDef?.label ?? this.objectDef?.defName),
-                DefDatabase<WorldObjectDef>.AllDefsListForReading, d => this.objectDef = d, d => d.label ?? d.defName);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_WorldObject.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -526,12 +530,17 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "LandmarkDef".Translate(this.landmark?.label ?? this.landmark?.defName),
-                DefDatabase<LandmarkDef>.AllDefsListForReading, d => this.landmark = d, d => d.label ?? d.defName);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_Landmark.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -555,12 +564,17 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "BiomeDef".Translate(this.biome?.label ?? this.biome?.defName),
-                DefDatabase<BiomeDef>.AllDefsListForReading, d => this.biome = d, d => d.label ?? d.defName);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_Biome.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -584,12 +598,17 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-        {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "TileMutatorDef".Translate(this.mutator?.label ?? this.mutator?.defName),
-                DefDatabase<TileMutatorDef>.AllDefsListForReading, d => this.mutator = d, d => d.label ?? d.defName);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_TileMutator.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -625,12 +644,16 @@ namespace QuestEditor_Library
             return result >= this.vaule;
         }
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawSelectButton(x, ref y, "SkillDef".Translate(this.skill?.label ?? this.skill?.defName),
-                DefDatabase<SkillDef>.AllDefsListForReading, d => this.skill = d, d => d.label);
-            CQFEditorTools.DrawLabelAndText_Line(y, "RequiredLevel".Translate(), ref this.vaule, ref this.buffer, x);
-            y += 30f;
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.WorldCondition_TotalSkill.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -65,10 +65,10 @@ namespace QuestEditor_Library
                     return x is CustomThingData_ZoneCore corevar && data.GetDataByCore(corevar) is CustomMapDataDef data2 && !this.conditions.Exists(c2 => !c2.SatisfiedForCore(corevar)) && corevar.coreRotation != Rot4.Invalid
                     && this.CanGenerate(this.CoreRotation, data.size.ToIntVec2, this.Position, this.Map, corevar);
                 }).RandomElement();
-                if (Prefs.DevMode && !DebugTools.clearGenerationData)
+                if (CQFEditorBridge.IsLoaded && Prefs.DevMode && !CQFMapGenerationState.ClearGenerationData)
                 {
                     CellRect rect = this.GetRect(this.CoreRotation, data.size.ToIntVec2, this.Position, coreData);
-                    DebugTools.cells.AddRange(rect.Cells);
+                    CQFMapGenerationState.Cells.AddRange(rect.Cells);
                     if (Prefs.DevMode)
                     {
                         Log.Message(this.Position.ToString());
@@ -158,105 +158,12 @@ namespace QuestEditor_Library
         }
         //参数分别为生成的事物的坐标，被生成的地图的核心的坐标，要返回的实际坐标
         public void DrawTab()
+
         {
-            Widgets.BeginScrollView(new Rect(0f, 5f, 490f, 590f), ref this.scrollPos, new Rect(0f, 5f, 490f, this.height));
-            float y = 10f;
-            float x = 7f;
-            Rect rect = new Rect(x, y, 250f, 25f);
-            Func<Rot4, string> GetText = r => r == Rot4.Invalid ? "Rot_Invalid".Translate().ToString() : r.ToStringHuman().Translate().ToString();
-            if (Widgets.ButtonText(rect, "CoreZoneRotation".Translate(this.isCenter ? "Rot_Invalid".Translate().ToString() : GetText(this.coreRotation)), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(new List<Rot4>() { Rot4.West, Rot4.East, Rot4.North, Rot4.South, Rot4.Invalid }, (r) =>
-                      {
-                          this.coreRotation = r;
-                          this.isCenter = !r.IsValid;
-                      }, (r) => GetText(r));
-            }
-            TooltipHandler.TipRegion(rect, "CoreZoneRotationTip".Translate());
-            Rect rectCP = new Rect(380f, y, 25f, 25f);
-            if (Widgets.ButtonImage(rectCP, TexButton.Copy))
-            {
-                this.CopyData();
-            }
-            TooltipHandler.TipRegion(rectCP, "Copy".Translate());
-            y += 30f;
-            Rect reserveRect = new Rect(x, y, 300f, 25f);
-            if (Widgets.ButtonText(reserveRect, "ReserveGenerationThing".Translate(this.reserveThing == null ? "NoGenerate".Translate().ToString() : this.reserveThing?.stuff?.label + this.reserveThing?.def?.label), false))
-            {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
-                options.Add(new FloatMenuOption("NoGenerate".Translate(), () => this.reserveThing = null));
-                options.Add(new FloatMenuOption("Select".Translate(), () =>
-                {
-                    this.reserveThing = new ThingData();
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                        new TextureSelectDrawer<ThingDef>(
-                            Designator_SpawnThing.Bespawnable,
-                            t => t.uiIcon,
-                            t => t.label,
-                            t =>
-                            {
-                                this.reserveThing.def = t;
-                                this.reserveThing.hitPoint = t.BaseMaxHitPoints;
-                                if (t.MadeFromStuff)
-                                {
-                                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                                        new TextureSelectDrawer<ThingDef>(
-                                            GenStuff.AllowedStuffsFor(t).ToList(),
-                                            s => s.uiIcon,
-                                            s => s.label,
-                                            s =>
-                                            {
-                                                this.reserveThing.stuff = s;
-                                                this.reserveThing.hitPoint = (int)(t.BaseMaxHitPoints * (s.stuffProps.statFactors.Find(s2 => s2.stat == StatDefOf.MaxHitPoints) is StatModifier stat ? stat.value : 1f));
-                                            },
-                                            t2 => t2.graphic?.Color ?? Color.white,
-                                            (d, r) => Widgets.DefIcon(r, d, null)),
-                                        "SelectStuff".Translate()));
-                                }
-                            },
-                            t => t.graphic?.Color ?? Color.white),
-                        "Select".Translate()));
-                }));
-                Find.WindowStack.Add(new FloatMenu(options));
-            }
-            TooltipHandler.TipRegion(reserveRect, "ReserveGenerationThingTip".Translate());
-            Rect copy = new Rect(300f, y, 25f, 25f);
-            if (Widgets.ButtonImage(copy, TexButton.Copy)) 
-            {
-                CQFEditorTools.thingData = this.reserveThing;
-            }
-            copy.x += 30f;
-            if (Widgets.ButtonImage(copy, TexButton.Paste))
-            {
-                this.reserveThing = CQFEditorTools.thingData;
-            }  
-            y += 30f; 
-            Rect generationKeyRect = new Rect(x, y, 300f, 25f);
-            CQFEditorTools.DrawLabelAndText_Line(y,"GenerationKey".Translate(), ref this.generationKey,x,150f);
-            TooltipHandler.TipRegion(generationKeyRect, "GenerationKeyTip".Translate());
-            y += 30f;
-            Rect destroyThingsRect = new Rect(x, y, 300f, 25f);
-            Widgets.CheckboxLabeled(destroyThingsRect, "DestroyThingsWhenGeneration".Translate(), ref this.destroyThings);
-            TooltipHandler.TipRegion(destroyThingsRect, "DestroyThingsWhenGenerationTip".Translate());
-            y += 30f;
-            Rect prohibitRotatingRect = new Rect(x, y, 300f, 25f);
-            Widgets.CheckboxLabeled(prohibitRotatingRect, "ProhibitRotatingDocking".Translate(), ref this.prohibitRotatingDocking);
-            TooltipHandler.TipRegion(prohibitRotatingRect, "ProhibitRotatingDockingTip".Translate());
-            y += 30f;
-            Rect prohibitFlippingRect = new Rect(x, y, 300f, 25f);
-            Widgets.CheckboxLabeled(prohibitFlippingRect, "ProhibitFlippingDocking".Translate(), ref this.prohibitFlippingDocking);
-            TooltipHandler.TipRegion(prohibitFlippingRect, "ProhibitFlippingDockingTip".Translate());
-            y += 30f;
-            Rect coreTagsRect = new Rect(x, y, 360f, 30f);
-            CQFEditorTools.DrawEditableStringList(this.coreTags,ref y,"CoreTags".Translate(),null,true,x,360f);
-            TooltipHandler.TipRegion(coreTagsRect, "CoreTagsTip".Translate());
-            y += 5f;
-            Rect conditionsRect = new Rect(x, y, 480f, 30f);
-            CQFEditorTools.DrawIDrawList(ref y, x, this.conditions, new Rect(5f, 5f, 490f, 590f), "ZoneGenerationConditions".Translate());
-            TooltipHandler.TipRegion(conditionsRect, "ZoneGenerationConditionsTip".Translate());
-            y += 40;
-            Widgets.EndScrollView();
-            this.height = y;
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCore.DrawTab()", this, arguments);
         }
         public override IEnumerable<Gizmo> GetGizmos()
         {
@@ -291,31 +198,21 @@ namespace QuestEditor_Library
         }
 
         public void PasteData()
-        {
-            this.coreRotation = CQFEditorTools.coreRotation;
-            this.generationKey = CQFEditorTools.generationKey;
-            this.isCenter = CQFEditorTools.isCenter;
-            this.reserveThing = CQFEditorTools.reserveThing;
-            this.prohibitRotatingDocking = CQFEditorTools.prohibitRotatingDocking;
-            this.prohibitFlippingDocking = CQFEditorTools.prohibitFlippingDocking;
-            this.conditions.Clear();
-            CQFEditorTools.conditions.ForEach(c => this.conditions.Add(c.Copy()));
-            this.coreTags = CQFEditorTools.coreTags.ListFullCopy();
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCore.PasteData()", this, arguments);
+        }
         public void CopyData()
-        {
-            CQFEditorTools.coreRotation = this.coreRotation;
-            CQFEditorTools.isCenter = this.isCenter;
-            CQFEditorTools.reserveThing = this.reserveThing;
-            CQFEditorTools.generationKey = this.generationKey;
-            CQFEditorTools.prohibitRotatingDocking = this.prohibitRotatingDocking;
-            CQFEditorTools.prohibitFlippingDocking = this.prohibitFlippingDocking;
-            CQFEditorTools.destroyThings = this.destroyThings;
-            CQFEditorTools.conditions = this.conditions.ListFullCopy();
-            CQFEditorTools.coreTags = this.coreTags.ListFullCopy();
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCore.CopyData()", this, arguments);
+        }
         public string generationKey = null;
 
         public float height = 0f;
@@ -336,14 +233,16 @@ namespace QuestEditor_Library
     {
         public abstract bool Satisfied(Map map,CustomMapDataDef def);
         public virtual void Draw(ref float y, Rect inRect, float x)
+
         {
-            Rect rect = new Rect(x, y, 150f, 25f);
-            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            if ((this.GetType().Name + "_Tip").CanTranslate())
+            object[] arguments = new object[]
             {
-                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public virtual bool SatisfiedForCore(CustomThingData_ZoneCore core) 
         {
@@ -372,10 +271,16 @@ namespace QuestEditor_Library
     public class ZoneCondition_Size : ZoneCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIntRange(ref y,"RangeOfX".Translate(),ref this.x,ref this.buffer,ref this.buffer1,x,150f);
-            CQFEditorTools.DrawIntRange(ref y, "RangeOfZ".Translate(), ref this.z, ref this.buffer2, ref this.buffer3, x, 150f);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition_Size.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -405,21 +310,16 @@ namespace QuestEditor_Library
     public class ZoneCondition_FactionMeme : ZoneCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x); 
-            CQFEditorTools.DrawSelectableText(y, "PawnDataFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll((f) => !f.isPlayer), (f) => this.faction = f.defName, (f) => f.label, new List<FloatMenuOption>()
+            object[] arguments = new object[]
             {
-                new FloatMenuOption("RandomHostile".Translate(),() => this.faction = "RandomHostile"),
-                new FloatMenuOption("RandomAlly".Translate(),() => this.faction = "RandomAlly"),
-                new FloatMenuOption("RandomNeutral".Translate(),() => this.faction = "RandomNeutral"),
-                new FloatMenuOption("PawnDataMapFaction".Translate(),() => this.faction = "MapFaction")
-            }), 20f + x, 120f);
-            y += 30f;
-            if (Widgets.ButtonText(new Rect(x,y,350f,25f), "RequiredMeme".Translate(this.meme?.label),false)) 
-            {
-                CQFEditorTools.DrawFloatMenu<MemeDef>(DefDatabase<MemeDef>.AllDefs.ToList(), (f) => this.meme = f, (f) => f.label);
-            }
-            y += 30f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition_FactionMeme.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -446,14 +346,21 @@ namespace QuestEditor_Library
     public class ZoneCondition_Tag : ZoneCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawEditableStringList(this.tags,ref y, "CustomMapTags".Translate(),null,true,x);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition_Tag.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList(this.tags,"tags"));
+            result.Add(CQFSerialization.SaveList(this.tags,"tags"));
             return result;
         }
         public override bool Satisfied(Map map,CustomMapDataDef def)
@@ -471,15 +378,21 @@ namespace QuestEditor_Library
     public class ZoneCondition_CoreTag : ZoneCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawEditableStringList(this.coreTags, ref y, "CoreTags".Translate(), null, true, x);
-            Widgets.CheckboxLabeled(new Rect(x,y,250f,25f),"InvertResult".Translate(),ref this.invert);
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition_CoreTag.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(CQFEditorTools.SaveList(this.coreTags, "coreTags"));
+            result.Add(CQFSerialization.SaveList(this.coreTags, "coreTags"));
             return result;
         }
         public override bool Satisfied(Map map,CustomMapDataDef def)
@@ -505,15 +418,16 @@ namespace QuestEditor_Library
     public class ZoneCondition_Invert : ZoneCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            this.subCondition?.Draw(ref y, inRect, x + 5f);
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "SelectCondition".Translate(), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(typeof(ZoneCondition).AllSubclassesNonAbstract(), a =>
-    this.subCondition = ((ZoneCondition)Activator.CreateInstance(a)), a => a.Name.Translate());
-            }
-            y += 35f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition_Invert.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {
@@ -538,16 +452,16 @@ namespace QuestEditor_Library
     public class ZoneCondition_Wealth : ZoneCondition
     {
         public override void Draw(ref float y, Rect inRect, float x)
+
         {
-            base.Draw(ref y, inRect, x);
-            CQFEditorTools.DrawIntRange(ref y, "WealthRange".Translate(), ref this.wealth, ref this.buffer, ref this.buffer1, x, 150f);
-            this.subCondition?.Draw(ref y, inRect, x + 5f);   
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "SelectCondition".Translate(), false))
+            object[] arguments = new object[]
             {
-                CQFEditorTools.DrawFloatMenu(typeof(ZoneCondition).AllSubclassesNonAbstract(), a =>
-    this.subCondition = ((ZoneCondition)Activator.CreateInstance(a)), a => a.Name.Translate());
-            }
-            y += 35f;
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.ZoneCondition_Wealth.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
         }
         public override XElement SaveToXElement(string nodeName)
         {

@@ -22,25 +22,17 @@ namespace QuestEditor_Library
         }
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
-        {
-            DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
-            {
-                DrawRowLabel(card, rowY, "CQF_QuestBook_TargetResearch");
-                string label = TargetResearch == null ? "CQF_QuestBook_None".Translate().ToString() : TargetResearch.LabelCap;
-                Rect button = new Rect(card.x + 184f, rowY, card.width - 198f, 28f);
-                if (Widgets.ButtonText(button, label, false, true))
-                {
-                    List<ResearchProjectDef> projects = DefDatabase<ResearchProjectDef>.AllDefsListForReading
-                        .OrderBy(def => def.label)
-                        .ToList();
-                    Find.WindowStack.Add(new Dialog_Select<ResearchProjectDef>(new TextSelectDrawer<ResearchProjectDef>(
-                        projects, def => def.LabelCap, def => TargetResearch = def, null, def => def.description,
-                        null, def => def.defName, null, null), "CQF_QuestBook_TargetResearch".Translate()));
-                }
-                rowY += 36f;
-            });
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective_Research.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public override bool Process(QuestBookObjectiveProgress progress, Signal signal)
         {
             return false;

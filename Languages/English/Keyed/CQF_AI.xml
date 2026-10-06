@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_AI_Open>AI assistant</CQF_AI_Open>
+  <CQF_AI_EmptyChat>What would you like to work on?</CQF_AI_EmptyChat>
+  <CQF_AI_InputHint>Message the assistant…</CQF_AI_InputHint>
+  <CQF_AI_Options>Conversation options</CQF_AI_Options>
+  <CQF_AI_SendHint>Send message (Ctrl+Enter)</CQF_AI_SendHint>
+  <CQF_AI_Stop>Stop generating</CQF_AI_Stop>
+  <CQF_AI_RequestFailed>Request could not finish. Hover for details.</CQF_AI_RequestFailed>
+  <CQF_AI_OpenHint>Open the floating AI chat. Keep working in the editor while you talk.</CQF_AI_OpenHint>
+  <CQF_AI_Settings>AI settings</CQF_AI_Settings>
+  <CQF_AI_GenerateText>Write new text</CQF_AI_GenerateText>
+  <CQF_AI_GenerateTextHint>Allow new prose in edited content. When off, reuse existing text, text supplied in your command, or placeholders. This does not restrict chat replies.</CQF_AI_GenerateTextHint>
+  <CQF_AI_Unnamed>Unnamed {0}</CQF_AI_Unnamed>
+  <CQF_AI_Collapse>Collapse chat; requests continue in the background</CQF_AI_Collapse>
+  <CQF_AI_Expand>Expand chat</CQF_AI_Expand>
+  <CQF_AI_TargetChanged>The editing target changed. The previous request was stopped.</CQF_AI_TargetChanged>
+  <CQF_AI_AppliedLive>Changes are visible in the editor. You can undo them here; use the editor to save.</CQF_AI_AppliedLive>
+  <CQF_AI_NotLoaded>The editor is not loaded. Enable the editor in CQF Mod settings and restart RimWorld to use AI.</CQF_AI_NotLoaded>
+  <CQF_AI_Chat>Chat</CQF_AI_Chat>
+  <CQF_AI_Resources>Resources</CQF_AI_Resources>
+  <CQF_AI_Changes>Changes</CQF_AI_Changes>
+  <CQF_AI_NoTarget>Chat and resource queries</CQF_AI_NoTarget>
+  <CQF_AI_Target>Target: {0}</CQF_AI_Target>
+  <CQF_AI_SelectTarget>Select target</CQF_AI_SelectTarget>
+  <CQF_AI_New>New CQF content</CQF_AI_New>
+  <CQF_AI_Assistant>Assistant</CQF_AI_Assistant>
+  <CQF_AI_Player>Player</CQF_AI_Player>
+  <CQF_AI_Tool>Tool context</CQF_AI_Tool>
+  <CQF_AI_Send>Send</CQF_AI_Send>
+  <CQF_AI_Edit>Allow editing</CQF_AI_Edit>
+  <CQF_AI_EditHint>Allow AI changes to the content selected in an open CQF editor. This preference can be changed at any time; without an editing target, AI can only chat and query resources.</CQF_AI_EditHint>
+  <CQF_AI_ClearChat>Clear conversation</CQF_AI_ClearChat>
+  <CQF_AI_Type>Resource type</CQF_AI_Type>
+  <CQF_AI_Search>Search</CQF_AI_Search>
+  <CQF_AI_Previous>Previous page</CQF_AI_Previous>
+  <CQF_AI_Next>Next page</CQF_AI_Next>
+  <CQF_AI_ModOverview>Loaded Mod overview</CQF_AI_ModOverview>
+  <CQF_AI_NoDraft>No changes to preview.</CQF_AI_NoDraft>
+  <CQF_AI_Before>Before</CQF_AI_Before>
+  <CQF_AI_After>After</CQF_AI_After>
+  <CQF_AI_Apply>Apply changes</CQF_AI_Apply>
+  <CQF_AI_Applied>Changes applied.</CQF_AI_Applied>
+  <CQF_AI_Undone>Changes undone.</CQF_AI_Undone>
+  <CQF_AI_GenerateMap>Open as editor map</CQF_AI_GenerateMap>
+  <CQF_AI_Replied>Reply received.</CQF_AI_Replied>
+  <CQF_AI_StaleTarget>The target changed or its editor closed. Send the command again using the latest editor content.</CQF_AI_StaleTarget>
+  <CQF_AI_UnknownType>Unknown or unsupported data type</CQF_AI_UnknownType>
+  <CQF_AI_UnknownField>Unknown or noneditable field</CQF_AI_UnknownField>
+  <CQF_AI_InvalidValue>Invalid field value</CQF_AI_InvalidValue>
+  <CQF_AI_InvalidChanges>Invalid change operations</CQF_AI_InvalidChanges>
+  <CQF_AI_InvalidPath>Invalid data path</CQF_AI_InvalidPath>
+  <CQF_AI_DuplicateKey>The dictionary key already exists</CQF_AI_DuplicateKey>
+  <CQF_AI_MapRequired>This operation requires a map draft</CQF_AI_MapRequired>
+  <CQF_AI_MapBounds>Invalid map size or coordinates outside the map</CQF_AI_MapBounds>
+  <CQF_AI_MissingResource>The referenced resource is not loaded</CQF_AI_MissingResource>
+  <CQF_AI_InvalidQuery>Invalid resource query</CQF_AI_InvalidQuery>
+  <CQF_AI_QueryRoot>The query root must be queries, without attributes or text.</CQF_AI_QueryRoot>
+  <CQF_AI_QueryCount>Each query batch must contain 1 to 8 queries.</CQF_AI_QueryCount>
+  <CQF_AI_QueryUnknown>Unsupported query element {0}. Use defs, images, schema, or object.</CQF_AI_QueryUnknown>
+  <CQF_AI_QueryBody>Query {0} must use attributes; child elements and text are not accepted.</CQF_AI_QueryBody>
+  <CQF_AI_QueryAttributes>Query {0} does not accept attribute {1}. Allowed attributes: {2}.</CQF_AI_QueryAttributes>
+  <CQF_AI_QueryType>Query {0} requires an exact CLR type in the type attribute.</CQF_AI_QueryType>
+  <CQF_AI_QueryName>An object query requires an exact defName in the name attribute.</CQF_AI_QueryName>
+  <CQF_AI_QuerySearch>The search text may contain at most 100 characters.</CQF_AI_QuerySearch>
+  <CQF_AI_QueryOffset>The offset must be an integer from 0 to 100000.</CQF_AI_QueryOffset>
+  <CQF_AI_QueryRetrying>Query format rejected; asking AI to correct it ({0}/8)…</CQF_AI_QueryRetrying>
+  <CQF_AI_InvalidResponse>Invalid AI response</CQF_AI_InvalidResponse>
+  <CQF_AI_ReadOnly>Editing is disabled. Enable Allow editing in AI settings to modify the current target.</CQF_AI_ReadOnly>
+  <CQF_AI_NoEditingTarget>Editing is enabled, but no editing target is available. Load a game map or open the relevant CQF editor.</CQF_AI_NoEditingTarget>
+  <CQF_AI_LiveMapOperationRequired>Use live map operations for the current map. Map resizing and direct metadata edits are not supported.</CQF_AI_LiveMapOperationRequired>
+  <CQF_AI_LiveMapBlocked>The requested placement is blocked by an existing object. Inspect the region or explicitly remove the intended object first.</CQF_AI_LiveMapBlocked>
+  <CQF_AI_LiveThingMissing>The map object could not be found. Read the current region again to obtain its actual ID.</CQF_AI_LiveThingMissing>
+  <CQF_AI_AppliedMap>Changes have been applied to the current map. You can undo this task here; save the game to keep the changes.</CQF_AI_AppliedMap>
+  <CQF_AI_UndoConflict>The affected objects or cells have changed since this task, or the editing target is no longer available. Undo is unavailable to preserve the newer state.</CQF_AI_UndoConflict>
+  <CQF_AI_InvalidLinks>Invalid node or step links</CQF_AI_InvalidLinks>
+  <CQF_AI_InvalidName>Use a valid Def name; new definitions require the CQF_ prefix</CQF_AI_InvalidName>
+  <CQF_AI_TextNotAllowed>New narrative text was not permitted</CQF_AI_TextNotAllowed>
+  <CQF_AI_Depth>Data nesting exceeds the limit</CQF_AI_Depth>
+  <CQF_AI_Cycle>An unsupported object reference cycle was found</CQF_AI_Cycle>
+  <CQF_AI_ContextTooLarge>The conversation or data is too large; start a new conversation or select a smaller object</CQF_AI_ContextTooLarge>
+  <CQF_AI_UseNativeSave>Save this object with its CQF editor</CQF_AI_UseNativeSave>
+  <CQF_AI_ApplyMismatch>The editor state does not match the requested change. The operation was rolled back.</CQF_AI_ApplyMismatch>
+  <CQF_AI_InvalidTool>Unknown tool or invalid tool arguments</CQF_AI_InvalidTool>
+  <CQF_AI_NativeTools>Use native tool calling</CQF_AI_NativeTools>
+  <CQF_AI_NativeToolsHint>Use structured function calls when supported by the configured model and API. Disable this option for XML tool transport on compatible APIs without function calling.</CQF_AI_NativeToolsHint>
+  <CQF_AI_PortalLinked>This portal is already linked. Its destination and exit name must be changed together with its runtime counterpart.</CQF_AI_PortalLinked>
+  <CQF_AI_ReadTooLarge>The requested data is too large. Read a narrower field path or use a smaller page.</CQF_AI_ReadTooLarge>
+  <CQF_AI_ToolLimit>The task reached its tool limit. Applied changes remain visible and can be undone.</CQF_AI_ToolLimit>
+  <CQF_AI_ToolRetrying>Tool operation rejected; asking AI to correct it ({0}/24)…</CQF_AI_ToolRetrying>
+  <CQF_AI_ToolWorking>Reading, editing and checking results ({0}/24)…</CQF_AI_ToolWorking>
+  <CQF_AI_RollbackMismatch>The edit failed and its original state could not be fully restored. Check the current editor content and error log.</CQF_AI_RollbackMismatch>
+  <CQF_AI_UsageBrief>Task {0} · Chat {1} tokens</CQF_AI_UsageBrief>
+  <CQF_AI_UsageUnknown>unavailable</CQF_AI_UsageUnknown>
+  <CQF_AI_UsageDetails>Current task: input {0}, output {1}; {2} responses without valid usage.
+Conversation: input {3}, output {4}; {5} responses without valid usage.
+Counts come from the API and include completed tool rounds. +? means the total is incomplete. Missing usage is not counted as zero. Cancelled requests may be billed without returning usage. Clearing chat resets these counters.</CQF_AI_UsageDetails>
+  <CQF_AI_InvalidUsage>The API returned invalid token usage. The reply remains available; this response is marked as missing usage.</CQF_AI_InvalidUsage>
+</LanguageData>

@@ -1,4 +1,4 @@
-﻿using LudeonTK;
+using LudeonTK;
 using RimWorld.Planet;
 using System;
 using System.Collections.Generic;

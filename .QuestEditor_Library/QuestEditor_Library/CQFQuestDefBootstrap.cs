@@ -30,6 +30,18 @@ namespace QuestEditor_Library
             ReplaceDef(currentDef, currentDef);
         }
 
+        public static void HotLoadDefinition(Def definition)
+        {
+            System.Type type = definition.GetType();
+            if (type.Assembly != typeof(DialogTreeDef).Assembly && type != typeof(DutyDef) && type != typeof(QuestScriptDef))
+                throw new System.InvalidOperationException("CQF_AI_UnknownType: " + type.FullName);
+            if (definition.modContentPack == null)
+                definition.modContentPack = LoadedModManager.RunningModsListForReading.FirstOrDefault(content => content.assemblies.loadedAssemblies.Contains(typeof(DialogTreeDef).Assembly));
+            typeof(CQFQuestDefBootstrap).GetMethod(nameof(ReplaceDef), BindingFlags.Static | BindingFlags.NonPublic)
+                .MakeGenericMethod(type).Invoke(null, new object[] { definition, definition });
+            if (definition is QuestBookDef book) GameComponent_QuestBook.Instance?.RefreshDefinition(book);
+        }
+
         public static void HotLoadDialogManagerDef(DialogManagerDef currentDef)
         {
             ReplaceDef(currentDef, currentDef);
@@ -63,7 +75,7 @@ namespace QuestEditor_Library
 
         private static void LoadAll()
         {
-            string questPath = Page_QuestEditor.Path;
+            string questPath = CQFContentPaths.Quests;
             if (questPath.NullOrEmpty())
             {
                 return;
@@ -77,6 +89,8 @@ namespace QuestEditor_Library
             LoadDefs(Path.Combine(questPath, "Duty"), "//DutyDef", DefDatabase<DutyDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyDef>(node, false), def => DefDatabase<DutyDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Duty"), "//QuestEditor_Library.DutyMapDef", DefDatabase<DutyMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyMapDef>(node, false), def => DefDatabase<DutyMapDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "QuestBook"), "//QuestEditor_Library.QuestBookDef", DefDatabase<QuestBookDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<QuestBookDef>(node, false), def => DefDatabase<QuestBookDef>.Add(def));
+            foreach (System.Type type in typeof(DialogTreeDef).Assembly.GetTypes().Where(type => !type.IsAbstract && typeof(Def).IsAssignableFrom(type)))
+                typeof(CQFQuestDefBootstrap).GetMethod(nameof(LoadAdditionalDefs), BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(type).Invoke(null, null);
             try
             {
                 DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
@@ -89,6 +103,12 @@ namespace QuestEditor_Library
             {
                 ValidateDef(loadedDef);
             }
+        }
+
+        private static void LoadAdditionalDefs<T>() where T : Def
+        {
+            LoadDefs(Path.Combine(CQFContentPaths.Quests, "AI"), "//" + typeof(T).FullName, DefDatabase<T>.AllDefsListForReading,
+                node => DirectXmlToObject.ObjectFromXml<T>(node, false), def => DefDatabase<T>.Add(def));
         }
 
         private static void LoadDefs<T>(string path, string xpath, List<T> loadedDefs, System.Func<XmlNode, T> loadAction, System.Action<T> addAction) where T : Def

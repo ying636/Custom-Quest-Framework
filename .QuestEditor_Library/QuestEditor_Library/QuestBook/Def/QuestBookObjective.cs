@@ -70,16 +70,29 @@ namespace QuestEditor_Library
         }
 
         public virtual void Draw(ref float y, Rect inRect, float x)
-        {
-            DrawCommonStart(ref y, inRect);
-            DrawSpecial(ref y, inRect, x);
-            DrawCommonRules(ref y, inRect);
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public virtual void DrawSpecial(ref float y, Rect inRect, float x)
-        {
-        }
 
+        {
+            object[] arguments = new object[]
+            {
+                y,
+                inRect,
+                x
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
+            y = (float)arguments[0];
+        }
         public virtual void ExposeData()
         {
             Scribe_Values.Look(ref labelKey, "labelKey");
@@ -107,101 +120,94 @@ namespace QuestEditor_Library
             return result;
         }
 
-        protected void DrawCommonStart(ref float y, Rect inRect)
+        protected internal void DrawCommonStart(ref float y, Rect inRect)
+
         {
-            float width = inRect.width - 16f;
-            Widgets.Label(new Rect(8f, y, width, 32f), "CQF_QuestBook_ObjectiveEditor".Translate().Colorize(ColorLibrary.SkyBlue));
-            y += 38f;
-            DrawSection(ref y, width, "CQF_QuestBook_ObjectiveBasic", 154f, card =>
+            object[] arguments = new object[]
             {
-                float rowY = card.y + 46f;
-                DrawTextField(card, ref rowY, "CQF_QuestBook_ObjectiveName", ref labelKey, false);
-                DrawTextField(card, ref rowY, "CQF_QuestBook_ObjectiveDescription", ref descriptionKey, true);
-            });
-            DrawSection(ref y, width, "CQF_QuestBook_ObjectiveIcon", 160f, card =>
+                y,
+                inRect
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawCommonStart(Ref:float,None:UnityEngine.Rect)", this, arguments);
+            y = (float)arguments[0];
+        }
+        protected internal void DrawCommonRules(ref float y, Rect inRect)
+
+        {
+            object[] arguments = new object[]
             {
-                Rect previewRect = new Rect(card.x + 14f, card.y + 44f, 64f, 64f);
-                Widgets.DrawBox(previewRect, 1);
-                DrawObjectiveIcon(previewRect.ContractedBy(8f));
-                float buttonX = previewRect.xMax + 18f;
-                DrawTextButton(new Rect(buttonX, previewRect.y, 168f, 26f), "CQF_QuestBook_SelectThingIcon", SelectThingIcon);
-                DrawTextButton(new Rect(buttonX, previewRect.y + 32f, 168f, 26f), "CQF_QuestBook_SelectImageIcon", SelectImageIcon);
-                DrawTextButton(new Rect(buttonX, previewRect.y + 64f, 100f, 26f), "CQF_QuestBook_Clear", ClearIcon);
-            });
+                y,
+                inRect
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawCommonRules(Ref:float,None:UnityEngine.Rect)", this, arguments);
+            y = (float)arguments[0];
         }
+        public delegate void DetectionContentDrawer(Rect card, ref float y);
 
-        protected void DrawCommonRules(ref float y, Rect inRect)
+        protected internal void DrawDetectionSection(ref float y, Rect inRect, DetectionContentDrawer contentDrawer)
+
         {
-            DrawSection(ref y, inRect.width - 16f, "CQF_QuestBook_ObjectiveRules", 82f, card =>
+            object[] arguments = new object[]
             {
-                Rect toggleRect = new Rect(card.x + 14f, card.y + 48f, card.width - 28f, 28f);
-                Widgets.DrawHighlightIfMouseover(toggleRect);
-                Widgets.CheckboxLabeled(toggleRect, "CQF_QuestBook_Optional".Translate(), ref optional, placeCheckboxNearText: false);
-                TooltipHandler.TipRegion(toggleRect, "CQF_QuestBook_OptionalTip".Translate());
-            });
+                y,
+                inRect,
+                contentDrawer
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawDetectionSection(Ref:float,None:UnityEngine.Rect,None:QuestEditor_Library.QuestBookObjective.DetectionContentDrawer)", this, arguments);
+            y = (float)arguments[0];
         }
+        protected internal void DrawSection(ref float y, float width, string titleKey, float height, Action<Rect> contentDrawer)
 
-        protected delegate void DetectionContentDrawer(Rect card, ref float y);
-
-        protected void DrawDetectionSection(ref float y, Rect inRect, DetectionContentDrawer contentDrawer)
         {
-            float startY = y;
-            float width = inRect.width - 16f;
-            float measuredY = startY + 84f;
-            bool previousEnabled = GUI.enabled;
-            Color previousColor = GUI.color;
-            GUI.enabled = false;
-            GUI.color = Color.clear;
-            contentDrawer(new Rect(8f, startY, width, 0f), ref measuredY);
-            GUI.color = previousColor;
-            GUI.enabled = previousEnabled;
-
-            float cardHeight = measuredY - startY + 10f;
-            Rect card = new Rect(8f, startY, width, cardHeight);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), "CQF_QuestBook_ObjectiveDetection".Translate().Colorize(ColorLibrary.PaleBlue));
-            float rowY = card.y + 48f;
-            Widgets.Label(new Rect(card.x + 14f, rowY + 2f, 164f, 24f), "CQF_QuestBook_ObjectiveType".Translate());
-            Widgets.Label(new Rect(card.x + 184f, rowY + 2f, card.width - 198f, 24f), GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
-            rowY += 36f;
-            contentDrawer(card, ref rowY);
-            y = card.yMax + 12f;
-        }
-
-        protected void DrawSection(ref float y, float width, string titleKey, float height, Action<Rect> contentDrawer)
-        {
-            Rect card = new Rect(8f, y, width, height);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), titleKey.Translate().Colorize(ColorLibrary.PaleBlue));
-            contentDrawer(card);
-            y += height + 12f;
-        }
-
-        protected void DrawTextField(Rect card, ref float y, string labelKey, ref string value, bool multiline)
-        {
-            float fieldX = card.x + 184f;
-            float fieldWidth = card.width - 198f;
-            float fieldHeight = multiline ? 54f : 28f;
-            Widgets.Label(new Rect(card.x + 14f, y + 2f, 164f, 24f), labelKey.Translate());
-            Rect field = new Rect(fieldX, y, fieldWidth, fieldHeight);
-            value = multiline ? Widgets.TextArea(field, value ?? string.Empty) : Widgets.TextField(field, value ?? string.Empty);
-            y += multiline ? 64f : 36f;
-        }
-
-        protected void DrawRowLabel(Rect card, float y, string labelKey)
-        {
-            Widgets.Label(new Rect(card.x + 14f, y + 2f, 164f, 24f), labelKey.Translate());
-        }
-
-        protected void DrawTextButton(Rect rect, string labelKey, Action action)
-        {
-            if (Widgets.ButtonText(rect, labelKey.Translate()))
+            object[] arguments = new object[]
             {
-                action();
-            }
+                y,
+                width,
+                titleKey,
+                height,
+                contentDrawer
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawSection(Ref:float,None:float,None:string,None:float,None:System.Action<UnityEngine.Rect>)", this, arguments);
+            y = (float)arguments[0];
         }
+        protected internal void DrawTextField(Rect card, ref float y, string labelKey, ref string value, bool multiline)
 
-        protected void DrawObjectiveIcon(Rect rect)
+        {
+            object[] arguments = new object[]
+            {
+                card,
+                y,
+                labelKey,
+                value,
+                multiline
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawTextField(None:UnityEngine.Rect,Ref:float,None:string,Ref:string,None:bool)", this, arguments);
+            y = (float)arguments[1];
+            value = (string)arguments[3];
+        }
+        protected internal void DrawRowLabel(Rect card, float y, string labelKey)
+
+        {
+            object[] arguments = new object[]
+            {
+                card,
+                y,
+                labelKey
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawRowLabel(None:UnityEngine.Rect,None:float,None:string)", this, arguments);
+        }
+        protected internal void DrawTextButton(Rect rect, string labelKey, Action action)
+
+        {
+            object[] arguments = new object[]
+            {
+                rect,
+                labelKey,
+                action
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawTextButton(None:UnityEngine.Rect,None:string,None:System.Action)", this, arguments);
+        }
+        protected internal void DrawObjectiveIcon(Rect rect)
         {
             if (!iconPath.NullOrEmpty())
             {
@@ -219,26 +225,23 @@ namespace QuestEditor_Library
             }
             Widgets.DrawTextureFitted(rect, TexButton.Info, 1f);
         }
+        internal void SelectThingIcon()
 
-        private void SelectThingIcon()
         {
-            QuestBookTextureEntry.OpenSelect(path =>
+            object[] arguments = new object[]
             {
-                iconPath = path;
-                iconManuallySelected = true;
-            }, "CQF_QuestBook_SelectThingIcon");
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.SelectThingIcon()", this, arguments);
         }
+        internal void SelectImageIcon()
 
-        private void SelectImageIcon()
         {
-            Find.WindowStack.Add(new Dialog_SelectDialogImage(path =>
+            object[] arguments = new object[]
             {
-                iconPath = path;
-                iconManuallySelected = true;
-            }, iconPath));
+            };
+            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.SelectImageIcon()", this, arguments);
         }
-
-        private void ClearIcon()
+        internal void ClearIcon()
         {
             iconPath = null;
             iconManuallySelected = false;

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_DialogGraph_Node>Node #{0}</CQF_DialogGraph_Node>
+  <CQF_DialogGraph_Entry>Entry</CQF_DialogGraph_Entry>
+  <CQF_DialogGraph_End>End dialogue</CQF_DialogGraph_End>
+  <CQF_DialogGraph_Hint>Right-click the background to create a node; drag headers to move; drag output ports to connect; scroll to zoom; drag the background to pan.</CQF_DialogGraph_Hint>
+  <CQF_DialogGraph_File>File</CQF_DialogGraph_File>
+  <CQF_DialogGraph_View>View</CQF_DialogGraph_View>
+  <CQF_DialogGraph_TreeSettings>Tree settings</CQF_DialogGraph_TreeSettings>
+  <CQF_DialogGraph_ShowInspector>Properties</CQF_DialogGraph_ShowInspector>
+  <CQF_DialogGraph_HideInspector>Hide properties</CQF_DialogGraph_HideInspector>
+  <CQF_DialogGraph_NodeInfo>{0} options · {1} images</CQF_DialogGraph_NodeInfo>
+  <CQF_DialogGraph_ResultInfo>{0} conditions · {1} actions. Click to edit; drag the output to another node.</CQF_DialogGraph_ResultInfo>
+  <CQF_DialogGraph_Find>Find node</CQF_DialogGraph_Find>
+  <CQF_DialogGraph_Arrange>Arrange</CQF_DialogGraph_Arrange>
+  <CQF_DialogGraph_Fit>Fit</CQF_DialogGraph_Fit>
+  <CQF_DialogGraph_Undo>Undo</CQF_DialogGraph_Undo>
+  <CQF_DialogGraph_Redo>Redo</CQF_DialogGraph_Redo>
+  <CQF_DialogGraph_AI>AI editor</CQF_DialogGraph_AI>
+  <CQF_DialogGraph_Check>Check</CQF_DialogGraph_Check>
+  <CQF_DialogGraph_Preview>Preview</CQF_DialogGraph_Preview>
+  <CQF_DialogGraph_Expand>Open editor</CQF_DialogGraph_Expand>
+  <CQF_DialogGraph_MoveUp>Move result up. The first matching result is used.</CQF_DialogGraph_MoveUp>
+  <CQF_DialogGraph_MoveDown>Move result down. The first matching result is used.</CQF_DialogGraph_MoveDown>
+  <CQF_DialogGraph_SelectHint>Select a node, option or result to edit it here. Drag a result's output port onto any node to connect them.</CQF_DialogGraph_SelectHint>
+  <CQF_DialogGraph_KeepEntry>The entry node #0 cannot be removed.</CQF_DialogGraph_KeepEntry>
+  <CQF_DialogGraph_Error>Operation failed: {0}</CQF_DialogGraph_Error>
+  <CQF_DialogGraph_Valid>Graph checked: {0} nodes, {1} unreachable from the entry.</CQF_DialogGraph_Valid>
+  <CQF_DialogGraph_InvalidName>Enter a valid dialogue defName before saving.</CQF_DialogGraph_InvalidName>
+  <CQF_DialogGraph_PreviewHint>This preview follows the graph without running game actions. Select a result manually to explore conditional branches. Condition checks and resource consumption need in-game testing.</CQF_DialogGraph_PreviewHint>
+  <CQF_DialogGraph_PreviewResult>{0}. {1} · {2} conditions · {3} actions</CQF_DialogGraph_PreviewResult>
+  <CQF_DialogGraph_MissingImage>Image not found: {0}</CQF_DialogGraph_MissingImage>
+  <CQF_DialogAI_Enabled>Enable AI requests</CQF_DialogAI_Enabled>
+  <CQF_DialogAI_Endpoint>API address</CQF_DialogAI_Endpoint>
+  <CQF_DialogAI_EndpointHint>Use a Chat Completions compatible API base address, or the full /chat/completions address. Requests append /chat/completions to a base address.</CQF_DialogAI_EndpointHint>
+  <CQF_DialogAI_Model>Model name</CQF_DialogAI_Model>
+  <CQF_DialogAI_Key>API Key</CQF_DialogAI_Key>
+  <CQF_DialogAI_ShowKey>Show</CQF_DialogAI_ShowKey>
+  <CQF_DialogAI_Timeout>Timeout (seconds)</CQF_DialogAI_Timeout>
+  <CQF_DialogAI_Test>Test connection</CQF_DialogAI_Test>
+  <CQF_DialogAI_TestPassed>Connection succeeded.</CQF_DialogAI_TestPassed>
+  <CQF_DialogAI_CommandHint>Describe how to edit the current graph. Selected node: {0}.</CQF_DialogAI_CommandHint>
+  <CQF_DialogAI_GenerateText>Allow new narrative text for this command</CQF_DialogAI_GenerateText>
+  <CQF_DialogAI_Send>Generate changes</CQF_DialogAI_Send>
+  <CQF_DialogAI_Apply>Apply draft to current graph</CQF_DialogAI_Apply>
+  <CQF_DialogAI_PreviewHint>Configure the API in this window's Settings tab. AI changes are validated and shown here before applying. Without permission to generate prose, new text uses CQF_ placeholders.</CQF_DialogAI_PreviewHint>
+  <CQF_DialogAI_OpenWindow>AI dialogue editor / Settings</CQF_DialogAI_OpenWindow>
+  <CQF_DialogAI_EditTab>Edit</CQF_DialogAI_EditTab>
+  <CQF_DialogAI_SettingsTab>Settings</CQF_DialogAI_SettingsTab>
+  <CQF_DialogAI_NoEditor>Open the AI window from the dialogue tree editor to edit the current tree.</CQF_DialogAI_NoEditor>
+  <CQF_DialogAI_DraftInfo>Draft: {0} nodes · {1} changed nodes</CQF_DialogAI_DraftInfo>
+  <CQF_DialogAI_XML>XML</CQF_DialogAI_XML>
+  <CQF_DialogAI_Working>Waiting for the AI response…</CQF_DialogAI_Working>
+  <CQF_DialogAI_Querying>Looking up loaded Mod resources (round {0}/8)…</CQF_DialogAI_Querying>
+  <CQF_DialogAI_Ready>Draft validated. Review changes before applying.</CQF_DialogAI_Ready>
+  <CQF_DialogAI_Cancelled>Request cancelled.</CQF_DialogAI_Cancelled>
+  <CQF_DialogAI_TimedOut>The AI request timed out. Check the connection or increase the timeout.</CQF_DialogAI_TimedOut>
+  <CQF_DialogAI_Conflict>The current graph changed after this request started. Generate a new draft from the current graph.</CQF_DialogAI_Conflict>
+  <CQF_DialogAI_Applied>Draft applied. You can undo the change. Save the graph to export it.</CQF_DialogAI_Applied>
+  <CQF_DialogAI_Added>Added node #{0}</CQF_DialogAI_Added>
+  <CQF_DialogAI_Removed>Removed node #{0}</CQF_DialogAI_Removed>
+  <CQF_DialogAI_Changed>Changed node #{0}</CQF_DialogAI_Changed>
+  <CQF_DialogAI_IncludeNode>Apply changes to node #{0}</CQF_DialogAI_IncludeNode>
+  <CQF_DialogAI_ChangedFields>Changed fields: {0}</CQF_DialogAI_ChangedFields>
+  <CQF_DialogAI_Disabled>Open AI settings and enable AI requests first.</CQF_DialogAI_Disabled>
+  <CQF_DialogAI_InvalidEndpoint>Enter a valid HTTP or HTTPS API address.</CQF_DialogAI_InvalidEndpoint>
+  <CQF_DialogAI_MissingModel>Enter a model name in CQF Mod settings.</CQF_DialogAI_MissingModel>
+  <CQF_DialogAI_HTTP>The API returned an HTTP error</CQF_DialogAI_HTTP>
+  <CQF_DialogAI_Incomplete>The model response was truncated or filtered. The graph was not changed.</CQF_DialogAI_Incomplete>
+  <CQF_DialogAI_EmptyResponse>The API returned no usable text.</CQF_DialogAI_EmptyResponse>
+  <CQF_DialogAI_InvalidPatch>The AI response is not a valid CQF edit document.</CQF_DialogAI_InvalidPatch>
+  <CQF_DialogAI_InvalidOperation>Unknown edit operation</CQF_DialogAI_InvalidOperation>
+  <CQF_DialogAI_DuplicateNode>The requested node ID already exists</CQF_DialogAI_DuplicateNode>
+  <CQF_DialogAI_MissingNode>Referenced node does not exist</CQF_DialogAI_MissingNode>
+  <CQF_DialogAI_MissingOption>Referenced option does not exist</CQF_DialogAI_MissingOption>
+  <CQF_DialogAI_InvalidNode>Invalid node data</CQF_DialogAI_InvalidNode>
+  <CQF_DialogAI_InvalidField>Invalid field or field value</CQF_DialogAI_InvalidField>
+  <CQF_DialogAI_InvalidType>Unavailable or unsupported data type</CQF_DialogAI_InvalidType>
+  <CQF_DialogAI_MissingDef>The referenced Def is not loaded</CQF_DialogAI_MissingDef>
+  <CQF_DialogAI_MissingImage>The referenced image is not loaded</CQF_DialogAI_MissingImage>
+  <CQF_DialogAI_InvalidIndex>Invalid node, option or result index</CQF_DialogAI_InvalidIndex>
+  <CQF_DialogAI_ContextTooLarge>The graph and schema exceed the request size limit.</CQF_DialogAI_ContextTooLarge>
+  <CQF_DialogAI_InvalidQuery>Invalid Mod resource query.</CQF_DialogAI_InvalidQuery>
+  <CQF_DialogAI_QueryLimit>The AI exceeded the resource lookup limit. Make the request more specific.</CQF_DialogAI_QueryLimit>
+  <CQF_DialogAI_TextNotAllowed>The AI generated new prose without permission. Enable prose generation or provide the exact text.</CQF_DialogAI_TextNotAllowed>
+</LanguageData>
