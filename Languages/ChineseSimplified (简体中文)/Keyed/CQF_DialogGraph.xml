@@ -3,7 +3,9 @@
   <CQF_DialogGraph_Node>节点 #{0}</CQF_DialogGraph_Node>
   <CQF_DialogGraph_Entry>入口</CQF_DialogGraph_Entry>
   <CQF_DialogGraph_End>结束对话</CQF_DialogGraph_End>
-  <CQF_DialogGraph_Hint>右键空白处新建节点；拖动标题移动；拖动输出端口连接；滚轮缩放；拖动空白处平移。</CQF_DialogGraph_Hint>
+  <CQF_DialogGraph_Hint>右键空白处新建对话或选项卡片。拖动对话顶部的输出端口连接选项；拖动选项结果的输出端口连接对话。多个对话可以共用一个选项。拖动卡片移动；双击编辑；滚轮缩放；拖动空白处平移。右键卡片或选项引用可删除。</CQF_DialogGraph_Hint>
+  <CQF_DialogGraph_AddOption>添加选项</CQF_DialogGraph_AddOption>
+  <CQF_DialogGraph_AddOptionTo>添加选项到：{0}</CQF_DialogGraph_AddOptionTo>
   <CQF_DialogGraph_File>文件</CQF_DialogGraph_File>
   <CQF_DialogGraph_View>视图</CQF_DialogGraph_View>
   <CQF_DialogGraph_TreeSettings>对话树设置</CQF_DialogGraph_TreeSettings>
@@ -22,8 +24,8 @@
   <CQF_DialogGraph_Expand>详细编辑</CQF_DialogGraph_Expand>
   <CQF_DialogGraph_MoveUp>结果上移。优先采用第一个满足条件的结果。</CQF_DialogGraph_MoveUp>
   <CQF_DialogGraph_MoveDown>结果下移。优先采用第一个满足条件的结果。</CQF_DialogGraph_MoveDown>
-  <CQF_DialogGraph_SelectHint>选择节点、选项或结果，在此编辑。将结果的输出端口拖到任意节点即可连接。</CQF_DialogGraph_SelectHint>
-  <CQF_DialogGraph_KeepEntry>入口节点 #0 不能删除。</CQF_DialogGraph_KeepEntry>
+  <CQF_DialogGraph_SelectHint>双击节点、选项或结果，或点击属性按钮，在此编辑。将结果的输出端口拖到任意节点即可连接。</CQF_DialogGraph_SelectHint>
+  <CQF_DialogGraph_KeepEntry>入口节点不能删除。</CQF_DialogGraph_KeepEntry>
   <CQF_DialogGraph_Error>操作失败：{0}</CQF_DialogGraph_Error>
   <CQF_DialogGraph_Valid>检查完成：{0} 个节点，其中 {1} 个无法从入口到达。</CQF_DialogGraph_Valid>
   <CQF_DialogGraph_InvalidName>保存前请输入有效的对话树 defName。</CQF_DialogGraph_InvalidName>
@@ -36,7 +38,7 @@
   <CQF_DialogAI_Model>模型名称</CQF_DialogAI_Model>
   <CQF_DialogAI_Key>API Key</CQF_DialogAI_Key>
   <CQF_DialogAI_ShowKey>显示</CQF_DialogAI_ShowKey>
-  <CQF_DialogAI_Timeout>超时（秒）</CQF_DialogAI_Timeout>
+  <CQF_DialogAI_Timeout>无反馈超时（秒）</CQF_DialogAI_Timeout>
   <CQF_DialogAI_Test>测试连接</CQF_DialogAI_Test>
   <CQF_DialogAI_TestPassed>连接成功。</CQF_DialogAI_TestPassed>
   <CQF_DialogAI_CommandHint>描述对当前对话树的修改要求。已选节点：{0}。</CQF_DialogAI_CommandHint>
@@ -54,7 +56,7 @@
   <CQF_DialogAI_Querying>正在查询已加载的 Mod 资源（第 {0}/8 轮）……</CQF_DialogAI_Querying>
   <CQF_DialogAI_Ready>草稿已通过校验。请预览修改后再应用。</CQF_DialogAI_Ready>
   <CQF_DialogAI_Cancelled>请求已取消。</CQF_DialogAI_Cancelled>
-  <CQF_DialogAI_TimedOut>AI 请求超时，请检查连接或增加超时时间。</CQF_DialogAI_TimedOut>
+  <CQF_DialogAI_TimedOut>连续未收到反馈，已达到设置的超时时间。请检查连接或增加无反馈超时时间。</CQF_DialogAI_TimedOut>
   <CQF_DialogAI_Conflict>本次请求发出后，当前对话树已有变化。请依据当前内容重新生成草稿。</CQF_DialogAI_Conflict>
   <CQF_DialogAI_Applied>草稿已应用，可撤销。保存对话树后才会导出文件。</CQF_DialogAI_Applied>
   <CQF_DialogAI_Added>新增节点 #{0}</CQF_DialogAI_Added>
@@ -83,4 +85,26 @@
   <CQF_DialogAI_InvalidQuery>Mod 资源查询格式无效。</CQF_DialogAI_InvalidQuery>
   <CQF_DialogAI_QueryLimit>AI 超过资源查询轮数限制，请缩小需求范围。</CQF_DialogAI_QueryLimit>
   <CQF_DialogAI_TextNotAllowed>AI 未获允许便生成了新文案。请允许生成文案，或提供需要使用的原文。</CQF_DialogAI_TextNotAllowed>
+  <CQF_DialogGraph_Disconnect>断开连线</CQF_DialogGraph_Disconnect>
+  <CQF_DialogGraph_HintShort>右键添加 · 双击编辑</CQF_DialogGraph_HintShort>
+  <CQF_DialogGraph_ResultCounts>{0} 个条件 · {1} 个动作</CQF_DialogGraph_ResultCounts>
+  <CQF_DialogGraph_Summary>{0} 个节点 · {1} 个选项</CQF_DialogGraph_Summary>
+  <CQF_DialogGraph_ZoomIn>放大</CQF_DialogGraph_ZoomIn>
+  <CQF_DialogGraph_ZoomOut>缩小</CQF_DialogGraph_ZoomOut>
+  <CQF_DialogGraph_LinkOption>拖动端口连接到选项卡片</CQF_DialogGraph_LinkOption>
+  <CQF_DialogGraph_SharedCount>共用选项 · {0} 处引用</CQF_DialogGraph_SharedCount>
+  <CQF_DialogGraph_SharedHint>此选项被 {0} 个节点共用。修改文本、条件或结果会同步影响所有引用。</CQF_DialogGraph_SharedHint>
+  <CQF_DialogGraph_LinkExisting>连接已有选项</CQF_DialogGraph_LinkExisting>
+  <CQF_DialogGraph_LinkToNode>添加引用到节点</CQF_DialogGraph_LinkToNode>
+  <CQF_DialogGraph_AddResult>添加结果</CQF_DialogGraph_AddResult>
+  <CQF_DialogGraph_UnlinkReference>移除此处引用</CQF_DialogGraph_UnlinkReference>
+  <CQF_DialogGraph_UnlinkFrom>移除指定节点的引用</CQF_DialogGraph_UnlinkFrom>
+  <CQF_DialogGraph_MakeLocal>为此节点创建独立副本</CQF_DialogGraph_MakeLocal>
+  <CQF_DialogGraph_CopyOption>复制选项</CQF_DialogGraph_CopyOption>
+  <CQF_DialogGraph_RemoveResult>删除此结果</CQF_DialogGraph_RemoveResult>
+  <CQF_DialogGraph_DeleteOption>删除选项及全部引用</CQF_DialogGraph_DeleteOption>
+  <CQF_DialogGraph_ConfirmDeleteShared>此选项被 {0} 个节点共用。删除将同时移除所有引用，是否继续？</CQF_DialogGraph_ConfirmDeleteShared>
+  <CQF_DialogGraph_OptionOrder>拖动调整此节点中的选项顺序</CQF_DialogGraph_OptionOrder>
+  <CQF_DialogGraph_Advanced>条件与行为</CQF_DialogGraph_Advanced>
+  <CQF_DialogGraph_InvalidOptions>选项定义或引用无效，请检查缺失引用、重复引用及选项数据。</CQF_DialogGraph_InvalidOptions>
 </LanguageData>

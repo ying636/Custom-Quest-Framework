@@ -53,7 +53,7 @@ internal static class Program
         Check(!CQFAIBridge.IsLoaded && CQFAIBridge.GenerateMap == null, "disabled editor leaves AI entry unavailable");
         foreach (string name in new[] { "Page_QuestEditor", "QuestEditor_Dialog", "CQFEditorTools", "CQFDialogAIClient", "CQFDialogAIWindow", "CQFSignalBook", "Designator_CQFTools" })
             Check(framework.GetType("QuestEditor_Library." + name) == null, "editor type absent: " + name);
-        Check(new[] { typeof(DialogTreeDef), typeof(CustomMapDataDef), typeof(ComplexPawnDef), typeof(DutyMapDef), typeof(QuestBookDef), typeof(GameComponent_Editor) }.All(type => type.Assembly == framework), "runtime types remain in framework");
+        Check(new[] { typeof(DialogTreeDef), typeof(CustomMapDataDef), typeof(ComplexPawnDef), typeof(DutyMapDef), typeof(QuestBookDef), typeof(GameComponent_Editor), typeof(CQFComponentOverride), typeof(MapComponent_CQFComponentOverrides) }.All(type => type.Assembly == framework), "runtime types and component save overrides remain in framework");
         Check(CQFSerialization.SaveList(new List<string> { "CQF_Check" }, "values").Element("li")!.Value == "CQF_Check", "serialization works without editor");
         CQFContentPaths.Initialize(Path.Combine(game, "Mods", "CQF"));
         Check(CQFContentPaths.Quests == Path.Combine(game, "Mods", "CQF", "Quests"), "content path independent of editor");
@@ -67,6 +67,7 @@ internal static class Program
         string xml = tree.SaveToXElement("tree").ToString().Replace(" Class=\"QuestEditor_Library.DialogOption\"", "");
         document.LoadXml(xml);
         DialogTreeDef restored = DirectXmlToObject.ObjectFromXml<DialogTreeDef>(document.DocumentElement!, false);
+        restored.ResolveReferences();
         Check(restored.nodeMoulds[0].options[0].results[0].nextIndex == 0, "framework XML loads without editor");
         MethodInfo invoke = typeof(CQFEditorBridge).GetMethod(nameof(CQFEditorBridge.Invoke))!;
         string[] runtimeMethods = { "Work", "Generate", "GenerateZone", "Spawn", "SpawnThing", "Process", "Check", "SaveToXElement", "ExposeData", "PostSpawnSetup" };

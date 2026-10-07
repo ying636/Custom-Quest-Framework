@@ -4,7 +4,7 @@
   <CQF_AI_EmptyChat>What would you like to work on?</CQF_AI_EmptyChat>
   <CQF_AI_InputHint>Message the assistant…</CQF_AI_InputHint>
   <CQF_AI_Options>Conversation options</CQF_AI_Options>
-  <CQF_AI_SendHint>Send message (Ctrl+Enter)</CQF_AI_SendHint>
+  <CQF_AI_SendHint>Send message\nCtrl + Enter: send\nEnter / Shift + Enter: new line</CQF_AI_SendHint>
   <CQF_AI_Stop>Stop generating</CQF_AI_Stop>
   <CQF_AI_RequestFailed>Request could not finish. Hover for details.</CQF_AI_RequestFailed>
   <CQF_AI_OpenHint>Open the floating AI chat. Keep working in the editor while you talk.</CQF_AI_OpenHint>
@@ -48,6 +48,7 @@
   <CQF_AI_UnknownType>Unknown or unsupported data type</CQF_AI_UnknownType>
   <CQF_AI_UnknownField>Unknown or noneditable field</CQF_AI_UnknownField>
   <CQF_AI_InvalidValue>Invalid field value</CQF_AI_InvalidValue>
+  <CQF_AI_ValidationFailed>Configuration validation failed</CQF_AI_ValidationFailed>
   <CQF_AI_InvalidChanges>Invalid change operations</CQF_AI_InvalidChanges>
   <CQF_AI_InvalidPath>Invalid data path</CQF_AI_InvalidPath>
   <CQF_AI_DuplicateKey>The dictionary key already exists</CQF_AI_DuplicateKey>
@@ -78,7 +79,10 @@
   <CQF_AI_TextNotAllowed>New narrative text was not permitted</CQF_AI_TextNotAllowed>
   <CQF_AI_Depth>Data nesting exceeds the limit</CQF_AI_Depth>
   <CQF_AI_Cycle>An unsupported object reference cycle was found</CQF_AI_Cycle>
-  <CQF_AI_ContextTooLarge>The conversation or data is too large; start a new conversation or select a smaller object</CQF_AI_ContextTooLarge>
+  <CQF_AI_ContextTooLarge>The current AI instructions exceed the local context limit.</CQF_AI_ContextTooLarge>
+  <CQF_AI_RequestTooLarge>The current request still exceeds the local context limit after compaction. Read fewer resources or smaller pages. Previously applied changes and conversation history are preserved.</CQF_AI_RequestTooLarge>
+  <CQF_AI_MessageTooLarge>A single AI message or tool result exceeds the size limit. Read a smaller page or reduce the size of one batch.</CQF_AI_MessageTooLarge>
+  <CQF_AI_ResponseTooLarge>The API response exceeds the local size limit. Reduce the size of one reply or tool batch.</CQF_AI_ResponseTooLarge>
   <CQF_AI_UseNativeSave>Save this object with its CQF editor</CQF_AI_UseNativeSave>
   <CQF_AI_ApplyMismatch>The editor state does not match the requested change. The operation was rolled back.</CQF_AI_ApplyMismatch>
   <CQF_AI_InvalidTool>Unknown tool or invalid tool arguments</CQF_AI_InvalidTool>
@@ -86,9 +90,9 @@
   <CQF_AI_NativeToolsHint>Use structured function calls when supported by the configured model and API. Disable this option for XML tool transport on compatible APIs without function calling.</CQF_AI_NativeToolsHint>
   <CQF_AI_PortalLinked>This portal is already linked. Its destination and exit name must be changed together with its runtime counterpart.</CQF_AI_PortalLinked>
   <CQF_AI_ReadTooLarge>The requested data is too large. Read a narrower field path or use a smaller page.</CQF_AI_ReadTooLarge>
-  <CQF_AI_ToolLimit>The task reached its tool limit. Applied changes remain visible and can be undone.</CQF_AI_ToolLimit>
-  <CQF_AI_ToolRetrying>Tool operation rejected; asking AI to correct it ({0}/24)…</CQF_AI_ToolRetrying>
-  <CQF_AI_ToolWorking>Reading, editing and checking results ({0}/24)…</CQF_AI_ToolWorking>
+  <CQF_AI_ToolLimit>This batch of map changes exceeds operation capacity. Split it into smaller batches. Applied changes remain visible and can be undone.</CQF_AI_ToolLimit>
+  <CQF_AI_ToolRetrying>Tool operation rejected; asking AI to correct it (round {0})…</CQF_AI_ToolRetrying>
+  <CQF_AI_ToolWorking>Reading, editing and checking results (round {0})…</CQF_AI_ToolWorking>
   <CQF_AI_RollbackMismatch>The edit failed and its original state could not be fully restored. Check the current editor content and error log.</CQF_AI_RollbackMismatch>
   <CQF_AI_UsageBrief>Task {0} · Chat {1} tokens</CQF_AI_UsageBrief>
   <CQF_AI_UsageUnknown>unavailable</CQF_AI_UsageUnknown>
@@ -96,4 +100,122 @@
 Conversation: input {3}, output {4}; {5} responses without valid usage.
 Counts come from the API and include completed tool rounds. +? means the total is incomplete. Missing usage is not counted as zero. Cancelled requests may be billed without returning usage. Clearing chat resets these counters.</CQF_AI_UsageDetails>
   <CQF_AI_InvalidUsage>The API returned invalid token usage. The reply remains available; this response is marked as missing usage.</CQF_AI_InvalidUsage>
+  <CQF_AI_UsageTitle>Token usage</CQF_AI_UsageTitle>
+  <CQF_AI_UsageEmpty>Open the AI chat to view this conversation's usage.</CQF_AI_UsageEmpty>
+  <CQF_AI_ActivityHeader>{0} · Total {1}s · {2} operations</CQF_AI_ActivityHeader>
+  <CQF_AI_ElapsedHint>Total elapsed time includes waiting for AI replies across every tool round and executing tools. Each operation's execution time measures only the local tool, excluding AI and network waits.</CQF_AI_ElapsedHint>
+  <CQF_AI_ActivityHint>Expand or collapse reasoning information and executed operations.</CQF_AI_ActivityHint>
+  <CQF_AI_Waiting>Waiting for AI</CQF_AI_Waiting>
+  <CQF_AI_Thinking>Thinking</CQF_AI_Thinking>
+  <CQF_AI_Responding>Receiving reply</CQF_AI_Responding>
+  <CQF_AI_Preparing>Preparing operations</CQF_AI_Preparing>
+  <CQF_AI_Executing>Executing operations</CQF_AI_Executing>
+  <CQF_AI_ActivityDone>Completed</CQF_AI_ActivityDone>
+  <CQF_AI_ActivityStopped>Stopped</CQF_AI_ActivityStopped>
+  <CQF_AI_ActivityFailed>Interrupted</CQF_AI_ActivityFailed>
+  <CQF_AI_Reasoning>Reasoning information provided by the API</CQF_AI_Reasoning>
+  <CQF_AI_ReasoningUnavailable>The API has not provided reasoning information. The current stage and elapsed time are shown above.</CQF_AI_ReasoningUnavailable>
+  <CQF_AI_ReasoningAvailable>Reasoning information received. Expand to view.</CQF_AI_ReasoningAvailable>
+  <CQF_AI_PreparingTool>Preparing: {0}</CQF_AI_PreparingTool>
+  <CQF_AI_OperationLine>{0} · {1} · Execution {2}s</CQF_AI_OperationLine>
+  <CQF_AI_OperationRunning>Running</CQF_AI_OperationRunning>
+  <CQF_AI_OperationDone>Done</CQF_AI_OperationDone>
+  <CQF_AI_OperationFailed>Failed</CQF_AI_OperationFailed>
+  <CQF_AI_OperationCount>{0} changes</CQF_AI_OperationCount>
+  <CQF_AI_ToolContext>Read current context</CQF_AI_ToolContext>
+  <CQF_AI_ToolMods>Find loaded Mods</CQF_AI_ToolMods>
+  <CQF_AI_ToolTypes>Find types</CQF_AI_ToolTypes>
+  <CQF_AI_ToolResources>Query resources</CQF_AI_ToolResources>
+  <CQF_AI_ToolSchema>Read field schema</CQF_AI_ToolSchema>
+  <CQF_AI_ToolReadTarget>Read current editor data</CQF_AI_ToolReadTarget>
+  <CQF_AI_ToolValidate>Check current state</CQF_AI_ToolValidate>
+  <CQF_AI_ToolReadMap>Read map region</CQF_AI_ToolReadMap>
+  <CQF_AI_ToolReadThing>Read map object</CQF_AI_ToolReadThing>
+  <CQF_AI_ToolApply>Apply changes</CQF_AI_ToolApply>
+  <CQF_AI_ToolEditThing>Edit map object</CQF_AI_ToolEditThing>
+  <CQF_AI_ToolBranch>Create dialogue branch</CQF_AI_ToolBranch>
+  <CQF_AI_ToolInteraction>Add interaction option</CQF_AI_ToolInteraction>
+  <CQF_AI_ToolPortal>Configure map entrance or exit</CQF_AI_ToolPortal>
+  <CQF_AI_ToolExtension>Extension operation</CQF_AI_ToolExtension>
+  <CQF_AI_InvalidStream>The API returned an invalid stream. Incomplete operations were not executed.</CQF_AI_InvalidStream>
+  <CQF_AI_StreamError>The API reported a streaming error. Incomplete operations were not executed.</CQF_AI_StreamError>
+  <CQF_AI_PreviewExcerpt>Live preview shortened; the full reply will appear when complete.</CQF_AI_PreviewExcerpt>
+  <CQF_AI_StreamUsageFallback>The API does not support requesting streaming usage. Live progress remains available; usage is shown when provided.</CQF_AI_StreamUsageFallback>
+  <CQF_AI_StreamFallback>The API does not support streaming. Receiving a complete reply instead; elapsed time and executed operations remain available.</CQF_AI_StreamFallback>
+  <CQF_AI_NewChat>New conversation</CQF_AI_NewChat>
+  <CQF_AI_History>Conversation history</CQF_AI_History>
+  <CQF_AI_HistoryEmpty>No saved conversations yet.</CQF_AI_HistoryEmpty>
+  <CQF_AI_HistoryHint>{0}\nClick to continue. Use the delete icon on the right to delete this conversation. Right-click to rename or delete.</CQF_AI_HistoryHint>
+  <CQF_AI_RenameChat>Rename conversation</CQF_AI_RenameChat>
+  <CQF_AI_DeleteChat>Delete conversation</CQF_AI_DeleteChat>
+  <CQF_AI_DeleteChatConfirm>Delete “{0}” and its saved chat history? Changes already made in the game will remain.</CQF_AI_DeleteChatConfirm>
+  <CQF_AI_HistoryError>Unable to save or load conversation history: {0}</CQF_AI_HistoryError>
+  <CQF_AI_InvalidHistory>The conversation file is invalid. The original file has been preserved.</CQF_AI_InvalidHistory>
+  <CQF_AI_HistoryTooLarge>This conversation is too large to save. Start a new conversation; the last saved file has been preserved.</CQF_AI_HistoryTooLarge>
+  <CQF_AI_MissingTarget>The object is no longer available. Query the available objects again before continuing.</CQF_AI_MissingTarget>
+  <CQF_AI_ToolTargets>Find or select an object</CQF_AI_ToolTargets>
+  <CQF_AI_DefinitionNameFixed>Changing a loaded definition's defName is unsupported. Edit its contents using the existing name.</CQF_AI_DefinitionNameFixed>
+  <CQF_AI_AdditionalPrompt>Enable additional instructions</CQF_AI_AdditionalPrompt>
+  <CQF_AI_AdditionalPromptHint>Optional instructions, up to 16,000 characters. Disabled by default; disabled or empty text is not sent to AI. Applies to the next request and its tool rounds. Edit freely for layout, writing style, or other preferences.</CQF_AI_AdditionalPromptHint>
+  <CQF_AI_LayoutPromptExample>Load settlement layout example</CQF_AI_LayoutPromptExample>
+  <CQF_AI_LayoutPromptText>When I ask for a village or settlement, first plan a connected layout at the requested scale: a central gathering space, circulation paths, distinct functional buildings, and suitable furniture. Vary building dimensions and entrances according to their use and local terrain rather than placing only repeated empty rectangles. Leave traversable paths between entrances, keep doors clear, face chairs toward table edges, and reserve access beside beds and at workstations. Preserve unrelated existing objects. Query needed definitions once and reuse their placement metadata. Apply manageable batches, then inspect the affected region; follow pagination until relevant doors, furniture and operating cells are actually read. Correct orientation or obstruction issues before finishing.</CQF_AI_LayoutPromptText>
+  <CQF_AI_ReplacePromptConfirm>Replace the current additional instructions with the settlement layout example?</CQF_AI_ReplacePromptConfirm>
+  <CQF_AI_ClearPrompt>Clear additional instructions</CQF_AI_ClearPrompt>
+  <CQF_AI_PromptTooLong>Additional instructions exceed 16,000 characters. Shorten the text in AI settings before sending.</CQF_AI_PromptTooLong>
+  <CQF_AI_IdleTimeoutHint>Stop only after this many seconds without incoming feedback. Reply, reasoning and tool-argument fragments, and stream heartbeats reset the timer. A request may run longer than this limit while feedback continues.</CQF_AI_IdleTimeoutHint>
+  <CQF_AI_PromptLength>{0} / 16000 characters</CQF_AI_PromptLength>
+  <CQF_AI_TabBehavior>Behavior</CQF_AI_TabBehavior>
+  <CQF_AI_TabConnection>Connection</CQF_AI_TabConnection>
+  <CQF_AI_TabPrompts>Prompts</CQF_AI_TabPrompts>
+  <CQF_AI_TabUsage>Usage</CQF_AI_TabUsage>
+  <CQF_AI_LiveMapOverlap>Placements in this batch overlap. The AI can adjust their positions or rotations using the conflict details.</CQF_AI_LiveMapOverlap>
+  <CQF_AI_More>More actions</CQF_AI_More>
+  <CQF_AI_Planning>Enable goals and plans</CQF_AI_Planning>
+  <CQF_AI_PlanningHint>Complex tasks can maintain goals, acceptance criteria and plans saved with the chat. Restored tasks do not run automatically; send a message to continue or revise them.</CQF_AI_PlanningHint>
+  <CQF_AI_Agents>Allow worker agents</CQF_AI_Agents>
+  <CQF_AI_AgentsHint>Requires goals and plans. The AI decides when to delegate. Workers inspect and propose; the main agent applies changes. Additional requests increase usage.</CQF_AI_AgentsHint>
+  <CQF_AI_ParallelAgents>Maximum concurrent workers</CQF_AI_ParallelAgents>
+  <CQF_AI_AgentModel>Worker model</CQF_AI_AgentModel>
+  <CQF_AI_AgentModelHint>Leave blank to use the main model. Workers share the configured endpoint and API key. The provider must support the chosen model.</CQF_AI_AgentModelHint>
+  <CQF_AI_AgentPrompt>Additional worker instructions</CQF_AI_AgentPrompt>
+  <CQF_AI_AgentPromptHint>Optional; blank adds no preferences. Sent only to workers. Add design, research or review preferences here. Inspection permissions are enforced by the application.</CQF_AI_AgentPromptHint>
+  <CQF_AI_GoalLine>Goal: {0} · {1}</CQF_AI_GoalLine>
+  <CQF_AI_CriterionLine>Acceptance: {0}</CQF_AI_CriterionLine>
+  <CQF_AI_PlanLine>[{0}] {1}</CQF_AI_PlanLine>
+  <CQF_AI_AgentLine>Worker {0} · {1} · {2}s</CQF_AI_AgentLine>
+  <CQF_AI_TaskStatus_active>Active</CQF_AI_TaskStatus_active>
+  <CQF_AI_TaskStatus_pending>Pending</CQF_AI_TaskStatus_pending>
+  <CQF_AI_TaskStatus_running>Running</CQF_AI_TaskStatus_running>
+  <CQF_AI_TaskStatus_completed>Completed</CQF_AI_TaskStatus_completed>
+  <CQF_AI_TaskStatus_blocked>Blocked</CQF_AI_TaskStatus_blocked>
+  <CQF_AI_TaskStatus_failed>Failed</CQF_AI_TaskStatus_failed>
+  <CQF_AI_TaskStatus_paused>Paused</CQF_AI_TaskStatus_paused>
+  <CQF_AI_WaitingAgents>Waiting for workers</CQF_AI_WaitingAgents>
+  <CQF_AI_ToolGoal>Manage goal</CQF_AI_ToolGoal>
+  <CQF_AI_ToolPlan>Update plan</CQF_AI_ToolPlan>
+  <CQF_AI_ToolDelegate>Delegate worker</CQF_AI_ToolDelegate>
+  <CQF_AI_ToolWaitAgents>Wait for workers</CQF_AI_ToolWaitAgents>
+  <CQF_AI_SteerHint>Add instructions to the current task. Ctrl + Enter sends. With an empty input, this button stops the task.</CQF_AI_SteerHint>
+  <CQF_AI_Steering>Additional instructions received; the task will be revised in the next round.</CQF_AI_Steering>
+  <CQF_AI_InvalidPlan>Invalid goal or plan. Check step IDs, dependencies and completion evidence.</CQF_AI_InvalidPlan>
+  <CQF_AI_TaskUnfinished>The task is unfinished. Complete the plan, collect worker results and read actual state after changes.</CQF_AI_TaskUnfinished>
+  <CQF_AI_InvalidAgent>Invalid worker assignment or permission configuration.</CQF_AI_InvalidAgent>
+  <CQF_AI_AgentCapacity>Worker record capacity reached for this task. Reuse existing results or continue with the main agent.</CQF_AI_AgentCapacity>
+  <CQF_AI_AgentResultTooLarge>The worker result is too large. Narrow the assignment and return a concise result.</CQF_AI_AgentResultTooLarge>
+  <CQF_AI_ActivityBlocked>Blocked</CQF_AI_ActivityBlocked>
+  <CQF_AI_ToolAgentResult>Read worker result</CQF_AI_ToolAgentResult>
+  <CQF_AI_AgentDetailsHint>Click to expand or collapse the assignment, live progress and result.</CQF_AI_AgentDetailsHint>
+  <CQF_AI_ToolCQFThings>Discover CQF things</CQF_AI_ToolCQFThings>
+  <CQF_AI_ToolMapTargets>Read map target keys</CQF_AI_ToolMapTargets>
+  <CQF_AI_ToolMapSignals>Read signal references</CQF_AI_ToolMapSignals>
+  <CQF_AI_ToolDatabase>Read CQF database</CQF_AI_ToolDatabase>
+  <CQF_AI_ToolMapConfiguration>Map configuration</CQF_AI_ToolMapConfiguration>
+  <CQF_AI_ToolRuntimeHelp>Inspect runtime capabilities</CQF_AI_ToolRuntimeHelp>
+  <CQF_AI_ToolRuntimeRead>Read game state</CQF_AI_ToolRuntimeRead>
+  <CQF_AI_ToolRuntimeOperate>Operate game systems</CQF_AI_ToolRuntimeOperate>
+  <CQF_AI_ToolConditions>Evaluate conditions</CQF_AI_ToolConditions>
+  <CQF_AI_ToolDiagnostics>Inspect map behaviour</CQF_AI_ToolDiagnostics>
+  <CQF_AI_ToolDefinition>Manage definition</CQF_AI_ToolDefinition>
+  <CQF_AI_RuntimeFailed>The game reported an error while executing this operation. Some effects may already have occurred; inspect the current state before continuing.</CQF_AI_RuntimeFailed>
+  <CQF_AI_UndoUnsupported>This task executed operations that cannot be fully undone.</CQF_AI_UndoUnsupported>
 </LanguageData>

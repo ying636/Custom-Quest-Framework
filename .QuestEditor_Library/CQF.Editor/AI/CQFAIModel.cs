@@ -35,11 +35,14 @@ namespace QuestEditor_Library
         }
         public XElement Write(object? value, string name = "value", bool root = false)
         {
+            if (value is DialogTreeDef tree && root) tree.ResolveOptions();
             return WriteValue(value, name, root, new HashSet<object>(), 0);
         }
         public object? Read(XElement xml, Type declared, object? template = null, bool root = false)
         {
-            return ReadValue(xml, declared, template, root, 0);
+            object? value = ReadValue(xml, declared, template, root, 0);
+            if (value is DialogTreeDef tree && root) tree.Update();
+            return value;
         }
         public object Copy(object source)
         {
@@ -63,6 +66,10 @@ namespace QuestEditor_Library
                 foreach (FieldInfo field in Fields(type))
                 {
                     XElement info = new XElement("field", new XAttribute("name", field.Name), new XAttribute("type", field.FieldType.ToString()));
+                    if (type == typeof(DialogNode) && field.Name == "optionIds")
+                        info.Add(new XAttribute("description", "Ordered references to DialogTreeDef.optionMoulds keys. Several nodes can reference the same choice. Removing one reference does not delete the choice."));
+                    if (type == typeof(DialogTreeDef) && field.Name == "optionMoulds")
+                        info.Add(new XAttribute("description", "Canonical choice definitions, including unused choices. Editing a choice updates every node that references its key. Delete all node optionIds references before deleting a choice."));
                     Type item = field.FieldType.IsArray ? field.FieldType.GetElementType()! : field.FieldType;
                     if (recursive && !IsScalar(item))
                     {
@@ -186,6 +193,11 @@ namespace QuestEditor_Library
             }
             if (!IsDataType(type) || type.IsAbstract) throw new InvalidDataException("CQF_AI_UnknownType: " + type.FullName);
             object copy = template != null && template.GetType() == type ? Memberwise.Invoke(template, null)! : Activator.CreateInstance(type)!;
+            if (copy is DialogNode dialogNode)
+            {
+                dialogNode.options = new List<DialogOption>();
+                dialogNode.optionsResolved = false;
+            }
             Dictionary<string, FieldInfo> fields = Fields(type).ToDictionary(field => field.Name);
             HashSet<string> seen = new HashSet<string>();
             foreach (XElement element in xml.Elements())

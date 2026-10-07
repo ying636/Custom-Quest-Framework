@@ -22,6 +22,9 @@ internal static class AIMapChecks
         Check(CQFAIMapPlan.Positions(draft.thingDatas.Single()).Count() == 2 && CQFAIMapPlan.Positions(source.thingDatas.Single()).Count() == 3, "erase edits compressed placements and preserves source");
         CustomMapDataDef custom = (CustomMapDataDef)changes.Build(AICheckFixtures.Map(), XElement.Parse("<changes><place def='CQF_Check_CustomDoor' Class='QuestEditor_Library.CustomThingData_CustomDoor' x='8' z='8'/></changes>"), "", false);
         Check(custom.customThings.Single() is CustomThingData_CustomDoor, "interactive object uses matching data class");
+        CustomMapDataDef turned = (CustomMapDataDef)changes.Build(AICheckFixtures.Map(), XElement.Parse("<changes><place def='CQF_Check_LargeBuilding' x='8' z='8' rotation='1'/></changes>"), "", false);
+        Check(turned.thingDatas.Single().rotation == Rot4.East && GenAdj.OccupiedRect(turned.thingDatas.Single().position, turned.thingDatas.Single().rotation, building.size).Width == 3,
+            "map draft placement preserves explicit rotation and rotates its native footprint");
         CellRect occupied = GenAdj.OccupiedRect(custom.customThings.Single().position, custom.customThings.Single().rotation, door.size);
         IntVec3 edge = occupied.Cells.First(cell => cell != custom.customThings.Single().position);
         XElement eraseEdge = new XElement("changes", new XElement("erase", new XAttribute("x", edge.x), new XAttribute("z", edge.z)));

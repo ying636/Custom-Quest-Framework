@@ -12,13 +12,15 @@ namespace QuestEditor_Library
             this.backend = backend;
         }
         public override bool CanUndo => edits.Count > 0;
-        public override bool IsCurrent => backend.IsValid && context.IsValid?.Invoke() != false && ReferenceEquals(context.Identity, backend.Identity)
+        public override bool IsTargetValid => backend.IsValid && context.IsValid?.Invoke() != false && ReferenceEquals(context.Identity, backend.Identity);
+        public override bool IsCurrent => !undoConflict && IsTargetValid
             && edits.GroupBy(edit => edit.Key).All(group => group.Last().IsCurrent);
-        public XElement Receipt => new XElement("liveMapApplied", new XAttribute("operations", last.Count), new XAttribute("undoAvailable", CanUndo),
+        public XElement Receipt => new XElement("liveMapApplied", new XAttribute("operations", last.Count), new XAttribute("undoAvailable", CanUndo && IsCurrent),
             last.Take(40).Select(edit => edit.Receipt), backend.Validate());
         public override void Build(XElement changes, string command, bool generateText)
         {
-            if (!IsCurrent) throw new InvalidOperationException("CQF_AI_StaleTarget");
+            if (!IsTargetValid) throw new InvalidOperationException("CQF_AI_StaleTarget");
+            if (CanUndo && !IsCurrent) undoConflict = true;
             if (changes.Name != "changes" || changes.HasAttributes || changes.Elements().Count() is < 1 or > 500
                 || changes.Nodes().OfType<XText>().Any(text => !string.IsNullOrWhiteSpace(text.Value))) throw new InvalidDataException("CQF_AI_InvalidChanges");
             pending = backend.Prepare(changes, model, command, generateText);
@@ -26,7 +28,7 @@ namespace QuestEditor_Library
         }
         public override void Apply()
         {
-            if (pending == null || !IsCurrent) throw new InvalidOperationException("CQF_AI_StaleTarget");
+            if (pending == null || !IsTargetValid) throw new InvalidOperationException("CQF_AI_StaleTarget");
             List<CQFAILiveMapEdit> applied = new List<CQFAILiveMapEdit>();
             try
             {
@@ -66,5 +68,6 @@ namespace QuestEditor_Library
         private readonly List<CQFAILiveMapEdit> edits = new List<CQFAILiveMapEdit>();
         private List<CQFAILiveMapEdit> last = new List<CQFAILiveMapEdit>();
         private IReadOnlyList<CQFAILiveMapEdit>? pending;
+        private bool undoConflict;
     }
 }

@@ -53,6 +53,13 @@ internal static class AILiveMapChecks
         map.Cells["terrain:3:3"] = "CQF_Check_PlayerChange";
         Reject(recovering.Transaction!.Undo, "manual map modifications prevent stale undo from overwriting player changes");
         Check(map.Cells["terrain:3:3"] == "CQF_Check_PlayerChange", "rejected undo preserves newer map changes");
+        Check(recovering.Process(AIToolChecks.Response("changed_live_read", "cqf_read_map_region", ("x", "3"), ("z", "3"), ("width", "1"), ("height", "1"))), "changed undo checkpoints do not block fresh live map reads");
+        Check(!recovering.Process("<assistant><reply>CQF_Check_ChangedLiveDone</reply></assistant>"), "a valid map task can finish even when its old undo checkpoint changed");
+        Check(recovering.Process(AIToolChecks.Response("live_after_conflict", "cqf_apply_changes", ("changes_xml", "<changes><roof def='CQF_Check_NewRoof' x='6' z='6'/></changes>")))
+            && map.Cells["terrain:3:3"] == "CQF_Check_PlayerChange" && map.Cells["roof:6:6"] == "CQF_Check_NewRoof", "live edits after an earlier checkpoint conflict use current state and preserve unrelated player changes");
+        Check(!recovering.Transaction!.IsCurrent, "later live writes never re-enable undo over an observed player conflict");
+        Check(recovering.LastResults.Single().Descendants("liveMapApplied").Single().Attribute("undoAvailable")?.Value == "false", "live receipts report unavailable undo after a checkpoint conflict");
+        Reject(recovering.Transaction.Undo, "conflicted task undo remains blocked after a new successful edit");
         CQFAIHarness stale = new(model, catalog, new CQFAIConversation(model, catalog), context, "", true, false);
         map.IsValid = false;
         Reject(() => stale.Process(AIToolChecks.Response("map_switch", "cqf_validate_target")), "changing maps invalidates outstanding live tasks");

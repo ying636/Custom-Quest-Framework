@@ -20,6 +20,7 @@ public class CQFDialogTreeWindow : Window
         this.interviewee = interviewee;
         this.quest = quest;
         this.tree = tree;
+        this.tree.ResolveOptions();
         this.GoToNode(0);
     }
 

@@ -29,7 +29,6 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
-            if (CQFAIButton.Draw(new Rect(inRect.width - 40f, 0f, 32f, 32f))) CQFAIBridge.Open(this.AIContext);
             Rect outRect = new Rect(0f, 36f, inRect.width, inRect.height - 36f);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(this.height + 10f, inRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CQF.RuntimeChecks</AssemblyName>
+    <RimWorldDir>$(MSBuildThisFileDirectory)..\..\..\..\..</RimWorldDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="QuestEditor_Library"><HintPath>$(MSBuildThisFileDirectory)..\..\..\1.6\Assemblies\net48\QuestEditor_Library.dll</HintPath><Private>false</Private></Reference>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="1.6.4633" />
+    <Reference Include="UnityEngine.ScreenCaptureModule"><HintPath>$(RimWorldDir)\RimWorldWin64_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

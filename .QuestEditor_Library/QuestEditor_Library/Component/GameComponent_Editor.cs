@@ -18,6 +18,8 @@ namespace QuestEditor_Library
             Instance = this;
         }
         public static GameComponent_Editor Component => Instance;
+        private static Material QuestionMarkMat => questionMarkMat ??= MaterialPool.MatFrom("UI/Overlays/QuestionMark", ShaderDatabase.MetaOverlay);
+        private static Material QuestIconMat => questIconMat ??= MaterialPool.MatFrom("UI/Icons/Icon_Dialog", ShaderDatabase.MetaOverlay);
         public List<ExecutiveRequest> Request 
         {
             get 
@@ -236,7 +238,6 @@ namespace QuestEditor_Library
                 }
             }
         }
-        private static readonly Material QuestionMarkMat = MaterialPool.MatFrom("UI/Overlays/QuestionMark", ShaderDatabase.MetaOverlay);
         public void AddDialog(Thing thing, DialogManagerDef def)
         {
             if (!this.Dialogs.ContainsKey(thing))
@@ -304,13 +305,13 @@ namespace QuestEditor_Library
 
         public static bool showCells = false;
 
-        private static readonly Material QuestIconMat = MaterialPool.MatFrom("UI/Icons/Icon_Dialog", ShaderDatabase.MetaOverlay);
-
         private static readonly float BaseAlt = AltitudeLayer.MetaOverlays.AltitudeFor() - 0.243243232f;
 
         private DrawBatch drawBatch = new DrawBatch();
         private readonly List<ExecutiveRequest> readyRequests = new List<ExecutiveRequest>();
         private readonly List<KeyValuePair<Thing, DialogManagerDef>> dialogDrawBuffer = new List<KeyValuePair<Thing, DialogManagerDef>>();
+        private static Material? questionMarkMat;
+        private static Material? questIconMat;
     }
     public class CD : IExposable
     {

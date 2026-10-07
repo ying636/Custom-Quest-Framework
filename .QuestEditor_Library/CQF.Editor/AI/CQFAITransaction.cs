@@ -14,8 +14,10 @@ namespace QuestEditor_Library
             sourceXml = Snapshot(Source);
         }
         public object Source { get; }
+        public virtual bool UndoSupported => true;
         public object? Draft { get; private set; }
         public virtual bool CanUndo => undo != null;
+        public virtual bool IsTargetValid => context.IsValid?.Invoke() != false && ReferenceEquals(context.Identity, identity);
         public virtual bool IsCurrent => context.IsValid?.Invoke() != false && ReferenceEquals(context.Identity, identity) && Snapshot(context.Read()) == (CanUndo ? appliedXml : sourceXml);
         public virtual void Build(XElement changes, string command, bool generateText)
         {

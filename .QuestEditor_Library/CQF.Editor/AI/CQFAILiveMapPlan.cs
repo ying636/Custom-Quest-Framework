@@ -20,6 +20,14 @@ namespace QuestEditor_Library
         {
             foreach (XElement operation in changes.Elements())
             {
+                if (operation.Name == "editMap")
+                {
+                    Attributes(operation);
+                    if (changes.Elements().Count() != 1 || edits.Any(edit => edit.Key == "map_configuration") || operation.Elements().Count() != 1 || operation.Element("changes") == null
+                        || operation.Nodes().OfType<XText>().Any(text => !string.IsNullOrWhiteSpace(text.Value))) throw new InvalidDataException("CQF_AI_InvalidChanges: editMap");
+                    edits.Add(CQFAIMapFeatures.Prepare(map, model, operation.Element("changes")!, command, generateText));
+                    continue;
+                }
                 if (operation.Name == "editThing") { EditThing(operation); continue; }
                 if (operation.HasElements || !string.IsNullOrWhiteSpace(operation.Value)) throw new InvalidDataException("CQF_AI_InvalidChanges");
                 int x = Number(operation, "x"), z = Number(operation, "z");
@@ -77,16 +85,18 @@ namespace QuestEditor_Library
             if (!footprint.InBounds(map)) throw new InvalidDataException("CQF_AI_MapBounds");
             foreach (Thing existing in footprint.SelectMany(position => position.GetThingList(map)).Distinct().Where(thing => !removed.Contains(thing)).ToArray())
             {
-                if (existing is Pawn && def.passability == Traversability.Impassable) throw new InvalidDataException("CQF_AI_LiveMapBlocked: " + existing.ThingID);
+                if (existing is Pawn && def.passability == Traversability.Impassable) throw new InvalidDataException("CQF_AI_LiveMapBlocked: existing " + existing.ThingID + "; " + PlacementDetails(existing.def, existing.Position, existing.Rotation));
                 if (!GenSpawn.SpawningWipes(def, existing.def) && !(def.IsEdifice() && existing.def.IsEdifice())) continue;
                 if (existing.def.category is ThingCategory.Plant or ThingCategory.Filth) Remove(existing);
-                else throw new InvalidDataException("CQF_AI_LiveMapBlocked: " + existing.ThingID);
+                else throw new InvalidDataException("CQF_AI_LiveMapBlocked: existing " + existing.ThingID + "; " + PlacementDetails(existing.def, existing.Position, existing.Rotation));
             }
             foreach (Thing existing in planned)
                 if (GenAdj.OccupiedRect(existing.Position, existing.Rotation, existing.def.size).Overlaps(footprint)
                     && (GenSpawn.SpawningWipes(def, existing.def) || def.category == ThingCategory.Plant && existing.def.category == ThingCategory.Plant
                         || def.category == ThingCategory.Item && existing.def.category == ThingCategory.Item))
-                    throw new InvalidDataException("CQF_AI_LiveMapBlocked: overlapping placements");
+                    throw new InvalidDataException("CQF_AI_LiveMapOverlap: overlapping placements; batch not applied; requested "
+                        + PlacementDetails(def, cell, rot) + "; conflicts with planned " + PlacementDetails(existing.def, existing.Position, existing.Rotation)
+                        + "; adjust anchors/rotation or remove duplicate placements from this batch before retrying.");
             if (def.category == ThingCategory.Item && footprint.Any(position => position.GetThingList(map).Any(thing => thing.def.category == ThingCategory.Item && !removed.Contains(thing))))
                 throw new InvalidDataException("CQF_AI_LiveMapBlocked: existing items");
             if (def.category == ThingCategory.Plant && footprint.Any(position => position.GetThingList(map).Any(thing => thing.def.category == ThingCategory.Plant && !removed.Contains(thing))))
@@ -102,9 +112,9 @@ namespace QuestEditor_Library
                 cells.Capture();
                 CheckSpawn(thing, cell, rot);
                 GenSpawn.Spawn(thing, cell, map, rot, WipeMode.Vanish);
-                if (!thing.Spawned || thing.Map != map || thing.Position != cell || thing.stackCount != count) throw new InvalidDataException("CQF_AI_ApplyMismatch: " + thing.ThingID);
+                if (!thing.Spawned || thing.Map != map || thing.Position != cell || thing.stackCount != count || thing.Rotation != rot) throw new InvalidDataException("CQF_AI_ApplyMismatch: " + thing.ThingID);
             }, () => { if (thing.Spawned) Despawn(thing); cells.Restore(); }, () => ThingState(thing, footprint) + ":" + cells.Current,
-                () => new XElement("placed", new XAttribute("thingId", thing.ThingID), new XAttribute("def", def.defName), new XAttribute("x", cell.x), new XAttribute("z", cell.z))));
+                () => new XElement("placed", new XAttribute("thingId", thing.ThingID), new XAttribute("def", def.defName), new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("rotation", thing.Rotation.AsInt))));
         }
         private void Remove(Thing thing)
         {
@@ -180,13 +190,14 @@ namespace QuestEditor_Library
             CQFAILiveThingConfiguration before = (CQFAILiveThingConfiguration)model.Copy(CQFAILiveMap.Configuration(thing));
             CQFAILiveThingConfiguration after = (CQFAILiveThingConfiguration)new CQFAIChanges(model).Build(before, operation.Element("changes")!, command, generateText);
             CQFAILiveMap.ValidateConfiguration(thing, after);
+            LootData? cachedLoot = CQFAILiveFeatures.CaptureLoot(thing);
             CellRect footprint = thing.OccupiedRect();
             CQFAILiveMapCellState cells = new CQFAILiveMapCellState(map, thing);
             edits.Add(new CQFAILiveMapEdit("thing:" + thing.ThingID, () =>
             {
                 CQFAILiveMap.ApplyConfiguration(thing, after);
                 if (!XNode.DeepEquals(model.Write(CQFAILiveMap.Configuration(thing)), model.Write(after))) throw new InvalidDataException("CQF_AI_ApplyMismatch: configuration");
-            }, () => CQFAILiveMap.ApplyConfiguration(thing, before), () => ThingState(thing, footprint) + ":" + cells.Current,
+            }, () => { CQFAILiveMap.ApplyConfiguration(thing, before); CQFAILiveFeatures.RestoreLoot(thing, cachedLoot); }, () => ThingState(thing, footprint) + ":" + cells.Current,
                 () => new XElement("edited", new XAttribute("thingId", thing.ThingID), new CQFAITargetReader(model).Summary(CQFAILiveMap.Configuration(thing)))));
         }
         private void CheckSpawn(Thing thing, IntVec3 cell, Rot4 rotation)
@@ -195,8 +206,14 @@ namespace QuestEditor_Library
                 if (existing != thing && (GenSpawn.SpawningWipes(thing.def, existing.def) || thing.def.IsEdifice() && existing.def.IsEdifice() || existing is Pawn && thing.def.passability == Traversability.Impassable
                     || thing.def.category == ThingCategory.Item && existing.def.category == ThingCategory.Item
                     || thing.def.category == ThingCategory.Plant && existing.def.category == ThingCategory.Plant))
-                    throw new InvalidDataException("CQF_AI_LiveMapBlocked: " + existing.ThingID);
+                    throw new InvalidDataException("CQF_AI_LiveMapBlocked: existing " + existing.ThingID + "; " + PlacementDetails(existing.def, existing.Position, existing.Rotation));
             if (!thing.def.CanSpawnAt(cell, rotation, map)) throw new InvalidDataException("CQF_AI_LiveMapBlocked: " + thing.ThingID);
+        }
+        private static string PlacementDetails(ThingDef definition, IntVec3 anchor, Rot4 rotation)
+        {
+            CellRect area = GenAdj.OccupiedRect(anchor, rotation, definition.size);
+            return definition.defName + " anchor=(" + anchor.x + "," + anchor.z + ") rotation=" + rotation.AsInt
+                + " footprint=(minX=" + area.minX + ",minZ=" + area.minZ + ",width=" + area.Width + ",height=" + area.Height + ")";
         }
         private string ThingState(Thing thing, CellRect footprint) => thing.Spawned + ":" + thing.Destroyed + ":" + thing.Position + ":" + thing.Rotation.AsInt + ":"
             + thing.Faction?.GetUniqueLoadID() + ":" + (thing is Pawn ? "" : model.Write(CQFAILiveMap.Configuration(thing)).ToString(SaveOptions.DisableFormatting)) + ":"

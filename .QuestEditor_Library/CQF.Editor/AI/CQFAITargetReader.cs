@@ -10,6 +10,7 @@ namespace QuestEditor_Library
             if (target == null) return new XElement("target", new XAttribute("available", false));
             return SummaryValue(model.Write(target, root: true), "/");
         }
+        public XElement SummaryXml(XElement value) => SummaryValue(value, "/");
         public XElement Read(object target, string path, int offset = 0, int limit = 20)
         {
             if (offset < 0 || offset > 100000 || limit < 1 || limit > 40) throw new InvalidDataException("CQF_AI_InvalidTool: pagination");

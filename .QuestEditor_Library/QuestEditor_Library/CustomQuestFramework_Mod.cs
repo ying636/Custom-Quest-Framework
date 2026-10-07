@@ -68,6 +68,13 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.dialogAIAllowEditing, "dialogAIAllowEditing", true);
             Scribe_Values.Look(ref this.dialogAIAllowTextGeneration, "dialogAIAllowTextGeneration", true);
             Scribe_Values.Look(ref this.dialogAIUseTools, "dialogAIUseTools", true);
+            Scribe_Values.Look(ref this.dialogAIPlanning, "dialogAIPlanning", true);
+            Scribe_Values.Look(ref this.dialogAIAgents, "dialogAIAgents", true);
+            Scribe_Values.Look(ref this.dialogAIParallelAgents, "dialogAIParallelAgents", 2);
+            Scribe_Values.Look(ref this.dialogAIAgentModel, "dialogAIAgentModel", string.Empty);
+            Scribe_Values.Look(ref this.dialogAIAgentPrompt, "dialogAIAgentPrompt", string.Empty);
+            Scribe_Values.Look(ref this.dialogAIAdditionalPromptEnabled, "dialogAIAdditionalPromptEnabled", false);
+            Scribe_Values.Look(ref this.dialogAIAdditionalPrompt, "dialogAIAdditionalPrompt", string.Empty);
             Scribe_Values.Look(ref this.dialogAIEndpoint, "dialogAIEndpoint", string.Empty);
             Scribe_Values.Look(ref this.dialogAIModel, "dialogAIModel", string.Empty);
             Scribe_Values.Look(ref this.dialogAIKey, "dialogAIKey", string.Empty);
@@ -80,6 +87,13 @@ namespace QuestEditor_Library
         public bool dialogAIAllowEditing = true;
         public bool dialogAIAllowTextGeneration = true;
         public bool dialogAIUseTools = true;
+        public bool dialogAIPlanning = true;
+        public bool dialogAIAgents = true;
+        public int dialogAIParallelAgents = 2;
+        public string dialogAIAgentModel = string.Empty;
+        public string dialogAIAgentPrompt = string.Empty;
+        public bool dialogAIAdditionalPromptEnabled;
+        public string dialogAIAdditionalPrompt = string.Empty;
         public string dialogAIEndpoint = string.Empty;
         public string dialogAIModel = string.Empty;
         public string dialogAIKey = string.Empty;

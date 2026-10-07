@@ -22,7 +22,6 @@ namespace QuestEditor_Library
         public override void DoWindowContents(Rect inRect)
         {
             base.DrawPageTitle(inRect);
-            if (CQFAIButton.Draw(new Rect(inRect.width - 40f, 0f, 32f, 32f))) CQFAIBridge.Open(this.AIContext);
             if (Widgets.CloseButtonFor(inRect))
             {
                 this.Close();

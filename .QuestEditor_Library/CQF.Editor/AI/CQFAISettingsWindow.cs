@@ -19,13 +19,20 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            GameFont previousFont = Text.Font;
+            TextAnchor previousAnchor = Text.Anchor;
+            bool previousWrap = Text.WordWrap;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 30f), "CQF_DialogAI_SettingsTab".Translate());
-            Text.Font = GameFont.Small;
-            Rect body = new Rect(0f, 38f, inRect.width, inRect.height - 38f);
-            Widgets.BeginScrollView(body, ref scroll, new Rect(0f, 0f, body.width - 20f, 570f));
-            settings.Draw(new Rect(0f, 0f, body.width - 20f, 570f), CustomQuestFramework_ModSetting.setting);
-            Widgets.EndScrollView();
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.WordWrap = true;
+            try
+            {
+                Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 30f), "CQF_DialogAI_SettingsTab".Translate());
+                Text.Font = GameFont.Small;
+                Rect body = new Rect(0f, 38f, inRect.width, inRect.height - 38f);
+                settings.Draw(body, CustomQuestFramework_ModSetting.setting);
+            }
+            finally { Text.Font = previousFont; Text.Anchor = previousAnchor; Text.WordWrap = previousWrap; }
         }
 
         public override void PostClose()
@@ -37,6 +44,5 @@ namespace QuestEditor_Library
         }
 
         private readonly CQFDialogAISettings settings = new CQFDialogAISettings();
-        private Vector2 scroll;
     }
 }

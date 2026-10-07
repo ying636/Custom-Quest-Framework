@@ -34,7 +34,6 @@ namespace QuestEditor_Library
         {
             this.RefreshMods();
             base.DrawPageTitle(inRect);
-            if (CQFAIButton.Draw(new Rect(inRect.width - 40f, 0f, 32f, 32f))) CQFAIBridge.Open(this.AIContext);
             this.DrawButtons(inRect);
             Rect mainRect = new Rect(5f, 76f, inRect.width - 10f, inRect.height - 84f);
             float leftWidth = 270f;

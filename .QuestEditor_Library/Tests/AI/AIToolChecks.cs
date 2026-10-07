@@ -52,7 +52,8 @@ internal static class AIToolChecks
         recovering.Process(Response("corrected", "cqf_apply_changes", ("changes_xml", "<changes><mapResize x='16' z='16'/></changes>")));
         Check(((CustomMapDataDef)current).size.x == 16, "model can correct a failed edit within the same task");
         ((CustomMapDataDef)current).label = "CQF_Check_Manual";
-        Reject(() => recovering.Process(Response("stale", "cqf_validate_target")), "manual editing prevents overwriting or verifying stale task state");
+        Check(recovering.Process(Response("changed_read", "cqf_read_target", ("path", "/label"))) && recovering.LastResults.Single().Value.Contains("CQF_Check_Manual"), "manual editor changes remain readable without invalidating the target");
+        Reject(() => recovering.Process(Response("stale", "cqf_apply_changes", ("changes_xml", "<changes><set path='/label'><value>CQF_Check_Overwrite</value></set></changes>"))), "manual editor changes still prevent stale draft writes");
         CQFAIHarness readOnly = new CQFAIHarness(model, catalog, conversation, context, "", false, false);
         Check(readOnly.Instructions.Contains("Editing permission is disabled"), "disabled editing permission is reported explicitly");
         CQFAIHarness noTarget = new CQFAIHarness(model, catalog, new CQFAIConversation(model, catalog), null, "", true, false);

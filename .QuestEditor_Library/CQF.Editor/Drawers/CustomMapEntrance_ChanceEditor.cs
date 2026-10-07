@@ -14,7 +14,6 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.CustomMapEntrance_Chance cqfReceiver)
         {
-            if (CQFAIButton.Draw(new Rect(500f, 0f, 30f, 30f))) CQFAIBridge.Open(CQFAIThingContext.Create(cqfReceiver));
             Rect outRect = new Rect(0f, 36f, 540f, 554f);
             float width = outRect.width - 40f;
             Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, cqfReceiver.height + 10f));

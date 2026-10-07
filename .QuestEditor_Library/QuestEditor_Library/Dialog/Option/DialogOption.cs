@@ -164,6 +164,12 @@ namespace QuestEditor_Library
             XElement result = new XElement(nodeName);
             result.SetAttributeValue("Class", this.GetType().FullName);
             result.Add(new XElement("text", this.text));
+            if (this.editorPositionSet)
+            {
+                result.Add(new XElement("editorX", this.editorX));
+                result.Add(new XElement("editorY", this.editorY));
+                result.Add(new XElement("editorPositionSet", true));
+            }
             if (this.hideWhenDisabled)
             {
                 result.Add(new XElement("hideWhenDisabled", this.hideWhenDisabled));
@@ -211,6 +217,9 @@ namespace QuestEditor_Library
         public List<DialogCondition> conditions = new List<DialogCondition>();
         public List<DialogResult> results = new List<DialogResult>() {new DialogResult()};
         public List<CQFThingData> requiredThings = new List<CQFThingData>();
+        public float editorX;
+        public float editorY;
+        public bool editorPositionSet;
         //public bool requiredThingsWillBeGivenToInterviewer = false;
     }
 }

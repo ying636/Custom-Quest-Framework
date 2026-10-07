@@ -29,6 +29,24 @@ internal static class AILiveMapPlanChecks
         Reject(() => backend.ReadRegion(new CellRect(63, 63, 2, 2), 0, 10), "actual live backend rejects invalid region bounds");
         Reject(() => backend.ReadRegion(new CellRect(1, 1, 2, 2), 0, 401), "actual live backend enforces read page limits");
         Check(map.terrainGrid == null && map.roofGrid == null, "native planning checks run without initializing game maps or Unity UI");
+        map.cellIndices = new CellIndices(map);
+        map.thingGrid = new ThingGrid(map);
+        ThingDef collisionDef = (ThingDef)RuntimeHelpers.GetUninitializedObject(typeof(ThingDef));
+        collisionDef.defName = "CQF_Check_Collision"; collisionDef.category = ThingCategory.Item; collisionDef.size = new IntVec2(2, 3); collisionDef.stackLimit = 1;
+        DefDatabase<ThingDef>.Add(collisionDef);
+        Thing planned = new() { def = collisionDef, Position = new IntVec3(10, 0, 10), Rotation = Rot4.East };
+        CQFAILiveMapPlan collision = new(backend, model, "", false);
+        ((List<Thing>)typeof(CQFAILiveMapPlan).GetField("planned", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(collision)!).Add(planned);
+        try { collision.Build(XElement.Parse("<changes><place def='CQF_Check_Collision' x='10' z='10' rotation='0'/></changes>")); }
+        catch (InvalidDataException error) when (error.Message.StartsWith("CQF_AI_LiveMapOverlap:"))
+        {
+            Check(error.Message.Contains("batch not applied") && error.Message.Contains("requested CQF_Check_Collision anchor=(10,10) rotation=0")
+                && error.Message.Contains("planned CQF_Check_Collision anchor=(10,10) rotation=1") && error.Message.Contains("width=3,height=2"),
+                "native planner returns both requested and conflicting planned footprints and rotations");
+            Check(map.thingGrid.ThingsListAt(new IntVec3(10, 0, 10)).Count == 0, "conflicting native placement planning leaves the live map unchanged");
+            return;
+        }
+        throw new InvalidOperationException("native planned collision was not reported");
         IReadOnlyList<CQFAILiveMapEdit> Plan(string operations) => new CQFAILiveMapPlan(backend, model, "", false).Build(XElement.Parse("<changes>" + operations + "</changes>"));
     }
     private static void Reject(Action action, string name)

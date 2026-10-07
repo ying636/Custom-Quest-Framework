@@ -31,7 +31,6 @@ namespace QuestEditor_Library
         public override void DoWindowContents(Rect inRect)
         {
             base.DrawPageTitle(inRect);
-            if (CQFAIButton.Draw(new Rect(inRect.width - 40f, 0f, 32f, 32f))) CQFAIBridge.Open(this.AIContext);
             this.DrawButtons(inRect);
             float y = 45f;
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DefName".Translate(), ref this.CurDef.defName, 5f, 100f);

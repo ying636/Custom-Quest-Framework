@@ -51,6 +51,35 @@ internal static class AIQueryChecks
         XElement queried = catalog.Query(XElement.Parse("<queries><object type='QuestEditor_Library.DialogTreeDef' name='CQF_Check_QueryObject'/></queries>"));
         Check(XNode.DeepEquals(queried.Element("object"), model.Write(tree, "object", true)), "object queries return the actual CQF definition");
         Check(catalog.Query(XElement.Parse("<queries><images mod='CQF_MissingPackage'/></queries>")).Element("images")?.Attribute("total")?.Value == "0", "image search keeps an empty result distinct from query failure");
+        ThingDef directional = (ThingDef)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(ThingDef));
+        directional.defName = "CQF_Check_DirectionalBuilding"; directional.label = "CQF_Check_DirectionalBuilding"; directional.category = ThingCategory.Building;
+        directional.size = new IntVec2(2, 3); directional.rotatable = true; directional.passability = Traversability.Impassable;
+        directional.hasInteractionCell = true; directional.interactionCellOffset = new IntVec3(0, 0, -2);
+        DefDatabase<ThingDef>.Add(directional);
+        XElement placement = catalog.Query(XElement.Parse("<queries><defs type='Verse.ThingDef' search='CQF_Check_DirectionalBuilding'/></queries>")).Descendants("placement").Single();
+        Check(placement.Attribute("passability")?.Value == "Impassable" && placement.Elements("rotation").Count() == 4, "directional buildings expose passability and all four placement orientations");
+        foreach (XElement rotation in placement.Elements("rotation"))
+        {
+            int value = (int)rotation.Attribute("value")!;
+            Rot4 facing = new(value);
+            CellRect footprint = GenAdj.OccupiedRect(IntVec3.Zero, facing, directional.size);
+            IntVec3 interaction = directional.interactionCellOffset.RotatedBy(facing);
+            Check(rotation.Attribute("footprint")?.Value == $"{footprint.minX},{footprint.minZ},{footprint.Width},{footprint.Height}"
+                && (int)rotation.Element("interactionOffset")!.Attribute("x")! == interaction.x && (int)rotation.Element("interactionOffset")!.Attribute("z")! == interaction.z,
+                "placement reports native even-sized anchor offsets and operating cell for rotation " + value);
+        }
+        directional.hasInteractionCell = false;
+        directional.multipleInteractionCellOffsets = new List<IntVec3> { new(1, 0, 2), new(-1, 0, 2) };
+        placement = catalog.Query(XElement.Parse("<queries><defs type='Verse.ThingDef' search='CQF_Check_DirectionalBuilding'/></queries>")).Descendants("placement").Single();
+        Check(placement.Elements("rotation").All(rotation => rotation.Elements("interactionOffset").Count() == 2), "resource metadata preserves multiple operating cells for every orientation");
+        Thing described = new Thing { def = directional, Position = new IntVec3(10, 0, 12), Rotation = Rot4.West };
+        XElement actual = (XElement)typeof(CQFAILiveMap).GetMethod("Describe", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!.Invoke(null, new object[] { described })!;
+        CellRect actualFootprint = described.OccupiedRect();
+        Check((int)actual.Attribute("rotation")! == 3 && (int)actual.Element("footprint")!.Attribute("x")! == actualFootprint.minX
+            && (int)actual.Element("footprint")!.Attribute("z")! == actualFootprint.minZ && (int)actual.Element("footprint")!.Attribute("width")! == 3,
+            "live map descriptions report actual rotated footprint at absolute coordinates");
+        Check(actual.Elements("interactionCell").Select(cell => new IntVec3((int)cell.Attribute("x")!, 0, (int)cell.Attribute("z")!))
+            .SequenceEqual(directional.multipleInteractionCellOffsets.Select(cell => cell.RotatedBy(Rot4.West) + described.Position)), "live map descriptions rotate and translate multiple operating cells correctly");
         Dictionary<string, LoadedLanguage.KeyedReplacement> previous = LanguageDatabase.activeLanguage.keyedReplacements;
         try
         {
@@ -63,6 +92,11 @@ internal static class AIQueryChecks
                 Check(unknown.Contains("mods") && unknown.Contains("defs") && !unknown.Contains("{0}"), "localized query errors include the rejected command: " + language);
                 string attribute = catalog.QueryForAssistant(XElement.Parse("<queries><defs type='Verse.ThingDef' limit='20'/></queries>")).Element("error")!.Value;
                 Check(attribute.Contains("limit") && attribute.Contains("offset") && !attribute.Contains("{1}") && !attribute.Contains("{2}"), "localized query errors identify the bad attribute and accepted attributes: " + language);
+                CQFAIActivity timing = CQFAIActivity.Restore(XElement.Parse("<activity index='1' state='CQF_AI_ActivityDone' elapsed='321.8'/>"));
+                CQFAIOperation fast = CQFAIOperation.Restore(XElement.Parse("<operation id='CQF_Check_Fast' name='cqf_query_resources' elapsed='0.02' success='true'/>"));
+                Check(timing.Header.Contains("322") && !timing.Header.Contains("{1}") && fast.Label.Contains("<0.1"), "localized timing distinguishes full task duration from sub-tenth-second tool execution: " + language);
+                Check(Math.Abs((double)timing.Save().Attribute("elapsed")! - 321.8) < 0.000001 && fast.ElapsedSeconds == 0.02,
+                    "restored task and tool timings preserve independent precision without restarting clocks: " + language);
             }
         }
         finally { LanguageDatabase.activeLanguage.keyedReplacements = previous; }

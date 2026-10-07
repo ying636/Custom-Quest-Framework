@@ -12,19 +12,35 @@ namespace QuestEditor_Library
 {
     public static class CQFAIDefDocument
     {
-        public static string Save(Def definition)
+        public static string Save(Def definition, bool overwrite = true)
         {
             CQFAIChanges.Validate(definition);
             System.Xml.XmlConvert.VerifyNCName(definition.defName);
             if (!definition.defName.StartsWith("CQF_", StringComparison.Ordinal) && GenDefDatabase.GetAllDefsInDatabaseForDef(definition.GetType()).All(def => def.defName != definition.defName))
                 throw new InvalidDataException("CQF_AI_InvalidName");
             XElement xml = Export(definition);
-            string category = definition switch { CustomMapDataDef or MainMapDef => "Map", DialogTreeDef or DialogManagerDef => "DialogTree", ComplexPawnDef => "Pawn", DutyMapDef or DutyDef => "Duty", QuestBookDef => "QuestBook", QuestScriptDef => string.Empty, _ => "AI" };
-            string directory = Path.Combine(CQFContentPaths.Quests, category);
+            string path = PathFor(definition);
+            string directory = Path.GetDirectoryName(path)!;
             Directory.CreateDirectory(directory);
-            string path = Path.Combine(directory, definition.defName + ".xml");
-            new XDocument(new XElement("Defs", xml)).Save(path);
+            if (!overwrite && File.Exists(path)) throw new InvalidDataException("CQF_AI_InvalidValue: source file exists; overwrite must be explicit");
+            string temporary = Path.Combine(directory, "." + definition.defName + "." + Guid.NewGuid().ToString("N") + ".tmp");
+            try
+            {
+                new XDocument(new XElement("Defs", xml)).Save(temporary);
+                if (File.Exists(path)) File.Replace(temporary, path, null); else File.Move(temporary, path);
+            }
+            finally { if (File.Exists(temporary)) File.Delete(temporary); }
             CQFQuestDefBootstrap.HotLoadDefinition(definition);
+            return path;
+        }
+        public static string PathFor(Def definition)
+        {
+            System.Xml.XmlConvert.VerifyNCName(definition.defName);
+            if (definition.defName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 || definition.defName.EndsWith(".", StringComparison.Ordinal)) throw new InvalidDataException("CQF_AI_InvalidName");
+            string category = definition switch { CustomMapDataDef or MainMapDef => "Map", DialogTreeDef or DialogManagerDef => "DialogTree", ComplexPawnDef => "Pawn", DutyMapDef or DutyDef => "Duty", QuestBookDef => "QuestBook", QuestScriptDef => string.Empty, _ => "AI" };
+            string root = Path.GetFullPath(CQFContentPaths.Quests);
+            string path = Path.GetFullPath(Path.Combine(root, category, definition.defName + ".xml"));
+            if (!path.StartsWith(root.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) throw new InvalidDataException("CQF_AI_InvalidName");
             return path;
         }
 

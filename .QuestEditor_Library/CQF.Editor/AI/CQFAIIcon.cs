@@ -10,6 +10,9 @@ namespace QuestEditor_Library
         Send,
         Stop,
         Options,
-        Close
+        Close,
+        NewChat,
+        History,
+        More
     }
 }

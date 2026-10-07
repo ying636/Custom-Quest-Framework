@@ -10,7 +10,7 @@ namespace QuestEditor_Library
     {
         public CQFAIResourceCatalog(CQFAIModel model) { this.model = model; }
         public XElement Summary() => new XElement("resources", new XAttribute("mods", LoadedModManager.RunningModsListForReading.Count),
-            new XAttribute("defTypes", GenDefDatabase.AllDefTypesWithDatabases().Count()));
+            new XAttribute("defTypes", GenDefDatabase.AllDefTypesWithDatabases().Count()), CQFAIThingCatalog.Summary());
         public XElement Discover(bool mods, string search, int offset)
         {
             if (search.Length > 100 || offset < 0 || offset > 100000) throw new InvalidDataException("CQF_AI_InvalidTool: pagination/search");
@@ -102,7 +102,17 @@ namespace QuestEditor_Library
         {
             if (def is ThingDef thing) return new XElement("placement", new XAttribute("category", thing.category), new XAttribute("sizeX", thing.size.x),
                 new XAttribute("sizeZ", thing.size.z), new XAttribute("madeFromStuff", thing.MadeFromStuff), new XAttribute("stackLimit", thing.stackLimit),
-                new XAttribute("rotatable", thing.rotatable), thing.MadeFromStuff ? GenStuff.AllowedStuffsFor(thing).Take(40).Select(stuff => new XElement("stuff", stuff.defName)) : null);
+                new XAttribute("rotatable", thing.rotatable), new XAttribute("passability", thing.passability), new XAttribute("thingClass", thing.thingClass?.FullName ?? ""), CQFAIThingCatalog.Describe(thing),
+                thing.rotatable || thing.size.x > 1 || thing.size.z > 1 || thing.hasInteractionCell || thing.multipleInteractionCellOffsets?.Count > 0
+                    ? Enumerable.Range(0, thing.rotatable ? 4 : 1).Select(rotation =>
+                    {
+                        Rot4 facing = new Rot4(rotation);
+                        CellRect footprint = GenAdj.OccupiedRect(IntVec3.Zero, facing, thing.size);
+                        return new XElement("rotation", new XAttribute("value", rotation), new XAttribute("direction", new[] { "North", "East", "South", "West" }[rotation]),
+                            new XAttribute("footprint", footprint.minX + "," + footprint.minZ + "," + footprint.Width + "," + footprint.Height),
+                            ThingUtility.InteractionCellsWhenAt(thing, IntVec3.Zero, facing, null!).Select(cell => new XElement("interactionOffset", new XAttribute("x", cell.x), new XAttribute("z", cell.z))));
+                    }) : null,
+                thing.MadeFromStuff ? GenStuff.AllowedStuffsFor(thing).Take(40).Select(stuff => new XElement("stuff", stuff.defName)) : null);
             if (def is TerrainDef terrain) return new XElement("terrain", new XAttribute("temporary", terrain.temporary), new XAttribute("foundation", terrain.isFoundation));
             return null;
         }

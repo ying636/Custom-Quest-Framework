@@ -3,7 +3,9 @@
   <CQF_DialogGraph_Node>Node #{0}</CQF_DialogGraph_Node>
   <CQF_DialogGraph_Entry>Entry</CQF_DialogGraph_Entry>
   <CQF_DialogGraph_End>End dialogue</CQF_DialogGraph_End>
-  <CQF_DialogGraph_Hint>Right-click the background to create a node; drag headers to move; drag output ports to connect; scroll to zoom; drag the background to pan.</CQF_DialogGraph_Hint>
+  <CQF_DialogGraph_Hint>Right-click the background to create dialogue or choice cards. Drag a dialogue's upper output to a choice; drag a choice's result output to a dialogue. Several dialogues can share one choice. Drag cards to move; double-click to edit; scroll to zoom; drag the background to pan. Right-click cards or choice references to remove them.</CQF_DialogGraph_Hint>
+  <CQF_DialogGraph_AddOption>Add option</CQF_DialogGraph_AddOption>
+  <CQF_DialogGraph_AddOptionTo>Add option to: {0}</CQF_DialogGraph_AddOptionTo>
   <CQF_DialogGraph_File>File</CQF_DialogGraph_File>
   <CQF_DialogGraph_View>View</CQF_DialogGraph_View>
   <CQF_DialogGraph_TreeSettings>Tree settings</CQF_DialogGraph_TreeSettings>
@@ -22,8 +24,8 @@
   <CQF_DialogGraph_Expand>Open editor</CQF_DialogGraph_Expand>
   <CQF_DialogGraph_MoveUp>Move result up. The first matching result is used.</CQF_DialogGraph_MoveUp>
   <CQF_DialogGraph_MoveDown>Move result down. The first matching result is used.</CQF_DialogGraph_MoveDown>
-  <CQF_DialogGraph_SelectHint>Select a node, option or result to edit it here. Drag a result's output port onto any node to connect them.</CQF_DialogGraph_SelectHint>
-  <CQF_DialogGraph_KeepEntry>The entry node #0 cannot be removed.</CQF_DialogGraph_KeepEntry>
+  <CQF_DialogGraph_SelectHint>Double-click a node, choice or result, or open Properties, to edit it here. Drag a result's output port onto any node to connect them.</CQF_DialogGraph_SelectHint>
+  <CQF_DialogGraph_KeepEntry>The entry node cannot be removed.</CQF_DialogGraph_KeepEntry>
   <CQF_DialogGraph_Error>Operation failed: {0}</CQF_DialogGraph_Error>
   <CQF_DialogGraph_Valid>Graph checked: {0} nodes, {1} unreachable from the entry.</CQF_DialogGraph_Valid>
   <CQF_DialogGraph_InvalidName>Enter a valid dialogue defName before saving.</CQF_DialogGraph_InvalidName>
@@ -36,7 +38,7 @@
   <CQF_DialogAI_Model>Model name</CQF_DialogAI_Model>
   <CQF_DialogAI_Key>API Key</CQF_DialogAI_Key>
   <CQF_DialogAI_ShowKey>Show</CQF_DialogAI_ShowKey>
-  <CQF_DialogAI_Timeout>Timeout (seconds)</CQF_DialogAI_Timeout>
+  <CQF_DialogAI_Timeout>No-feedback timeout (seconds)</CQF_DialogAI_Timeout>
   <CQF_DialogAI_Test>Test connection</CQF_DialogAI_Test>
   <CQF_DialogAI_TestPassed>Connection succeeded.</CQF_DialogAI_TestPassed>
   <CQF_DialogAI_CommandHint>Describe how to edit the current graph. Selected node: {0}.</CQF_DialogAI_CommandHint>
@@ -54,7 +56,7 @@
   <CQF_DialogAI_Querying>Looking up loaded Mod resources (round {0}/8)…</CQF_DialogAI_Querying>
   <CQF_DialogAI_Ready>Draft validated. Review changes before applying.</CQF_DialogAI_Ready>
   <CQF_DialogAI_Cancelled>Request cancelled.</CQF_DialogAI_Cancelled>
-  <CQF_DialogAI_TimedOut>The AI request timed out. Check the connection or increase the timeout.</CQF_DialogAI_TimedOut>
+  <CQF_DialogAI_TimedOut>No feedback was received within the configured timeout. Check the connection or increase the no-feedback timeout.</CQF_DialogAI_TimedOut>
   <CQF_DialogAI_Conflict>The current graph changed after this request started. Generate a new draft from the current graph.</CQF_DialogAI_Conflict>
   <CQF_DialogAI_Applied>Draft applied. You can undo the change. Save the graph to export it.</CQF_DialogAI_Applied>
   <CQF_DialogAI_Added>Added node #{0}</CQF_DialogAI_Added>
@@ -83,4 +85,26 @@
   <CQF_DialogAI_InvalidQuery>Invalid Mod resource query.</CQF_DialogAI_InvalidQuery>
   <CQF_DialogAI_QueryLimit>The AI exceeded the resource lookup limit. Make the request more specific.</CQF_DialogAI_QueryLimit>
   <CQF_DialogAI_TextNotAllowed>The AI generated new prose without permission. Enable prose generation or provide the exact text.</CQF_DialogAI_TextNotAllowed>
+  <CQF_DialogGraph_Disconnect>Disconnect</CQF_DialogGraph_Disconnect>
+  <CQF_DialogGraph_HintShort>Right-click to add · Double-click to edit</CQF_DialogGraph_HintShort>
+  <CQF_DialogGraph_ResultCounts>{0} conditions · {1} actions</CQF_DialogGraph_ResultCounts>
+  <CQF_DialogGraph_Summary>{0} nodes · {1} choices</CQF_DialogGraph_Summary>
+  <CQF_DialogGraph_ZoomIn>Zoom in</CQF_DialogGraph_ZoomIn>
+  <CQF_DialogGraph_ZoomOut>Zoom out</CQF_DialogGraph_ZoomOut>
+  <CQF_DialogGraph_LinkOption>Drag this output to a choice card</CQF_DialogGraph_LinkOption>
+  <CQF_DialogGraph_SharedCount>Shared choice · {0} references</CQF_DialogGraph_SharedCount>
+  <CQF_DialogGraph_SharedHint>This choice is shared by {0} nodes. Editing its text, conditions or results updates every reference.</CQF_DialogGraph_SharedHint>
+  <CQF_DialogGraph_LinkExisting>Link existing choice</CQF_DialogGraph_LinkExisting>
+  <CQF_DialogGraph_LinkToNode>Add reference to dialogue</CQF_DialogGraph_LinkToNode>
+  <CQF_DialogGraph_AddResult>Add result</CQF_DialogGraph_AddResult>
+  <CQF_DialogGraph_UnlinkReference>Remove this reference</CQF_DialogGraph_UnlinkReference>
+  <CQF_DialogGraph_UnlinkFrom>Remove reference from dialogue</CQF_DialogGraph_UnlinkFrom>
+  <CQF_DialogGraph_MakeLocal>Make a separate copy for this dialogue</CQF_DialogGraph_MakeLocal>
+  <CQF_DialogGraph_CopyOption>Duplicate choice</CQF_DialogGraph_CopyOption>
+  <CQF_DialogGraph_RemoveResult>Delete this result</CQF_DialogGraph_RemoveResult>
+  <CQF_DialogGraph_DeleteOption>Delete choice and all references</CQF_DialogGraph_DeleteOption>
+  <CQF_DialogGraph_ConfirmDeleteShared>This choice is shared by {0} nodes. Deleting it removes all references. Continue?</CQF_DialogGraph_ConfirmDeleteShared>
+  <CQF_DialogGraph_OptionOrder>Drag to reorder choices within this dialogue</CQF_DialogGraph_OptionOrder>
+  <CQF_DialogGraph_Advanced>Conditions and behavior</CQF_DialogGraph_Advanced>
+  <CQF_DialogGraph_InvalidOptions>Invalid choice definitions or references. Check for missing or duplicate references and invalid choice data.</CQF_DialogGraph_InvalidOptions>
 </LanguageData>

@@ -4,7 +4,7 @@
   <CQF_AI_EmptyChat>想一起做点什么？</CQF_AI_EmptyChat>
   <CQF_AI_InputHint>输入消息…</CQF_AI_InputHint>
   <CQF_AI_Options>对话选项</CQF_AI_Options>
-  <CQF_AI_SendHint>发送消息（Ctrl+Enter）</CQF_AI_SendHint>
+  <CQF_AI_SendHint>发送消息\nCtrl + Enter：发送\nEnter / Shift + Enter：换行</CQF_AI_SendHint>
   <CQF_AI_Stop>停止生成</CQF_AI_Stop>
   <CQF_AI_RequestFailed>请求未完成，悬停查看详情。</CQF_AI_RequestFailed>
   <CQF_AI_OpenHint>打开 AI 聊天浮窗，可一边对话一边操作编辑器。</CQF_AI_OpenHint>
@@ -48,6 +48,7 @@
   <CQF_AI_UnknownType>未知或不支持的数据类型</CQF_AI_UnknownType>
   <CQF_AI_UnknownField>未知或不可编辑的字段</CQF_AI_UnknownField>
   <CQF_AI_InvalidValue>字段值无效</CQF_AI_InvalidValue>
+  <CQF_AI_ValidationFailed>配置校验未通过</CQF_AI_ValidationFailed>
   <CQF_AI_InvalidChanges>修改操作无效</CQF_AI_InvalidChanges>
   <CQF_AI_InvalidPath>数据路径无效</CQF_AI_InvalidPath>
   <CQF_AI_DuplicateKey>字典键已存在</CQF_AI_DuplicateKey>
@@ -78,7 +79,10 @@
   <CQF_AI_TextNotAllowed>尚未允许生成新的内容文案</CQF_AI_TextNotAllowed>
   <CQF_AI_Depth>数据嵌套层级超过限制</CQF_AI_Depth>
   <CQF_AI_Cycle>发现不支持的对象循环引用</CQF_AI_Cycle>
-  <CQF_AI_ContextTooLarge>会话或数据过大，请清空会话或选择更小的编辑对象</CQF_AI_ContextTooLarge>
+  <CQF_AI_ContextTooLarge>当前 AI 指令超过本地上下文上限。</CQF_AI_ContextTooLarge>
+  <CQF_AI_RequestTooLarge>压缩后的当前请求仍超过本地上下文上限，请减少一次读取的资源或分页大小。已应用的修改和对话记录均已保留。</CQF_AI_RequestTooLarge>
+  <CQF_AI_MessageTooLarge>单条 AI 消息或工具结果超过大小上限，请缩小读取分页或单次操作批量。</CQF_AI_MessageTooLarge>
+  <CQF_AI_ResponseTooLarge>接口返回的内容超过本地大小上限，请减少单次回复或工具操作的规模。</CQF_AI_ResponseTooLarge>
   <CQF_AI_UseNativeSave>请在此对象的 CQF 编辑器中保存</CQF_AI_UseNativeSave>
   <CQF_AI_ApplyMismatch>编辑器实际状态与请求的修改不一致，已回滚本次操作。</CQF_AI_ApplyMismatch>
   <CQF_AI_InvalidTool>工具不存在或工具参数无效</CQF_AI_InvalidTool>
@@ -86,9 +90,9 @@
   <CQF_AI_NativeToolsHint>模型和接口支持工具调用时，使用结构化函数调用。不支持工具调用的兼容接口可关闭此项，改用 XML 工具协议。</CQF_AI_NativeToolsHint>
   <CQF_AI_PortalLinked>此出入口已有运行时关联，目标地图和出口标识需要与关联对象一起修改。</CQF_AI_PortalLinked>
   <CQF_AI_ReadTooLarge>请求的数据过大，请读取更具体的字段路径或减小分页数量。</CQF_AI_ReadTooLarge>
-  <CQF_AI_ToolLimit>本次任务已达到工具调用上限。已应用的修改仍可查看和撤销。</CQF_AI_ToolLimit>
-  <CQF_AI_ToolRetrying>工具操作被拒绝，正在让 AI 修正（{0}/24）…</CQF_AI_ToolRetrying>
-  <CQF_AI_ToolWorking>正在读取、编辑并核对结果（{0}/24）…</CQF_AI_ToolWorking>
+  <CQF_AI_ToolLimit>这批地图修改超过操作容量，请拆分为较小的批次。已应用的修改仍可查看和撤销。</CQF_AI_ToolLimit>
+  <CQF_AI_ToolRetrying>工具操作被拒绝，正在让 AI 修正（第 {0} 轮）…</CQF_AI_ToolRetrying>
+  <CQF_AI_ToolWorking>正在读取、编辑并核对结果（第 {0} 轮）…</CQF_AI_ToolWorking>
   <CQF_AI_RollbackMismatch>修改失败，原始状态也未能完整恢复。请检查编辑器当前内容和错误日志。</CQF_AI_RollbackMismatch>
   <CQF_AI_UsageBrief>本次 {0} · 会话 {1} tokens</CQF_AI_UsageBrief>
   <CQF_AI_UsageUnknown>未提供</CQF_AI_UsageUnknown>
@@ -96,4 +100,122 @@
 当前会话：输入 {3}，输出 {4}；{5} 次回复未提供有效用量。
 统计来自接口，包含已完成的工具调用轮次。+? 表示累计值不完整；缺失用量不会按零计算。取消请求可能产生费用，但没有返回用量。清空会话会重置计数。</CQF_AI_UsageDetails>
   <CQF_AI_InvalidUsage>接口返回的 token 用量无效。本次回复仍可使用，但用量标记为未提供。</CQF_AI_InvalidUsage>
+  <CQF_AI_UsageTitle>Token 用量</CQF_AI_UsageTitle>
+  <CQF_AI_UsageEmpty>打开 AI 聊天窗口后，可查看当前会话用量。</CQF_AI_UsageEmpty>
+  <CQF_AI_ActivityHeader>{0} · 总耗时{1}秒 · {2}项操作</CQF_AI_ActivityHeader>
+  <CQF_AI_ElapsedHint>总耗时包含各轮等待 AI 回复和执行工具的时间。每项操作的执行耗时只统计本机工具运行时间，不包含等待 AI 和网络的时间。</CQF_AI_ElapsedHint>
+  <CQF_AI_ActivityHint>展开或收起接口返回的思考信息和已执行的操作。</CQF_AI_ActivityHint>
+  <CQF_AI_Waiting>等待 AI</CQF_AI_Waiting>
+  <CQF_AI_Thinking>正在思考</CQF_AI_Thinking>
+  <CQF_AI_Responding>正在接收回复</CQF_AI_Responding>
+  <CQF_AI_Preparing>正在准备操作</CQF_AI_Preparing>
+  <CQF_AI_Executing>正在执行操作</CQF_AI_Executing>
+  <CQF_AI_ActivityDone>已完成</CQF_AI_ActivityDone>
+  <CQF_AI_ActivityStopped>已停止</CQF_AI_ActivityStopped>
+  <CQF_AI_ActivityFailed>已中断</CQF_AI_ActivityFailed>
+  <CQF_AI_Reasoning>思考信息（由接口提供）</CQF_AI_Reasoning>
+  <CQF_AI_ReasoningUnavailable>接口尚未返回思考信息，上方会显示当前阶段和等待时间。</CQF_AI_ReasoningUnavailable>
+  <CQF_AI_ReasoningAvailable>已收到思考信息，展开可查看。</CQF_AI_ReasoningAvailable>
+  <CQF_AI_PreparingTool>准备：{0}</CQF_AI_PreparingTool>
+  <CQF_AI_OperationLine>{0} · {1} · 执行耗时{2}秒</CQF_AI_OperationLine>
+  <CQF_AI_OperationRunning>执行中</CQF_AI_OperationRunning>
+  <CQF_AI_OperationDone>已完成</CQF_AI_OperationDone>
+  <CQF_AI_OperationFailed>失败</CQF_AI_OperationFailed>
+  <CQF_AI_OperationCount>{0}项修改</CQF_AI_OperationCount>
+  <CQF_AI_ToolContext>读取当前上下文</CQF_AI_ToolContext>
+  <CQF_AI_ToolMods>查找已加载 Mod</CQF_AI_ToolMods>
+  <CQF_AI_ToolTypes>查找类型</CQF_AI_ToolTypes>
+  <CQF_AI_ToolResources>查询资源</CQF_AI_ToolResources>
+  <CQF_AI_ToolSchema>读取字段结构</CQF_AI_ToolSchema>
+  <CQF_AI_ToolReadTarget>读取当前编辑数据</CQF_AI_ToolReadTarget>
+  <CQF_AI_ToolValidate>检查当前状态</CQF_AI_ToolValidate>
+  <CQF_AI_ToolReadMap>读取地图区域</CQF_AI_ToolReadMap>
+  <CQF_AI_ToolReadThing>读取地图事物</CQF_AI_ToolReadThing>
+  <CQF_AI_ToolApply>应用修改</CQF_AI_ToolApply>
+  <CQF_AI_ToolEditThing>修改地图事物</CQF_AI_ToolEditThing>
+  <CQF_AI_ToolBranch>创建对话分支</CQF_AI_ToolBranch>
+  <CQF_AI_ToolInteraction>添加交互选项</CQF_AI_ToolInteraction>
+  <CQF_AI_ToolPortal>配置地图出入口</CQF_AI_ToolPortal>
+  <CQF_AI_ToolExtension>扩展操作</CQF_AI_ToolExtension>
+  <CQF_AI_InvalidStream>接口返回的流式数据无效，未执行尚未接收完整的操作。</CQF_AI_InvalidStream>
+  <CQF_AI_StreamError>接口报告流式请求错误，未执行尚未接收完整的操作。</CQF_AI_StreamError>
+  <CQF_AI_PreviewExcerpt>实时预览已缩短，完成后会显示完整回复。</CQF_AI_PreviewExcerpt>
+  <CQF_AI_StreamUsageFallback>接口不支持请求流式用量，仍会显示实时进度；用量以接口实际返回为准。</CQF_AI_StreamUsageFallback>
+  <CQF_AI_StreamFallback>接口不支持流式回复，已改为接收完整回复；仍会显示耗时和已执行的操作。</CQF_AI_StreamFallback>
+  <CQF_AI_NewChat>新建对话</CQF_AI_NewChat>
+  <CQF_AI_History>历史对话</CQF_AI_History>
+  <CQF_AI_HistoryEmpty>还没有保存的对话。</CQF_AI_HistoryEmpty>
+  <CQF_AI_HistoryHint>{0}\n点击继续对话，点击右侧删除图标删除此对话，右键可重命名或删除。</CQF_AI_HistoryHint>
+  <CQF_AI_RenameChat>重命名对话</CQF_AI_RenameChat>
+  <CQF_AI_DeleteChat>删除对话</CQF_AI_DeleteChat>
+  <CQF_AI_DeleteChatConfirm>删除“{0}”及其保存的聊天记录？已经在游戏中完成的修改会保留。</CQF_AI_DeleteChatConfirm>
+  <CQF_AI_HistoryError>无法保存或读取对话记录：{0}</CQF_AI_HistoryError>
+  <CQF_AI_InvalidHistory>对话文件无效，原文件已保留。</CQF_AI_InvalidHistory>
+  <CQF_AI_HistoryTooLarge>这段对话过大，无法继续保存。请新建对话，最后一次保存的文件已保留。</CQF_AI_HistoryTooLarge>
+  <CQF_AI_MissingTarget>对象已经不可用，请重新查询可操作对象后再继续。</CQF_AI_MissingTarget>
+  <CQF_AI_ToolTargets>查询或选择操作对象</CQF_AI_ToolTargets>
+  <CQF_AI_DefinitionNameFixed>暂不支持修改已加载定义的 defName，请使用原名称编辑其内容。</CQF_AI_DefinitionNameFixed>
+  <CQF_AI_AdditionalPrompt>启用附加提示词</CQF_AI_AdditionalPrompt>
+  <CQF_AI_AdditionalPromptHint>可选提示词，最多 16000 字符。默认关闭；关闭或内容为空时不会发送给 AI。从下一次请求开始生效，并用于该请求的各轮工具调用。可自由填写布局、文案风格等偏好。</CQF_AI_AdditionalPromptHint>
+  <CQF_AI_LayoutPromptExample>载入村落布局示例</CQF_AI_LayoutPromptExample>
+  <CQF_AI_LayoutPromptText>当我要求设计村落或聚落时，先按要求的规模规划连通的布局：公共聚集空间、连接道路、不同用途的建筑和适合的家具。根据用途和当地地形调整建筑尺寸与入口，避免只摆放重复的空矩形房屋。建筑入口之间应有可通行的道路，门口保持畅通，椅子朝向桌边，床边和工作台操作位置保留通行空间。保留无关的现有物体。查询需要的建筑定义后复用其放置信息。分批应用修改，再读取受影响的区域；继续翻页，直到实际检查到相关门、家具和操作格。完成前修正朝向或阻挡问题。</CQF_AI_LayoutPromptText>
+  <CQF_AI_ReplacePromptConfirm>用村落布局示例替换当前附加提示词？</CQF_AI_ReplacePromptConfirm>
+  <CQF_AI_ClearPrompt>清空附加提示词</CQF_AI_ClearPrompt>
+  <CQF_AI_PromptTooLong>附加提示词超过 16000 字符，请在 AI 设置中缩短后再发送。</CQF_AI_PromptTooLong>
+  <CQF_AI_IdleTimeoutHint>仅在连续这么多秒没有收到反馈时停止。正文、思考信息、工具参数片段和流式心跳都会重置计时。持续收到反馈时，请求可以超过此时长。</CQF_AI_IdleTimeoutHint>
+  <CQF_AI_PromptLength>{0} / 16000 字符</CQF_AI_PromptLength>
+  <CQF_AI_TabBehavior>行为</CQF_AI_TabBehavior>
+  <CQF_AI_TabConnection>连接</CQF_AI_TabConnection>
+  <CQF_AI_TabPrompts>提示词</CQF_AI_TabPrompts>
+  <CQF_AI_TabUsage>用量</CQF_AI_TabUsage>
+  <CQF_AI_LiveMapOverlap>这批修改中的放置操作占格重叠。AI 可根据冲突详情调整位置或方向。</CQF_AI_LiveMapOverlap>
+  <CQF_AI_More>更多操作</CQF_AI_More>
+  <CQF_AI_Planning>启用目标与计划</CQF_AI_Planning>
+  <CQF_AI_PlanningHint>复杂任务可建立目标、完成条件和计划，并随对话保存。恢复历史后不会自动执行；发送消息后可继续或调整。</CQF_AI_PlanningHint>
+  <CQF_AI_Agents>允许分发子智能体</CQF_AI_Agents>
+  <CQF_AI_AgentsHint>需要启用目标与计划。AI 自行判断是否分工；子智能体只查询和提出方案，主智能体统一修改。额外请求会增加用量。</CQF_AI_AgentsHint>
+  <CQF_AI_ParallelAgents>子智能体最大并发数</CQF_AI_ParallelAgents>
+  <CQF_AI_AgentModel>子智能体模型</CQF_AI_AgentModel>
+  <CQF_AI_AgentModelHint>留空使用主智能体模型，共用当前 API 地址和密钥。模型名称必须由所配置的接口支持。</CQF_AI_AgentModelHint>
+  <CQF_AI_AgentPrompt>子智能体补充提示词</CQF_AI_AgentPrompt>
+  <CQF_AI_AgentPromptHint>可选，留空不附加偏好。只发送给子智能体，可填写设计、查询或审查偏好；查询权限由程序控制。</CQF_AI_AgentPromptHint>
+  <CQF_AI_GoalLine>目标：{0} · {1}</CQF_AI_GoalLine>
+  <CQF_AI_CriterionLine>完成条件：{0}</CQF_AI_CriterionLine>
+  <CQF_AI_PlanLine>[{0}] {1}</CQF_AI_PlanLine>
+  <CQF_AI_AgentLine>智能体 {0} · {1} · {2}秒</CQF_AI_AgentLine>
+  <CQF_AI_TaskStatus_active>进行中</CQF_AI_TaskStatus_active>
+  <CQF_AI_TaskStatus_pending>待执行</CQF_AI_TaskStatus_pending>
+  <CQF_AI_TaskStatus_running>执行中</CQF_AI_TaskStatus_running>
+  <CQF_AI_TaskStatus_completed>已完成</CQF_AI_TaskStatus_completed>
+  <CQF_AI_TaskStatus_blocked>需要处理</CQF_AI_TaskStatus_blocked>
+  <CQF_AI_TaskStatus_failed>失败</CQF_AI_TaskStatus_failed>
+  <CQF_AI_TaskStatus_paused>已暂停</CQF_AI_TaskStatus_paused>
+  <CQF_AI_WaitingAgents>等待子智能体</CQF_AI_WaitingAgents>
+  <CQF_AI_ToolGoal>更新目标</CQF_AI_ToolGoal>
+  <CQF_AI_ToolPlan>更新计划</CQF_AI_ToolPlan>
+  <CQF_AI_ToolDelegate>分发智能体</CQF_AI_ToolDelegate>
+  <CQF_AI_ToolWaitAgents>等待智能体</CQF_AI_ToolWaitAgents>
+  <CQF_AI_SteerHint>补充当前任务要求。Ctrl + Enter 发送；输入框留空时此按钮用于停止任务。</CQF_AI_SteerHint>
+  <CQF_AI_Steering>已收到补充要求，将在下一轮调整任务。</CQF_AI_Steering>
+  <CQF_AI_InvalidPlan>目标或计划格式不正确，请检查步骤编号、依赖关系和完成证据。</CQF_AI_InvalidPlan>
+  <CQF_AI_TaskUnfinished>任务尚未满足完成条件，请完成计划、收集智能体结果，并在修改后读取实际状态。</CQF_AI_TaskUnfinished>
+  <CQF_AI_InvalidAgent>智能体任务或权限配置不正确。</CQF_AI_InvalidAgent>
+  <CQF_AI_AgentCapacity>本次任务的智能体记录已达到容量，请复用已有结果或由主智能体继续完成。</CQF_AI_AgentCapacity>
+  <CQF_AI_AgentResultTooLarge>智能体结果过长，请缩小任务范围并返回精简结果。</CQF_AI_AgentResultTooLarge>
+  <CQF_AI_ActivityBlocked>需要处理</CQF_AI_ActivityBlocked>
+  <CQF_AI_ToolAgentResult>读取智能体结果</CQF_AI_ToolAgentResult>
+  <CQF_AI_AgentDetailsHint>点击展开或收起任务说明、实时进度与结果。</CQF_AI_AgentDetailsHint>
+  <CQF_AI_ToolCQFThings>发现 CQF 物品</CQF_AI_ToolCQFThings>
+  <CQF_AI_ToolMapTargets>读取地图目标键</CQF_AI_ToolMapTargets>
+  <CQF_AI_ToolMapSignals>读取信号引用</CQF_AI_ToolMapSignals>
+  <CQF_AI_ToolDatabase>读取 CQF 数据库</CQF_AI_ToolDatabase>
+  <CQF_AI_ToolMapConfiguration>地图配置</CQF_AI_ToolMapConfiguration>
+  <CQF_AI_ToolRuntimeHelp>查询运行时能力</CQF_AI_ToolRuntimeHelp>
+  <CQF_AI_ToolRuntimeRead>读取游戏状态</CQF_AI_ToolRuntimeRead>
+  <CQF_AI_ToolRuntimeOperate>操作游戏系统</CQF_AI_ToolRuntimeOperate>
+  <CQF_AI_ToolConditions>检查条件</CQF_AI_ToolConditions>
+  <CQF_AI_ToolDiagnostics>检查地图运行情况</CQF_AI_ToolDiagnostics>
+  <CQF_AI_ToolDefinition>管理定义</CQF_AI_ToolDefinition>
+  <CQF_AI_RuntimeFailed>游戏在执行此操作时报告了错误。可能已有部分效果发生，请先查询当前状态再继续。</CQF_AI_RuntimeFailed>
+  <CQF_AI_UndoUnsupported>此次任务执行了无法完整撤销的操作。</CQF_AI_UndoUnsupported>
 </LanguageData>

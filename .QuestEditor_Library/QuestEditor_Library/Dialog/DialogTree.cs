@@ -111,7 +111,7 @@ namespace QuestEditor_Library
         public DialogTreeDef tree;
         public List<DialogCondition> conditions;
     }
-    public class DialogTreeDef : Def, ISaveable
+    public partial class DialogTreeDef : Def, ISaveable
     {
         public DialogTreeDef()
         {
@@ -120,6 +120,7 @@ namespace QuestEditor_Library
 
         public void Update()
         {
+            this.ResolveOptions();
             this.idleNodes.Clear();
             HashSet<int> visited = new HashSet<int>();
             Queue<int> pending = new Queue<int>();
@@ -282,18 +283,18 @@ namespace QuestEditor_Library
 
         public XElement SaveToXElement(string nodeName)
         {
+            this.ResolveOptions();
             XElement result = new XElement(nodeName);
             result.Add(new XElement("defName", this.defName));
             result.Add(new XElement("title", this.title));
             result.Add(new XElement("requireNonHostile", this.requireNonHostile));
             result.Add(new XElement("dialogReportKey", this.dialogReportKey));
             result.Add(new XElement("curIndex", this.curIndex));
-            if (this.idleNodes.Any())
-            {
-                XElement idleNodes = new XElement("idleNodes");
-                this.idleNodes.ForEach(x => idleNodes.Add(x.SaveToXElement("li")));
-                result.Add(idleNodes);
-            }
+            result.Add(new XElement("curOptionIndex", this.curOptionIndex));
+            XElement optionPool = new XElement("optionMoulds");
+            foreach (var option in this.optionMoulds)
+                optionPool.Add(new XElement("li", new XElement("key", option.Key), option.Value.SaveToXElement("value")));
+            result.Add(optionPool);
             XElement nodes = new XElement("nodeMoulds");
             foreach (KeyValuePair<int, DialogNode> nodeMould in this.nodeMoulds)
             {
@@ -381,11 +382,9 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("parentIndex", this.parentIndex));
             }
-            XElement options = new XElement("options");
-            this.options.ForEach(x =>
-            {
-                options.Add(x.SaveToXElement("li"));
-            });
+            XElement options = this.optionsResolved
+                ? new XElement("optionIds", this.optionIds.Select(id => new XElement("li", id)))
+                : new XElement("options", this.options.Select(option => option.SaveToXElement("li")));
             XElement subNodeIndexs = new XElement("subNodeIndexs");
             this.subNodeIndexs.ForEach(x =>
             {
@@ -410,7 +409,11 @@ namespace QuestEditor_Library
         public List<string> extraText = new List<string>();
         public int? index = null;
         public int? parentIndex = null;
+        [Unsaved]
         public List<DialogOption> options = new List<DialogOption>();
+        public List<int> optionIds = new List<int>();
+        [Unsaved]
+        public bool optionsResolved;
         public List<int> subNodeIndexs = new List<int>();
         public List<DialogImage> images = new List<DialogImage>();
         public float editorX;

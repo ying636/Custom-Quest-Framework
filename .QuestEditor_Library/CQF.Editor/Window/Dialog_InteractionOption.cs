@@ -47,7 +47,6 @@ namespace QuestEditor_Library
             {
                 Find.WindowStack.Add(new Dialog_CQFInteractionCheck(this.operation, this.owner));
             }
-            if (CQFAIButton.Draw(new Rect(inRect.width - 68f, 0f, 30f, 30f))) CQFAIBridge.Open(this.AIContext);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, this.height + 12f);
             Widgets.BeginScrollView(new Rect(0f, 38f, inRect.width, inRect.height - 38f), ref this.pos, viewRect);
             this.operation.Draw(ref y,viewRect,x);

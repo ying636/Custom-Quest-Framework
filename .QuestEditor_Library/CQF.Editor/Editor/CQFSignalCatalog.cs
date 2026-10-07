@@ -99,11 +99,12 @@ namespace QuestEditor_Library
         {
             bool template = thing.Map?.Parent is EditorMapObject;
             string source = thing.LabelCap + " " + thing.Position;
-            CompActionWorker? worker = thing.TryGetComp<CompActionWorker>();
-            if (worker != null)
-            {
-                this.AddComps(worker.comps, thing, source, template, "");
-            }
+            if (thing is ThingWithComps withComps)
+                foreach (CompActionWorker worker in withComps.AllComps.OfType<CompActionWorker>()) this.AddComps(worker.comps, thing, source, template, "");
+            if (thing is CustomDoor door) this.AddActions(door.openingActions, thing, source, template, "", null, "");
+            if (thing is CustomContainer container) this.AddActions(container.openingActions, thing, source, template, "", null, "");
+            if (thing is CustomMapEntrance entrance) this.AddActions(entrance.enterActions, thing, source, template, "", null, "");
+            if (thing is CustomMapExit exit) this.AddActions(exit.enterActions, thing, source, template, "", null, "");
             if (thing is CustomTrap trap)
             {
                 this.AddTraps(trap.trapComps, trap.trapName, thing, source, template, "");
@@ -149,6 +150,10 @@ namespace QuestEditor_Library
             }
             string source = partName + " / " + (data.customName ?? data.def?.label ?? data.GetType().Name) + " " + data.position;
             this.AddComps(data.comps, null, source, true, partName);
+            if (data is CustomThingData_CustomDoor door) this.AddActions(door.openingActions, null, source, true, "", null, partName);
+            if (data is CustomThingData_CustomContainer container) this.AddActions(container.openingActions, null, source, true, "", null, partName);
+            if (data is CustomThingData_CustomMapEntrance entrance) this.AddActions(entrance.enterActions, null, source, true, "", null, partName);
+            if (data is CustomThingData_CustomMapExit exit) this.AddActions(exit.enterActions, null, source, true, "", null, partName);
             if (data is CustomThingData_CustomTrap trap)
             {
                 this.AddTraps(trap.trapComps, trap.trapName, null, source, true, partName);

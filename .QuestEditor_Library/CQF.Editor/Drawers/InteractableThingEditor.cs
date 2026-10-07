@@ -16,7 +16,6 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.InteractableThing cqfReceiver)
         {
-            if (CQFAIButton.Draw(new Rect(500f, 0f, 30f, 30f))) CQFAIBridge.Open(CQFAIThingContext.Create(cqfReceiver));
             Rect outRect = new Rect(8f, 36f, 536f, 566f);
             Rect viewRect = new Rect(0f, 0f, 516f, cqfReceiver.height);
             Widgets.BeginScrollView(outRect, ref cqfReceiver.scrollPos, viewRect);

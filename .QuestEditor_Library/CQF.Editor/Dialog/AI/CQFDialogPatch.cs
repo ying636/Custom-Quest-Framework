@@ -95,7 +95,7 @@ namespace QuestEditor_Library
                     this.NoChildren(operation);
                     if (nodeId == 0) throw new InvalidDataException("CQF_DialogGraph_KeepEntry");
                     draft.nodeMoulds.Remove(nodeId);
-                    foreach (DialogResult result in draft.nodeMoulds.Values.SelectMany(value => value.options).SelectMany(option => option.results))
+                    foreach (DialogResult result in draft.optionMoulds.Values.SelectMany(option => option.results))
                     {
                         if (result.nextIndex == nodeId) result.nextIndex = null;
                     }
@@ -153,6 +153,8 @@ namespace QuestEditor_Library
 
         public void Validate(DialogTreeDef tree)
         {
+            tree.ResolveOptions();
+            CQFAIChanges.Validate(tree);
             if (!tree.nodeMoulds.ContainsKey(0)) throw new InvalidDataException("CQF_DialogGraph_KeepEntry");
             foreach (KeyValuePair<int, DialogNode> pair in tree.nodeMoulds)
             {
@@ -190,18 +192,27 @@ namespace QuestEditor_Library
             DialogTreeDef draftCopy = this.session.Copy(draft);
             foreach (int id in nodeIds.Distinct())
             {
-                if (draftCopy.nodeMoulds.TryGetValue(id, out DialogNode node)) accepted.nodeMoulds[id] = node;
+                if (draftCopy.nodeMoulds.TryGetValue(id, out DialogNode node))
+                {
+                    accepted.nodeMoulds[id] = node;
+                    foreach (int optionId in node.optionIds) accepted.optionMoulds[optionId] = draftCopy.optionMoulds[optionId];
+                }
                 else
                 {
                     if (id == 0) throw new InvalidDataException("CQF_DialogGraph_KeepEntry");
                     accepted.nodeMoulds.Remove(id);
-                    foreach (DialogResult result in accepted.nodeMoulds.Values.SelectMany(value => value.options).SelectMany(option => option.results))
+                    foreach (DialogResult result in accepted.optionMoulds.Values.SelectMany(option => option.results))
                     {
                         if (result.nextIndex == id) result.nextIndex = null;
                     }
                 }
             }
             accepted.curIndex = accepted.nodeMoulds.Keys.Max() + 1;
+            foreach (DialogNode node in accepted.nodeMoulds.Values)
+            {
+                node.options = new List<DialogOption>();
+                node.optionsResolved = false;
+            }
             accepted.Update();
             this.Validate(accepted);
             return accepted;

@@ -6,11 +6,14 @@ namespace QuestEditor_Library
     {
         public static void Validate(object value)
         {
+            if (value is CQFAIMapConfiguration mapConfiguration) CQFAIMapFeatures.Validate(mapConfiguration);
             if (value is CQFAILiveThingConfiguration live)
             {
+                CQFAILiveFeatureValidation.Validate(live);
                 if (live.interaction != null) Validate(live.interaction);
                 if (live.entrance != null) Validate(live.entrance);
                 if (live.exit != null) Validate(live.exit);
+                ValidateOperations(live.extraInteractions);
             }
             if (value is CustomMapDataDef map)
                 foreach (CustomThingData thing in (map.customThings ?? new List<CustomThingData>()).Concat(map.zoneCores ?? new List<CustomThingData>())) Validate(thing);

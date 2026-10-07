@@ -12,11 +12,13 @@ using UnityEvent = UnityEngine.Event;
 namespace QuestEditor_Library
 {
     [StaticConstructorOnStartup]
-    public class QuestEditor_Dialog : Page, ICQFAIEditorHost
+    public partial class QuestEditor_Dialog : Page, ICQFAIEditorHost
     {
         public QuestEditor_Dialog()
         {
             this.canvas = new CQFDialogNodeCanvas(this);
+            this.details = new CQFDialogDetailsPanel(this);
+            this.preview = new CQFDialogPreviewPanel(this);
             this.preventCameraMotion = true;
             this.absorbInputAroundWindow = true;
             this.doCloseX = true;
@@ -24,16 +26,29 @@ namespace QuestEditor_Library
             this.session.Reset(this.CurTree);
         }
 
-        public override string PageTitle => "DialogEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "DialogEditor".Translate().Colorize(CQFEditorPalette.Accent);
         public override Vector2 InitialSize => new Vector2(Mathf.Min(UI.screenWidth - 40f, 1520f), Mathf.Min(UI.screenHeight - 60f, 940f));
         public int? SelectedNodeIndex => this.canvas.SelectedIndex;
         public CQFDialogEditSession Session => this.session;
+        public DialogNode? SelectedNode => this.selectedNode;
+        public DialogOption? CurrentOption => this.selectedOption;
+        public DialogResult? CurrentResult => this.selectedResult;
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.CurTree.defName, () => this.CurTree, value =>
         {
+            int? nodeId = this.selectedNode?.index;
+            int? optionId = this.CurTree.optionMoulds.Where(pair => pair.Value == this.selectedOption).Select(pair => (int?)pair.Key).SingleOrDefault();
+            int resultIndex = this.selectedOption != null && this.selectedResult != null ? this.selectedOption.results.IndexOf(this.selectedResult) : -1;
             this.CloseEditors();
             this.RecordChanges();
             tree = (DialogTreeDef)value;
             this.InitCurTree();
+            DialogNode? node = nodeId.HasValue && tree.nodeMoulds.TryGetValue(nodeId.Value, out DialogNode current) ? current : null;
+            if (optionId.HasValue && tree.optionMoulds.TryGetValue(optionId.Value, out DialogOption option))
+            {
+                if (resultIndex >= 0 && resultIndex < option.results.Count) this.SelectResult(node, option, option.results[resultIndex], false);
+                else this.SelectOption(node, option, false);
+            }
+            else if (node != null) this.SelectNode(node, false);
             this.session.Observe(tree);
         }, value => new CQFDialogPatch(this.session).Validate((DialogTreeDef)value), () => Find.WindowStack.Windows.Contains(this), this);
         public DialogTreeDef CurTree
@@ -45,7 +60,7 @@ namespace QuestEditor_Library
                 tree = value;
                 this.canvas.Reset();
                 this.showInspector = false;
-                this.inspector = null;
+                this.showPreview = false;
                 this.selectedNode = null;
                 this.selectedOption = null;
                 this.selectedResult = null;
@@ -56,28 +71,47 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, 260f, 35f), this.PageTitle);
-            Text.Font = GameFont.Small;
-            Rect treeInfo = new Rect(270f, 7f, Mathf.Max(0f, inRect.width - 310f), 26f);
-            Widgets.Label(treeInfo, this.CurTree.defName + "  ·  " + this.CurTree.title);
-            TooltipHandler.TipRegion(treeInfo, this.CurTree.defName + "\n" + this.CurTree.title);
-            this.DrawButton(inRect);
-            float inspectorWidth = this.showInspector ? Mathf.Min(380f, inRect.width * 0.36f) : 0f;
-            Rect canvasRect = new Rect(0f, 84f, inRect.width - (this.showInspector ? inspectorWidth + 10f : 0f), inRect.height - 84f);
-            this.canvas.Draw(canvasRect);
-            if (this.showInspector)
+            GameFont previousFont = Text.Font;
+            TextAnchor previousAnchor = Text.Anchor;
+            bool previousWrap = Text.WordWrap;
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.WordWrap = true;
+            try
             {
-                Rect inspectorRect = new Rect(canvasRect.xMax + 10f, 84f, inspectorWidth, canvasRect.height);
-                Widgets.DrawBoxSolid(inspectorRect, new Color(0.1f, 0.14f, 0.12f));
-                GUI.BeginGroup(inspectorRect.ContractedBy(6f));
-                this.DrawInspector(new Rect(0f, 0f, inspectorWidth - 12f, canvasRect.height - 12f));
-                GUI.EndGroup();
+                Text.Font = GameFont.Medium;
+                float titleWidth = Mathf.Min(260f, inRect.width);
+                Widgets.Label(new Rect(0f, 0f, titleWidth, 35f), this.PageTitle.Truncate(titleWidth));
+                Text.Font = GameFont.Small;
+                Rect treeInfo = new Rect(270f, 7f, Mathf.Max(0f, inRect.width - 310f), 26f);
+                string treeTitle = this.CurTree.title.CanTranslate() ? this.CurTree.title.Translate().ToString() : this.CurTree.title;
+                Widgets.Label(treeInfo, treeTitle.Truncate(treeInfo.width));
+                TooltipHandler.TipRegion(treeInfo, this.CurTree.defName + "\n" + this.CurTree.title);
+                this.DrawButton(inRect);
+                bool sidePanel = this.showInspector || this.showPreview;
+                CQFDialogEditorLayout layout = new CQFDialogEditorLayout(inRect, sidePanel);
+                Rect canvasRect = layout.Canvas;
+                this.canvas.InputBlockedRect = layout.Overlay ? layout.Panel : (Rect?)null;
+                this.canvas.HighlightedNodes = this.showPreview && this.preview.CurrentIndex.HasValue ? new HashSet<int> { this.preview.CurrentIndex.Value } : new HashSet<int>();
+                this.canvas.Draw(canvasRect);
+                if (sidePanel)
+                {
+                    Rect inspectorRect = layout.Panel;
+                    Widgets.DrawBoxSolid(inspectorRect, CQFEditorPalette.Panel);
+                    GUI.BeginGroup(inspectorRect.ContractedBy(6f));
+                    try
+                    {
+                        Rect panel = new Rect(0f, 0f, inspectorRect.width - 12f, canvasRect.height - 12f);
+                        if (this.showPreview) this.preview.Draw(panel);
+                        else this.DrawInspector(panel);
+                    }
+                    finally { GUI.EndGroup(); }
+                }
+                if (!this.canvas.IsInteracting && UnityEvent.current.type != EventType.Repaint && UnityEvent.current.type != EventType.Layout)
+                {
+                    this.RecordChanges();
+                }
             }
-            if (UnityEvent.current.type != EventType.Repaint && UnityEvent.current.type != EventType.Layout)
-            {
-                this.RecordChanges();
-            }
+            finally { Text.Font = previousFont; Text.Anchor = previousAnchor; Text.WordWrap = previousWrap; }
         }
 
         public override void PostClose()
@@ -89,20 +123,21 @@ namespace QuestEditor_Library
         public void InitCurTree()
         {
             this.CurTree.Update();
-            bool hasPositions = this.CurTree.nodeMoulds.Values.Any(node => node.editorPositionSet);
+            bool hasPositions = this.CurTree.nodeMoulds.Values.Any(node => node.editorPositionSet)
+                && (this.CurTree.optionMoulds.Count == 0 || this.CurTree.optionMoulds.Values.Any(option => option.editorPositionSet));
             this.canvas.EnsurePositions();
             if (this.selectedNode != null && !this.CurTree.nodeMoulds.Values.Contains(this.selectedNode))
             {
                 this.selectedNode = null;
                 this.selectedOption = null;
                 this.selectedResult = null;
-                this.inspector = null;
             }
-            else if (this.selectedNode != null && this.selectedOption != null && !this.selectedNode.options.Contains(this.selectedOption))
+            else if (this.selectedOption != null && !this.CurTree.optionMoulds.Values.Contains(this.selectedOption))
             {
-                this.SelectNode(this.selectedNode);
+                this.selectedOption = null;
+                this.selectedResult = null;
             }
-            else if (this.selectedNode != null && this.selectedOption != null && this.selectedResult != null && !this.selectedOption.results.Contains(this.selectedResult))
+            else if (this.selectedOption != null && this.selectedResult != null && !this.selectedOption.results.Contains(this.selectedResult))
             {
                 this.SelectOption(this.selectedNode, this.selectedOption);
             }
@@ -110,6 +145,7 @@ namespace QuestEditor_Library
             {
                 this.canvas.Arrange();
             }
+            this.canvas.Select(this.selectedNode, this.selectedOption);
             if (this.initialized)
             {
                 this.RecordChanges();
@@ -139,40 +175,42 @@ namespace QuestEditor_Library
 
         public void SelectNode(DialogNode node, bool showProperties = true)
         {
+            this.canvas.Select(node, null);
+            if (showProperties) { this.showInspector = true; this.showPreview = false; }
             if (this.selectedNode != node || this.selectedOption != null)
             {
-                if (showProperties) this.showInspector = true;
                 this.selectedNode = node;
                 this.selectedOption = null;
                 this.selectedResult = null;
-                this.inspector = new Dialog_EditDialogNode(node, this);
+                this.details.Reset();
             }
         }
 
-        public void SelectOption(DialogNode node, DialogOption option)
+        public void CloseSidePanel() { this.showInspector = false; this.showPreview = false; }
+
+        public void SelectOption(DialogNode? node, DialogOption option, bool showProperties = true)
         {
-            this.showInspector = true;
+            this.canvas.Select(node, option);
+            if (showProperties) { this.showInspector = true; this.showPreview = false; }
+            if (this.selectedOption != option) this.details.Reset();
             this.selectedNode = node;
             this.selectedOption = option;
             this.selectedResult = null;
-            this.inspector = new Dialog_EditDialogOption(this, option, node);
         }
 
-        public void SelectResult(DialogNode node, DialogOption option, DialogResult result)
+        public void SelectResult(DialogNode? node, DialogOption option, DialogResult result, bool showProperties = true)
         {
-            this.showInspector = true;
+            this.canvas.Select(node, option);
+            if (showProperties) { this.showInspector = true; this.showPreview = false; }
+            if (this.selectedResult != result) this.details.Reset();
             this.selectedNode = node;
             this.selectedOption = option;
             this.selectedResult = result;
-            this.inspector = new Dialog_EditDialogResult(this, result, option, node);
         }
 
         public void AddOption(DialogNode node)
         {
-            DialogOption option = new DialogOption { text = "CQF_Dialog_Node_" + node.index + "_Option_" + node.options.Count };
-            node.options.Add(option);
-            this.SelectOption(node, option);
-            this.RecordChanges();
+            this.CreateOption(node, this.canvas.GetOptionPosition(node));
         }
 
         public void RemoveNode(DialogNode node)
@@ -182,7 +220,7 @@ namespace QuestEditor_Library
                 Messages.Message("CQF_DialogGraph_KeepEntry".Translate(), MessageTypeDefOf.RejectInput);
                 return;
             }
-            foreach (DialogResult result in this.CurTree.nodeMoulds.Values.SelectMany(current => current.options).SelectMany(option => option.results))
+            foreach (DialogResult result in this.CurTree.optionMoulds.Values.SelectMany(option => option.results))
             {
                 if (result.nextIndex == node.index)
                 {
@@ -193,7 +231,6 @@ namespace QuestEditor_Library
             this.selectedNode = null;
             this.selectedOption = null;
             this.selectedResult = null;
-            this.inspector = null;
             this.InitCurTree();
         }
 
@@ -204,7 +241,7 @@ namespace QuestEditor_Library
             tree = draft;
             this.canvas.Reset();
             this.showInspector = false;
-            this.inspector = null;
+            this.showPreview = false;
             this.selectedNode = null;
             this.selectedOption = null;
             this.selectedResult = null;
@@ -213,43 +250,46 @@ namespace QuestEditor_Library
 
         public void DrawButton(Rect inRect)
         {
-            string[] labels = { "CQF_DialogGraph_File", "CQF_DialogGraph_View", "CQF_DialogGraph_Undo", "CQF_DialogGraph_Redo",
-                this.showInspector ? "CQF_DialogGraph_HideInspector" : "CQF_DialogGraph_ShowInspector", "CQF_DialogGraph_Preview", "Save" };
-            float buttonWidth = Mathf.Min(140f, (inRect.width - 76f) / labels.Length);
-            for (int i = 0; i < labels.Length; i++)
+            bool compact = inRect.width < 560f;
+            float x = 0f;
+            if (CQFAIIconButton.DrawText(new Rect(x, 44f, 72f, 32f), "CQF_DialogGraph_File".Translate())) this.ShowFileMenu();
+            x += 78f;
+            if (CQFAIIconButton.DrawText(new Rect(x, 44f, 72f, 32f), "CQF_DialogGraph_View".Translate())) this.ShowViewMenu();
+            x += 82f;
+            void Image(Texture2D texture, string key, Action action, bool available = true)
             {
+                Rect button = new Rect(x, 44f, 32f, 32f);
                 bool enabled = GUI.enabled;
-                if (i == 2) GUI.enabled = enabled && this.session.CanUndo;
-                if (i == 3) GUI.enabled = enabled && this.session.CanRedo;
-                bool clicked = Widgets.ButtonText(new Rect(i * (buttonWidth + 4f), 45f, buttonWidth, 32f), labels[i].Translate());
+                GUI.enabled = enabled && available;
+                bool clicked = CQFAIIconButton.DrawFramedImage(button, texture, key.Translate());
                 GUI.enabled = enabled;
-                if (!clicked) continue;
-                switch (i)
-                {
-                    case 0:
-                        this.ShowFileMenu();
-                        break;
-                    case 1:
-                        this.ShowViewMenu();
-                        break;
-                    case 2:
-                        this.RestoreHistory(false);
-                        break;
-                    case 3:
-                        this.RestoreHistory(true);
-                        break;
-                    case 4:
-                        this.showInspector = !this.showInspector;
-                        break;
-                    case 5:
-                        Find.WindowStack.Add(new CQFDialogPreviewWindow(this.session.Copy(this.CurTree), this.SelectedNodeIndex ?? 0));
-                        break;
-                    case 6:
-                        this.SaveTree();
-                        break;
-                }
+                TooltipHandler.TipRegion(button, key.Translate());
+                x += 36f;
+                if (clicked) action();
             }
-            if (CQFAIButton.Draw(new Rect(labels.Length * (buttonWidth + 4f), 45f, 32f, 32f))) CQFAIBridge.Open(this.AIContext);
+            if (!compact)
+            {
+                Image(TexUI.ArrowTexLeft, "CQF_DialogGraph_Undo", () => this.RestoreHistory(false), this.session.CanUndo);
+                Image(TexUI.ArrowTexRight, "CQF_DialogGraph_Redo", () => this.RestoreHistory(true), this.session.CanRedo);
+            }
+            Image(ContentFinder<Texture2D>.Get("UI/Icon_Edit"), this.showInspector ? "CQF_DialogGraph_HideInspector" : "CQF_DialogGraph_ShowInspector",
+                () => { this.showInspector = !this.showInspector; this.showPreview = false; });
+            Image(TexButton.Play, "CQF_DialogGraph_Preview", () =>
+            {
+                this.showPreview = !this.showPreview;
+                if (this.showPreview) this.preview.Start(this.SelectedNodeIndex ?? 0);
+            });
+            if (!compact)
+            {
+                Image(TexButton.Info, "CQF_DialogGraph_Check", this.CheckTree);
+                Image(TexButton.Save, "Save", this.SaveTree);
+            }
+            if (CQFAIButton.Draw(new Rect(x, 44f, 32f, 32f), true)) CQFAIBridge.Open(this.AIContext);
+            x += 42f;
+            Rect summary = new Rect(x, 49f, Mathf.Max(0f, inRect.width - x), 22f);
+            Text.Font = GameFont.Tiny;
+            Widgets.Label(summary, "CQF_DialogGraph_Summary".Translate(this.CurTree.nodeMoulds.Count, this.CurTree.optionMoulds.Count).ToString().Truncate(summary.width));
+            Text.Font = GameFont.Small;
         }
 
         private void ShowFileMenu()
@@ -262,6 +302,7 @@ namespace QuestEditor_Library
                     "ConfirmCreateNewDialogTree".Translate(), "Confirm".Translate(),
                     () => this.CurTree = new DialogTreeDef { defName = "CQF_DialogTree_" + Guid.NewGuid().ToString("N").Substring(0, 8) }, "Cancel".Translate()))),
                 new FloatMenuOption("CQF_DialogGraph_TreeSettings".Translate(), () => Find.WindowStack.Add(new QuestEditor_DialogTreeMisc(this.CurTree))),
+                new FloatMenuOption("Save".Translate(), this.SaveTree),
                 new FloatMenuOption("CQF_DialogGraph_Check".Translate(), this.CheckTree)
             }));
         }
@@ -270,11 +311,13 @@ namespace QuestEditor_Library
         {
             Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
             {
+                new FloatMenuOption("CQF_DialogGraph_Undo".Translate(), this.session.CanUndo ? () => this.RestoreHistory(false) : (Action?)null),
+                new FloatMenuOption("CQF_DialogGraph_Redo".Translate(), this.session.CanRedo ? () => this.RestoreHistory(true) : (Action?)null),
                 new FloatMenuOption("CQF_DialogGraph_Arrange".Translate(), this.canvas.Arrange),
                 new FloatMenuOption("CQF_DialogGraph_Fit".Translate(), this.canvas.Fit),
                 new FloatMenuOption("CQF_DialogGraph_Find".Translate(), () => Find.WindowStack.Add(new FloatMenu(
                     this.CurTree.nodeMoulds.OrderBy(pair => pair.Key).Select(pair => new FloatMenuOption(
-                        "#" + pair.Key + " " + pair.Value.text, () => this.canvas.Focus(pair.Key))).ToList())))
+                        (pair.Value.text.CanTranslate() ? pair.Value.text.Translate().ToString() : pair.Value.text).Replace('\r', ' ').Replace('\n', ' '), () => this.canvas.Focus(pair.Key))).ToList())))
             }));
         }
 
@@ -293,59 +336,19 @@ namespace QuestEditor_Library
 
         private void DrawInspector(Rect rect)
         {
-            if (this.selectedNode == null)
-            {
-                Widgets.Label(new Rect(8f, 8f, rect.width - 16f, 100f), "CQF_DialogGraph_SelectHint".Translate());
-                return;
-            }
-            Widgets.Label(new Rect(6f, 5f, rect.width - 116f, 28f), "CQF_DialogGraph_Node".Translate(this.selectedNode.index.GetValueOrDefault()));
-            if (Widgets.ButtonText(new Rect(rect.width - 106f, 5f, 100f, 26f), "CQF_DialogGraph_Expand".Translate()))
-            {
-                if (this.selectedResult != null && this.selectedOption != null) Find.WindowStack.Add(new Dialog_EditDialogResult(this, this.selectedResult, this.selectedOption, this.selectedNode));
-                else if (this.selectedOption != null) Find.WindowStack.Add(new Dialog_EditDialogOption(this, this.selectedOption, this.selectedNode));
-                else Find.WindowStack.Add(new Dialog_EditDialogNode(this.selectedNode, this));
-            }
-            float buttonWidth = (rect.width - 16f) / 3f;
-            if (Widgets.ButtonText(new Rect(4f, 36f, buttonWidth, 26f), "DialogText".Translate())) this.SelectNode(this.selectedNode);
-            if (Widgets.ButtonText(new Rect(buttonWidth + 8f, 36f, buttonWidth, 26f), "Add".Translate())) this.AddOption(this.selectedNode);
-            if (Widgets.ButtonText(new Rect(buttonWidth * 2f + 12f, 36f, buttonWidth, 26f), "Remove".Translate()))
-            {
-                if (this.selectedResult != null && this.selectedOption != null)
-                {
-                    this.selectedOption.results.Remove(this.selectedResult);
-                    this.SelectOption(this.selectedNode, this.selectedOption);
-                    this.InitCurTree();
-                }
-                else if (this.selectedOption != null)
-                {
-                    this.selectedNode.options.Remove(this.selectedOption);
-                    this.SelectNode(this.selectedNode);
-                    this.InitCurTree();
-                }
-                else
-                {
-                    this.RemoveNode(this.selectedNode);
-                }
-            }
-            if (this.inspector != null)
-            {
-                Rect contents = new Rect(0f, 70f, rect.width, rect.height - 70f);
-                GUI.BeginGroup(contents);
-                this.inspector.DoWindowContents(new Rect(Vector2.zero, contents.size));
-                GUI.EndGroup();
-            }
+            this.details.Draw(rect);
         }
 
         private void RestoreHistory(bool redo)
         {
             this.CloseEditors();
             tree = redo ? this.session.Redo(this.CurTree) : this.session.Undo(this.CurTree);
-            this.inspector = null;
             this.selectedNode = null;
             this.selectedOption = null;
             this.selectedResult = null;
             this.canvas.Reset();
             this.showInspector = false;
+            this.showPreview = false;
             this.InitCurTree();
         }
 
@@ -427,6 +430,8 @@ namespace QuestEditor_Library
                     this.CompileNodeElement(nodeValue, language, nodeIndex);
                 }
             }
+            foreach (XElement entry in result.Element("optionMoulds")?.Elements("li") ?? Enumerable.Empty<XElement>())
+                this.CompileTextElement(entry.Element("value")?.Element("text"), this.MakeTextKey("Option_" + entry.Element("key")?.Value + "_Text"), language);
             return result;
         }
 
@@ -472,7 +477,7 @@ namespace QuestEditor_Library
             language.Save(Path.Combine(dialogDirectory, this.CurTree.defName + "_Text.xml"));
         }
 
-        private void CompileTextElement(XElement element, string key, XElement language)
+        private void CompileTextElement(XElement? element, string key, XElement language)
         {
             if (element == null || element.Value.NullOrEmpty())
             {
@@ -502,15 +507,17 @@ namespace QuestEditor_Library
         public static readonly Texture2D nodeTexture = ContentFinder<Texture2D>.Get("UI/Node");
         public static readonly Texture2D optionTexture = ContentFinder<Texture2D>.Get("UI/Option");
         public static readonly Texture2D whiteTex = SolidColorMaterials.NewSolidColorTexture(Color.white);
-        public static readonly Texture2D blueTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.SkyBlue);
+        public static readonly Texture2D blueTex = SolidColorMaterials.NewSolidColorTexture(CQFEditorPalette.Accent);
         private readonly CQFDialogEditSession session = new CQFDialogEditSession();
         private readonly CQFDialogNodeCanvas canvas;
-        private Window? inspector;
+        private readonly CQFDialogDetailsPanel details;
+        private readonly CQFDialogPreviewPanel preview;
         private DialogNode? selectedNode;
         private DialogOption? selectedOption;
         private DialogResult? selectedResult;
         private bool initialized;
         private bool showInspector;
+        private bool showPreview;
         private string? lastHistoryError;
     }
 }

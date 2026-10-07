@@ -87,6 +87,7 @@ namespace QuestEditor_Library
             if (value is Def def && (string.IsNullOrWhiteSpace(def.defName) || def.defName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)) throw new InvalidDataException("CQF_AI_InvalidName");
             if (value is DialogTreeDef tree)
             {
+                tree.ResolveOptions();
                 if (!tree.nodeMoulds.ContainsKey(0)) throw new InvalidDataException("CQF_AI_InvalidLinks: entry");
                 foreach (var pair in tree.nodeMoulds)
                 {
@@ -95,6 +96,12 @@ namespace QuestEditor_Library
                         if (result.nextIndex.HasValue && !tree.nodeMoulds.ContainsKey(result.nextIndex.Value)) throw new InvalidDataException("CQF_AI_InvalidLinks: dialogue");
                 }
                 tree.Update();
+                foreach (DialogOption option in tree.optionMoulds.Values)
+                    if (option.results == null || option.conditions == null || option.requiredThings == null
+                        || float.IsNaN(option.editorX) || float.IsInfinity(option.editorX) || float.IsNaN(option.editorY) || float.IsInfinity(option.editorY)
+                        || option.results.Any(result => result == null || result.conditions == null || result.actions == null
+                            || result.nextIndex.HasValue && !tree.nodeMoulds.ContainsKey(result.nextIndex.Value)))
+                        throw new InvalidDataException("CQF_DialogGraph_InvalidOptions");
             }
             if (value is DutyMapDef duty)
             {
@@ -164,6 +171,6 @@ namespace QuestEditor_Library
             return path.Substring(1).Split('/');
         }
         private readonly CQFAIModel model;
-        private static readonly HashSet<string> TextFields = new HashSet<string> { "text", "extraText", "title", "label", "description", "labelKey", "descriptionKey", "customName", "customDescription", "customInspectText", "dialogReportKey", "openReport", "trapName", "lootBoxName", "failReason", "reason", "report", "message", "interactionText", "disableReason", "disarmReport" };
+        private static readonly HashSet<string> TextFields = new HashSet<string> { "text", "extraText", "title", "label", "description", "labelKey", "descriptionKey", "customName", "customDescription", "customInspectText", "dialogReportKey", "openReport", "trapName", "lootBoxName", "failReason", "reason", "report", "message", "interactionText", "disableReason", "disarmReport", "spawnMessage", "landfillText", "firstName", "nickName", "lastName" };
     }
 }
