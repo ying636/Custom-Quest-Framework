@@ -29,10 +29,11 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             float y = 10f;
             float x = 12f;
             float width = inRect.width - 36f;
-            Widgets.Label(new Rect(x, y, width, 32f), "CQF_QuestBook_ChapterProperties".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x, y, width, 32f), "CQF_QuestBook_ChapterProperties".Translate().Colorize(CQFUIStyle.Accent));
             y += 46f;
             DrawTextField(ref y, x, width, "CQF_QuestBook_ChapterDataName".Translate(), ref chapter.id);
             DrawTextField(ref y, x, width, "CQF_QuestBook_ChapterName".Translate(), ref chapter.labelKey);
@@ -43,7 +44,7 @@ namespace QuestEditor_Library
 
         private void DrawTextField(ref float y, float x, float width, string label, ref string value)
         {
-            Widgets.Label(new Rect(x, y, width, 24f), label.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x, y, width, 24f), label.Colorize(CQFUIStyle.Accent));
             y += 26f;
             value = Widgets.TextField(new Rect(x, y, width, 30f), value ?? string.Empty);
             y += 42f;

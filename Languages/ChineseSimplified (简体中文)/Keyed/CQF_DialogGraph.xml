@@ -24,7 +24,7 @@
   <CQF_DialogGraph_Expand>详细编辑</CQF_DialogGraph_Expand>
   <CQF_DialogGraph_MoveUp>结果上移。优先采用第一个满足条件的结果。</CQF_DialogGraph_MoveUp>
   <CQF_DialogGraph_MoveDown>结果下移。优先采用第一个满足条件的结果。</CQF_DialogGraph_MoveDown>
-  <CQF_DialogGraph_SelectHint>双击节点、选项或结果，或点击属性按钮，在此编辑。将结果的输出端口拖到任意节点即可连接。</CQF_DialogGraph_SelectHint>
+  <CQF_DialogGraph_SelectHint>双击节点、选项或结果，在此编辑。将结果的输出端口拖到任意节点即可连接。</CQF_DialogGraph_SelectHint>
   <CQF_DialogGraph_KeepEntry>入口节点不能删除。</CQF_DialogGraph_KeepEntry>
   <CQF_DialogGraph_Error>操作失败：{0}</CQF_DialogGraph_Error>
   <CQF_DialogGraph_Valid>检查完成：{0} 个节点，其中 {1} 个无法从入口到达。</CQF_DialogGraph_Valid>
@@ -105,6 +105,7 @@
   <CQF_DialogGraph_DeleteOption>删除选项及全部引用</CQF_DialogGraph_DeleteOption>
   <CQF_DialogGraph_ConfirmDeleteShared>此选项被 {0} 个节点共用。删除将同时移除所有引用，是否继续？</CQF_DialogGraph_ConfirmDeleteShared>
   <CQF_DialogGraph_OptionOrder>拖动调整此节点中的选项顺序</CQF_DialogGraph_OptionOrder>
+  <CQF_DialogGraph_ResultOrder>拖拽上下移动</CQF_DialogGraph_ResultOrder>
   <CQF_DialogGraph_Advanced>条件与行为</CQF_DialogGraph_Advanced>
   <CQF_DialogGraph_InvalidOptions>选项定义或引用无效，请检查缺失引用、重复引用及选项数据。</CQF_DialogGraph_InvalidOptions>
 </LanguageData>

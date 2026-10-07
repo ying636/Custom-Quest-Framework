@@ -13,6 +13,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Genes cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
             cqfReceiver.EnsureXenotype(data);
             if (cqfReceiver.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Xenotype".Translate(data.xenotype.LabelCap)))
@@ -34,7 +35,7 @@ namespace QuestEditor_Library
         {
             List<GeneDef> customGenes = data.customGenes;
             Rect labelRect = new Rect(x, y + 3f, 150f, 25f);
-            Widgets.Label(labelRect, "CQF_PawnEditor_CustomGenes".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(labelRect, "CQF_PawnEditor_CustomGenes".Translate().Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(labelRect.xMax + 8f, y, 90f, 30f);
             if (cqfReceiver.DrawCommandText(addRect, "CQF_PawnEditor_Add".Translate()))
             {

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQF_EditorActionReferencePreview>Action reference preview (actions are not executed)</CQF_EditorActionReferencePreview>
   <CQF_EditorAllMatchingResults>Execute all matching results</CQF_EditorAllMatchingResults>
-  <CQF_EditorCheck>Check</CQF_EditorCheck>
-  <CQF_EditorCheckConditionsOnly>Check conditions only</CQF_EditorCheckConditionsOnly>
-  <CQF_EditorCheckFailed>Check failed</CQF_EditorCheckFailed>
   <CQF_EditorEmptyClipboard>The interaction clipboard is empty.</CQF_EditorEmptyClipboard>
   <CQF_EditorFirstMatchingResult>Execute the first matching result</CQF_EditorFirstMatchingResult>
   <CQF_EditorMoveDown>Move down</CQF_EditorMoveDown>
@@ -12,15 +8,11 @@
   <CQF_EditorPasteFailed>Failed to paste interactions</CQF_EditorPasteFailed>
   <CQF_EditorReplace>Replace existing interactions</CQF_EditorReplace>
   <CQF_EditorSignal>Signal</CQF_EditorSignal>
-  <CQF_EditorSkipped>Skipped</CQF_EditorSkipped>
   <CQF_EditorStateKey>State key</CQF_EditorStateKey>
   <CQF_EditorTargetKey>Target key</CQF_EditorTargetKey>
   <CQF_EditorTargetUnavailable>The target is no longer available.</CQF_EditorTargetUnavailable>
-  <CQF_EditorTestPawn>Pawn used for the check</CQF_EditorTestPawn>
   <CQF_EditorUndoPaste>Undo paste</CQF_EditorUndoPaste>
   <CQF_EditorUnreachableResult>This result cannot be reached in the current execution order.</CQF_EditorUnreachableResult>
-  <CQF_EditorUnresolvedOrExternal>Unresolved or external reference</CQF_EditorUnresolvedOrExternal>
-  <CQF_EditorWouldExecute>Would execute</CQF_EditorWouldExecute>
   <CQF_MapSignals_Automatic>Automatic signals</CQF_MapSignals_Automatic>
   <CQF_MapSignals_ChangedReference>The referenced signals have changed. Reopen the rename window.</CQF_MapSignals_ChangedReference>
   <CQF_MapSignals_Connected>Linked signals</CQF_MapSignals_Connected>
@@ -33,7 +25,6 @@
   <CQF_MapSignals_Part>Map part</CQF_MapSignals_Part>
   <CQF_MapSignals_Quest>Quest</CQF_MapSignals_Quest>
   <CQF_MapSignals_References>References</CQF_MapSignals_References>
-  <CQF_MapSignals_Refresh>Refresh</CQF_MapSignals_Refresh>
   <CQF_MapSignals_RenameImpact>Signals affected by renaming</CQF_MapSignals_RenameImpact>
   <CQF_MapSignals_ScopeMismatch>The signal name matches, but its scope differs.</CQF_MapSignals_ScopeMismatch>
   <CQF_MapSignals_SyncReferences>Update referenced signals</CQF_MapSignals_SyncReferences>
@@ -51,4 +42,5 @@
   <CQF_TargetPickerTitle>Select target</CQF_TargetPickerTitle>
   <CQF_TargetPickOnMap>Pick on map</CQF_TargetPickOnMap>
   <CQF_TargetRegisterKey>Register target key</CQF_TargetRegisterKey>
+  <CQF_MapSignals_InteractionInputHint>Click to choose a signal from the signal book or enter one manually in the selection window. The suffix follows the interaction name; selecting also changes that name. Quest or object prefixes are added at runtime.</CQF_MapSignals_InteractionInputHint>
 </LanguageData>

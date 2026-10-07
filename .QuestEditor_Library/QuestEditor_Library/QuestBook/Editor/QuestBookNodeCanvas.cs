@@ -22,13 +22,15 @@ namespace QuestEditor_Library
 
         public void Draw(Rect rect, QuestBookDef book, QuestBookInstance instance, bool editable, QuestBookChapter chapter = null)
         {
+            using CQFUIScope scope = new CQFUIScope();
             Text.Font = GameFont.Small;
             if (book == null)
             {
                 return;
             }
             currentBook = book;
-            Widgets.DrawBox(rect, 1);
+            Widgets.DrawBoxSolid(rect, CQFUIStyle.Canvas);
+            CQFUIStyle.DrawBox(rect, 1);
             GUI.BeginGroup(rect);
             Dictionary<QuestBookStep, Rect> nodeRects = BuildNodeRects(book, chapter);
             DrawLinks(nodeRects);
@@ -201,7 +203,7 @@ namespace QuestEditor_Library
             Color tint = Color.white;
             if (state?.status == QuestBookStepStatus.Active)
             {
-                tint = ColorLibrary.SkyBlue;
+                tint = CQFUIStyle.Accent;
             }
             else if (state?.status == QuestBookStepStatus.Completed)
             {

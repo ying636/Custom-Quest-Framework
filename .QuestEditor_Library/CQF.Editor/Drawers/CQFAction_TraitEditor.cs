@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Trait cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
             List<KeyValuePair<TraitDef, TraitDegreeData>> stagets = new List<KeyValuePair<TraitDef, TraitDegreeData>>();
@@ -34,7 +35,7 @@ namespace QuestEditor_Library
                     stagets.Add(new KeyValuePair<TraitDef, TraitDegreeData>(t, s));
                 });
             });
-            if (Widgets.ButtonText(rect, "RequiredTrait".Translate(cqfReceiver.trait?.degreeDatas.Find(d => d.degree == cqfReceiver.degree)?.label), false))
+            if (CQFUIStyle.ButtonText(rect, "RequiredTrait".Translate(cqfReceiver.trait?.degreeDatas.Find(d => d.degree == cqfReceiver.degree)?.label), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<KeyValuePair<TraitDef, TraitDegreeData>>(new TextSelectDrawer<KeyValuePair<TraitDef, TraitDegreeData>>(stagets, t => t.Value.label, t =>
                 {

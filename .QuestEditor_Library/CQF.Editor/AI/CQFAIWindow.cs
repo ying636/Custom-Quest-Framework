@@ -32,6 +32,8 @@ namespace QuestEditor_Library
         public string UsageSummary => "CQF_AI_UsageBrief".Translate(UsageValue(taskUsage), UsageValue(sessionUsage));
         public string UsageDetails => "CQF_AI_UsageDetails".Translate(taskUsage.Input.ToString("N0"), taskUsage.Output.ToString("N0"), taskUsage.Unavailable,
             sessionUsage.Input.ToString("N0"), sessionUsage.Output.ToString("N0"), sessionUsage.Unavailable);
+        public string BudgetSummary => requestBudget == null ? string.Empty : "CQF_AI_BudgetUsage".Translate(requestBudget.Used.ToString("N0"), requestBudget.TokenLimit.ToString("N0"), requestBudget.Requests, requestBudget.RequestLimit, requestBudget.Reserved.ToString("N0")).ToString()
+            + (requestBudget.HasEstimates ? "\n" + "CQF_AI_BudgetEstimated".Translate().ToString() : string.Empty);
         public string SessionId => session.Id;
         public bool IsWorking => harness != null;
 
@@ -88,9 +90,9 @@ namespace QuestEditor_Library
         public override void WindowUpdate()
         {
             base.WindowUpdate();
-            try { SyncContext(); Poll(); }
+            try { SyncContext(); Poll(); mapFeedback.Draw(); }
             catch (Exception error) { Error(error); }
-            if (command != savedDraft && DateTime.UtcNow >= nextSave) SaveChat();
+            if ((command != savedDraft || chatDirty) && DateTime.UtcNow >= nextSave) SaveChat();
             windowRect.width = Mathf.Clamp(windowRect.width, Mathf.Min(340f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             if (!collapsed) windowRect.height = Mathf.Clamp(windowRect.height, Mathf.Min(360f, UI.screenHeight - 20f), UI.screenHeight - 20f);
             windowRect.x = Mathf.Clamp(windowRect.x, 0f, Mathf.Max(0f, UI.screenWidth - windowRect.width));
@@ -108,6 +110,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             GameFont previousFont = Text.Font;
             TextAnchor previousAnchor = Text.Anchor;
             bool previousWrap = Text.WordWrap;
@@ -156,7 +159,28 @@ namespace QuestEditor_Library
 
         private void DrawHistory(Rect rect)
         {
-            CQFAIMessage[] messages = conversation.VisibleMessages.ToArray();
+            float width = rect.width - 20f;
+            bool refresh = historyWidth != width || historyMessageCount != conversation.Messages.Count || historyActivityCount != activities.Count || scrollToEnd
+                || currentActivity?.Finished == false && DateTime.UtcNow >= nextHistoryLayout || nextHistoryLayout == DateTime.MinValue;
+            if (refresh)
+            {
+                historyMessages = conversation.VisibleMessages.ToArray();
+                historyRows.Clear();
+                for (int index = 0; index <= historyMessages.Length; index++)
+                {
+                    foreach (CQFAIActivity activity in activities.Where(activity => activity.MessageIndex == index))
+                        historyRows.Add((null, activity, ActivityHeight(activity, width), width));
+                    if (index < historyMessages.Length)
+                    {
+                        CQFAIMessage message = historyMessages[index];
+                        float cardWidth = message.Role == "system" ? width : ChatWidth(message.DisplayContent, width);
+                        historyRows.Add((message, null, Text.CalcHeight(message.DisplayContent, cardWidth - 20f) + 32f, cardWidth));
+                    }
+                }
+                historyWidth = width; historyMessageCount = conversation.Messages.Count; historyActivityCount = activities.Count;
+                nextHistoryLayout = DateTime.UtcNow.AddMilliseconds(150);
+            }
+            CQFAIMessage[] messages = historyMessages;
             if (messages.Length == 0)
             {
                 Color previous = GUI.color;
@@ -167,19 +191,7 @@ namespace QuestEditor_Library
                 GUI.color = previous;
                 return;
             }
-            float width = rect.width - 20f;
-            List<(CQFAIMessage? message, CQFAIActivity? activity, float height)> rows = new List<(CQFAIMessage?, CQFAIActivity?, float)>();
-            for (int index = 0; index <= messages.Length; index++)
-            {
-                foreach (CQFAIActivity activity in activities.Where(activity => activity.MessageIndex == index))
-                    rows.Add((null, activity, ActivityHeight(activity, width)));
-                if (index < messages.Length)
-                {
-                    CQFAIMessage message = messages[index];
-                    float cardWidth = message.Role == "system" ? width : ChatWidth(message.DisplayContent, width);
-                    rows.Add((message, null, Text.CalcHeight(message.DisplayContent, cardWidth - 20f) + 32f));
-                }
-            }
+            var rows = historyRows;
             float height = rows.Sum(row => row.height);
             bool follow = currentActivity?.Finished == false && chatScroll.y >= Mathf.Max(0f, historyHeight - rect.height) - 24f;
             if (scrollToEnd || follow) { chatScroll.y = Mathf.Max(0f, height - rect.height); scrollToEnd = false; }
@@ -188,16 +200,17 @@ namespace QuestEditor_Library
             float y = 0f;
             foreach (var row in rows)
             {
+                if (y + row.height < chatScroll.y || y > chatScroll.y + rect.height) { y += row.height; continue; }
                 if (row.activity != null)
                 {
-                    DrawActivity(row.activity, new Rect(0f, y, width, row.height - 14f));
+                    DrawActivity(row.activity, new Rect(0f, y, width, row.height - 14f), chatScroll.y, chatScroll.y + rect.height);
                     y += row.height;
                     continue;
                 }
                 CQFAIMessage message = row.message!;
                 bool player = message.Role == "user";
-                float cardWidth = message.Role == "system" ? width : ChatWidth(message.DisplayContent, width);
-                float textHeight = Text.CalcHeight(message.DisplayContent, cardWidth - 20f);
+                float cardWidth = row.cardWidth;
+                float textHeight = row.height - 32f;
                 Rect card = new Rect(player ? width - cardWidth : 0f, y, cardWidth, textHeight + 18f);
                 if (message.Role == "user" || message.Role == "assistant") CQFAIChatBubble.Draw(card, player ? CQFEditorPalette.Header : CQFEditorPalette.Card);
                 Color previous = GUI.color;
@@ -214,7 +227,7 @@ namespace QuestEditor_Library
             return Mathf.Clamp(Text.CalcSize(content).x + 24f, 50f, width * 0.87f);
         }
 
-        private static float ActivityHeight(CQFAIActivity activity, float width)
+        private float ActivityHeight(CQFAIActivity activity, float width)
         {
             Text.Font = GameFont.Tiny;
             float height = 52f;
@@ -223,14 +236,14 @@ namespace QuestEditor_Library
                 if (activity.TaskState != null) height += CQFAITaskPanel.Height(activity.TaskState, width - 20f);
                 if (activity.Notice.Length > 0) height += Text.CalcHeight(activity.Notice, width - 20f) + 8f;
                 height += 24f + Text.CalcHeight(activity.Reasoning.Length > 0 ? activity.Reasoning : "CQF_AI_ReasoningUnavailable".Translate().ToString(), width - 20f) + 8f;
-                height += activity.Operations.Sum(operation => Text.CalcHeight(operation.Label, width - 20f) + 8f);
+                height += activity.Operations.Sum(operation => OperationLayout(operation, width - 20f).height + 8f);
             }
             Text.Font = GameFont.Small;
             if (activity.Preview.Length > 0) height += Text.CalcHeight(activity.Preview, ChatWidth(activity.Preview, width) - 20f) + 28f;
             return height + 14f;
         }
 
-        private static void DrawActivity(CQFAIActivity activity, Rect rect)
+        private void DrawActivity(CQFAIActivity activity, Rect rect, float visibleTop, float visibleBottom)
         {
             Color previous = GUI.color;
             GUI.color = CQFEditorPalette.Muted;
@@ -238,7 +251,7 @@ namespace QuestEditor_Library
             Rect header = new Rect(rect.x + 10f, rect.y, rect.width - 20f, 24f);
             Widgets.Label(header, ((activity.Expanded ? "▾ " : "▸ ") + activity.Header).Truncate(header.width));
             TooltipHandler.TipRegion(header, "CQF_AI_ActivityHint".Translate());
-            if (Widgets.ButtonInvisible(header)) activity.Expanded = !activity.Expanded;
+            if (Widgets.ButtonInvisible(header)) { activity.Expanded = !activity.Expanded; nextHistoryLayout = DateTime.MinValue; }
             Rect step = new Rect(header.x, header.yMax, header.width, 24f);
             Widgets.Label(step, activity.CurrentStep.Truncate(step.width));
             TooltipHandler.TipRegion(step, activity.CurrentStep);
@@ -261,10 +274,14 @@ namespace QuestEditor_Library
                 foreach (CQFAIOperation operation in activity.Operations)
                 {
                     GUI.color = operation.Succeeded == false ? ColorLibrary.RedReadable : CQFEditorPalette.Muted;
-                    float lineHeight = Text.CalcHeight(operation.Label, header.width);
+                    var operationLayout = OperationLayout(operation, header.width);
+                    float lineHeight = operationLayout.height;
                     Rect line = new Rect(header.x, y, header.width, lineHeight);
-                    Widgets.Label(line, operation.Label);
-                    if (operation.Details.Length > 0) TooltipHandler.TipRegion(line, operation.Details);
+                    if (line.yMax >= visibleTop && line.y <= visibleBottom)
+                    {
+                        Widgets.Label(line, operationLayout.label);
+                        if (operation.Details.Length > 0) TooltipHandler.TipRegion(line, operation.Details);
+                    }
                     y += lineHeight + 8f;
                 }
             }
@@ -280,12 +297,23 @@ namespace QuestEditor_Library
             }
         }
 
+        private (string label, float height) OperationLayout(CQFAIOperation operation, float width)
+        {
+            if (operation.Succeeded != null && operationLayouts.TryGetValue(operation, out var finished) && finished.width == width) return (finished.label, finished.height);
+            string label = operation.Label;
+            if (!operationLayouts.TryGetValue(operation, out var cached) || cached.width != width || cached.label != label)
+            {
+                cached = (label, width, Text.CalcHeight(label, width));
+                operationLayouts[operation] = cached;
+            }
+            return (cached.label, cached.height);
+        }
         private void TrackTool(CQFAIToolCall call, XElement? result)
         {
             if (currentActivity == null) return;
             if (result == null) currentActivity.Add(new CQFAIOperation(call));
             else currentActivity.Operations.Last(operation => operation.Id == call.Id).Complete(result, CustomQuestFramework_ModSetting.setting.dialogAIKey);
-            if (result != null) SaveChat();
+            if (result != null) chatDirty = true;
         }
         private void DrawHeader(CQFAIWindowLayout layout)
         {
@@ -304,7 +332,7 @@ namespace QuestEditor_Library
             }
             bool enabled = GUI.enabled;
             bool undoAvailable = transaction?.CanUndo == true;
-            bool undoCurrent = undoAvailable && transaction!.IsCurrent;
+            bool undoCurrent = undoAvailable;
             string undoTip = transaction?.UndoSupported == false ? "CQF_AI_UndoUnsupported" : undoAvailable && !undoCurrent ? "CQF_AI_UndoConflict" : "CQF_DialogGraph_Undo";
             int historyIndex = layout.Compact ? 3 : 4;
             if (CQFAIIconButton.Draw(layout.HeaderButton(historyIndex), CQFAIIcon.History, "CQF_AI_History".Translate()))
@@ -396,6 +424,9 @@ namespace QuestEditor_Library
             session = value;
             conversation.Clear();
             activities.Clear(); currentActivity = null; historyHeight = 0f;
+            operationLayouts.Clear(); historyRows.Clear(); historyMessages = Array.Empty<CQFAIMessage>(); nextHistoryLayout = DateTime.MinValue;
+            requestBudget = null;
+            chatDirty = false;
             foreach (CQFAIMessage message in value.Messages) conversation.Add(message.Role, message.DisplayContent, visible: true);
             activities.AddRange(value.Activities);
             taskUsage.Restore(value.TaskUsage.Save("usage")); sessionUsage.Restore(value.SessionUsage.Save("usage"));
@@ -420,7 +451,7 @@ namespace QuestEditor_Library
                     string title = session.Messages.FirstOrDefault(message => message.Role == "user")?.DisplayContent.Replace('\n', ' ').Trim() ?? "";
                     session.Title = title.Length > 40 ? title.Substring(0, 40) : title;
                 }
-                store.Save(session); savedDraft = command;
+                store.Save(session); savedDraft = command; chatDirty = false;
             }
             catch (Exception error) { nextSave = DateTime.UtcNow.AddSeconds(30); HistoryError(error); }
         }
@@ -452,6 +483,32 @@ namespace QuestEditor_Library
             context = value;
         }
 
+        private void TrackMapProgress(CQFAIToolCall call, CQFAILiveMapTransaction execution)
+        {
+            if (currentActivity == null) return;
+            string kind = execution.CurrentOperation?.Name.LocalName ?? "edit";
+            string key = "CQF_AI_MapStep_" + kind;
+            string label = key.CanTranslate() ? key.Translate().ToString() : "CQF_AI_ToolApply".Translate().ToString();
+            if (execution.ExecutionPhase != "CQF_AI_Executing") label = execution.ExecutionPhase.Translate();
+            string line = "CQF_AI_MapProgress".Translate(label, execution.CompletedOperations, execution.TotalOperations);
+            if (execution.CurrentOperation is XElement receipt && receipt.Attribute("x") != null && receipt.Attribute("z") != null)
+                line += " · (" + receipt.Attribute("x")!.Value + ", " + receipt.Attribute("z")!.Value + ")";
+            currentActivity.ExecutionProgress = line;
+            CQFAIOperation? operation = currentActivity.Operations.LastOrDefault(value => value.Id == call.Id);
+            if (operation != null) operation.Progress = line;
+        }
+        private void StopExecution()
+        {
+            try { harness?.CancelResponse(); }
+            catch (Exception error)
+            {
+                string secret = CustomQuestFramework_ModSetting.setting.dialogAIKey;
+                string details = string.IsNullOrEmpty(secret) ? error.ToString() : error.ToString().Replace(secret, "***");
+                if (currentActivity != null) currentActivity.Notice = "CQF_DialogGraph_Error".Translate(details);
+                Log.Error("CQF AI execution cleanup: " + details);
+            }
+            finally { if (harness?.Transaction?.CanUndo == true) transaction = harness.Transaction; }
+        }
         private void ToggleCollapsed()
         {
             if (collapsed) windowRect.size = expandedSize;
@@ -476,8 +533,11 @@ namespace QuestEditor_Library
                 currentActivity = new CQFAIActivity(conversation.VisibleMessages.Count());
                 activities.Add(currentActivity);
                 harness.ToolProgress = TrackTool;
+                harness.MapProgress = TrackMapProgress;
+                harness.MapStepApplied = mapFeedback.Add;
                 command = string.Empty;
-                client = new CQFDialogAIClient(setting.dialogAIEndpoint, setting.dialogAIModel, setting.dialogAIKey, setting.dialogAITimeout);
+                requestBudget = new CQFAIRequestBudget(Math.Max(1000, setting.dialogAITokenBudget), Math.Max(1, setting.dialogAIRequestBudget));
+                client = new CQFDialogAIClient(setting.dialogAIEndpoint, setting.dialogAIModel, setting.dialogAIKey, setting.dialogAITimeout) { RequestBudget = requestBudget };
                 cancellation = new CancellationTokenSource();
                 if (setting.dialogAIPlanning)
                 {
@@ -522,7 +582,7 @@ namespace QuestEditor_Library
             CQFAIHarness workerHarness = new CQFAIHarness(model, catalog, workerConversation, null, record.Assignment, false, false, nativeTools,
                 new CQFAITargetCatalog(() => CQFAITargetCatalog.Discover(model)), prompt, inspectionOnly: true);
             workerConversation.Add("user", record.Assignment);
-            CQFDialogAIClient workerClient = new CQFDialogAIClient(endpoint, agentModel, key, timeout);
+            CQFDialogAIClient workerClient = new CQFDialogAIClient(endpoint, agentModel, key, timeout) { RequestBudget = requestBudget };
             bool accounted = false;
             return new CQFAIAgentRunner(record, workerHarness, (worker, cancellationToken) =>
             {
@@ -559,6 +619,20 @@ namespace QuestEditor_Library
             {
                 if (!CustomQuestFramework_ModSetting.setting.dialogAIEnabled) { Cancel(); return; }
                 harness.PollAgents();
+                if (requestBudget?.IsBlocked == true) { PauseBudget(); return; }
+                if (harness.HasPendingResponse)
+                {
+                    if (harness.ActiveMapExecution != null && !CustomQuestFramework_ModSetting.setting.dialogAIAllowEditing) { Cancel(); return; }
+                    if (pendingSteering) { StopExecution(); currentActivity?.NextRound(); RequestMain(); return; }
+                    if (DateTime.UtcNow < nextExecution) return;
+                    int speed = Mathf.Clamp(CustomQuestFramework_ModSetting.setting.dialogAIExecutionSpeed, 0, 3);
+                    nextExecution = DateTime.UtcNow.AddMilliseconds(speed == 0 ? 100 : speed == 1 ? 50 : 0);
+                    bool finished;
+                    try { finished = harness.AdvanceResponse(speed == 0 ? 1 : speed == 1 ? 8 : speed == 2 ? 48 : int.MaxValue, speed == 3 ? 6 : 3); }
+                    finally { if (harness.Transaction?.CanUndo == true) transaction = harness.Transaction; }
+                    if (finished) { FinishResponse(harness.ResponseContinued); chatDirty = true; }
+                    return;
+                }
                 if (task == null)
                 {
                     if (harness.Orchestration?.Waiting == true && !pendingSteering) { currentActivity?.WaitForAgents(); return; }
@@ -593,41 +667,8 @@ namespace QuestEditor_Library
                 }
                 if (!CustomQuestFramework_ModSetting.setting.dialogAIEnabled) throw new InvalidOperationException("CQF_DialogAI_Disabled");
                 if (harness?.Transaction != null && !CustomQuestFramework_ModSetting.setting.dialogAIAllowEditing) throw new InvalidDataException("CQF_AI_ReadOnly");
-                bool continued;
-                try { continued = harness!.Process(response); }
-                finally
-                {
-                    if (harness?.Transaction?.CanUndo == true)
-                    {
-                        transaction = harness.Transaction;
-                    }
-                }
-                XElement[] failures = harness!.LastResults.Where(result => result.Element("error") != null).ToArray();
-                if (failures.Length > 0)
-                {
-                    string details = string.Join("\n", failures.Select(result => result.Element("error")!.Value));
-                    string secret = CustomQuestFramework_ModSetting.setting.dialogAIKey;
-                    if (!string.IsNullOrEmpty(secret)) details = details.Replace(secret, "***");
-                    Log.Warning("CQF AI tool: " + details);
-                    status = "CQF_AI_ToolRetrying".Translate(harness.Rounds) + " " + details;
-                    statusIsError = true;
-                }
-                if (continued)
-                {
-                    currentActivity?.NextRound();
-                    if (harness.Orchestration?.Waiting != true) RequestMain();
-                    else currentActivity?.WaitForAgents();
-                    if (failures.Length == 0) { status = "CQF_AI_ToolWorking".Translate(harness.Rounds); statusIsError = false; }
-                    scrollToEnd = true;
-                    return;
-                }
-                currentActivity?.Complete(harness.TaskState?.Status == "blocked" ? "CQF_AI_ActivityBlocked" : "CQF_AI_ActivityDone");
-                status = (harness.Transaction?.CanUndo != true ? "CQF_AI_Replied" : harness.Transaction is CQFAILiveMapTransaction ? "CQF_AI_AppliedMap" : "CQF_AI_AppliedLive").Translate();
-                statusIsError = false;
-                cancellation?.Cancel(); harness.Orchestration?.Stop(); cancellation?.Dispose();
-                cancellation = null;
-                harness = null;
-                scrollToEnd = true;
+                harness!.BeginResponse(response);
+                nextExecution = DateTime.MinValue;
             }
             catch (OperationCanceledException)
             {
@@ -640,6 +681,36 @@ namespace QuestEditor_Library
             }
             catch (Exception error) { Error(error); }
             finally { SaveChat(); }
+        }
+
+        private void FinishResponse(bool continued)
+        {
+            XElement[] failures = harness!.LastResults.Where(result => result.Element("error") != null).ToArray();
+            if (failures.Length > 0)
+            {
+                string details = string.Join("\n", failures.Select(result => result.Element("error")!.Value));
+                string secret = CustomQuestFramework_ModSetting.setting.dialogAIKey;
+                if (!string.IsNullOrEmpty(secret)) details = details.Replace(secret, "***");
+                Log.Warning("CQF AI tool: " + details);
+                status = "CQF_AI_ToolRetrying".Translate(harness.Rounds) + " " + details;
+                statusIsError = true;
+            }
+            if (continued)
+            {
+                currentActivity?.NextRound();
+                if (harness.Orchestration?.Waiting != true) RequestMain();
+                else currentActivity?.WaitForAgents();
+                if (failures.Length == 0) { status = "CQF_AI_ToolWorking".Translate(harness.Rounds); statusIsError = false; }
+                scrollToEnd = true;
+                return;
+            }
+            currentActivity?.Complete(harness.TaskState?.Status == "blocked" ? "CQF_AI_ActivityBlocked" : "CQF_AI_ActivityDone");
+            status = (harness.Transaction?.CanUndo != true ? "CQF_AI_Replied" : harness.Transaction is CQFAILiveMapTransaction ? "CQF_AI_AppliedMap" : "CQF_AI_AppliedLive").Translate();
+            statusIsError = false;
+            cancellation?.Cancel(); harness.Orchestration?.Stop(); cancellation?.Dispose();
+            cancellation = null;
+            harness = null;
+            scrollToEnd = true;
         }
 
         private void Undo()
@@ -658,6 +729,7 @@ namespace QuestEditor_Library
 
         private void Cancel()
         {
+            StopExecution();
             currentActivity?.Update(client?.LastProgress);
             currentActivity?.Complete("CQF_AI_ActivityStopped", true);
             if (task != null && client?.ReceivedResponse == true) { taskUsage.Add(client.LastUsage); sessionUsage.Add(client.LastUsage); }
@@ -675,6 +747,8 @@ namespace QuestEditor_Library
 
         private void Error(Exception error)
         {
+            if (error.Message == "CQF_AI_BudgetPaused") { PauseBudget(); return; }
+            StopExecution();
             currentActivity?.Complete("CQF_AI_ActivityFailed", true);
             cancellation?.Cancel();
             harness?.Orchestration?.Stop(); currentActivity?.TaskState?.Pause(); pendingSteering = false;
@@ -697,6 +771,14 @@ namespace QuestEditor_Library
             SaveChat();
         }
 
+        private void PauseBudget()
+        {
+            Cancel();
+            status = "CQF_AI_BudgetPaused".Translate(); statusIsError = false;
+            conversation.Add("system", "Task paused at its shared request/token budget. Completed changes remain applied. Continue only after a new player instruction, with fresh state reads and a new budget.", status, true);
+            Log.Warning("CQF AI: " + status);
+            scrollToEnd = true; SaveChat();
+        }
         private CQFAIEditorContext? context;
         private readonly CQFAISessionStore store;
         private CQFAISession session = new CQFAISession();
@@ -707,9 +789,19 @@ namespace QuestEditor_Library
         private readonly CQFAIConversation conversation;
         private readonly List<CQFAIActivity> activities = new List<CQFAIActivity>();
         private CQFAIActivity? currentActivity;
+        private readonly CQFAIMapFeedback mapFeedback = new CQFAIMapFeedback();
+        private DateTime nextExecution;
         private float historyHeight;
+        private readonly List<(CQFAIMessage? message, CQFAIActivity? activity, float height, float cardWidth)> historyRows = new List<(CQFAIMessage?, CQFAIActivity?, float, float)>();
+        private readonly Dictionary<CQFAIOperation, (string label, float width, float height)> operationLayouts = new Dictionary<CQFAIOperation, (string, float, float)>();
+        private CQFAIMessage[] historyMessages = Array.Empty<CQFAIMessage>();
+        private int historyMessageCount;
+        private int historyActivityCount;
+        private float historyWidth;
+        private DateTime nextHistoryLayout;
         private readonly CQFAITokenTotals taskUsage = new CQFAITokenTotals();
         private readonly CQFAITokenTotals sessionUsage = new CQFAITokenTotals();
+        private CQFAIRequestBudget? requestBudget;
         private CQFAITransaction? transaction;
         private CQFAIHarness? harness;
         private Task<string>? task;
@@ -722,6 +814,7 @@ namespace QuestEditor_Library
         private bool collapsed;
         private bool scrollToEnd;
         private bool statusIsError;
+        private bool chatDirty;
         private GUIStyle? composerStyle;
         private Vector2 expandedSize;
         private Vector2 chatScroll;

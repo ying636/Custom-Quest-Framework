@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_ColonistCount cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Widgets.CheckboxLabeled(new Rect(x, y, 325f, 20f), "NeedToBeGreater".Translate(), ref cqfReceiver.needGreater);
             y += 30f;

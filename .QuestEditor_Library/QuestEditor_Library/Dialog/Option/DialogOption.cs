@@ -23,29 +23,29 @@ namespace QuestEditor_Library
 
     public class DialogOption : ISaveable
     {
-        public virtual DialogResult ProduceResult(Thing target,Thing interviwer,Quest quest) 
+        public virtual DialogResult ProduceResult(Thing target,Thing interviwer,Quest quest)
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
             targets.Add("Interviewee", target);
             targets.Add("Interviewer", interviwer);
-            return this.results.Find(r => !r.conditions.Exists(c => !c.Satisfied(targets,out string reason, quest))) 
+            return this.results.Find(r => !r.conditions.Exists(c => !c.Satisfied(targets,out string reason, quest)))
                 ?? new DialogResult() {};
         }
 
         public virtual bool Disabled(Dictionary<string, TargetInfo> targets,Quest quest
         ,out string reason)
-        { 
+        {
             foreach (DialogCondition condition in this.conditions)
             {
                 if (!condition.Satisfied(targets, out reason, quest))
                 {
                     return true;
-                } 
+                }
             }
             reason = null;
             return false;
         }
- 
+
         public virtual List<DialogElement_Option> GetDEOptions(Thing interviewer
             ,Thing interviewee,DialogTreeDef def,Quest quest)
         {
@@ -92,7 +92,7 @@ namespace QuestEditor_Library
                 {
                     GameComponent_Editor.Instance.RemoveDialog(interviewer);
                 }
-                GameTools.ConsumeRequiredThings(interviewer as Pawn, interviewee as Pawn, this.requiredThings); 
+                GameTools.ConsumeRequiredThings(interviewer as Pawn, interviewee as Pawn, this.requiredThings);
             };
             return [result];
         }
@@ -117,7 +117,7 @@ namespace QuestEditor_Library
         {
             Rect rect = new Rect(x + 6f, startY - 2f, width - 12f, Mathf.Max(34f, endY - startY + 4f));
             Widgets.DrawHighlightIfMouseover(rect);
-            Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), CQFUIStyle.Accent, 1f);
         }
         internal void DrawEmptyState(ref float y, float x, float width, string label)
 
@@ -141,7 +141,7 @@ namespace QuestEditor_Library
             {
                 if (node.Value.options.Contains(this))
                 {
-                    parent = node.Value; 
+                    parent = node.Value;
                 }
                 if (this.results.Exists(r => r.nextIndex == node.Key))
                 {
@@ -153,7 +153,7 @@ namespace QuestEditor_Library
             {
                 if (parent.subNodeIndexs.Contains(node.index.Value))
                 {
-                    result += node.GetRequiredSpace(tree);   
+                    result += node.GetRequiredSpace(tree);
                 }
             }
 
@@ -189,10 +189,10 @@ namespace QuestEditor_Library
                 this.conditions.ForEach(c =>
                 {
                     conditions.Add(c.SaveToXElement("li"));
-                });     
+                });
                 result.Add(conditions);
             }
-            if (this.results.Any()) 
+            if (this.results.Any())
             {
                 result.Add(CQFSerialization.SaveList_Saveable(this.results, "results"));
             }

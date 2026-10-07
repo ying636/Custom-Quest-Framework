@@ -14,7 +14,13 @@
   <CQF_SignalBook_InvalidConfigurationName>请输入配置名称，不要使用文件名非法字符或首尾空格。</CQF_SignalBook_InvalidConfigurationName>
   <CQF_SignalBook_InvalidSignal>信号名称不能为空或重复。</CQF_SignalBook_InvalidSignal>
   <CQF_SignalBook_OpenDescription>打开信号本，编辑共用信号，并保存或读取配置。</CQF_SignalBook_OpenDescription>
-  <CQF_SignalBook_SelectSignal>点击从信号本选择信号；也可以直接在文本框中编辑。</CQF_SignalBook_SelectSignal>
+  <CQF_SignalBook_SelectSignal>点击打开信号本选择窗口，也可以手动输入信号。</CQF_SignalBook_SelectSignal>
+  <CQF_SignalBook_Search>搜索</CQF_SignalBook_Search>
+  <CQF_SignalBook_NoSignals>信号本中没有信号。</CQF_SignalBook_NoSignals>
+  <CQF_SignalBook_NoMatches>没有匹配的信号。</CQF_SignalBook_NoMatches>
+  <CQF_SignalBook_ManualInput>手动输入信号后点击选择，不会修改信号本内容。</CQF_SignalBook_ManualInput>
+  <CQF_SignalBook_ClearSelection>清空选择</CQF_SignalBook_ClearSelection>
+  <CQF_SignalBook_SelectionFailed>无法选择信号</CQF_SignalBook_SelectionFailed>
   <CQF_SignalBook_ClearDefaultConfiguration>取消默认</CQF_SignalBook_ClearDefaultConfiguration>
   <CQF_SignalBook_NewConfiguration>新建配置</CQF_SignalBook_NewConfiguration>
   <CQF_SignalBook_UnsavedConfiguration>未保存的配置</CQF_SignalBook_UnsavedConfiguration>

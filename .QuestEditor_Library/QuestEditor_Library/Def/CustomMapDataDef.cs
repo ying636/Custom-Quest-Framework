@@ -31,7 +31,7 @@ namespace QuestEditor_Library
             {
                 Log.Error($"Generate map part error:Mappart={this.defName},Center={center.ToString()},{e.Message}");
             }
-            //if (Prefs.DevMode) 
+            //if (Prefs.DevMode)
             //{
             //    StringBuilder test = new StringBuilder();
             //    test.AppendLine(this.defName);
@@ -55,7 +55,7 @@ namespace QuestEditor_Library
             {
                 Log.Error($"Generate map part error:Mappart={this.defName},Center={center.ToString()},{e.Message}");
             }
-            //if (Prefs.DevMode) 
+            //if (Prefs.DevMode)
             //{
             //    StringBuilder test = new StringBuilder();
             //    test.AppendLine(this.defName);
@@ -166,7 +166,7 @@ namespace QuestEditor_Library
             this.enterSpots.ForEach(add);
             this.routes.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
             this.terrains.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
-            this.terrainsRect.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 => 
+            this.terrainsRect.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 =>
             add(p3))));
             this.terrainsColorRect.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 =>
 add(p3))));
@@ -211,7 +211,7 @@ add(p3))));
                     t.rotation.Rotate(direction);
                 }
             });
-            result.zoneCores.ForEach(c => 
+            result.zoneCores.ForEach(c =>
             {
                 if (c is CustomThingData_ZoneCore core)
                 {
@@ -494,9 +494,9 @@ add(p3))));
                     {
                         this.terrains.Add(def.defName, new List<IntVec3>() { savePos });
                     }
-                } 
-                if (map.terrainGrid.ColorAt(pos) is ColorDef color) 
-                { 
+                }
+                if (map.terrainGrid.ColorAt(pos) is ColorDef color)
+                {
                     if (colors.TryGetValue(color, out List<IntVec3> list))
                     {
                         list.Add(savePos);
@@ -507,13 +507,13 @@ add(p3))));
                     }
                 }
             }
-            this.terrains.ToList().ForEach(t => 
+            this.terrains.ToList().ForEach(t =>
             {
                 List<CellRect> rect = this.GetRect(t.Value.ListFullCopy());
                 this.terrainsRect.SetOrAdd(t.Key,rect);
             });
             colors.ToList().ForEach(t =>
-            { 
+            {
                 List<CellRect> rect = this.GetRect(t.Value.ListFullCopy());
                 this.terrainsColorRect.SetOrAdd(t.Key, rect);
             });
@@ -606,7 +606,7 @@ add(p3))));
                     this.enterSpots.Add(savePos);
                     continue;
                 }
-                if (thing is GenerationActionWorker worker) 
+                if (thing is GenerationActionWorker worker)
                 {
                     this.generationActions.Add(new GenerationAction(savePos,worker.actions));
                     continue;
@@ -644,11 +644,11 @@ add(p3))));
                 this.thingDatas.Add(d);
             });
         }
-        public List<CellRect> GetRect(List<IntVec3> allPos) 
+        public List<CellRect> GetRect(List<IntVec3> allPos)
         {
             List<CellRect> result = new List<CellRect>();
             allPos.SortBy(p => p.DistanceTo(IntVec3.Zero));
-            while (allPos.Any()) 
+            while (allPos.Any())
             {
                 IntVec3 position = allPos.First();
                 int x = position.x;
@@ -662,7 +662,7 @@ add(p3))));
                         position.x++;
                         curX++;
                     }
-                    else 
+                    else
                     {
                         break;
                     }
@@ -680,7 +680,7 @@ add(p3))));
                     }
                     if (unended)
                     {
-                        curZ++; 
+                        curZ++;
                     }
                 }
                 CellRect rect = new CellRect(x, z, curX - x + 1, curZ - z + 1);
@@ -834,7 +834,7 @@ add(p3))));
         public override void PostLoad()
         {
             base.PostLoad();
-            if (!this.zoneCores.Any()) 
+            if (!this.zoneCores.Any())
             {
                 this.zoneCores.AddRange(this.customThings.FindAll(t => t is CustomThingData_ZoneCore));
             }
@@ -952,7 +952,7 @@ add(p3))));
     public class GenerationAction : ISaveable
     {
         public GenerationAction() { }
-        public GenerationAction(IntVec3 pos,List<CQFAction> actions) 
+        public GenerationAction(IntVec3 pos,List<CQFAction> actions)
         {
             this.pos = pos;
             this.actions = actions;
@@ -974,16 +974,16 @@ add(p3))));
         public virtual Dictionary<string, string> ReplaceThings => this.replaceThings;
         public virtual Dictionary<string, string> ReplaceTerrains => this.replaceTerrains;
         public virtual Dictionary<string, string> ReplaceStuffs => this.replaceStuffs;
-        public virtual void Init() 
+        public virtual void Init()
         {
- 
+
         }
 
-        public virtual void Clear() 
+        public virtual void Clear()
         {
-        
+
         }
-        public virtual TerrainDef ReplaceTerrain(TerrainDef def) 
+        public virtual TerrainDef ReplaceTerrain(TerrainDef def)
         {
             if (this.ReplaceTerrains != null && this.ReplaceTerrains.TryGetValue(def.defName, out string result))
             {
@@ -991,7 +991,7 @@ add(p3))));
             }
             return def;
         }
-        public virtual ThingDef ReplaceThing(ThingDef def) 
+        public virtual ThingDef ReplaceThing(ThingDef def)
         {
             if (this.ReplaceThings.TryGetValue(def.defName, out string result))
             {
@@ -1006,7 +1006,7 @@ add(p3))));
                 return ThingDef.Named(result);
             }
             return def;
-        }  
+        }
         public virtual void Draw(ref float y, Rect inRect, float x)
 
         {
@@ -1026,7 +1026,7 @@ add(p3))));
             {
                 result.SetAttributeValue("Class", this.GetType().FullName);
             }
-            if (this.dataName != null) 
+            if (this.dataName != null)
             {
                 result.Add(new XElement("dataName", dataName));
             }
@@ -1066,9 +1066,9 @@ add(p3))));
             }
         }
 
-        public void LoadReplacement(XmlNode xmlRoot) 
+        public void LoadReplacement(XmlNode xmlRoot)
         {
-            switch (xmlRoot.Name) 
+            switch (xmlRoot.Name)
             {
                 case "replaceThings":
                     foreach (object obj in xmlRoot.ChildNodes)
@@ -1130,15 +1130,15 @@ add(p3))));
         internal void DrawReplacementHeader(float y, float x, float width, string title,
             Action addAction, Action removeAction)
         {
-            Widgets.Label(new Rect(x + 12f, y + 9f, width - 96f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x + 12f, y + 9f, width - 96f, 25f), title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(x + width - 72f, y + 6f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 addAction();
             }
             TooltipHandler.TipRegion(addRect, "Add".Translate());
             Rect removeRect = new Rect(x + width - 36f, y + 6f, 28f, 28f);
-            if (Widgets.ButtonImage(removeRect, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(removeRect, TexButton.Delete))
             {
                 removeAction();
             }
@@ -1222,7 +1222,7 @@ add(p3))));
         public override void Init()
         {
             this.data = this.def?.datas.RandomElement();
-             
+
         }
         public override void Clear()
         {

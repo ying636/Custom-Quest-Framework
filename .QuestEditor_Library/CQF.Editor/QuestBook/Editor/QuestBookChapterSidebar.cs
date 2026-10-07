@@ -39,11 +39,11 @@ namespace QuestEditor_Library
             }
             HoveredStep = null;
             Rect panelRect = new Rect(rect.x, rect.y, currentWidth, rect.height);
-            Widgets.DrawMenuSection(panelRect);
+            CQFUIStyle.DrawMenuSection(panelRect);
             if (currentWidth < minWidth + 8f)
             {
                 HoveredStep = null;
-                if (Widgets.ButtonText(new Rect(panelRect.x + 7f, panelRect.y + 8f, 30f, 30f), ">", false))
+                if (CQFUIStyle.ButtonText(new Rect(panelRect.x + 7f, panelRect.y + 8f, 30f, 30f), ">", false))
                 {
                     expandedByClick = true;
                 }
@@ -51,12 +51,12 @@ namespace QuestEditor_Library
                 DrawHoverDetails(rect, rightLimit);
                 return;
             }
-            Widgets.Label(new Rect(panelRect.x + 12f, panelRect.y + 10f, currentWidth - 100f, 28f), "CQF_QuestBook_Chapters".Translate().Colorize(ColorLibrary.SkyBlue));
-            if (Widgets.ButtonText(new Rect(panelRect.xMax - 38f, panelRect.y + 8f, 30f, 30f), "<", false))
+            Widgets.Label(new Rect(panelRect.x + 12f, panelRect.y + 10f, currentWidth - 100f, 28f), "CQF_QuestBook_Chapters".Translate().Colorize(CQFUIStyle.Accent));
+            if (CQFUIStyle.ButtonText(new Rect(panelRect.xMax - 38f, panelRect.y + 8f, 30f, 30f), "<", false))
             {
                 expandedByClick = false;
             }
-            if (Widgets.ButtonText(new Rect(panelRect.xMax - 76f, panelRect.y + 8f, 30f, 30f), "+", false))
+            if (CQFUIStyle.ButtonText(new Rect(panelRect.xMax - 76f, panelRect.y + 8f, 30f, 30f), "+", false))
             {
                 QuestBookChapter chapter = new QuestBookChapter
                 {
@@ -73,10 +73,10 @@ namespace QuestEditor_Library
                 Rect chapterRect = new Rect(panelRect.x + 8f, y, currentWidth - 16f, 34f);
                 if (chapter == SelectedChapter)
                 {
-                    Widgets.DrawHighlightSelected(chapterRect);
+                    CQFUIStyle.DrawHighlightSelected(chapterRect);
                 }
                 bool expanded = expandedChapters.Contains(chapter);
-                if (Widgets.ButtonText(new Rect(chapterRect.x, chapterRect.y, 28f, chapterRect.height), expanded ? "v" : ">", false))
+                if (CQFUIStyle.ButtonText(new Rect(chapterRect.x, chapterRect.y, 28f, chapterRect.height), expanded ? "v" : ">", false))
                 {
                     if (expanded)
                     {
@@ -88,7 +88,7 @@ namespace QuestEditor_Library
                     }
                 }
                 string chapterLabel = chapter.Label.Replace("{0}", (book.chapters.IndexOf(chapter) + 1).ToString());
-                if (Widgets.ButtonText(new Rect(chapterRect.x + 30f, chapterRect.y, chapterRect.width - 66f, chapterRect.height), chapterLabel, false))
+                if (CQFUIStyle.ButtonText(new Rect(chapterRect.x + 30f, chapterRect.y, chapterRect.width - 66f, chapterRect.height), chapterLabel, false))
                 {
                     SelectedChapter = chapter;
                     SelectedStep = null;
@@ -102,7 +102,7 @@ namespace QuestEditor_Library
                     }));
                     UnityEngine.Event.current.Use();
                 }
-                if (Widgets.ButtonText(new Rect(chapterRect.xMax - 30f, chapterRect.y, 30f, chapterRect.height), "+", false))
+                if (CQFUIStyle.ButtonText(new Rect(chapterRect.xMax - 30f, chapterRect.y, 30f, chapterRect.height), "+", false))
                 {
                     chapter.steps.Add(new QuestBookStep
                     {
@@ -121,13 +121,13 @@ namespace QuestEditor_Library
                     Rect stepRect = new Rect(panelRect.x + 28f, y, currentWidth - 36f, 30f);
                     if (step == SelectedStep)
                     {
-                        Widgets.DrawHighlightSelected(stepRect);
+                        CQFUIStyle.DrawHighlightSelected(stepRect);
                     }
                     if (stepRect.Contains(UnityEngine.Event.current.mousePosition))
                     {
                         HoveredStep = step;
                     }
-                    if (Widgets.ButtonText(stepRect, step.Label, false))
+                    if (CQFUIStyle.ButtonText(stepRect, step.Label, false))
                     {
                         SelectedChapter = chapter;
                         SelectedStep = step;
@@ -185,9 +185,9 @@ namespace QuestEditor_Library
             Rect panelRect = new Rect(panelX, panelY, panelWidth, panelHeight);
             Color oldColor = GUI.color;
             GUI.color = new Color(1f, 1f, 1f, detailAlpha);
-            Widgets.DrawBoxSolid(panelRect, new Color(0.035f, 0.045f, 0.055f, 0.98f * detailAlpha));
-            Widgets.DrawBox(panelRect, 1);
-            Widgets.Label(new Rect(panelRect.x + 10f, panelRect.y + 8f, panelRect.width - 20f, 24f), detailStep.Label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.DrawBoxSolid(panelRect, new Color(CQFUIStyle.Panel.r, CQFUIStyle.Panel.g, CQFUIStyle.Panel.b, 0.98f * detailAlpha));
+            CQFUIStyle.DrawBox(panelRect, 1);
+            Widgets.Label(new Rect(panelRect.x + 10f, panelRect.y + 8f, panelRect.width - 20f, 24f), detailStep.Label.Colorize(CQFUIStyle.Accent));
             if (!detailStep.Description.NullOrEmpty())
             {
                 Widgets.Label(new Rect(panelRect.x + 10f, panelRect.y + 34f, panelRect.width - 20f, 52f), detailStep.Description);

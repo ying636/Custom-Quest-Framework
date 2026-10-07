@@ -12,6 +12,7 @@ internal sealed class AIFakeLiveMap : ICQFAILiveMap
     public Dictionary<string, string> Cells { get; } = new();
     public string? FailKey { get; set; }
     public bool FailUndo { get; set; }
+    public int ApplyDelayMilliseconds { get; set; }
     public XElement ReadRegion(CellRect region, int offset, int limit) => new("region", new XAttribute("total", region.Area), new XAttribute("offset", offset),
         region.Skip(offset).Take(limit).Select(cell => new XElement("cell", new XAttribute("x", cell.x), new XAttribute("z", cell.z))));
     public XElement ReadThing(string id) => new("thing", new XAttribute("id", id), model.Write(Things.TryGetValue(id, out var value) ? value : throw new InvalidDataException("CQF_AI_LiveThingMissing"), "configuration", true));
@@ -46,6 +47,7 @@ internal sealed class AIFakeLiveMap : ICQFAILiveMap
                 string? before = null;
                 result.Add(new CQFAILiveMapEdit(key, () =>
                 {
+                    if (ApplyDelayMilliseconds > 0) Thread.Sleep(ApplyDelayMilliseconds);
                     before = Cells.GetValueOrDefault(key); Cells[key] = value;
                     if (FailKey == key) throw new InvalidDataException("CQF_AI_ApplyMismatch");
                 }, () =>

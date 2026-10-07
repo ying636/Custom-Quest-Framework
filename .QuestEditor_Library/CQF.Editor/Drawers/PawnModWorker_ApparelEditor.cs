@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Apparel cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Apparel modData = pawnDef.DataFor<PawnModData_Apparel>();
             cqfReceiver.RemoveDuplicateLayers(modData.apparels);
             foreach (ApparelLayerDef layer in cqfReceiver.AvailableLayers())
@@ -20,7 +21,7 @@ namespace QuestEditor_Library
                 Widgets.DrawLightHighlight(row);
                 ThingData data = cqfReceiver.ApparelForLayer(modData.apparels, layer);
                 Rect layerRect = new Rect(row.x + 8f, row.y + 6f, 120f, 24f);
-                Widgets.Label(layerRect, cqfReceiver.LayerLabel(layer).Colorize(ColorLibrary.PaleBlue));
+                Widgets.Label(layerRect, cqfReceiver.LayerLabel(layer).Colorize(CQFUIStyle.Accent));
                 Rect iconRect = new Rect(layerRect.xMax + 8f, row.y + 4f, 28f, 28f);
                 if (data?.def?.uiIcon != null)
                 {

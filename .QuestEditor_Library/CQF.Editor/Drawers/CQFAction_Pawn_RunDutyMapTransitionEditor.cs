@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Pawn_RunDutyMapTransition cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 260f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_DutyMapDef".Translate(cqfReceiver.dutyMap?.defName ?? "Null"), false))
+            if (CQFUIStyle.ButtonText(rect, "CQF_DutyMapDef".Translate(cqfReceiver.dutyMap?.defName ?? "Null"), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(new TextSelectDrawer<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, d => d.defName, d => cqfReceiver.dutyMap = d, null, null, null, null, null, null), "Select".Translate()));
             }

@@ -19,7 +19,8 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.ReplaceData_Def cqfReceiver, ref float y, Rect inRect, float x)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 250f, 25f), "ReplacementDef".Translate(cqfReceiver.def?.defName), false))
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 250f, 25f), "ReplacementDef".Translate(cqfReceiver.def?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu<ReplacementDataDef>(DefDatabase<ReplacementDataDef>.AllDefsListForReading, d => cqfReceiver.def = d, d => d.defName);
             }

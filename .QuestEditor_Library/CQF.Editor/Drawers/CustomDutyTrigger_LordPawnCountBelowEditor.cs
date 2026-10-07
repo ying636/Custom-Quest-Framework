@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CustomDutyTrigger_LordPawnCountBelow cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CustomDutyTriggerEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_PawnCount".Translate(), ref cqfReceiver.count, ref cqfReceiver.buffer, x, 150f);
             y += 30f;

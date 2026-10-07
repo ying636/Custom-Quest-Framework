@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_DoEffect cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 350f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_EffectDef".Translate(cqfReceiver.effect?.label ?? cqfReceiver.effect?.defName), false))
+            if (CQFUIStyle.ButtonText(rect, "CQF_EffectDef".Translate(cqfReceiver.effect?.label ?? cqfReceiver.effect?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<EffecterDef>.AllDefsListForReading, d => cqfReceiver.effect = d, d => d.label ?? d.defName);
             }

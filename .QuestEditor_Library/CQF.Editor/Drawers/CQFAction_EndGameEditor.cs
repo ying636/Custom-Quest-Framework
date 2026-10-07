@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_EndGame cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawLabelAndText_Line(y, "CQFAction_EndGame_Message".Translate(), ref cqfReceiver.message, x, 150f);
         }

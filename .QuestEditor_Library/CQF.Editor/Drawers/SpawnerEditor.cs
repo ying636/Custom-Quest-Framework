@@ -12,13 +12,17 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.Spawner cqfReceiver)
         {
-            Widgets.BeginScrollView(new Rect(7f, 25f, 475f, 590f), ref cqfReceiver.scrollPos, new Rect(7f, 10f, 475f, cqfReceiver.height));
+            using CQFUIScope scope = new CQFUIScope();
+            Rect viewport = new Rect(8f, 36f, Mathf.Min(490f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, CQFUIScope.ContentHeight - 44f));
+            Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, cqfReceiver.height));
+            Widgets.BeginScrollView(viewport, ref cqfReceiver.scrollPos, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
             float y = 10f;
             float initY = y;
             foreach (PawnSpawnData pawnData in cqfReceiver.pawns)
             {
-                Rect rectData = new Rect(17f, y + 3f, 450f, 25f);
-                if (Widgets.ButtonText(rectData, pawnData.dataName, false))
+                Rect rectData = new Rect(12f, y + 3f, content.width - 24f, 25f);
+                if (CQFUIStyle.ButtonText(rectData, pawnData.dataName, false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(pawnData));
                 }
@@ -26,7 +30,7 @@ namespace QuestEditor_Library
                 y += 30f;
             }
 
-            Widgets.DrawBox(new Rect(7f, initY, 350f, y - initY), 1, QuestEditor_Dialog.blueTex);
+            CQFUIStyle.DrawBox(new Rect(7f, initY, 350f, y - initY), 1, QuestEditor_Dialog.blueTex);
             y += 10f;
             CQFEditorTools.DrawButtonForPawnData(y, cqfReceiver.pawns);
             y += 40f;

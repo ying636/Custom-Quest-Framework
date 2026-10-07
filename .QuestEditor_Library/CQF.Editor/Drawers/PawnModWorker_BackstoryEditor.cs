@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Backstory cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Backstory data = pawnDef.DataFor<PawnModData_Backstory>();
             cqfReceiver.DrawBackstoryButton(ref y, inRect, x, "CQF_PawnEditor_Childhood".Translate(cqfReceiver.ValueOrNone(data.childhood?.title)), backstory => data.childhood = backstory);
             cqfReceiver.DrawBackstoryButton(ref y, inRect, x, "CQF_PawnEditor_Adulthood".Translate(cqfReceiver.ValueOrNone(data.adulthood?.title)), backstory => data.adulthood = backstory);

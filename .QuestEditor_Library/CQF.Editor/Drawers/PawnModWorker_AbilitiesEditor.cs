@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Abilities cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Abilities modData = pawnDef.DataFor<PawnModData_Abilities>();
             Rect addRect = new Rect(x, y, 120f, 30f);
             if (cqfReceiver.DrawCommandText(addRect, "CQF_PawnEditor_Add".Translate()))

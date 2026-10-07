@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Appearance cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Appearance data = pawnDef.DataFor<PawnModData_Appearance>();
             if (cqfReceiver.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_Hair".Translate(cqfReceiver.ValueOrNone(data.hair?.label))))
             {

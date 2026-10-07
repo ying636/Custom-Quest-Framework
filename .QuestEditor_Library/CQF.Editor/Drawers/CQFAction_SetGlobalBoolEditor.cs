@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SetGlobalBool cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawLabelAndText_Line(y, "keyOfBoolValue".Translate(), ref cqfReceiver.keyOfBool, x, 350f);
             y += 30f;

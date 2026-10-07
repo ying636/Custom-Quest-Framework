@@ -16,21 +16,23 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.LootBox cqfReceiver)
         {
-            Rect outRect = new Rect(8f, 18f, 536f, 584f);
-            Rect viewRect = new Rect(0f, 0f, 516f, cqfReceiver.height);
+            using CQFUIScope scope = new CQFUIScope();
+            Rect outRect = new Rect(8f, 18f, Mathf.Max(80f, Mathf.Min(536f, CQFUIScope.ContentWidth - 16f)), Mathf.Max(40f, Mathf.Min(584f, CQFUIScope.ContentHeight - 26f)));
+            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, cqfReceiver.height));
             Widgets.BeginScrollView(outRect, ref cqfReceiver.scrollPos, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
             float y = 8f;
             cqfReceiver.DrawSectionHeader(ref y, viewRect.width, "LootBox".Translate());
-            CQFEditorTools.DrawLabelAndText_Line(y, "LootBoxName".Translate(), ref cqfReceiver.lootBoxName, 16f, 300f);
-            Rect rectCP = new Rect(448f, y, 25f, 25f);
-            if (Widgets.ButtonImage(rectCP, TexButton.Copy))
+            CQFEditorTools.DrawLabelAndText_Line(y, "LootBoxName".Translate(), ref cqfReceiver.lootBoxName, 16f, Mathf.Max(40f, viewRect.width - 262f));
+            Rect rectCP = new Rect(viewRect.width - 70f, y, 25f, 25f);
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Copy))
             {
                 cqfReceiver.CopyData();
             }
 
             TooltipHandler.TipRegion(rectCP, "Copy".Translate());
             rectCP.x += 30f;
-            if (Widgets.ButtonImage(rectCP, TexButton.Paste))
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Paste))
             {
                 cqfReceiver.PasteData();
             }
@@ -40,7 +42,7 @@ namespace QuestEditor_Library
             Rect saveRect = cqfReceiver.DrawSectionHeader(ref y, viewRect.width, cqfReceiver.useLootDef ? "CQF_UseLootDataDef".Translate() : "CQF_CustomLootData".Translate(), !cqfReceiver.useLootDef, !cqfReceiver.useLootDef);
             if (cqfReceiver.useLootDef)
             {
-                if (Widgets.ButtonText(new Rect(16f, y, 450f, 28f), "LootDef".Translate(cqfReceiver.lootDef?.defName), false))
+                if (CQFUIStyle.ButtonText(new Rect(16f, y, viewRect.width - 32f, 28f), "LootDef".Translate(cqfReceiver.lootDef?.defName), false))
                 {
                     CQFEditorTools.DrawFloatMenu(DefDatabase<LootDataDef>.AllDefsListForReading, d => cqfReceiver.lootDef = d, d => d.defName);
                 }
@@ -49,7 +51,7 @@ namespace QuestEditor_Library
             }
             else
             {
-                if (Widgets.ButtonImage(saveRect, CQFEditorTools.icon_Save))
+                if (CQFUIStyle.ButtonImage(saveRect, CQFEditorTools.icon_Save))
                 {
                     LongEventHandler.QueueLongEvent(() =>
                     {
@@ -72,10 +74,10 @@ namespace QuestEditor_Library
 
                 TooltipHandler.TipRegion(saveRect, "SaveAsDef".Translate());
                 float initY = y;
-                Rect rectData = new Rect(20f, y + 3f, 454f, 28f);
+                Rect rectData = new Rect(20f, y + 3f, viewRect.width - 40f, 28f);
                 foreach (LootData data in cqfReceiver.loots)
                 {
-                    if (Widgets.ButtonText(rectData, data.dataName + "  " + data.chance * 100f + "%", false))
+                    if (CQFUIStyle.ButtonText(rectData, data.dataName + "  " + data.chance * 100f + "%", false))
                     {
                         Find.WindowStack.Add(new Dialog_EditIDrawable(data));
                     }
@@ -87,23 +89,24 @@ namespace QuestEditor_Library
 
                 if (!cqfReceiver.loots.Any())
                 {
-                    Widgets.Label(new Rect(20f, y + 4f, 454f, 25f), "CQF_NoLootData".Translate().Colorize(Color.gray));
+                    Widgets.Label(new Rect(20f, y + 4f, viewRect.width - 40f, 25f), "CQF_NoLootData".Translate().Colorize(CQFUIStyle.Muted));
                     y += 32f;
                 }
 
-                Widgets.DrawBox(new Rect(10f, initY, 474f, y - initY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(10f, initY, viewRect.width - 20f, y - initY), 1, QuestEditor_Dialog.blueTex);
                 y += 10f;
-                if (Widgets.ButtonText(new Rect(10f, y, 132f, 32f), "AddNewLootData".Translate()))
+                float buttonWidth = Mathf.Min(132f, (viewRect.width - 36f) / 3f);
+                if (CQFUIStyle.ButtonText(new Rect(10f, y, buttonWidth, 32f), "AddNewLootData".Translate()))
                 {
                     cqfReceiver.loots.Add(new LootData());
                 }
 
-                if (Widgets.ButtonText(new Rect(156f, y, 132f, 32f), "Paste".Translate()) && CQFEditorTools.lootData != null)
+                if (CQFUIStyle.ButtonText(new Rect(18f + buttonWidth, y, buttonWidth, 32f), "Paste".Translate()) && CQFEditorTools.lootData != null)
                 {
                     cqfReceiver.loots.Add(CQFEditorTools.lootData.Copy());
                 }
 
-                if (Widgets.ButtonText(new Rect(302f, y, 132f, 32f), "DeleteLootData".Translate()) && cqfReceiver.loots.Any())
+                if (CQFUIStyle.ButtonText(new Rect(26f + buttonWidth * 2f, y, buttonWidth, 32f), "DeleteLootData".Translate()) && cqfReceiver.loots.Any())
                 {
                     CQFEditorTools.DrawFloatMenu(cqfReceiver.loots, (x) => cqfReceiver.loots.Remove(x), (x) => x.dataName);
                 }
@@ -116,11 +119,11 @@ namespace QuestEditor_Library
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "TickToOpenLoot".Translate(), ref cqfReceiver.tickToOpen, ref cqfReceiver.buffer, 16f, 220f);
             y += 30f;
-            Widgets.CheckboxLabeled(new Rect(16f, y, 300f, 25f), "DestroyAfterOpening".Translate(), ref cqfReceiver.destroyAfterOpening);
+            Widgets.CheckboxLabeled(new Rect(16f, y, viewRect.width - 32f, 25f), "DestroyAfterOpening".Translate(), ref cqfReceiver.destroyAfterOpening);
             y += 30f;
-            Widgets.CheckboxLabeled(new Rect(16f, y, 300f, 25f), "OpenWhenDestroyed".Translate(), ref cqfReceiver.openWhenDestroyed);
+            Widgets.CheckboxLabeled(new Rect(16f, y, viewRect.width - 32f, 25f), "OpenWhenDestroyed".Translate(), ref cqfReceiver.openWhenDestroyed);
             y += 30f;
-            Widgets.CheckboxLabeled(new Rect(16f, y, 420f, 25f), "UseLootDef".Translate(), ref cqfReceiver.useLootDef);
+            Widgets.CheckboxLabeled(new Rect(16f, y, viewRect.width - 32f, 25f), "UseLootDef".Translate(), ref cqfReceiver.useLootDef);
             y += 30f;
             cqfReceiver.height = y + 15f;
             Widgets.EndScrollView();
@@ -156,19 +159,18 @@ namespace QuestEditor_Library
         public static Rect DrawSectionHeader_3(QuestEditor_Library.LootBox cqfReceiver, ref float y, float width, string label, bool drawSaveButton = false, bool skipLine = false)
         {
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(10f, y, width - 20f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(10f, y, width - (drawSaveButton ? 64f : 20f), 30f), label.Colorize(CQFUIStyle.Accent));
             Rect saveRect = Rect.zero;
             if (drawSaveButton)
             {
-                float labelWidth = Text.CalcSize(label).x;
-                saveRect = new Rect(Mathf.Min(10f + labelWidth + 12f, width - 52f), y + 2f, 25f, 25f);
+                saveRect = new Rect(width - 44f, y + 2f, 25f, 25f);
             }
 
             Text.Font = GameFont.Small;
             y += 32f;
             if (!skipLine)
             {
-                Widgets.DrawLine(new Vector2(10f, y), new Vector2(width - 20f, y), ColorLibrary.SkyBlue, 1f);
+                Widgets.DrawLine(new Vector2(10f, y), new Vector2(width - 20f, y), CQFUIStyle.Accent, 1f);
                 y += 10f;
             }
             else

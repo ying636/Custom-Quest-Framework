@@ -26,7 +26,7 @@ namespace QuestEditor_Library
 
         public static void DrawBookField(Rect labelRect, Rect fieldRect, string label, string? value, Action<string> selected, bool allowContextKeys = true)
         {
-            if (Widgets.ButtonText(labelRect, label, drawBackground: false, overrideTextAnchor: TextAnchor.MiddleLeft))
+            if (CQFUIStyle.ButtonText(labelRect, label, drawBackground: false, overrideTextAnchor: TextAnchor.MiddleLeft))
             {
                 ShowMenu(selected, allowContextKeys);
             }

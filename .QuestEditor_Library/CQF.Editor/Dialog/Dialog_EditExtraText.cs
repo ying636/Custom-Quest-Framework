@@ -36,15 +36,19 @@ namespace QuestEditor_Library
         }
         public override void DoWindowContents(Rect inRect)
         {
-            float width = inRect.width - 16f;
-            Widgets.BeginScrollView(new Rect(0f, 0f, width, 600f), ref this.scrollPosition, new Rect(0f, 0f, width, 670f + (35f * this.node.options.Count)));
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+            Rect content = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, height));
+            Widgets.BeginScrollView(inRect, ref this.scrollPosition, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
             float y = 5f;
-            CQFEditorTools.DrawEditableStringList(this.node.extraText,ref y, "ExtraDialogText".Translate().Colorize(ColorLibrary.SkyBlue));
+            CQFEditorTools.DrawEditableStringList(this.node.extraText,ref y, "ExtraDialogText".Translate().Colorize(CQFUIStyle.Accent));
+            height = y + 12f;
             Widgets.EndScrollView();
         }
 
         public DialogNode node;
         private Vector2 scrollPosition;
+        private float height;
         public static readonly Vector2 initSize = new Vector2(600f, 500f);
     }
 }

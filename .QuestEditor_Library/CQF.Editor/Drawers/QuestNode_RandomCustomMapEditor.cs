@@ -14,8 +14,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.QuestNode_RandomCustomMap cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             QuestNode_Root_CustomMapEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             y += 10f;
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 92f), 25f), "MapTags".Translate());
             CQFEditorTools.DrawButtonWithIcon(y, () => Find.WindowStack.Add(new Window_StringAndChance((t, c) => cqfReceiver.tags.SetOrAdd(t, c))), () =>
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
@@ -25,14 +27,14 @@ namespace QuestEditor_Library
                 }
 
                 Find.WindowStack.Add(new FloatMenu(options));
-            }, x + 400f);
-            float y2 = y + 60f;
-            Widgets.Label(new Rect(x + 400f, y + 30f, 350f, 25f), "MapTags".Translate());
-            cqfReceiver.tags.ToList().ForEach(t =>
+            }, inRect.width - 80f);
+            y += 34f;
+            foreach (KeyValuePair<string, float> tag in cqfReceiver.tags)
             {
-                Widgets.Label(new Rect(x + 400f, y2, 350f, 25f), t.Key + "*" + t.Value);
-                y2 += 30f;
-            });
+                Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), tag.Key + "*" + tag.Value);
+                y += 30f;
+            }
+            y += 10f;
             CQFEditorTools.DrawButtonWithIcon(y, () => Find.WindowStack.Add(new Window_AddMapWithChance() { action = (data, chance) => cqfReceiver.datas.Add(data, chance) }), () =>
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
@@ -50,8 +52,10 @@ namespace QuestEditor_Library
                 datas.AppendLine(data.Key + "，" + "GenerationChance".Translate() + data.Value * 100f + "%");
             }
 
-            Widgets.Label(new Rect(x + 7f, y, 350f, 500f), "MapDatas".Translate(datas.ToString()));
-            y += 180f;
+            string text = "MapDatas".Translate(datas.ToString());
+            float dataHeight = Mathf.Max(25f, Text.CalcHeight(text, Mathf.Max(40f, inRect.width - x - 19f)));
+            Widgets.Label(new Rect(x + 7f, y, Mathf.Max(40f, inRect.width - x - 19f), dataHeight), text);
+            y += dataHeight + 12f;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace QuestEditor_Library
         public CustomThingData GetData(IntVec3 pos)
         {
             return new CustomThingData_CustomDoor(this, pos);
-        }   
+        }
         public override void ExposeData()
         {
             base.ExposeData();
@@ -75,7 +75,7 @@ namespace QuestEditor_Library
         {
             Rect rect = new Rect(x + 6f, startY - 2f, width - 12f, Mathf.Max(34f, endY - startY + 4f));
             Widgets.DrawHighlightIfMouseover(rect);
-            Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), CQFUIStyle.Accent, 1f);
         }
         internal void DrawEmptyState(ref float y, float x, float width, string label)
 

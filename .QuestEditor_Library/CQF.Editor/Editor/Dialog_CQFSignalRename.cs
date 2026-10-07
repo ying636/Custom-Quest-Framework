@@ -29,16 +29,18 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height - 90f);
             Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, Text.CalcHeight(this.preview, outRect.width - 20f)));
             Widgets.BeginScrollView(outRect, ref this.scroll, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             Widgets.Label(viewRect, this.preview);
             Widgets.EndScrollView();
             if (this.changes.Count > 0)
             {
                 Widgets.CheckboxLabeled(new Rect(0f, inRect.height - 80f, inRect.width, 30f), "CQF_MapSignals_SyncReferences".Translate(), ref this.syncReferences);
             }
-            if (Widgets.ButtonText(new Rect(0f, inRect.height - 38f, inRect.width * 0.5f - 6f, 36f), "Confirm".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 38f, inRect.width * 0.5f - 6f, 36f), "Confirm".Translate()))
             {
                 if (this.operation.interactionText != this.previousName || this.syncReferences && this.changes.Any(change => !change.IsCurrent))
                 {
@@ -54,10 +56,9 @@ namespace QuestEditor_Library
                     }
                 }
                 this.operation.interactionText = this.newName;
-                CQFSignalEditor.InvalidateSummary(this.operation);
                 this.Close();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width * 0.5f + 6f, inRect.height - 38f, inRect.width * 0.5f - 6f, 36f), "Cancel".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width * 0.5f + 6f, inRect.height - 38f, inRect.width * 0.5f - 6f, 36f), "Cancel".Translate()))
             {
                 this.Close();
             }

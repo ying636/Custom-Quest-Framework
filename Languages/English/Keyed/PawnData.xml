@@ -78,4 +78,9 @@ When spawning, the spawned pawn will be recorded in the &quot;quest database&quo
   <MainPawnRegenerateIfDead>Regenerate if dead</MainPawnRegenerateIfDead>
   <MainPawnGenerateConditions>Generate conditions</MainPawnGenerateConditions>
   <MainPawnRegenerateConditions>Regenerate conditions</MainPawnRegenerateConditions>
+  <CQF_PawnData_GenerationSettings>Generation settings</CQF_PawnData_GenerationSettings>
+  <CQF_PawnData_LordAndDialog>Lord and dialogue</CQF_PawnData_LordAndDialog>
+  <CQF_PawnData_Inventory>Inventory</CQF_PawnData_Inventory>
+  <CQF_PawnData_MissingKind>Select a pawn kind.</CQF_PawnData_MissingKind>
+  <CQF_PawnData_InvalidCount>The maximum count must be at least 1.</CQF_PawnData_InvalidCount>
 </LanguageData>

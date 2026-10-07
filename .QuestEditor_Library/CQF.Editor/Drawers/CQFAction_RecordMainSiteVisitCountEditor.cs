@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_RecordMainSiteVisitCount cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), cqfReceiver.key, value => cqfReceiver.key = value, x, 150f, inRect.width - x - 20f);
             y += 30f;

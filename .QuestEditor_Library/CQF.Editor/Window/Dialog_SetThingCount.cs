@@ -20,6 +20,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             GameFont oldFont = Text.Font;
             TextAnchor oldAnchor = Text.Anchor;
             Text.Font = GameFont.Small;
@@ -54,11 +55,11 @@ namespace QuestEditor_Library
             GUI.color = Color.white;
 
             float buttonWidth = (inRect.width - 10f) / 2f;
-            if (Widgets.ButtonText(new Rect(inRect.x, inRect.yMax - 30f, buttonWidth, 30f), "CancelButton".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.x, inRect.yMax - 30f, buttonWidth, 30f), "CancelButton".Translate()))
             {
                 this.Close();
             }
-            if (Widgets.ButtonText(new Rect(inRect.x + buttonWidth + 10f, inRect.yMax - 30f, buttonWidth, 30f), "OK".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.x + buttonWidth + 10f, inRect.yMax - 30f, buttonWidth, 30f), "OK".Translate()))
             {
                 this.Close();
                 this.confirmAction(this.value);

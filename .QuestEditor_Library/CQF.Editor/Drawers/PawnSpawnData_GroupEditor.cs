@@ -17,8 +17,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnSpawnData_Group cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             Rect rect = new Rect(20f + x, y, 250f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_PawnGroupDef".Translate(cqfReceiver.group?.defName), false))
+            if (CQFUIStyle.ButtonText(rect, "CQF_PawnGroupDef".Translate(cqfReceiver.group?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu<GroupDataDef>(DefDatabase<GroupDataDef>.AllDefsListForReading, (k) => cqfReceiver.group = k, (k) =>
                 {

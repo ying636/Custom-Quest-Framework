@@ -14,6 +14,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.ZoneCondition_Tag cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             ZoneConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawEditableStringList(cqfReceiver.tags, ref y, "CustomMapTags".Translate(), null, true, x);
         }

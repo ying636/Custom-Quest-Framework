@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SetXenotype cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
-            if (Widgets.ButtonText(rect, "CQFXenotypeDef".Translate(cqfReceiver.xenotype?.label), false))
+            if (CQFUIStyle.ButtonText(rect, "CQFXenotypeDef".Translate(cqfReceiver.xenotype?.label), false))
             {
                 CQFEditorTools.DrawFloatMenu<XenotypeDef>(DefDatabase<XenotypeDef>.AllDefsListForReading, (d) => cqfReceiver.xenotype = d, (d) => d.label.Translate());
             }

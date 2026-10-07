@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_Age cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogCondition_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawLabelAndText_Line(y, "CQFAge".Translate(), ref cqfReceiver.age, ref cqfReceiver.buffer, x);
             y += 30f;

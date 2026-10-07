@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQF_EditorActionReferencePreview>动作引用预览（不执行动作）</CQF_EditorActionReferencePreview>
   <CQF_EditorAllMatchingResults>执行所有满足条件的结果</CQF_EditorAllMatchingResults>
-  <CQF_EditorCheck>检查</CQF_EditorCheck>
-  <CQF_EditorCheckConditionsOnly>仅检查条件</CQF_EditorCheckConditionsOnly>
-  <CQF_EditorCheckFailed>检查失败</CQF_EditorCheckFailed>
   <CQF_EditorEmptyClipboard>交互剪贴板为空。</CQF_EditorEmptyClipboard>
   <CQF_EditorFirstMatchingResult>执行首个满足条件的结果</CQF_EditorFirstMatchingResult>
   <CQF_EditorMoveDown>下移</CQF_EditorMoveDown>
@@ -12,15 +8,11 @@
   <CQF_EditorPasteFailed>粘贴交互失败</CQF_EditorPasteFailed>
   <CQF_EditorReplace>替换现有交互</CQF_EditorReplace>
   <CQF_EditorSignal>信号</CQF_EditorSignal>
-  <CQF_EditorSkipped>跳过</CQF_EditorSkipped>
   <CQF_EditorStateKey>状态键</CQF_EditorStateKey>
   <CQF_EditorTargetKey>目标键</CQF_EditorTargetKey>
   <CQF_EditorTargetUnavailable>目标已不可用。</CQF_EditorTargetUnavailable>
-  <CQF_EditorTestPawn>用于检查的角色</CQF_EditorTestPawn>
   <CQF_EditorUndoPaste>撤销粘贴</CQF_EditorUndoPaste>
   <CQF_EditorUnreachableResult>按当前执行顺序无法触发此结果。</CQF_EditorUnreachableResult>
-  <CQF_EditorUnresolvedOrExternal>未解析或外部引用</CQF_EditorUnresolvedOrExternal>
-  <CQF_EditorWouldExecute>将执行</CQF_EditorWouldExecute>
   <CQF_MapSignals_Automatic>自动生成的信号</CQF_MapSignals_Automatic>
   <CQF_MapSignals_ChangedReference>引用的信号已发生变化，请重新打开重命名窗口。</CQF_MapSignals_ChangedReference>
   <CQF_MapSignals_Connected>已关联的信号</CQF_MapSignals_Connected>
@@ -33,7 +25,6 @@
   <CQF_MapSignals_Part>地图部分</CQF_MapSignals_Part>
   <CQF_MapSignals_Quest>任务</CQF_MapSignals_Quest>
   <CQF_MapSignals_References>引用</CQF_MapSignals_References>
-  <CQF_MapSignals_Refresh>刷新</CQF_MapSignals_Refresh>
   <CQF_MapSignals_RenameImpact>重命名影响的信号</CQF_MapSignals_RenameImpact>
   <CQF_MapSignals_ScopeMismatch>信号名称相同，但有效范围不同。</CQF_MapSignals_ScopeMismatch>
   <CQF_MapSignals_SyncReferences>同步修改引用信号</CQF_MapSignals_SyncReferences>
@@ -51,4 +42,5 @@
   <CQF_TargetPickerTitle>选择目标</CQF_TargetPickerTitle>
   <CQF_TargetPickOnMap>在地图上选择</CQF_TargetPickOnMap>
   <CQF_TargetRegisterKey>登记目标键</CQF_TargetRegisterKey>
+  <CQF_MapSignals_InteractionInputHint>点击从信号本选择信号，或在选择窗口中手动输入。后缀与交互名称一致，选择时也会修改该名称；任务或对象前缀由运行时添加。</CQF_MapSignals_InteractionInputHint>
 </LanguageData>

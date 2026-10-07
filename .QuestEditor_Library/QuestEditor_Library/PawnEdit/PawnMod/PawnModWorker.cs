@@ -83,12 +83,12 @@ namespace QuestEditor_Library
         protected internal bool DrawTextButton(Rect rect, string label, TextAnchor anchor = TextAnchor.MiddleLeft)
         {
             Widgets.DrawHighlightIfMouseover(rect);
-            return Widgets.ButtonText(rect, label, false, true, true, anchor);
+            return CQFUIStyle.ButtonText(rect, label, false, true, true, anchor);
         }
 
         protected internal bool DrawCommandText(Rect rect, string label)
         {
-            return this.DrawTextButton(rect, label.Colorize(ColorLibrary.PaleBlue), TextAnchor.MiddleCenter);
+            return this.DrawTextButton(rect, label.Colorize(CQFUIStyle.Accent), TextAnchor.MiddleCenter);
         }
 
         protected internal bool DrawSelectRow(ref float y, Rect inRect, float x, string label, float height = 30f)
@@ -201,7 +201,7 @@ namespace QuestEditor_Library
         internal void DrawColorSwatch(Rect rect, Color color)
         {
             Widgets.DrawBoxSolid(rect, color);
-            Widgets.DrawBox(rect);
+            CQFUIStyle.DrawBox(rect);
         }
 
         public PawnModDef def;

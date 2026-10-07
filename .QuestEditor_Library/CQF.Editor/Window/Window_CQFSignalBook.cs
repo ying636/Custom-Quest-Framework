@@ -24,6 +24,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             if (this.revision != CQFSignalBook.Revision)
             {
                 this.RefreshDrafts();
@@ -31,12 +32,12 @@ namespace QuestEditor_Library
             Text.Font = GameFont.Small;
             Widgets.Label(new Rect(0f, 0f, inRect.width - 148f, 24f), "CQF_SignalBook_Title".Translate() + " (" + this.drafts.Count + ")");
             float toolbarX = inRect.width - 138f;
-            if (Widgets.ButtonImage(new Rect(toolbarX, 1f, 22f, 22f), TexButton.NewFile,
+            if (CQFUIStyle.ButtonImage(new Rect(toolbarX, 1f, 22f, 22f), TexButton.NewFile,
                 tooltip: "CQF_SignalBook_NewConfiguration".Translate()))
             {
                 this.OpenConfigurationName(true);
             }
-            if (Widgets.ButtonImage(new Rect(toolbarX + 28f, 1f, 22f, 22f), TexButton.Save,
+            if (CQFUIStyle.ButtonImage(new Rect(toolbarX + 28f, 1f, 22f, 22f), TexButton.Save,
                 tooltip: "CQF_SignalBook_SaveConfiguration".Translate()))
             {
                 if (CQFSignalBook.CurrentConfigurationName.Length == 0)
@@ -48,14 +49,14 @@ namespace QuestEditor_Library
                     this.Execute(() => this.SaveConfiguration(CQFSignalBook.CurrentConfigurationName));
                 }
             }
-            if (Widgets.ButtonImage(new Rect(toolbarX + 56f, 1f, 22f, 22f), TexButton.Reload,
+            if (CQFUIStyle.ButtonImage(new Rect(toolbarX + 56f, 1f, 22f, 22f), TexButton.Reload,
                 tooltip: "CQF_SignalBook_LoadConfiguration".Translate()))
             {
                 this.ShowConfigurations(this.LoadConfiguration);
             }
             string defaultName = CQFSignalBook.DefaultConfigurationName.Length > 0
                 ? CQFSignalBook.DefaultConfigurationName : "CQF_SignalBook_NoDefaultConfiguration".Translate().ToString();
-            if (Widgets.ButtonImage(new Rect(toolbarX + 84f, 1f, 22f, 22f), TexButton.AutoHomeArea,
+            if (CQFUIStyle.ButtonImage(new Rect(toolbarX + 84f, 1f, 22f, 22f), TexButton.AutoHomeArea,
                 tooltip: "CQF_SignalBook_SetDefaultConfiguration".Translate() + "\n"
                     + "CQF_SignalBook_DefaultConfiguration".Translate() + ": " + defaultName))
             {
@@ -73,7 +74,7 @@ namespace QuestEditor_Library
                 configurationText += " *";
             }
             Rect configurationRect = new Rect(0f, 30f, inRect.width - 30f, 24f);
-            if (Widgets.ButtonText(configurationRect, configurationText.Truncate(configurationRect.width), drawBackground: false, overrideTextAnchor: TextAnchor.MiddleLeft))
+            if (CQFUIStyle.ButtonText(configurationRect, configurationText.Truncate(configurationRect.width), drawBackground: false, overrideTextAnchor: TextAnchor.MiddleLeft))
             {
                 this.ShowConfigurations(this.LoadConfiguration);
             }
@@ -82,7 +83,7 @@ namespace QuestEditor_Library
                 this.validationError.Message.CanTranslate() ? this.validationError.Message.Translate().ToString() : this.validationError.Message,
                 inRect.width) + 6f;
             Rect outRect = new Rect(0f, 62f, inRect.width, inRect.height - 66f - errorHeight);
-            if (Widgets.ButtonImage(new Rect(inRect.width - 22f, 30f, 22f, 22f), TexButton.Plus,
+            if (CQFUIStyle.ButtonImage(new Rect(inRect.width - 22f, 30f, 22f, 22f), TexButton.Plus,
                 tooltip: "CQF_SignalBook_AddSignal".Translate()))
             {
                 this.drafts.Add(string.Empty);
@@ -91,6 +92,7 @@ namespace QuestEditor_Library
             }
             Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.drafts.Count * 28f));
             Widgets.BeginScrollView(outRect, ref this.scroll, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             bool changed = false;
             for (int index = 0; index < this.drafts.Count; index++)
             {
@@ -103,7 +105,7 @@ namespace QuestEditor_Library
                     this.drafts[index] = value;
                     changed = true;
                 }
-                if (Widgets.ButtonImage(new Rect(viewRect.width - 22f, y + 1f, 20f, 20f), TexButton.Delete, tooltip: "Remove".Translate()))
+                if (CQFUIStyle.ButtonImage(new Rect(viewRect.width - 22f, y + 1f, 20f, 20f), TexButton.Delete, tooltip: "Remove".Translate()))
                 {
                     this.drafts.RemoveAt(index);
                     changed = true;

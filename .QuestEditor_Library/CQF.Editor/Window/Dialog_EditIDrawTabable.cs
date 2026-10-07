@@ -23,6 +23,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             using (new CQFEditorContext(this.iDrawable as Thing))
             {
                 this.iDrawable.DrawTab();

@@ -10,18 +10,19 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CustomMapStep_BackgroundEffects cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             cqfReceiver.backgroundEffects ??= new List<CustomMapBackgroundEffectDef>();
             float width = inRect.width - x - 12f;
-            Widgets.Label(new Rect(x, y, width - 72f, 30f), "CustomMapStep_BackgroundEffects".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x, y, width - 72f, 30f), "CustomMapStep_BackgroundEffects".Translate().Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(x + width - 64f, y, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 Find.WindowStack.Add(new Dialog_Select<CustomMapBackgroundEffectDef>(new TextSelectDrawer<CustomMapBackgroundEffectDef>(DefDatabase<CustomMapBackgroundEffectDef>.AllDefsListForReading, def => def.LabelCap, def => cqfReceiver.backgroundEffects.Add(def), null, def => def.description, null, null, null, null), "CQF_MapBackgroundSelectDynamicEffect".Translate()));
             }
 
             TooltipHandler.TipRegion(addRect, "Add".Translate());
             Rect removeRect = new Rect(x + width - 28f, y, 28f, 28f);
-            if (Widgets.ButtonImage(removeRect, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(removeRect, TexButton.Delete))
             {
                 CQFEditorTools.DrawFloatMenu(cqfReceiver.backgroundEffects.Where(effect => effect != null).ToList(), effect => cqfReceiver.backgroundEffects.Remove(effect), effect => effect.LabelCap);
             }

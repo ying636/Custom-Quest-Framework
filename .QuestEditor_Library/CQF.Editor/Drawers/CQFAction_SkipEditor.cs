@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Skip cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), cqfReceiver.skipedTargetText, value => cqfReceiver.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
             y += 30f;

@@ -14,12 +14,16 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.ZoneCore cqfReceiver)
         {
-            Widgets.BeginScrollView(new Rect(0f, 5f, 490f, 590f), ref cqfReceiver.scrollPos, new Rect(0f, 5f, 490f, cqfReceiver.height));
+            using CQFUIScope scope = new CQFUIScope();
+            Rect viewport = new Rect(8f, 36f, Mathf.Min(490f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, CQFUIScope.ContentHeight - 44f));
+            Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, cqfReceiver.height));
+            Widgets.BeginScrollView(viewport, ref cqfReceiver.scrollPos, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
             float y = 10f;
             float x = 7f;
-            Rect rect = new Rect(x, y, 250f, 25f);
+            Rect rect = new Rect(x, y, Mathf.Min(250f, content.width - x - 52f), 25f);
             Func<Rot4, string> GetText = r => r == Rot4.Invalid ? "Rot_Invalid".Translate().ToString() : r.ToStringHuman().Translate().ToString();
-            if (Widgets.ButtonText(rect, "CoreZoneRotation".Translate(cqfReceiver.isCenter ? "Rot_Invalid".Translate().ToString() : GetText(cqfReceiver.coreRotation)), false))
+            if (CQFUIStyle.ButtonText(rect, "CoreZoneRotation".Translate(cqfReceiver.isCenter ? "Rot_Invalid".Translate().ToString() : GetText(cqfReceiver.coreRotation)), false))
             {
                 CQFEditorTools.DrawFloatMenu(new List<Rot4>() { Rot4.West, Rot4.East, Rot4.North, Rot4.South, Rot4.Invalid }, (r) =>
                 {
@@ -29,16 +33,16 @@ namespace QuestEditor_Library
             }
 
             TooltipHandler.TipRegion(rect, "CoreZoneRotationTip".Translate());
-            Rect rectCP = new Rect(380f, y, 25f, 25f);
-            if (Widgets.ButtonImage(rectCP, TexButton.Copy))
+            Rect rectCP = new Rect(content.width - 40f, y, 25f, 25f);
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Copy))
             {
                 cqfReceiver.CopyData();
             }
 
             TooltipHandler.TipRegion(rectCP, "Copy".Translate());
             y += 30f;
-            Rect reserveRect = new Rect(x, y, 300f, 25f);
-            if (Widgets.ButtonText(reserveRect, "ReserveGenerationThing".Translate(cqfReceiver.reserveThing == null ? "NoGenerate".Translate().ToString() : cqfReceiver.reserveThing?.stuff?.label + cqfReceiver.reserveThing?.def?.label), false))
+            Rect reserveRect = new Rect(x, y, content.width - x - 88f, 25f);
+            if (CQFUIStyle.ButtonText(reserveRect, "ReserveGenerationThing".Translate(cqfReceiver.reserveThing == null ? "NoGenerate".Translate().ToString() : cqfReceiver.reserveThing?.stuff?.label + cqfReceiver.reserveThing?.def?.label), false))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 options.Add(new FloatMenuOption("NoGenerate".Translate(), () => cqfReceiver.reserveThing = null));
@@ -63,14 +67,14 @@ namespace QuestEditor_Library
             }
 
             TooltipHandler.TipRegion(reserveRect, "ReserveGenerationThingTip".Translate());
-            Rect copy = new Rect(300f, y, 25f, 25f);
-            if (Widgets.ButtonImage(copy, TexButton.Copy))
+            Rect copy = new Rect(content.width - 70f, y, 25f, 25f);
+            if (CQFUIStyle.ButtonImage(copy, TexButton.Copy))
             {
                 CQFEditorTools.thingData = cqfReceiver.reserveThing;
             }
 
             copy.x += 30f;
-            if (Widgets.ButtonImage(copy, TexButton.Paste))
+            if (CQFUIStyle.ButtonImage(copy, TexButton.Paste))
             {
                 cqfReceiver.reserveThing = CQFEditorTools.thingData;
             }
@@ -92,12 +96,12 @@ namespace QuestEditor_Library
             Widgets.CheckboxLabeled(prohibitFlippingRect, "ProhibitFlippingDocking".Translate(), ref cqfReceiver.prohibitFlippingDocking);
             TooltipHandler.TipRegion(prohibitFlippingRect, "ProhibitFlippingDockingTip".Translate());
             y += 30f;
-            Rect coreTagsRect = new Rect(x, y, 360f, 30f);
+            Rect coreTagsRect = new Rect(x, y, content.width - x - 12f, 30f);
             CQFEditorTools.DrawEditableStringList(cqfReceiver.coreTags, ref y, "CoreTags".Translate(), null, true, x, 360f);
             TooltipHandler.TipRegion(coreTagsRect, "CoreTagsTip".Translate());
             y += 5f;
-            Rect conditionsRect = new Rect(x, y, 480f, 30f);
-            CQFEditorTools.DrawIDrawList(ref y, x, cqfReceiver.conditions, new Rect(5f, 5f, 490f, 590f), "ZoneGenerationConditions".Translate());
+            Rect conditionsRect = new Rect(x, y, content.width - x - 12f, 30f);
+            CQFEditorTools.DrawIDrawList(ref y, x, cqfReceiver.conditions, content, "ZoneGenerationConditions".Translate());
             TooltipHandler.TipRegion(conditionsRect, "ZoneGenerationConditionsTip".Translate());
             y += 40;
             Widgets.EndScrollView();

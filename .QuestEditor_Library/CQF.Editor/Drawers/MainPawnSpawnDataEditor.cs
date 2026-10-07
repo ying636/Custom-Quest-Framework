@@ -13,6 +13,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.MainPawnSpawnData cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             Rect rect = new Rect(16f + x, y + 10f, 500f, 45f);
             cqfReceiver.DrawName(ref y, x, rect);
             cqfReceiver.DrawMainPawnOptions(ref y, inRect, x);
@@ -52,18 +53,18 @@ namespace QuestEditor_Library
             }
 
             Rect titleRect = new Rect(20f + x, y, 350f, 25f);
-            Widgets.Label(titleRect, "MainPawnSpawnDataSpawnData".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, "MainPawnSpawnDataSpawnData".Translate().Colorize(CQFUIStyle.Accent));
             y += 30f;
             string label = cqfReceiver.spawnData.GetType().Name.Translate() + ": " + cqfReceiver.spawnData.dataName;
             Rect row = new Rect(20f + x, y, Mathf.Max(360f, inRect.width - x - 60f), 25f);
-            if (Widgets.ButtonText(row, label, false))
+            if (CQFUIStyle.ButtonText(row, label, false))
             {
                 Find.WindowStack.Add(new Dialog_EditIDrawable(cqfReceiver.spawnData));
             }
 
             TooltipHandler.TipRegion(row, label);
             y += 30f;
-            if (Widgets.ButtonText(new Rect(20f + x, y, 220f, 25f), "MainPawnChangeSubPawnData".Translate(), false))
+            if (CQFUIStyle.ButtonText(new Rect(20f + x, y, 220f, 25f), "MainPawnChangeSubPawnData".Translate(), false))
             {
                 List<Type> types = new List<Type>();
                 types.Add(typeof(PawnSpawnData));
@@ -76,7 +77,7 @@ namespace QuestEditor_Library
 
         public static void DrawConditionList_3(QuestEditor_Library.MainPawnSpawnData cqfReceiver, ref float y, float x, Rect inRect, List<DialogCondition> conditions, string title)
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(CQFUIStyle.Accent));
             CQFEditorTools.DrawButtonForList_UseIcon(y, conditions, condition => condition.GetType().Name.Translate(), () =>
             {
                 List<Type> types = new List<Type>();
@@ -88,7 +89,7 @@ namespace QuestEditor_Library
             {
                 string label = condition.GetType().Name.Translate();
                 Rect row = new Rect(x, y, Mathf.Max(300f, inRect.width - x - 115f), 25f);
-                if (Widgets.ButtonText(row, label, false))
+                if (CQFUIStyle.ButtonText(row, label, false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(condition));
                 }

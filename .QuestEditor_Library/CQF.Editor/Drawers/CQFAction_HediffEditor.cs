@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Hediff cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 350f, 25f);
-            if (Widgets.ButtonText(rect, "GivenHediff".Translate() + cqfReceiver.hediff?.label, false))
+            if (CQFUIStyle.ButtonText(rect, "GivenHediff".Translate() + cqfReceiver.hediff?.label, false))
             {
                 Find.WindowStack.Add(new Dialog_Select<HediffDef>(new TextSelectDrawer<HediffDef>(DefDatabase<HediffDef>.AllDefsListForReading, t => t.label, t =>
                 {
@@ -37,7 +38,7 @@ namespace QuestEditor_Library
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line<float>(y, "SeverityOfHediff".Translate(), ref cqfReceiver.severity, ref cqfReceiver.buffer, x);
             y += 30f;
-            if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQFBodyPartForHediff".Translate(cqfReceiver.labelBuffer ?? "FullBody".Translate()), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 350f, 25f), "CQFBodyPartForHediff".Translate(cqfReceiver.labelBuffer ?? "FullBody".Translate()), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<BodyDef>.AllDefsListForReading, b =>
                 {

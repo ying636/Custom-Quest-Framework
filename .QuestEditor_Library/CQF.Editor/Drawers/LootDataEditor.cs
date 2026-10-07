@@ -16,6 +16,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.LootData cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             float width = inRect.width - 35f - x;
             cqfReceiver.DrawHeader(ref y, x + 10f, width - 10f);
             cqfReceiver.DrawBasicSettings(ref y, x, width);
@@ -31,17 +32,17 @@ namespace QuestEditor_Library
         {
             Widgets.DrawHighlight(new Rect(x - 4f, y + 4f, width + 8f, 32f));
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(x, y + 7f, width - 75f, 30f), cqfReceiver.dataName.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x, y + 7f, width - 75f, 30f), cqfReceiver.dataName.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             Rect button = new Rect(x + width - 60f, y + 7f, 25f, 25f);
-            if (Widgets.ButtonImage(button, TexButton.Rename))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Rename))
             {
                 Find.WindowStack.Add(new Dialog_RenameForQE(name => cqfReceiver.dataName = name));
             }
 
             TooltipHandler.TipRegion(button, "Rename".Translate());
             button.x += 30f;
-            if (Widgets.ButtonImage(button, TexButton.Copy))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Copy))
             {
                 CQFEditorTools.lootData = cqfReceiver.Copy();
             }
@@ -124,7 +125,7 @@ namespace QuestEditor_Library
             {
                 float itemY = y;
                 Rect rectData = new Rect(x + 16f, y + 3f, width - 32f, 25f);
-                if (Widgets.ButtonText(rectData, pawnData.dataName, false))
+                if (CQFUIStyle.ButtonText(rectData, pawnData.dataName, false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(pawnData));
                 }
@@ -146,16 +147,16 @@ namespace QuestEditor_Library
         public static void DrawListHeader_7(QuestEditor_Library.LootData cqfReceiver, ref float y, float x, float width, string label, Action addAction, Action removeAction)
         {
             Widgets.DrawHighlight(new Rect(x + 4f, y - 2f, width - 8f, 32f));
-            Widgets.Label(new Rect(x + 8f, y + 4f, width - 84f, 25f), label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x + 8f, y + 4f, width - 84f, 25f), label.Colorize(CQFUIStyle.Accent));
             Rect button = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(button, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Plus))
             {
                 addAction();
             }
 
             TooltipHandler.TipRegion(button, "Add".Translate());
             button.x += 30f;
-            if (Widgets.ButtonImage(button, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Delete))
             {
                 removeAction();
             }
@@ -166,7 +167,7 @@ namespace QuestEditor_Library
 
         public static void DrawEmptyState_8(QuestEditor_Library.LootData cqfReceiver, ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
+            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(CQFUIStyle.Muted));
             y += 32f;
         }
     }

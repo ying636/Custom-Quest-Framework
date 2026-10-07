@@ -24,13 +24,14 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SpawnAndAddToInventory cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            Rect rectData = new Rect(x + 5f, y, 600f, 25f);
+            Rect rectData = new Rect(x + 5f, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 17f), 25f);
             float initY = y;
             y += 5f;
             foreach (LootData data in cqfReceiver.datas)
             {
-                if (Widgets.ButtonText(rectData, data.dataName, false))
+                if (CQFUIStyle.ButtonText(rectData, data.dataName, false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable((IDrawable)data));
                 }
@@ -40,14 +41,14 @@ namespace QuestEditor_Library
             }
 
             y -= 5f;
-            Widgets.DrawBox(new Rect(x, initY, inRect.width - 40f - (2 * x), y - initY), 1, QuestEditor_Dialog.blueTex);
+            CQFUIStyle.DrawBox(new Rect(x, initY, inRect.width - 40f - (2 * x), y - initY), 1, QuestEditor_Dialog.blueTex);
             y += 7f;
-            if (Widgets.ButtonText(new Rect(x + 10f, y, 150f, 25f), "AddNewLootData".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x + 10f, y, 150f, 25f), "AddNewLootData".Translate()))
             {
                 cqfReceiver.datas.Add(new LootData());
             }
 
-            if (Widgets.ButtonText(new Rect(x + 174f, y, 150f, 25f), "DeleteLootData".Translate()) && cqfReceiver.datas.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 174f, y, 150f, 25f), "DeleteLootData".Translate()) && cqfReceiver.datas.Any())
             {
                 CQFEditorTools.DrawFloatMenu(cqfReceiver.datas, (d) => cqfReceiver.datas.Remove(d), (d) => d.dataName);
             }

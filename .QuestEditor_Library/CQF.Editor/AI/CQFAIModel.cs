@@ -38,10 +38,10 @@ namespace QuestEditor_Library
             if (value is DialogTreeDef tree && root) tree.ResolveOptions();
             return WriteValue(value, name, root, new HashSet<object>(), 0);
         }
-        public object? Read(XElement xml, Type declared, object? template = null, bool root = false)
+        public object? Read(XElement xml, Type declared, object? template = null, bool root = false, bool resolveDialogue = true)
         {
             object? value = ReadValue(xml, declared, template, root, 0);
-            if (value is DialogTreeDef tree && root) tree.Update();
+            if (value is DialogTreeDef tree && root && resolveDialogue) tree.Update();
             return value;
         }
         public object Copy(object source)

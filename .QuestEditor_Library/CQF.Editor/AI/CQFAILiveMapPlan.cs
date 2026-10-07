@@ -42,7 +42,7 @@ namespace QuestEditor_Library
                     string category = operation.Attribute("category")?.Value ?? "Building";
                     if (!Enum.TryParse(category, out ThingCategory filter) || filter is not (ThingCategory.Building or ThingCategory.Item or ThingCategory.Plant or ThingCategory.Filth))
                         throw new InvalidDataException("CQF_AI_InvalidValue: erase category");
-                    if (planned.Any(thing => GenAdj.OccupiedRect(thing.Position, thing.Rotation, thing.def.size).Overlaps(region)))
+                    if (region.Any(plannedCells.ContainsKey))
                         throw new InvalidDataException("CQF_AI_InvalidChanges: erase before place, or use another tool call");
                     foreach (Thing thing in region.SelectMany(cell => cell.GetThingList(map)).Distinct().Where(thing => thing.def.category == filter).ToArray()) Remove(thing);
                 }
@@ -90,7 +90,7 @@ namespace QuestEditor_Library
                 if (existing.def.category is ThingCategory.Plant or ThingCategory.Filth) Remove(existing);
                 else throw new InvalidDataException("CQF_AI_LiveMapBlocked: existing " + existing.ThingID + "; " + PlacementDetails(existing.def, existing.Position, existing.Rotation));
             }
-            foreach (Thing existing in planned)
+            foreach (Thing existing in footprint.Where(plannedCells.ContainsKey).SelectMany(position => plannedCells[position]).Distinct())
                 if (GenAdj.OccupiedRect(existing.Position, existing.Rotation, existing.def.size).Overlaps(footprint)
                     && (GenSpawn.SpawningWipes(def, existing.def) || def.category == ThingCategory.Plant && existing.def.category == ThingCategory.Plant
                         || def.category == ThingCategory.Item && existing.def.category == ThingCategory.Item))
@@ -105,7 +105,11 @@ namespace QuestEditor_Library
             Thing thing = ThingMaker.MakeThing(def, stuff);
             thing.Position = cell; thing.Rotation = rot; thing.stackCount = count;
             if (def.CanHaveFaction && faction == "player") thing.SetFaction(Faction.OfPlayer);
-            planned.Add(thing);
+            foreach (IntVec3 position in footprint)
+            {
+                if (!plannedCells.TryGetValue(position, out List<Thing> entries)) { entries = new List<Thing>(); plannedCells.Add(position, entries); }
+                entries.Add(thing);
+            }
             CQFAILiveMapCellState cells = new CQFAILiveMapCellState(map, thing);
             edits.Add(new CQFAILiveMapEdit("thing:" + thing.ThingID, () =>
             {
@@ -114,7 +118,7 @@ namespace QuestEditor_Library
                 GenSpawn.Spawn(thing, cell, map, rot, WipeMode.Vanish);
                 if (!thing.Spawned || thing.Map != map || thing.Position != cell || thing.stackCount != count || thing.Rotation != rot) throw new InvalidDataException("CQF_AI_ApplyMismatch: " + thing.ThingID);
             }, () => { if (thing.Spawned) Despawn(thing); cells.Restore(); }, () => ThingState(thing, footprint) + ":" + cells.Current,
-                () => new XElement("placed", new XAttribute("thingId", thing.ThingID), new XAttribute("def", def.defName), new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("rotation", thing.Rotation.AsInt))));
+                () => new XElement("placed", new XAttribute("thingId", thing.ThingID), new XAttribute("def", def.defName), new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("rotation", thing.Rotation.AsInt)), footprint));
         }
         private void Remove(Thing thing)
         {
@@ -137,7 +141,7 @@ namespace QuestEditor_Library
                 if (thing.Destroyed) throw new InvalidOperationException("CQF_AI_RollbackMismatch: " + thing.ThingID);
                 if (!thing.Spawned) { CheckSpawn(thing, position, rotation); GenSpawn.Spawn(thing, position, map, rotation, WipeMode.Vanish); }
                 cells.Restore();
-            }, () => ThingState(thing, footprint) + ":" + cells.Current, () => new XElement("removed", new XAttribute("thingId", thing.ThingID))));
+            }, () => ThingState(thing, footprint) + ":" + cells.Current, () => new XElement("removed", new XAttribute("thingId", thing.ThingID), new XAttribute("x", position.x), new XAttribute("z", position.z)), footprint));
         }
         private void Terrain(IntVec3 cell, TerrainDef terrain)
         {
@@ -167,7 +171,7 @@ namespace QuestEditor_Library
                 map.snowGrid.SetDepth(cell, snow); map.sandGrid?.SetDepth(cell, sand);
                 foreach (Designation designation in designations!)
                     if (map.designationManager.DesignationAt(cell, designation.def) == null) map.designationManager.AddDesignation(designation);
-            }, () => TerrainState(cell), () => new XElement("terrain", new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("def", terrain.defName))));
+            }, () => TerrainState(cell), () => new XElement("terrain", new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("def", terrain.defName)), new[] { cell }));
         }
         private void Roof(IntVec3 cell, RoofDef? roof)
         {
@@ -178,7 +182,7 @@ namespace QuestEditor_Library
                 before = map.roofGrid.RoofAt(cell); map.roofGrid.SetRoof(cell, roof);
                 if (map.roofGrid.RoofAt(cell) != roof) throw new InvalidDataException("CQF_AI_ApplyMismatch: roof");
             }, () => map.roofGrid.SetRoof(cell, before), () => map.roofGrid.RoofAt(cell)?.defName ?? "",
-                () => new XElement("roof", new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("def", roof?.defName ?? ""))));
+                () => new XElement("roof", new XAttribute("x", cell.x), new XAttribute("z", cell.z), new XAttribute("def", roof?.defName ?? "")), new[] { cell }));
         }
         private void EditThing(XElement operation)
         {
@@ -198,7 +202,7 @@ namespace QuestEditor_Library
                 CQFAILiveMap.ApplyConfiguration(thing, after);
                 if (!XNode.DeepEquals(model.Write(CQFAILiveMap.Configuration(thing)), model.Write(after))) throw new InvalidDataException("CQF_AI_ApplyMismatch: configuration");
             }, () => { CQFAILiveMap.ApplyConfiguration(thing, before); CQFAILiveFeatures.RestoreLoot(thing, cachedLoot); }, () => ThingState(thing, footprint) + ":" + cells.Current,
-                () => new XElement("edited", new XAttribute("thingId", thing.ThingID), new CQFAITargetReader(model).Summary(CQFAILiveMap.Configuration(thing)))));
+                () => new XElement("edited", new XAttribute("thingId", thing.ThingID), new XAttribute("x", thing.Position.x), new XAttribute("z", thing.Position.z), new CQFAITargetReader(model).Summary(CQFAILiveMap.Configuration(thing))), footprint));
         }
         private void CheckSpawn(Thing thing, IntVec3 cell, Rot4 rotation)
         {
@@ -248,7 +252,7 @@ namespace QuestEditor_Library
         private readonly List<CQFAILiveMapEdit> edits = new List<CQFAILiveMapEdit>();
         private readonly HashSet<Thing> removed = new HashSet<Thing>();
         private readonly HashSet<Thing> configured = new HashSet<Thing>();
-        private readonly List<Thing> planned = new List<Thing>();
+        private readonly Dictionary<IntVec3, List<Thing>> plannedCells = new Dictionary<IntVec3, List<Thing>>();
         private static readonly FieldInfo UnderGrid = typeof(TerrainGrid).GetField("underGrid", BindingFlags.Instance | BindingFlags.NonPublic)
             ?? throw new MissingFieldException(typeof(TerrainGrid).FullName, "underGrid");
     }

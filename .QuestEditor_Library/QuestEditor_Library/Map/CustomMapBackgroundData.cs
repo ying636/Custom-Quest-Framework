@@ -144,7 +144,7 @@ namespace QuestEditor_Library;
         }
         internal void DrawPreview(Rect rect)
     {
-        Widgets.Label(new Rect(rect.x, rect.y, rect.width, 25f), "CQF_MapBackgroundPreview".Translate().Colorize(ColorLibrary.SkyBlue));
+        Widgets.Label(new Rect(rect.x, rect.y, rect.width, 25f), "CQF_MapBackgroundPreview".Translate().Colorize(CQFUIStyle.Accent));
         Rect imageRect = new Rect(rect.x, rect.y + 30f, rect.width, rect.height - 30f);
         Widgets.DrawBoxSolid(imageRect, Color.black);
         Texture2D texture = this.texPath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(this.texPath, false);
@@ -162,7 +162,7 @@ namespace QuestEditor_Library;
             Widgets.Label(imageRect, "CQF_MapBackgroundNoPreview".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
         }
-        Widgets.DrawBox(imageRect);
+        CQFUIStyle.DrawBox(imageRect);
     }
         internal void DrawScaleField(ref float y, float x)
 
@@ -230,7 +230,7 @@ namespace QuestEditor_Library;
     public Vector2 drawSize = Vector2.zero;
     public float scale = 1f;
     public Vector2 offset = Vector2.zero;
-    public bool enableTerrainEdges; 
+    public bool enableTerrainEdges;
     public List<CustomMapBackgroundEffectDef> backgroundEffects = new List<CustomMapBackgroundEffectDef>();
         internal string bufferAlpha;
         internal string bufferScale;

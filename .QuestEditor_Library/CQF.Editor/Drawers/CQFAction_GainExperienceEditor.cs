@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_GainExperience cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 350f, 25f);
-            if (Widgets.ButtonText(rect, "SkillType".Translate(cqfReceiver.skill == null ? "Random".Translate().ToString() : cqfReceiver.skill?.label), false))
+            if (CQFUIStyle.ButtonText(rect, "SkillType".Translate(cqfReceiver.skill == null ? "Random".Translate().ToString() : cqfReceiver.skill?.label), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<SkillDef>.AllDefsListForReading, d => cqfReceiver.skill = d, d => d.label, new List<FloatMenuOption>() { new FloatMenuOption("Random".Translate().ToString(), () => cqfReceiver.skill = null) });
             }

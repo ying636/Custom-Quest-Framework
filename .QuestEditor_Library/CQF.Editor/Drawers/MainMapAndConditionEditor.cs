@@ -10,6 +10,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.MainMapAndCondition cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFEditorTools.DrawLabelAndText_Line(y, "MainMapConditionName".Translate(), ref cqfReceiver.name, x, 200f);
             TooltipHandler.TipRegion(new Rect(x, y, 405f, 25f), "MainMapConditionNameTip".Translate());
             y += 30f;
@@ -19,7 +20,7 @@ namespace QuestEditor_Library
             }
 
             Rect generationSetRect = new Rect(x, y, 255f, 25f);
-            Widgets.Label(generationSetRect, "MainMapGenerationSet".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(generationSetRect, "MainMapGenerationSet".Translate().Colorize(CQFUIStyle.Accent));
             TooltipHandler.TipRegion(generationSetRect, "MainMapGenerationSetTip".Translate());
             y += 30f;
             cqfReceiver.set.Draw(ref y, inRect, x + 15f);

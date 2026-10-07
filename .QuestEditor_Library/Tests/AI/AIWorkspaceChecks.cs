@@ -25,7 +25,8 @@ internal static class AIWorkspaceChecks
         string mapId = listed.Single(target => target.Attribute("kind")?.Value == "current_map").Attribute("id")!.Value;
         Check(listed.Length == 2 && targets.Query("Conversation", 0).Elements().Single().Attribute("id")!.Value == editorId, "target discovery filters names and preserves stable IDs within the task");
         harness.Process(AIToolChecks.Response("CQF_Check_SelectEditor", "cqf_select_target", ("target_id", editorId)));
-        Check(harness.Registry.Tools.Any(tool => tool.Name == "cqf_add_dialogue_branch") && harness.LastResults.Single().Descendants("tools").Any(), "selecting dialogue data exposes its actual editing tools and XML definitions");
+        Check(harness.Registry.Tools.Any(tool => tool.Name == "cqf_add_dialogue_branch") && !harness.LastResults.Single().Descendants("tools").Any()
+            && harness.Instructions.Contains(editorId), "native selection exposes actual tools and persistent target identity without duplicate XML definitions");
         harness.Process(AIToolChecks.Response("CQF_Check_EditEditor", "cqf_apply_changes", ("changes_xml", "<changes><set path='/label'><value>CQF_Check_Changed</value></set></changes>")));
         Check(((DialogTreeDef)data).label == "CQF_Check_Changed" && harness.Transaction!.CanUndo, "discovered editor edits apply to the actual host and retain task undo");
         harness.Process(AIToolChecks.Response("CQF_Check_SelectMap", "cqf_select_target", ("target_id", mapId)));

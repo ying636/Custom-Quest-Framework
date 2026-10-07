@@ -23,6 +23,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             bool accept = UnityEngine.Event.current.type == EventType.KeyDown
                 && (UnityEngine.Event.current.keyCode == KeyCode.Return || UnityEngine.Event.current.keyCode == KeyCode.KeypadEnter);
             if (accept)
@@ -44,7 +45,7 @@ namespace QuestEditor_Library
             {
                 Widgets.Label(new Rect(0f, 104f, inRect.width, 42f), this.error.Colorize(Color.red));
             }
-            if (Widgets.ButtonText(new Rect(0f, inRect.height - 32f, inRect.width, 32f), "AcceptButton".Translate()) || accept)
+            if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 32f, inRect.width, 32f), "AcceptButton".Translate()) || accept)
             {
                 try
                 {

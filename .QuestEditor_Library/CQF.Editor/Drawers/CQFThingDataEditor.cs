@@ -16,6 +16,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFThingData cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             cqfReceiver.DrawIcon(ref y);
             Widgets.Label(new Rect(60f + x, y + 5f, 35f, 35f), "x");
             int min = cqfReceiver.count.min;
@@ -27,7 +28,7 @@ namespace QuestEditor_Library
             if (cqfReceiver.CanSelectStuff)
             {
                 Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
-                if (Widgets.ButtonText(rect, "SelectStuff".Translate(cqfReceiver.stuff?.label), false))
+                if (CQFUIStyle.ButtonText(rect, "SelectStuff".Translate(cqfReceiver.stuff?.label), false))
                 {
                     CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => cqfReceiver.stuff = t, (t) => t.label, new List<FloatMenuOption>() { new FloatMenuOption("Null".Translate(), () => cqfReceiver.stuff = null) });
                 }
@@ -48,7 +49,7 @@ namespace QuestEditor_Library
             if (cqfReceiver.CanSelectStuff)
             {
                 Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
-                if (Widgets.ButtonText(rect, "SelectStuff".Translate(cqfReceiver.stuff?.label), false))
+                if (CQFUIStyle.ButtonText(rect, "SelectStuff".Translate(cqfReceiver.stuff?.label), false))
                 {
                     CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => cqfReceiver.stuff = t, (t) => t.label, new List<FloatMenuOption>() { new FloatMenuOption("Null".Translate(), () => cqfReceiver.stuff = null) });
                 }

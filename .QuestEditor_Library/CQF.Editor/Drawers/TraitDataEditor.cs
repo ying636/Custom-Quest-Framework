@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void DrawList_0(List<TraitData> list, ref float y, string title = null, string tip = null, bool needBox = false, float x = 10f, float defaultWidth = 180f)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope();
             List<KeyValuePair<TraitDef, TraitDegreeData>> stagets = new List<KeyValuePair<TraitDef, TraitDegreeData>>();
             DefDatabase<TraitDef>.AllDefsListForReading.ForEach(t =>
             {
@@ -26,17 +27,17 @@ namespace QuestEditor_Library
             {
                 y += 5f;
                 Text.Font = GameFont.Medium;
-                Rect rectTitle = new Rect(x + 10, y, 1020f, 35f);
+                Rect rectTitle = new Rect(x + 10f, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 24f), 35f);
                 Widgets.Label(rectTitle, title);
                 if (tip != null)
                 {
-                    TooltipHandler.TipRegionByKey(rectTitle, tip);
+                    TooltipHandler.TipRegion(rectTitle, tip);
                 }
 
                 Text.Font = GameFont.Small;
                 y += 40f;
                 float textWidth = Text.CalcSize(title).x + 20f;
-                width = textWidth > width ? textWidth : width;
+                width = Mathf.Min(Mathf.Max(textWidth, width), Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f));
             }
 
             for (int i = 0; i < list.Count; i++)
@@ -53,7 +54,7 @@ namespace QuestEditor_Library
             y += 5f;
             if (needBox)
             {
-                Widgets.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
             }
 
             y += 10f;

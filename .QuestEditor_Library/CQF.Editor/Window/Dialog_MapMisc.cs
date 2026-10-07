@@ -12,7 +12,7 @@ namespace QuestEditor_Library
 {
     public class Dialog_MapMisc : Window
     {
-        public Dialog_MapMisc(CustomMapDataDef def) 
+        public Dialog_MapMisc(CustomMapDataDef def)
         {
             this.def = def;
             this.doCloseX = true;
@@ -22,11 +22,13 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             float y = 0f;
             float contentWidth = inRect.width - 20f;
             Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height);
             Rect viewRect = new Rect(0f, 0f, contentWidth, Mathf.Max(this.height, inRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
 
             this.DrawSelectorRow(ref y, contentWidth, "MapDataFaction".Translate(), this.FactionLabel(), () =>
             {
@@ -69,7 +71,7 @@ namespace QuestEditor_Library
             int rowCount = Math.Max(1, this.def.mapPartGenerationLimit.Count);
             float sectionHeight = 42f + rowCount * 32f + 8f;
             Rect sectionRect = new Rect(0f, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             this.DrawSectionHeader(y + 6f, width, "MapPartGenerationLimit".Translate(),
                 "MapPartGenerationLimit_Tip".Translate(),
                 () => this.def.mapPartGenerationLimit.Add(new GenerationKeyWithLimit()),
@@ -94,18 +96,18 @@ namespace QuestEditor_Library
         private void DrawSectionHeader(float y, float width, string title, string tip, Action addAction, Action removeAction)
         {
             Rect titleRect = new Rect(12f, y + 3f, width - 96f, 25f);
-            Widgets.Label(titleRect, title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, title.Colorize(CQFUIStyle.Accent));
             TooltipHandler.TipRegion(titleRect, tip);
 
             Rect addRect = new Rect(width - 72f, y, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 addAction();
             }
             TooltipHandler.TipRegion(addRect, "Add".Translate());
 
             Rect removeRect = new Rect(width - 36f, y, 28f, 28f);
-            if (Widgets.ButtonImage(removeRect, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(removeRect, TexButton.Delete))
             {
                 removeAction();
             }
@@ -119,7 +121,7 @@ namespace QuestEditor_Library
             Rect labelRect = new Rect(8f, y + 6f, 170f, 25f);
             Widgets.Label(labelRect, label);
             Rect buttonRect = new Rect(180f, y + 3f, width - 188f, 29f);
-            if (Widgets.ButtonText(buttonRect, value, false))
+            if (CQFUIStyle.ButtonText(buttonRect, value, false))
             {
                 selectAction();
             }
@@ -132,7 +134,7 @@ namespace QuestEditor_Library
             int rowCount = Math.Max(1, steps.Count);
             float sectionHeight = 42f + rowCount * 32f + 8f;
             Rect sectionRect = new Rect(0f, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             this.DrawSectionHeader(y + 6f, width, titleKey.Translate(), tipKey.Translate(),
                 () => CQFEditorTools.DrawFloatMenu(typeof(CustomMapStep).AllSubclassesNonAbstract(),
                     type => steps.Add((CustomMapStep)Activator.CreateInstance(type)), type => type.Name.Translate()),
@@ -145,7 +147,7 @@ namespace QuestEditor_Library
             }
             foreach (CustomMapStep step in steps)
             {
-                if (Widgets.ButtonText(new Rect(12f, rowY, width - 24f, 27f), this.GetStepLabel(step), false))
+                if (CQFUIStyle.ButtonText(new Rect(12f, rowY, width - 24f, 27f), this.GetStepLabel(step), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(step));
                 }
@@ -159,7 +161,7 @@ namespace QuestEditor_Library
             int rowCount = Math.Max(1, this.def.tags.Count);
             float sectionHeight = 42f + rowCount * 32f + 8f;
             Rect sectionRect = new Rect(0f, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             this.DrawSectionHeader(y + 6f, width, "CustomMapTags".Translate(), "CustomMapTags_Tip".Translate(),
                 () => this.def.tags.Add("undefined"),
                 () => CQFEditorTools.DrawFloatMenu(this.def.tags, tag => this.def.tags.Remove(tag), tag => tag));

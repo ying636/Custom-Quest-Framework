@@ -15,6 +15,8 @@ namespace QuestEditor_Library
         }
         public CQFAITarget Resolve(string id)
         {
+            CQFAITarget? known = targets.SingleOrDefault(target => target.Id == id);
+            if (known?.IsValid() == true) return known;
             Refresh();
             return targets.SingleOrDefault(target => target.Id == id) ?? throw new InvalidDataException("CQF_AI_MissingTarget");
         }
@@ -57,17 +59,19 @@ namespace QuestEditor_Library
                                 string[] errors = ((Def)value).ConfigErrors().Take(16).ToArray();
                                 if (errors.Length > 0) throw new InvalidDataException("CQF_AI_InvalidValue: " + string.Join("; ", errors));
                             },
-                            isValid: () => GenDefDatabase.GetAllDefsInDatabaseForDef(type).Any(value => ReferenceEquals(value, current))),
-                        () => GenDefDatabase.GetAllDefsInDatabaseForDef(type).Any(value => ReferenceEquals(value, current)), label);
+                            isValid: () => ReferenceEquals(GenDefDatabase.GetDef(type, name, false), current)),
+                        () => ReferenceEquals(GenDefDatabase.GetDef(type, name, false), current), label);
                 }
         }
         private void Refresh()
         {
             List<CQFAITarget> next = new List<CQFAITarget>();
-            foreach (CQFAITarget candidate in discover().Where(target => target.IsValid()))
+            var previousByName = targets.GroupBy(target => (target.Kind, target.Name, target.Type)).ToDictionary(group => group.Key, group => group.ToArray());
+            foreach (CQFAITarget candidate in discover())
             {
-                CQFAITarget? previous = targets.FirstOrDefault(target => target.Kind == candidate.Kind && target.Name == candidate.Name && target.Type == candidate.Type
-                    && (ReferenceEquals(target.Identity, candidate.Identity) || target.Kind == "loaded_definition") && target.IsValid());
+                if (!candidate.IsValid()) continue;
+                CQFAITarget? previous = previousByName.TryGetValue((candidate.Kind, candidate.Name, candidate.Type), out CQFAITarget[] matches)
+                    ? matches.FirstOrDefault(target => ReferenceEquals(target.Identity, candidate.Identity) || target.Kind == "loaded_definition" && target.IsValid()) : null;
                 if (previous != null) previous.Label = candidate.Label;
                 next.Add(previous ?? candidate);
             }

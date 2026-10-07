@@ -20,7 +20,7 @@ namespace QuestEditor_Library
             chapterSidebar.OpenChapterEditor = chapter => Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter, curDef));
         }
 
-        public override string PageTitle => "CQF_QuestBookEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "CQF_QuestBookEditor".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(curDef.defName, () => curDef,
             value =>
             {
@@ -33,11 +33,12 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             DrawToolbar(inRect);
-            DrawBookHeader(inRect);
+            float contentTop = DrawBookHeader(inRect);
             float sidebarWidth = Mathf.Min(chapterSidebar.Width, Mathf.Max(44f, inRect.width * 0.34f));
-            Rect sidebarRect = new Rect(5f, 128f, sidebarWidth, inRect.height - 138f);
+            Rect sidebarRect = new Rect(5f, contentTop, sidebarWidth, Mathf.Max(40f, inRect.height - contentTop - 10f));
             chapterSidebar.Draw(sidebarRect, curDef, true, inRect.width - 10f);
             QuestBookChapter chapter = chapterSidebar.SelectedChapter;
             if (chapter == null)
@@ -47,16 +48,16 @@ namespace QuestEditor_Library
             }
             float contentX = 5f + chapterSidebar.DisplayedWidth + 12f;
             Rect chapterHeader = new Rect(contentX, sidebarRect.y, inRect.width - contentX - 8f, 38f);
-            Widgets.DrawMenuSection(chapterHeader);
+            CQFUIStyle.DrawMenuSection(chapterHeader);
             int chapterNumber = curDef.chapters.IndexOf(chapter) + 1;
             string chapterLabel = chapter.Label.Replace("{0}", chapterNumber.ToString());
-            Widgets.Label(new Rect(chapterHeader.x + 12f, chapterHeader.y + 7f, chapterHeader.width - 120f, 24f), chapterLabel.Colorize(ColorLibrary.SkyBlue));
-            Widgets.Label(new Rect(chapterHeader.x + chapterHeader.width - 108f, chapterHeader.y + 8f, 72f, 22f), "CQF_QuestBook_StepCount".Translate(chapter.steps.Count).Colorize(Color.gray));
-            if (Widgets.ButtonText(new Rect(chapterHeader.xMax - 34f, chapterHeader.y + 5f, 28f, 28f), "...", false))
+            Widgets.Label(new Rect(chapterHeader.x + 12f, chapterHeader.y + 7f, chapterHeader.width - 120f, 24f), chapterLabel.Colorize(CQFUIStyle.Accent));
+            Widgets.Label(new Rect(chapterHeader.x + chapterHeader.width - 108f, chapterHeader.y + 8f, 72f, 22f), "CQF_QuestBook_StepCount".Translate(chapter.steps.Count).Colorize(CQFUIStyle.Muted));
+            if (CQFUIStyle.ButtonText(new Rect(chapterHeader.xMax - 34f, chapterHeader.y + 5f, 28f, 28f), "...", false))
             {
                 Find.WindowStack.Add(new Dialog_EditQuestBookChapter(chapter, curDef));
             }
-            Rect canvasRect = new Rect(chapterHeader.x, chapterHeader.yMax + 8f, chapterHeader.width, inRect.height - 184f);
+            Rect canvasRect = new Rect(chapterHeader.x, chapterHeader.yMax + 8f, chapterHeader.width, Mathf.Max(40f, inRect.height - chapterHeader.yMax - 18f));
             nodeCanvas.Draw(canvasRect, curDef, null, true, chapter);
             if (chapterSidebar.SelectedStep != null)
             {
@@ -66,7 +67,7 @@ namespace QuestEditor_Library
 
         private void DrawToolbar(Rect inRect)
         {
-            if (Widgets.ButtonText(new Rect(5f, 42f, 100f, 30f), "CQF_QuestBook_Load".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(5f, 42f, 100f, 30f), "CQF_QuestBook_Load".Translate()))
             {
                 List<FloatMenuOption> options = DefDatabase<QuestBookDef>.AllDefsListForReading
                     .Select(def => new FloatMenuOption(def.defName, () =>
@@ -84,31 +85,31 @@ namespace QuestEditor_Library
                     Messages.Message("CQF_QuestBook_NoLoadedBooks".Translate(), MessageTypeDefOf.CautionInput);
                 }
             }
-            if (Widgets.ButtonText(new Rect(110f, 42f, 100f, 30f), "CQF_QuestBook_Save".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(110f, 42f, 100f, 30f), "CQF_QuestBook_Save".Translate()))
             {
                 SaveCurrent();
             }
-            if (Widgets.ButtonText(new Rect(215f, 42f, 100f, 30f), "CQF_QuestBook_New".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(215f, 42f, 100f, 30f), "CQF_QuestBook_New".Translate()))
             {
                 curDef = new QuestBookDef();
                 nodeCanvas.ResetView();
             }
-            Widgets.CheckboxLabeled(new Rect(330f, 42f, 180f, 30f), "CQF_QuestBook_AutoStart".Translate(), ref curDef.autoStart, placeCheckboxNearText: false);
+            Widgets.CheckboxLabeled(new Rect(inRect.width < 540f ? 5f : 330f, inRect.width < 540f ? 80f : 42f, Mathf.Min(180f, inRect.width - 10f), 30f), "CQF_QuestBook_AutoStart".Translate(), ref curDef.autoStart, placeCheckboxNearText: false);
         }
 
-        private void DrawBookHeader(Rect inRect)
+        private float DrawBookHeader(Rect inRect)
         {
-            const float rowY = 86f;
-            float labelWidth = 136f;
-            float gap = 28f;
-            float availableWidth = Mathf.Max(360f, inRect.width - 10f);
-            float fieldWidth = Mathf.Max(150f, (availableWidth - labelWidth * 2f - gap) * 0.5f);
-            float firstX = 5f;
-            float secondX = firstX + labelWidth + fieldWidth + gap;
-            Widgets.Label(new Rect(firstX, rowY, labelWidth, 25f), "CQF_QuestBook_DefName".Translate());
-            curDef.defName = Widgets.TextField(new Rect(firstX + labelWidth, rowY, fieldWidth, 25f), curDef.defName);
-            Widgets.Label(new Rect(secondX, rowY, labelWidth, 25f), "CQF_QuestBook_LabelField".Translate());
-            curDef.label = Widgets.TextField(new Rect(secondX + labelWidth, rowY, fieldWidth, 25f), curDef.label);
+            float y = inRect.width < 540f ? 120f : 86f;
+            float width = inRect.width - 10f;
+            bool stacked = width < 620f;
+            float fieldWidth = stacked ? width - 136f : (width - 300f) * 0.5f;
+            Widgets.Label(new Rect(5f, y, 128f, 25f), "CQF_QuestBook_DefName".Translate());
+            curDef.defName = Widgets.TextField(new Rect(141f, y, fieldWidth, 25f), curDef.defName);
+            float secondX = stacked ? 5f : 169f + fieldWidth;
+            float secondY = stacked ? y + 34f : y;
+            Widgets.Label(new Rect(secondX, secondY, 128f, 25f), "CQF_QuestBook_LabelField".Translate());
+            curDef.label = Widgets.TextField(new Rect(secondX + 136f, secondY, fieldWidth, 25f), curDef.label);
+            return secondY + 42f;
         }
 
         private void AddChapter()

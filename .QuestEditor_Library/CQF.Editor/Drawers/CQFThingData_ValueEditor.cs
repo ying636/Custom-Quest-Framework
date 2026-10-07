@@ -16,6 +16,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFThingData_Value cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFEditorTools.DrawButtonToSelectWithoutBackground(ref y, x + 7f, "CQFThingData_Value_Category".Translate(cqfReceiver.category?.label), DefDatabase<ThingCategoryDef>.AllDefsListForReading, d => cqfReceiver.category = d, d => d.label ?? d.defName);
             CQFEditorTools.DrawFloatRange(ref y, "TotalMarketValueRange".Translate(), ref cqfReceiver.totalMarketValueRange, ref cqfReceiver.buffer, ref cqfReceiver.buffer2, x + 7f, 40f);
             y += 30f;

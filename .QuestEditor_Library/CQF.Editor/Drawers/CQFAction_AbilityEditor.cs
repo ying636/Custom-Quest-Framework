@@ -24,8 +24,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Ability cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, inRect.width, 25f), "CQFAbilityDef".Translate(cqfReceiver.ability?.label), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, inRect.width, 25f), "CQFAbilityDef".Translate(cqfReceiver.ability?.label), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<AbilityDef>(new TextSelectDrawer<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, t => t.label, t =>
                 {

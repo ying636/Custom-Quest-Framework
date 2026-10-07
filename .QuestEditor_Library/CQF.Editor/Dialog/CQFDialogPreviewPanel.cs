@@ -19,7 +19,6 @@ namespace QuestEditor_Library
             Widgets.Label(new Rect(10f, 8f, rect.width - 50f, 28f), "CQF_DialogGraph_Preview".Translate().Colorize(CQFEditorPalette.Accent));
             TooltipHandler.TipRegion(new Rect(10f, 8f, rect.width - 50f, 28f), "CQF_DialogGraph_PreviewHint".Translate());
             Rect close = new Rect(rect.width - 35f, 8f, 24f, 24f);
-            TooltipHandler.TipRegion(close, "CQF_DialogGraph_HideInspector".Translate());
             if (CQFAIIconButton.DrawFramedImage(close, TexButton.CloseXSmall, "CQF_DialogGraph_HideInspector".Translate())) { this.editor.CloseSidePanel(); return; }
             if (CQFAIIconButton.DrawText(new Rect(8f, 44f, (rect.width - 24f) / 2f, 32f), "CQF_DialogGraph_Entry".Translate())) this.Start(0);
             bool enabled = GUI.enabled;
@@ -33,6 +32,7 @@ namespace QuestEditor_Library
             Rect view = new Rect(0f, 90f, rect.width, rect.height - 90f);
             Rect content = new Rect(0f, 0f, view.width - 20f, Mathf.Max(view.height, this.height));
             Widgets.BeginScrollView(view, ref this.scroll, content);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(content.width);
             try
             {
                 float width = content.width - 16f, y = 8f;
@@ -54,9 +54,8 @@ namespace QuestEditor_Library
                     {
                         DialogResult? result = i < option.results.Count ? option.results[i] : null;
                         string caption = option.results.Count > 1 ? label + " · " + (result!.resultName.CanTranslate() ? result.resultName.Translate().ToString() : result.resultName) : label;
-                        if (CQFAIIconButton.DrawText(new Rect(8f, y, width, 36f), caption))
+                        if (CQFAIIconButton.DrawText(new Rect(8f, y, width, 36f), caption, tip: caption + "\n" + "CQF_DialogGraph_PreviewHint".Translate()))
                         { this.history.Push(node.index.GetValueOrDefault()); this.CurrentIndex = result?.nextIndex; this.scroll = Vector2.zero; }
-                        TooltipHandler.TipRegion(new Rect(8f, y, width, 36f), "CQF_DialogGraph_PreviewHint".Translate());
                         y += 44f;
                     }
                 }

@@ -34,6 +34,7 @@ namespace QuestEditor_Library
 
         public void Draw(Rect rect, CustomQuestFramework_ModSetting setting)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(rect.width, rect.height);
             GameFont previousFont = Text.Font;
             TextAnchor previousAnchor = Text.Anchor;
             bool previousWrap = Text.WordWrap;
@@ -59,6 +60,7 @@ namespace QuestEditor_Library
                 Rect body = new Rect(rect.x, rect.y + top, rect.width, rect.height - top);
                 Rect content = new Rect(0f, 0f, body.width - 20f, Mathf.Max(body.height, ContentHeight));
                 Widgets.BeginScrollView(body, ref bodyScroll, content);
+                using CQFUIScope cqfContentScope1 = new CQFUIScope(content.width);
                 try
                 {
                     float width = content.width - 8f;
@@ -150,6 +152,23 @@ namespace QuestEditor_Library
             float y = 4f;
             DrawCheckbox(width, ref y, "CQF_AI_Edit", ref setting.dialogAIAllowEditing);
             DrawHint(width, ref y, "CQF_AI_EditHint");
+            Widgets.Label(new Rect(0f, y, width, 26f), "CQF_AI_TokenBudget".Translate());
+            y += 30f;
+            tokenBudgetBuffer ??= setting.dialogAITokenBudget.ToString();
+            Widgets.TextFieldNumeric(new Rect(0f, y, Mathf.Min(180f, width), 32f), ref setting.dialogAITokenBudget, ref tokenBudgetBuffer, 1000, 10000000);
+            y += 42f;
+            Widgets.Label(new Rect(0f, y, width, 26f), "CQF_AI_RequestBudget".Translate());
+            y += 30f;
+            requestBudgetBuffer ??= setting.dialogAIRequestBudget.ToString();
+            Widgets.TextFieldNumeric(new Rect(0f, y, Mathf.Min(180f, width), 32f), ref setting.dialogAIRequestBudget, ref requestBudgetBuffer, 1, 1000);
+            y += 38f;
+            DrawHint(width, ref y, "CQF_AI_BudgetHint");
+            Widgets.Label(new Rect(0f, y, width, 26f), "CQF_AI_ExecutionSpeed".Translate());
+            y += 30f;
+            int speed = Mathf.Clamp(setting.dialogAIExecutionSpeed, 0, 3);
+            if (CQFAIIconButton.DrawText(new Rect(0f, y, width, 32f), ("CQF_AI_ExecutionSpeed_" + speed).Translate(), tip: "CQF_AI_ExecutionSpeedHint".Translate()))
+                Find.WindowStack.Add(new FloatMenu(Enumerable.Range(0, 4).Select(value => new FloatMenuOption(("CQF_AI_ExecutionSpeed_" + value).Translate(), () => setting.dialogAIExecutionSpeed = value)).ToList()));
+            y += 40f;
             y += 10f;
             DrawCheckbox(width, ref y, "CQF_AI_GenerateText", ref setting.dialogAIAllowTextGeneration);
             DrawHint(width, ref y, "CQF_AI_GenerateTextHint");
@@ -226,6 +245,13 @@ namespace QuestEditor_Library
                 Widgets.Label(new Rect(0f, y, width, height), chat.UsageDetails);
                 Text.Font = GameFont.Small;
                 y += height;
+                if (chat.BudgetSummary.Length > 0)
+                {
+                    y += 16f;
+                    height = Text.CalcHeight(chat.BudgetSummary, width);
+                    Widgets.Label(new Rect(0f, y, width, height), chat.BudgetSummary);
+                    y += height;
+                }
             }
             else
             {
@@ -238,12 +264,8 @@ namespace QuestEditor_Library
 
         private void DrawHint(float width, ref float y, string key)
         {
-            Text.Font = GameFont.Tiny;
-            string text = key.Translate();
-            float height = Text.CalcHeight(text, width);
-            Widgets.Label(new Rect(0f, y, width, height), text);
-            y += height + 12f;
-            Text.Font = GameFont.Small;
+            TooltipHandler.TipRegion(new Rect(0f, Mathf.Max(0f, y - 36f), width, 32f), key.Translate());
+            y += 8f;
         }
 
         private void DrawCheckbox(float width, ref float y, string key, ref bool value)
@@ -268,6 +290,8 @@ namespace QuestEditor_Library
         private CancellationTokenSource? cancellation;
         private string? timeoutBuffer;
         private string? parallelBuffer;
+        private string? tokenBudgetBuffer;
+        private string? requestBudgetBuffer;
         private string status = string.Empty;
         private bool showKey;
         private bool statusIsError;

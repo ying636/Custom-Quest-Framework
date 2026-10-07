@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Pollute cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawLabelAndText_Line<float>(y, "PolluatingRadius".Translate(), ref cqfReceiver.radius, ref cqfReceiver.buffer, x);
             y += 30f;

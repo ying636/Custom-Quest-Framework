@@ -24,8 +24,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_QuestIsGenerated cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFQuestDef".Translate(cqfReceiver.quest?.defName), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFQuestDef".Translate(cqfReceiver.quest?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<QuestScriptDef>.AllDefsListForReading, (d) => cqfReceiver.quest = d, (d) => d.defName);
             }

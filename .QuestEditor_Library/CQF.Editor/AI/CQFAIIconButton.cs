@@ -13,10 +13,10 @@ namespace QuestEditor_Library
             return Widgets.ButtonInvisible(rect);
         }
 
-        public static bool DrawText(Rect rect, string label, bool selected = false)
+        public static bool DrawText(Rect rect, string label, bool selected = false, string? tip = null, bool drawBackground = true)
         {
-            TooltipHandler.TipRegion(rect, label);
-            DrawBackground(rect, selected);
+            TooltipHandler.TipRegion(rect, tip ?? label);
+            if (drawBackground) DrawBackground(rect, selected);
             GameFont previousFont = Text.Font;
             TextAnchor previousAnchor = Text.Anchor;
             bool previousWrap = Text.WordWrap;
@@ -41,7 +41,7 @@ namespace QuestEditor_Library
             try
             {
                 GUI.color = previous * (GUI.enabled ? Mouse.IsOver(rect) ? CQFEditorPalette.Accent : CQFEditorPalette.Text : CQFEditorPalette.Muted);
-                Widgets.DrawTextureFitted(rect.ContractedBy(7f), texture, 1f);
+                DrawGlyph(rect.ContractedBy(7f), texture);
             }
             finally { GUI.color = previous; }
             return Widgets.ButtonInvisible(rect);
@@ -65,6 +65,11 @@ namespace QuestEditor_Library
             Widgets.DrawBoxSolid(rect, color);
         }
 
+        public static void DrawGlyph(Rect rect, Texture2D texture)
+        {
+            CQFUIStyle.DrawGlyph(rect, texture);
+        }
+
         private static void DrawIcon(Rect rect, CQFAIIcon icon, Color color)
         {
             Texture2D texture = icon switch
@@ -86,7 +91,7 @@ namespace QuestEditor_Library
             try
             {
                 GUI.color = previous * color;
-                Widgets.DrawTextureFitted(rect, texture, 1f);
+                DrawGlyph(rect, texture);
             }
             finally { GUI.color = previous; }
         }

@@ -22,7 +22,7 @@ namespace QuestEditor_Library
             this.EnsureDefaultThinkNodes();
         }
 
-        public override string PageTitle => "CQF_DutyDefEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "CQF_DutyDefEditor".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.CurDef.defName, () => this.CurDef,
             value => { QuestEditor_DutyDefEditor.curDef = (DutyDef)value; }, isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
 
@@ -30,16 +30,19 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             this.DrawButtons(inRect);
-            float y = 45f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DefName".Translate(), ref this.CurDef.defName, 5f, 100f);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyLabel".Translate(), ref this.CurDef.label, 310f, 120f);
+            float y = 84f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DefName".Translate(), ref this.CurDef.defName, 5f, inRect.width - 190f);
+            y += 34f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyLabel".Translate(), ref this.CurDef.label, 5f, inRect.width - 190f);
             y += 34f;
             Rect outRect = new Rect(5f, y, inRect.width - 10f, inRect.height - y - 8f);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 30f, this.height);
             float contentY = 4f;
             Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             this.DrawDuty(ref contentY, viewRect);
             this.DrawDraggingNodePreview();
             Widgets.EndScrollView();
@@ -52,8 +55,9 @@ namespace QuestEditor_Library
 
         private void DrawButtons(Rect inRect)
         {
-            float x = inRect.width - 450f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "LoadPremade".Translate()))
+            float buttonWidth = Mathf.Min(120f, (inRect.width - 24f) / 4f);
+            float x = Mathf.Max(0f, inRect.width - buttonWidth * 4f - 24f);
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, buttonWidth, 32f), "LoadPremade".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<DutyDef>.AllDefsListForReading, def =>
                 {
@@ -62,20 +66,20 @@ namespace QuestEditor_Library
                     this.fieldBuffers.Clear();
                 }, def => def.defName);
             }
-            x += 110f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "Save".Translate()))
+            x += buttonWidth + 8f;
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, buttonWidth, 32f), "Save".Translate()))
             {
                 this.Save();
             }
-            x += 110f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "ResetBinding".Translate()))
+            x += buttonWidth + 8f;
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, buttonWidth, 32f), "ResetBinding".Translate()))
             {
                 QuestEditor_DutyDefEditor.curDef = new DutyDef();
                 this.EnsureDefaultThinkNodes();
                 this.fieldBuffers.Clear();
             }
-            x += 110f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "Misc".Translate()))
+            x += buttonWidth + 8f;
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, buttonWidth, 32f), "Misc".Translate()))
             {
                 Find.WindowStack.Add(new Dialog_DutyDefMisc(this.CurDef));
             }
@@ -102,16 +106,16 @@ namespace QuestEditor_Library
 
         private void DrawThinkNodeRoot(ref float y, Rect inRect, string title, string tip, Func<ThinkNode> getNode, Action<ThinkNode> setNode, string key)
         {
-            Rect titleRect = new Rect(5f, y, 600f, 30f);
+            Rect titleRect = new Rect(5f, y, inRect.width - 10f, 30f);
             Text.Font = GameFont.Medium;
-            Widgets.Label(titleRect, title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, title.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             TooltipHandler.TipRegion(titleRect, tip);
             y += 38f;
             ThinkNode node = getNode();
             if (node == null)
             {
-                if (Widgets.ButtonText(new Rect(25f, y, 180f, 32f), "CQF_DutySelectThinkNode".Translate(), false))
+                if (CQFUIStyle.ButtonText(new Rect(25f, y, 180f, 32f), "CQF_DutySelectThinkNode".Translate(), false))
                 {
                     this.OpenThinkNodeTypeSelect(type => setNode(this.MakeThinkNode(type)));
                 }
@@ -136,7 +140,7 @@ namespace QuestEditor_Library
             string foldKey = key + ".fold";
             bool foldout = !this.foldouts.Contains(foldKey);
             Rect foldRect = new Rect(header.x + 4f, header.y + 3f, 28f, 28f);
-            if (Widgets.ButtonText(foldRect, foldout ? "-" : "+", false))
+            if (CQFUIStyle.ButtonText(foldRect, foldout ? "-" : "+", false))
             {
                 if (foldout)
                 {
@@ -154,12 +158,12 @@ namespace QuestEditor_Library
             TooltipHandler.TipRegion(dragRect, "CQF_DutyDragNodeTip".Translate());
             this.HandleNodeDrag(node, parentList, index, dragRect);
             Rect changeRect = new Rect(header.xMax - (parentList == null ? 96f : 174f), header.y + 4f, 88f, 26f);
-            if (Widgets.ButtonText(changeRect, "CQF_DutyChangeNode".Translate(), false))
+            if (CQFUIStyle.ButtonText(changeRect, "CQF_DutyChangeNode".Translate(), false))
             {
                 ThinkNode capturedNode = node;
                 this.OpenThinkNodeTypeSelect(type => setNode(this.ReplaceThinkNode(capturedNode, type)));
             }
-            if (parentList != null && Widgets.ButtonText(new Rect(header.xMax - 78f, header.y + 4f, 66f, 26f), "Delete".Translate(), false))
+            if (parentList != null && CQFUIStyle.ButtonText(new Rect(header.xMax - 78f, header.y + 4f, 66f, 26f), "Delete".Translate(), false))
             {
                 parentList.RemoveAt(index);
                 return;
@@ -181,9 +185,9 @@ namespace QuestEditor_Library
                 Rect childHeader = new Rect(contentX, y + 4f, contentWidth, 32f);
                 Widgets.DrawBoxSolid(childHeader, new Color(0.08f, 0.12f, 0.15f, 0.56f));
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(new Rect(childHeader.x + 10f, childHeader.y, childHeader.width - 132f, childHeader.height), "CQF_DutySubNodes".Translate().Colorize(ColorLibrary.PaleBlue));
+                Widgets.Label(new Rect(childHeader.x + 10f, childHeader.y, childHeader.width - 132f, childHeader.height), "CQF_DutySubNodes".Translate().Colorize(CQFUIStyle.Accent));
                 Text.Anchor = TextAnchor.UpperLeft;
-                if (Widgets.ButtonText(new Rect(childHeader.xMax - 118f, childHeader.y + 3f, 108f, 26f), "CQF_DutyAddSubNode".Translate(), false))
+                if (CQFUIStyle.ButtonText(new Rect(childHeader.xMax - 118f, childHeader.y + 3f, 108f, 26f), "CQF_DutyAddSubNode".Translate(), false))
                 {
                     ThinkNode capturedNode = node;
                     this.OpenThinkNodeTypeSelect(type =>
@@ -212,7 +216,7 @@ namespace QuestEditor_Library
                     Rect emptyRect = new Rect(contentX + 10f, y, contentWidth - 20f, 34f);
                     Widgets.DrawBoxSolid(emptyRect, new Color(0.09f, 0.1f, 0.11f, 0.52f));
                     Text.Anchor = TextAnchor.MiddleLeft;
-                    Widgets.Label(new Rect(emptyRect.x + 10f, emptyRect.y, emptyRect.width - 20f, emptyRect.height), "CQF_DutyNoSubNodes".Translate().Colorize(Color.gray));
+                    Widgets.Label(new Rect(emptyRect.x + 10f, emptyRect.y, emptyRect.width - 20f, emptyRect.height), "CQF_DutyNoSubNodes".Translate().Colorize(CQFUIStyle.Muted));
                     Text.Anchor = TextAnchor.UpperLeft;
                     this.HandleNodeDrop(node, emptyRect);
                     y += 44f;
@@ -246,7 +250,7 @@ namespace QuestEditor_Library
             {
                 if (rect.Contains(ev.mousePosition))
                 {
-                    Widgets.DrawBox(rect, 2, QuestEditor_Dialog.blueTex);
+                    CQFUIStyle.DrawBox(rect, 2, QuestEditor_Dialog.blueTex);
                 }
             }
             if (this.draggingNode == null || ev.type != EventType.MouseUp || ev.button != 0 || !rect.Contains(ev.mousePosition))
@@ -301,7 +305,7 @@ namespace QuestEditor_Library
             GUI.color = new Color(1f, 1f, 1f, 0.86f);
             Widgets.DrawBoxSolid(previewRect, new Color(0.08f, 0.11f, 0.14f, 0.9f));
             Widgets.DrawBoxSolid(new Rect(previewRect.x, previewRect.y, 4f, previewRect.height), new Color(0.33f, 0.55f, 0.95f, 0.95f));
-            Widgets.DrawBox(previewRect, 1, QuestEditor_Dialog.blueTex);
+            CQFUIStyle.DrawBox(previewRect, 1, QuestEditor_Dialog.blueTex);
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(new Rect(previewRect.x + 14f, previewRect.y, previewRect.width - 22f, previewRect.height), this.ThinkNodeLabel(this.draggingNode).Colorize(new Color(0.78f, 0.86f, 1f)));
             Text.Anchor = TextAnchor.UpperLeft;
@@ -428,7 +432,7 @@ namespace QuestEditor_Library
             }
             if (fieldType.IsEnum)
             {
-                if (Widgets.ButtonText(controlRect, this.EnumLabel(value), false))
+                if (CQFUIStyle.ButtonText(controlRect, this.EnumLabel(value), false))
                 {
                     List<object> values = Enum.GetValues(fieldType).Cast<object>().ToList();
                     CQFEditorTools.DrawFloatMenu(values, setValue, this.EnumLabel);
@@ -439,7 +443,7 @@ namespace QuestEditor_Library
             if (fieldType == typeof(DutyDef))
             {
                 DutyDef duty = value as DutyDef;
-                if (Widgets.ButtonText(controlRect, CQFEditorTools.DutyLabel(duty) ?? "Null".Translate().ToString(), false))
+                if (CQFUIStyle.ButtonText(controlRect, CQFEditorTools.DutyLabel(duty) ?? "Null".Translate().ToString(), false))
                 {
                     CQFEditorTools.OpenDutySelect(d => setValue(d));
                 }
@@ -449,7 +453,7 @@ namespace QuestEditor_Library
             if (typeof(Def).IsAssignableFrom(fieldType))
             {
                 Def defValue = value as Def;
-                if (Widgets.ButtonText(controlRect, defValue?.defName ?? "Null".Translate().ToString(), false))
+                if (CQFUIStyle.ButtonText(controlRect, defValue?.defName ?? "Null".Translate().ToString(), false))
                 {
                     this.OpenDefSelect(fieldType, setValue);
                 }
@@ -533,7 +537,7 @@ namespace QuestEditor_Library
             if (fieldType == typeof(Rot4))
             {
                 Rot4 rot = value is Rot4 rot4 ? rot4 : Rot4.North;
-                if (Widgets.ButtonText(controlRect, rot.ToString(), false))
+                if (CQFUIStyle.ButtonText(controlRect, rot.ToString(), false))
                 {
                     CQFEditorTools.DrawFloatMenu(new List<Rot4> { Rot4.North, Rot4.East, Rot4.South, Rot4.West }, rotValue => setValue(rotValue), rotValue => rotValue.ToString());
                 }
@@ -551,7 +555,7 @@ namespace QuestEditor_Library
                 return;
             }
             Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(controlRect, "CQF_DutyUnsupportedField".Translate(label, fieldType.Name).Colorize(Color.gray));
+            Widgets.Label(controlRect, "CQF_DutyUnsupportedField".Translate(label, fieldType.Name).Colorize(CQFUIStyle.Muted));
             Text.Anchor = TextAnchor.UpperLeft;
             y += 32f;
         }
@@ -584,11 +588,11 @@ namespace QuestEditor_Library
             Rect headerRect = new Rect(x, y, width, 28f);
             Widgets.DrawBoxSolid(headerRect, new Color(0.04f, 0.05f, 0.06f, 0.38f));
             Widgets.Label(new Rect(headerRect.x + 6f, headerRect.y + 4f, headerRect.width - 170f, 24f), label);
-            if (Widgets.ButtonText(new Rect(headerRect.xMax - 152f, headerRect.y + 2f, 70f, 24f), "Add".Translate(), false))
+            if (CQFUIStyle.ButtonText(new Rect(headerRect.xMax - 152f, headerRect.y + 2f, 70f, 24f), "Add".Translate(), false))
             {
                 list.Add(this.MakeDefaultValue(elementType));
             }
-            if (list.Count > 0 && Widgets.ButtonText(new Rect(headerRect.xMax - 76f, headerRect.y + 2f, 70f, 24f), "Delete".Translate(), false))
+            if (list.Count > 0 && CQFUIStyle.ButtonText(new Rect(headerRect.xMax - 76f, headerRect.y + 2f, 70f, 24f), "Delete".Translate(), false))
             {
                 list.RemoveAt(list.Count - 1);
             }
@@ -611,7 +615,7 @@ namespace QuestEditor_Library
             }
             bool open = this.foldouts.Contains(key);
             Rect headerRect = new Rect(x, y, width, 28f);
-            if (Widgets.ButtonText(headerRect, (open ? "- " : "+ ") + label + " (" + fieldType.Name + ")", false))
+            if (CQFUIStyle.ButtonText(headerRect, (open ? "- " : "+ ") + label + " (" + fieldType.Name + ")", false))
             {
                 if (open)
                 {
@@ -1099,10 +1103,11 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, inRect.width, 35f), "CQF_DutyMiscSettings".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(0f, 0f, inRect.width, 35f), "CQF_DutyMiscSettings".Translate().Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
-            float y = 45f;
+            float y = 84f;
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyDescription".Translate(), ref this.def.description, 5f, 260f);
             y += 38f;
             Widgets.CheckboxLabeled(new Rect(5f, y, 300f, 28f), "CQF_DutyAlwaysShowWeapon".Translate(), ref this.def.alwaysShowWeapon);
@@ -1111,16 +1116,16 @@ namespace QuestEditor_Library
             Widgets.CheckboxLabeled(new Rect(5f, y, 300f, 28f), "CQF_DutyRitualSpectateTarget".Translate(), ref this.def.ritualSpectateTarget);
             Widgets.CheckboxLabeled(new Rect(340f, y, 300f, 28f), "CQF_DutyForceFaceUpPosture".Translate(), ref this.def.forceFaceUpPosture);
             y += 45f;
-            if (Widgets.ButtonText(new Rect(5f, y, 300f, 32f), "CQF_DutyHook".Translate(this.EnumLabel(this.def.hook)), false))
+            if (CQFUIStyle.ButtonText(new Rect(5f, y, 300f, 32f), "CQF_DutyHook".Translate(this.EnumLabel(this.def.hook)), false))
             {
                 CQFEditorTools.DrawFloatMenu<ThinkTreeDutyHook>(Enum.GetValues(typeof(ThinkTreeDutyHook)).Cast<ThinkTreeDutyHook>().ToList(), value => this.def.hook = value, value => this.EnumLabel(value));
             }
-            if (Widgets.ButtonText(new Rect(340f, y, 300f, 32f), "CQF_DutySocialModeMax".Translate(this.EnumLabel(this.def.socialModeMax)), false))
+            if (CQFUIStyle.ButtonText(new Rect(340f, y, 300f, 32f), "CQF_DutySocialModeMax".Translate(this.EnumLabel(this.def.socialModeMax)), false))
             {
                 CQFEditorTools.DrawFloatMenu<RandomSocialMode>(Enum.GetValues(typeof(RandomSocialMode)).Cast<RandomSocialMode>().ToList(), value => this.def.socialModeMax = value, value => this.EnumLabel(value));
             }
             y += 45f;
-            if (Widgets.ButtonText(new Rect(5f, y, 300f, 32f), "CQF_DutyDrawBodyOverride".Translate() + ": " + this.NullableBoolLabel(this.def.drawBodyOverride), false))
+            if (CQFUIStyle.ButtonText(new Rect(5f, y, 300f, 32f), "CQF_DutyDrawBodyOverride".Translate() + ": " + this.NullableBoolLabel(this.def.drawBodyOverride), false))
             {
                 Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
                 {

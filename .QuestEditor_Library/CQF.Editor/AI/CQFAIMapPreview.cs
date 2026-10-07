@@ -7,7 +7,7 @@ namespace QuestEditor_Library
     {
         public void Draw(Rect rect, CustomMapDataDef map)
         {
-            Widgets.DrawBoxSolid(rect, new Color(0.07f, 0.09f, 0.10f));
+            Widgets.DrawBoxSolid(rect, CQFUIStyle.Canvas);
             float scale = Mathf.Min((rect.width - 16f) / map.size.x, (rect.height - 16f) / map.size.z);
             Vector2 origin = rect.center - new Vector2(map.size.x, map.size.z) * scale / 2f;
             Rect Cell(IntVec3 cell, float width = 1f, float height = 1f) => new Rect(origin.x + cell.x * scale, origin.y + (map.size.z - cell.z - height) * scale, width * scale, height * scale);

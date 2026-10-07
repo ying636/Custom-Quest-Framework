@@ -65,6 +65,9 @@ internal static class Program
         object dialog = changes.Build(tree, XElement.Parse("<changes><put path='/nodeMoulds'><key>1</key><value Class='QuestEditor_Library.DialogNode'><index>1</index><text>CQF_Check_Text</text></value></put><put path='/optionMoulds'><key>0</key><value Class='QuestEditor_Library.DialogOption'><text>CQF_Check_Option</text><results><li Class='QuestEditor_Library.DialogResult'><nextIndex>1</nextIndex></li></results></value></put><append path='/nodeMoulds/@0/optionIds'><value>0</value></append></changes>"), "", false);
         Check(((DialogTreeDef)dialog).nodeMoulds.Count == 2 && tree.nodeMoulds.Count == 1, "dialogue draft adds linked nodes without mutating source");
         Check(model.Write(model.Copy(dialog), root: true).ToString() == model.Write(dialog, root: true).ToString(), "dialogue snapshot roundtrip");
+        DialogTreeDef forward = (DialogTreeDef)changes.Build(tree, XElement.Parse("<changes><put path='/nodeMoulds'><key>1</key><value Class='QuestEditor_Library.DialogNode'><optionIds><li>5</li></optionIds></value></put><put path='/optionMoulds'><key>5</key><value Class='QuestEditor_Library.DialogOption'><text>CQF_Check_Forward</text><results><li Class='QuestEditor_Library.DialogResult'><nextIndex>0</nextIndex></li></results></value></put><append path='/nodeMoulds/@0/optionIds'><value>5</value></append></changes>"), "", false);
+        Check(forward.nodeMoulds[1].options.Single() == forward.nodeMoulds[0].options.Single() && tree.optionMoulds.Count == 0, "atomic dialogue batch resolves forward shared option references only after all operations");
+        Reject(() => changes.Build(tree, XElement.Parse("<changes><put path='/nodeMoulds'><key>1</key><value Class='QuestEditor_Library.DialogNode'><optionIds><li>999</li></optionIds></value></put></changes>"), "", false), "final dialogue validation still rejects missing shared choice references");
         DialogTreeDef partial = (DialogTreeDef)changes.Build(tree, XElement.Parse("<changes><put path='/nodeMoulds'><key>2</key><value Class='QuestEditor_Library.DialogNode'><index>2</index><text>CQF_Check_Before</text></value></put><set path='/nodeMoulds/@2'><value><text>CQF_Check_After</text></value></set></changes>"), "", false);
         Check(partial.nodeMoulds[2].index == 2 && partial.nodeMoulds[2].text == "CQF_Check_After", "partial edit preserves fields of a newly inserted object");
         Reject(() => changes.Build(tree, XElement.Parse("<changes><set path='/nodeMoulds/@0/text'><value>Invented narrative</value></set></changes>"), "", false), "new narrative rejected without permission");
@@ -124,7 +127,10 @@ internal static class Program
         DialogSharedOptionsChecks.Run(model);
         AITokenChecks.Run(model, catalog);
         AIContextChecks.Run(model, catalog);
+        AIRequestBudgetChecks.Run(model, catalog).GetAwaiter().GetResult();
         AILiveMapChecks.Run(model, catalog);
+        AIIncrementalChecks.Run(model, catalog);
+        AICostChecks.Run(model, catalog).GetAwaiter().GetResult();
         AINetworkChecks.Run(model, catalog).GetAwaiter().GetResult();
         AIToolNetworkChecks.Run(model, catalog).GetAwaiter().GetResult();
         AIStreamingChecks.Run(model, catalog).GetAwaiter().GetResult();

@@ -104,7 +104,6 @@ namespace QuestEditor_Library
             {
                 if (value.extraInteractions.Count == 0) component.ExtraOperations.Remove(thing);
                 else component.ExtraOperations[thing] = value.extraInteractions;
-                foreach (InteractionOperation operation in value.extraInteractions) CQFSignalEditor.InvalidateSummary(operation);
             }
             if (thing is ThingWithComps textThing)
                 foreach (CQFAICustomTextConfiguration data in value.customTexts)

@@ -38,6 +38,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             GameFont oldFont = Text.Font;
             TextAnchor oldAnchor = Text.Anchor;
             Text.Font = GameFont.Tiny;
@@ -68,21 +69,21 @@ namespace QuestEditor_Library
             float contentWidth = inRect.width - ToolbarWidth;
             float y = 0f;
             Rect recentRect = new Rect(0f, y, contentWidth, RecentSectionHeight);
-            Widgets.DrawMenuSection(recentRect);
+            CQFUIStyle.DrawMenuSection(recentRect);
             this.DrawRecentItems(recentRect.ContractedBy(SectionPadding));
             Rect closeRect = new Rect(contentWidth + ToolbarGap, 1f, ToolbarButtonSize, ToolbarButtonSize);
-            if (Widgets.ButtonImage(closeRect, TexButton.CloseXSmall, true, "CloseButton".Translate()))
+            if (CQFUIStyle.ButtonImage(closeRect, TexButton.CloseXSmall, true, "CloseButton".Translate()))
             {
                 this.Close();
             }
             Rect pinRect = new Rect(contentWidth + ToolbarGap, 1f + ToolbarButtonSize + ToolbarGap, ToolbarButtonSize, ToolbarButtonSize);
             if (this.windowPinned)
             {
-                Widgets.DrawHighlightSelected(pinRect);
+                CQFUIStyle.DrawHighlightSelected(pinRect);
             }
             string pinTip = (this.windowPinned ? "CQF_UnpinWindow" : "CQF_PinWindow").Translate();
             Texture2D pinIcon = this.windowPinned ? TexCommand.ForbidOff : TexCommand.ForbidOn;
-            if (Widgets.ButtonImage(pinRect, pinIcon, true, pinTip))
+            if (CQFUIStyle.ButtonImage(pinRect, pinIcon, true, pinTip))
             {
                 this.windowPinned = !this.windowPinned;
                 this.draggable = !this.windowPinned;
@@ -99,7 +100,7 @@ namespace QuestEditor_Library
             y += SearchHeight + SectionGap;
 
             Rect selectionRect = new Rect(0f, y, contentWidth, inRect.height - y);
-            Widgets.DrawMenuSection(selectionRect);
+            CQFUIStyle.DrawMenuSection(selectionRect);
             this.DrawAllItems(selectionRect.ContractedBy(SectionPadding));
         }
 
@@ -137,6 +138,7 @@ namespace QuestEditor_Library
             float contentHeight = Math.Max(outRect.height, rowCount * (ItemHeight + ItemGap));
             Rect viewRect = new Rect(0f, 0f, outRect.width - ScrollbarWidth, contentHeight);
             Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float rowStride = ItemHeight + ItemGap;
             int firstVisibleRow = Math.Max(0, Mathf.FloorToInt(this.scrollPosition.y / rowStride) - 1);
             int lastVisibleRow = Math.Min(rowCount - 1, Mathf.CeilToInt((this.scrollPosition.y + outRect.height) / rowStride) + 1);
@@ -156,7 +158,7 @@ namespace QuestEditor_Library
         {
             if (this.IsSelected(item))
             {
-                Widgets.DrawHighlightSelected(rect);
+                CQFUIStyle.DrawHighlightSelected(rect);
             }
             Widgets.DrawHighlightIfMouseover(rect);
             Rect iconRect = drawLabel

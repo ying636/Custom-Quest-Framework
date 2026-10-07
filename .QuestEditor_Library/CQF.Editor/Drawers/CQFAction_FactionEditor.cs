@@ -24,11 +24,12 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Faction cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
             Widgets.Label(rect, "Faction".Translate() + ":" + cqfReceiver.faction?.label);
             rect.x = 160f;
-            if (Widgets.ButtonText(rect, "Select".Translate()))
+            if (CQFUIStyle.ButtonText(rect, "Select".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<FactionDef>.AllDefsListForReading, f => cqfReceiver.faction = f, f => f.label);
             }

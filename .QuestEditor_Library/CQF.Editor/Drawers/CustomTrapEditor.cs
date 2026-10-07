@@ -14,10 +14,11 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CustomTrap cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             Text.Font = GameFont.Small;
             CQFEditorTools.DrawLabelAndText_Line(y, "TrapName".Translate(), ref cqfReceiver.trapName, x, 350f);
             Rect rect = new Rect(inRect.xMax - 70f, y + 30f, 30f, 30f);
-            if (Widgets.ButtonImage(rect, TexButton.Copy))
+            if (CQFUIStyle.ButtonImage(rect, TexButton.Copy))
             {
                 CQFEditorTools.copyTrapComps.Clear();
                 foreach (var trapComp in cqfReceiver.trapComps)
@@ -27,7 +28,7 @@ namespace QuestEditor_Library
             }
 
             rect.x += 35f;
-            if (Widgets.ButtonImage(rect, TexButton.Paste))
+            if (CQFUIStyle.ButtonImage(rect, TexButton.Paste))
             {
                 foreach (var trapComp in CQFEditorTools.copyTrapComps)
                 {
@@ -36,7 +37,7 @@ namespace QuestEditor_Library
             }
 
             y += 30f;
-            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, cqfReceiver.TrapComps, inRect, "TrapComps".Translate().Colorize(ColorLibrary.LightBlue), () =>
+            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, cqfReceiver.TrapComps, inRect, "TrapComps".Translate().Colorize(CQFUIStyle.Accent), () =>
             {
                 CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => cqfReceiver.TrapComps.Add(new TrapComp() { mode = m }), m => ("ActionTriggerMode_" + m.ToString()).Translate());
             }, c => ("ActionTriggerMode_" + c.mode.ToString()).Translate());

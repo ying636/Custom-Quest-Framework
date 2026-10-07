@@ -17,22 +17,26 @@ namespace QuestEditor_Library
         {
             if (this.optionMoulds == null || this.optionMoulds.Any(pair => pair.Key < 0 || pair.Value == null)
                 || this.optionMoulds.Values.Distinct().Count() != this.optionMoulds.Count)
-                throw new InvalidDataException("CQF_DialogGraph_InvalidOptions");
-            foreach (DialogNode node in this.nodeMoulds.Values)
+                throw new InvalidDataException("CQF_DialogGraph_InvalidOptions: /optionMoulds invalid definitions");
+            foreach (var pair in this.nodeMoulds)
             {
+                DialogNode node = pair.Value;
+                string path = "/nodeMoulds/@" + pair.Key;
                 if (node == null || node.options == null || node.optionIds == null)
-                    throw new InvalidDataException("CQF_DialogGraph_InvalidOptions");
+                    throw new InvalidDataException("CQF_DialogGraph_InvalidOptions: " + path + " null option list");
                 if (node.optionsResolved || node.optionIds.Count == 0 && node.options.Count > 0)
                 {
                     if (node.options.Any(option => option == null) || node.options.Distinct().Count() != node.options.Count)
-                        throw new InvalidDataException("CQF_DialogGraph_InvalidOptions");
+                        throw new InvalidDataException("CQF_DialogGraph_InvalidOptions: " + path + " null or duplicate inline options");
                     node.optionIds = node.options.Select(this.RegisterOption).ToList();
                 }
                 else
                 {
-                    if (node.optionIds.Distinct().Count() != node.optionIds.Count
-                        || node.optionIds.Any(id => !this.optionMoulds.ContainsKey(id)))
-                        throw new InvalidDataException("CQF_DialogGraph_InvalidOptions");
+                    if (node.optionIds.Distinct().Count() != node.optionIds.Count)
+                        throw new InvalidDataException("CQF_DialogGraph_InvalidOptions: " + path + "/optionIds duplicate references");
+                    int[] missing = node.optionIds.Where(id => !this.optionMoulds.ContainsKey(id)).ToArray();
+                    if (missing.Length > 0)
+                        throw new InvalidDataException("CQF_DialogGraph_InvalidOptions: " + path + "/optionIds missing=" + string.Join(",", missing));
                     node.options = node.optionIds.Select(id => this.optionMoulds[id]).ToList();
                 }
                 node.optionsResolved = true;

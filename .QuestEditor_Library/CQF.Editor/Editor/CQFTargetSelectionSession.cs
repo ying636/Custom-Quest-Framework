@@ -25,18 +25,18 @@ namespace QuestEditor_Library
             Map map = CQFEditorContext.Map ?? Find.CurrentMap;
             Thing source = CQFEditorContext.SourceThing;
             float buttonWidth = (width - 8f) / 3f;
-            if (Widgets.ButtonText(new Rect(x, y, buttonWidth, 25f), "Select".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, buttonWidth, 25f), "Select".Translate()))
             {
                 Find.WindowStack.Add(new Window_CQFTargetPicker(map, source, assign));
             }
             bool oldEnabled = GUI.enabled;
             GUI.enabled = oldEnabled && map != null && Current.ProgramState == ProgramState.Playing;
-            if (Widgets.ButtonText(new Rect(x + buttonWidth + 4f, y, buttonWidth, 25f), "CQF_TargetPickOnMap".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x + buttonWidth + 4f, y, buttonWidth, 25f), "CQF_TargetPickOnMap".Translate()))
             {
                 new CQFTargetSelectionSession(map, source, assign).Begin();
             }
             GUI.enabled = oldEnabled && map != null && !value.NullOrEmpty();
-            if (Widgets.ButtonText(new Rect(x + (buttonWidth + 4f) * 2f, y, buttonWidth, 25f), "CQF_TargetLocate".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x + (buttonWidth + 4f) * 2f, y, buttonWidth, 25f), "CQF_TargetLocate".Translate()))
             {
                 Locate(ResolveEditorTarget(map, source, value));
             }

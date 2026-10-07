@@ -19,6 +19,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.WorldCondition_Biome cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             WorldConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawSelectButton(x, ref y, "BiomeDef".Translate(cqfReceiver.biome?.label ?? cqfReceiver.biome?.defName), DefDatabase<BiomeDef>.AllDefsListForReading, d => cqfReceiver.biome = d, d => d.label ?? d.defName);
         }

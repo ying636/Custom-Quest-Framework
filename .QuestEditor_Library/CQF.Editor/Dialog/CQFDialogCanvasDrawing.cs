@@ -79,12 +79,9 @@ namespace QuestEditor_Library
             float x = view.width - 175f, y = view.height - 34f;
             Widgets.DrawBoxSolid(new Rect(x - 6f, y - 3f, 174f, 32f), CQFEditorPalette.Panel);
             if (CQFAIIconButton.DrawFramedImage(new Rect(x, y, 26f, 26f), TexButton.Minus, "CQF_DialogGraph_ZoomOut".Translate())) this.ZoomAt(this.viewSize / 2f, 1f / 1.1f);
-            TooltipHandler.TipRegion(new Rect(x, y, 26f, 26f), "CQF_DialogGraph_ZoomOut".Translate());
             Widgets.Label(new Rect(x + 32f, y + 4f, 52f, 22f), Mathf.RoundToInt(this.zoom * 100f) + "%");
             if (CQFAIIconButton.DrawFramedImage(new Rect(x + 88f, y, 26f, 26f), TexButton.Plus, "CQF_DialogGraph_ZoomIn".Translate())) this.ZoomAt(this.viewSize / 2f, 1.1f);
-            TooltipHandler.TipRegion(new Rect(x + 88f, y, 26f, 26f), "CQF_DialogGraph_ZoomIn".Translate());
             if (CQFAIIconButton.DrawFramedImage(new Rect(x + 130f, y, 26f, 26f), TexButton.CenterOnPointsTex, "CQF_DialogGraph_Fit".Translate())) this.Fit();
-            TooltipHandler.TipRegion(new Rect(x + 130f, y, 26f, 26f), "CQF_DialogGraph_Fit".Translate());
             Text.Font = GameFont.Small;
         }
 

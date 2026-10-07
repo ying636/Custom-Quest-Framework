@@ -15,6 +15,7 @@ namespace QuestEditor_Library
         public double ElapsedSeconds => elapsed + timer.Elapsed.TotalSeconds;
         public string Notice { get; set; } = string.Empty;
         public CQFAITaskState? TaskState { get; set; }
+        public string ExecutionProgress { get; set; } = string.Empty;
         public IReadOnlyList<CQFAIOperation> Operations => operations;
         public string Reasoning => previousReasoning + reasoning;
         public string Preview
@@ -35,7 +36,7 @@ namespace QuestEditor_Library
             }
         }
         public string Header => "CQF_AI_ActivityHeader".Translate(state.Translate(), ElapsedSeconds.ToString("0"), operations.Count);
-        public string CurrentStep => pending.Length > 0 ? "CQF_AI_PreparingTool".Translate(string.Join(", ", pending.Select(CQFAIOperation.ToolLabel))) : operations.LastOrDefault()?.Label
+        public string CurrentStep => ExecutionProgress.Length > 0 ? ExecutionProgress : pending.Length > 0 ? "CQF_AI_PreparingTool".Translate(string.Join(", ", pending.Select(CQFAIOperation.ToolLabel))) : operations.LastOrDefault()?.Label
             ?? (Reasoning.Length > 0 ? "CQF_AI_ReasoningAvailable" : "CQF_AI_ReasoningUnavailable").Translate().ToString();
         public void Update(CQFAIStreamUpdate? progress)
         {
@@ -52,7 +53,7 @@ namespace QuestEditor_Library
                 previousReasoning += (previousReasoning.Length > 0 ? "\n\n" : string.Empty) + reasoning;
                 if (previousReasoning.Length > 32768) previousReasoning = previousReasoning.Substring(0, 32768) + "…";
             }
-            reasoning = string.Empty; content = string.Empty; pending = Array.Empty<string>(); state = "CQF_AI_Waiting";
+            reasoning = string.Empty; content = string.Empty; pending = Array.Empty<string>(); ExecutionProgress = string.Empty; state = "CQF_AI_Waiting";
         }
         public void Add(CQFAIOperation operation) { operations.Add(operation); pending = Array.Empty<string>(); state = "CQF_AI_Executing"; }
         public void WaitForAgents() { state = "CQF_AI_WaitingAgents"; }

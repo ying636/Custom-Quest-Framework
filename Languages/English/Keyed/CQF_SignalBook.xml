@@ -14,7 +14,13 @@
   <CQF_SignalBook_InvalidConfigurationName>Enter a configuration name without invalid filename characters or spaces at either end.</CQF_SignalBook_InvalidConfigurationName>
   <CQF_SignalBook_InvalidSignal>Signal names must not be blank or duplicated.</CQF_SignalBook_InvalidSignal>
   <CQF_SignalBook_OpenDescription>Open the signal book to edit shared signals and save or load configurations.</CQF_SignalBook_OpenDescription>
-  <CQF_SignalBook_SelectSignal>Click to choose a signal from the signal book. The text field remains editable.</CQF_SignalBook_SelectSignal>
+  <CQF_SignalBook_SelectSignal>Click to open the signal book selector. Manual signal input is also supported.</CQF_SignalBook_SelectSignal>
+  <CQF_SignalBook_Search>Search</CQF_SignalBook_Search>
+  <CQF_SignalBook_NoSignals>No signals in the signal book.</CQF_SignalBook_NoSignals>
+  <CQF_SignalBook_NoMatches>No matching signals.</CQF_SignalBook_NoMatches>
+  <CQF_SignalBook_ManualInput>Enter a signal manually, then select it. This does not change the signal book.</CQF_SignalBook_ManualInput>
+  <CQF_SignalBook_ClearSelection>Clear selection</CQF_SignalBook_ClearSelection>
+  <CQF_SignalBook_SelectionFailed>Could not select the signal</CQF_SignalBook_SelectionFailed>
   <CQF_SignalBook_ClearDefaultConfiguration>Clear default</CQF_SignalBook_ClearDefaultConfiguration>
   <CQF_SignalBook_NewConfiguration>New configuration</CQF_SignalBook_NewConfiguration>
   <CQF_SignalBook_UnsavedConfiguration>Unsaved configuration</CQF_SignalBook_UnsavedConfiguration>

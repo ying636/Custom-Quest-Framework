@@ -9,7 +9,7 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditDialogResult : Window
     {
-        public Dialog_EditDialogResult(QuestEditor_Dialog parent,DialogResult result, DialogOption option, DialogNode node) 
+        public Dialog_EditDialogResult(QuestEditor_Dialog parent,DialogResult result, DialogOption option, DialogNode node)
         {
             this.parent = parent;
             this.node = node;
@@ -36,14 +36,16 @@ namespace QuestEditor_Library
         }
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             DialogTreeDef tree = this.parent.CurTree;
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, this.height + 20f));
             Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float x = 8f;
             float y = 8f;
             float width = viewRect.width - 18f;
             Widgets.DrawHighlight(new Rect(x + 4f, y - 2f, width - 8f, 32f));
-            Widgets.Label(new Rect(x + 8f, y + 4f, width - 16f, 25f), "DialogResults".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x + 8f, y + 4f, width - 16f, 25f), "DialogResults".Translate().Colorize(CQFUIStyle.Accent));
             y += 40f;
             CQFEditorTools.DrawLabelAndText_Line(y, "ResultName".Translate(), ref this.result.resultName, x + 8f, 150f);
             y += 38f;
@@ -53,7 +55,7 @@ namespace QuestEditor_Library
                 nextNodeText = node.text;
             }
             Rect nextRect = new Rect(x + 8f, y, width - 196f, 28f);
-            if (Widgets.ButtonText(nextRect, "NextNode".Translate(nextNodeText), false) && this.result.nextIndex != null)
+            if (CQFUIStyle.ButtonText(nextRect, "NextNode".Translate(nextNodeText), false) && this.result.nextIndex != null)
             {
                 this.Close();
                 if (Find.WindowStack.Windows.ToList().Find(x => x.GetType() == typeof(Dialog_EditDialogNode)) is Window window)
@@ -65,7 +67,7 @@ namespace QuestEditor_Library
             TooltipHandler.TipRegion(nextRect, "NextNodeTip".Translate());
             nextRect.x = x + width - 176f;
             nextRect.width = 168f;
-            if (Widgets.ButtonText(nextRect, "SelectNode".Translate()))
+            if (CQFUIStyle.ButtonText(nextRect, "SelectNode".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(tree.nodeMoulds, (i, n) =>
                 {
@@ -122,15 +124,15 @@ namespace QuestEditor_Library
         {
             Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
             Widgets.DrawHighlight(headerRect);
-            Widgets.Label(new Rect(x + 8f, y + 4f, width - 84f, 25f), label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x + 8f, y + 4f, width - 84f, 25f), label.Colorize(CQFUIStyle.Accent));
             Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Plus))
             {
                 addAction();
             }
             TooltipHandler.TipRegion(buttonRect, "Add".Translate());
             buttonRect.x += 30f;
-            if (Widgets.ButtonImage(buttonRect, TexButton.Delete) && canRemove())
+            if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Delete) && canRemove())
             {
                 removeAction();
             }
@@ -142,12 +144,12 @@ namespace QuestEditor_Library
         {
             Rect rect = new Rect(x + 6f, startY - 2f, width - 12f, Mathf.Max(34f, endY - startY + 4f));
             Widgets.DrawHighlightIfMouseover(rect);
-            Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(new Vector2(rect.x + 6f, rect.yMax), new Vector2(rect.xMax - 6f, rect.yMax), CQFUIStyle.Accent, 1f);
         }
 
         private void DrawEmptyState(ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
+            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(CQFUIStyle.Muted));
             y += 32f;
         }
 

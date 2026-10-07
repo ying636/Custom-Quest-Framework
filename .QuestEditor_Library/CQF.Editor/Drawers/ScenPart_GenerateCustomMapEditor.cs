@@ -14,7 +14,7 @@ namespace QuestEditor_Library
         public static void DoEditInterface_0(QuestEditor_Library.ScenPart_GenerateCustomMap cqfReceiver, Listing_ScenEdit listing)
         {
             Rect scenPartRect = listing.GetScenPartRect(cqfReceiver, 30f + ScenPart.RowHeight);
-            if (Widgets.ButtonText(scenPartRect, "StartMap".Translate(cqfReceiver.map?.label), false))
+            if (CQFUIStyle.ButtonText(scenPartRect, "StartMap".Translate(cqfReceiver.map?.label), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, d => cqfReceiver.map = d, d => d.label);
             }

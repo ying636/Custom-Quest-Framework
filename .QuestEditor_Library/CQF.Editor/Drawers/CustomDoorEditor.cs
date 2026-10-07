@@ -13,18 +13,21 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.CustomDoor cqfReceiver)
         {
-            Rect inRect = new Rect(0f, 0f, 540f, 590f);
+            using CQFUIScope scope = new CQFUIScope();
+            Rect inRect = new Rect(8f, 36f, Mathf.Min(540f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, Mathf.Min(554f, CQFUIScope.ContentHeight - 44f)));
             float width = inRect.width - 20f;
-            Widgets.BeginScrollView(new Rect(0f, 0f, inRect.width, inRect.height), ref cqfReceiver.pos, new Rect(0f, 0f, width, Mathf.Max(inRect.height, cqfReceiver.height + 10f)));
+            Rect content = new Rect(0f, 0f, width, Mathf.Max(inRect.height, cqfReceiver.height + 10f));
+            Widgets.BeginScrollView(inRect, ref cqfReceiver.pos, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
             float x = 10f;
             float y = 10f;
             cqfReceiver.DrawSectionHeader(ref y, x, width, "OpeningActions".Translate(), "CustomDoorOpeningActionsTip".Translate(), () => CQFEditorTools.OpenCQFActionSelect(t => cqfReceiver.openingActions.Add((CQFAction)Activator.CreateInstance(t))), () => CQFEditorTools.DrawFloatMenu(cqfReceiver.openingActions, a => cqfReceiver.openingActions.Remove(a), a => a.GetType().Name.Translate()), () => cqfReceiver.openingActions.Any());
-            cqfReceiver.DrawActionList(ref y, x, width, inRect);
+            cqfReceiver.DrawActionList(ref y, x, width, content);
             cqfReceiver.DrawSectionHeader(ref y, x, width, "OpeningConditions".Translate(), "CustomDoorOpeningConditionsTip".Translate(), () => Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(DialogCondition).AllSubclassesNonAbstract(), c => c.Name.Translate(), c => cqfReceiver.openingConditions.Add((DialogCondition)Activator.CreateInstance(c)), null, null, null, null, null, null), "Select".Translate())), () => CQFEditorTools.DrawFloatMenu(cqfReceiver.openingConditions, c => cqfReceiver.openingConditions.Remove(c), c => c.GetType().Name.Translate()), () => cqfReceiver.openingConditions.Any());
             foreach (DialogCondition c in cqfReceiver.openingConditions)
             {
                 float itemY = y;
-                c.Draw(ref y, inRect, x + 8f);
+                c.Draw(ref y, content, x + 8f);
                 cqfReceiver.DrawListItemFrame(itemY, y, x, width);
                 y += 8f;
             }
@@ -61,17 +64,17 @@ namespace QuestEditor_Library
             Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
             Widgets.DrawHighlight(headerRect);
             Rect labelRect = new Rect(x + 8f, y + 4f, width - 84f, 25f);
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
             TooltipHandler.TipRegion(labelRect, tip);
             Rect button = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(button, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Plus))
             {
                 addAction();
             }
 
             TooltipHandler.TipRegion(button, "Add".Translate());
             button.x += 30f;
-            if (Widgets.ButtonImage(button, TexButton.Delete) && canRemove())
+            if (CQFUIStyle.ButtonImage(button, TexButton.Delete) && canRemove())
             {
                 removeAction();
             }
@@ -82,7 +85,7 @@ namespace QuestEditor_Library
 
         public static void DrawEmptyState_3(QuestEditor_Library.CustomDoor cqfReceiver, ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
+            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(CQFUIStyle.Muted));
             y += 32f;
         }
     }

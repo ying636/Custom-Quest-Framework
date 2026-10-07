@@ -23,13 +23,14 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(0f, 0f, inRect.width - 35f, 35f), "CQF_TargetPickerTitle".Translate());
             Text.Font = GameFont.Small;
             this.search = Widgets.TextField(new Rect(0f, 42f, inRect.width - 190f, 30f), this.search);
             bool oldEnabled = GUI.enabled;
             GUI.enabled = oldEnabled && this.map != null;
-            if (Widgets.ButtonText(new Rect(inRect.width - 182f, 42f, 182f, 30f), "CQF_TargetPickOnMap".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - 182f, 42f, 182f, 30f), "CQF_TargetPickOnMap".Translate()))
             {
                 this.Close(false);
                 new CQFTargetSelectionSession(this.map, this.source, this.assign).Begin();
@@ -37,8 +38,9 @@ namespace QuestEditor_Library
             GUI.enabled = oldEnabled;
             Rect viewRect = new Rect(0f, 0f, inRect.width - 18f, this.height);
             Widgets.BeginScrollView(new Rect(0f, 82f, inRect.width, inRect.height - 82f), ref this.scroll, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float y = 0f;
-            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetContextEntries".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetContextEntries".Translate().Colorize(CQFUIStyle.Accent));
             y += 30f;
             foreach (string key in CQFTargetNames.Reserved)
             {
@@ -51,7 +53,7 @@ namespace QuestEditor_Library
                 this.DrawEntry(ref y, viewRect.width, key, label, target);
             }
             y += 10f;
-            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetKeyBook_Title".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetKeyBook_Title".Translate().Colorize(CQFUIStyle.Accent));
             y += 30f;
             foreach (string key in CQFTargetKeyBook.Keys)
             {
@@ -62,12 +64,12 @@ namespace QuestEditor_Library
                     this.DrawEntry(ref y, viewRect.width, key, key, target);
                 }
             }
-            if (Widgets.ButtonText(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetKeyBook_Title".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetKeyBook_Title".Translate()))
             {
                 CQFTargetKeyEditor.OpenBook();
             }
             y += 40f;
-            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetMapEntries".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(0f, y, viewRect.width, 28f), "CQF_TargetMapEntries".Translate().Colorize(CQFUIStyle.Accent));
             y += 30f;
             foreach (TargetWithKey entry in this.entries)
             {
@@ -83,7 +85,7 @@ namespace QuestEditor_Library
 
         private void DrawEntry(ref float y, float width, string key, string label, TargetInfo target, bool register = false)
         {
-            if (Widgets.ButtonText(new Rect(0f, y, width - 115f, 28f), label, false))
+            if (CQFUIStyle.ButtonText(new Rect(0f, y, width - 115f, 28f), label, false))
             {
                 if (register && CQFTargetSelectionSession.CanPersistThing(target.Thing) &&
                     !target.Map.GetComponent<MapComponent_CQFTargets>().TryRegister(key, target.Thing))
@@ -95,8 +97,8 @@ namespace QuestEditor_Library
             }
             if (target.IsValid && target.Map != null)
             {
-                Widgets.Label(new Rect(10f, y + 28f, width - 125f, 25f), target.Cell.ToString().Colorize(Color.gray));
-                if (Widgets.ButtonText(new Rect(width - 110f, y + 10f, 110f, 28f), "CQF_TargetLocate".Translate()))
+                Widgets.Label(new Rect(10f, y + 28f, width - 125f, 25f), target.Cell.ToString().Colorize(CQFUIStyle.Muted));
+                if (CQFUIStyle.ButtonText(new Rect(width - 110f, y + 10f, 110f, 28f), "CQF_TargetLocate".Translate()))
                 {
                     CQFTargetSelectionSession.Locate(target);
                 }

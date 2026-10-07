@@ -19,6 +19,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.WorldCondition_TileMutator cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             WorldConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawSelectButton(x, ref y, "TileMutatorDef".Translate(cqfReceiver.mutator?.label ?? cqfReceiver.mutator?.defName), DefDatabase<TileMutatorDef>.AllDefsListForReading, d => cqfReceiver.mutator = d, d => d.label ?? d.defName);
         }

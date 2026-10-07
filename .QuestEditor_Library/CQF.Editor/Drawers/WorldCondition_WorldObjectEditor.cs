@@ -19,6 +19,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.WorldCondition_WorldObject cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             WorldConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "NonHostile".Translate(), ref cqfReceiver.nonHostile);
             y += 30f;

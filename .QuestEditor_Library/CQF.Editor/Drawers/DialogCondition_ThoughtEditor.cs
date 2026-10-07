@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_Thought cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogCondition_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 350f, 25f);
             List<KeyValuePair<ThoughtDef, ThoughtStage>> stagets = new List<KeyValuePair<ThoughtDef, ThoughtStage>>();
@@ -34,7 +35,7 @@ namespace QuestEditor_Library
                     stagets.Add(new KeyValuePair<ThoughtDef, ThoughtStage>(t, s));
                 });
             });
-            if (Widgets.ButtonText(rect, "CQF_ThoughtDef".Translate(cqfReceiver.thought?.stages.Find(s => s.untranslatedLabel == cqfReceiver.untranslatedLabel)?.label), false))
+            if (CQFUIStyle.ButtonText(rect, "CQF_ThoughtDef".Translate(cqfReceiver.thought?.stages.Find(s => s.untranslatedLabel == cqfReceiver.untranslatedLabel)?.label), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<KeyValuePair<ThoughtDef, ThoughtStage>>(new TextSelectDrawer<KeyValuePair<ThoughtDef, ThoughtStage>>(stagets, t => t.Value?.label, t =>
                 {

@@ -11,6 +11,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_QuestBookStep cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             if (cqfReceiver.selectedBookDef == null && cqfReceiver.editorBook != null)
             {
@@ -20,7 +21,7 @@ namespace QuestEditor_Library
             float width = Mathf.Max(280f, inRect.width - x - 12f);
             string selectedBookLabel = cqfReceiver.selectedBookDef == null ? "CQF_QuestBook_None".Translate().ToString() : QuestEditor_Library.CQFAction_QuestBookStep.GetBookLabel(cqfReceiver.selectedBookDef);
             Rect bookRect = new Rect(x, y, width, 28f);
-            if (Widgets.ButtonText(bookRect, "CQF_QuestBook_ActionBook".Translate(selectedBookLabel), false))
+            if (CQFUIStyle.ButtonText(bookRect, "CQF_QuestBook_ActionBook".Translate(selectedBookLabel), false))
             {
                 List<QuestBookDef> availableBooks = cqfReceiver.GetAvailableBooks();
                 if (availableBooks.Any())
@@ -47,19 +48,19 @@ namespace QuestEditor_Library
             Rect selectRect = new Rect(x, y, width, 28f);
             if (cqfReceiver.selectedBookDef == null)
             {
-                Widgets.Label(selectRect, "CQF_QuestBook_SelectBookFirst".Translate().Colorize(Color.gray));
+                Widgets.Label(selectRect, "CQF_QuestBook_SelectBookFirst".Translate().Colorize(CQFUIStyle.Muted));
                 TooltipHandler.TipRegion(selectRect, "CQF_QuestBook_SelectBookFirst".Translate());
             }
             else if (availableSteps.Any())
             {
-                if (Widgets.ButtonText(selectRect, "CQF_QuestBook_ActionStep".Translate(selectedLabel), false))
+                if (CQFUIStyle.ButtonText(selectRect, "CQF_QuestBook_ActionStep".Translate(selectedLabel), false))
                 {
                     Find.WindowStack.Add(new FloatMenu(availableSteps.Select(step => new FloatMenuOption(step.Label, () => cqfReceiver.stepId = step.id)).ToList()));
                 }
             }
             else
             {
-                Widgets.Label(selectRect, "CQF_QuestBook_NoStepsAvailable".Translate().Colorize(Color.gray));
+                Widgets.Label(selectRect, "CQF_QuestBook_NoStepsAvailable".Translate().Colorize(CQFUIStyle.Muted));
                 TooltipHandler.TipRegion(selectRect, "CQF_QuestBook_NoStepsAvailable".Translate());
             }
 

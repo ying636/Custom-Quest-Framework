@@ -64,4 +64,9 @@
   <MainPawnRegenerateIfDead>死亡后重新生成</MainPawnRegenerateIfDead>
   <MainPawnGenerateConditions>生成条件</MainPawnGenerateConditions>
   <MainPawnRegenerateConditions>重新生成条件</MainPawnRegenerateConditions>
+  <CQF_PawnData_GenerationSettings>生成设置</CQF_PawnData_GenerationSettings>
+  <CQF_PawnData_LordAndDialog>集群与对话</CQF_PawnData_LordAndDialog>
+  <CQF_PawnData_Inventory>库存</CQF_PawnData_Inventory>
+  <CQF_PawnData_MissingKind>请选择实体类型。</CQF_PawnData_MissingKind>
+  <CQF_PawnData_InvalidCount>数量上限必须至少为 1。</CQF_PawnData_InvalidCount>
 </LanguageData>

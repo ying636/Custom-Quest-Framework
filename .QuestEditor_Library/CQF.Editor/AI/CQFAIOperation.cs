@@ -28,9 +28,10 @@ namespace QuestEditor_Library
         public bool? Succeeded { get; private set; }
         public string Error { get; private set; } = string.Empty;
         public int? Count { get; private set; }
+        public string Progress { get; set; } = string.Empty;
         public double ElapsedSeconds => elapsed + timer.Elapsed.TotalSeconds;
         public string Label => "CQF_AI_OperationLine".Translate(ToolLabel(Name), (Succeeded == null ? "CQF_AI_OperationRunning" : Succeeded.Value ? "CQF_AI_OperationDone" : "CQF_AI_OperationFailed").Translate(), ElapsedSeconds < 0.1 ? "<0.1" : ElapsedSeconds.ToString("0.0")).ToString()
-            + (Count == null ? string.Empty : " " + "CQF_AI_OperationCount".Translate(Count.Value).ToString());
+            + (Count == null ? string.Empty : " " + "CQF_AI_OperationCount".Translate(Count.Value).ToString()) + (Progress.Length == 0 ? string.Empty : "\n" + Progress);
         public string Details => string.Join("\n", new[] { Arguments, Error }.Where(value => value.Length > 0));
         public void Complete(XElement result, string secret)
         {
@@ -86,7 +87,7 @@ namespace QuestEditor_Library
             return key.Translate();
         }
         public XElement Save() => new XElement("operation", new XAttribute("id", Id), new XAttribute("name", Name), new XAttribute("elapsed", ElapsedSeconds),
-            Succeeded == null ? null : new XAttribute("success", Succeeded.Value), Count == null ? null : new XAttribute("count", Count.Value), new XElement("arguments", Arguments), new XElement("error", Error));
+            Succeeded == null ? null : new XAttribute("success", Succeeded.Value), Count == null ? null : new XAttribute("count", Count.Value), new XElement("arguments", Arguments), new XElement("error", Error), new XElement("progress", Progress));
         public static CQFAIOperation Restore(XElement value)
         {
             string id = (string?)value.Attribute("id") ?? "", name = (string?)value.Attribute("name") ?? "";
@@ -95,7 +96,7 @@ namespace QuestEditor_Library
             if (id.Length is < 1 or > 256 || !name.StartsWith("cqf_", StringComparison.Ordinal) || name.Length > 100 || seconds < 0 || double.IsNaN(seconds) || double.IsInfinity(seconds) || count < 0)
                 throw new InvalidDataException("CQF_AI_InvalidHistory");
             CQFAIOperation operation = new CQFAIOperation(new CQFAIToolCall(id, name, new XElement("arguments")))
-            { elapsed = seconds, Succeeded = (bool?)value.Attribute("success"), Count = count, Error = value.Element("error")?.Value ?? "", Arguments = value.Element("arguments")?.Value ?? "" };
+            { elapsed = seconds, Succeeded = (bool?)value.Attribute("success"), Count = count, Error = value.Element("error")?.Value ?? "", Arguments = value.Element("arguments")?.Value ?? "", Progress = value.Element("progress")?.Value ?? "" };
             operation.timer.Stop(); operation.timer.Reset();
             return operation;
         }

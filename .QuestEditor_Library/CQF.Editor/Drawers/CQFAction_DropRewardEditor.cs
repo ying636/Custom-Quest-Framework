@@ -11,14 +11,15 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_DropReward cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             float contentWidth = Mathf.Max(280f, inRect.width - x - 12f);
             Rect sectionRect = new Rect(x, y, contentWidth, 32f);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             string title = "CQF_QuestBook_Rewards".Translate();
-            Widgets.Label(new Rect(sectionRect.x + 12f, sectionRect.y + 5f, sectionRect.width - 52f, 24f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(sectionRect.x + 12f, sectionRect.y + 5f, sectionRect.width - 52f, 24f), title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(sectionRect.xMax - 36f, sectionRect.y + 3f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 CQFRewardEditor.OpenRewardSelector(reward => cqfReceiver.rewards.Add(reward));
             }
@@ -28,8 +29,8 @@ namespace QuestEditor_Library
             if (cqfReceiver.rewards.NullOrEmpty())
             {
                 Rect emptyRect = new Rect(x, y, contentWidth, 38f);
-                Widgets.DrawMenuSection(emptyRect);
-                Widgets.Label(new Rect(emptyRect.x + 12f, emptyRect.y + 9f, emptyRect.width - 24f, 22f), "CQF_QuestBook_NoRewards".Translate().Colorize(Color.gray));
+                CQFUIStyle.DrawMenuSection(emptyRect);
+                Widgets.Label(new Rect(emptyRect.x + 12f, emptyRect.y + 9f, emptyRect.width - 24f, 22f), "CQF_QuestBook_NoRewards".Translate().Colorize(CQFUIStyle.Muted));
                 y += emptyRect.height + 10f;
                 return;
             }
@@ -39,7 +40,7 @@ namespace QuestEditor_Library
                 float cardY = y;
                 float contentY = cardY + 28f;
                 string rewardType = reward == null ? "CQF_QuestBook_RewardInvalid".Translate() : reward.GetType().Name.Translate();
-                Widgets.Label(new Rect(x + 12f, cardY + 4f, contentWidth - 56f, 22f), rewardType.Colorize(ColorLibrary.PaleBlue));
+                Widgets.Label(new Rect(x + 12f, cardY + 4f, contentWidth - 56f, 22f), rewardType.Colorize(CQFUIStyle.Accent));
                 if (reward != null)
                 {
                     reward.Draw(ref contentY, inRect, x + 8f);
@@ -51,9 +52,9 @@ namespace QuestEditor_Library
                 }
 
                 float cardHeight = Mathf.Max(54f, contentY - cardY + 6f);
-                Widgets.DrawBox(new Rect(x, cardY, contentWidth, cardHeight), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, cardY, contentWidth, cardHeight), 1, QuestEditor_Dialog.blueTex);
                 Rect deleteRect = new Rect(x + contentWidth - 36f, cardY + 2f, 28f, 28f);
-                if (Widgets.ButtonImage(deleteRect, TexButton.Delete))
+                if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete))
                 {
                     cqfReceiver.rewards.Remove(reward);
                 }

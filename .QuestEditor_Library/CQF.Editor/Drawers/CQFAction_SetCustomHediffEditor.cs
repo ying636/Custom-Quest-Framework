@@ -24,8 +24,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SetCustomHediff cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "GivenHediff".Translate() + cqfReceiver.hediff?.label, false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 25f), "GivenHediff".Translate() + cqfReceiver.hediff?.label, false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<HediffDef>.AllDefsListForReading.FindAll(c => typeof(CustomHediff).IsAssignableFrom(c.hediffClass)), f => cqfReceiver.hediff = f, f => f.label);
             }

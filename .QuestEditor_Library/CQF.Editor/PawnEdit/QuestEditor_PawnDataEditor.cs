@@ -17,7 +17,7 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
-        public override string PageTitle => "CQF_PawnEditor_Title".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "CQF_PawnEditor_Title".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.CurDef.defName, () => this.CurDef,
             value => { QuestEditor_PawnDataEditor.curDef = (ComplexPawnDef)value; this.previewDirty = true; },
             isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
@@ -32,6 +32,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             this.RefreshMods();
             base.DrawPageTitle(inRect);
             this.DrawButtons(inRect);
@@ -51,7 +52,7 @@ namespace QuestEditor_Library
         private void DrawButtons(Rect inRect)
         {
             float y = 30f;
-            if (Widgets.ButtonText(new Rect(inRect.width - 320f, y, 90f, 30f), "CQF_PawnEditor_LoadPremade".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - 320f, y, 90f, 30f), "CQF_PawnEditor_LoadPremade".Translate()))
             {
                 List<ComplexPawnDef> defs = new List<ComplexPawnDef>();
                 defs.AddRange(DefDatabase<ComplexPawnDef>.AllDefsListForReading);
@@ -63,11 +64,11 @@ namespace QuestEditor_Library
                     QuestEditor_PawnDataEditor.ResetPreview();
                 }, this.PawnDisplayName);
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 220f, y, 90f, 30f), "CQF_PawnEditor_Save".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - 220f, y, 90f, 30f), "CQF_PawnEditor_Save".Translate()))
             {
                 this.Save();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 120f, y, 90f, 30f), "CQF_PawnEditor_New".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - 120f, y, 90f, 30f), "CQF_PawnEditor_New".Translate()))
             {
                 Dialog_MessageBox dialog = new Dialog_MessageBox("CQF_PawnEditor_ConfirmCreateNew".Translate());
                 dialog.buttonBText = "CQF_PawnEditor_Cancel".Translate();
@@ -85,10 +86,10 @@ namespace QuestEditor_Library
 
         private void DrawPreviewPanel(Rect rect)
         {
-            Widgets.DrawMenuSection(rect);
+            CQFUIStyle.DrawMenuSection(rect);
             float y = rect.y + 12f;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Preview".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Preview".Translate().Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             y += 40f;
             Rect portraitRect = new Rect(rect.x + 35f, y, rect.width - 70f, 260f);
@@ -110,17 +111,17 @@ namespace QuestEditor_Library
         {
             Rect labelRect = new Rect(rect.x + 14f, y, 105f, 24f);
             Rect valueRect = new Rect(labelRect.xMax + 6f, y, rect.width - 139f, 24f);
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
             Widgets.Label(valueRect, value.NullOrEmpty() ? "CQF_PawnEditor_None".Translate().ToString() : value);
             y += 26f;
         }
 
         private void DrawModulePanel(Rect rect)
         {
-            Widgets.DrawMenuSection(rect);
+            CQFUIStyle.DrawMenuSection(rect);
             float y = rect.y + 12f;
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Modules".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(rect.x + 12f, y, rect.width - 24f, 30f), "CQF_PawnEditor_Modules".Translate().Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             y += 38f;
             List<PawnModDef> mods = this.VisibleMods();
@@ -131,13 +132,13 @@ namespace QuestEditor_Library
                 bool selected = mod.defName == this.selectedModDefName;
                 if (selected)
                 {
-                    Widgets.DrawHighlightSelected(row);
+                    CQFUIStyle.DrawHighlightSelected(row);
                 }
                 else
                 {
                     Widgets.DrawHighlightIfMouseover(row);
                 }
-                if (Widgets.ButtonText(row, mod.EditorLabel, false, true, true, TextAnchor.MiddleLeft))
+                if (CQFUIStyle.ButtonText(row, mod.EditorLabel, false, true, true, TextAnchor.MiddleLeft))
                 {
                     this.selectedModDefName = mod.defName;
                     this.scrollPos = Vector2.zero;
@@ -153,7 +154,7 @@ namespace QuestEditor_Library
 
         private void DrawCurrentModule(Rect rect)
         {
-            Widgets.DrawMenuSection(rect);
+            CQFUIStyle.DrawMenuSection(rect);
             List<PawnModDef> mods = this.VisibleMods();
             this.EnsureSelectedMod(mods);
             PawnModDef mod = mods.FirstOrDefault(def => def.defName == this.selectedModDefName);
@@ -164,12 +165,13 @@ namespace QuestEditor_Library
             }
             Rect titleRect = new Rect(rect.x + 14f, rect.y + 12f, rect.width - 28f, 34f);
             Text.Font = GameFont.Medium;
-            Widgets.Label(titleRect, mod.EditorLabel.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, mod.EditorLabel.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             TooltipHandler.TipRegion(titleRect, mod.EditorDescription);
             Rect outRect = new Rect(rect.x + 10f, rect.y + 52f, rect.width - 20f, rect.height - 62f);
             Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float y = 8f;
             bool previousChanged = GUI.changed;
             GUI.changed = false;

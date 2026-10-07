@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CustomDutyTrigger_Signal cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CustomDutyTriggerEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), cqfReceiver.signal, value => cqfReceiver.signal = value, x, 150f, inRect.width - x - 12f);
             y += 30f;

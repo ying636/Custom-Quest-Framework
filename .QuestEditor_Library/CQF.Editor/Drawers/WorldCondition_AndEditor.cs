@@ -19,6 +19,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.WorldCondition_And cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             WorldConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawIDrawList(ref y, x + 5f, cqfReceiver.conditions, inRect, "WorldConditions".Translate());
             y += 30f;

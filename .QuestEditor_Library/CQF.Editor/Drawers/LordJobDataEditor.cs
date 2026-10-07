@@ -17,21 +17,22 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.LordJobData cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             cqfReceiver.DrawName(ref y, inRect, x);
-            y += 30f;
+            y += 38f;
             if (cqfReceiver.JobSelectable)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordJob".Translate(cqfReceiver.lordJob.Name.CanTranslate() ? cqfReceiver.lordJob.Name.Translate().ToString() : cqfReceiver.lordJob.Name), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(80f, inRect.width - x - 12f), 32f), "CQF_LordJob".Translate(cqfReceiver.lordJob.Name.CanTranslate() ? cqfReceiver.lordJob.Name.Translate().ToString() : cqfReceiver.lordJob.Name), false, overrideTextAnchor: TextAnchor.MiddleLeft))
                 {
                     Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(LordJob).AllSubclassesNonAbstract(), t => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name, t => cqfReceiver.lordJob = t, null, t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""), "Select".Translate()));
                 }
             }
             else
             {
-                Widgets.Label(new Rect(x, y, 350f, 25f), "CQF_LordJob".Translate(cqfReceiver.LordJob.Name.CanTranslate() ? cqfReceiver.LordJob.Name.Translate().ToString() : cqfReceiver.LordJob.Name));
+                Widgets.Label(new Rect(x, y, Mathf.Max(80f, inRect.width - x - 12f), 32f), "CQF_LordJob".Translate(cqfReceiver.LordJob.Name.CanTranslate() ? cqfReceiver.LordJob.Name.Translate().ToString() : cqfReceiver.LordJob.Name));
             }
 
-            y += 30f;
+            y += 38f;
             if (cqfReceiver.lordJob == typeof(LordJob_ComplexCustom))
             {
                 cqfReceiver.DrawComplexDutyMap(ref y, x);
@@ -40,8 +41,8 @@ namespace QuestEditor_Library
 
         public static void DrawName_1(QuestEditor_Library.LordJobData cqfReceiver, ref float y, Rect inRect, float x)
         {
-            Rect rect = new Rect(x, y, 250f, 25f);
-            if (Widgets.ButtonText(rect, cqfReceiver.GetType().Name.Translate(), false))
+            Rect rect = new Rect(x, y, Mathf.Max(80f, inRect.width - x - 12f), 32f);
+            if (CQFUIStyle.ButtonText(rect, cqfReceiver.GetType().Name.Translate(), false, overrideTextAnchor: TextAnchor.MiddleLeft))
             {
                 List<Type> types = typeof(LordJobData).AllSubclassesNonAbstract().ListFullCopy();
                 types.Add(typeof(LordJobData));
@@ -60,16 +61,16 @@ namespace QuestEditor_Library
 
         public static void DrawComplexDutyMap_2(QuestEditor_Library.LordJobData cqfReceiver, ref float y, float x)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 350f, 25f), "CQF_LordData_DutyMap".Translate(cqfReceiver.dutyMap?.defName ?? "Null"), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(80f, CQFUIScope.ContentWidth - x - 12f), 32f), "CQF_LordData_DutyMap".Translate(cqfReceiver.dutyMap?.defName ?? "Null"), false, overrideTextAnchor: TextAnchor.MiddleLeft))
             {
                 Find.WindowStack.Add(new Dialog_Select<DutyMapDef>(new TextSelectDrawer<DutyMapDef>(DefDatabase<DutyMapDef>.AllDefsListForReading, d => d.defName, d => cqfReceiver.dutyMap = d, null, null, null, null, null, null), "Select".Translate()));
             }
 
-            y += 30f;
+            y += 38f;
             if (cqfReceiver.dutyMap != null && cqfReceiver.dutyMap.nodes.Any())
             {
                 CQFEditorTools.DrawSelectableText(y, "CQF_LordData_DutyMapStartNode".Translate(), ref cqfReceiver.dutyMapStartNodeId, () => CQFEditorTools.DrawFloatMenu(cqfReceiver.dutyMap.nodes, node => cqfReceiver.dutyMapStartNodeId = node.nodeId, node => node.nodeId), x, 180f);
-                y += 30f;
+                y += 38f;
             }
         }
     }

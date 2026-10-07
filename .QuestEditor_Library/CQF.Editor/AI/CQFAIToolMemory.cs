@@ -4,7 +4,7 @@ namespace QuestEditor_Library
 {
     public sealed partial class CQFAIConversation
     {
-        private XElement CompactToolResult(XElement result)
+        private XElement CompactToolResult(XElement result, int maximumCharacters = 8192)
         {
             result.Descendants("defs").Elements("def").Elements("description").Remove();
             foreach (XElement schemas in result.Descendants("schemas").ToArray())
@@ -14,21 +14,33 @@ namespace QuestEditor_Library
                     new XAttribute("detailsOmitted", true), types.Take(20).Select(type => new XElement("type", type.Attributes(), new XAttribute("fields", type.Elements("field").Count()))),
                     new XElement("notice", "Historical schema field details omitted. Request cqf_get_schema for the exact type before editing.")));
             }
-            if (result.ToString(SaveOptions.DisableFormatting).Length <= 8192) return result;
-            XElement summary = new XElement(result.Name, result.Attributes(), new XAttribute("detailsOmitted", true),
+            if (result.ToString(SaveOptions.DisableFormatting).Length <= maximumCharacters) return result;
+            XElement summary = new XElement(result.Name, result.Attributes(),
                 new XElement("notice", "Detailed historical data omitted to fit the request. Successful writes have already executed and must not be replayed. Re-read current data using narrow paths and pagination."));
-            int budget = 5000;
+            summary.SetAttributeValue("detailsOmitted", true);
+            XElement outcomes = new XElement("execution_outcomes");
+            foreach (XElement error in result.Descendants("error").Take(4))
+                outcomes.Add(new XElement("error", error.Attributes(), error.Value.Substring(0, Math.Min(error.Value.Length, Math.Min(512, maximumCharacters / 8)))));
+            int outcomeBudget = Math.Min(1500, maximumCharacters / 4);
+            foreach (XElement applied in result.Descendants().Where(element => element.Name == "applied" || element.Name == "liveMapApplied" || element.Name == "runtimeEdited").Take(4))
+            {
+                if (outcomeBudget <= 0) break;
+                outcomes.Add(this.SummarizeToolData(applied, ref outcomeBudget, 0));
+            }
+            if (outcomes.HasElements) summary.Add(outcomes);
+            int budget = Math.Max(0, maximumCharacters - 1200 - summary.ToString(SaveOptions.DisableFormatting).Length);
             foreach (XElement child in result.Elements())
             {
                 if (budget <= 0) break;
                 summary.Add(this.SummarizeToolData(child, ref budget, 0));
             }
-            if (summary.ToString(SaveOptions.DisableFormatting).Length <= 8192) return summary;
-            XElement receipt = new XElement(result.Name, result.Attributes(), new XAttribute("detailsOmitted", true),
+            if (summary.ToString(SaveOptions.DisableFormatting).Length <= maximumCharacters) return summary;
+            XElement receipt = new XElement(result.Name, result.Attributes(),
                 new XElement("notice", "Historical result details omitted. Use current read tools if needed; do not repeat successful writes."));
+            receipt.SetAttributeValue("detailsOmitted", true);
             foreach (XElement error in result.Descendants("error").Take(4))
-                receipt.Add(new XElement("error", error.Attributes(), error.Value.Length <= 512 ? error.Value : error.Value.Substring(0, 512)));
-            foreach (XElement applied in result.Descendants().Where(element => element.Name == "applied" || element.Name == "liveMapApplied").Take(4))
+                receipt.Add(new XElement("error", error.Attributes(), error.Value.Substring(0, Math.Min(error.Value.Length, Math.Min(512, maximumCharacters / 8)))));
+            foreach (XElement applied in result.Descendants().Where(element => element.Name == "applied" || element.Name == "liveMapApplied" || element.Name == "runtimeEdited").Take(4))
                 receipt.Add(new XElement(applied.Name, applied.Attributes()));
             return receipt;
         }

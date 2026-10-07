@@ -218,4 +218,26 @@ Counts come from the API and include completed tool rounds. +? means the total i
   <CQF_AI_ToolDefinition>Manage definition</CQF_AI_ToolDefinition>
   <CQF_AI_RuntimeFailed>The game reported an error while executing this operation. Some effects may already have occurred; inspect the current state before continuing.</CQF_AI_RuntimeFailed>
   <CQF_AI_UndoUnsupported>This task executed operations that cannot be fully undone.</CQF_AI_UndoUnsupported>
+  <CQF_AI_ExecutionSpeed>Map execution speed</CQF_AI_ExecutionSpeed>
+  <CQF_AI_ExecutionSpeed_0>Slow</CQF_AI_ExecutionSpeed_0>
+  <CQF_AI_ExecutionSpeed_1>Normal</CQF_AI_ExecutionSpeed_1>
+  <CQF_AI_ExecutionSpeed_2>Fast</CQF_AI_ExecutionSpeed_2>
+  <CQF_AI_ExecutionSpeed_3>Finish as soon as possible</CQF_AI_ExecutionSpeed_3>
+  <CQF_AI_ExecutionSpeedHint>Map changes execute in order on UI frames, including while paused. Slow: one change per 100 ms; normal: up to eight per 50 ms; fast: up to 48 per frame; finish mode: a six ms frame budget. Stop keeps completed changes. Task undo checks for conflicts before restoring.</CQF_AI_ExecutionSpeedHint>
+  <CQF_AI_MapRollingBack>Restoring the failed batch</CQF_AI_MapRollingBack>
+  <CQF_AI_MapChecking>Checking map changes</CQF_AI_MapChecking>
+  <CQF_AI_MapStep_placed>Place object</CQF_AI_MapStep_placed>
+  <CQF_AI_MapStep_removed>Remove object</CQF_AI_MapStep_removed>
+  <CQF_AI_MapStep_terrain>Lay terrain</CQF_AI_MapStep_terrain>
+  <CQF_AI_MapStep_roof>Set roofing</CQF_AI_MapStep_roof>
+  <CQF_AI_MapStep_edited>Edit object</CQF_AI_MapStep_edited>
+  <CQF_AI_MapProgress>{0} · {1}/{2} changes</CQF_AI_MapProgress>
+  <CQF_AI_TokenBudget>Token budget per task</CQF_AI_TokenBudget>
+  <CQF_AI_RequestBudget>Maximum requests per task</CQF_AI_RequestBudget>
+  <CQF_AI_BudgetHint>Defaults: 100,000 tokens and 24 requests shared by the main AI and all workers. Each HTTP attempt counts, including compatibility retries. A task pauses before a request would exceed the estimated remaining budget. Completed changes remain applied; send a new instruction to continue with a new budget. Updated limits apply to the next task. Token reservations are estimates; provider usage is settled after each response, so an in-flight response can exceed the token limit. This is not a currency spending cap.</CQF_AI_BudgetHint>
+  <CQF_AI_BudgetPaused>Task paused at its shared request/token budget. Completed changes remain applied. Send a new instruction to continue with a new budget.</CQF_AI_BudgetPaused>
+  <CQF_AI_BudgetUsage>Budget used: {0}/{1} tokens
+Requests sent: {2}/{3}
+Estimated reservation for active requests: {4} tokens</CQF_AI_BudgetUsage>
+  <CQF_AI_BudgetEstimated>Budget accounting includes estimated usage for requests with unavailable usage or interrupted responses. Reported token totals above remain unchanged.</CQF_AI_BudgetEstimated>
 </LanguageData>

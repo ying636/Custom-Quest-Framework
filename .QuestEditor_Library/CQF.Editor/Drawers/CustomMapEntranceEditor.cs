@@ -17,16 +17,19 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.CustomMapEntrance cqfReceiver)
         {
-            Rect outRect = new Rect(0f, 36f, 540f, 554f);
+            using CQFUIScope scope = new CQFUIScope();
+            Rect outRect = new Rect(8f, 36f, Mathf.Max(80f, Mathf.Min(540f, CQFUIScope.ContentWidth - 16f)), Mathf.Max(40f, Mathf.Min(554f, CQFUIScope.ContentHeight - 44f)));
             float width = outRect.width - 40f;
             Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, cqfReceiver.height + 10f));
             Widgets.BeginScrollView(outRect, ref cqfReceiver.scrollPos, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float x = 10f;
             float y = 10f;
             cqfReceiver.DrawSectionHeader(ref y, x, width, "CQF_PortalMapSection".Translate(), "CQF_PortalMapSectionTip".Translate());
             string mapLabel = cqfReceiver.mapDef == null ? "Null".Translate().ToString() : cqfReceiver.mapDef.label;
             Rect rect = new Rect(x + 8f, y, width - 16f, 30f);
-            if (Widgets.ButtonText(rect, "CurCustomMap".Translate(mapLabel), false))
+            if (CQFUIStyle.ButtonText(rect, "CurCustomMap".Translate(mapLabel), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, (x) => cqfReceiver.mapDef = x, (x) => x.label);
             }
@@ -51,7 +54,7 @@ namespace QuestEditor_Library
                 {
                     Rect rowRect = new Rect(x + 8f, y, width - 16f, 28f);
                     Widgets.DrawHighlightIfMouseover(rowRect);
-                    if (Widgets.ButtonText(rowRect, action.GetType().Name.Translate(), false))
+                    if (CQFUIStyle.ButtonText(rowRect, action.GetType().Name.Translate(), false))
                     {
                         Find.WindowStack.Add(new Dialog_EditIDrawable(action));
                     }
@@ -72,7 +75,7 @@ namespace QuestEditor_Library
             Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
             Widgets.DrawHighlight(headerRect);
             Rect labelRect = new Rect(x + 8f, y + 4f, width - 84f, 25f);
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
             if (!tip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(labelRect, tip);
@@ -81,14 +84,14 @@ namespace QuestEditor_Library
             if (addAction != null)
             {
                 Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
-                if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
+                if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Plus))
                 {
                     addAction();
                 }
 
                 TooltipHandler.TipRegion(buttonRect, "Add".Translate());
                 buttonRect.x += 30f;
-                if (Widgets.ButtonImage(buttonRect, TexButton.Delete) && canRemove)
+                if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Delete) && canRemove)
                 {
                     removeAction?.Invoke();
                 }
@@ -101,7 +104,7 @@ namespace QuestEditor_Library
 
         public static void DrawEmptyState_3(QuestEditor_Library.CustomMapEntrance cqfReceiver, ref float y, float x, float width, string label)
         {
-            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(Color.gray));
+            Widgets.Label(new Rect(x, y + 4f, width, 25f), label.Colorize(CQFUIStyle.Muted));
             y += 32f;
         }
     }

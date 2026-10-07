@@ -19,12 +19,16 @@ namespace QuestEditor_Library
         }
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Small;
-            Widgets.BeginScrollView(new Rect(4f,5f, inRect.width - 10f, inRect.height - 5f), ref this.scrollPos, new Rect(0f,0f, inRect.width - 10f,this.height));
+            Rect viewport = new Rect(0f, 0f, inRect.width, inRect.height);
+            Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, this.height + 12f));
+            Widgets.BeginScrollView(viewport, ref this.scrollPos, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
             float y = 5f;
             using (new CQFEditorContext(this.owner))
             {
-                comp.Draw(ref y,inRect,5f);
+                comp.Draw(ref y,content,5f);
             }
             this.height = y;
             Widgets.EndScrollView();

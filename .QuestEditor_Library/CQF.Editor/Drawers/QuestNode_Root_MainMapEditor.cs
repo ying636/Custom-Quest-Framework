@@ -13,6 +13,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.QuestNode_Root_MainMap cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             y += 10f;
             CQFEditorTools.DrawSelectButton(x + 7f, ref y, "MainMapDef".Translate(cqfReceiver.mainMapDef.GetValue(QuestGen.slate)?.defName), DefDatabase<MainMapDef>.AllDefsListForReading, def => cqfReceiver.mainMapDef = def, def => def.defName);
             CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "tile".Translate(), ref cqfReceiver.tile, x + 7f, 110f);
@@ -41,12 +42,12 @@ namespace QuestEditor_Library
             cqfReceiver.blacklist.ForEach(b => listText = b.label + "," + listText);
             Widgets.Label(new Rect(x + 7f, y, 300f, 60f), (cqfReceiver.enableBlack ? "BiomesBlackList".Translate() : "BiomesWhiteList".Translate()) + listText);
             y += 70f;
-            if (Widgets.ButtonText(new Rect(x + 7f, y, 70f, 25f), "Add".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x + 7f, y, 70f, 25f), "Add".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu<BiomeDef>(DefDatabase<BiomeDef>.AllDefs.ToList().FindAll(b => !cqfReceiver.blacklist.Contains(b)), b => cqfReceiver.blacklist.Add(b), b => b.label);
             }
 
-            if (Widgets.ButtonText(new Rect(x + 70f, y, 70f, 25f), "Delete".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x + 70f, y, 70f, 25f), "Delete".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu<BiomeDef>(cqfReceiver.blacklist, b => cqfReceiver.blacklist.Remove(b), b => b.label);
             }

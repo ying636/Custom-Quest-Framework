@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_UpgradeTrait cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
-            if (Widgets.ButtonText(rect, "GiveTrait".Translate(cqfReceiver.trait?.defName), false))
+            if (CQFUIStyle.ButtonText(rect, "GiveTrait".Translate(cqfReceiver.trait?.defName), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<TraitDef>(new TextSelectDrawer<TraitDef>(DefDatabase<TraitDef>.AllDefsListForReading, t => t.defName, t =>
                 {

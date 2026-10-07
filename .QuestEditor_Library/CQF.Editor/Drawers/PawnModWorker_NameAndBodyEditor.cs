@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_NameAndBody cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_NameAndBody data = pawnDef.DataFor<PawnModData_NameAndBody>();
             Rect row = cqfReceiver.DrawRowLabel(ref y, inRect, x, "CQF_PawnEditor_Name".Translate(), 140f);
             float nameWidth = Mathf.Min(150f, (row.width - 20f) / 3f);

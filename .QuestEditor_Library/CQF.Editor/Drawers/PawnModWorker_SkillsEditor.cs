@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Skills cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Skills modData = pawnDef.DataFor<PawnModData_Skills>();
             foreach (SkillDef skill in DefDatabase<SkillDef>.AllDefsListForReading.OrderBy(def => def.listOrder))
             {
@@ -31,10 +32,10 @@ namespace QuestEditor_Library
 
             Text.Anchor = TextAnchor.MiddleLeft;
             Rect labelRect = new Rect(row.x + 6f, row.y, 100f, row.height);
-            Widgets.Label(labelRect, skill.skillLabel.CapitalizeFirst().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(labelRect, skill.skillLabel.CapitalizeFirst().Colorize(CQFUIStyle.Accent));
             Rect passionRect = new Rect(labelRect.xMax, row.y + 1f, 24f, 24f);
             Widgets.DrawLightHighlight(passionRect);
-            Widgets.DrawBox(passionRect, 1);
+            CQFUIStyle.DrawBox(passionRect, 1);
             Widgets.DrawHighlightIfMouseover(passionRect);
             if (data.passion == Passion.Minor)
             {

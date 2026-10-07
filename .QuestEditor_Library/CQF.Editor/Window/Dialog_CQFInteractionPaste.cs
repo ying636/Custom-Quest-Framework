@@ -29,6 +29,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Widgets.Label(new Rect(0f, 0f, inRect.width - 35f, 30f), "Paste".Translate() + " · "
                 + "InteractionOperations".Translate() + ": " + this.draft.Count + " → " + this.owners.Count);
             TooltipHandler.TipRegion(new Rect(0f, 0f, inRect.width - 35f, 30f), string.Join("\n", this.owners.Select(o => o.LabelCap + " " + o.Position)));
@@ -36,6 +37,7 @@ namespace QuestEditor_Library
             Rect outRect = new Rect(0f, 76f, inRect.width, inRect.height - 136f);
             Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.contentHeight));
             Widgets.BeginScrollView(outRect, ref this.scroll, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float y = 0f;
             foreach (CQFConfigurationReference reference in this.draft.References)
             {
@@ -64,16 +66,16 @@ namespace QuestEditor_Library
             Widgets.EndScrollView();
             if (this.applied)
             {
-                if (Widgets.ButtonText(new Rect(0f, inRect.height - 40f, 180f, 35f), "CQF_EditorUndoPaste".Translate()))
+                if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 40f, 180f, 35f), "CQF_EditorUndoPaste".Translate()))
                 {
                     this.Undo();
                 }
             }
-            else if (Widgets.ButtonText(new Rect(0f, inRect.height - 40f, 180f, 35f), "Paste".Translate()))
+            else if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 40f, 180f, 35f), "Paste".Translate()))
             {
                 this.Apply();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 180f, inRect.height - 40f, 180f, 35f), "Close".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - 180f, inRect.height - 40f, 180f, 35f), "Close".Translate()))
             {
                 this.Close();
             }

@@ -21,7 +21,7 @@ namespace QuestEditor_Library
             if (Mouse.IsOver(rect))
             {
                 Vector3 mouse = Input.mousePosition;
-                Widgets.DrawBox(new Rect(mouse.x, mouse.y, 70f, 40f));
+                CQFUIStyle.DrawBox(new Rect(mouse.x, mouse.y, 70f, 40f));
                 Widgets.Label(rect, cqfReceiver.category.label);
             }
         }

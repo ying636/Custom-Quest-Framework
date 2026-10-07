@@ -18,6 +18,8 @@ namespace QuestEditor_Library
             this.forcePause = true;
             this.closeOnClickedOutside = false;
             this.doCloseX = true;
+            this.draggable = true;
+            this.resizeable = true;
         }
 
         public override Vector2 InitialSize => new Vector2(620f, 620f);
@@ -27,18 +29,34 @@ namespace QuestEditor_Library
                 if (!field.IsInitOnly) field.SetValue(this.iDrawable, field.GetValue(value));
         }, isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
 
+        public override void WindowUpdate()
+        {
+            base.WindowUpdate();
+            windowRect.width = Mathf.Clamp(windowRect.width, Mathf.Min(420f, UI.screenWidth - 20f), UI.screenWidth - 20f);
+            windowRect.height = Mathf.Clamp(windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
-            Rect outRect = new Rect(0f, 36f, inRect.width, inRect.height - 36f);
-            Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(this.height + 10f, inRect.height));
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+            Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 28f), this.iDrawable.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
+            float top = 36f;
+            if (this.iDrawable is PawnSpawnData pawnData)
+            {
+                pawnData.DrawName(ref top, 0f, new Rect(0f, top, inRect.width, 36f));
+                top += 4f;
+            }
+            Rect outRect = new Rect(0f, top, inRect.width, inRect.height - top);
+            Rect viewRect = new Rect(0f, 0f, Mathf.Max(100f, inRect.width - 20f), Mathf.Max(this.height + 10f, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             float y = 0f;
             if (questBook != null && iDrawable is CQFAction_QuestBookStep questBookStepAction)
             {
                 questBookStepAction.SetEditorBook(questBook);
             }
-            using (new CQFEditorContext(this.owner))
+            using (new CQFEditorContext(this.owner, this.iDrawable as PawnSpawnData))
             {
+                using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
                 this.iDrawable.Draw(ref y, viewRect, 0f);
             }
             this.height = y;

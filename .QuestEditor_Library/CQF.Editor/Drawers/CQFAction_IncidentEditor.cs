@@ -24,8 +24,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Incident cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFIncidentDef".Translate(cqfReceiver.incident?.defName), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFIncidentDef".Translate(cqfReceiver.incident?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<IncidentDef>.AllDefsListForReading, (d) => cqfReceiver.incident = d, (d) => d.label);
             }

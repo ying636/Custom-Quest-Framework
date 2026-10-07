@@ -11,9 +11,9 @@ namespace QuestEditor_Library
         public static void Draw(ref float y, float x, float width, Rect inRect, string title, List<DialogCondition> conditions, Action addAction = null)
         {
             width = Mathf.Max(180f, width);
-            Widgets.LabelEllipses(new Rect(x, y, width - 70f, 28f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.LabelEllipses(new Rect(x, y, width - 70f, 28f), title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(x + width - 58f, y, 25f, 25f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 if (addAction != null)
                 {
@@ -67,13 +67,13 @@ namespace QuestEditor_Library
                     }
                 });
                 DrawBody(ref y, x, width, inRect, condition);
-                Widgets.DrawBox(new Rect(x, startY, width, y - startY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, startY, width, y - startY), 1, QuestEditor_Dialog.blueTex);
                 y += 10f;
             }
             mutation?.Invoke();
             if (conditions.Count == 0)
             {
-                Widgets.Label(new Rect(x + 8f, y, width - 16f, 25f), "CQF_NoResultConditions".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(x + 8f, y, width - 16f, 25f), "CQF_NoResultConditions".Translate().Colorize(CQFUIStyle.Muted));
                 y += 30f;
             }
             y += 6f;
@@ -83,7 +83,7 @@ namespace QuestEditor_Library
         {
             Widgets.DrawHighlight(new Rect(x, y, width, 30f));
             bool open = expanded.TryGetValue(condition, out _);
-            if (Widgets.ButtonText(new Rect(x + 2f, y + 3f, 22f, 22f), open ? "−" : "+", false))
+            if (CQFUIStyle.ButtonText(new Rect(x + 2f, y + 3f, 22f, 22f), open ? "−" : "+", false))
             {
                 if (open)
                 {
@@ -104,7 +104,7 @@ namespace QuestEditor_Library
             if (!details.NullOrEmpty())
             {
                 Rect summaryRect = new Rect(x + 12f, y, width - 20f, 25f);
-                Widgets.LabelEllipses(summaryRect, details.Colorize(Color.gray));
+                Widgets.LabelEllipses(summaryRect, details.Colorize(CQFUIStyle.Muted));
                 TooltipHandler.TipRegion(summaryRect, details);
                 y += 28f;
             }
@@ -143,7 +143,7 @@ namespace QuestEditor_Library
 
         private static void DrawSingleChild(ref float y, float x, float width, Rect inRect, DialogCondition_WithSubConditions parent)
         {
-            if (Widgets.ButtonText(new Rect(x, y, width - 34f, 28f), "CQF_SelectDialogCondition".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, width - 34f, 28f), "CQF_SelectDialogCondition".Translate()))
             {
                 Select(condition =>
                 {
@@ -177,7 +177,7 @@ namespace QuestEditor_Library
         {
             bool previous = GUI.enabled;
             GUI.enabled = previous && enabled;
-            bool clicked = Widgets.ButtonImage(rect, texture);
+            bool clicked = CQFUIStyle.ButtonImage(rect, texture);
             GUI.enabled = previous;
             TooltipHandler.TipRegion(rect, key.Translate());
             return clicked;

@@ -16,6 +16,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.InteractionResult cqfReceiver, ref float y, Rect inRect, float x = 0f)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFInteractionResultEditor.DrawResult(ref y, x, inRect.width - x - 35f, inRect, cqfReceiver);
         }
     }

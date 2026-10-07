@@ -13,7 +13,7 @@ namespace QuestEditor_Library
 {
     public class QuestEditor_GroupEditor : Page, ICQFAIEditorHost
     {
-        public override string PageTitle => "GroupEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "GroupEditor".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(data.defName, () => data, value =>
         {
             data = (GroupDataDef)value;
@@ -21,31 +21,60 @@ namespace QuestEditor_Library
         }, isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             if (Widgets.CloseButtonFor(inRect))
             {
                 this.Close();
             }
-            GroupDataDef data = QuestEditor_GroupEditor.data;
-            this.DrawMisc();
-            float y = 50f;
-            float x = 5f;
-            Widgets.BeginScrollView(new Rect(4f, 40f, inRect.width - 8f, inRect.height - 83f), ref this.scrollPos, new Rect(0f, 40f, inRect.width - 32f, height));
-            CQFEditorTools.DrawLabelAndText_Line(y, "LootBoxName".Translate(), ref data.defName, x, 150f);
-            y += 30f;
-            data.lord.Draw(ref y, inRect, x);
-            float y2 = y;
-            y += 4f;
-            CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, x + 3f, data.pawns, inRect, "PawnSpawnDatas".Translate().Colorize(ColorLibrary.SkyBlue), p => p.dataName);
-            Widgets.DrawBox(new Rect(x - 5f,y2,inRect.width - 35f,y - y2),1,QuestEditor_Dialog.blueTex);
+            this.DrawMisc(inRect);
+            Rect main = new Rect(0f, 88f, inRect.width, Mathf.Max(80f, inRect.height - 96f));
+            bool columns = main.width >= 780f;
+            float leftWidth = columns ? Mathf.Min(520f, main.width * 0.48f) : main.width;
+            Rect left = new Rect(main.x, main.y, leftWidth, main.height);
+            CQFUIStyle.DrawMenuSection(left);
+            Rect viewport = left.ContractedBy(12f);
+            Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(height, viewport.height));
+            Widgets.BeginScrollView(viewport, ref scrollPos, content);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(content.width);
+            using (new CQFUIScope(content.width))
+            {
+                GroupDataDef current = QuestEditor_GroupEditor.data;
+                float y = 4f;
+                CQFEditorTools.DrawLabelAndText_Line(y, "LootBoxName".Translate(), ref current.defName, 0f, content.width - 176f);
+                y += 36f;
+                current.lord.Draw(ref y, content, 0f);
+                if (!columns)
+                {
+                    y += 12f;
+                    CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 0f, current.pawns, content, "PawnSpawnDatas".Translate(), pawn => pawn.dataName);
+                }
+                height = y + 12f;
+            }
             Widgets.EndScrollView();
-            height = y;
+            if (columns)
+            {
+                Rect right = new Rect(left.xMax + 12f, main.y, main.width - left.width - 12f, main.height);
+                CQFUIStyle.DrawMenuSection(right);
+                Rect pawnViewport = right.ContractedBy(12f);
+                Rect pawnContent = new Rect(0f, 0f, pawnViewport.width - 20f, Mathf.Max(pawnHeight, pawnViewport.height));
+                Widgets.BeginScrollView(pawnViewport, ref pawnScrollPos, pawnContent);
+                using (new CQFUIScope(pawnContent.width))
+                {
+                    float y = 4f;
+                    CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 0f, data.pawns, pawnContent, "PawnSpawnDatas".Translate(), pawn => pawn.dataName);
+                    pawnHeight = y + 12f;
+                }
+                Widgets.EndScrollView();
+            }
         }
 
-        public void DrawMisc() 
+        public void DrawMisc(Rect inRect)
         {
-            float y = 20f;
-            if (Widgets.ButtonText(new Rect(780f, y, 90f, 30f), "LoadPremade".Translate()))
+            float y = 44f;
+            float width = Mathf.Min(180f, (inRect.width - 16f) / 3f);
+            float start = Mathf.Max(0f, inRect.width - width * 3f - 16f);
+            if (CQFUIStyle.ButtonText(new Rect(start + (width + 8f) * 2f, y, width, 32f), "LoadPremade".Translate()))
             {
                 List<GroupDataDef> groups = new List<GroupDataDef>();
                 groups.AddRange(DefDatabase<GroupDataDef>.AllDefsListForReading);
@@ -56,7 +85,7 @@ namespace QuestEditor_Library
                     QuestEditor_GroupEditor.data.lord.Data.lordData = QuestEditor_GroupEditor.data.lord;
                 }, (x) => x.defName);
             }
-            if (Widgets.ButtonText(new Rect(670f, y, 90f, 30f), "Save".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(start + width + 8f, y, width, 32f), "Save".Translate()))
             {
                 try
                 {
@@ -64,8 +93,9 @@ namespace QuestEditor_Library
                     XElement defs = new XElement("Defs");
                     XElement tree = QuestEditor_GroupEditor.data.SaveToXElement("QuestEditor_Library.GroupDataDef");
                     defs.Add(tree);
+                    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
                     defs.Save(path);
-                    if (!DefDatabase<GroupDataDef>.AllDefsListForReading.Exists(d => d.defName == QuestEditor_GroupEditor.data.defName)) 
+                    if (!DefDatabase<GroupDataDef>.AllDefsListForReading.Exists(d => d.defName == QuestEditor_GroupEditor.data.defName))
                     {
                         DefDatabase<GroupDataDef>.Add(QuestEditor_GroupEditor.data);
                     }
@@ -73,10 +103,10 @@ namespace QuestEditor_Library
                 }
                 catch (Exception e)
                 {
-                    Log.Error("Save error:" + e.Message);
+                    Log.Error("Save error:" + e);
                 }
             }
-            if (Widgets.ButtonText(new Rect(560f, y, 90f, 30f), "ResetBinding".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(start, y, width, 32f), "ResetBinding".Translate()))
             {
                 Dialog_MessageBox dialog = new Dialog_MessageBox("ConfirmCreateNewDialogTree".Translate());
                 dialog.buttonBText = "Cancel".Translate();
@@ -93,6 +123,8 @@ namespace QuestEditor_Library
 
         public static GroupDataDef data = new GroupDataDef();
         public Vector2 scrollPos = Vector2.zero;
-        float height;
+        private float height;
+        private float pawnHeight;
+        private Vector2 pawnScrollPos;
     }
 }

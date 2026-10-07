@@ -24,7 +24,7 @@
   <CQF_DialogGraph_Expand>Open editor</CQF_DialogGraph_Expand>
   <CQF_DialogGraph_MoveUp>Move result up. The first matching result is used.</CQF_DialogGraph_MoveUp>
   <CQF_DialogGraph_MoveDown>Move result down. The first matching result is used.</CQF_DialogGraph_MoveDown>
-  <CQF_DialogGraph_SelectHint>Double-click a node, choice or result, or open Properties, to edit it here. Drag a result's output port onto any node to connect them.</CQF_DialogGraph_SelectHint>
+  <CQF_DialogGraph_SelectHint>Double-click a node, choice or result to edit it here. Drag a result's output port onto any node to connect them.</CQF_DialogGraph_SelectHint>
   <CQF_DialogGraph_KeepEntry>The entry node cannot be removed.</CQF_DialogGraph_KeepEntry>
   <CQF_DialogGraph_Error>Operation failed: {0}</CQF_DialogGraph_Error>
   <CQF_DialogGraph_Valid>Graph checked: {0} nodes, {1} unreachable from the entry.</CQF_DialogGraph_Valid>
@@ -105,6 +105,7 @@
   <CQF_DialogGraph_DeleteOption>Delete choice and all references</CQF_DialogGraph_DeleteOption>
   <CQF_DialogGraph_ConfirmDeleteShared>This choice is shared by {0} nodes. Deleting it removes all references. Continue?</CQF_DialogGraph_ConfirmDeleteShared>
   <CQF_DialogGraph_OptionOrder>Drag to reorder choices within this dialogue</CQF_DialogGraph_OptionOrder>
+  <CQF_DialogGraph_ResultOrder>Drag up or down to reorder results</CQF_DialogGraph_ResultOrder>
   <CQF_DialogGraph_Advanced>Conditions and behavior</CQF_DialogGraph_Advanced>
   <CQF_DialogGraph_InvalidOptions>Invalid choice definitions or references. Check for missing or duplicate references and invalid choice data.</CQF_DialogGraph_InvalidOptions>
 </LanguageData>

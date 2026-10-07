@@ -15,16 +15,17 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.ActionComp cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFEditorTools.DrawLabelAndText_Line(y, "CompName".Translate(), ref cqfReceiver.compName, x, 100f);
             Rect rectCP = new Rect(380f, y, 25f, 25f);
-            if (Widgets.ButtonImage(rectCP, TexButton.Copy))
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Copy))
             {
                 CQFEditorTools.actionComp = cqfReceiver.Copy();
             }
 
             TooltipHandler.TipRegion(rectCP, "Copy".Translate());
             y += 30f;
-            if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), "CQFActionTriggerMode".Translate(("ActionTriggerMode_" + cqfReceiver.mode.ToString()).Translate().ToString()), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f), 25f), "CQFActionTriggerMode".Translate(("ActionTriggerMode_" + cqfReceiver.mode.ToString()).Translate().ToString()), false))
             {
                 var actions = new List<ActionTriggerMode>()
                 {

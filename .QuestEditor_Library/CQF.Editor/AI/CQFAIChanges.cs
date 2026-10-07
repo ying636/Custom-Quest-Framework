@@ -120,7 +120,7 @@ namespace QuestEditor_Library
         }
         private void RequireCollection(object source, XElement snapshot, string path, bool dictionary)
         {
-            object copy = model.Read(snapshot, source.GetType(), source, true)!;
+            object copy = model.Read(snapshot, source.GetType(), source, true, resolveDialogue: false)!;
             foreach (string segment in Segments(path))
             {
                 if (copy is System.Collections.IDictionary values)

@@ -21,11 +21,13 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(5f, 5f, 420f, 30f), "CQF_DutyMapNodeEditor".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(5f, 5f, 420f, 30f), "CQF_DutyMapNodeEditor".Translate().Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             Rect view = new Rect(0f, 0f, inRect.width - 20f, this.height);
             Widgets.BeginScrollView(new Rect(0f, 40f, inRect.width, inRect.height - 45f), ref this.scrollPos, view);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(view.width);
             float y = 5f;
             this.DrawNode(ref y, view);
             Widgets.EndScrollView();
@@ -36,7 +38,7 @@ namespace QuestEditor_Library
         {
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyMapNodeId".Translate(), ref this.node.nodeId, 5f, 120f);
             y += 30f;
-            if (Widgets.ButtonText(new Rect(5f, y, 300f, 25f), "CQF_DutyType".Translate(CQFEditorTools.DutyLabel(this.node.duty) ?? "Null"), false))
+            if (CQFUIStyle.ButtonText(new Rect(5f, y, 300f, 25f), "CQF_DutyType".Translate(CQFEditorTools.DutyLabel(this.node.duty) ?? "Null"), false))
             {
                 CQFEditorTools.OpenDutySelect(d => this.node.duty = d);
             }
@@ -51,7 +53,7 @@ namespace QuestEditor_Library
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_WanderRadius".Translate(), ref this.node.wanderRadius, ref this.wanderRadiusBuffer, 5f, 120f);
             y += 30f;
-            if (Widgets.ButtonText(new Rect(5f, y, 300f, 25f), "CQF_LocomotionUrgency".Translate(this.node.locomotion.ToString()), false))
+            if (CQFUIStyle.ButtonText(new Rect(5f, y, 300f, 25f), "CQF_LocomotionUrgency".Translate(this.node.locomotion.ToString()), false))
             {
                 CQFEditorTools.DrawFloatMenu<LocomotionUrgency>(Enum.GetValues(typeof(LocomotionUrgency)).Cast<LocomotionUrgency>().ToList(), v => this.node.locomotion = v, v => v.ToString());
             }
@@ -69,7 +71,7 @@ namespace QuestEditor_Library
                 foreach (CQFAction action in actions)
                 {
                     Rect rowRect = new Rect(x + 6f, y, width - 12f, 28f);
-                    if (Widgets.ButtonText(rowRect, action.GetType().Name.Translate(), false))
+                    if (CQFUIStyle.ButtonText(rowRect, action.GetType().Name.Translate(), false))
                     {
                         Find.WindowStack.Add(new Dialog_EditIDrawable(action));
                     }
@@ -78,7 +80,7 @@ namespace QuestEditor_Library
             }
             else
             {
-                Widgets.Label(new Rect(x + 10f, y + 2f, width - 20f, 25f), "CQF_DutyMapNoOptions".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(x + 10f, y + 2f, width - 20f, 25f), "CQF_DutyMapNoOptions".Translate().Colorize(CQFUIStyle.Muted));
                 y += 30f;
             }
             y += 8f;
@@ -88,15 +90,15 @@ namespace QuestEditor_Library
         {
             Widgets.DrawHighlight(new Rect(x - 4f, y - 2f, width + 8f, 32f));
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(x, y, width - 90f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x, y, width - 90f, 30f), label.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             Rect buttonRect = new Rect(x + width - 60f, y + 2f, 25f, 25f);
-            if (Widgets.ButtonImage(buttonRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Plus))
             {
                 addAction();
             }
             buttonRect.x += 30f;
-            if (Widgets.ButtonImage(buttonRect, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Delete))
             {
                 removeAction();
             }

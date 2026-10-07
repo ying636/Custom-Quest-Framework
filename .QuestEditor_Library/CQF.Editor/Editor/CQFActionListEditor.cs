@@ -12,13 +12,13 @@ namespace QuestEditor_Library
         {
             width = Mathf.Max(180f, width);
             Rect titleRect = new Rect(x, y, width - 70f, 28f);
-            Widgets.LabelEllipses(titleRect, title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.LabelEllipses(titleRect, title.Colorize(CQFUIStyle.Accent));
             if (!tip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(titleRect, tip);
             }
             Rect addRect = new Rect(x + width - 58f, y, 25f, 25f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 CQFEditorTools.OpenCQFActionSelect(type =>
                 {
@@ -46,7 +46,7 @@ namespace QuestEditor_Library
                 Widgets.DrawHighlight(row);
                 bool open = expanded.TryGetValue(action, out _);
                 Rect foldRect = new Rect(x + 2f, y + 3f, 22f, 22f);
-                if (Widgets.ButtonText(foldRect, open ? "−" : "+", false))
+                if (CQFUIStyle.ButtonText(foldRect, open ? "−" : "+", false))
                 {
                     if (open)
                     {
@@ -87,7 +87,7 @@ namespace QuestEditor_Library
                 if (!details.NullOrEmpty())
                 {
                     Rect summaryRect = new Rect(x + 12f, y, width - 20f, 25f);
-                    Widgets.LabelEllipses(summaryRect, details.Colorize(Color.gray));
+                    Widgets.LabelEllipses(summaryRect, details.Colorize(CQFUIStyle.Muted));
                     TooltipHandler.TipRegion(summaryRect, details);
                     y += 28f;
                 }
@@ -101,13 +101,13 @@ namespace QuestEditor_Library
                     });
                     y += 5f;
                 }
-                Widgets.DrawBox(new Rect(x, startY, width, y - startY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, startY, width, y - startY), 1, QuestEditor_Dialog.blueTex);
                 y += 10f;
             }
             mutation?.Invoke();
             if (actions.Count == 0)
             {
-                Widgets.Label(new Rect(x + 8f, y, width - 16f, 25f), "CQF_NoResultActions".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(x + 8f, y, width - 16f, 25f), "CQF_NoResultActions".Translate().Colorize(CQFUIStyle.Muted));
                 y += 30f;
             }
             y += 6f;
@@ -117,7 +117,7 @@ namespace QuestEditor_Library
         {
             bool previous = GUI.enabled;
             GUI.enabled = previous && enabled;
-            bool clicked = Widgets.ButtonImage(rect, texture);
+            bool clicked = CQFUIStyle.ButtonImage(rect, texture);
             GUI.enabled = previous;
             TooltipHandler.TipRegion(rect, key.Translate());
             return clicked;

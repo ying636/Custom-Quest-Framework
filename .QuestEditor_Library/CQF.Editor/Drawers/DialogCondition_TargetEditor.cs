@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_Target cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFTargetSelectionSession.DrawField(ref y, inRect, x, cqfReceiver.targetText, value => cqfReceiver.targetText = value);
         }

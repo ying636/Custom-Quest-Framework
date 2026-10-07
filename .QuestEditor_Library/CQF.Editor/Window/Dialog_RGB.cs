@@ -9,7 +9,7 @@ namespace QuestEditor_Library
 {
     public class Dialog_RGB : Window
     {
-        public Dialog_RGB(Color cur,Action<Color> apply) 
+        public Dialog_RGB(Color cur,Action<Color> apply)
         {
             this.curColor = cur;
             this.apply = apply;
@@ -17,12 +17,13 @@ namespace QuestEditor_Library
         public override Vector2 InitialSize => new Vector2(500f,225f);
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Rect rect = new Rect(5f, 3f, 50f, 50f);
             Widgets.ColorBox(rect, ref this.curColor, this.curColor,46);
             TooltipHandler.TipRegion(rect, new TipSignal(this.curColor.ToString()));
             float y = 60f;
             CQFEditorTools.DrawLabelAndText_Line(y, "Hex:", ref this.hex,5f, 150f);
-            if (Widgets.ButtonText(new Rect(200f, y, Window.CloseButSize.x, Window.CloseButSize.y), "OK".Translate(), true, true, true, null))
+            if (CQFUIStyle.ButtonText(new Rect(200f, y, Window.CloseButSize.x, Window.CloseButSize.y), "OK".Translate(), true, true, true, null))
             {
                 if (this.hex != null && this.hex.Length >= 6)
                 {
@@ -30,11 +31,11 @@ namespace QuestEditor_Library
                     ColorUtility.TryParseHtmlString(hex,out this.curColor);
                 }
             }
-            if (Widgets.ButtonText(new Rect(inRect.x, inRect.height - Window.CloseButSize.y, Window.CloseButSize.x, Window.CloseButSize.y), "CloseButton".Translate(), true, true, true, null))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.x, inRect.height - Window.CloseButSize.y, Window.CloseButSize.x, Window.CloseButSize.y), "CloseButton".Translate(), true, true, true, null))
             {
                 this.Close(true);
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - Window.CloseButSize.x, inRect.height - Window.CloseButSize.y, Window.CloseButSize.x, Window.CloseButSize.y), "OK".Translate(), true, true, true, null))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - Window.CloseButSize.x, inRect.height - Window.CloseButSize.y, Window.CloseButSize.x, Window.CloseButSize.y), "OK".Translate(), true, true, true, null))
             {
                 Action<Color> action = this.apply;
                 if (action != null)

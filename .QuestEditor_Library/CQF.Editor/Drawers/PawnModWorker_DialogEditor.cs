@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_Dialog cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_Dialog data = pawnDef.DataFor<PawnModData_Dialog>();
             if (cqfReceiver.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_DialogManager".Translate(cqfReceiver.ValueOrNone(data.dialogManager?.defName))))
             {

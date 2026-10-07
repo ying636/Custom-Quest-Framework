@@ -104,6 +104,7 @@ internal static class Program
         System.Xml.Linq.XElement serialized = redone.SaveToXElement("tree"); foreach (System.Xml.Linq.XAttribute classAttribute in serialized.Descendants().Attributes("Class").Where(attribute => attribute.Value == typeof(DialogOption).FullName).ToArray()) classAttribute.Remove();
         System.Xml.XmlNode xmlNode = new System.Xml.XmlDocument().ReadNode(serialized.CreateReader())!;
         DialogTreeDef reloaded = DirectXmlToObject.ObjectFromXml<DialogTreeDef>(xmlNode, false);
+        reloaded.ResolveOptions();
         Check(reloaded.nodeMoulds[0].editorX == 123.25f && reloaded.nodeMoulds[0].editorY == -42f && reloaded.nodeMoulds[0].editorPositionSet, "RimWorld XML position roundtrip");
         Check(reloaded.nodeMoulds[0].options[0].results[0].nextIndex == a.index, "RimWorld XML link roundtrip");
         Check(ChecksLogHandler.ErrorCount == 0, "no game parser errors");

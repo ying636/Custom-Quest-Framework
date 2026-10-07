@@ -9,13 +9,13 @@ public class CQFDialogTreeWindow : Window
     public CQFDialogTreeWindow(string title,Thing interviewer, Thing interviewee,Quest quest
     , DialogTreeDef tree)
     {
-        this.title = title; 
+        this.title = title;
         this.forcePause = true;
         this.absorbInputAroundWindow = true;
         this.closeOnAccept = false;
-        this.closeOnCancel = false; 
+        this.closeOnCancel = false;
         this.soundAppear = SoundDefOf.CommsWindow_Open;
-        this.soundClose = SoundDefOf.CommsWindow_Close; 
+        this.soundClose = SoundDefOf.CommsWindow_Close;
         this.interviewer = interviewer;
         this.interviewee = interviewee;
         this.quest = quest;
@@ -29,32 +29,34 @@ public class CQFDialogTreeWindow : Window
     public float CharacterWidth => 0f;
     public override void DoWindowContents(Rect inRect)
     {
+        using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
         if (this.title != null)
         {
-            Text.Font = GameFont.Medium; 
+            Text.Font = GameFont.Medium;
             Rect titleRect = new Rect(CharacterWidth, 0f, inRect.width - CharacterWidth*2f, 40f);
-            Widgets.DrawBoxSolid(titleRect,Color.black);
-            Widgets.DrawBox(titleRect);
-            titleRect.y += 5f;
-            titleRect.x += this.InitialSize.x/2f - (CharacterWidth) - this.title.GetWidthCached() / 2f;
+            Widgets.DrawBoxSolid(titleRect, CQFUIStyle.Header);
+            CQFUIStyle.DrawBox(titleRect);
+            Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(titleRect, this.title);
-            Text.Font = GameFont.Small; 
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.Font = GameFont.Small;
         }
         // if (this.interviewee != null)
         // {
         //     this.DrawCharacter(0f,this.interviewee);
-        // } 
+        // }
         // if (this.interviewer != null)
         // {
         //     this.DrawCharacter(rightLine,this.interviewer);
         // }
-  
+
         Rect dialogRect = new Rect(CharacterWidth,40f,inRect.width - CharacterWidth * 2f,inRect.height - 40f );
-        Widgets.DrawBox(dialogRect);
-        Widgets.DrawTitleBG(dialogRect);
-        Rect curRect = new Rect(20f, 25f,dialogRect.width - 40f,dialogRect.height - 5f);
+        Widgets.DrawBoxSolid(dialogRect, CQFUIStyle.Panel);
+        CQFUIStyle.DrawBox(dialogRect);
+        Rect curRect = new Rect(16f, 0f, dialogRect.width - 52f, dialogRect.height);
         float y = 15f;
-        Widgets.BeginScrollView(dialogRect,ref pos,new Rect(0,0,dialogRect.width - 16f,height));
+        Widgets.BeginScrollView(dialogRect,ref pos,new Rect(0,0,dialogRect.width - 16f,Mathf.Max(dialogRect.height, height)));
+        using CQFUIScope contentScope = new CQFUIScope(curRect.width);
         foreach (var dialogElement in this.elements)
         {
             dialogElement.Draw(ref y,curRect);
@@ -88,7 +90,7 @@ public class CQFDialogTreeWindow : Window
         }
         Widgets.Label(new Rect(x + (CharacterWidth - name.GetWidthCached())/2f
             ,220f+ CharacterWidth + 5f,CharacterWidth,25f),name);
-    } 
+    }
     public void GoToNode(int index)
     {
         if (this.tree.nodeMoulds.TryGetValue(index,out var node))
@@ -106,14 +108,14 @@ public class CQFDialogTreeWindow : Window
                         {
                             this.elements.Add(new DialogElement_Text("----" + op.text));
                             this.GoToNode(op.nextIndex.Value);
-                        };   
+                        };
                     }
                     else
                     {
                         op.action += () =>
                         {
                             this.Close();
-                        };   
+                        };
                     }
                     this.nextOptions.Add(op);
                 }
@@ -138,8 +140,8 @@ public class CQFDialogTreeWindow : Window
     public DialogTreeDef tree;
 
     private string title;
-    
-    
+
+
     private static readonly Rect DefaultTexCoords = new Rect(0f, 0f, 1f, 1f);
     private static readonly Rect LinkedTexCoords = new Rect(0f, 0.5f, 0.25f, 0.25f);
 }

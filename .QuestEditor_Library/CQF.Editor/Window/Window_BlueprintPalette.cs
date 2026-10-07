@@ -33,6 +33,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             GameFont oldFont = Text.Font;
             TextAnchor oldAnchor = Text.Anchor;
             Text.Font = GameFont.Tiny;
@@ -60,7 +61,7 @@ namespace QuestEditor_Library
 
             float y = TitleHeight + SectionGap;
             Rect previewRect = new Rect(0f, y, contentWidth, PreviewSectionHeight);
-            Widgets.DrawMenuSection(previewRect);
+            CQFUIStyle.DrawMenuSection(previewRect);
             this.DrawSelectedPreview(previewRect.ContractedBy(3f));
             y = previewRect.yMax + SectionGap;
 
@@ -76,7 +77,7 @@ namespace QuestEditor_Library
             y += SearchHeight + SectionGap;
 
             Rect listRect = new Rect(0f, y, contentWidth, inRect.height - y);
-            Widgets.DrawMenuSection(listRect);
+            CQFUIStyle.DrawMenuSection(listRect);
             this.DrawBlueprintList(listRect.ContractedBy(2f));
         }
 
@@ -84,7 +85,7 @@ namespace QuestEditor_Library
         {
             float x = contentWidth + ToolbarGap;
             Rect closeRect = new Rect(x, 1f, ToolbarButtonSize, ToolbarButtonSize);
-            if (Widgets.ButtonImage(closeRect, TexButton.CloseXSmall, true, "CloseButton".Translate()))
+            if (CQFUIStyle.ButtonImage(closeRect, TexButton.CloseXSmall, true, "CloseButton".Translate()))
             {
                 this.Close();
             }
@@ -92,11 +93,11 @@ namespace QuestEditor_Library
             Rect pinRect = new Rect(x, closeRect.yMax + ToolbarGap, ToolbarButtonSize, ToolbarButtonSize);
             if (this.windowPinned)
             {
-                Widgets.DrawHighlightSelected(pinRect);
+                CQFUIStyle.DrawHighlightSelected(pinRect);
             }
             Texture2D pinIcon = this.windowPinned ? TexCommand.ForbidOff : TexCommand.ForbidOn;
             string pinTip = (this.windowPinned ? "CQF_UnpinWindow" : "CQF_PinWindow").Translate();
-            if (Widgets.ButtonImage(pinRect, pinIcon, true, pinTip))
+            if (CQFUIStyle.ButtonImage(pinRect, pinIcon, true, pinTip))
             {
                 this.windowPinned = !this.windowPinned;
                 this.draggable = !this.windowPinned;
@@ -105,7 +106,7 @@ namespace QuestEditor_Library
             Rect saveRect = new Rect(x, pinRect.yMax + ToolbarGap, ToolbarButtonSize, ToolbarButtonSize);
             Texture2D saveIcon = ContentFinder<Texture2D>.Get("UI/Icon_SaveZoneAsDef_Round", false)
                 ?? TexButton.NewFile;
-            if (Widgets.ButtonImage(saveRect, saveIcon, true, "CQF_SaveBlueprintDesc".Translate()))
+            if (CQFUIStyle.ButtonImage(saveRect, saveIcon, true, "CQF_SaveBlueprintDesc".Translate()))
             {
                 Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
                 {
@@ -121,7 +122,7 @@ namespace QuestEditor_Library
             }
 
             Rect importRect = new Rect(x, saveRect.yMax + ToolbarGap, ToolbarButtonSize, ToolbarButtonSize);
-            if (Widgets.ButtonImage(importRect, TexButton.Add, true, "CQF_ImportLoadedMaps".Translate()))
+            if (CQFUIStyle.ButtonImage(importRect, TexButton.Add, true, "CQF_ImportLoadedMaps".Translate()))
             {
                 BlueprintRepository.ConfirmImportLoadedBlueprints();
             }
@@ -163,6 +164,7 @@ namespace QuestEditor_Library
             float contentHeight = Math.Max(outRect.height, this.filteredBlueprints.Count * RowHeight);
             Rect viewRect = new Rect(0f, 0f, outRect.width - ScrollbarWidth, contentHeight);
             Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             int firstVisible = Math.Max(0, Mathf.FloorToInt(this.scrollPosition.y / RowHeight) - 1);
             int lastVisible = Math.Min(this.filteredBlueprints.Count,
                 Mathf.CeilToInt((this.scrollPosition.y + outRect.height) / RowHeight) + 1);
@@ -178,7 +180,7 @@ namespace QuestEditor_Library
         {
             if (blueprint == this.designator.SelectedBlueprint)
             {
-                Widgets.DrawHighlightSelected(rowRect);
+                CQFUIStyle.DrawHighlightSelected(rowRect);
             }
             Widgets.DrawHighlightIfMouseover(rowRect);
 

@@ -36,7 +36,8 @@ internal static class AILiveMapPlanChecks
         DefDatabase<ThingDef>.Add(collisionDef);
         Thing planned = new() { def = collisionDef, Position = new IntVec3(10, 0, 10), Rotation = Rot4.East };
         CQFAILiveMapPlan collision = new(backend, model, "", false);
-        ((List<Thing>)typeof(CQFAILiveMapPlan).GetField("planned", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(collision)!).Add(planned);
+        var plannedCells = (Dictionary<IntVec3, List<Thing>>)typeof(CQFAILiveMapPlan).GetField("plannedCells", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.GetValue(collision)!;
+        foreach (IntVec3 cell in GenAdj.OccupiedRect(planned.Position, planned.Rotation, planned.def.size)) plannedCells[cell] = new List<Thing> { planned };
         try { collision.Build(XElement.Parse("<changes><place def='CQF_Check_Collision' x='10' z='10' rotation='0'/></changes>")); }
         catch (InvalidDataException error) when (error.Message.StartsWith("CQF_AI_LiveMapOverlap:"))
         {
@@ -44,6 +45,18 @@ internal static class AILiveMapPlanChecks
                 && error.Message.Contains("planned CQF_Check_Collision anchor=(10,10) rotation=1") && error.Message.Contains("width=3,height=2"),
                 "native planner returns both requested and conflicting planned footprints and rotations");
             Check(map.thingGrid.ThingsListAt(new IntVec3(10, 0, 10)).Count == 0, "conflicting native placement planning leaves the live map unchanged");
+            map.terrainGrid = new TerrainGrid(map); map.roofGrid = new RoofGrid(map);
+            TerrainDef floor = (TerrainDef)RuntimeHelpers.GetUninitializedObject(typeof(TerrainDef)); floor.defName = "CQF_Check_RegionFloor";
+            var topGrid = (TerrainDef[])typeof(TerrainGrid).GetField("topGrid", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)!.GetValue(map.terrainGrid)!;
+            Array.Fill(topGrid, floor);
+            map.thingGrid.Register(planned);
+            XElement read = backend.ReadRegion(new CellRect(8, 8, 5, 5), 0, 25);
+            Check(read.Element("things")!.Elements("thing").Count() == 1 && read.Descendants("thingRef").Count() == 6,
+                "native map reads describe multi-cell objects once and preserve all occupied cell references");
+            XElement described = read.Element("things")!.Element("thing")!;
+            Check(described.Attribute("rotation")!.Value == "1" && described.Element("footprint")!.Attribute("width")!.Value == "3"
+                && described.Attribute("maxHitPoints") == null && read.Elements("cell").All(cell => cell.Attribute("terrain")!.Value == floor.defName),
+                "compact native map reads preserve terrain, anchors and actual rotated footprints");
             return;
         }
         throw new InvalidOperationException("native planned collision was not reported");

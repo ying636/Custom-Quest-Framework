@@ -1,6 +1,6 @@
 ---
 name: "cqf-overview"
-description: "Explains CQF systems, responsibilities, and extension entry points. Invoke when tasks involve CQF submods, runtime logic, quests, custom things, or deciding which CQF subsystem to use."
+description: "Explains CQF systems, responsibilities, extension entry points, and shared UI conventions. Invoke for CQF submods, runtime logic, quests, custom things, CQF editor or runtime UI, or choosing a CQF subsystem."
 ---
 
 # CQF Overview
@@ -25,6 +25,8 @@ description: "Explains CQF systems, responsibilities, and extension entry points
 - 用户要快速了解 CQF 的结构与能力
 
 如果任务明确是“做 CQF 地图 / 子地图 / 区域拼装 / 地图入口出口 / 地图流程设计”，优先继续调用 `cqf-map-dev`。
+
+修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
 
 ## 仓库与信息源
 

@@ -17,7 +17,7 @@ namespace QuestEditor_Library
                 return;
             }
             GUI.DrawTexture(rect.ContractedBy(2f), GetTexture(blueprint), ScaleMode.ScaleToFit, true);
-            Widgets.DrawBox(rect);
+            CQFUIStyle.DrawBox(rect);
         }
 
         public static void Remove(CustomMapDataDef blueprint)

@@ -9,8 +9,17 @@ namespace QuestEditor_Library
     public sealed class CQFAIResourceCatalog
     {
         public CQFAIResourceCatalog(CQFAIModel model) { this.model = model; }
-        public XElement Summary() => new XElement("resources", new XAttribute("mods", LoadedModManager.RunningModsListForReading.Count),
-            new XAttribute("defTypes", GenDefDatabase.AllDefTypesWithDatabases().Count()), CQFAIThingCatalog.Summary());
+        public XElement Summary()
+        {
+            int mods = LoadedModManager.RunningModsListForReading.Count, things = DefDatabase<ThingDef>.AllDefsListForReading.Count;
+            int defTypes = GenDefDatabase.AllDefTypesWithDatabases().Count();
+            if (summary == null || summaryMods != mods || summaryThings != things || summaryDefTypes != defTypes)
+            {
+                summary = new XElement("resources", new XAttribute("mods", mods), new XAttribute("defTypes", defTypes), CQFAIThingCatalog.Summary());
+                summaryMods = mods; summaryThings = things; summaryDefTypes = defTypes;
+            }
+            return new XElement(summary);
+        }
         public XElement Discover(bool mods, string search, int offset)
         {
             if (search.Length > 100 || offset < 0 || offset > 100000) throw new InvalidDataException("CQF_AI_InvalidTool: pagination/search");
@@ -117,5 +126,9 @@ namespace QuestEditor_Library
             return null;
         }
         private readonly CQFAIModel model;
+        private XElement? summary;
+        private int summaryMods;
+        private int summaryThings;
+        private int summaryDefTypes;
     }
 }

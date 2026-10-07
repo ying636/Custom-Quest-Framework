@@ -24,7 +24,7 @@ namespace QuestEditor_Library
             }
         }
 
-        public override string PageTitle => "CQF_DutyMapEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "CQF_DutyMapEditor".Translate().Colorize(CQFUIStyle.Accent);
 
         public DutyMapDef CurDutyMap => QuestEditor_DutyMap.curDutyMap;
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.CurDutyMap.defName, () => this.CurDutyMap,
@@ -41,15 +41,20 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             this.DrawButtons(inRect);
-            CQFEditorTools.DrawLabelAndText_Line(45f, "CQF_DefName".Translate(), ref this.CurDutyMap.defName, 5f, 100f);
-            CQFEditorTools.DrawLabelAndText_Line(45f, "CQF_DutyMapLabel".Translate(), ref this.CurDutyMap.label, 310f, 120f);
+            float fieldWidth = (inRect.width - 12f) / 2f;
+            Widgets.Label(new Rect(0f, 86f, fieldWidth, 24f), "CQF_DefName".Translate().Colorize(CQFUIStyle.Accent));
+            Widgets.Label(new Rect(fieldWidth + 12f, 86f, fieldWidth, 24f), "CQF_DutyMapLabel".Translate().Colorize(CQFUIStyle.Accent));
+            this.CurDutyMap.defName = Widgets.TextField(new Rect(0f, 112f, fieldWidth, 32f), this.CurDutyMap.defName ?? string.Empty);
+            this.CurDutyMap.label = Widgets.TextField(new Rect(fieldWidth + 12f, 112f, fieldWidth, 32f), this.CurDutyMap.label ?? string.Empty);
 
-            Rect canvasRect = new Rect(5f, 85f, inRect.width - 10f, inRect.height - 95f);
+            Rect canvasRect = new Rect(0f, 156f, inRect.width, inRect.height - 156f);
             this.canvasSize = canvasRect.size;
             Rect viewRect = new Rect(0f, 0f, this.canvasSize.x, this.canvasSize.y);
-            Widgets.DrawBox(canvasRect, 1, QuestEditor_Dialog.blueTex);
+            Widgets.DrawBoxSolid(canvasRect, CQFUIStyle.Canvas);
+            CQFUIStyle.DrawBox(canvasRect);
             GUI.BeginGroup(canvasRect);
             this.UpdateHoveredTransition(viewRect);
             this.DrawTransitions();
@@ -61,8 +66,8 @@ namespace QuestEditor_Library
 
         private void DrawButtons(Rect inRect)
         {
-            float x = inRect.width - 450f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "LoadPremade".Translate()))
+            float x = 0f;
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, 100f, 32f), "LoadPremade".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<DutyMapDef>.AllDefsListForReading, d =>
                 {
@@ -72,12 +77,12 @@ namespace QuestEditor_Library
                 }, d => d.defName);
             }
             x += 110f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "Save".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, 100f, 32f), "Save".Translate()))
             {
                 this.Save();
             }
             x += 110f;
-            if (Widgets.ButtonText(new Rect(x, 30f, 100f, 38f), "ResetBinding".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x, 42f, 100f, 32f), "ResetBinding".Translate()))
             {
                 QuestEditor_DutyMap.curDutyMap = new DutyMapDef();
                 QuestEditor_DutyMap.curDutyMap.CreateNode();
@@ -93,14 +98,14 @@ namespace QuestEditor_Library
             {
                 this.ClampNodePosition(node);
                 Rect nodeRect = new Rect(node.editorPosition, QuestEditor_Dialog.nodeSize);
-                Color oldColor = GUI.color;
-                GUI.color = node.nodeId == this.CurDutyMap.startNodeId ? ColorLibrary.Yellow : Color.white;
-                Widgets.DrawTextureFitted(nodeRect, QuestEditor_Dialog.nodeTexture, 1f);
-                GUI.color = oldColor;
+                bool highlighted = node == this.selectedNode || node.nodeId == this.CurDutyMap.startNodeId;
+                Widgets.DrawBoxSolid(nodeRect, highlighted ? CQFUIStyle.Header : CQFUIStyle.Card);
+                CQFUIStyle.DrawBox(nodeRect, highlighted ? 2 : 1);
                 this.DrawTransitionTargetHint(node, nodeRect);
                 this.HandleNodeInput(node, nodeRect);
                 TooltipHandler.TipRegion(nodeRect, node.nodeId + "\n" + (node.duty?.defName ?? "Null"));
-                Widgets.Label(new Rect(node.editorPosition.x + 24f, node.editorPosition.y - 2f, 160f, 25f), node.nodeId);
+                Widgets.Label(new Rect(nodeRect.x + 12f, nodeRect.y + 8f, nodeRect.width - 24f, 24f), node.nodeId);
+                Widgets.Label(new Rect(nodeRect.x + 12f, nodeRect.y + 34f, nodeRect.width - 24f, 24f), (node.duty?.label ?? node.duty?.defName ?? string.Empty).Colorize(CQFUIStyle.Muted));
             }
         }
 
@@ -265,7 +270,7 @@ namespace QuestEditor_Library
             foreach (TransitionHitRecord record in this.transitionLayout)
             {
                 bool isHovered = this.hoveredTransition == record.Transition;
-                Color color = isHovered ? ColorLibrary.Yellow : ColorLibrary.SkyBlue;
+                Color color = isHovered ? CQFUIStyle.Accent : CQFUIStyle.Link;
                 Widgets.DrawLine(record.From, record.To, color, isHovered ? 2f : 1f);
                 this.HandleTransitionInput(record.Transition, isHovered);
             }
@@ -514,10 +519,10 @@ namespace QuestEditor_Library
             {
                 return;
             }
-            Color color = source ? ColorLibrary.Yellow : ColorLibrary.SkyBlue;
-            Widgets.DrawBox(nodeRect.ExpandedBy(4f), 2, BaseContent.WhiteTex);
+            Color color = CQFUIStyle.Accent;
+            CQFUIStyle.DrawBox(nodeRect.ExpandedBy(4f), 2, BaseContent.WhiteTex);
             GUI.color = color;
-            Widgets.DrawBox(nodeRect.ExpandedBy(3f));
+            CQFUIStyle.DrawBox(nodeRect.ExpandedBy(3f));
             GUI.color = Color.white;
             string label = source ? "CQF_DutyMapTransitionSource".Translate() : "CQF_DutyMapTransitionTargetHint".Translate();
             Widgets.Label(new Rect(nodeRect.x, nodeRect.yMax + 2f, 150f, 24f), label.Colorize(color));
@@ -530,7 +535,7 @@ namespace QuestEditor_Library
                 return;
             }
             Vector2 fromPos = this.transitionSourceNode.editorPosition + new Vector2(10f, 10f);
-            Widgets.DrawLine(fromPos, UnityEngine.Event.current.mousePosition, ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(fromPos, UnityEngine.Event.current.mousePosition, CQFUIStyle.Accent, 1f);
         }
 
         private void Save()

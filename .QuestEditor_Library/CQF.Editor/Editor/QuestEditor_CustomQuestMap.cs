@@ -16,6 +16,7 @@ namespace QuestEditor_Library
         public override Vector2 InitialSize => QuestEditor_CustomQuestMap.size;
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             if (Widgets.CloseButtonFor(inRect))
             {
@@ -33,12 +34,12 @@ namespace QuestEditor_Library
             Widgets.CheckboxLabeled(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMap".Translate(), ref this.enableBackground);
             TooltipHandler.TipRegion(backgroundMapRect, "CQF_MapBackgroundIsBackgroundMapTip".Translate());
             y += 35f;
-            if (Widgets.ButtonText(new Rect(10f, y, 100f, 38f), "OK".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(10f, y, 100f, 38f), "OK".Translate()))
             {
                 GenerateMap(this.mapSize, null, this.enableBackground);
                 this.Close();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 110f, y, 100f, 38f), "Load".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(inRect.width - 110f, y, 100f, 38f), "Load".Translate()))
             {
                 Action<CustomMapDataDef> generateMap = (m) =>
                 {
@@ -59,7 +60,7 @@ namespace QuestEditor_Library
             }
         }
 
-        public static void GenerateMap(IntVec3 size,CustomMapDataDef def = null, bool enableTerrainEdges = false) 
+        public static void GenerateMap(IntVec3 size,CustomMapDataDef def = null, bool enableTerrainEdges = false)
         {
             if (Current.Game == null)
             {
@@ -102,7 +103,7 @@ namespace QuestEditor_Library
 
                 def?.disdestroy?.ForEach(d =>
                 {
-                    if (!map.designationManager.HasMapDesignationAt(d)) 
+                    if (!map.designationManager.HasMapDesignationAt(d))
                     {
                         map.designationManager.AddDesignation(new Designation(d, QEDefOf.QE_Disdestroy, null));
                     }
@@ -111,8 +112,8 @@ namespace QuestEditor_Library
                 def?.disgenerate?.ForEach(d =>
                 {
                     if (!map.designationManager.HasMapDesignationAt(d))
-                    { 
-                        map.designationManager.AddDesignation(new Designation(d, QEDefOf.QE_Disgenerate, null)); 
+                    {
+                        map.designationManager.AddDesignation(new Designation(d, QEDefOf.QE_Disgenerate, null));
                     }
                 });
                 def?.routes?.ToList().ForEach(r => map.GetComponent<MapComponent_CustomMapData>().route.SetOrAdd(r.Key,new Route() {route = r.Value}));

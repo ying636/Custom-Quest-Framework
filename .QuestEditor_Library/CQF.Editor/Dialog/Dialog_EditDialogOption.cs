@@ -9,7 +9,7 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditDialogOption : Window
     {
-        public Dialog_EditDialogOption(QuestEditor_Dialog parent,DialogOption option,DialogNode node) 
+        public Dialog_EditDialogOption(QuestEditor_Dialog parent,DialogOption option,DialogNode node)
         {
             this.parent = parent;
             this.node = node;
@@ -35,8 +35,10 @@ namespace QuestEditor_Library
         }
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, this.height + 20f));
             Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             this.height = this.option.Draw(viewRect, this.parent, this.node);
             Widgets.EndScrollView();
         }

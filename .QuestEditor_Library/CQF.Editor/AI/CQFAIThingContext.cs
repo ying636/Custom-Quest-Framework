@@ -31,7 +31,6 @@ namespace QuestEditor_Library
             {
                 interactable.operations = interaction.operations;
                 interactable.operationDefs = interaction.operationDefs;
-                foreach (InteractionOperation operation in interactable.operations) CQFSignalEditor.InvalidateSummary(operation);
             }
             else if (thing is CustomMapEntrance entrance && value is CQFAIEntranceConfiguration entry)
             {

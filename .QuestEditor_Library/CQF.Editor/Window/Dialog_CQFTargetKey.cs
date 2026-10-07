@@ -23,6 +23,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 32f), "CQF_TargetRegisterKey".Translate());
             Widgets.Label(new Rect(0f, 40f, inRect.width, 30f), this.target.LabelCap + " " + this.target.Position);
             CQFTargetKeyEditor.DrawBookField(new Rect(0f, 78f, 110f, 30f),
@@ -32,7 +33,7 @@ namespace QuestEditor_Library
             {
                 Widgets.Label(new Rect(0f, 115f, inRect.width, 46f), this.error.Colorize(Color.red));
             }
-            if (Widgets.ButtonText(new Rect(0f, inRect.height - 35f, inRect.width, 35f), "AcceptButton".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 35f, inRect.width, 35f), "AcceptButton".Translate()))
             {
                 if (!CQFTargetSelectionSession.CanPersistThing(this.target))
                 {

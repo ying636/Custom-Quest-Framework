@@ -12,7 +12,7 @@ namespace QuestEditor_Library
 {
     public class QuestEditor_CreateNewRlueDef : Page
     {
-        public QuestEditor_CreateNewRlueDef(string path) 
+        public QuestEditor_CreateNewRlueDef(string path)
         {
             this.path = path;
         }
@@ -20,59 +20,66 @@ namespace QuestEditor_Library
         public override string PageTitle => "RuleCreater".Translate();
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             if (Widgets.CloseButtonFor(inRect))
             {
                 this.Close();
             }
-            float y = 30f;
-            inRect = this.DrawLoadButton(inRect, y);
-            this.DrawSaveButton(inRect, y);
+            this.DrawLoadButton(inRect, 42f);
+            this.DrawSaveButton(inRect, 42f);
+            Rect viewport = new Rect(0f, 86f, inRect.width, inRect.height - 86f);
+            Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, this.contentHeight));
+            Widgets.BeginScrollView(viewport, ref this.scrollPosition, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
+            float y = 8f;
             CQFEditorTools.DrawFieldAndText(ref y, "RuleName".Translate(), ref QuestEditor_CreateNewRlueDef.curRule.ruleName);
             y += 25f;
             Widgets.Label(new Rect(0f, y, 300f, 30f), "StringRule".Translate());
-            y += 25f;
+            y += 36f;
             for (int i = 0; i < QuestEditor_CreateNewRlueDef.curRule.stringRules.Count; i++)
             {
-                QuestEditor_CreateNewRlueDef.curRule.stringRules[i] = Widgets.TextField(new Rect(0f, y, 500f, 25f), QuestEditor_CreateNewRlueDef.curRule.stringRules[i]);
+                QuestEditor_CreateNewRlueDef.curRule.stringRules[i] = Widgets.TextField(new Rect(0f, y, content.width, 25f), QuestEditor_CreateNewRlueDef.curRule.stringRules[i]);
                 y += 30f;
             }
-            if (Widgets.ButtonText(new Rect(0f, y, 150f, 38f), "AddNewRuleString".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, y, 150f, 38f), "AddNewRuleString".Translate()))
             {
                 QuestEditor_CreateNewRlueDef.curRule.stringRules.Add("");
             }
-            if (QuestEditor_CreateNewRlueDef.curRule.stringRules.Any() && Widgets.ButtonText(new Rect(170f, y, 150f, 38f), "DeleteRuleString".Translate()))
+            if (QuestEditor_CreateNewRlueDef.curRule.stringRules.Any() && CQFUIStyle.ButtonText(new Rect(170f, y, 150f, 38f), "DeleteRuleString".Translate()))
             {
                 QuestEditor_CreateNewRlueDef.curRule.stringRules.RemoveLast();
             }
             y += 63f;
             Widgets.Label(new Rect(0f, y, 300f, 30f), "RuleFilePaths".Translate());
-            y += 25f;
+            y += 36f;
             if (QuestEditor_CreateNewRlueDef.curRule.rulesFiles != null)
             {
                 for (int i = 0; i < QuestEditor_CreateNewRlueDef.curRule.rulesFiles.Count; i++)
                 {
-                    QuestEditor_CreateNewRlueDef.curRule.rulesFiles[i] = Widgets.TextField(new Rect(0f, y, 500f, 25f), QuestEditor_CreateNewRlueDef.curRule.rulesFiles[i]);
+                    QuestEditor_CreateNewRlueDef.curRule.rulesFiles[i] = Widgets.TextField(new Rect(0f, y, content.width, 25f), QuestEditor_CreateNewRlueDef.curRule.rulesFiles[i]);
                     y += 30f;
                 }
             }
-            if (Widgets.ButtonText(new Rect(0f, y, 150f, 38f), "AddNewFilePath".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, y, 150f, 38f), "AddNewFilePath".Translate()))
             {
-                if (QuestEditor_CreateNewRlueDef.curRule.rulesFiles == null) 
+                if (QuestEditor_CreateNewRlueDef.curRule.rulesFiles == null)
                 {
                     QuestEditor_CreateNewRlueDef.curRule.rulesFiles = new List<string>();
                 }
                 QuestEditor_CreateNewRlueDef.curRule.rulesFiles.Add("");
             }
-            if (QuestEditor_CreateNewRlueDef.curRule.rulesFiles != null && QuestEditor_CreateNewRlueDef.curRule.rulesFiles.Any() && Widgets.ButtonText(new Rect(170f, y, 150f, 38f), "DeleteFilePath".Translate()))
+            if (QuestEditor_CreateNewRlueDef.curRule.rulesFiles != null && QuestEditor_CreateNewRlueDef.curRule.rulesFiles.Any() && CQFUIStyle.ButtonText(new Rect(170f, y, 150f, 38f), "DeleteFilePath".Translate()))
             {
                 QuestEditor_CreateNewRlueDef.curRule.rulesFiles.RemoveLast();
             }
+            this.contentHeight = y + 48f;
+            Widgets.EndScrollView();
         }
 
         private Rect DrawLoadButton(Rect inRect, float y)
         {
-            if (Widgets.ButtonText(new Rect(inRect.width - 160f, y, 150f, 38f), "LoadRule".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(Mathf.Max(0f, inRect.width - 316f), y, Mathf.Min(150f, (inRect.width - 8f) / 2f), 32f), "LoadRule".Translate()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 DirectoryInfo ruleDir = new DirectoryInfo(this.path);
@@ -100,9 +107,9 @@ namespace QuestEditor_Library
 
         private void DrawSaveButton(Rect inRect, float y)
         {
-            if (Widgets.ButtonText(new Rect(inRect.width - 160f, y + 40f, 150f, 38f), "SaveToFile".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(Mathf.Max(0f, inRect.width - 158f), y, Mathf.Min(150f, (inRect.width - 8f) / 2f), 32f), "SaveToFile".Translate()))
             {
-                if (QuestEditor_CreateNewRlueDef.curRule.ruleName == null || QuestEditor_CreateNewRlueDef.curRule.ruleName == "") 
+                if (QuestEditor_CreateNewRlueDef.curRule.ruleName == null || QuestEditor_CreateNewRlueDef.curRule.ruleName == "")
                 {
                     Messages.Message("NoName".Translate(), MessageTypeDefOf.CautionInput);
                     return;
@@ -118,6 +125,8 @@ namespace QuestEditor_Library
 
         public string path;
         public static RuleData curRule = new RuleData();
+        private Vector2 scrollPosition;
+        private float contentHeight;
         private static readonly Vector2 size = new Vector2(760f,840f);
     }
 }

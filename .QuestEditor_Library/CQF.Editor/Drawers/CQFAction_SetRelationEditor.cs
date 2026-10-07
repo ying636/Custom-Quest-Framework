@@ -24,8 +24,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SetRelation cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 320f, 25f), "CQF_RelationDef".Translate(cqfReceiver.relation?.label), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 320f, 25f), "CQF_RelationDef".Translate(cqfReceiver.relation?.label), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<PawnRelationDef>.AllDefsListForReading, m => cqfReceiver.relation = m, m => m.label);
             }

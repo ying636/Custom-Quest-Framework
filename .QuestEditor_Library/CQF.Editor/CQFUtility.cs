@@ -57,52 +57,41 @@ namespace QuestEditor_Library
         }
         public static void DrawLabelAndText_SlateRef_Line(float y, string label, ref SlateRef<string> text, float x = 0f, float width = 60f)
         {
-            Widgets.Label(new Rect(x, y, 350f, 20f), label);
-            string bufferText = Widgets.TextField(new Rect(Text.CalcSize(label).x + x + 5f, y, width, 20f), text.ToString());
-            text = text.ToString() == bufferText ? text : new SlateRef<string>(bufferText);
+            using CQFUIScope scope = new CQFUIScope();
+            string value = Widgets.TextField(DrawFieldLabel(y, label, x, width), text.ToString());
+            if (text.ToString() != value) text = new SlateRef<string>(value);
         }
         public static void DrawLabelAndText_SlateRef_Line<T>(float y, string label, ref SlateRef<T> text, float x = 0f, float width = 60f)
         {
-            Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            string bufferText = Widgets.TextField(new Rect(Text.CalcSize(label).x + x + 5f, y, width, 25f), text.ToString());
-            text = text.ToString() == bufferText ? text : new SlateRef<T>(bufferText);
+            using CQFUIScope scope = new CQFUIScope();
+            string value = Widgets.TextField(DrawFieldLabel(y, label, x, width), text.ToString());
+            if (text.ToString() != value) text = new SlateRef<T>(value);
         }
         public static void DrawLabelAndText_SlateRef_Line<T>(float y, string label, ref SlateRef<T>? text, float x = 0f, float width = 60f)
         {
-            Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            string bufferText = Widgets.TextField(new Rect(Text.CalcSize(label).x + x + 5f, y, width, 25f), text?.ToString());
-            text = text?.ToString() == bufferText ? text : new SlateRef<T>(bufferText);
+            using CQFUIScope scope = new CQFUIScope();
+            string value = Widgets.TextField(DrawFieldLabel(y, label, x, width), text?.ToString());
+            if (text?.ToString() != value) text = new SlateRef<T>(value);
         }
         public static void DrawLabelAndText_Line<T>(float y, string label, ref T text, ref string buffer, float x = 0f, float width = 60f) where T : struct
         {
-            Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            Widgets.TextFieldNumeric<T>(new Rect(Text.CalcSize(label).x + x + 5f, y, width, 25f), ref text, ref buffer,-9999);
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.TextFieldNumeric<T>(DrawFieldLabel(y, label, x, width), ref text, ref buffer, -9999);
         }
         public static void DrawLabelAndText_Line(float y, string label, ref float text, ref string buffer, float x = 0f, float width = 60f)
         {
-            Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            Widgets.TextFieldPercent(new Rect(Text.CalcSize(label).x + x + 5f, y, width, 25f), ref text, ref buffer);
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.TextFieldPercent(DrawFieldLabel(y, label, x, width), ref text, ref buffer);
         }
         public static void DrawLabelAndText_Line(float y, string label, ref string text, float x = 0f, float width = 60f)
         {
-            bool nullText = label.NullOrEmpty();
-            if (!nullText)
-            {
-                Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            }
-            text = Widgets.TextField(new Rect(nullText ? x + 5f : Text.CalcSize(label).x + x + 5f, y, width, 25f), text);
+            using CQFUIScope scope = new CQFUIScope();
+            text = Widgets.TextField(DrawFieldLabel(y, label, x, width), text ?? string.Empty);
         }
         public static void DrawSelectableText(float y, string label, ref string text, Action selectAction, float x = 0f, float width = 60f)
         {
-            bool nullText = label.NullOrEmpty();
-            if (!nullText)
-            {
-                if (Widgets.ButtonText(new Rect(x, y, Text.CalcSize(label).x, 25f), label, false))
-                {
-                    selectAction();
-                }
-            }
-            text = Widgets.TextField(new Rect(nullText ? x + 5f : Text.CalcSize(label).x + x + 5f, y, width, 25f), text);
+            using CQFUIScope scope = new CQFUIScope();
+            text = Widgets.TextField(DrawFieldLabel(y, label, x, width, selectAction), text ?? string.Empty);
         }
         public static void DrawFactionSelectableText(float y, string label, ref string faction, Action<string> setFaction, float x = 0f, float width = 60f)
         {
@@ -139,39 +128,18 @@ namespace QuestEditor_Library
         }
         public static void DrawSelectableText(float y, string label, ref SlateRef<string> text, Action selectAction, float x = 0f, float width = 60f)
         {
-            bool nullText = label.NullOrEmpty();
-            if (!nullText)
-            {
-                if (Widgets.ButtonText(new Rect(x, y, Text.CalcSize(label).x, 25f), label, false))
-                {
-                    selectAction();
-                }
-            }
-            text = Widgets.TextField(new Rect(nullText ? x + 5f : Text.CalcSize(label).x + x + 5f, y, width, 25f), text.ToString());
+            using CQFUIScope scope = new CQFUIScope();
+            text = Widgets.TextField(DrawFieldLabel(y, label, x, width, selectAction), text.ToString());
         }
         public static void DrawSelectableNumber<T>(float y, string label, ref T text, ref string buffer, Action selectAction, float x = 0f, float width = 60f) where T : struct
         {
-            bool nullText = label.NullOrEmpty();
-            if (!nullText)
-            {
-                if (Widgets.ButtonText(new Rect(x, y, Text.CalcSize(label).x, 25f), label, false))
-                {
-                    selectAction();
-                }
-            }
-            Widgets.TextFieldNumeric(new Rect(nullText ? x + 5f : Text.CalcSize(label).x + x + 5f, y, width, 25f), ref text, ref buffer);
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.TextFieldNumeric(DrawFieldLabel(y, label, x, width, selectAction), ref text, ref buffer);
         }
         public static void DrawSelectablePercent(float y, string label, ref float text, ref string buffer, Action selectAction, float x = 0f, float width = 60f)
         {
-            bool nullText = label.NullOrEmpty();
-            if (!nullText)
-            {
-                if (Widgets.ButtonText(new Rect(x, y, Text.CalcSize(label).x, 25f), label, false))
-                {
-                    selectAction();
-                }
-            }
-            Widgets.TextFieldPercent(new Rect(nullText ? x + 5f : Text.CalcSize(label).x + x + 5f, y, width, 25f), ref text, ref buffer);
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.TextFieldPercent(DrawFieldLabel(y, label, x, width, selectAction), ref text, ref buffer);
         }
         public static void DrawFieldAndText(ref float y, string label, ref string text, float x = 0f, float width = 350f)
         {
@@ -179,50 +147,48 @@ namespace QuestEditor_Library
             y += 25f;
             text = Widgets.TextField(new Rect(x, y, width, 25f), text);
         }
-        public static void DrawIntRange(ref float y, string label, ref IntRange num, ref string bufferMin, ref string bufferMax, float x = 0f, float width = 30f)
+        public static void DrawIntRange(ref float y, string label, ref IntRange num, ref string bufferMin, ref string bufferMax, float x = 0f, float width = 50f)
         {
-            Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            int min = num.min;
-            int max = num.max;
-            Rect rect = new Rect(Text.CalcSize(label).x + x + 5f, y, width, 25f);
-            Widgets.TextFieldNumeric(rect, ref min, ref bufferMin);
-            rect.x += width;
-            Widgets.Label(rect, "~");
-            rect.x += 7f;
-            Widgets.TextFieldNumeric(rect, ref max, ref bufferMax);
+            using CQFUIScope scope = new CQFUIScope();
+            int min = num.min, max = num.max;
+            Rect fields = DrawFieldLabel(y, label, x, width * 2f + 12f);
+            float part = Mathf.Max(10f, (fields.width - 12f) / 2f);
+            Widgets.TextFieldNumeric(new Rect(fields.x, y, part, 25f), ref min, ref bufferMin);
+            Widgets.Label(new Rect(fields.x + part, y, 12f, 25f), "~");
+            Widgets.TextFieldNumeric(new Rect(fields.x + part + 12f, y, part, 25f), ref max, ref bufferMax);
             num = new IntRange(min, max);
             y += 30f;
         }
 
-        public static void DrawFloatRange(ref float y, string label, ref FloatRange num, ref string bufferMin, ref string bufferMax, float x = 0f, float width = 30f)
+        public static void DrawFloatRange(ref float y, string label, ref FloatRange num, ref string bufferMin, ref string bufferMax, float x = 0f, float width = 50f)
         {
-            Widgets.Label(new Rect(x, y, 350f, 25f), label);
-            float min = num.min;
-            float max = num.max;
-            Rect rect = new Rect(Text.CalcSize(label).x + x + 5f, y, width, 25f);
-            Widgets.TextFieldNumeric(rect, ref min, ref bufferMin);
-            rect.x += width;
-            Widgets.Label(rect, "~");
-            rect.x += 7f;
-            Widgets.TextFieldNumeric(rect, ref max, ref bufferMax);
+            using CQFUIScope scope = new CQFUIScope();
+            float min = num.min, max = num.max;
+            Rect fields = DrawFieldLabel(y, label, x, width * 2f + 12f);
+            float part = Mathf.Max(10f, (fields.width - 12f) / 2f);
+            Widgets.TextFieldNumeric(new Rect(fields.x, y, part, 25f), ref min, ref bufferMin);
+            Widgets.Label(new Rect(fields.x + part, y, 12f, 25f), "~");
+            Widgets.TextFieldNumeric(new Rect(fields.x + part + 12f, y, part, 25f), ref max, ref bufferMax);
             num = new FloatRange(min, max);
         }
 
         public static void DrawVector(ref float y0, string label, ref Vector3 vector, ref string bufferX, ref string bufferZ, ref string bufferY, float x0 = 0f, float width = 30f)
         {
-            Widgets.Label(new Rect(x0, y0, 350f, 25f), label);
+            using CQFUIScope scope = new CQFUIScope();
             float x = vector.x;
             float z = vector.z;
             float y = vector.y;
-            Rect rect = new Rect(Text.CalcSize(label).x + x0 + 5f, y0, width, 25f);
+            Rect fields = DrawFieldLabel(y0, label, x0, width * 3f + 24f);
+            width = Mathf.Max(10f, (fields.width - 24f) / 3f);
+            Rect rect = new Rect(fields.x, y0, width, 25f);
             Widgets.TextFieldNumeric(rect, ref x, ref bufferX);
             rect.x += width;
-            Widgets.Label(rect, "~");
-            rect.x += 7f;
+            Widgets.Label(new Rect(rect.x, y0, 12f, 25f), "~");
+            rect.x += 12f;
             Widgets.TextFieldNumeric(rect, ref y, ref bufferY);
             rect.x += width;
-            Widgets.Label(rect, "~");
-            rect.x += 7f;
+            Widgets.Label(new Rect(rect.x, y0, 12f, 25f), "~");
+            rect.x += 12f;
             Widgets.TextFieldNumeric(rect, ref z, ref bufferZ);
             vector = new Vector3(x, y, z);
         }
@@ -230,37 +196,43 @@ namespace QuestEditor_Library
             ref IntVec3 vector,
             ref string bufferX, ref string bufferZ, ref string bufferY, float x0 = 0f, float width = 30f)
         {
-            Widgets.Label(new Rect(x0, y0, 350f, 25f), label);
+            using CQFUIScope scope = new CQFUIScope();
             int x = vector.x;
             int z = vector.z;
             int y = vector.y;
-            Rect rect = new Rect(Text.CalcSize(label).x + x0 + 5f, y0, width, 25f);
+            Rect fields = DrawFieldLabel(y0, label, x0, width * 3f + 24f);
+            width = Mathf.Max(10f, (fields.width - 24f) / 3f);
+            Rect rect = new Rect(fields.x, y0, width, 25f);
             Widgets.TextFieldNumeric(rect, ref x, ref bufferX);
             rect.x += width;
-            Widgets.Label(rect, "~");
-            rect.x += 7f;
+            Widgets.Label(new Rect(rect.x, y0, 12f, 25f), "~");
+            rect.x += 12f;
             Widgets.TextFieldNumeric(rect, ref y, ref bufferY);
             rect.x += width;
-            Widgets.Label(rect, "~");
-            rect.x += 7f;
+            Widgets.Label(new Rect(rect.x, y0, 12f, 25f), "~");
+            rect.x += 12f;
             Widgets.TextFieldNumeric(rect, ref z, ref bufferZ);
             vector = new IntVec3(x, y, z);
         }
 
         public static void DrawButtonAndText(ref float y, string text, string buttonText, Action buttonAction, float x = 0f)
         {
-            Widgets.Label(new Rect(x, y, 300f, 25f), text);
-            y += 30f;
-            if (Widgets.ButtonText(new Rect(x, y, 200f, 25f), buttonText))
-            {
-                buttonAction();
-            }
-            y += 30f;
+            using CQFUIScope scope = new CQFUIScope();
+            float width = Mathf.Max(80f, CQFUIScope.ContentWidth - x - 12f);
+            float buttonWidth = Mathf.Min(150f, width);
+            bool stacked = width < 360f;
+            Rect label = new Rect(x, y, stacked ? width : width - buttonWidth - 8f, 32f);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Text.WordWrap = false;
+            Widgets.Label(label, text.Truncate(label.width));
+            Rect button = new Rect(stacked ? x : label.xMax + 8f, stacked ? y + 38f : y, buttonWidth, 32f);
+            if (CQFUIStyle.ButtonText(button, buttonText)) buttonAction();
+            y += stacked ? 76f : 38f;
         }
         public static void DrawSelectableField<T>(float x, ref float y, string label,
             List<T> list, Action<T> action, Func<T, string> text,Vector2 size, List<FloatMenuOption> extra = null, Func<T, bool> validator = null)
         {
-            if (Widgets.ButtonText(new Rect(x,y,size.x,size.y),label,false))
+            if (CQFUIStyle.ButtonText(new Rect(x,y,size.x,size.y),label,false))
             {
                 DrawFloatMenu(list,action,text,extra,validator);
             }
@@ -395,7 +367,7 @@ namespace QuestEditor_Library
         public static void DrawSelectButton<T>(float x, ref float y, string title,
             List<T> list, Action<T> addAction, Func<T, string> getText, List<FloatMenuOption> extraOptions = null)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 800f, 25f), title, false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 800f, 25f), title, false))
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => addAction(d), (d) => getText(d), extraOptions);
             }
@@ -403,7 +375,7 @@ namespace QuestEditor_Library
         }
         public static void DrawSelectButton(float x, ref float y,string title, List<Type> list, Action<Type> addAction, Func<Type, string> getText)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 800f, 25f), title, false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 800f, 25f), title, false))
             {
                 CQFEditorTools.DrawFloatMenu<Type>(list, (d) => addAction(d), (d) => getText(d));
             }
@@ -411,7 +383,7 @@ namespace QuestEditor_Library
         }
         public static void DrawSelectButton(float x,ref float y,List<Type> list,Action<Type> addAction, Func<Type,string> getText)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 800f, 25f), "SelectCondition".Translate(), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 800f, 25f), "SelectCondition".Translate(), false))
             {
                 CQFEditorTools.DrawFloatMenu<Type>(list, (d) => addAction(d), (d) => getText(d));
             }
@@ -423,11 +395,14 @@ namespace QuestEditor_Library
             {
                 size = new Vector2(120f, 25f);
             }
-            if (Widgets.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
+            float availableWidth = Mathf.Max(40f, CQFUIScope.ContentWidth - x - 17f);
+            size = new Vector2(Mathf.Min(size.Value.x, (availableWidth - 8f) / 2f), size.Value.y);
+            interval = Mathf.Clamp(interval, size.Value.x + 8f, availableWidth - size.Value.x);
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
             {
                 list.Add("undefined");
             }
-            if (Widgets.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
             {
                 CQFEditorTools.DrawFloatMenu(list, (d) => list.Remove(d), (d) => getText(d));
             }
@@ -440,16 +415,19 @@ namespace QuestEditor_Library
             {
                 size = new Vector2(120f, 35f);
             }
-            if (Widgets.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
+            float availableWidth = Mathf.Max(40f, CQFUIScope.ContentWidth - x - 17f);
+            size = new Vector2(Mathf.Min(size.Value.x, (availableWidth - 8f) / 2f), size.Value.y);
+            interval = Mathf.Clamp(interval, size.Value.x + 8f, availableWidth - size.Value.x);
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu<T>(DefDatabase<T>.AllDefsListForReading,
                     (d) => list.Add(d), (d) => d.label);
             }
-            if (Widgets.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => list.Remove(d), (d) => d.label);
             }
-            y += 40f;
+            y += size.Value.y + 5f;
         }
         public static void DrawButtonForList<T>(ref float y, List<T> list, Func<T, string> getText, float x = 10f, float interval = 290f, Vector2? size = null) where T : new()
         {
@@ -457,15 +435,18 @@ namespace QuestEditor_Library
             {
                 size = new Vector2(120f, 35f);
             }
-            if (Widgets.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
+            float availableWidth = Mathf.Max(40f, CQFUIScope.ContentWidth - x - 17f);
+            size = new Vector2(Mathf.Min(size.Value.x, (availableWidth - 8f) / 2f), size.Value.y);
+            interval = Mathf.Clamp(interval, size.Value.x + 8f, availableWidth - size.Value.x);
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
             {
                 list.Add(new T());
             }
-            if (Widgets.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => list.Remove(d), (d) => getText(d));
             }
-            y += 40f;
+            y += size.Value.y + 5f;
         }
         public static void DrawButtonForList(ref float y, List<CQFAction> list,
             Func<CQFAction, string> getText, float x = 10f, float interval = 290f, Vector2? size = null)
@@ -474,15 +455,18 @@ namespace QuestEditor_Library
             {
                 size = new Vector2(120f, 35f);
             }
-            if (Widgets.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
+            float availableWidth = Mathf.Max(40f, CQFUIScope.ContentWidth - x - 17f);
+            size = new Vector2(Mathf.Min(size.Value.x, (availableWidth - 8f) / 2f), size.Value.y);
+            interval = Mathf.Clamp(interval, size.Value.x + 8f, availableWidth - size.Value.x);
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
             {
                 CQFEditorTools.OpenCQFActionSelect(t => list.Add((CQFAction)Activator.CreateInstance(t)));
             }
-            if (Widgets.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
             {
                 CQFEditorTools.DrawFloatMenu(list, (d) => list.Remove(d), (d) => getText(d));
             }
-            y += 40f;
+            y += size.Value.y + 5f;
         }
         public static void DrawButtonForList<T>(ref float y, List<T> list, Func<T, string> getText,
             Action addAction, float x = 10f, float interval = 290f, Vector2? size = null)
@@ -491,23 +475,26 @@ namespace QuestEditor_Library
             {
                 size = new Vector2(120f, 35f);
             }
-            if (Widgets.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
+            float availableWidth = Mathf.Max(40f, CQFUIScope.ContentWidth - x - 17f);
+            size = new Vector2(Mathf.Min(size.Value.x, (availableWidth - 8f) / 2f), size.Value.y);
+            interval = Mathf.Clamp(interval, size.Value.x + 8f, availableWidth - size.Value.x);
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, size.Value.x, size.Value.y), "Add".Translate()))
             {
                 addAction();
             }
-            if (Widgets.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f + interval, y, size.Value.x, size.Value.y), "Remove".Translate()) && list.Any())
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => list.Remove(d), (d) => getText(d));
             }
-            y += 40f;
+            y += size.Value.y + 5f;
         }
         public static void DrawButtonForList_UseIcon<T>(float y, List<T> list, Func<T, string> getText, Action addAction, float x = 10f,float iconSize = 25f, float interval = 35f, Vector2? size = null)
         {
-            if (Widgets.ButtonImage(new Rect(x, y, iconSize, iconSize), TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(new Rect(x, y, iconSize, iconSize), TexButton.Plus))
             {
                 addAction();
             }
-            if (Widgets.ButtonImage(new Rect(x + interval, y, iconSize, iconSize), TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(new Rect(x + interval, y, iconSize, iconSize), TexButton.Delete))
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => list.Remove(d), (d) => getText(d));
             }
@@ -515,11 +502,12 @@ namespace QuestEditor_Library
 
         public static void DrawButtonForList<T>(ref float y, List<T> list, Func<T, string> getText, Action<T> addAction, Action removeAction, float x = 10f)
         {
-            if (Widgets.ButtonText(new Rect(x + 5f, y, 120f, 35f), "Add".Translate()))
+            float buttonWidth = Mathf.Min(120f, Mathf.Max(20f, (CQFUIScope.ContentWidth - x - 25f) / 2f));
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, buttonWidth, 35f), "Add".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => addAction(d), (d) => getText(d));
             }
-            if (Widgets.ButtonText(new Rect(x + 295f, y, 120f, 35f), "Remove".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 13f + buttonWidth, y, buttonWidth, 35f), "Remove".Translate()) && list.Any())
             {
                 removeAction();
             }
@@ -527,18 +515,19 @@ namespace QuestEditor_Library
         }
         public static void DrawButtonWithIcon(float y,Action addAction,Action removeAction, float x = 10f, float iconSize = 25f, float interval = 35f, Vector2? size = null)
         {
-            if (Widgets.ButtonImage(new Rect(x, y, iconSize, iconSize), TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(new Rect(x, y, iconSize, iconSize), TexButton.Plus))
             {
                 addAction();
             }
-            if (Widgets.ButtonImage(new Rect(x + interval, y, iconSize, iconSize), TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(new Rect(x + interval, y, iconSize, iconSize), TexButton.Delete))
             {
                 removeAction();
             }
         }
         public static void DrawButtonForPawnData(float y, List<PawnSpawnData> list, float x = 10f)
         {
-            if (Widgets.ButtonText(new Rect(x + 5f, y, 120f, 38f), "AddNewPawns".Translate()))
+            float buttonWidth = Mathf.Min(120f, Mathf.Max(20f, (CQFUIScope.ContentWidth - x - 32f) / 3f));
+            if (CQFUIStyle.ButtonText(new Rect(x + 5f, y, buttonWidth, 38f), "AddNewPawns".Translate()))
             {
                 List<Type> types = new List<Type>();
                 types.Add(typeof(PawnSpawnData));
@@ -546,18 +535,18 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawFloatMenu(types, a =>
      list.Add((PawnSpawnData)Activator.CreateInstance(a)), a => a.Name.Translate());
             }
-            if (Widgets.ButtonText(new Rect(x + 150f, y, 120f, 38f), "PastePawns".Translate()) && CQFEditorTools.data != null)
+            if (CQFUIStyle.ButtonText(new Rect(x + 13f + buttonWidth, y, buttonWidth, 38f), "PastePawns".Translate()) && CQFEditorTools.data != null)
             {
                 list.Add(CQFEditorTools.data.Copy());
             }
-            if (Widgets.ButtonText(new Rect(x + 295f, y, 120f, 38f), "DeleteNewPawns".Translate()) && list.Any())
+            if (CQFUIStyle.ButtonText(new Rect(x + 21f + buttonWidth * 2f, y, buttonWidth, 38f), "DeleteNewPawns".Translate()) && list.Any())
             {
                 CQFEditorTools.DrawFloatMenu<PawnSpawnData>(list, (d) => list.Remove(d), (d) => d.dataName);
             }
         }
         public static void DrawButtonForPawnData_UseIcon(float y, List<PawnSpawnData> list,float iconSize = 25f, float interval = 35f, float x = 10f)
         {
-            if (Widgets.ButtonImage(new Rect(x, y, iconSize, iconSize), TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(new Rect(x, y, iconSize, iconSize), TexButton.Plus))
             {
                 List<Type> types = new List<Type>();
                 types.Add(typeof(PawnSpawnData));
@@ -565,11 +554,11 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawFloatMenu(types, a =>
      list.Add((PawnSpawnData)Activator.CreateInstance(a)), a => a.Name.Translate());
             }
-            if (Widgets.ButtonImage(new Rect(x + interval, y, iconSize, iconSize), TexButton.Paste) && CQFEditorTools.data != null)
+            if (CQFUIStyle.ButtonImage(new Rect(x + interval, y, iconSize, iconSize), TexButton.Paste) && CQFEditorTools.data != null)
             {
                 list.Add(CQFEditorTools.data.Copy());
             }
-            if (Widgets.ButtonImage(new Rect(x + interval + interval, y, iconSize, iconSize), TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(new Rect(x + interval + interval, y, iconSize, iconSize), TexButton.Delete))
             {
                 CQFEditorTools.DrawFloatMenu<PawnSpawnData>(list, (d) => list.Remove(d), (d) => d.dataName);
             }
@@ -581,16 +570,16 @@ namespace QuestEditor_Library
             {
                 y += 5f;
                 Text.Font = GameFont.Medium;
-                Rect rectTitle = new Rect(x + 10, y, 1020f, 35f);
-                Widgets.Label(rectTitle, title.Colorize(ColorLibrary.SkyBlue));
+                Rect rectTitle = new Rect(x + 10f, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 24f), 35f);
+                Widgets.Label(rectTitle, title.Colorize(CQFUIStyle.Accent));
                 if (tip != null)
                 {
-                    TooltipHandler.TipRegionByKey(rectTitle, tip);
+                    TooltipHandler.TipRegion(rectTitle, tip);
                 }
                 Text.Font = GameFont.Small;
                 y += 40f;
                 float textWidth = Text.CalcSize(title).x + 20f;
-                width = textWidth > width ? textWidth : width;
+                width = Mathf.Min(Mathf.Max(textWidth, width), Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f));
             }
             Rect textField = new Rect(x + 10, y, 150f, 25f);
             for (int i = 0; i < list.Count; i++)
@@ -603,7 +592,7 @@ namespace QuestEditor_Library
             y += 5f;
             if (needBox)
             {
-                Widgets.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
             }
             y += 10f;
             CQFEditorTools.DrawButtonForList(ref y, list, t => t, x - 5f, width - 70f, new Vector2(70f, 25f));
@@ -616,16 +605,16 @@ namespace QuestEditor_Library
             {
                 y += 5f;
                 Text.Font = GameFont.Medium;
-                Rect rectTitle = new Rect(x + 10, y, 1020f, 35f);
-                Widgets.Label(rectTitle, title.Colorize(ColorLibrary.SkyBlue));
+                Rect rectTitle = new Rect(x + 10f, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 24f), 35f);
+                Widgets.Label(rectTitle, title.Colorize(CQFUIStyle.Accent));
                 if (tip != null)
                 {
-                    TooltipHandler.TipRegionByKey(rectTitle, tip);
+                    TooltipHandler.TipRegion(rectTitle, tip);
                 }
                 Text.Font = GameFont.Small;
                 y += 40f;
                 float textWidth = Text.CalcSize(title).x + 20f;
-                width = textWidth > width ? textWidth : width;
+                width = Mathf.Min(Mathf.Max(textWidth, width), Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f));
             }
             Rect textField = new Rect(x + 10, y, 150f, 25f);
             for (int i = 0; i < list.Count; i++)
@@ -637,7 +626,7 @@ namespace QuestEditor_Library
             y += 5f;
             if (needBox)
             {
-                Widgets.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
             }
             y += 10f;
             CQFEditorTools.DrawButtonForList(ref y, list, t => t, x - 5f, width - 70f, new Vector2(70f, 25f));
@@ -663,16 +652,16 @@ namespace QuestEditor_Library
             {
                 y += 5f;
                 Text.Font = GameFont.Medium;
-                Rect rectTitle = new Rect(x + 10, y, 1020f, 35f);
-                Widgets.Label(rectTitle, title.Colorize(ColorLibrary.SkyBlue));
+                Rect rectTitle = new Rect(x + 10f, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 24f), 35f);
+                Widgets.Label(rectTitle, title.Colorize(CQFUIStyle.Accent));
                 if (tip != null)
                 {
-                    TooltipHandler.TipRegionByKey(rectTitle, tip);
+                    TooltipHandler.TipRegion(rectTitle, tip);
                 }
                 Text.Font = GameFont.Small;
                 y += 40f;
                 float textWidth = Text.CalcSize(title).x + 20f;
-                width = textWidth > width ? textWidth : width;
+                width = Mathf.Min(Mathf.Max(textWidth, width), Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f));
             }
             Rect textField = new Rect(x + 10, y, 150f, 25f);
             for (int i = 0; i < list.Count; i++)
@@ -684,7 +673,7 @@ namespace QuestEditor_Library
             y += 5f;
             if (needBox)
             {
-                Widgets.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
             }
             y += 10f;
             CQFEditorTools.DrawButtonForList<T>(ref y, list, t => getText(t), x - 5f, width - 70f, new Vector2(70f, 25f));
@@ -697,16 +686,16 @@ namespace QuestEditor_Library
             {
                 y += 5f;
                 Text.Font = GameFont.Medium;
-                Rect rectTitle = new Rect(x + 10, y, 1020f, 35f);
-                Widgets.Label(rectTitle, title.Colorize(ColorLibrary.SkyBlue));
+                Rect rectTitle = new Rect(x + 10f, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 24f), 35f);
+                Widgets.Label(rectTitle, title.Colorize(CQFUIStyle.Accent));
                 if (tip != null)
                 {
-                    TooltipHandler.TipRegionByKey(rectTitle, tip);
+                    TooltipHandler.TipRegion(rectTitle, tip);
                 }
                 Text.Font = GameFont.Small;
                 y += 40f;
                 float textWidth = Text.CalcSize(title).x + 20f;
-                width = textWidth > width ? textWidth : width;
+                width = Mathf.Min(Mathf.Max(textWidth, width), Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f));
             }
             Rect textField = new Rect(x + 10, y, 150f, 25f);
             for (int i = 0; i < list.Count; i++)
@@ -718,7 +707,7 @@ namespace QuestEditor_Library
             y += 5f;
             if (needBox)
             {
-                Widgets.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(new Rect(x, initY, width, y - initY), 1, QuestEditor_Dialog.blueTex);
             }
             y += 10f;
             CQFEditorTools.DrawButtonForList<T>(ref y, list, t => getText(t), addAction, x - 5f, width - 70f, new Vector2(70f, 25f));
@@ -735,15 +724,15 @@ namespace QuestEditor_Library
                 CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions);
                 return;
             }
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            y += 30f;
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 120f), 30f), title.Colorize(CQFUIStyle.Accent));
+            y += 38f;
             foreach (T d in list)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), getString(d), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(120f, inRect.width - x - 25f), 32f), getString(d), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(d));
                 }
-                y += 30f;
+                y += 38f;
             }
             y += 5f;
             List<Type> types = new List<Type>();
@@ -768,15 +757,15 @@ namespace QuestEditor_Library
                 CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions, addaction);
                 return;
             }
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            y += 30f;
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 120f), 30f), title.Colorize(CQFUIStyle.Accent));
+            y += 38f;
             foreach (T d in list)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), getString(d), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(120f, inRect.width - x - 25f), 32f), getString(d), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(d));
                 }
-                y += 30f;
+                y += 38f;
             }
             y += 5f;
             CQFEditorTools.DrawButtonForList(ref y, list, d =>
@@ -784,9 +773,9 @@ namespace QuestEditor_Library
         }
         public static void DrawIDrawList_UseWindow_UseIcon<T>(ref float y, float x, List<T> list, Rect inRect, string title, Func<T, string> getString) where T : IDrawable
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            Rect button = new Rect(inRect.width - 150f, y, 30f, 30f);
-            if (Widgets.ButtonImage(button, TexButton.Plus))
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 120f), 30f), title.Colorize(CQFUIStyle.Accent));
+            Rect button = new Rect(inRect.width - 80f, y, 30f, 30f);
+            if (CQFUIStyle.ButtonImage(button, TexButton.Plus))
             {
                 List<Type> types = new List<Type>();
                 if (!typeof(T).IsAbstract)
@@ -798,33 +787,32 @@ namespace QuestEditor_Library
                   list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate());
             }
             button.x += 40f;
-            button.x += 40f;
-            if (Widgets.ButtonImage(button, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Delete))
             {
                 CQFEditorTools.DrawFloatMenu<T>(list, (d) => list.Remove(d), (d) => getString(d));
             }
-            y += 30f;
+            y += 38f;
             foreach (T d in list)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), getString(d), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(120f, inRect.width - x - 25f), 32f), getString(d), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(d));
                 }
-                y += 30f;
+                y += 38f;
             }
             y += 5f;
         }
         public static void DrawPawnDataList_UseWindow(ref float y, float x, List<PawnSpawnData> list, Rect inRect, string title, Func<PawnSpawnData, string> getString)
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            y += 30f;
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 120f), 30f), title.Colorize(CQFUIStyle.Accent));
+            y += 38f;
             foreach (PawnSpawnData d in list)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), getString(d), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(120f, inRect.width - x - 25f), 32f), getString(d), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(d));
                 }
-                y += 30f;
+                y += 38f;
             }
             y += 5f;
             List<Type> types = new List<Type>();
@@ -834,12 +822,13 @@ namespace QuestEditor_Library
             }
             types.AddRange(typeof(PawnSpawnData).AllSubclassesNonAbstract());
             CQFEditorTools.DrawButtonForPawnData(y, list, x);
+            y += 46f;
         }
         public static void DrawPawnDataList_UseWindow_UseIcon(ref float y, float x, List<PawnSpawnData> list, Rect inRect, string title, Func<PawnSpawnData, string> getString)
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            Rect button = new Rect(inRect.width - 150f, y, 30f, 30f);
-            if (Widgets.ButtonImage(button, TexButton.Plus))
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 132f), 30f), title.Colorize(CQFUIStyle.Accent));
+            Rect button = new Rect(inRect.width - 120f, y, 30f, 30f);
+            if (CQFUIStyle.ButtonImage(button, TexButton.Plus))
             {
                 List<Type> types = new List<Type>();
                 types.Add(typeof(PawnSpawnData));
@@ -848,19 +837,19 @@ namespace QuestEditor_Library
      list.Add((PawnSpawnData)Activator.CreateInstance(a)), a => a.Name.Translate());
             }
             button.x += 40f;
-            if (Widgets.ButtonImage(button, TexButton.Paste))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Paste) && CQFEditorTools.data != null)
             {
                 list.Add(CQFEditorTools.data.Copy());
             }
             button.x += 40f;
-            if (Widgets.ButtonImage(button, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Delete))
             {
                 CQFEditorTools.DrawFloatMenu<PawnSpawnData>(list, (d) => list.Remove(d), (d) => d.dataName);
             }
             y += 30f;
             foreach (PawnSpawnData d in list)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), getString(d), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 32f), getString(d), false, overrideTextAnchor: TextAnchor.MiddleLeft))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(d));
                 }
@@ -870,15 +859,15 @@ namespace QuestEditor_Library
         }
         public static void DrawIDraw<T>(ref float y, float x,ref T t, Rect inRect, string title) where T : IDrawable
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(CQFUIStyle.Accent));
             y += 30f;
             Vector2 start = new Vector2(x, y);
             Vector2 end = new Vector2(inRect.width - (x * 2) - 10f, y);
             if (t != null)
             {
-                Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+                Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
                 y += 5f;
-                Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+                Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             }
 
         }
@@ -893,13 +882,13 @@ namespace QuestEditor_Library
                 CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions);
                 return;
             }
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(CQFUIStyle.Accent));
             CQFEditorTools.DrawButtonForList_UseIcon(y, list, d => d.GetType().Name.Translate(), () => CQFEditorTools.DrawFloatMenu(typeof(T).AllSubclassesNonAbstract(), a =>
 list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width - 150f);
             y += 30f;
             Vector2 start = new Vector2(x, y);
             Vector2 end = new Vector2(inRect.width - (x * 2) - 10f, y);
-            Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             foreach (IDrawable d in list)
             {
                 y += 3f;
@@ -907,7 +896,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                 y += 3f;
                 start.y = y;
                 end.y = y;
-                Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+                Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             }
             y += 25f;
         }
@@ -918,12 +907,12 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                 CQFConditionListEditor.Draw(ref y, x, inRect.width - x - 25f, inRect, title, conditions, addAction);
                 return;
             }
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(CQFUIStyle.Accent));
             CQFEditorTools.DrawButtonForList_UseIcon(y, list, d => getText(d), () => addAction(), x + 220f);
             y += 30f;
             Vector2 start = new Vector2(x, y);
             Vector2 end = new Vector2(inRect.width - (x * 2) - 10f, y);
-            Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             foreach (IDrawable d in list)
             {
                 y += 3f;
@@ -931,17 +920,17 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                 y += 3f;
                 start.y = y;
                 end.y = y;
-                Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+                Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             }
             y += 25f;
         }
         public static void DrawIDrawList<T>(ref float y, float x, List<T> list, Rect inRect, string title, Action addAction, Func<T, string> getText, Func<T, float, Rect, float, float> drawAction)
         {
-            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(CQFUIStyle.Accent));
             y += 30f;
             Vector2 start = new Vector2(x, y);
             Vector2 end = new Vector2(inRect.width - (x * 2) - 10f, y);
-            Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             foreach (T d in list)
             {
                 y += 3f;
@@ -949,7 +938,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
                 y += 3f;
                 start.y = y;
                 end.y = y;
-                Widgets.DrawLine(start, end, ColorLibrary.SkyBlue, 1f);
+                Widgets.DrawLine(start, end, CQFUIStyle.Accent, 1f);
             }
             y += 25f;
             CQFEditorTools.DrawButtonForList(ref y, list, getText, addAction);
@@ -964,8 +953,8 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         {
             Rect colorRect = new Rect(x, y, 30f, 30f);
             Widgets.DrawBoxSolid(colorRect, color);
-            Widgets.DrawBox(colorRect);
-            if (Widgets.ButtonText(new Rect(x + 35f, y + 2.5f, 130f, 25f), label,false))
+            CQFUIStyle.DrawBox(colorRect);
+            if (CQFUIStyle.ButtonText(new Rect(x + 35f, y + 2.5f, 130f, 25f), label,false))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 options.Add(new FloatMenuOption("Colorbase".Translate(),() =>
@@ -982,7 +971,7 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
         }
         public static void DrawButtonToSelectWithoutBackground<T>(ref float y, float x,string buttonText,List<T> list,Action<T> action,Func<T,string> getText)
         {
-            if (Widgets.ButtonText(new Rect(x,y,250f,25f),buttonText,false))
+            if (CQFUIStyle.ButtonText(new Rect(x,y,250f,25f),buttonText,false))
             {
                 CQFEditorTools.DrawFloatMenu(list,action,getText);
             }
@@ -1072,6 +1061,22 @@ list.Add((T)Activator.CreateInstance(a)), a => a.Name.Translate()),inRect.width 
             XElement result = new XElement(nodeName);
             list.ForEach(x => result.Add(x.SaveToXElement("li")));
             return result;
+        }
+
+        private static Rect DrawFieldLabel(float y, string label, float x, float width, Action? selectAction = null)
+        {
+            float available = Mathf.Max(80f, CQFUIScope.ContentWidth - x - 12f);
+            float labelWidth = label.NullOrEmpty() ? 0f : Mathf.Min(160f, available * 0.45f);
+            Rect labelRect = new Rect(x, y, labelWidth, 25f);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Text.WordWrap = false;
+            if (selectAction != null)
+            {
+                if (CQFUIStyle.ButtonText(labelRect, label, false, overrideTextAnchor: TextAnchor.MiddleLeft)) selectAction();
+            }
+            else if (labelWidth > 0f) Widgets.Label(labelRect, label.Truncate(labelWidth));
+            float gap = labelWidth > 0f ? 8f : 0f;
+            return new Rect(x + labelWidth + gap, y, Mathf.Min(Mathf.Max(20f, width), Mathf.Max(20f, available - labelWidth - gap)), 25f);
         }
 
         private static string DutyTip(DutyDef duty)

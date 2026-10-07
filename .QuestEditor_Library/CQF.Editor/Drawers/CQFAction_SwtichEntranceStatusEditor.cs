@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SwtichEntranceStatus cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Widgets.CheckboxLabeled(new Rect(15f, y, 350f, 25f), "OpeningStatus".Translate(), ref cqfReceiver.value);
             y += 35f;

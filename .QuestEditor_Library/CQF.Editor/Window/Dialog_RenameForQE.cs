@@ -12,7 +12,7 @@ namespace QuestEditor_Library
         public Dialog_RenameForQE()
         {
         }
-        public Dialog_RenameForQE(Action<string> rename,string tile = "Rename") 
+        public Dialog_RenameForQE(Action<string> rename,string tile = "Rename")
         {
             this.rename = rename;
 			this.optionalTitle = tile.Translate();
@@ -34,6 +34,7 @@ namespace QuestEditor_Library
 		}
 		public override void DoWindowContents(Rect inRect)
 		{
+		    using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
 			Text.Font = GameFont.Small;
 			bool flag = false;
 			if (UnityEngine.Event.current.type == EventType.KeyDown && (UnityEngine.Event.current.keyCode == KeyCode.Return || UnityEngine.Event.current.keyCode == KeyCode.KeypadEnter))
@@ -52,7 +53,7 @@ namespace QuestEditor_Library
 				UI.FocusControl("RenameField", this);
 				this.focusedRenameField = true;
 			}
-			if (Widgets.ButtonText(new Rect(15f, inRect.height - 35f - 10f, inRect.width - 15f - 15f, 35f), "OK", true, true, true, null) || flag)
+			if (CQFUIStyle.ButtonText(new Rect(15f, inRect.height - 35f - 10f, inRect.width - 15f - 15f, 35f), "OK", true, true, true, null) || flag)
 			{
 				AcceptanceReport acceptanceReport = this.NameIsValid(this.curName);
 				if (!acceptanceReport.Accepted)
@@ -80,7 +81,7 @@ namespace QuestEditor_Library
 		{
 			this.rename(name);
 		}
-        public Action<string> rename; 
+        public Action<string> rename;
 		protected string curName;
 		private bool focusedRenameField;
 	}

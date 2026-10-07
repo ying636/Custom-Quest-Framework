@@ -12,17 +12,18 @@ namespace QuestEditor_Library
 {
     public class Dialog_QuestEditorMisc : Window
     {
-        public Dialog_QuestEditorMisc() 
+        public Dialog_QuestEditorMisc()
         {
             this.doCloseX = true;
         }
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             float y = 10f;
             float x = 5f;
-            Widgets.BeginScrollView(new Rect(0f, 0f, inRect.width, inRect.height), ref this.pos, new Rect(0f, 0f, inRect.width, this.height + 10f));
-            Rect output = new Rect(x, y, 520f, 30f);
-            if (Widgets.ButtonText(output, "SelectOutputMod".Translate(Page_QuestEditor.ModData.Name),false)) 
+            Widgets.BeginScrollView(new Rect(0f, 0f, inRect.width, inRect.height), ref this.pos, new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, this.height + 10f)));
+            Rect output = new Rect(x, y, inRect.width - x - 32f, 32f);
+            if (CQFUIStyle.ButtonText(output, "SelectOutputMod".Translate(Page_QuestEditor.ModData.Name),false))
             {
                 Find.WindowStack.Add(new Dialog_Select<ModMetaData>(new TextSelectDrawer<ModMetaData>(ModLister.AllInstalledMods.ToList(), m => m.Name, m =>
                 {
@@ -39,7 +40,7 @@ namespace QuestEditor_Library
             TooltipHandler.TipRegion(output, "OutputModTip".Translate());
 
             Widgets.EndScrollView();
-            this.height = y + 5f;
+            this.height = y + 44f;
         }
         public string buffer;
         public float height;

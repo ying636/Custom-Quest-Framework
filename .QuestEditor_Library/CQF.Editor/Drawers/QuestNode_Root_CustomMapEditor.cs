@@ -17,6 +17,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.QuestNode_Root_CustomMap cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             y += 10f;
             CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "tile".Translate(), ref cqfReceiver.tile, x + 7f, 110f);
             TooltipHandler.TipRegion(new Rect(x + 7f, y, 150f, 25f), "tile_Tip".Translate());
@@ -54,14 +55,14 @@ namespace QuestEditor_Library
             cqfReceiver.DrawSectionHeader(ref y, inRect, x, cqfReceiver.enableBlack ? "BiomesBlackList".Translate() : "BiomesWhiteList".Translate(), () => CQFEditorTools.DrawFloatMenu<BiomeDef>(DefDatabase<BiomeDef>.AllDefs.ToList().FindAll(b => !cqfReceiver.blacklist.Contains(b)), b => cqfReceiver.blacklist.Add(b), b => b.label), () => CQFEditorTools.DrawFloatMenu<BiomeDef>(cqfReceiver.blacklist, b => cqfReceiver.blacklist.Remove(b), b => b.label));
             if (cqfReceiver.blacklist.NullOrEmpty())
             {
-                Widgets.Label(new Rect(x, y, 600f, 25f), "NoBiomeFilters".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(x, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f), 25f), "NoBiomeFilters".Translate().Colorize(CQFUIStyle.Muted));
                 y += 30f;
                 return;
             }
 
             foreach (BiomeDef biome in cqfReceiver.blacklist)
             {
-                Widgets.Label(new Rect(x, y, 600f, 25f), (biome.label ?? biome.defName).CapitalizeFirst());
+                Widgets.Label(new Rect(x, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f), 25f), (biome.label ?? biome.defName).CapitalizeFirst());
                 y += 25f;
             }
 
@@ -77,14 +78,14 @@ namespace QuestEditor_Library
             }, () => CQFEditorTools.DrawFloatMenu<WorldCondition>(cqfReceiver.worldConditions, d => cqfReceiver.worldConditions.Remove(d), cqfReceiver.WorldConditionLabel));
             if (cqfReceiver.worldConditions.NullOrEmpty())
             {
-                Widgets.Label(new Rect(x, y, 600f, 25f), "NoWorldConditions".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(x, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f), 25f), "NoWorldConditions".Translate().Colorize(CQFUIStyle.Muted));
                 y += 30f;
                 return;
             }
 
             foreach (WorldCondition condition in cqfReceiver.worldConditions)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 600f, 25f), cqfReceiver.WorldConditionLabel(condition), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, CQFUIScope.ContentWidth - x - 12f), 25f), cqfReceiver.WorldConditionLabel(condition), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(condition));
                 }
@@ -97,15 +98,15 @@ namespace QuestEditor_Library
 
         public static void DrawSectionHeader_3(QuestEditor_Library.QuestNode_Root_CustomMap cqfReceiver, ref float y, Rect inRect, float x, string title, Action addAction, Action removeAction)
         {
-            Widgets.Label(new Rect(x, y, 400f, 25f), title.Colorize(ColorLibrary.PaleBlue));
-            Rect button = new Rect(x + 420f, y, 30f, 30f);
-            if (Widgets.ButtonImage(button, TexButton.Plus))
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 96f), 25f), title.Colorize(CQFUIStyle.Accent));
+            Rect button = new Rect(inRect.width - 80f, y, 30f, 30f);
+            if (CQFUIStyle.ButtonImage(button, TexButton.Plus))
             {
                 addAction();
             }
 
             button.x += 40f;
-            if (Widgets.ButtonImage(button, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(button, TexButton.Delete))
             {
                 removeAction();
             }

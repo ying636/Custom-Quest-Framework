@@ -18,6 +18,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             if (objective == null)
             {
                 Close();
@@ -28,6 +29,7 @@ namespace QuestEditor_Library
             float viewHeight = Mathf.Max(inRect.height, contentHeight);
             Rect contentRect = new Rect(0f, 0f, inRect.width - 18f, viewHeight);
             Widgets.BeginScrollView(scrollRect, ref scrollPosition, contentRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(contentRect.width);
             float y = 8f;
             objective.Draw(ref y, contentRect, 8f);
             Widgets.EndScrollView();

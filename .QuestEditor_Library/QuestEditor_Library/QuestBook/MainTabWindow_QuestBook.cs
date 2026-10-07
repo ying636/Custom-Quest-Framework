@@ -41,6 +41,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect rect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(rect.width, rect.height);
             Text.Font = GameFont.Small;
             if (instances.NullOrEmpty())
             {
@@ -59,28 +60,28 @@ namespace QuestEditor_Library
 
         private void DrawBookSelector(Rect rect)
         {
-            Widgets.DrawMenuSection(rect);
-            Widgets.Label(new Rect(rect.x + 10f, rect.y + 10f, rect.width - 20f, 28f), "CQF_QuestBook_Label".Translate().Colorize(ColorLibrary.SkyBlue));
+            CQFUIStyle.DrawMenuSection(rect);
+            Widgets.Label(new Rect(rect.x + 10f, rect.y + 10f, rect.width - 20f, 28f), "CQF_QuestBook_Label".Translate().Colorize(CQFUIStyle.Accent));
             float y = rect.y + 46f;
             foreach (QuestBookInstance instance in instances)
             {
                 Rect row = new Rect(rect.x + 6f, y, rect.width - 12f, 32f);
                 if (instance == selectedInstance)
                 {
-                    Widgets.DrawHighlightSelected(row);
+                    CQFUIStyle.DrawHighlightSelected(row);
                 }
                 bool hasChapters = instance.bookDef?.chapters.NullOrEmpty() == false;
                 Rect labelRect = row;
                 if (instance == selectedInstance && hasChapters)
                 {
                     Rect chapterToggleRect = new Rect(row.x + 4f, row.y + 2f, 28f, 28f);
-                    if (Widgets.ButtonText(chapterToggleRect, chaptersExpanded ? "v" : ">", false))
+                    if (CQFUIStyle.ButtonText(chapterToggleRect, chaptersExpanded ? "v" : ">", false))
                     {
                         chaptersExpanded = !chaptersExpanded;
                     }
                     labelRect = new Rect(row.x + 34f, row.y, row.width - 34f, row.height);
                 }
-                if (Widgets.ButtonText(labelRect, instance.bookDef?.LabelCap ?? instance.instanceId, false))
+                if (CQFUIStyle.ButtonText(labelRect, instance.bookDef?.LabelCap ?? instance.instanceId, false))
                 {
                     selectedInstance = instance;
                     selectedChapter = instance.bookDef?.FirstChapter;
@@ -97,9 +98,9 @@ namespace QuestEditor_Library
                     Rect chapterRow = new Rect(rect.x + 30f, y, rect.width - 36f, 28f);
                     if (chapter == selectedChapter)
                     {
-                        Widgets.DrawHighlightSelected(chapterRow);
+                        CQFUIStyle.DrawHighlightSelected(chapterRow);
                     }
-                    if (Widgets.ButtonText(chapterRow, FormatChapterLabel(chapter, instance.bookDef), false))
+                    if (CQFUIStyle.ButtonText(chapterRow, FormatChapterLabel(chapter, instance.bookDef), false))
                     {
                         selectedChapter = chapter;
                         nodeCanvas.ResetView();

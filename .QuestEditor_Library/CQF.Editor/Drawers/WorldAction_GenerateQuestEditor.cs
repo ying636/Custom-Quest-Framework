@@ -19,6 +19,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.WorldAction_GenerateQuest cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             WorldActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawSelectButton(x, ref y, "CQFQuestDef".Translate(cqfReceiver.quest?.label ?? cqfReceiver.quest?.defName), DefDatabase<QuestScriptDef>.AllDefsListForReading, d => cqfReceiver.quest = d, d => d.label ?? d.defName);
             Widgets.CheckboxLabeled(new Rect(x, y, 300f, 25f), "SetCaravanTileAsTarget".Translate(), ref cqfReceiver.setCaravanTileAsTarget);

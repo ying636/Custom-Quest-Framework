@@ -79,7 +79,7 @@ namespace QuestEditor_Library
                         ("search", "Signal, source or Thing ID substring, at most 100 characters.", false), ("offset", "Page offset from 0 to 100000.", false),
                         ("limit", "Page size from 1 to 40.", false)));
                 }
-                Register(new CQFAITool("cqf_read_map_region", "Read actual terrain, roofs and Thing IDs in the current game map. Inspect a region before changing it. Coordinates are absolute game map cells.", ReadLiveRegion,
+                Register(new CQFAITool("cqf_read_map_region", "Read actual terrain, roofs and Thing IDs in the current game map. Inspect a region before changing it. Coordinates are absolute game map cells. Cells contain thingRef IDs; the things table describes each sampled object once, including actual rotation, footprint and interaction cells. Use cqf_read_map_thing for full state/configuration and cqf_list_cqf_things for feature/tool discovery.", ReadLiveRegion,
                     ("x", "Minimum X coordinate as integer text.", true), ("z", "Minimum Z coordinate as integer text.", true),
                     ("width", "Region width; at most 4096 cells total.", true), ("height", "Region height; at most 4096 cells total.", true),
                     ("offset", "Cell page offset as integer text.", false), ("limit", "Cells per page, from 1 to 400; default 100.", false)));
@@ -124,6 +124,8 @@ namespace QuestEditor_Library
         public bool EditingAllowed { get; }
         public CQFAIRuntimeJournal RuntimeJournal { get; }
         public IReadOnlyCollection<CQFAITool> Tools => tools.Values.ToArray();
+        public bool QueueLiveWrites { get; set; }
+        public CQFAILiveMapTransaction? QueuedTransaction { get; private set; }
         public XElement Definitions => new XElement("tools", tools.Values.Select(tool => tool.Definition));
         public void Register(CQFAITool tool)
         {
@@ -138,6 +140,7 @@ namespace QuestEditor_Library
                 or "cqf_read_map_targets" or "cqf_read_map_signals" or "cqf_read_map_configuration" or "cqf_runtime_help" or "cqf_read_runtime" or "cqf_check_conditions" or "cqf_inspect_map" or "cqf_export_definition")).ToArray()) tools.Remove(name);
         }
         public void AddInstruction(string text) { command += "\n" + text; runtimeTools.AddInstruction(text); }
+        public void FinishQueuedExecution() { QueuedTransaction = null; }
         public XElement Execute(CQFAIToolCall call)
         {
             bool independent = call.Name is "cqf_runtime_help" or "cqf_read_runtime" or "cqf_operate_runtime" or "cqf_check_conditions" or "cqf_inspect_map" or "cqf_manage_definition" or "cqf_export_definition";
@@ -195,8 +198,14 @@ namespace QuestEditor_Library
         private XElement Apply(XElement changes)
         {
             if (transaction == null) throw new InvalidDataException("CQF_AI_ReadOnly");
+            if (transaction is CQFAILiveMapTransaction staged) staged.DeferExecution = QueueLiveWrites;
             transaction.Build(changes, command, generateText);
             transaction.Apply();
+            if (transaction is CQFAILiveMapTransaction queued && queued.IsExecuting)
+            {
+                QueuedTransaction = queued;
+                return new XElement("liveMapQueued");
+            }
             if (transaction is CQFAILiveMapTransaction live) return live.Receipt;
             return new XElement("applied", new XAttribute("operations", changes.Elements().Count()), new XAttribute("undoAvailable", transaction.CanUndo), reader.Summary(context!.Read()), ValidateTarget());
         }

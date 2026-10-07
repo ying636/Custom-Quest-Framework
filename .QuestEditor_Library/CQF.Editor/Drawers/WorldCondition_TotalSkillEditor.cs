@@ -19,6 +19,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.WorldCondition_TotalSkill cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             WorldConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawSelectButton(x, ref y, "SkillDef".Translate(cqfReceiver.skill?.label ?? cqfReceiver.skill?.defName), DefDatabase<SkillDef>.AllDefsListForReading, d => cqfReceiver.skill = d, d => d.label);
             CQFEditorTools.DrawLabelAndText_Line(y, "RequiredLevel".Translate(), ref cqfReceiver.vaule, ref cqfReceiver.buffer, x);

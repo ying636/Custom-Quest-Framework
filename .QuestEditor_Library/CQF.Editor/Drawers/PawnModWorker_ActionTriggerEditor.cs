@@ -12,16 +12,17 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker_ActionTrigger cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             PawnModData_ActionTrigger modData = pawnDef.DataFor<PawnModData_ActionTrigger>();
             Rect addRect = new Rect(x, y, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 modData.actionTriggers.Add(new PawnActionTriggerData { key = pawnDef.defName + "_Damaged" });
             }
 
             TooltipHandler.TipRegion(addRect, "CQF_PawnEditor_Add".Translate());
             Rect deleteRect = new Rect(addRect.xMax + 10f, y, 28f, 28f);
-            if (Widgets.ButtonImage(deleteRect, TexButton.Delete) && modData.actionTriggers.Any())
+            if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete) && modData.actionTriggers.Any())
             {
                 CQFEditorTools.DrawFloatMenu(modData.actionTriggers, data => modData.actionTriggers.Remove(data), cqfReceiver.TriggerLabel);
             }
@@ -33,9 +34,9 @@ namespace QuestEditor_Library
                 float panelHeight = cqfReceiver.TriggerPanelHeight(data);
                 Rect panelRect = new Rect(x, y, inRect.width - x - 20f, panelHeight);
                 Widgets.DrawLightHighlight(panelRect);
-                Widgets.DrawBox(panelRect, 1, QuestEditor_Dialog.blueTex);
+                CQFUIStyle.DrawBox(panelRect, 1, QuestEditor_Dialog.blueTex);
                 Rect keyRect = new Rect(panelRect.x + 10f, panelRect.y + 8f, panelRect.width - 20f, 30f);
-                Widgets.Label(new Rect(keyRect.x, keyRect.y + 3f, 110f, 24f), "CQF_PawnEditor_TriggerKey".Translate().Colorize(ColorLibrary.PaleBlue));
+                Widgets.Label(new Rect(keyRect.x, keyRect.y + 3f, 110f, 24f), "CQF_PawnEditor_TriggerKey".Translate().Colorize(CQFUIStyle.Accent));
                 data.key = Widgets.TextField(new Rect(keyRect.x + 118f, keyRect.y, keyRect.width - 118f, 30f), data.key);
                 Rect modeRect = new Rect(panelRect.x + 10f, keyRect.yMax + 6f, panelRect.width - 20f, 30f);
                 if (cqfReceiver.DrawTextButton(modeRect, "CQF_PawnEditor_TriggerMode".Translate(cqfReceiver.ModeLabel(data.mode))))
@@ -52,17 +53,17 @@ namespace QuestEditor_Library
         {
             Rect labelRect = new Rect(panelRect.x + 10f, y + 3f, 255f, 24f);
             string label = "CQF_PawnEditor_TriggerActions".Translate();
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
             float buttonX = labelRect.x + Text.CalcSize(label).x + 14f;
             Rect addRect = new Rect(buttonX, y, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 CQFEditorTools.OpenCQFActionSelect(type => data.actions.Add((CQFAction)Activator.CreateInstance(type)));
             }
 
             TooltipHandler.TipRegion(addRect, "CQF_PawnEditor_Add".Translate());
             Rect deleteRect = new Rect(addRect.xMax + 8f, y, 28f, 28f);
-            if (Widgets.ButtonImage(deleteRect, TexButton.Delete) && data.actions.Any())
+            if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete) && data.actions.Any())
             {
                 CQFEditorTools.DrawFloatMenu(data.actions, action => data.actions.Remove(action), cqfReceiver.ActionLabel);
             }
@@ -72,7 +73,7 @@ namespace QuestEditor_Library
             foreach (CQFAction action in data.actions)
             {
                 Rect actionRect = new Rect(panelRect.x + 14f, actionY, panelRect.width - 28f, 26f);
-                if (Widgets.ButtonText(actionRect, cqfReceiver.ActionLabel(action), false))
+                if (CQFUIStyle.ButtonText(actionRect, cqfReceiver.ActionLabel(action), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(action));
                 }

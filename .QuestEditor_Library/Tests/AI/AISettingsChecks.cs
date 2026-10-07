@@ -27,6 +27,9 @@ internal static class AISettingsChecks
                         dialogAIPlanning = editing,
                         dialogAIAgents = tools,
                         dialogAIParallelAgents = 3,
+                        dialogAITokenBudget = 80000,
+                        dialogAIRequestBudget = 18,
+                        dialogAIExecutionSpeed = 2,
                         dialogAIAgentModel = "CQF_Check_WorkerModel",
                         dialogAIAgentPrompt = "CQF_Check_分工\nCQF_Check_<worker>&",
                         dialogAIAdditionalPromptEnabled = tools,
@@ -48,6 +51,8 @@ internal static class AISettingsChecks
                     Check(loaded.dialogAIAllowEditing == editing, "editing preference persists through native Scribe: " + editing + "/" + text);
                     Check(loaded.dialogAIAllowTextGeneration == text, "text permission persists through native Scribe: " + editing + "/" + text);
                     Check(loaded.dialogAIUseTools == tools, "tool transport preference persists through native Scribe: " + tools);
+                    Check(loaded.dialogAITokenBudget == 80000 && loaded.dialogAIRequestBudget == 18 && loaded.dialogAIExecutionSpeed == 2,
+                        "shared cost limits and execution speed persist through native Scribe");
                     Check(loaded.dialogAIPlanning == editing && loaded.dialogAIAgents == tools && loaded.dialogAIParallelAgents == 3 && loaded.dialogAIAgentModel == setting.dialogAIAgentModel
                         && loaded.dialogAIAgentPrompt.Replace("\r\n", "\n") == setting.dialogAIAgentPrompt, "orchestration preferences and worker instructions persist through native Scribe: " + tools + "/" + editing);
                     Check(loaded.dialogAIAdditionalPromptEnabled == tools && loaded.dialogAIAdditionalPrompt.Replace("\r\n", "\n") == setting.dialogAIAdditionalPrompt,

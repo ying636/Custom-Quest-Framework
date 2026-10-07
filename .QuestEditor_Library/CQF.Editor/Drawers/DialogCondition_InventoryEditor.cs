@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_Inventory cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogCondition_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawIDrawList(ref y, x, cqfReceiver.requirations, inRect, "RequiredThings".Translate(), () => CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
             {

@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_StartMentalState cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 350f, 25f);
-            if (Widgets.ButtonText(rect, "CQFMentalState".Translate(cqfReceiver.state?.label), false))
+            if (CQFUIStyle.ButtonText(rect, "CQFMentalState".Translate(cqfReceiver.state?.label), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<MentalStateDef>.AllDefsListForReading, f => cqfReceiver.state = f, f => f.label);
             }

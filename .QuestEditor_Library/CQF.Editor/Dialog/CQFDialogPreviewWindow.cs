@@ -22,18 +22,19 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 35f), "CQF_DialogGraph_Preview".Translate());
             Text.Font = GameFont.Small;
             Widgets.Label(new Rect(0f, 40f, inRect.width, 65f), "CQF_DialogGraph_PreviewHint".Translate());
-            if (Widgets.ButtonText(new Rect(0f, 110f, 130f, 28f), "CQF_DialogGraph_Entry".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, 110f, 130f, 28f), "CQF_DialogGraph_Entry".Translate()))
             {
                 this.index = 0;
                 this.history.Clear();
             }
             bool enabled = GUI.enabled;
             GUI.enabled = enabled && this.history.Count > 0;
-            if (Widgets.ButtonText(new Rect(140f, 110f, 130f, 28f), "Back".Translate())) this.index = this.history.Pop();
+            if (CQFUIStyle.ButtonText(new Rect(140f, 110f, 130f, 28f), "Back".Translate())) this.index = this.history.Pop();
             GUI.enabled = enabled;
             if (!this.index.HasValue)
             {
@@ -69,7 +70,7 @@ namespace QuestEditor_Library
                 for (int i = 0; i < option.results.Count; i++)
                 {
                     DialogResult result = option.results[i];
-                    if (Widgets.ButtonText(new Rect(12f, y, view.width - 36f, 34f),
+                    if (CQFUIStyle.ButtonText(new Rect(12f, y, view.width - 36f, 34f),
                         "CQF_DialogGraph_PreviewResult".Translate(i + 1, result.resultName, result.conditions.Count, result.actions.Count)))
                     {
                         this.history.Push(node.index.GetValueOrDefault());

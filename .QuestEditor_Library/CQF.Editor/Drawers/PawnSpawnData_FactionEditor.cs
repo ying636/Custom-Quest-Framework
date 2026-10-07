@@ -17,8 +17,9 @@ namespace QuestEditor_Library
     {
         public static void DrawKind_0(QuestEditor_Library.PawnSpawnData_Faction cqfReceiver, float x, ref float y)
         {
-            Rect rect = new Rect(20f + x, y, 250f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_PawnGroupMaker".Translate(cqfReceiver.kindDef?.defName), false) && !cqfReceiver.faction.NullOrEmpty() && FactionDef.Named(cqfReceiver.faction)is FactionDef factionDef && !factionDef.pawnGroupMakers.NullOrEmpty())
+            Rect rect = PawnSpawnDataEditor.DrawField(ref y, x, "CQF_PawnGroupMaker".Translate(string.Empty));
+            FactionDef? factionDef = cqfReceiver.faction.NullOrEmpty() ? null : DefDatabase<FactionDef>.GetNamedSilentFail(cqfReceiver.faction);
+            if (CQFUIStyle.ButtonText(rect, cqfReceiver.kindDef?.defName ?? "Select".Translate().ToString(), active: factionDef != null && !factionDef.pawnGroupMakers.NullOrEmpty()) && factionDef != null)
             {
                 CQFEditorTools.DrawFloatMenu(factionDef.pawnGroupMakers, (k) => cqfReceiver.kindDef = k.kindDef, (k) =>
                 {
@@ -27,8 +28,14 @@ namespace QuestEditor_Library
             }
 
             TooltipHandler.TipRegion(rect, "CQF_PawnGroupMaker_Tip".Translate());
-            y += 30f;
-            CQFEditorTools.DrawIntRange(ref y, "SpawmPoint".Translate(), ref cqfReceiver.point, ref cqfReceiver.buffer1, ref cqfReceiver.buffer2, x + 20f, 80f);
+            Rect points = PawnSpawnDataEditor.DrawField(ref y, x, "SpawmPoint".Translate(), 190f);
+            float part = (points.width - 18f) / 2f;
+            int min = cqfReceiver.point.min;
+            int max = cqfReceiver.point.max;
+            Widgets.TextFieldNumeric(new Rect(points.x, points.y, part, points.height), ref min, ref cqfReceiver.buffer1);
+            Widgets.Label(new Rect(points.x + part + 3f, points.y + 4f, 12f, 25f), "~");
+            Widgets.TextFieldNumeric(new Rect(points.x + part + 18f, points.y, part, points.height), ref max, ref cqfReceiver.buffer2);
+            cqfReceiver.point = new IntRange(min, max);
         }
     }
 }

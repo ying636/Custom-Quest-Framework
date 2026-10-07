@@ -37,6 +37,7 @@ namespace QuestEditor_Library
         }
 
         public CQFAITokenUsage? LastUsage { get; private set; }
+        public CQFAIRequestBudget? RequestBudget { get; set; }
         public bool ReceivedResponse { get; private set; }
         public string? UsageError { get; private set; }
         public string? TransportNotice { get; private set; }
@@ -47,6 +48,18 @@ namespace QuestEditor_Library
             return await CompleteConversationAsync(instructions, new[] { new CQFAIMessage("user", command) }, cancellation).ConfigureAwait(false);
         }
 
+        public static long RequestContextLength(string instructions, IEnumerable<CQFAIMessage> messages, IEnumerable<CQFAITool>? tools = null)
+        {
+            CQFAITool[] definitions = tools?.ToArray() ?? Array.Empty<CQFAITool>();
+            bool nativeTools = definitions.Length > 0;
+            return instructions.Length + 6L + (nativeTools ? NativeToolInstructions.Length + 4L : 0L)
+                + messages.Sum(message => MessageContextLength(message, nativeTools))
+                + definitions.Sum(tool => tool.JsonDefinition.Descendants().Where(element => element.Attribute("type")?.Value == "string").Sum(element => (long)element.Value.Length));
+        }
+
+        public static long MessageContextLength(CQFAIMessage message, bool nativeTools)
+            => MessageJson(message, nativeTools).Descendants().Where(element => element.Attribute("type")?.Value == "string").Sum(element => (long)element.Value.Length);
+
         public async Task<string> CompleteConversationAsync(string instructions, IEnumerable<CQFAIMessage> messages, CancellationToken cancellation, IEnumerable<CQFAITool>? tools = null, bool stream = false)
         {
             LastUsage = null; UsageError = null; ReceivedResponse = false;
@@ -54,7 +67,7 @@ namespace QuestEditor_Library
             stream &= streamingSupported;
             CQFAITool[] definitions = tools?.ToArray() ?? Array.Empty<CQFAITool>();
             bool nativeTools = definitions.Length > 0;
-            if (nativeTools) instructions += "\nNative function tools are enabled. Request operations using tool_calls, not XML tool/query/change sections. Return conversational replies as plain text. All function arguments are strings.\n";
+            if (nativeTools) instructions += NativeToolInstructions;
             XElement payload = new XElement("root", new XAttribute("type", "object"),
                 new XElement("model", new XAttribute("type", "string"), this.model),
                 new XElement("stream", new XAttribute("type", "boolean"), stream ? "true" : "false"),
@@ -70,7 +83,7 @@ namespace QuestEditor_Library
                 payload.Add(new XElement("tool_choice", new XAttribute("type", "string"), "auto"));
             }
             long contextLength = payload.Descendants().Where(element => element.Attribute("type")?.Value == "string").Sum(element => (long)element.Value.Length);
-            if (contextLength > 600000) throw new InvalidDataException("CQF_AI_RequestTooLarge: " + contextLength);
+            if (contextLength > MaxRequestCharacters) throw new InvalidDataException("CQF_AI_RequestTooLarge: " + contextLength);
             using CancellationTokenSource deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
             deadline.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
             using HttpClientHandler handler = new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false };
@@ -83,59 +96,66 @@ namespace QuestEditor_Library
                     deadline.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
                     using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, endpoint);
                     if (apiKey.Length > 0) request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-                    request.Content = new StringContent(CQFAIJson.Write(payload), Encoding.UTF8, "application/json");
-                    using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, deadline.Token).ConfigureAwait(false);
-                    deadline.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
-                    if (!response.IsSuccessStatusCode)
+                    string requestBody = CQFAIJson.Write(payload);
+                    request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
+                    using CQFAIRequestLease? lease = RequestBudget?.Reserve((Encoding.UTF8.GetByteCount(requestBody) + 2L) / 3);
+                    try
                     {
-                        string body = await ReadBodyAsync(response, deadline).ConfigureAwait(false);
-                        if ((int)response.StatusCode is 400 or 422 && payload.Element("stream_options") != null
-                            && body.IndexOf("stream_options", StringComparison.OrdinalIgnoreCase) >= 0)
+                        using HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, deadline.Token).ConfigureAwait(false);
+                        deadline.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
+                        if (!response.IsSuccessStatusCode)
                         {
-                            payload.Element("stream_options")!.Remove();
-                            streamingUsageSupported = false;
-                            TransportNotice = "CQF_AI_StreamUsageFallback";
-                            continue;
+                            if (lease != null) lease.Rejected = true;
+                            string body = await ReadBodyAsync(response, deadline).ConfigureAwait(false);
+                            if ((int)response.StatusCode is 400 or 422 && payload.Element("stream_options") != null
+                                && body.IndexOf("stream_options", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                payload.Element("stream_options")!.Remove();
+                                streamingUsageSupported = false;
+                                TransportNotice = "CQF_AI_StreamUsageFallback";
+                                continue;
+                            }
+                            if ((int)response.StatusCode is 400 or 422 && payload.Element("stream")?.Value == "true"
+                                && body.IndexOf("stream", StringComparison.OrdinalIgnoreCase) >= 0
+                                && (body.IndexOf("unsupported", StringComparison.OrdinalIgnoreCase) >= 0 || body.IndexOf("not support", StringComparison.OrdinalIgnoreCase) >= 0))
+                            {
+                                payload.Element("stream")!.Value = "false";
+                                payload.Element("stream_options")?.Remove();
+                                streamingSupported = false;
+                                TransportNotice = "CQF_AI_StreamFallback";
+                                continue;
+                            }
+                            throw new InvalidOperationException("CQF_DialogAI_HTTP " + (int)response.StatusCode);
                         }
-                        if ((int)response.StatusCode is 400 or 422 && payload.Element("stream")?.Value == "true"
-                            && body.IndexOf("stream", StringComparison.OrdinalIgnoreCase) >= 0
-                            && (body.IndexOf("unsupported", StringComparison.OrdinalIgnoreCase) >= 0 || body.IndexOf("not support", StringComparison.OrdinalIgnoreCase) >= 0))
+                        ReceivedResponse = true;
+                        XElement result;
+                        if (response.Content.Headers.ContentType?.MediaType?.Equals("text/event-stream", StringComparison.OrdinalIgnoreCase) == true)
+                            result = await ReadStreamAsync(response, deadline).ConfigureAwait(false);
+                        else
                         {
-                            payload.Element("stream")!.Value = "false";
-                            payload.Element("stream_options")?.Remove();
-                            streamingSupported = false;
-                            TransportNotice = "CQF_AI_StreamFallback";
-                            continue;
+                            result = CQFAIJson.Read(await ReadBodyAsync(response, deadline).ConfigureAwait(false));
+                            ReadUsage(result.Element("usage"));
+                            XElement? message = result.Element("choices")?.Element("item")?.Element("message");
+                            string thought = message?.Element("reasoning_summary")?.Value ?? message?.Element("reasoning_content")?.Value ?? message?.Element("reasoning")?.Value ?? string.Empty;
+                            Volatile.Write(ref progress, new CQFAIStreamUpdate(message?.Element("content")?.Value ?? string.Empty, thought,
+                                message?.Element("tool_calls")?.Elements().Select(call => call.Element("function")?.Element("name")?.Value ?? string.Empty).ToArray() ?? Array.Empty<string>()));
                         }
-                        throw new InvalidOperationException("CQF_DialogAI_HTTP " + (int)response.StatusCode);
+                        string? finish = result.Element("choices")?.Element("item")?.Element("finish_reason")?.Value;
+                        if (finish == "length" || finish == "content_filter") throw new InvalidOperationException("CQF_DialogAI_Incomplete");
+                        XElement? answer = result.Element("choices")?.Element("item")?.Element("message");
+                        string? text = answer?.Element("content")?.Value;
+                        XElement? calls = answer?.Element("tool_calls");
+                        if (nativeTools && calls?.HasElements == true)
+                        {
+                            if (calls.Elements().Count() > 8) throw new InvalidDataException("CQF_AI_InvalidTool");
+                            return new XElement("assistant", string.IsNullOrWhiteSpace(text) ? null : new XElement("reply", text),
+                                new XElement("tools", calls.Elements().Select(call => CQFAIToolCall.FromJson(call).ToXml()))).ToString(SaveOptions.DisableFormatting);
+                        }
+                        if (string.IsNullOrWhiteSpace(text)) throw new InvalidDataException("CQF_DialogAI_EmptyResponse");
+                        return nativeTools && !text!.TrimStart().StartsWith("<assistant", StringComparison.Ordinal) && !text.TrimStart().StartsWith("```", StringComparison.Ordinal)
+                            ? new XElement("assistant", new XElement("reply", text)).ToString(SaveOptions.DisableFormatting) : text!;
                     }
-                    ReceivedResponse = true;
-                    XElement result;
-                    if (response.Content.Headers.ContentType?.MediaType?.Equals("text/event-stream", StringComparison.OrdinalIgnoreCase) == true)
-                        result = await ReadStreamAsync(response, deadline).ConfigureAwait(false);
-                    else
-                    {
-                        result = CQFAIJson.Read(await ReadBodyAsync(response, deadline).ConfigureAwait(false));
-                        ReadUsage(result.Element("usage"));
-                        XElement? message = result.Element("choices")?.Element("item")?.Element("message");
-                        string thought = message?.Element("reasoning_summary")?.Value ?? message?.Element("reasoning_content")?.Value ?? message?.Element("reasoning")?.Value ?? string.Empty;
-                        Volatile.Write(ref progress, new CQFAIStreamUpdate(message?.Element("content")?.Value ?? string.Empty, thought,
-                            message?.Element("tool_calls")?.Elements().Select(call => call.Element("function")?.Element("name")?.Value ?? string.Empty).ToArray() ?? Array.Empty<string>()));
-                    }
-                    string? finish = result.Element("choices")?.Element("item")?.Element("finish_reason")?.Value;
-                    if (finish == "length" || finish == "content_filter") throw new InvalidOperationException("CQF_DialogAI_Incomplete");
-                    XElement? answer = result.Element("choices")?.Element("item")?.Element("message");
-                    string? text = answer?.Element("content")?.Value;
-                    XElement? calls = answer?.Element("tool_calls");
-                    if (nativeTools && calls?.HasElements == true)
-                    {
-                        if (calls.Elements().Count() > 8) throw new InvalidDataException("CQF_AI_InvalidTool");
-                        return new XElement("assistant", string.IsNullOrWhiteSpace(text) ? null : new XElement("reply", text),
-                            new XElement("tools", calls.Elements().Select(call => CQFAIToolCall.FromJson(call).ToXml()))).ToString(SaveOptions.DisableFormatting);
-                    }
-                    if (string.IsNullOrWhiteSpace(text)) throw new InvalidDataException("CQF_DialogAI_EmptyResponse");
-                    return nativeTools && !text!.TrimStart().StartsWith("<assistant", StringComparison.Ordinal) && !text.TrimStart().StartsWith("```", StringComparison.Ordinal)
-                        ? new XElement("assistant", new XElement("reply", text)).ToString(SaveOptions.DisableFormatting) : text!;
+                    finally { if (lease != null) lease.Usage = LastUsage; }
                 }
                 throw new InvalidOperationException("CQF_AI_StreamError");
             }
@@ -214,6 +234,8 @@ namespace QuestEditor_Library
             return result;
         }
 
+        public const int MaxRequestCharacters = 600000;
+        private const string NativeToolInstructions = "\nNative function tools are enabled. Request operations using tool_calls, not XML tool/query/change sections. Return conversational replies as plain text. All function arguments are strings.\n";
         private CQFAIStreamUpdate? progress;
         private bool streamingSupported = true;
         private bool streamingUsageSupported = true;

@@ -13,9 +13,9 @@ namespace QuestEditor_Library
     {
         public Designator_CustomTrap()
         {
-            this.defaultLabel = "TrapEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+            this.defaultLabel = "TrapEditor".Translate().Colorize(CQFUIStyle.Accent);
             this.icon =  ContentFinder<Texture2D>.Get("UI/Icon_Edit");;
-            this.defaultDesc = "TrapEditorDesc".Translate().Colorize(ColorLibrary.SkyBlue);
+            this.defaultDesc = "TrapEditorDesc".Translate().Colorize(CQFUIStyle.Accent);
             this.useMouseIcon = true;
         }
         public override bool Visible => DebugSettings.godMode;
@@ -41,14 +41,14 @@ namespace QuestEditor_Library
                 }
                 yield return new FloatMenuOption("Select".Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CustomTrap.bespawnable, x => x.uiIcon, x => this.IsCQFTool(x) ? x.label.Colorize(ColorLibrary.SkyBlue) : x.label, x =>
+                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CustomTrap.bespawnable, x => x.uiIcon, x => this.IsCQFTool(x) ? x.label.Colorize(CQFUIStyle.Accent) : x.label, x =>
            {
                Designator_CustomTrap.thing = x;
                stuff = null;
                string label = x.label;
                if (this.IsCQFTool(x))
                {
-                   label = label.Colorize(ColorLibrary.SkyBlue);
+                   label = label.Colorize(CQFUIStyle.Accent);
                }
                this.defaultLabel = label;
                this.icon = x.GetUIIconForStuff(stuff);
@@ -63,7 +63,7 @@ namespace QuestEditor_Library
                            s =>
                            {
                                stuff = s;
-                               this.defaultLabel = s.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
+                               this.defaultLabel = s.LabelAsStuff.Colorize(CQFUIStyle.Accent) + this.defaultLabel;
                                this.icon = x.GetUIIconForStuff(s);
                            },
                            t => t.graphic?.Color ?? Color.white,
@@ -75,9 +75,9 @@ namespace QuestEditor_Library
                 yield return new FloatMenuOption("TrapEditor".Translate(), () =>
                 {
                     Designator_CustomTrap.thing = null;
-                    this.defaultLabel = "TrapEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+                    this.defaultLabel = "TrapEditor".Translate().Colorize(CQFUIStyle.Accent);
                     this.icon = ContentFinder<Texture2D>.Get("UI/Icon_Edit");
-                    this.defaultDesc = "TrapEditorDesc".Translate().Colorize(ColorLibrary.SkyBlue);
+                    this.defaultDesc = "TrapEditorDesc".Translate().Colorize(CQFUIStyle.Accent);
                 });
                yield break;
             }

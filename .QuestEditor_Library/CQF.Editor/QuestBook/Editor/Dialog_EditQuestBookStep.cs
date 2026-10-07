@@ -31,10 +31,12 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             float contentWidth = inRect.width - 30f;
             Rect scrollRect = new Rect(0f, 0f, inRect.width, inRect.height);
             Rect contentRect = new Rect(0f, 0f, contentWidth, Mathf.Max(inRect.height, CalculateContentHeight(contentWidth)));
             Widgets.BeginScrollView(scrollRect, ref scrollPosition, contentRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(contentRect.width);
             float y = 8f;
             DrawSectionTitle(ref y, contentWidth, "CQF_QuestBook_StepProperties".Translate());
             DrawTextField(ref y, contentWidth, "CQF_QuestBook_StepName".Translate(), ref step.labelKey);
@@ -54,7 +56,7 @@ namespace QuestEditor_Library
 
         private void DrawSectionTitle(ref float y, float width, string title)
         {
-            Widgets.Label(new Rect(8f, y, width - 16f, 32f), title.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(8f, y, width - 16f, 32f), title.Colorize(CQFUIStyle.Accent));
             y += 42f;
         }
 
@@ -62,8 +64,8 @@ namespace QuestEditor_Library
         {
             float rowHeight = 62f;
             Rect row = new Rect(8f, y, width - 16f, rowHeight);
-            Widgets.DrawMenuSection(row);
-            Widgets.Label(new Rect(row.x + 12f, row.y + 7f, row.width - 24f, 22f), label.Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(row);
+            Widgets.Label(new Rect(row.x + 12f, row.y + 7f, row.width - 24f, 22f), label.Colorize(CQFUIStyle.Accent));
             value = Widgets.TextField(new Rect(row.x + 12f, row.y + 30f, row.width - 24f, 26f), value ?? string.Empty);
             y += rowHeight + 8f;
         }
@@ -72,8 +74,8 @@ namespace QuestEditor_Library
         {
             float cardHeight = 142f;
             Rect card = new Rect(8f, y, width - 16f, cardHeight);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_NodeIcon".Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_NodeIcon".Translate().Colorize(CQFUIStyle.Accent));
             Rect previewRect = new Rect(card.x + 12f, card.y + 38f, 88f, 88f);
             Widgets.DrawTextureFitted(previewRect, nodeFrame, 1f);
             DrawIcon(previewRect.ContractedBy(13f));
@@ -89,10 +91,10 @@ namespace QuestEditor_Library
             step.detailImagePaths ??= new List<string>();
             float cardHeight = GetDetailImageCardHeight();
             Rect card = new Rect(8f, y, width - 16f, cardHeight);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_DetailImage".Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_DetailImage".Translate().Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(card.xMax - 42f, card.y + 5f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 SelectDetailImage();
             }
@@ -100,7 +102,7 @@ namespace QuestEditor_Library
             float rowY = card.y + 40f;
             if (step.detailImagePaths.NullOrEmpty())
             {
-                Widgets.Label(new Rect(card.x + 12f, rowY + 14f, card.width - 24f, 22f), "CQF_QuestBook_NoDetailImages".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(card.x + 12f, rowY + 14f, card.width - 24f, 22f), "CQF_QuestBook_NoDetailImages".Translate().Colorize(CQFUIStyle.Muted));
             }
             foreach (string path in step.detailImagePaths.ToList())
             {
@@ -108,15 +110,15 @@ namespace QuestEditor_Library
                 Widgets.DrawBoxSolid(rowRect, new Color(0.08f, 0.1f, 0.12f, 0.72f));
                 Widgets.DrawHighlightIfMouseover(rowRect);
                 Rect previewRect = new Rect(rowRect.x + 6f, rowRect.y + 6f, 112f, rowRect.height - 12f);
-                Widgets.DrawBox(previewRect, 1);
+                CQFUIStyle.DrawBox(previewRect, 1);
                 Texture2D texture = path.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(path, false);
                 if (texture != null)
                 {
                     Widgets.DrawTextureFitted(previewRect.ContractedBy(4f), texture, 1f);
                 }
-                Widgets.Label(new Rect(previewRect.xMax + 12f, rowRect.y + 12f, rowRect.width - 164f, 22f), path.Colorize(Color.gray));
+                Widgets.Label(new Rect(previewRect.xMax + 12f, rowRect.y + 12f, rowRect.width - 164f, 22f), path.Colorize(CQFUIStyle.Muted));
                 Rect deleteRect = new Rect(rowRect.xMax - 34f, rowRect.y + 10f, 28f, 28f);
-                if (Widgets.ButtonImage(deleteRect, TexButton.Delete))
+                if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete))
                 {
                     step.detailImagePaths.Remove(path);
                     break;
@@ -137,11 +139,11 @@ namespace QuestEditor_Library
             step.rewardInfos ??= new List<QuestBookRewardInfo>();
             float cardHeight = GetRewardInfoCardHeight(width);
             Rect card = new Rect(8f, y, width - 16f, cardHeight);
-            Widgets.DrawMenuSection(card);
+            CQFUIStyle.DrawMenuSection(card);
             string title = "CQF_QuestBook_RewardInfo".Translate();
-            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, Text.CalcSize(title).x, 24f), title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, Text.CalcSize(title).x, 24f), title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(card.xMax - 42f, card.y + 5f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 QuestBookRewardInfo info = new QuestBookRewardInfo();
                 step.rewardInfos.Add(info);
@@ -151,7 +153,7 @@ namespace QuestEditor_Library
             float rowY = card.y + 40f;
             if (step.rewardInfos.NullOrEmpty())
             {
-                Widgets.Label(new Rect(card.x + 12f, rowY + 12f, card.width - 24f, 26f), "CQF_QuestBook_NoRewardInfo".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(card.x + 12f, rowY + 12f, card.width - 24f, 26f), "CQF_QuestBook_NoRewardInfo".Translate().Colorize(CQFUIStyle.Muted));
             }
             for (int index = 0; index < step.rewardInfos.Count; index++)
             {
@@ -161,11 +163,11 @@ namespace QuestEditor_Library
                 Widgets.DrawBoxSolid(rowRect, new Color(0.08f, 0.1f, 0.12f, 0.72f));
                 Widgets.DrawHighlightIfMouseover(rowRect);
                 Rect iconRect = new Rect(rowRect.x + 6f, rowRect.y + 6f, 48f, 48f);
-                Widgets.DrawBox(iconRect, 1);
+                CQFUIStyle.DrawBox(iconRect, 1);
                 DrawRewardInfoIcon(info, iconRect.ContractedBy(6f));
                 Rect contentRect = new Rect(iconRect.xMax + 12f, rowRect.y + 6f, rowRect.width - 106f, rowHeight - 12f);
                 string label = info.Label.NullOrEmpty() ? "CQF_QuestBook_RewardInfoUnnamed".Translate().ToString() : info.Label;
-                Widgets.Label(new Rect(contentRect.x, contentRect.y, contentRect.width, 22f), label.Colorize(ColorLibrary.PaleBlue));
+                Widgets.Label(new Rect(contentRect.x, contentRect.y, contentRect.width, 22f), label.Colorize(CQFUIStyle.Accent));
                 if (!info.Description.NullOrEmpty())
                 {
                     Widgets.Label(new Rect(contentRect.x, contentRect.y + 24f, contentRect.width, contentRect.height - 24f), info.Description);
@@ -175,7 +177,7 @@ namespace QuestEditor_Library
                     Find.WindowStack.Add(new Dialog_EditQuestBookRewardInfo(info));
                 }
                 Rect deleteRect = new Rect(rowRect.xMax - 30f, rowRect.y + 13f, 28f, 28f);
-                if (Widgets.ButtonImage(deleteRect, TexButton.Delete))
+                if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete))
                 {
                     step.rewardInfos.Remove(info);
                     break;
@@ -200,7 +202,7 @@ namespace QuestEditor_Library
 
         private static void DrawTextButton(Rect rect, string labelKey, Action action)
         {
-            if (Widgets.ButtonText(rect, labelKey.Translate()))
+            if (CQFUIStyle.ButtonText(rect, labelKey.Translate()))
             {
                 action();
             }
@@ -252,12 +254,12 @@ namespace QuestEditor_Library
         {
             float cardHeight = GetObjectiveCardHeight();
             Rect card = new Rect(8f, y, width - 16f, cardHeight);
-            Widgets.DrawMenuSection(card);
+            CQFUIStyle.DrawMenuSection(card);
             string title = "CQF_QuestBook_Objectives".Translate();
             Rect titleRect = new Rect(card.x + 12f, card.y + 8f, Text.CalcSize(title).x, 30f);
-            Widgets.Label(titleRect, title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(titleRect.xMax + 8f, card.y + 5f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 OpenObjectiveTypeSelector();
             }
@@ -265,8 +267,8 @@ namespace QuestEditor_Library
             float modeLabelWidth = Text.CalcSize("CQF_QuestBook_CompletionMode".Translate()).x;
             float modeButtonWidth = 120f;
             Rect modeButtonRect = new Rect(card.xMax - modeButtonWidth - 12f, card.y + 5f, modeButtonWidth, 28f);
-            Widgets.Label(new Rect(modeButtonRect.x - modeLabelWidth - 8f, card.y + 8f, modeLabelWidth, 24f), "CQF_QuestBook_CompletionMode".Translate().Colorize(ColorLibrary.PaleBlue));
-            if (Widgets.ButtonText(modeButtonRect, ("QuestBookCompletionMode_" + step.completionMode).Translate(), false))
+            Widgets.Label(new Rect(modeButtonRect.x - modeLabelWidth - 8f, card.y + 8f, modeLabelWidth, 24f), "CQF_QuestBook_CompletionMode".Translate().Colorize(CQFUIStyle.Accent));
+            if (CQFUIStyle.ButtonText(modeButtonRect, ("QuestBookCompletionMode_" + step.completionMode).Translate(), false))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 foreach (QuestBookCompletionMode mode in Enum.GetValues(typeof(QuestBookCompletionMode)))
@@ -281,7 +283,7 @@ namespace QuestEditor_Library
             {
                 Rect row = new Rect(card.x + 12f, rowY, card.width - 58f, 30f);
                 string objectiveLabel = objective.Label;
-                if (Widgets.ButtonText(row, string.Empty, false))
+                if (CQFUIStyle.ButtonText(row, string.Empty, false))
                 {
                     Find.WindowStack.Add(new Dialog_EditQuestBookObjective(objective));
                 }
@@ -289,7 +291,7 @@ namespace QuestEditor_Library
                 DrawObjectiveIcon(objective, iconRect);
                 Widgets.Label(new Rect(iconRect.xMax + 8f, row.y + 4f, row.width - 40f, 22f), objectiveLabel);
                 Rect deleteRect = new Rect(card.xMax - 42f, rowY + 1f, 28f, 28f);
-                if (Widgets.ButtonImage(deleteRect, TexButton.Delete))
+                if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete))
                 {
                     step.objectives.Remove(objective);
                 }
@@ -351,11 +353,11 @@ namespace QuestEditor_Library
         {
             float cardHeight = GetActionCardHeight(actions);
             Rect card = new Rect(8f, y, width - 16f, cardHeight);
-            Widgets.DrawMenuSection(card);
+            CQFUIStyle.DrawMenuSection(card);
             Rect titleRect = new Rect(card.x + 12f, card.y + 8f, Text.CalcSize(title).x, 30f);
-            Widgets.Label(titleRect, title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(titleRect.xMax + 8f, card.y + 5f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 CQFEditorTools.OpenCQFActionSelect(type => actions.Add((CQFAction)Activator.CreateInstance(type)));
             }
@@ -366,7 +368,7 @@ namespace QuestEditor_Library
             {
                 GUI.color = Color.gray;
             }
-            bool removeClicked = Widgets.ButtonImage(removeRect, TexButton.Delete);
+            bool removeClicked = CQFUIStyle.ButtonImage(removeRect, TexButton.Delete);
             GUI.color = oldColor;
             if (removeClicked && actions.Any())
             {
@@ -376,7 +378,7 @@ namespace QuestEditor_Library
             float rowY = card.y + 42f;
             foreach (CQFAction action in actions.ToList())
             {
-                if (Widgets.ButtonText(new Rect(card.x + 12f, rowY, card.width - 24f, 26f), action.GetType().Name.Translate(), false))
+                if (CQFUIStyle.ButtonText(new Rect(card.x + 12f, rowY, card.width - 24f, 26f), action.GetType().Name.Translate(), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(action, book));
                 }
@@ -389,12 +391,12 @@ namespace QuestEditor_Library
         {
             float cardHeight = GetRewardCardHeight();
             Rect card = new Rect(8f, y, width - 16f, cardHeight);
-            Widgets.DrawMenuSection(card);
+            CQFUIStyle.DrawMenuSection(card);
             string title = "CQF_QuestBook_StepRewards".Translate();
             Rect titleRect = new Rect(card.x + 12f, card.y + 8f, Text.CalcSize(title).x, 30f);
-            Widgets.Label(titleRect, title.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, title.Colorize(CQFUIStyle.Accent));
             Rect addRect = new Rect(titleRect.xMax + 8f, card.y + 5f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 CQFRewardEditor.OpenThingSelector(definition => step.rewards.Add(new CQFThingDefCount { thing = definition }));
             }
@@ -405,7 +407,7 @@ namespace QuestEditor_Library
                 float itemY = rowY;
                 reward.DrawWithSingleCount(ref rowY, card, card.x + 12f);
                 Rect deleteRect = new Rect(card.xMax - 42f, itemY + 1f, 28f, 28f);
-                if (Widgets.ButtonImage(deleteRect, TexButton.Delete))
+                if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete))
                 {
                     step.rewards.Remove(reward);
                 }

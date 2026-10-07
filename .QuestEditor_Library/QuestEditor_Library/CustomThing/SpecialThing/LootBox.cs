@@ -16,11 +16,11 @@ namespace QuestEditor_Library
     {
         public override string Label => this.TextComp == null || !this.textComp.useCustomName ? base.Label : this.textComp.customName;
         public override string DescriptionFlavor => this.TextComp == null || !this.textComp.useCustomDescription ? base.DescriptionFlavor : this.textComp.customDescription;
-        public LootData InnerData 
+        public LootData InnerData
         {
-            get 
+            get
             {
-                if (this.innerLoot == null) 
+                if (this.innerLoot == null)
                 {
                     List<LootData> datas = new List<LootData>();
                     datas.AddRange(this.loots);
@@ -28,7 +28,7 @@ namespace QuestEditor_Library
                     {
                         datas.AddRange(this.lootDef.loots);
                     }
-                    if (datas.Any()) 
+                    if (datas.Any())
                     {
                         this.innerLoot = GenCollection.RandomElementByWeight(datas, (x) => x.chance);
                     }
@@ -47,22 +47,22 @@ namespace QuestEditor_Library
                 return this.textComp;
             }
         }
-        public override Graphic Graphic 
+        public override Graphic Graphic
         {
-            get 
+            get
             {
-                if (!this.opened) 
+                if (!this.opened)
                 {
                     return base.Graphic;
                 }
-                if (this.openedGraphic == null) 
+                if (this.openedGraphic == null)
                 {
-                    if (this.def.GetModExtension<ModExtension_CustomThing>() is ModExtension_CustomThing me && me.openedGraphicdata !=null) 
+                    if (this.def.GetModExtension<ModExtension_CustomThing>() is ModExtension_CustomThing me && me.openedGraphicdata !=null)
                     {
-                        this.openedGraphic = me.openedGraphicdata.GraphicColoredFor(this); 
+                        this.openedGraphic = me.openedGraphicdata.GraphicColoredFor(this);
                         return this.openedGraphic;
                     }
-                    
+
                     this.openedGraphic = base.Graphic;
                 }
                 return this.openedGraphic;
@@ -92,7 +92,7 @@ namespace QuestEditor_Library
             result.Append("CQF_OpenLootbox".Translate(this.openReport.Translate()).ToString().Trim());
             return result.ToString().Trim();
         }
-        public void DrawTab() 
+        public void DrawTab()
 
         {
             object[] arguments = new object[]
@@ -118,39 +118,39 @@ namespace QuestEditor_Library
         }
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
-            if (this.Map != null && !this.opened && this.openWhenDestroyed) 
+            if (this.Map != null && !this.opened && this.openWhenDestroyed)
             {
                 this.InnerData?.SpawnLoots(Map, this.Position, this.GetLord(), this);
             }
             this.OpenPost();
             base.Destroy(mode);
         }
-        public virtual void Open(Pawn pawn = null) 
+        public virtual void Open(Pawn pawn = null)
         {
-            if (!this.opened) 
+            if (!this.opened)
             {
                 QuestUtility.SendQuestTargetSignals(this.questTags, "Opened", this.Named("SUBJECT"));
                 this.InnerData?.SpawnLoots(this.Map, this.Position, this.GetLord(),this,pawn);
                 this.opened = true;
                 this.Map.mapDrawer.MapMeshDirty(this.Position, MapMeshFlagDefOf.Things);
-                if (this.destroyAfterOpening) 
+                if (this.destroyAfterOpening)
                 {
                     this.Destroy();
                 }
                 this.OpenPost();
             }
         }
-        public void OpenPost() 
+        public void OpenPost()
         {
             if (!GameTools.isGeneratingMap)
             {
                 GameTools.ClearTemporaryTargets();
             }
-            if (this.TryGetComp<CompActionWorker>() is CompActionWorker comp) 
+            if (this.TryGetComp<CompActionWorker>() is CompActionWorker comp)
             {
                 foreach (var actionComp in comp.comps)
                 {
-                    if (actionComp.mode == ActionTriggerMode.Open) 
+                    if (actionComp.mode == ActionTriggerMode.Open)
                     {
                         actionComp.actions.ForEach(a => a.Work(comp.GetTargetThis(), comp.Quest));
                     }
@@ -175,7 +175,7 @@ namespace QuestEditor_Library
                         {
                             selPawn.jobs.TryTakeOrderedJob(job);
                         }
-                        else 
+                        else
                         {
                             selPawn.jobs.StartJob(job);
                         }
@@ -225,13 +225,13 @@ namespace QuestEditor_Library
         }
         [NoTranslate]
         public string lootBoxName = "Undefined";
-        public float height = 0f; 
+        public float height = 0f;
         public int tickToOpen = 100;
         public bool opened = false;
         public bool destroyAfterOpening = false;
         public bool useLootDef = false;
         public bool openWhenDestroyed = true;
-        
+
         public string openReport = "CQF_Open";
         public string buffer;
         public Vector2 scrollPos;
@@ -239,15 +239,15 @@ namespace QuestEditor_Library
         private LootData innerLoot;
         public List<LootData> loots = new List<LootData>();
         public LootDataDef lootDef;
-        private CompCustomText textComp = null; 
+        private CompCustomText textComp = null;
     }
     public class LootData : IExposable ,ISaveable,IDrawable
     {
-        public LootData() 
+        public LootData()
         {
             this.dataName = "Unnamed";
         }
-        public LootData Copy() 
+        public LootData Copy()
         {
             LootData result = new LootData();
             result.dataName = this.dataName;
@@ -256,7 +256,7 @@ namespace QuestEditor_Library
             this.pawnDatas.ForEach(d => result.pawnDatas.Add(d.Copy()));
             this.things.ForEach(d => result.things.Add((CQFThingDefCount)d.Copy()));
             this.categorys.ForEach(d => result.categorys.Add((CQFThingCategoryCount)d.Copy()));
-            this.specialThingDatas.ForEach(d => result.specialThingDatas.Add(d.Copy())); 
+            this.specialThingDatas.ForEach(d => result.specialThingDatas.Add(d.Copy()));
             return result;
         }
         public void Draw(ref float y, Rect inRect, float x)
@@ -365,7 +365,7 @@ namespace QuestEditor_Library
         {
             Rect rect = new Rect(x, startY - 2f, width, Mathf.Max(34f, endY - startY + 4f));
             Widgets.DrawHighlightIfMouseover(rect);
-            Widgets.DrawLine(new Vector2(x + 6f, rect.yMax), new Vector2(x + width - 6f, rect.yMax), ColorLibrary.SkyBlue, 1f);
+            Widgets.DrawLine(new Vector2(x + 6f, rect.yMax), new Vector2(x + width - 6f, rect.yMax), CQFUIStyle.Accent, 1f);
         }
         internal void DrawEmptyState(ref float y, float x, float width, string label)
 
@@ -412,7 +412,7 @@ namespace QuestEditor_Library
                             text += "," + t.Label;
                         }
                         result.Add(t);
-                    }); 
+                    });
                 });
             }
             if (box != null)
@@ -420,9 +420,9 @@ namespace QuestEditor_Library
                 QuestUtility.SendQuestTargetSignals(box.questTags, this.dataName, box.Named("SUBJECT"));
             }
             Messages.Message(this.message.Translate(text),new LookTargets(pos,map),MessageTypeDefOf.NeutralEvent);
-            result.ForEach(t => 
+            result.ForEach(t =>
             {
-                if (t.TryGetComp<CompQuality>() is CompQuality comp) 
+                if (t.TryGetComp<CompQuality>() is CompQuality comp)
                 {
                     comp.SetQuality(QualityUtility.AllQualityCategories.RandomElement(),null);
                 }
@@ -434,7 +434,7 @@ namespace QuestEditor_Library
             XElement result = new XElement(nodeName);
             result.Add(new XElement("dataName", this.dataName));
             result.Add(new XElement("chance", this.chance));
-            if (this.message != null && this.message != "") 
+            if (this.message != null && this.message != "")
             {
                 result.Add(new XElement("message", this.message));
             }
@@ -497,7 +497,7 @@ namespace QuestEditor_Library
 
         public static void OpenSelectWindow(Type type, Action<CQFThingData> action)
         {
-            if (type == typeof(CQFThingDefCount)) 
+            if (type == typeof(CQFThingDefCount))
             {
                 OpenLootThingSelectWindow(d => action(new CQFThingDefCount { thing = d }));
             }
@@ -553,7 +553,7 @@ namespace QuestEditor_Library
 
         public abstract ThingRequest GetRequest();
         public abstract List<Thing> Spawn();
-        public CQFThingData Copy() 
+        public CQFThingData Copy()
         {
             XElement x = this.SaveToXElement("PawnSpawnData");
             XmlNode node = new XmlDocument().ReadNode(x.CreateReader()) as XmlNode;
@@ -594,7 +594,7 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("stuff", this.stuff.defName));
             }
-            if (this.count != new IntRange(1, 1)) 
+            if (this.count != new IntRange(1, 1))
             {
                 result.Add(new XElement("count", this.count.ToString()));
             }
@@ -602,15 +602,15 @@ namespace QuestEditor_Library
         }
         public virtual void ExposeData()
         {
-            Scribe_Values.Look(ref this.count, "QE_ThingDefCountRangeWithBuffer_count");   
+            Scribe_Values.Look(ref this.count, "QE_ThingDefCountRangeWithBuffer_count");
             Scribe_Defs.Look(ref this.stuff, "QE_ThingDefCountRangeWithBuffer_stuff");
             Scribe_Values.Look(ref this.bufferMin, "QE_ThingDefCountRangeWithBuffer_bufferMin");
             Scribe_Values.Look(ref this.bufferMax, "QE_ThingDefCountRangeWithBuffer_bufferMax");
         }
 
         public string bufferMin;
-        public string bufferMax;       
-        public ThingDef stuff = null;   
+        public string bufferMax;
+        public ThingDef stuff = null;
         public IntRange count = new IntRange(1,1);
     }
     public class CQFThingDefCount : CQFThingData
@@ -649,7 +649,7 @@ namespace QuestEditor_Library
 
         public override List<Thing> Spawn()
         {
-            Thing thing = ThingMaker.MakeThing(this.thing, this.thing.MadeFromStuff 
+            Thing thing = ThingMaker.MakeThing(this.thing, this.thing.MadeFromStuff
                 ? (this.stuff ?? GenStuff.RandomStuffFor(this.thing)) : null);
             thing.stackCount = this.count.RandomInRange;
             return new List<Thing>() {thing};
@@ -797,7 +797,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("pawn", this.pawn.defName));
             if (this.rotMode != null)
             {
-                result.Add(new XElement("rotMode", this.rotMode));   
+                result.Add(new XElement("rotMode", this.rotMode));
             }
             return result;
         }
@@ -991,7 +991,7 @@ namespace QuestEditor_Library
 
         public string buffer;
         public string buffer2;
-        public ThingCategoryDef category; 
+        public ThingCategoryDef category;
         public FloatRange totalMarketValueRange = new FloatRange(100, 1000);
     }
 }

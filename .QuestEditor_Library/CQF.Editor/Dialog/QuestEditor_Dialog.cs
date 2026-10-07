@@ -71,6 +71,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             GameFont previousFont = Text.Font;
             TextAnchor previousAnchor = Text.Anchor;
             bool previousWrap = Text.WordWrap;
@@ -254,26 +255,27 @@ namespace QuestEditor_Library
             float x = 0f;
             if (CQFAIIconButton.DrawText(new Rect(x, 44f, 72f, 32f), "CQF_DialogGraph_File".Translate())) this.ShowFileMenu();
             x += 78f;
-            if (CQFAIIconButton.DrawText(new Rect(x, 44f, 72f, 32f), "CQF_DialogGraph_View".Translate())) this.ShowViewMenu();
+            string viewTip = string.Join(" · ", new[] { "CQF_DialogGraph_Undo", "CQF_DialogGraph_Redo", "CQF_DialogGraph_Arrange", "CQF_DialogGraph_Fit", "CQF_DialogGraph_Find" }.Select(key => key.Translate().ToString()));
+            if (CQFAIIconButton.DrawText(new Rect(x, 44f, 72f, 32f), "CQF_DialogGraph_View".Translate(), tip: viewTip)) this.ShowViewMenu();
             x += 82f;
             void Image(Texture2D texture, string key, Action action, bool available = true)
             {
                 Rect button = new Rect(x, 44f, 32f, 32f);
                 bool enabled = GUI.enabled;
                 GUI.enabled = enabled && available;
-                bool clicked = CQFAIIconButton.DrawFramedImage(button, texture, key.Translate());
+                string tip = key == "CQF_DialogGraph_Preview" ? key.Translate() + "\n" + "CQF_DialogGraph_PreviewHint".Translate() : key.Translate().ToString();
+                bool clicked = CQFAIIconButton.DrawFramedImage(button, texture, tip);
                 GUI.enabled = enabled;
-                TooltipHandler.TipRegion(button, key.Translate());
                 x += 36f;
                 if (clicked) action();
             }
+            Image(ContentFinder<Texture2D>.Get("UI/Icon_Edit"), "CQF_DialogGraph_TreeSettings", () =>
+                Find.WindowStack.Add(new QuestEditor_DialogTreeMisc(this.CurTree, this.RecordChanges)));
             if (!compact)
             {
                 Image(TexUI.ArrowTexLeft, "CQF_DialogGraph_Undo", () => this.RestoreHistory(false), this.session.CanUndo);
                 Image(TexUI.ArrowTexRight, "CQF_DialogGraph_Redo", () => this.RestoreHistory(true), this.session.CanRedo);
             }
-            Image(ContentFinder<Texture2D>.Get("UI/Icon_Edit"), this.showInspector ? "CQF_DialogGraph_HideInspector" : "CQF_DialogGraph_ShowInspector",
-                () => { this.showInspector = !this.showInspector; this.showPreview = false; });
             Image(TexButton.Play, "CQF_DialogGraph_Preview", () =>
             {
                 this.showPreview = !this.showPreview;
@@ -301,7 +303,6 @@ namespace QuestEditor_Library
                 new FloatMenuOption("ResetBinding".Translate(), () => Find.WindowStack.Add(new Dialog_MessageBox(
                     "ConfirmCreateNewDialogTree".Translate(), "Confirm".Translate(),
                     () => this.CurTree = new DialogTreeDef { defName = "CQF_DialogTree_" + Guid.NewGuid().ToString("N").Substring(0, 8) }, "Cancel".Translate()))),
-                new FloatMenuOption("CQF_DialogGraph_TreeSettings".Translate(), () => Find.WindowStack.Add(new QuestEditor_DialogTreeMisc(this.CurTree))),
                 new FloatMenuOption("Save".Translate(), this.SaveTree),
                 new FloatMenuOption("CQF_DialogGraph_Check".Translate(), this.CheckTree)
             }));

@@ -13,6 +13,7 @@ namespace QuestEditor_Library
         public override Vector2 InitialSize => new Vector2(Mathf.Min(UI.screenWidth - 40f, 420f), Mathf.Min(UI.screenHeight - 40f, 500f));
         public override void DoWindowContents(Rect rect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(rect.width, rect.height);
             GameFont previousFont = Text.Font;
             TextAnchor previousAnchor = Text.Anchor;
             bool previousWrap = Text.WordWrap;

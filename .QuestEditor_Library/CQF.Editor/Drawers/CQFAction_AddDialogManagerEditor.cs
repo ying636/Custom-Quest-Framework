@@ -24,8 +24,9 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_AddDialogManager cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            if (Widgets.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(cqfReceiver.dialog?.defName), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(cqfReceiver.dialog?.defName), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => cqfReceiver.dialog = m, m => m.defName);
             }

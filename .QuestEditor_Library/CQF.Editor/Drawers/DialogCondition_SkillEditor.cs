@@ -24,10 +24,11 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_Skill cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogCondition_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
             rect = new Rect(x, y, 150f, 25f);
-            if (Widgets.ButtonText(rect, "RequiredSkill".Translate() + cqfReceiver.skill?.label, false))
+            if (CQFUIStyle.ButtonText(rect, "RequiredSkill".Translate() + cqfReceiver.skill?.label, false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<SkillDef>.AllDefsListForReading, s => cqfReceiver.skill = s, s => s.label);
             }

@@ -14,9 +14,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.ZoneCondition_Invert cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             ZoneConditionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             cqfReceiver.subCondition?.Draw(ref y, inRect, x + 5f);
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "SelectCondition".Translate(), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 25f), "SelectCondition".Translate(), false))
             {
                 CQFEditorTools.DrawFloatMenu(typeof(ZoneCondition).AllSubclassesNonAbstract(), a => cqfReceiver.subCondition = ((ZoneCondition)Activator.CreateInstance(a)), a => a.Name.Translate());
             }

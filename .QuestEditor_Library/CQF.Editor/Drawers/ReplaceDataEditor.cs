@@ -19,10 +19,11 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.ReplaceData cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             float width = inRect.width - x - 12f;
             Rect nameSection = new Rect(x, y, width, 78f);
-            Widgets.DrawMenuSection(nameSection);
-            Widgets.Label(new Rect(x + 12f, y + 8f, width - 24f, 25f), "DataName".Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(nameSection);
+            Widgets.Label(new Rect(x + 12f, y + 8f, width - 24f, 25f), "DataName".Translate().Colorize(CQFUIStyle.Accent));
             cqfReceiver.dataName = Widgets.TextField(new Rect(x + 12f, y + 39f, width - 24f, 27f), cqfReceiver.dataName);
             y = nameSection.yMax + 10f;
             cqfReceiver.DrawThingReplacementSection(ref y, x, width, "ThingReplacement".Translate(), cqfReceiver.replaceThings, cqfReceiver.OpenThingReplacementSelector);
@@ -34,7 +35,7 @@ namespace QuestEditor_Library
         {
             float sectionHeight = 50f + Math.Max(1, replacements.Count) * 42f;
             Rect sectionRect = new Rect(x, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             cqfReceiver.DrawReplacementHeader(y, x, width, title, addAction, () => CQFEditorTools.DrawFloatMenu(replacements.ToList(), pair => replacements.Remove(pair.Key), cqfReceiver.GetThingReplacementLabel));
             float rowY = y + 42f;
             if (!replacements.Any())
@@ -57,7 +58,7 @@ namespace QuestEditor_Library
         {
             float sectionHeight = 50f + Math.Max(1, cqfReceiver.replaceTerrains.Count) * 42f;
             Rect sectionRect = new Rect(x, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             cqfReceiver.DrawReplacementHeader(y, x, width, "TerrainReplacement".Translate(), cqfReceiver.OpenTerrainReplacementSelector, () => CQFEditorTools.DrawFloatMenu(cqfReceiver.replaceTerrains.ToList(), pair => cqfReceiver.replaceTerrains.Remove(pair.Key), cqfReceiver.GetTerrainReplacementLabel));
             float rowY = y + 42f;
             if (!cqfReceiver.replaceTerrains.Any())

@@ -22,27 +22,28 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             const float headerHeight = 42f;
             float contentWidth = inRect.width - 20f;
             Widgets.Label(new Rect(8f, 5f, contentWidth - 124f, 30f),
-                "ReplaceDatas".Translate().Colorize(ColorLibrary.PaleBlue));
+                "ReplaceDatas".Translate().Colorize(CQFUIStyle.Accent));
 
             Rect saveRect = new Rect(contentWidth - 100f, 2f, 28f, 28f);
-            if (Widgets.ButtonImage(saveRect, CQFEditorTools.icon_Save))
+            if (CQFUIStyle.ButtonImage(saveRect, CQFEditorTools.icon_Save))
             {
                 this.SaveAsDef();
             }
             TooltipHandler.TipRegion(saveRect, "SaveAsDef".Translate());
 
             Rect addRect = new Rect(contentWidth - 64f, 2f, 28f, 28f);
-            if (Widgets.ButtonImage(addRect, TexButton.Plus))
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 this.OpenAddMenu();
             }
             TooltipHandler.TipRegion(addRect, "Add".Translate());
 
             Rect removeRect = new Rect(contentWidth - 28f, 2f, 28f, 28f);
-            if (Widgets.ButtonImage(removeRect, TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(removeRect, TexButton.Delete))
             {
                 CQFEditorTools.DrawFloatMenu(this.map.replaces, data => this.map.replaces.Remove(data), this.GetDataLabel);
             }
@@ -51,9 +52,10 @@ namespace QuestEditor_Library
             Rect outRect = new Rect(0f, headerHeight, inRect.width, inRect.height - headerHeight);
             Rect viewRect = new Rect(0f, 0f, contentWidth, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float y = 0f;
             float sectionHeight = 18f + Math.Max(1, this.map.replaces.Count) * 38f;
-            Widgets.DrawMenuSection(new Rect(0f, 0f, contentWidth, sectionHeight));
+            CQFUIStyle.DrawMenuSection(new Rect(0f, 0f, contentWidth, sectionHeight));
             if (!this.map.replaces.Any())
             {
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -63,7 +65,7 @@ namespace QuestEditor_Library
             foreach (ReplaceData data in this.map.replaces)
             {
                 Rect rowRect = new Rect(10f, y + 9f, contentWidth - 20f, 30f);
-                if (Widgets.ButtonText(rowRect, this.GetDataLabel(data), false))
+                if (CQFUIStyle.ButtonText(rowRect, this.GetDataLabel(data), false))
                 {
                     if (data is ReplaceData_Def defData)
                     {

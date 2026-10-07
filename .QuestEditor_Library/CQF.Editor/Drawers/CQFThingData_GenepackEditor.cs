@@ -16,6 +16,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFThingData_Genepack cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFEditorTools.DrawDefList(cqfReceiver.genes, "Genes".Translate(), ref y, x + 5f);
         }
 

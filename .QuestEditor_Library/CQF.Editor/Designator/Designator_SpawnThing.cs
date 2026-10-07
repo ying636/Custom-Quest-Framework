@@ -37,13 +37,13 @@ namespace QuestEditor_Library
             {
                 if (Designator_SpawnThing.bespawnable.NullOrEmpty())
                 {
-                    List<ThingCategory> disable = new List<ThingCategory>() 
+                    List<ThingCategory> disable = new List<ThingCategory>()
                     {
-                        ThingCategory.Gas, ThingCategory.Mote, ThingCategory.Projectile, 
+                        ThingCategory.Gas, ThingCategory.Mote, ThingCategory.Projectile,
                         ThingCategory.Pawn, ThingCategory.Attachment };
                     foreach (ThingDef def in DefDatabase<ThingDef>.AllDefsListForReading)
                     {
-                        if (!disable.Contains(def.category) 
+                        if (!disable.Contains(def.category)
                             && !def.IsCorpse && !def.IsFrame && !Designator_CQFTools.IsCQFTool(def))
                         {
                             Designator_SpawnThing.bespawnable.Add(def);
@@ -55,7 +55,7 @@ namespace QuestEditor_Library
         }
         public override IEnumerable<FloatMenuOption> RightClickFloatMenuOptions
         {
-            get 
+            get
             {
                 if (Designator_SpawnThing.bespawnable.NullOrEmpty())
                 {
@@ -107,7 +107,7 @@ namespace QuestEditor_Library
             this.defaultDesc = def.description;
             if (stuffDef != null)
             {
-                this.defaultLabel = stuffDef.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
+                this.defaultLabel = stuffDef.LabelAsStuff.Colorize(CQFUIStyle.Accent) + this.defaultLabel;
             }
             if (def.drawerType != DrawerType.None && def.graphicData != null)
             {
@@ -129,14 +129,14 @@ namespace QuestEditor_Library
             if (!(this.PlacingDef.graphic is Graphic_Cluster) && (!((ThingDef)this.PlacingDef).graphicData.Linked || this.PlacingDef.uiIconPath != null) && ((ThingDef)this.PlacingDef).graphicData.onGroundRandomRotateAngle <  0.01f)
             {
                 base.DrawGhost(ghostCol);
-            } 
+            }
         }
         public override void DesignateSingleCell(IntVec3 loc)
         {
             if (loc.InBounds(Find.CurrentMap))
             {
                 ThingDef def = Designator_SpawnThing.thing;
-                if (loc.GetFirstThing(Find.CurrentMap, def) is Thing thing && thing.stackCount < thing.def.stackLimit) 
+                if (loc.GetFirstThing(Find.CurrentMap, def) is Thing thing && thing.stackCount < thing.def.stackLimit)
                 {
                     thing.stackCount++;
                     return;

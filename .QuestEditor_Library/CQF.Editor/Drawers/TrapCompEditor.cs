@@ -14,7 +14,8 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.TrapComp cqfReceiver, ref float y, Rect inRect, float x)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 325f, 25f), "CustomTrapMode".Translate(("ActionTriggerMode_" + cqfReceiver.mode.ToString()).Translate()), false))
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 325f, 25f), "CustomTrapMode".Translate(("ActionTriggerMode_" + cqfReceiver.mode.ToString()).Translate()), false))
             {
                 CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => cqfReceiver.mode = m, m => ("ActionTriggerMode_" + m.ToString()).Translate());
             }

@@ -24,12 +24,13 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_Hediff cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogCondition_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 150f, 25f);
             rect = new Rect(x, y, 150f, 25f);
             Widgets.Label(rect, "RequiredHediff".Translate() + cqfReceiver.hediff?.label);
             rect.x = 160f;
-            if (Widgets.ButtonText(rect, "Select".Translate()))
+            if (CQFUIStyle.ButtonText(rect, "Select".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<HediffDef>.AllDefsListForReading, h => cqfReceiver.hediff = h, h => h.label);
             }

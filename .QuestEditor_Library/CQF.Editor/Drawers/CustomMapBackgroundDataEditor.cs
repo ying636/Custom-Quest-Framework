@@ -10,7 +10,8 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CustomMapBackgroundData cqfReceiver, ref float y, Rect inRect, float x)
         {
-            Widgets.Label(new Rect(x, y, inRect.width - 40f, 30f), "CustomMapStep_MapBackground".Translate().Colorize(ColorLibrary.SkyBlue));
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            Widgets.Label(new Rect(x, y, inRect.width - 40f, 30f), "CustomMapStep_MapBackground".Translate().Colorize(CQFUIStyle.Accent));
             y += 35f;
             cqfReceiver.DrawPreview(new Rect(x, y, 430f, 240f));
             y += 255f;
@@ -41,7 +42,7 @@ namespace QuestEditor_Library
         public static void DrawPathField_1(QuestEditor_Library.CustomMapBackgroundData cqfReceiver, ref float y, float x, float width)
         {
             Rect labelRect = new Rect(x, y, 120f, 25f);
-            if (Widgets.ButtonText(labelRect, "CQF_MapBackgroundTexturePath".Translate(), false))
+            if (CQFUIStyle.ButtonText(labelRect, "CQF_MapBackgroundTexturePath".Translate(), false))
             {
                 Find.WindowStack.Add(new Dialog_SelectMapBackgroundImage(path => cqfReceiver.texPath = path, cqfReceiver.texPath));
             }
@@ -60,7 +61,7 @@ namespace QuestEditor_Library
         public static void DrawScopeField_3(QuestEditor_Library.CustomMapBackgroundData cqfReceiver, ref float y, float x)
         {
             Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundDrawScope".Translate());
-            if (Widgets.ButtonText(new Rect(x + 125f, y, 160f, 25f), cqfReceiver.DrawScopeLabel, false))
+            if (CQFUIStyle.ButtonText(new Rect(x + 125f, y, 160f, 25f), cqfReceiver.DrawScopeLabel, false))
             {
                 Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption> { new FloatMenuOption("CQF_MapBackgroundDrawScope_Map".Translate(), () => cqfReceiver.drawScope = CustomMapBackgroundDrawScope.Map), new FloatMenuOption("CQF_MapBackgroundDrawScope_CameraVisible".Translate(), () => cqfReceiver.drawScope = CustomMapBackgroundDrawScope.CameraVisible) }));
             }
@@ -71,7 +72,7 @@ namespace QuestEditor_Library
         public static void DrawFitModeField_4(QuestEditor_Library.CustomMapBackgroundData cqfReceiver, ref float y, float x)
         {
             Widgets.Label(new Rect(x, y, 120f, 25f), "CQF_MapBackgroundFitMode".Translate());
-            if (Widgets.ButtonText(new Rect(x + 125f, y, 160f, 25f), cqfReceiver.FitModeLabel, false))
+            if (CQFUIStyle.ButtonText(new Rect(x + 125f, y, 160f, 25f), cqfReceiver.FitModeLabel, false))
             {
                 Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption> { new FloatMenuOption("CQF_MapBackgroundFitMode_Tile".Translate(), () => cqfReceiver.fitMode = CustomMapBackgroundFitMode.Tile), new FloatMenuOption("CQF_MapBackgroundFitMode_Stretch".Translate(), () => cqfReceiver.fitMode = CustomMapBackgroundFitMode.Stretch), new FloatMenuOption("CQF_MapBackgroundFitMode_Cover".Translate(), () => cqfReceiver.fitMode = CustomMapBackgroundFitMode.Cover) }));
             }

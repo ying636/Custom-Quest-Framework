@@ -34,23 +34,25 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             if (this.drawer.ts == null)
             {
                 this.UpdateTs();
             }
 
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, inRect.width, TitleHeight), this.title);
+            Widgets.Label(new Rect(0f, 0f, Mathf.Max(0f, inRect.width - 30f), TitleHeight), this.title);
             Text.Font = GameFont.Small;
 
             float y = this.Margin + 17f;
-            float selectWidth = SearchAndTypeWidth;
+            float selectWidth = Mathf.Min(SearchAndTypeWidth, inRect.width);
             y = this.DrawTypeFilter(y, inRect.width, selectWidth);
             y = this.DrawSearchField(y, inRect.width, selectWidth);
 
             Rect outRect = new Rect(0f, y, inRect.width, inRect.height - y);
             Rect viewRect = new Rect(0f, 0f, inRect.width - ScrollbarWidth, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
             float contentHeight = 0f;
             contentHeight = this.DrawItems(viewRect, contentHeight);
             contentHeight = this.DrawExtraOptions(contentHeight, viewRect);
@@ -68,7 +70,7 @@ namespace QuestEditor_Library
             string selectedTypeText = this.selectedType?.type ?? "CQF_DialogSelectAllTypes".Translate().ToString();
             Rect rect = new Rect(this.GetCenteredX(selectWidth, width), y, selectWidth, TypeFilterHeight);
             Text.Font = GameFont.Medium;
-            if (Widgets.ButtonText(rect, "CQF_DialogSelectType".Translate(selectedTypeText), 
+            if (CQFUIStyle.ButtonText(rect, "CQF_DialogSelectType".Translate(selectedTypeText),
                     false,true,true,TextAnchor.MiddleCenter))
             {
                 Find.WindowStack.Add(new FloatMenu(this.GetTypeFilterOptions()));
@@ -107,8 +109,9 @@ namespace QuestEditor_Library
 
             foreach (var option in this.drawer.extraOptions)
             {
-                Rect rect = new Rect(this.GetCenteredX(TextRowWidth, viewRect.width), y, TextRowWidth, RowHeight);
-                if (Widgets.ButtonText(rect, option.text, false, true, option.color))
+                float rowWidth = Mathf.Min(TextRowWidth, viewRect.width);
+                Rect rect = new Rect(this.GetCenteredX(rowWidth, viewRect.width), y, rowWidth, RowHeight);
+                if (CQFUIStyle.ButtonText(rect, option.text, false, true, option.color))
                 {
                     option.action();
                     this.Close();
@@ -363,11 +366,12 @@ namespace QuestEditor_Library
             foreach (T t in ts)
             {
                 SelectItem<T> item = this.ItemFor(t);
-                Rect rect = new Rect(this.GetCenteredX(TextRowWidth, viewRect.width), y, TextRowWidth, RowHeight);
+                float rowWidth = Mathf.Min(TextRowWidth, viewRect.width);
+                Rect rect = new Rect(this.GetCenteredX(rowWidth, viewRect.width), y, rowWidth, RowHeight);
                 string label = item.text;
                 rect.height = Text.CalcHeight(label, rect.width);
                 Color color = item.color ?? Widgets.NormalOptionColor;
-                if (Widgets.ButtonText(rect, label, false, true, color))
+                if (CQFUIStyle.ButtonText(rect, label, false, true, color))
                 {
                     this.AcceptAndClose(item.value, closeAction);
                 }
@@ -508,6 +512,7 @@ namespace QuestEditor_Library
                 SelectItem<T> item = this.ItemFor(t);
                 Rect rect = new Rect(x, y, ItemWidth, 0f);
                 float itemHeight = this.DrawItem(item, rect, closeAction);
+                rect.height = itemHeight;
                 TooltipHandler.TipRegion(rect, item.tip);
                 rowHeight = Mathf.Max(rowHeight, itemHeight);
                 x += ItemSpacingX;
@@ -547,7 +552,7 @@ namespace QuestEditor_Library
         private const float LabeledRowSpacing = 20f;
     }
 
-    public class ExtraOption 
+    public class ExtraOption
     {
         public ExtraOption(string text, string tip , Action action, Texture2D icon = null
             ,Color? color = null)

@@ -30,33 +30,34 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Small;
             float x = 12f;
             float y = 8f;
             float width = inRect.width - 24f;
-            Widgets.Label(new Rect(x, y, width, 28f), "CQF_QuestBook_RewardInfoEditor".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x, y, width, 28f), "CQF_QuestBook_RewardInfoEditor".Translate().Colorize(CQFUIStyle.Accent));
             y += 38f;
             Rect iconRect = new Rect(x, y, 82f, 82f);
-            Widgets.DrawBox(iconRect, 1);
+            CQFUIStyle.DrawBox(iconRect, 1);
             DrawIcon(iconRect.ContractedBy(10f));
-            if (Widgets.ButtonImage(new Rect(iconRect.x, iconRect.yMax + 6f, 26f, 26f), TexButton.Delete))
+            if (CQFUIStyle.ButtonImage(new Rect(iconRect.x, iconRect.yMax + 6f, 26f, 26f), TexButton.Delete))
             {
                 info.iconPath = null;
             }
             TooltipHandler.TipRegion(new Rect(iconRect.x, iconRect.yMax + 6f, 26f, 26f), "CQF_QuestBook_Clear".Translate());
             float fieldX = iconRect.xMax + 16f;
             float fieldWidth = width - fieldX + x;
-            Widgets.Label(new Rect(fieldX, y, fieldWidth, 20f), "CQF_QuestBook_RewardInfoName".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(fieldX, y, fieldWidth, 20f), "CQF_QuestBook_RewardInfoName".Translate().Colorize(CQFUIStyle.Accent));
             info.labelKey = Widgets.TextField(new Rect(fieldX, y + 22f, fieldWidth, 26f), info.labelKey ?? string.Empty);
-            Widgets.Label(new Rect(fieldX, y + 56f, fieldWidth, 20f), "CQF_QuestBook_RewardInfoDescription".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(fieldX, y + 56f, fieldWidth, 20f), "CQF_QuestBook_RewardInfoDescription".Translate().Colorize(CQFUIStyle.Accent));
             info.descriptionKey = Widgets.TextField(new Rect(fieldX, y + 78f, fieldWidth, 26f), info.descriptionKey ?? string.Empty);
             float buttonY = y + 116f;
             float buttonWidth = (fieldWidth - 8f) * 0.5f;
-            if (Widgets.ButtonText(new Rect(fieldX, buttonY, buttonWidth, 28f), "CQF_QuestBook_SelectThingIcon".Translate(), false))
+            if (CQFUIStyle.ButtonText(new Rect(fieldX, buttonY, buttonWidth, 28f), "CQF_QuestBook_SelectThingIcon".Translate(), false))
             {
                 SelectThingIcon();
             }
-            if (Widgets.ButtonText(new Rect(fieldX + buttonWidth + 8f, buttonY, buttonWidth, 28f), "CQF_QuestBook_SelectImageIcon".Translate(), false))
+            if (CQFUIStyle.ButtonText(new Rect(fieldX + buttonWidth + 8f, buttonY, buttonWidth, 28f), "CQF_QuestBook_SelectImageIcon".Translate(), false))
             {
                 SelectImageIcon();
             }

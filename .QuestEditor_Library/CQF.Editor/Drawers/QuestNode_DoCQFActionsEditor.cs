@@ -9,6 +9,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.QuestNode_DoCQFActions cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFSignalEditor.DrawBookField(y, "inSignal".Translate(), cqfReceiver.inSignal.ToString(), value => cqfReceiver.inSignal = new SlateRef<string>(value), x, 100f, inRect.width - x - 12f);
             y += 30f;
             CQFEditorTools.DrawActionList_UseWindow(ref y, x, cqfReceiver.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());

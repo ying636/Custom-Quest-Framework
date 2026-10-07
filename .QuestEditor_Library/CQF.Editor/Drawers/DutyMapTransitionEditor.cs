@@ -14,7 +14,8 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DutyMapTransition cqfReceiver, ref float y, Rect inRect, float x)
         {
-            Widgets.Label(new Rect(x, y, 260f, 25f), "CQF_DutyMapTransition".Translate().Colorize(ColorLibrary.SkyBlue));
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            Widgets.Label(new Rect(x, y, 260f, 25f), "CQF_DutyMapTransition".Translate().Colorize(CQFUIStyle.Accent));
             y += 30f;
             cqfReceiver.DrawNodeSelect(y, x, "CQF_DutyMapFromNode".Translate(), cqfReceiver.fromNodeId, true);
             y += 30f;
@@ -29,7 +30,7 @@ namespace QuestEditor_Library
             float labelWidth = Mathf.Min(Text.CalcSize(label).x + 8f, 150f);
             Widgets.Label(new Rect(x, y, labelWidth, 25f), label);
             Rect buttonRect = new Rect(x + labelWidth + 8f, y, 180f, 25f);
-            if (Widgets.ButtonText(buttonRect, nodeId.NullOrEmpty() ? "Null".Translate().ToString() : nodeId, false))
+            if (CQFUIStyle.ButtonText(buttonRect, nodeId.NullOrEmpty() ? "Null".Translate().ToString() : nodeId, false))
             {
                 DutyMapDef dutyMap = QuestEditor_DutyMap.CurrentEditingDutyMap;
                 if (dutyMap != null)
@@ -58,7 +59,7 @@ namespace QuestEditor_Library
                 foreach (T item in list)
                 {
                     Rect rowRect = new Rect(x + 6f, y, width - 12f, 28f);
-                    if (Widgets.ButtonText(rowRect, getText(item), false))
+                    if (CQFUIStyle.ButtonText(rowRect, getText(item), false))
                     {
                         Find.WindowStack.Add(new Dialog_EditIDrawable(item));
                     }
@@ -68,7 +69,7 @@ namespace QuestEditor_Library
             }
             else
             {
-                Widgets.Label(new Rect(x + 10f, y + 2f, width - 20f, 25f), "CQF_DutyMapNoOptions".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(x + 10f, y + 2f, width - 20f, 25f), "CQF_DutyMapNoOptions".Translate().Colorize(CQFUIStyle.Muted));
                 y += 30f;
             }
 
@@ -79,16 +80,16 @@ namespace QuestEditor_Library
         {
             Widgets.DrawHighlight(new Rect(x - 4f, y - 2f, width + 8f, 32f));
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(x, y, width - 90f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(x, y, width - 90f, 30f), label.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             Rect buttonRect = new Rect(x + width - 60f, y + 2f, 25f, 25f);
-            if (addAction != null && Widgets.ButtonImage(buttonRect, TexButton.Plus))
+            if (addAction != null && CQFUIStyle.ButtonImage(buttonRect, TexButton.Plus))
             {
                 addAction();
             }
 
             buttonRect.x += 30f;
-            if (removeAction != null && Widgets.ButtonImage(buttonRect, TexButton.Delete))
+            if (removeAction != null && CQFUIStyle.ButtonImage(buttonRect, TexButton.Delete))
             {
                 removeAction();
             }

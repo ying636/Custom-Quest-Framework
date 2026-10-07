@@ -41,6 +41,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Widgets.Label(new Rect(0f, 0f, inRect.width - 25f, inRect.height), this.target.Label + " " + this.target.Cell);
         }
 

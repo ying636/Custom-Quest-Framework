@@ -1,4 +1,4 @@
-﻿using RimWorld;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,17 +27,34 @@ namespace QuestEditor_Library
         }
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             bool previous = this.setting.enableEditor;
-            Widgets.CheckboxLabeled(new Rect(inRect.x, inRect.y, inRect.width, 30f), "CQF_Editor_Enable".Translate(), ref this.setting.enableEditor);
+            float y = inRect.y;
+            Widgets.CheckboxLabeled(new Rect(inRect.x, y, inRect.width, 30f), "CQF_Editor_Enable".Translate(), ref this.setting.enableEditor);
             if (previous != this.setting.enableEditor) this.setting.Write();
-            Widgets.Label(new Rect(inRect.x, inRect.y + 38f, inRect.width, 64f), "CQF_Editor_EnableHint".Translate());
+            y += 38f;
+            string hint = "CQF_Editor_EnableHint".Translate();
+            float hintHeight = Text.CalcHeight(hint, inRect.width);
+            Widgets.Label(new Rect(inRect.x, y, inRect.width, hintHeight), hint);
+            y += hintHeight + 12f;
             if (this.setting.enableEditor != this.editorEnabledAtStartup)
-                Widgets.Label(new Rect(inRect.x, inRect.y + 105f, inRect.width, 32f), "CQF_Editor_RestartRequired".Translate().Colorize(ColorLibrary.Yellow));
+            {
+                string restart = "CQF_Editor_RestartRequired".Translate();
+                float restartHeight = Text.CalcHeight(restart, inRect.width);
+                Widgets.Label(new Rect(inRect.x, y, inRect.width, restartHeight), restart.Colorize(ColorLibrary.Yellow));
+                y += restartHeight + 12f;
+            }
             if (CQFEditorLoader.LoadError != null)
-                Widgets.Label(new Rect(inRect.x, inRect.y + 142f, inRect.width, 60f), "CQF_Editor_LoadFailed".Translate().Colorize(ColorLibrary.RedReadable));
+            {
+                string error = "CQF_Editor_LoadFailed".Translate();
+                float errorHeight = Text.CalcHeight(error, inRect.width);
+                Widgets.Label(new Rect(inRect.x, y, inRect.width, errorHeight), error.Colorize(ColorLibrary.RedReadable));
+                y += errorHeight + 12f;
+            }
             if (!CQFEditorBridge.IsLoaded) return;
-            if (Widgets.ButtonText(new Rect(inRect.x, inRect.y + 208f, 260f, 32f), "CQF_AI_Settings".Translate())) CQFEditorBridge.Module!.OpenSettings();
-            Widgets.CheckboxLabeled(new Rect(inRect.x, inRect.y + 250f, inRect.width, 30f), "AutoCompileDialogTextKey".Translate(), ref this.setting.autoCompileDialogTextKey);
+            if (CQFUIStyle.ButtonText(new Rect(inRect.x, y, Mathf.Min(260f, inRect.width), 32f), "CQF_AI_Settings".Translate())) CQFEditorBridge.Module!.OpenSettings();
+            y += 40f;
+            Widgets.CheckboxLabeled(new Rect(inRect.x, y, inRect.width, 30f), "AutoCompileDialogTextKey".Translate(), ref this.setting.autoCompileDialogTextKey);
         }
         private static void ApplySpecialBuildingTranslations()
         {
@@ -70,6 +87,9 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.dialogAIUseTools, "dialogAIUseTools", true);
             Scribe_Values.Look(ref this.dialogAIPlanning, "dialogAIPlanning", true);
             Scribe_Values.Look(ref this.dialogAIAgents, "dialogAIAgents", true);
+            Scribe_Values.Look(ref this.dialogAIExecutionSpeed, "dialogAIExecutionSpeed", 1);
+            Scribe_Values.Look(ref this.dialogAITokenBudget, "dialogAITokenBudget", 100000);
+            Scribe_Values.Look(ref this.dialogAIRequestBudget, "dialogAIRequestBudget", 24);
             Scribe_Values.Look(ref this.dialogAIParallelAgents, "dialogAIParallelAgents", 2);
             Scribe_Values.Look(ref this.dialogAIAgentModel, "dialogAIAgentModel", string.Empty);
             Scribe_Values.Look(ref this.dialogAIAgentPrompt, "dialogAIAgentPrompt", string.Empty);
@@ -89,6 +109,9 @@ namespace QuestEditor_Library
         public bool dialogAIUseTools = true;
         public bool dialogAIPlanning = true;
         public bool dialogAIAgents = true;
+        public int dialogAIExecutionSpeed = 1;
+        public int dialogAITokenBudget = 100000;
+        public int dialogAIRequestBudget = 24;
         public int dialogAIParallelAgents = 2;
         public string dialogAIAgentModel = string.Empty;
         public string dialogAIAgentPrompt = string.Empty;
@@ -100,5 +123,5 @@ namespace QuestEditor_Library
         public int dialogAITimeout = 120;
         public static CustomQuestFramework_ModSetting setting;
     }
- 
+
 }

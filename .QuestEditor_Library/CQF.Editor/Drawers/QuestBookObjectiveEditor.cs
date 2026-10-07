@@ -12,6 +12,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.QuestBookObjective cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             cqfReceiver.DrawCommonStart(ref y, inRect);
             cqfReceiver.DrawSpecial(ref y, inRect, x);
             cqfReceiver.DrawCommonRules(ref y, inRect);
@@ -24,7 +25,7 @@ namespace QuestEditor_Library
         public static void DrawCommonStart_2(QuestEditor_Library.QuestBookObjective cqfReceiver, ref float y, Rect inRect)
         {
             float width = inRect.width - 16f;
-            Widgets.Label(new Rect(8f, y, width, 32f), "CQF_QuestBook_ObjectiveEditor".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(8f, y, width, 32f), "CQF_QuestBook_ObjectiveEditor".Translate().Colorize(CQFUIStyle.Accent));
             y += 38f;
             cqfReceiver.DrawSection(ref y, width, "CQF_QuestBook_ObjectiveBasic", 154f, card =>
             {
@@ -35,7 +36,7 @@ namespace QuestEditor_Library
             cqfReceiver.DrawSection(ref y, width, "CQF_QuestBook_ObjectiveIcon", 160f, card =>
             {
                 Rect previewRect = new Rect(card.x + 14f, card.y + 44f, 64f, 64f);
-                Widgets.DrawBox(previewRect, 1);
+                CQFUIStyle.DrawBox(previewRect, 1);
                 cqfReceiver.DrawObjectiveIcon(previewRect.ContractedBy(8f));
                 float buttonX = previewRect.xMax + 18f;
                 cqfReceiver.DrawTextButton(new Rect(buttonX, previewRect.y, 168f, 26f), "CQF_QuestBook_SelectThingIcon", cqfReceiver.SelectThingIcon);
@@ -69,11 +70,11 @@ namespace QuestEditor_Library
             GUI.enabled = previousEnabled;
             float cardHeight = measuredY - startY + 10f;
             Rect card = new Rect(8f, startY, width, cardHeight);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), "CQF_QuestBook_ObjectiveDetection".Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), "CQF_QuestBook_ObjectiveDetection".Translate().Colorize(CQFUIStyle.Accent));
             float rowY = card.y + 48f;
             Widgets.Label(new Rect(card.x + 14f, rowY + 2f, 164f, 24f), "CQF_QuestBook_ObjectiveType".Translate());
-            Widgets.Label(new Rect(card.x + 184f, rowY + 2f, card.width - 198f, 24f), cqfReceiver.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(card.x + 184f, rowY + 2f, card.width - 198f, 24f), cqfReceiver.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
             rowY += 36f;
             contentDrawer(card, ref rowY);
             y = card.yMax + 12f;
@@ -82,8 +83,8 @@ namespace QuestEditor_Library
         public static void DrawSection_5(QuestEditor_Library.QuestBookObjective cqfReceiver, ref float y, float width, string titleKey, float height, Action<Rect> contentDrawer)
         {
             Rect card = new Rect(8f, y, width, height);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), titleKey.Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 14f, card.y + 10f, card.width - 28f, 28f), titleKey.Translate().Colorize(CQFUIStyle.Accent));
             contentDrawer(card);
             y += height + 12f;
         }
@@ -106,7 +107,7 @@ namespace QuestEditor_Library
 
         public static void DrawTextButton_8(QuestEditor_Library.QuestBookObjective cqfReceiver, Rect rect, string labelKey, Action action)
         {
-            if (Widgets.ButtonText(rect, labelKey.Translate()))
+            if (CQFUIStyle.ButtonText(rect, labelKey.Translate()))
             {
                 action();
             }

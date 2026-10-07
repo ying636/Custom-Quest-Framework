@@ -16,12 +16,14 @@ namespace QuestEditor_Library
     {
         public static void DrawTab_0(QuestEditor_Library.InteractableThing cqfReceiver)
         {
-            Rect outRect = new Rect(8f, 36f, 536f, 566f);
-            Rect viewRect = new Rect(0f, 0f, 516f, cqfReceiver.height);
+            using CQFUIScope scope = new CQFUIScope();
+            Rect outRect = new Rect(8f, 36f, Mathf.Min(536f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, Mathf.Min(566f, CQFUIScope.ContentHeight - 44f)));
+            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, cqfReceiver.height));
             Widgets.BeginScrollView(outRect, ref cqfReceiver.scrollPos, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
             float y = 12f;
             Rect copyAllRect = cqfReceiver.DrawSectionHeader(ref y, viewRect.width, "InteractionOperations".Translate(), true);
-            if (Widgets.ButtonImage(copyAllRect, TexButton.Copy))
+            if (CQFUIStyle.ButtonImage(copyAllRect, TexButton.Copy))
             {
                 CQFEditorTools.operations.Clear();
                 CQFEditorTools.operationDefs.Clear();
@@ -40,25 +42,25 @@ namespace QuestEditor_Library
         public static void DrawOperationList_1(QuestEditor_Library.InteractableThing cqfReceiver, ref float y, float width)
         {
             float initY = y;
-            Rect rect = new Rect(18f, y + 6f, 340f, 30f);
+            Rect rect = new Rect(12f, y + 4f, Mathf.Max(40f, width - 100f), 32f);
             for (int i = 0; i < cqfReceiver.operations.Count; i++)
             {
                 InteractionOperation o = cqfReceiver.operations[i];
-                rect.y = y + 6f;
-                if (Widgets.ButtonText(rect, o.interactionText, false))
+                rect.y = y + 4f;
+                if (CQFUIStyle.ButtonText(rect, o.interactionText, false))
                 {
                     Find.WindowStack.Add(new Dialog_InteractionOption(o, cqfReceiver));
                 }
 
                 TooltipHandler.TipRegion(rect, "CQF_ClickToEdit".Translate());
-                if (Widgets.ButtonImage(new Rect(426f, y + 8f, 25f, 25f), TexButton.Copy))
+                if (CQFUIStyle.ButtonImage(new Rect(width - 74f, y + 8f, 25f, 25f), TexButton.Copy))
                 {
                     CQFEditorTools.operation = o.Copy();
                 }
 
-                TooltipHandler.TipRegion(new Rect(426f, y + 8f, 25f, 25f), "Copy".Translate());
-                Rect save = new Rect(456f, y + 8f, 25f, 25f);
-                if (Widgets.ButtonImage(save, ContentFinder<Texture2D>.Get("UI/Icon_MoveOut", true)))
+                TooltipHandler.TipRegion(new Rect(width - 74f, y + 8f, 25f, 25f), "Copy".Translate());
+                Rect save = new Rect(width - 42f, y + 8f, 25f, 25f);
+                if (CQFUIStyle.ButtonImage(save, ContentFinder<Texture2D>.Get("UI/Icon_MoveOut", true)))
                 {
                     Find.WindowStack.Add(new Dialog_RenameForQE(name =>
                     {
@@ -92,55 +94,57 @@ namespace QuestEditor_Library
             };
             if (!cqfReceiver.operations.Any())
             {
-                Widgets.Label(new Rect(16f, y + 4f, 420f, 25f), "CQF_NoInteractionOperations".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(12f, y + 4f, width - 24f, 28f), "CQF_NoInteractionOperations".Translate().Colorize(CQFUIStyle.Muted));
                 y += 34f;
             }
 
-            Widgets.DrawBox(new Rect(10f, initY, width - 42f, Mathf.Max(42f, y - initY)), 1, QuestEditor_Dialog.blueTex);
+            CQFUIStyle.DrawBox(new Rect(8f, initY, width - 16f, Mathf.Max(36f, y - initY)));
             y += 10f;
-            if (Widgets.ButtonText(new Rect(15f, y, 120f, 32f), "Add".Translate()))
+            float buttonWidth = Mathf.Min(120f, (width - 68f) / 2f);
+            if (CQFUIStyle.ButtonText(new Rect(12f, y, buttonWidth, 32f), "Add".Translate()))
             {
                 cqfReceiver.operations.Add(new InteractionOperation());
             }
 
-            if (Widgets.ButtonText(new Rect(155f, y, 120f, 32f), "Remove".Translate()) && cqfReceiver.operations.Any())
+            if (CQFUIStyle.ButtonText(new Rect(20f + buttonWidth, y, buttonWidth, 32f), "Remove".Translate()) && cqfReceiver.operations.Any())
             {
                 CQFEditorTools.DrawFloatMenu(cqfReceiver.operations, o => cqfReceiver.operations.Remove(o), o => o.interactionText);
             }
 
-            if (Widgets.ButtonImage(new Rect(295f, y + 3f, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)
+            if (CQFUIStyle.ButtonImage(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)
             {
                 Find.WindowStack.Add(new Dialog_CQFInteractionPaste(cqfReceiver, new[] { CQFEditorTools.operation }));
             }
 
-            TooltipHandler.TipRegion(new Rect(295f, y + 3f, 25f, 25f), "Paste".Translate());
+            TooltipHandler.TipRegion(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), "Paste".Translate());
             y += 42f;
         }
 
         public static void DrawOperationDefList_2(QuestEditor_Library.InteractableThing cqfReceiver, ref float y, float width)
         {
             cqfReceiver.DrawSimpleSectionTitle(ref y, width, "InteractionDataDefs".Translate());
-            Rect rect = new Rect(18f, y + 6f, width - 90f, 28f);
+            Rect rect = new Rect(12f, y + 4f, width - 24f, 32f);
             foreach (InteractionDataDef def in cqfReceiver.operationDefs)
             {
-                rect.y = y + 6f;
+                rect.y = y + 4f;
                 Widgets.Label(rect, def.label ?? def.defName);
                 y += 36f;
             }
 
             if (!cqfReceiver.operationDefs.Any())
             {
-                Widgets.Label(new Rect(16f, y + 4f, 420f, 25f), "CQF_NoInteractionDefs".Translate().Colorize(Color.gray));
+                Widgets.Label(new Rect(12f, y + 4f, width - 24f, 28f), "CQF_NoInteractionDefs".Translate().Colorize(CQFUIStyle.Muted));
                 y += 34f;
             }
 
             y += 6f;
-            if (Widgets.ButtonText(new Rect(15f, y, 120f, 32f), "Add".Translate()))
+            float buttonWidth = Mathf.Min(120f, (width - 68f) / 2f);
+            if (CQFUIStyle.ButtonText(new Rect(12f, y, buttonWidth, 32f), "Add".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<InteractionDataDef>.AllDefsListForReading, d => Find.WindowStack.Add(new Dialog_CQFInteractionPaste(cqfReceiver, Enumerable.Empty<InteractionOperation>(), new[] { d })), d => d.label);
             }
 
-            if (Widgets.ButtonText(new Rect(155f, y, 120f, 32f), "Remove".Translate()) && cqfReceiver.operationDefs.Any())
+            if (CQFUIStyle.ButtonText(new Rect(20f + buttonWidth, y, buttonWidth, 32f), "Remove".Translate()) && cqfReceiver.operationDefs.Any())
             {
                 CQFEditorTools.DrawFloatMenu(cqfReceiver.operationDefs, d => cqfReceiver.operationDefs.Remove(d), d => d.label);
             }
@@ -155,13 +159,12 @@ namespace QuestEditor_Library
 
         public static Rect DrawSectionHeader_4(QuestEditor_Library.InteractableThing cqfReceiver, ref float y, float width, string label, bool drawCopyButton = false)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(15f, y, width - 35f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.Label(new Rect(12f, y, width - (drawCopyButton ? 62f : 24f), 32f), label.Colorize(CQFUIStyle.Accent));
             Rect copyRect = Rect.zero;
             if (drawCopyButton)
             {
-                float labelWidth = Text.CalcSize(label).x;
-                copyRect = new Rect(Mathf.Min(15f + labelWidth + 12f, width - 58f), y + 2f, 25f, 25f);
+                copyRect = new Rect(width - 42f, y + 2f, 25f, 25f);
             }
 
             Text.Font = GameFont.Small;
@@ -171,8 +174,8 @@ namespace QuestEditor_Library
 
         public static void DrawSimpleSectionTitle_5(QuestEditor_Library.InteractableThing cqfReceiver, ref float y, float width, string label)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(15f, y, width - 35f, 30f), label.Colorize(ColorLibrary.SkyBlue));
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.Label(new Rect(12f, y, width - 24f, 32f), label.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
             y += 38f;
         }

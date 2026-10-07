@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_ReplaceUsingCustomThing cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             if (cqfReceiver.data != null && cqfReceiver.customThing == null)
             {
@@ -31,9 +32,9 @@ namespace QuestEditor_Library
                 ;
             }
 
-            if (Widgets.ButtonText(new Rect(x, y, 250f, 25f), "CQFReplaceThing".Translate(cqfReceiver.customThing == null ? "" : ((Thing)cqfReceiver.customThing).Label), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 250f, 25f), "CQFReplaceThing".Translate(cqfReceiver.customThing == null ? "" : ((Thing)cqfReceiver.customThing).Label), false))
             {
-                Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CQFTools.Basespawnable.FindAll(sp => sp != QEDefOf.QE_Spawner_Editor && sp != QEDefOf.QE_ZoneCore), t => t.uiIcon, t => t.label.Colorize(ColorLibrary.SkyBlue) + "(" + t.thingClass.Name.Translate() + ")", t =>
+                Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CQFTools.Basespawnable.FindAll(sp => sp != QEDefOf.QE_Spawner_Editor && sp != QEDefOf.QE_ZoneCore), t => t.uiIcon, t => t.label.Colorize(CQFUIStyle.Accent) + "(" + t.thingClass.Name.Translate() + ")", t =>
                 {
                     if (t.MadeFromStuff)
                     {
@@ -49,13 +50,13 @@ namespace QuestEditor_Library
             y += 30f;
             if (cqfReceiver.customThing != null)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 250f, 25f), "EditCustomThing".Translate(), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, 250f, 25f), "EditCustomThing".Translate(), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawTabable((IDrawTabable)cqfReceiver.customThing));
                 }
 
                 y += 30f;
-                if (Widgets.ButtonText(new Rect(x, y, 250f, 25f), "EditActionAndText".Translate(), false))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, 250f, 25f), "EditActionAndText".Translate(), false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIActionAndText((Thing)cqfReceiver.customThing));
                 }

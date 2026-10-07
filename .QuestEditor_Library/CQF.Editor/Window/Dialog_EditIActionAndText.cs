@@ -20,10 +20,12 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Rect outRect = new Rect(5f, 5f, inRect.width - 10f, inRect.height - 10f);
             float viewWidth = outRect.width - 18f;
             Rect viewRect = new Rect(0f, 0f, viewWidth, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             float y = 10f;
             if (this.t.TryGetComp<CompCustomText>() is CompCustomText comp2)
             {
@@ -33,7 +35,7 @@ namespace QuestEditor_Library
             }
             if (t.TryGetComp<CompActionWorker>() is CompActionWorker comp)
             {
-                CQFEditorTools.DrawIDrawList(ref y, 5f, comp.comps, viewRect, "ITab_CompActionWorker".Translate().Colorize(ColorLibrary.SkyBlue), () => comp.comps.Add(new ActionComp()), a => a.compName);
+                CQFEditorTools.DrawIDrawList(ref y, 5f, comp.comps, viewRect, "ITab_CompActionWorker".Translate().Colorize(CQFUIStyle.Accent), () => comp.comps.Add(new ActionComp()), a => a.compName);
             }
             Widgets.EndScrollView();
             this.height = y + 10f;
@@ -56,7 +58,7 @@ namespace QuestEditor_Library
                 text = multiline ? Widgets.TextArea(editorRect, text ?? string.Empty) : Widgets.TextField(editorRect, text ?? string.Empty);
             }
 
-            Widgets.DrawBox(sectionRect, 1);
+            CQFUIStyle.DrawBox(sectionRect, 1);
             y += sectionHeight + 8f;
         }
 

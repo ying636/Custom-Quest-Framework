@@ -218,4 +218,26 @@
   <CQF_AI_ToolDefinition>管理定义</CQF_AI_ToolDefinition>
   <CQF_AI_RuntimeFailed>游戏在执行此操作时报告了错误。可能已有部分效果发生，请先查询当前状态再继续。</CQF_AI_RuntimeFailed>
   <CQF_AI_UndoUnsupported>此次任务执行了无法完整撤销的操作。</CQF_AI_UndoUnsupported>
+  <CQF_AI_ExecutionSpeed>地图执行速度</CQF_AI_ExecutionSpeed>
+  <CQF_AI_ExecutionSpeed_0>慢速</CQF_AI_ExecutionSpeed_0>
+  <CQF_AI_ExecutionSpeed_1>正常</CQF_AI_ExecutionSpeed_1>
+  <CQF_AI_ExecutionSpeed_2>快速</CQF_AI_ExecutionSpeed_2>
+  <CQF_AI_ExecutionSpeed_3>尽快完成</CQF_AI_ExecutionSpeed_3>
+  <CQF_AI_ExecutionSpeedHint>地图修改按顺序分帧执行，暂停游戏也能执行。慢速每100毫秒一项，正常每50毫秒最多8项，快速每帧最多48项，尽快完成模式每帧使用6毫秒预算。停止保留已完成修改；撤销前会检查冲突。</CQF_AI_ExecutionSpeedHint>
+  <CQF_AI_MapRollingBack>正在恢复失败批次</CQF_AI_MapRollingBack>
+  <CQF_AI_MapChecking>正在检查地图修改</CQF_AI_MapChecking>
+  <CQF_AI_MapStep_placed>放置事物</CQF_AI_MapStep_placed>
+  <CQF_AI_MapStep_removed>移除事物</CQF_AI_MapStep_removed>
+  <CQF_AI_MapStep_terrain>铺设地面</CQF_AI_MapStep_terrain>
+  <CQF_AI_MapStep_roof>设置屋顶</CQF_AI_MapStep_roof>
+  <CQF_AI_MapStep_edited>修改事物</CQF_AI_MapStep_edited>
+  <CQF_AI_MapProgress>{0} · {1}/{2} 项修改</CQF_AI_MapProgress>
+  <CQF_AI_TokenBudget>每次任务的 token 预算</CQF_AI_TokenBudget>
+  <CQF_AI_RequestBudget>每次任务的最大请求次数</CQF_AI_RequestBudget>
+  <CQF_AI_BudgetHint>默认每次任务10万token、24次请求，主AI与所有子智能体共用。每次HTTP请求都计数，包括兼容性重试。预计剩余预算不足时在发送前暂停，保留已完成修改；发送新指令可使用新预算继续。调整限额从下一次任务生效。发送前预留量是估算，响应后按接口用量结算，因此正在进行的请求可能超出token限额；该限额不是金额上限。</CQF_AI_BudgetHint>
+  <CQF_AI_BudgetPaused>任务已因共享请求次数或token预算不足而暂停，已完成修改保留。发送新指令可获得新预算继续。</CQF_AI_BudgetPaused>
+  <CQF_AI_BudgetUsage>预算已用：{0}/{1} token
+已发送请求：{2}/{3}
+正在请求的估算预留：{4} token</CQF_AI_BudgetUsage>
+  <CQF_AI_BudgetEstimated>预算扣除包含未返回用量或中断请求的估算量，上方的接口报告用量不受影响。</CQF_AI_BudgetEstimated>
 </LanguageData>

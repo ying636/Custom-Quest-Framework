@@ -16,10 +16,12 @@ namespace QuestEditor_Library
         {
             if (!region.InBounds(Map) || region.Width < 1 || region.Height < 1 || (long)region.Width * region.Height > 4096) throw new InvalidDataException("CQF_AI_MapBounds");
             if (offset < 0 || offset > 4096 || limit < 1 || limit > 400) throw new InvalidDataException("CQF_AI_InvalidTool: pagination");
-            return new XElement("region", new XAttribute("map", Map.uniqueID), new XAttribute("total", region.Area), new XAttribute("offset", offset),
-                region.Skip(offset).Take(limit).Select(cell => new XElement("cell", new XAttribute("x", cell.x), new XAttribute("z", cell.z),
+            IntVec3[] page = region.Skip(offset).Take(limit).ToArray();
+            return new XElement("region", new XAttribute("map", Map.uniqueID), new XAttribute("total", region.Area), new XAttribute("offset", offset), new XAttribute("encoding", "thing_refs"),
+                page.Select(cell => new XElement("cell", new XAttribute("x", cell.x), new XAttribute("z", cell.z),
                     new XAttribute("terrain", Map.terrainGrid.TerrainAt(cell).defName), new XAttribute("roof", Map.roofGrid.RoofAt(cell)?.defName ?? ""),
-                    new XAttribute("thingCount", cell.GetThingList(Map).Count), cell.GetThingList(Map).Take(20).Select(Describe))));
+                    new XAttribute("thingCount", cell.GetThingList(Map).Count), cell.GetThingList(Map).Take(20).Select(thing => new XElement("thingRef", new XAttribute("id", thing.ThingID))))),
+                new XElement("things", page.SelectMany(cell => cell.GetThingList(Map).Take(20)).Distinct().Select(DescribeRegionThing)));
         }
         public XElement ReadThing(string id)
         {
@@ -103,6 +105,14 @@ namespace QuestEditor_Library
             if (configuration.entrance != null) CQFAIThingContext.Apply(thing, configuration.entrance);
             if (configuration.exit != null) CQFAIThingContext.Apply(thing, configuration.exit);
             CQFAILiveFeatures.Apply(thing, configuration);
+        }
+        private static XElement DescribeRegionThing(Thing thing)
+        {
+            XElement result = Describe(thing);
+            foreach (string attribute in new[] { "hitPoints", "maxHitPoints", "stackLimit", "faction", "interaction", "entrance", "exit" }) result.Attribute(attribute)?.Remove();
+            XElement? cqf = result.Element("cqf");
+            if (cqf != null) cqf.ReplaceWith(new XElement("cqf", cqf.Attributes().Where(attribute => attribute.Name.LocalName is "kind" or "liveFeatureEditing")));
+            return result;
         }
         private static XElement Describe(Thing thing)
         {

@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Target cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             cqfReceiver.targetsText ??= new List<string>();
             for (int index = 0; index < cqfReceiver.targetsText.Count; index++)
@@ -38,14 +39,14 @@ namespace QuestEditor_Library
                         cqfReceiver.targetsText[capturedIndex] = value;
                     }
                 });
-                if (Widgets.ButtonText(new Rect(inRect.width - 78f, startY, 70f, 25f), "Remove".Translate()))
+                if (CQFUIStyle.ButtonText(new Rect(inRect.width - 78f, startY, 70f, 25f), "Remove".Translate()))
                 {
                     cqfReceiver.targetsText.RemoveAt(index);
                     break;
                 }
             }
 
-            if (Widgets.ButtonText(new Rect(x, y, 140f, 26f), "Add".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 140f, 26f), "Add".Translate()))
             {
                 cqfReceiver.targetsText.Add(string.Empty);
             }

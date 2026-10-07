@@ -16,6 +16,7 @@ namespace QuestEditor_Library
         }
         public CQFAIToolRegistry Registry { get; private set; }
         public CQFAIEditorContext? Context { get; private set; }
+        public string SelectedTargetId { get; private set; } = string.Empty;
         public CQFAITaskTransaction Transaction { get; }
         public void AddInstruction(string text)
         {
@@ -60,6 +61,7 @@ namespace QuestEditor_Library
             }
             Registry = registry;
             Context = contexts[target.Id];
+            SelectedTargetId = target.Id;
             return new XElement("selected_target", target.Summary, Registry.Tools.Single(tool => tool.Name == "cqf_get_context").Execute(new XElement("arguments")), Registry.Definitions);
         }
         private readonly CQFAIModel model;

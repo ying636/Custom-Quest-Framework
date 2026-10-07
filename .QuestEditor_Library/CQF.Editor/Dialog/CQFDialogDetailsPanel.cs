@@ -31,13 +31,13 @@ namespace QuestEditor_Library
                 Widgets.Label(new Rect(10f, 8f, rect.width - (result != null ? 85f : 50f), 28f),
                     (result != null ? "DialogResults" : option != null ? "OptionText" : "DialogText").Translate().Colorize(CQFEditorPalette.Accent));
                 Rect close = new Rect(rect.width - 35f, 8f, 24f, 24f);
-                TooltipHandler.TipRegion(close, "CQF_DialogGraph_HideInspector".Translate());
                 if (CQFAIIconButton.DrawFramedImage(close, TexButton.CloseXSmall, "CQF_DialogGraph_HideInspector".Translate())) { this.editor.CloseSidePanel(); return; }
                 if (option != null && result != null && CQFAIIconButton.DrawFramedImage(new Rect(rect.width - 67f, 8f, 24f, 24f), TexUI.ArrowTexLeft, "Back".Translate()))
                 { this.editor.SelectOption(node, option); return; }
                 Rect view = new Rect(0f, 44f, rect.width, rect.height - 44f);
                 Rect content = new Rect(0f, 0f, view.width - 20f, Mathf.Max(view.height, this.height));
                 Widgets.BeginScrollView(view, ref this.scroll, content);
+                using CQFUIScope cqfContentScope1 = new CQFUIScope(content.width);
                 try
                 {
                     float y = 6f, width = content.width - 16f;
@@ -62,7 +62,7 @@ namespace QuestEditor_Library
                 Rect row = new Rect(8f, y, width, 34f);
                 Widgets.DrawBoxSolid(row, CQFEditorPalette.Header);
                 Rect grip = new Rect(12f, y + 5f, 23f, 23f);
-                GUI.DrawTexture(grip, TexButton.DragHash);
+                CQFAIIconButton.DrawGlyph(grip, TexButton.DragHash);
                 TooltipHandler.TipRegion(grip, "CQF_DialogGraph_OptionOrder".Translate());
                 UnityEvent input = UnityEvent.current;
                 if (input.type == EventType.MouseDown && input.button == 0 && grip.Contains(input.mousePosition))
@@ -128,21 +128,11 @@ namespace QuestEditor_Library
             option.text = Widgets.TextArea(new Rect(8f, y, width, 100f), option.text ?? string.Empty);
             y += 114f;
             this.Header("DialogResults", ref y, width, () => option.results.Add(new DialogResult { resultName = "CQF_Dialog_Result_" + option.results.Count }));
-            for (int i = 0; i < option.results.Count; i++)
-            {
-                DialogResult result = option.results[i];
-                Rect row = new Rect(8f, y, width, 34f);
-                this.Context(row, () => this.editor.ShowOptionMenu(option, owner, result));
-                string target = !result.nextIndex.HasValue ? "CQF_DialogGraph_End".Translate().ToString()
-                    : this.editor.CurTree.nodeMoulds.TryGetValue(result.nextIndex.Value, out DialogNode node) ? this.Display(node.text) : "CQF_DialogAI_MissingNode".Translate().ToString();
-                if (CQFAIIconButton.DrawText(new Rect(8f, y, width - 58f, 32f), target.Replace('\n', ' '))) this.editor.SelectResult(owner, option, result);
-                TooltipHandler.TipRegion(new Rect(8f, y, width - 58f, 32f), "CQF_DialogGraph_ResultCounts".Translate(result.conditions.Count, result.actions.Count));
-                if (i > 0 && CQFAIIconButton.DrawFramedImage(new Rect(width - 45f, y + 3f, 24f, 24f), TexButton.ReorderUp, "CQF_EditorMoveUp".Translate()))
-                { option.results[i] = option.results[i - 1]; option.results[i - 1] = result; this.editor.InitCurTree(); break; }
-                if (i + 1 < option.results.Count && CQFAIIconButton.DrawFramedImage(new Rect(width - 16f, y + 3f, 24f, 24f), TexButton.ReorderDown, "CQF_EditorMoveDown".Translate()))
-                { option.results[i] = option.results[i + 1]; option.results[i + 1] = result; this.editor.InitCurTree(); break; }
-                y += 40f;
-            }
+            float resultsHeight = option.results.Count * CQFDialogResultList.RowHeight;
+            this.results.Draw(option, new Rect(8f, y, width, resultsHeight), result => !result.nextIndex.HasValue ? "CQF_DialogGraph_End".Translate().ToString()
+                : this.editor.CurTree.nodeMoulds.TryGetValue(result.nextIndex.Value, out DialogNode target) ? this.Display(target.text) : "CQF_DialogAI_MissingNode".Translate().ToString(),
+                result => this.editor.SelectResult(owner, option, result), result => this.editor.ShowOptionMenu(option, owner, result), this.editor.InitCurTree);
+            y += resultsHeight;
             this.Fold("CQF_DialogGraph_Advanced", ref this.advanced, ref y, width);
             if (!this.advanced) return;
             Widgets.CheckboxLabeled(new Rect(8f, y, width, 28f), "HideWhenDisable".Translate(), ref option.hideWhenDisabled); y += 34f;
@@ -209,7 +199,7 @@ namespace QuestEditor_Library
         {
             Rect row = new Rect(8f, y + 8f, width, 32f);
             CQFAIIconButton.DrawBackground(row, open);
-            GUI.DrawTexture(new Rect(14f, row.y + 6f, 20f, 20f), open ? TexButton.ReorderDown : TexUI.ArrowTexRight);
+            CQFAIIconButton.DrawGlyph(new Rect(14f, row.y + 6f, 20f, 20f), open ? TexButton.ReorderDown : TexUI.ArrowTexRight);
             Widgets.Label(new Rect(42f, row.y + 4f, width - 42f, 26f), key.Translate().ToString().Truncate(width - 42f));
             TooltipHandler.TipRegion(row, key.Translate());
             if (Widgets.ButtonInvisible(row)) open = !open;
@@ -221,7 +211,7 @@ namespace QuestEditor_Library
             Rect row = new Rect(8f, y, width, 32f);
             bool open = this.expanded.Contains(entry);
             CQFAIIconButton.DrawBackground(row, open);
-            GUI.DrawTexture(new Rect(14f, y + 6f, 20f, 20f), open ? TexButton.ReorderDown : TexUI.ArrowTexRight);
+            CQFAIIconButton.DrawGlyph(new Rect(14f, y + 6f, 20f, 20f), open ? TexButton.ReorderDown : TexUI.ArrowTexRight);
             string title = CQFEditorEntrySummary.Describe(entry);
             Widgets.Label(new Rect(42f, y + 4f, width - 42f, 26f), title.Truncate(width - 42f));
             TooltipHandler.TipRegion(row, CQFEditorEntrySummary.Describe(entry));
@@ -234,7 +224,7 @@ namespace QuestEditor_Library
             if (open) CQFEditorInlineLayout.Draw(entry, ref y, 8f, width, draw);
         }
 
-        private void Empty(string key, ref float y, float width) { Widgets.Label(new Rect(8f, y, width, 28f), key.Translate().Colorize(Color.gray)); y += 34f; }
+        private void Empty(string key, ref float y, float width) { Widgets.Label(new Rect(8f, y, width, 28f), key.Translate().Colorize(CQFUIStyle.Muted)); y += 34f; }
         private string Display(string text) => text.CanTranslate() ? text.Translate().ToString() : text ?? string.Empty;
         private void RemoveMenu(Action remove) => Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption> { new FloatMenuOption("Remove".Translate(), () => { remove(); this.editor.InitCurTree(); }) }));
 
@@ -245,6 +235,7 @@ namespace QuestEditor_Library
         }
 
         private readonly QuestEditor_Dialog editor;
+        private readonly CQFDialogResultList results = new CQFDialogResultList();
         private Vector2 scroll;
         private float height = 700f;
         private bool advanced;

@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_SetGameCondition cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Widgets.CheckboxLabeled(new Rect(x, y, 150f, 25f), "IsPermanent".Translate(), ref cqfReceiver.permanent);
             y += 30f;
@@ -32,7 +33,7 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawIntRange(ref y, "Duration".Translate(), ref cqfReceiver.duration, ref cqfReceiver.buffer, ref cqfReceiver.maxBuffer, x, 100f);
             }
 
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 25f), "CQFGameConditionDef".Translate(cqfReceiver.condition?.label), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 25f), "CQFGameConditionDef".Translate(cqfReceiver.condition?.label), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<GameConditionDef>.AllDefsListForReading, f => cqfReceiver.condition = f, f => f.label);
             }

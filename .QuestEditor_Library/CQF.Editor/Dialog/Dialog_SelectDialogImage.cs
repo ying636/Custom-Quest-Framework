@@ -27,12 +27,13 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, inRect.width, 35f), "DialogImage_Title".Translate());
+            Widgets.Label(new Rect(0f, 0f, Mathf.Max(0f, inRect.width - 30f), 35f), "DialogImage_Title".Translate());
             Text.Font = GameFont.Small;
 
             Widgets.Label(new Rect(0f, 40f, 80f, 25f), "DialogImage_Mod".Translate());
-            if (Widgets.ButtonText(new Rect(85f, 40f, 260f, 25f), this.selectedMod.NullOrEmpty() ? "DialogImage_All".Translate() : this.selectedMod, false))
+            if (CQFUIStyle.ButtonText(new Rect(85f, 40f, Mathf.Max(40f, Mathf.Min(260f, inRect.width - 85f)), 25f), this.selectedMod.NullOrEmpty() ? "DialogImage_All".Translate() : this.selectedMod, false))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>
                 {
@@ -50,18 +51,22 @@ namespace QuestEditor_Library
                 Find.WindowStack.Add(new FloatMenu(options));
             }
 
-            Widgets.Label(new Rect(360f, 40f, 60f, 25f), "DialogImage_Search".Translate());
-            string text = Widgets.TextField(new Rect(425f, 40f, 300f, 25f), this.searchTerm);
+            float searchY = inRect.width < 760f ? 75f : 40f;
+            float searchX = inRect.width < 760f ? 0f : 360f;
+            Widgets.Label(new Rect(searchX, searchY, 60f, 25f), "DialogImage_Search".Translate());
+            string text = Widgets.TextField(new Rect(searchX + 65f, searchY, Mathf.Max(40f, inRect.width - searchX - 65f), 25f), this.searchTerm);
             if (text != this.searchTerm)
             {
                 this.searchTerm = text;
                 this.UpdateFilteredImages();
             }
 
-            float top = 75f;
-            float viewHeight = Math.Max(620f, this.filteredImages.Count * 70f + 10f);
+            float top = searchY + 35f;
+            float contentWidth = inRect.width - 16f;
+            float viewHeight = Mathf.Max(inRect.height - top, this.contentHeight);
             Widgets.BeginScrollView(new Rect(0f, top, inRect.width, inRect.height - top), ref this.scrollPosition,
-                new Rect(0f, 0f, inRect.width - 16f, viewHeight));
+                new Rect(0f, 0f, contentWidth, viewHeight));
+            using CQFUIScope contentScope = new CQFUIScope(contentWidth);
 
             float y = 0f;
             string lastMod = null;
@@ -69,15 +74,15 @@ namespace QuestEditor_Library
             {
                 if (lastMod != image.modName)
                 {
-                    Widgets.Label(new Rect(0f, y, 500f, 25f), image.modName.Colorize(ColorLibrary.SkyBlue));
+                    Widgets.Label(new Rect(0f, y, contentWidth, 25f), image.modName.Colorize(CQFUIStyle.Accent));
                     y += 30f;
                     lastMod = image.modName;
                 }
 
-                Rect rowRect = new Rect(0f, y, 840f, 60f);
+                Rect rowRect = new Rect(0f, y, contentWidth, 60f);
                 if (image.path == this.currentPath)
                 {
-                    Widgets.DrawHighlightSelected(rowRect);
+                    CQFUIStyle.DrawHighlightSelected(rowRect);
                 }
 
                 Texture2D texture = ContentFinder<Texture2D>.Get(image.path, false);
@@ -91,12 +96,13 @@ namespace QuestEditor_Library
                     this.selectAction(image.path);
                     this.Close();
                 }
-                Widgets.Label(new Rect(70f, y, 760f, 25f), image.fileName);
-                Widgets.Label(new Rect(70f, y + 28f, 760f, 25f), image.packageId);
+                Widgets.Label(new Rect(70f, y, contentWidth - 80f, 25f), image.fileName);
+                Widgets.Label(new Rect(70f, y + 28f, contentWidth - 80f, 25f), image.packageId);
                 TooltipHandler.TipRegion(rowRect, image.modName + "\n" + image.packageId + "\n" + image.path);
                 y += 65f;
             }
 
+            this.contentHeight = y + 10f;
             Widgets.EndScrollView();
         }
 
@@ -141,6 +147,7 @@ namespace QuestEditor_Library
         private string selectedMod = string.Empty;
         private string searchTerm = string.Empty;
         private Vector2 scrollPosition;
+        private float contentHeight;
     }
 
     public class DialogImageResource

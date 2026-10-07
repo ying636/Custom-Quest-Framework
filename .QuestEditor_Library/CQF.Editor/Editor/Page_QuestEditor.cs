@@ -19,7 +19,7 @@ namespace QuestEditor_Library
     {
         public static List<Type> UseableNodes => typeof(QuestNode).AllSubclassesNonAbstract().OrderBy((x) => x.Name.CanTranslate() ? -1f : 0f).ToList(); /*new List<Type>() {typeof(QuestNode_RandomCustomMap) , typeof(QuestNode_Sequence) , typeof(QuestNode_Letter) , typeof(QuestNode_Signal) , typeof(QuestNode_End) , typeof(QuestNode_IsNull),typeof(QuestNode_Set) };*/
         public override string PageTitle => "QuestEditor".Translate();
-        public static ModMetaData ModData 
+        public static ModMetaData ModData
         {
             get
             {
@@ -45,11 +45,11 @@ namespace QuestEditor_Library
         public static string RulePath => System.IO.Path.Combine(Page_QuestEditor.questPath, "Rule");
         public QuestScriptDef CurQuestData
         {
-            get 
+            get
             {
                 return Page_QuestEditor.curQuestData;
             }
-            set 
+            set
             {
                 Page_QuestEditor.curQuestData = value;
             }
@@ -62,9 +62,9 @@ namespace QuestEditor_Library
                 Page_QuestEditor.buffers["GenerationChance"] = (100f * this.CurQuestData.rootSelectionWeight).ToString();
             }, isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
 
-        public static string GetBuffer(string name) 
+        public static string GetBuffer(string name)
         {
-            if (!Page_QuestEditor.buffers.ContainsKey(name)) 
+            if (!Page_QuestEditor.buffers.ContainsKey(name))
             {
                 Page_QuestEditor.buffers.Add(name,"");
             }
@@ -72,18 +72,19 @@ namespace QuestEditor_Library
         }
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             base.DoBottomButtons(inRect,null, "SaveToFile".Translate(),() =>
             {
-                if (this.CurQuestData.defName == null) 
+                if (this.CurQuestData.defName == null)
                 {
                     Messages.Message("NoName".Translate(),MessageTypeDefOf.CautionInput);
                     return;
                 }
-                
+
                 LongEventHandler.QueueLongEvent(() =>
                 {
-                    if (this.CurQuestData.defName == null) 
+                    if (this.CurQuestData.defName == null)
                     {
                         Messages.Message("NoName".Translate(), MessageTypeDefOf.CautionInput);
                         return;
@@ -93,15 +94,15 @@ namespace QuestEditor_Library
                     XDocument mapXml = new XDocument();
                     XElement defs = new XElement("Defs");
                     XElement root = new XElement("QuestScriptDef");
-                    foreach (FieldInfo field in typeof(QuestScriptDef).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) 
+                    foreach (FieldInfo field in typeof(QuestScriptDef).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
-                       
+
                         if (field.Name == "root")
                         {
                             root.Add(QE_SaveToolbase.SaveToXml(field, def));
                             continue;
                         }
-                        if (field.GetValue(def) is object ob && !Attribute.IsDefined(field, typeof(UnsavedAttribute))) 
+                        if (field.GetValue(def) is object ob && !Attribute.IsDefined(field, typeof(UnsavedAttribute)))
                         {
                             XElement node = DirectXmlSaver.XElementFromObject(ob, field.FieldType, field.Name, null,false);
                             root.Add(node);
@@ -112,7 +113,7 @@ namespace QuestEditor_Library
                     string path = Page_QuestEditor.questPath + @"\" + def.defName + ".xml";
                     mapXml.Save(path);
                     Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
-                    if (!DefDatabase<QuestScriptDef>.AllDefsListForReading.Exists(d => d.defName == def.defName)) 
+                    if (!DefDatabase<QuestScriptDef>.AllDefsListForReading.Exists(d => d.defName == def.defName))
                     {
                         DefDatabase<QuestScriptDef>.Add(def);
                     }
@@ -134,9 +135,12 @@ namespace QuestEditor_Library
                 this.CurQuestData.root = new QuestNode_Sequence();
             }
             Widgets.DrawLightHighlight(new Rect(0f, 40f, inRect.width - 16f, inRect.height - 83f));
-            Widgets.BeginScrollView(new Rect(4f, 40f, inRect.width - 8f, inRect.height - 83f), ref this.scrollPos, new Rect(0f, 40f, inRect.width - 32f, Page_QuestEditor.drawHeight.ContainsKey("Main") ? Page_QuestEditor.drawHeight["Main"] : 0f));
+            Rect viewport = new Rect(4f, 40f, inRect.width - 8f, inRect.height - 83f);
+            Rect content = new Rect(0f, 40f, viewport.width - 20f, Mathf.Max(viewport.height, Page_QuestEditor.drawHeight.TryGetValue("Main", out float oldHeight) ? oldHeight : 0f));
+            Widgets.BeginScrollView(viewport, ref this.scrollPos, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
             float y = 50f;
-            this.DrawButtonToOtherTools(inRect);
+            this.DrawButtonToOtherTools(content);
             CQFEditorTools.DrawFieldAndText(ref y, "DefName", ref this.CurQuestData.defName);
             y += 30f;
             Rect textRect = new Rect(0f, y, 350f, 20f);
@@ -145,11 +149,10 @@ namespace QuestEditor_Library
             y += 25f;
             if (this.CurQuestData.questNameRules != null)
             {
-                Widgets.Label(new Rect(170f, y + 19f, 350f, 25f), "CurRuleName".Translate(Page_QuestEditor.questNameRules?.ruleName).Colorize(Color.gray));
+                Widgets.Label(new Rect(170f, y + 19f, 350f, 25f), "CurRuleName".Translate(Page_QuestEditor.questNameRules?.ruleName).Colorize(CQFUIStyle.Muted));
             }
             Rect tip = new Rect(Text.CalcSize(nameRule).x + 5f, textRect.y, 25f, 25f);
-            Widgets.ButtonImage(tip, CQFEditorTools.TipIcon);
-            TooltipHandler.TipRegion(tip, "RuleTip".Translate());
+            CQFUIStyle.ButtonImage(tip, CQFEditorTools.TipIcon, tooltip: "RuleTip".Translate());
             y += 2f;
             Page_QuestEditor.DrawSelectRule(ref y, (node) => { RuleData rule = DirectXmlToObject.ObjectFromXml<RuleData>(node, false); this.CurQuestData.questNameRules = rule.GetRulePack(); Page_QuestEditor.questNameRules = rule; });
             textRect.y += 70f;
@@ -157,7 +160,7 @@ namespace QuestEditor_Library
             y += 25f;
             if (this.CurQuestData.questDescriptionRules != null)
             {
-                Widgets.Label(new Rect(170f, y + 15f, 350f, 20f), "CurRuleName".Translate(Page_QuestEditor.questDescriptionRules?.ruleName).Colorize(Color.gray));
+                Widgets.Label(new Rect(170f, y + 15f, 350f, 20f), "CurRuleName".Translate(Page_QuestEditor.questDescriptionRules?.ruleName).Colorize(CQFUIStyle.Muted));
             }
             y += 2f;
             Page_QuestEditor.DrawSelectRule(ref y, (node) => { RuleData rule = DirectXmlToObject.ObjectFromXml<RuleData>(node, false); this.CurQuestData.questDescriptionRules = rule.GetRulePack(); Page_QuestEditor.questDescriptionRules = rule; });
@@ -177,28 +180,28 @@ namespace QuestEditor_Library
                 string buffera = Page_QuestEditor.GetBuffer("ExpireDaysRangea");
                 string bufferi = Page_QuestEditor.GetBuffer("ExpireDaysRangei");
                 CQFEditorTools.DrawFloatRange(ref y, "CQFExpireDaysRange".Translate(),ref this.CurQuestData.expireDaysRange,ref buffera, ref bufferi);
-                Page_QuestEditor.buffers["ExpireDaysRangea"] = buffera; 
+                Page_QuestEditor.buffers["ExpireDaysRangea"] = buffera;
                 Page_QuestEditor.buffers["ExpireDaysRangei"] = bufferi;
             }
             y += 30f;
             QuestNode_Sequence root = (QuestNode_Sequence)this.CurQuestData.root;
-            Page_QuestEditor.DrawQuestNodeData(root,ref y,inRect);
+            Page_QuestEditor.DrawQuestNodeData(root,ref y,content);
             Widgets.EndScrollView();
             Page_QuestEditor.drawHeight.SetOrAdd("Main", y);
         }
 
         public static void DrawQuestNodeData(QuestNode node, ref float y, Rect inRect, float x = 15f)
         {
-            Color color = ColorLibrary.SkyBlue;
+            Color color = CQFUIStyle.Accent;
             color.a = 0.1f;
-            Widgets.DrawBox(new Rect(x - 15f, y, inRect.width - (x * 6f), Page_QuestEditor.drawHeight.ContainsKey("Node" + node.GetHashCode()) ? Page_QuestEditor.drawHeight["Node" + node.GetHashCode()] - y : 0f), 1, QuestEditor_Dialog.blueTex);
+            CQFUIStyle.DrawBox(new Rect(x - 15f, y, Mathf.Max(40f, inRect.width - x - 8f), Mathf.Max(40f, Page_QuestEditor.drawHeight.ContainsKey("Node" + node.GetHashCode()) ? Page_QuestEditor.drawHeight["Node" + node.GetHashCode()] - y : 0f)), 1, QuestEditor_Dialog.blueTex);
             y += 10f;
             Text.Font = GameFont.Medium;
-            Rect rectTitle = new Rect(x, y + 10f, 1020f, 45f);
-            Widgets.Label(rectTitle, node.GetType().Name.Translate().Colorize(ColorLibrary.SkyBlue));
+            Rect rectTitle = new Rect(x, y + 10f, Mathf.Max(40f, inRect.width - x - 12f), 36f);
+            Widgets.Label(rectTitle, node.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
             if ((node.GetType().Name + "_Tip").CanTranslate())
             {
-                TooltipHandler.TipRegionByKey(rectTitle, (node.GetType().Name + "_Tip").Translate());
+                TooltipHandler.TipRegion(rectTitle, (node.GetType().Name + "_Tip").Translate());
             }
             Text.Font = GameFont.Small;
             y += 50f;
@@ -211,25 +214,25 @@ namespace QuestEditor_Library
             if (node is QuestNode_Sequence sequence)
             {
                 Text.Font = GameFont.Medium;
-                Widgets.Label(new Rect(x, y + 15f, 1020f, 45f), "ChildNodes".Translate().Colorize(ColorLibrary.SkyBlue));
+                Widgets.Label(new Rect(x, y + 15f, Mathf.Max(40f, inRect.width - x - 12f), 36f), "ChildNodes".Translate().Colorize(CQFUIStyle.Accent));
                 Text.Font = GameFont.Small;
                 y += 50f;
                 foreach (QuestNode n in sequence.nodes)
                 {
                     Widgets.Label(new Rect(x, y, 150f, 20f), n.GetType().Name.Translate());
                     y += 25f;
-                    if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "OpenNode".Translate()))
+                    if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 30f), "OpenNode".Translate()))
                     {
                         Find.WindowStack.Add(new Dialog_EditQuestNode() { node = n });
                     }
                     y += 40f;
                 }
                 y += 20f;
-                if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "AddNewNode".Translate()))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 30f), "AddNewNode".Translate()))
                 {
                     Page_QuestEditor.OpenQuestNodeSelect(d => sequence.nodes.Add((QuestNode)Activator.CreateInstance(d)));
                 }
-                if (Widgets.ButtonText(new Rect(x + 200f, y, 150f, 30f), "DeleteNode".Translate()))
+                if (CQFUIStyle.ButtonText(new Rect(x + 200f, y, 150f, 30f), "DeleteNode".Translate()))
                 {
                     CQFEditorTools.DrawFloatMenu(sequence.nodes, (n2) => sequence.nodes.Remove(n2), (n2) => n2.GetType().Name.Translate());
                 }
@@ -240,7 +243,7 @@ namespace QuestEditor_Library
             {
                 CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "ObjectKeyword".Translate(), ref nodeNull.value, x);
                 y += 30f;
-                if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "SelectTrueNode".Translate()))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 38f), "SelectTrueNode".Translate()))
                 {
                     Page_QuestEditor.OpenQuestNodeSelect(d => nodeNull.node = (QuestNode)Activator.CreateInstance(d));
                 }
@@ -250,7 +253,7 @@ namespace QuestEditor_Library
                     Page_QuestEditor.DrawQuestNodeData(nodeNull.node, ref y, inRect, x + 20f);
                     y += 20f;
                 }
-                if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "SelectFalseNode".Translate()))
+                if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 38f), "SelectFalseNode".Translate()))
                 {
                     Page_QuestEditor.OpenQuestNodeSelect(d => nodeNull.elseNode = (QuestNode)Activator.CreateInstance(d));
                 }
@@ -265,10 +268,10 @@ namespace QuestEditor_Library
             }
             if (node is QuestNode_End nodeEnd)
             {
-                if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "outcome".
+                if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 38f), "outcome".
                         Translate(nodeEnd.outcome.ToString().Translate()),false))
                 {
-                    CQFEditorTools.DrawFloatMenu<QuestEndOutcome>(new List<QuestEndOutcome>() { QuestEndOutcome.Fail, 
+                    CQFEditorTools.DrawFloatMenu<QuestEndOutcome>(new List<QuestEndOutcome>() { QuestEndOutcome.Fail,
                         QuestEndOutcome.Success }, (o) => nodeEnd.outcome = o, (o) => o.ToString().Translate());
                 }
                 y += 45f;
@@ -286,22 +289,23 @@ namespace QuestEditor_Library
                 y += 30f;
                 if (signal.node != null)
                 {
-                    if (Widgets.ButtonText(new Rect(x + 700f, y - 40f, 130f, 30f), "Delete".Translate()))
+                    if (CQFUIStyle.ButtonText(new Rect(Mathf.Max(x, inRect.width - 142f), y, 130f, 30f), "Delete".Translate()))
                     {
                         signal.node = null;
                     }
                 }
                 if (signal.node != null)
                 {
+                    y += 38f;
                     Page_QuestEditor.DrawQuestNodeData(signal.node, ref y, inRect, x + 5f);
                 }
                 y += 5f;
                 if (signal.node == null)
                 {
-                    if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "SelectNode".Translate()))
+                    if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 30f), "SelectNode".Translate()))
                     {
                         Page_QuestEditor.OpenQuestNodeSelect(d => signal.node = (QuestNode)Activator.CreateInstance(d));
-                    }    
+                    }
                     y += 55f;
                 }
 
@@ -335,7 +339,7 @@ namespace QuestEditor_Library
                         y += 30f;
                         continue;
                     }
-                    if (value == null) 
+                    if (value == null)
                     {
                         continue;
                     }
@@ -343,26 +347,27 @@ namespace QuestEditor_Library
                     {
                         if (var_node == null)
                         {
-                            if (Widgets.ButtonText(new Rect(x, y, 130f, 30f), "SelectNode".Translate()))
+                            if (CQFUIStyle.ButtonText(new Rect(x, y, 130f, 30f), "SelectNode".Translate()))
                             {
-                                Page_QuestEditor.OpenQuestNodeSelect(d => field.SetValue(node, (QuestNode)Activator.CreateInstance(d))); 
-                            }         
+                                Page_QuestEditor.OpenQuestNodeSelect(d => field.SetValue(node, (QuestNode)Activator.CreateInstance(d)));
+                            }
                             y += 45f;
                         }
                         else
                         {
-                            if (Widgets.ButtonText(new Rect(x + 700f, y - 40f, 150f, 30f), "Delete".Translate()))
+                            if (CQFUIStyle.ButtonText(new Rect(Mathf.Max(x, inRect.width - 162f), y, 150f, 30f), "Delete".Translate()))
                             {
                                 field.SetValue(node, null);
                             }
-                        }      
+                        }
                         if (var_node != null)
                         {
+                            y += 38f;
                             Page_QuestEditor.DrawQuestNodeData(var_node, ref y, inRect, x + 20f);
                             y += 20f;
                         }
                     }
-                    if (value is List<QuestNode> nodes) 
+                    if (value is List<QuestNode> nodes)
                     {
                         Widgets.Label(new Rect(x,y,150f,25f),field.Name.Translate());
                         y += 30f;
@@ -370,18 +375,18 @@ namespace QuestEditor_Library
                         {
                             Widgets.Label(new Rect(x, y, 150f, 20f), n.GetType().Name.Translate());
                             y += 25f;
-                            if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "OpenNode".Translate()))
+                            if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 38f), "OpenNode".Translate()))
                             {
                                 Find.WindowStack.Add(new Dialog_EditQuestNode() { node = n });
                             }
                             y += 40f;
                         }
                         y += 20f;
-                        if (Widgets.ButtonText(new Rect(x, y, 150f, 30f), "AddNewNode".Translate()))
+                        if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 30f), "AddNewNode".Translate()))
                         {
                             Page_QuestEditor.OpenQuestNodeSelect(d => nodes.Add((QuestNode)Activator.CreateInstance(d)));
                         }
-                        if (Widgets.ButtonText(new Rect(x + 200f, y, 150f, 30f), "DeleteNode".Translate()))
+                        if (CQFUIStyle.ButtonText(new Rect(x + 200f, y, 150f, 30f), "DeleteNode".Translate()))
                         {
                             CQFEditorTools.DrawFloatMenu(nodes, (n2) => nodes.Remove(n2), (n2) => n2.GetType().Name.Translate());
                         }
@@ -407,7 +412,7 @@ namespace QuestEditor_Library
                     if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SlateRef<>))
                     {
                         FieldInfo slateRefField = type.GetField("slateRef", BindingFlags.NonPublic | BindingFlags.Instance);
-                        string slateRef = (string)slateRefField.GetValue(value);      
+                        string slateRef = (string)slateRefField.GetValue(value);
                         Type slateType = typeof(SlateRef<>).MakeGenericType(new Type[] { type.GenericTypeArguments[0] });
                         Type genericType = type.GenericTypeArguments[0];
                         if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0
@@ -436,7 +441,7 @@ namespace QuestEditor_Library
                         else if (genericType.IsEnum)
                         {
                             List<string> values = new List<string>();
-                            foreach (string s in Enum.GetValues(genericType)) 
+                            foreach (string s in Enum.GetValues(genericType))
                             {
                                 values.Add(s);
                             };
@@ -460,7 +465,7 @@ namespace QuestEditor_Library
                         var vaule_set = Activator.CreateInstance(slateType);
                         slateRefField.SetValue(vaule_set, slateRef);
                         field.SetValue(node, vaule_set);
-                        y += 30f; 
+                        y += 30f;
                     }
                 }
             }
@@ -612,9 +617,9 @@ namespace QuestEditor_Library
                         {
                             continue;
                         }
-                        foreach (KeyValuePair<XElement, List<XElement>> text in texts) 
+                        foreach (KeyValuePair<XElement, List<XElement>> text in texts)
                         {
-                            if(text.Value.Find(x => x.Name == field.Name) is XElement rerepeatXml) 
+                            if(text.Value.Find(x => x.Name == field.Name) is XElement rerepeatXml)
                             {
                                 text.Value.Remove(rerepeatXml);
                                 publicText.Add(rerepeatXml);
@@ -632,7 +637,7 @@ namespace QuestEditor_Library
                             texts.Add(new XElement(node.Name,node.Name), new List<XElement>() { new XElement(field.Name, getText(field.Name)) });
                         }
                     }
-                   
+
                 }
                 textXml.Add(" ");
                 textXml.Add(new XComment("Public Text"));
@@ -661,19 +666,19 @@ namespace QuestEditor_Library
         private static bool DrawToolButton(Rect rect, Texture2D icon, string tipKey)
         {
             TooltipHandler.TipRegion(rect, tipKey.Translate());
-            return Widgets.ButtonImage(rect, icon);
+            return CQFUIStyle.ButtonImage(rect, icon);
         }
 
         public static void DrawSelectRule(ref float y,Action<XmlNode> ruleAction , float x = 0f)
         {
-            if (Widgets.ButtonText(new Rect(x, y, 150f, 38f), "SelectRule".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 38f), "SelectRule".Translate()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 DirectoryInfo ruleDir = new DirectoryInfo(Page_QuestEditor.RulePath);
                 foreach (FileInfo file in ruleDir.GetFiles("*.xml"))
                 {
                     XmlDocument xml = new XmlDocument();
-                    xml.Load(file.FullName);      
+                    xml.Load(file.FullName);
                     foreach (XmlNode xmlNode in xml.SelectNodes("//RuleText"))
                     {
                         FloatMenuOption option = new FloatMenuOption(xmlNode["ruleName"].InnerText, () =>

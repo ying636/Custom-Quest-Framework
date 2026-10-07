@@ -17,20 +17,23 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
-        public override string PageTitle => "MainMapDefEditor".Translate().Colorize(ColorLibrary.SkyBlue);
+        public override string PageTitle => "MainMapDefEditor".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.CurDef.defName, () => this.CurDef,
             value => { QuestEditor_MainMapDefEditor.curDef = (MainMapDef)value; }, isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
-            CQFEditorTools.DrawLabelAndText_Line(45f, "MainMapDefName".Translate(), ref this.CurDef.defName, 5f, 300f);
-            TooltipHandler.TipRegion(new Rect(5f, 45f, 455f, 25f), "MainMapDefNameTip".Translate());
             this.DrawButton();
-            float y = 55f;
-            Widgets.BeginScrollView(new Rect(5f, 75f, inRect.width - 10f, inRect.height - 83f), ref this.scrollPos, new Rect(0f, 75f, inRect.width - 50f, this.height));
-            y += 35f;
-            this.DrawMainMapAndConditions(ref y, inRect);
+            Rect label = new Rect(0f, 86f, inRect.width, 24f);
+            Widgets.Label(label, "MainMapDefName".Translate().Colorize(CQFUIStyle.Accent));
+            TooltipHandler.TipRegion(label, "MainMapDefNameTip".Translate());
+            this.CurDef.defName = Widgets.TextField(new Rect(0f, 112f, inRect.width, 32f), this.CurDef.defName ?? string.Empty);
+            Rect viewport = new Rect(0f, 156f, inRect.width, inRect.height - 156f);
+            float y = 0f;
+            Widgets.BeginScrollView(viewport, ref this.scrollPos, new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, this.height)));
+            this.DrawMainMapAndConditions(ref y, new Rect(0f, 0f, viewport.width - 20f, viewport.height));
             Widgets.EndScrollView();
             this.height = y;
         }
@@ -39,19 +42,19 @@ namespace QuestEditor_Library
 
         private void DrawMainMapTip()
         {
-            Rect tip = new Rect(875f, 32.5f, 25f, 25f);
-            Widgets.ButtonImage(tip, CQFEditorTools.TipIcon);
+            Rect tip = new Rect(280f, 44f, 28f, 28f);
+            CQFUIStyle.ButtonImage(tip, CQFEditorTools.TipIcon);
             TooltipHandler.TipRegion(tip, "MainMapSystemTip".Translate());
         }
 
         private void DrawButton()
         {
-            if (Widgets.ButtonText(new Rect(780f, 30f, 90f, 30f), "LoadPremade".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(104f, 42f, 96f, 32f), "LoadPremade".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<MainMapDef>.AllDefsListForReading, def => QuestEditor_MainMapDefEditor.curDef = def, def => def.defName);
             }
             this.DrawMainMapTip();
-            if (Widgets.ButtonText(new Rect(670f, 30f, 90f, 30f), "Save".Translate()))
+            if (CQFUIStyle.ButtonImage(new Rect(236f, 44f, 28f, 28f), TexButton.Save, tooltip: "Save".Translate()))
             {
                 try
                 {
@@ -69,7 +72,7 @@ namespace QuestEditor_Library
                     Log.Error("Save error:" + e.Message);
                 }
             }
-            if (Widgets.ButtonText(new Rect(560f, 30f, 90f, 30f), "ResetBinding".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, 42f, 96f, 32f), "ResetBinding".Translate()))
             {
                 Dialog_MessageBox dialog = new Dialog_MessageBox("ConfirmCreateNewMainMapDef".Translate());
                 dialog.buttonBText = "Cancel".Translate();
@@ -96,7 +99,7 @@ namespace QuestEditor_Library
         private void DrawMainMapAndConditions(ref float y, Rect inRect)
         {
             Rect titleRect = new Rect(5f, y, 255f, 25f);
-            Widgets.Label(titleRect, "MainMapAndConditions".Translate().Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(titleRect, "MainMapAndConditions".Translate().Colorize(CQFUIStyle.Accent));
             TooltipHandler.TipRegion(titleRect, "MainMapAndConditionsTip".Translate());
             y += 30f;
             int dragTargetIndex = -1;
@@ -106,8 +109,8 @@ namespace QuestEditor_Library
                 MainMapAndCondition item = drawingMaps[i];
                 int originalIndex = this.CurDef.maps.IndexOf(item);
                 Rect dragRect = new Rect(5f, y + 3f, 18f, 18f);
-                Rect row = new Rect(30f, y, 615f, 25f);
-                Rect hitRect = new Rect(5f, y, 640f, 25f);
+                Rect row = new Rect(30f, y, inRect.width - 35f, 32f);
+                Rect hitRect = new Rect(5f, y, inRect.width - 10f, 32f);
                 this.HandleDragStart(originalIndex, dragRect);
                 if (this.draggingIndex >= 0 && Mouse.IsOver(hitRect))
                 {
@@ -128,17 +131,17 @@ namespace QuestEditor_Library
                     Widgets.DrawHighlightIfMouseover(row);
                     Widgets.Label(row, label);
                 }
-                else if (Widgets.ButtonText(row, label, false))
+                else if (CQFUIStyle.ButtonText(row, label, false))
                 {
                     Find.WindowStack.Add(new Dialog_EditIDrawable(item));
                 }
                 TooltipHandler.TipRegion(row, "MainMapCandidateTip".Translate());
-                y += 30f;
+                y += 40f;
             }
             this.HandleDragEnd(dragTargetIndex);
             y += 5f;
             Rect addRect = new Rect(5f, y, 120f, 25f);
-            if (Widgets.ButtonText(addRect, "Add".Translate()))
+            if (CQFUIStyle.ButtonText(addRect, "Add".Translate()))
             {
                 this.CurDef.maps.Add(new MainMapAndCondition()
                 {
@@ -148,7 +151,7 @@ namespace QuestEditor_Library
             }
             TooltipHandler.TipRegion(addRect, "MainMapAddCandidateTip".Translate());
             Rect deleteRect = new Rect(135f, y, 120f, 25f);
-            if (Widgets.ButtonText(deleteRect, "Delete".Translate()))
+            if (CQFUIStyle.ButtonText(deleteRect, "Delete".Translate()))
             {
                 CQFEditorTools.DrawFloatMenu(this.CurDef.maps, item => this.CurDef.maps.Remove(item), item => this.GetMainMapAndConditionLabel(item, this.CurDef.maps.IndexOf(item)));
             }

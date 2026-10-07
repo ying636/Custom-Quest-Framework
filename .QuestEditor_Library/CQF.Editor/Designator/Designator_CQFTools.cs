@@ -11,9 +11,9 @@ namespace QuestEditor_Library
     {
         public Designator_CQFTools()
         {
-            this.defaultLabel = Designator_CQFTools.thing.label.Colorize(ColorLibrary.SkyBlue);
+            this.defaultLabel = Designator_CQFTools.thing.label.Colorize(CQFUIStyle.Accent);
             this.icon = Designator_CQFTools.thing.GetUIIconForStuff(null);
-            this.defaultDesc = Designator_CQFTools.thing.description.Colorize(ColorLibrary.SkyBlue);
+            this.defaultDesc = Designator_CQFTools.thing.description.Colorize(CQFUIStyle.Accent);
             this.useMouseIcon = true;
         }
         public override string Desc => base.Desc + "\n" + "CQFToolsTip".Translate();
@@ -50,7 +50,7 @@ namespace QuestEditor_Library
         }
         public static List<Type> ToolTypes => new List<Type>() {typeof(GenerationActionWorker), typeof(LootBox),typeof(CustomContainer), typeof(CustomMapEnterSpot),
             typeof(Spawner), typeof(InteractableThing),typeof(CustomDoor), typeof(CustomMapEntrance), typeof(CustomMapExit) ,typeof(ZoneCore)};
-        public static bool IsCQFTool(ThingDef def) 
+        public static bool IsCQFTool(ThingDef def)
         {
             return IsSpecialBuilding(def)
                 || ToolTypes.Exists(t => def.thingClass == t || def.thingClass.IsSubclassOf(t));
@@ -76,11 +76,11 @@ namespace QuestEditor_Library
                 string label = x.label;
                 if (Designator_CQFTools.IsCQFTool(x))
                 {
-                    label = label.Colorize(ColorLibrary.SkyBlue);
+                    label = label.Colorize(CQFUIStyle.Accent);
                 }
                 this.defaultLabel = label;
                 stuff = null;
-                this.defaultDesc = x.description.Colorize(ColorLibrary.SkyBlue);
+                this.defaultDesc = x.description.Colorize(CQFUIStyle.Accent);
                 if (x.graphicData.onGroundRandomRotateAngle > 0.01f)
                 {
                     this.icon = Widgets.GetIconFor(x);
@@ -89,7 +89,7 @@ namespace QuestEditor_Library
                 {
                     this.icon = x.GetUIIconForStuff(this.StuffDef) ?? x.graphic.MatSingle.mainTexture;
                 }
-                if (x.MadeFromStuff) 
+                if (x.MadeFromStuff)
                 {
                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(
                         new TextureSelectDrawer<ThingDef>(
@@ -99,7 +99,7 @@ namespace QuestEditor_Library
                             s =>
                             {
                                 stuff = s;
-                                this.defaultLabel = s.LabelAsStuff.Colorize(ColorLibrary.SkyBlue) + this.defaultLabel;
+                                this.defaultLabel = s.LabelAsStuff.Colorize(CQFUIStyle.Accent) + this.defaultLabel;
                                 if (x.graphicData.onGroundRandomRotateAngle > 0.01f)
                                 {
                                     this.icon = Widgets.GetIconFor(x, s);

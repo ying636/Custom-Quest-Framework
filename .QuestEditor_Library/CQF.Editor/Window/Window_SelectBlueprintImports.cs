@@ -24,6 +24,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             GameFont oldFont = Text.Font;
             TextAnchor oldAnchor = Text.Anchor;
             Text.Font = GameFont.Small;
@@ -56,14 +57,14 @@ namespace QuestEditor_Library
 
             y += SearchHeight + SectionGap;
             float buttonWidth = (inRect.width - SectionGap) / 2f;
-            if (Widgets.ButtonText(new Rect(0f, y, buttonWidth, ActionButtonHeight), "CQF_SelectAll".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, y, buttonWidth, ActionButtonHeight), "CQF_SelectAll".Translate()))
             {
                 foreach (CustomMapDataDef blueprint in this.filteredBlueprints)
                 {
                     this.selectedBlueprints.Add(blueprint);
                 }
             }
-            if (Widgets.ButtonText(new Rect(buttonWidth + SectionGap, y, buttonWidth, ActionButtonHeight),
+            if (CQFUIStyle.ButtonText(new Rect(buttonWidth + SectionGap, y, buttonWidth, ActionButtonHeight),
                 "CQF_ClearSelection".Translate()))
             {
                 this.selectedBlueprints.Clear();
@@ -72,7 +73,7 @@ namespace QuestEditor_Library
             y += ActionButtonHeight + SectionGap;
             float footerY = inRect.height - FooterHeight;
             Rect listRect = new Rect(0f, y, inRect.width, footerY - y - SectionGap);
-            Widgets.DrawMenuSection(listRect);
+            CQFUIStyle.DrawMenuSection(listRect);
             this.DrawBlueprintList(listRect.ContractedBy(2f));
             this.DrawFooter(new Rect(0f, footerY, inRect.width, FooterHeight));
         }
@@ -90,6 +91,7 @@ namespace QuestEditor_Library
             float contentHeight = Math.Max(outRect.height, this.filteredBlueprints.Count * RowHeight);
             Rect viewRect = new Rect(0f, 0f, outRect.width - ScrollbarWidth, contentHeight);
             Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             int firstVisible = Math.Max(0, Mathf.FloorToInt(this.scrollPosition.y / RowHeight) - 1);
             int lastVisible = Math.Min(this.filteredBlueprints.Count,
                 Mathf.CeilToInt((this.scrollPosition.y + outRect.height) / RowHeight) + 1);
@@ -146,7 +148,7 @@ namespace QuestEditor_Library
                 FooterButtonHeight), selectionText);
 
             float cancelX = rect.xMax - FooterButtonsWidth;
-            if (Widgets.ButtonText(new Rect(cancelX, rect.y, FooterButtonWidth, FooterButtonHeight),
+            if (CQFUIStyle.ButtonText(new Rect(cancelX, rect.y, FooterButtonWidth, FooterButtonHeight),
                 "CancelButton".Translate()))
             {
                 this.Close();
@@ -158,7 +160,7 @@ namespace QuestEditor_Library
             {
                 GUI.color = Color.gray;
             }
-            bool importClicked = Widgets.ButtonText(importRect, "CQF_ImportSelected".Translate());
+            bool importClicked = CQFUIStyle.ButtonText(importRect, "CQF_ImportSelected".Translate());
             GUI.color = Color.white;
             if (!importClicked)
             {

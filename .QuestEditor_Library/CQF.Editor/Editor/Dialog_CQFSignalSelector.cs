@@ -12,8 +12,6 @@ namespace QuestEditor_Library
         {
             this.owner = owner;
             this.selected = selected;
-            this.map = map;
-            this.definition = definition;
             this.doCloseX = true;
             this.forcePause = true;
             this.closeOnClickedOutside = false;
@@ -25,25 +23,22 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
             Widgets.Label(new Rect(0f, 0f, inRect.width - 40f, 32f), "CQF_MapSignals_Title".Translate());
             Text.Font = GameFont.Small;
-            Widgets.Label(new Rect(0f, 38f, inRect.width, 44f), "CQF_MapSignals_KnownOnly".Translate().Colorize(Color.gray));
+            Widgets.Label(new Rect(0f, 38f, inRect.width, 44f), "CQF_MapSignals_KnownOnly".Translate().Colorize(CQFUIStyle.Muted));
             Widgets.Label(new Rect(0f, 82f, inRect.width, 30f), this.connectionStatus);
-            string search = Widgets.TextField(new Rect(0f, 116f, inRect.width - 110f, 30f), this.search);
+            string search = Widgets.TextField(new Rect(0f, 116f, inRect.width, 30f), this.search);
             if (search != this.search)
             {
                 this.search = search;
                 this.RefreshRows();
             }
-            if (Widgets.ButtonText(new Rect(inRect.width - 102f, 116f, 102f, 30f), "CQF_MapSignals_Refresh".Translate()))
-            {
-                this.catalog = CQFSignalCatalog.Build(this.map, this.definition);
-                this.RefreshRows();
-            }
             Rect outRect = new Rect(0f, 156f, inRect.width, inRect.height - 156f);
             Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.rows.Count * 110f));
             Widgets.BeginScrollView(outRect, ref this.scroll, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             if (this.rows.Count == 0)
             {
                 Widgets.Label(new Rect(8f, 8f, viewRect.width - 16f, 42f), "CQF_MapSignals_None".Translate());
@@ -86,16 +81,16 @@ namespace QuestEditor_Library
 
         private void DrawRow(Rect rect, CQFSignalEndpoint entry)
         {
-            Widgets.DrawMenuSection(rect);
+            CQFUIStyle.DrawMenuSection(rect);
             float contentWidth = rect.width - 120f;
-            Widgets.Label(new Rect(rect.x + 10f, rect.y + 6f, contentWidth, 25f), entry.DisplaySignal.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(rect.x + 10f, rect.y + 6f, contentWidth, 25f), entry.DisplaySignal.Colorize(CQFUIStyle.Accent));
             string direction = (entry.IsReceiver ? "InSignal" : "OutSignal").Translate();
             string kind = entry.IsAutomatic ? " / " + "CQF_MapSignals_Automatic".Translate() : "";
             string template = entry.IsTemplate ? " / " + "CQF_MapSignals_Template".Translate() : "";
             Widgets.Label(new Rect(rect.x + 10f, rect.y + 32f, contentWidth, 24f), direction + " " + entry.ScopeLabel + kind + template);
-            Widgets.Label(new Rect(rect.x + 10f, rect.y + 58f, contentWidth, 38f), entry.SourceLabel.Colorize(Color.gray));
+            Widgets.Label(new Rect(rect.x + 10f, rect.y + 58f, contentWidth, 38f), entry.SourceLabel.Colorize(CQFUIStyle.Muted));
             TooltipHandler.TipRegion(new Rect(rect.x, rect.y, contentWidth, rect.height), entry.DisplaySignal + "\n" + entry.SourceLabel);
-            if (entry.CanLocate && Widgets.ButtonText(new Rect(rect.xMax - 105f, rect.y + 58f, 95f, 30f), "CQF_MapSignals_Locate".Translate()))
+            if (entry.CanLocate && CQFUIStyle.ButtonText(new Rect(rect.xMax - 105f, rect.y + 58f, 95f, 30f), "CQF_MapSignals_Locate".Translate()))
             {
                 entry.Locate();
                 this.Close();
@@ -104,7 +99,7 @@ namespace QuestEditor_Library
             {
                 bool canSelect = this.TrySelection(entry, out string signal, out bool part, out bool quest);
                 Rect selectRect = new Rect(rect.xMax - 105f, rect.y + 12f, 95f, 30f);
-                if (Widgets.ButtonText(selectRect, "Select".Translate(), active: canSelect))
+                if (CQFUIStyle.ButtonText(selectRect, "Select".Translate(), active: canSelect))
                 {
                     this.selected(signal, part, quest);
                     this.Close();
@@ -165,9 +160,7 @@ namespace QuestEditor_Library
 
         private readonly object? owner;
         private readonly Action<string, bool, bool>? selected;
-        private readonly Map? map;
-        private readonly CustomMapDataDef? definition;
-        private CQFSignalCatalog catalog;
+        private readonly CQFSignalCatalog catalog;
         private List<CQFSignalEndpoint> rows = new List<CQFSignalEndpoint>();
         private string search = string.Empty;
         private string connectionStatus = string.Empty;

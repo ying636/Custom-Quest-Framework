@@ -75,6 +75,7 @@ internal static class AISessionChecks
             CQFAIWindow window = (CQFAIWindow)RuntimeHelpers.GetUninitializedObject(typeof(CQFAIWindow));
             Set(window, "model", model); Set(window, "catalog", catalog); Set(window, "conversation", new CQFAIConversation(model, catalog)); Set(window, "store", store);
             Set(window, "activities", new List<CQFAIActivity>()); Set(window, "taskUsage", new CQFAITokenTotals()); Set(window, "sessionUsage", new CQFAITokenTotals());
+            foreach (string field in new[] { "operationLayouts", "historyRows" }) Set(window, field, Activator.CreateInstance(typeof(CQFAIWindow).GetField(field, BindingFlags.Instance | BindingFlags.NonPublic)!.FieldType)!);
             Set(window, "session", second); Set(window, "command", "");
             typeof(CQFAIWindow).GetMethod("RestoreSession", BindingFlags.Instance | BindingFlags.NonPublic)!.Invoke(window, new object[] { restored });
             window.NewChat(); string fresh = window.SessionId;

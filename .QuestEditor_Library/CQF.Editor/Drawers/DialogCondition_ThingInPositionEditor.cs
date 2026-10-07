@@ -24,6 +24,7 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.DialogCondition_ThingInPosition cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             DialogCondition_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFTargetKeyEditor.DrawBookField(y, "PositionName".Translate(), cqfReceiver.positionName, value => cqfReceiver.positionName = value, x, 150f, inRect.width - x - 20f);
             y += 30f;

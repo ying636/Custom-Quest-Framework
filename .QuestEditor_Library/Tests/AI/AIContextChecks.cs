@@ -18,12 +18,12 @@ internal static class AIContextChecks
         Check(conversation.Messages.Sum(message => (long)message.Content.Length) > 600000,
             "raw tool transcript can exceed the former storage cap without aborting an active task");
         CQFAIMessage[] request = harness.RequestMessages.ToArray();
-        Check(request.Sum(message => (long)message.Content.Length) < 480000 && request.Count(message => message.ToolCalls.Count > 0) == 2,
-            "long schema query histories retain two complete recent rounds within the request budget");
-        Check(request.First().Content == conversation.Messages.First().Content && request.Last().Content == conversation.Messages.Last().Content,
-            "context pressure preserves the entire current command and latest schema result");
+        Check(request.Sum(message => (long)message.Content.Length) <= 32000 && request.Count(message => message.ToolCalls.Count > 0) <= 2,
+            "long schema histories fit the smaller active working context");
+        Check(request.Any(message => message.Content == conversation.Messages.First().Content) && request.Last().Content.Contains("legacy_query_10"),
+            "small working context preserves the entire command and latest schema result identity");
         string memory = string.Join("", request.Where(message => message.Role == "system").Select(message => message.Content));
-        Check(memory.Contains("legacy_query_1") && memory.Contains("QuestEditor_Library.CustomMapDataDef") && memory.Contains("detailsOmitted") && !memory.Contains("<field name="),
+        Check(memory.Contains("legacy_query_10") && memory.Contains("QuestEditor_Library.CustomMapDataDef") && memory.Contains("detailsOmitted") && !memory.Contains("<field name="),
             "old schema memory retains call and type identities without replaying field definitions");
         Check(conversation.VisibleMessages.Count() == 11 && conversation.Messages.Count == 21,
             "request compaction preserves full visible history and original stored tool results");

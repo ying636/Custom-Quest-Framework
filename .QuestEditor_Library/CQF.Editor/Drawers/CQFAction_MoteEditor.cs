@@ -24,9 +24,10 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Mote cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             Rect rect = new Rect(x, y, 350f, 25f);
-            if (Widgets.ButtonText(rect, "CQF_MoteDef".Translate(cqfReceiver.mote?.defName), false))
+            if (CQFUIStyle.ButtonText(rect, "CQF_MoteDef".Translate(cqfReceiver.mote?.defName), false))
             {
                 Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextSelectDrawer<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll(d => d.category == ThingCategory.Mote), d => d.defName, d => cqfReceiver.mote = d, null, null, null, null, null, null), "Select".Translate()));
             }

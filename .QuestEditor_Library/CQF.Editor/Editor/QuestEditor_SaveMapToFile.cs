@@ -31,6 +31,7 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             base.DrawPageTitle(inRect);
             if (Widgets.CloseButtonFor(inRect))
             {
@@ -43,6 +44,7 @@ namespace QuestEditor_Library
             float contentWidth = outRect.width - 20f;
             Rect viewRect = new Rect(0f, 0f, contentWidth, Mathf.Max(this.y, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
 
             float y = 0f;
             this.DrawBasicSection(ref y, contentWidth);
@@ -54,11 +56,11 @@ namespace QuestEditor_Library
 
             float buttonWidth = (inRect.width - 12f) / 2f;
             float footerY = inRect.height - footerHeight;
-            if (Widgets.ButtonText(new Rect(0f, footerY, buttonWidth, 40f), "Load".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(0f, footerY, buttonWidth, 40f), "Load".Translate()))
             {
                 this.OpenLoadMenu();
             }
-            if (Widgets.ButtonText(new Rect(buttonWidth + 12f, footerY, buttonWidth, 40f), "OK".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(buttonWidth + 12f, footerY, buttonWidth, 40f), "OK".Translate()))
             {
                 if (this.saveMode == SaveMode.None)
                 {
@@ -66,14 +68,14 @@ namespace QuestEditor_Library
                     QuestEditor_SaveMapToFile.def.lordDatas.Add(l.data));
                     Save(() => QuestEditor_SaveMapToFile.def.LoadData(Find.CurrentMap));
                 }
-                else 
+                else
                 {
                     Save(() => QuestEditor_SaveMapToFile.def.LoadData(Find.CurrentMap,this.poss,this.mapSize));
                 }
             }
         }
 
-        public virtual void Save(Action saveAction) 
+        public virtual void Save(Action saveAction)
         {
             if (QuestEditor_SaveMapToFile.def.label == null || QuestEditor_SaveMapToFile.def.defName == null || def.defName == "UnnamedDef")
             {
@@ -101,7 +103,7 @@ namespace QuestEditor_Library
                 }
                 def = new CustomMapDataDef() {isPart = def.isPart, destroyAllThing = def.destroyAllThing};
             }), "SaveToFile".Translate(), true, (Exception x) => { Log.Message("SaveError:" + x.ToString()); });
-            this.saveMode = SaveMode.None;   
+            this.saveMode = SaveMode.None;
             this.Close();
         }
 
@@ -109,9 +111,9 @@ namespace QuestEditor_Library
         {
             float sectionHeight = def.isPart ? 114f : 184f;
             Rect sectionRect = new Rect(0f, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             Widgets.Label(new Rect(12f, y + 8f, width - 24f, 25f),
-                "CQF_MapSave_BasicInformation".Translate().Colorize(ColorLibrary.PaleBlue));
+                "CQF_MapSave_BasicInformation".Translate().Colorize(CQFUIStyle.Accent));
             y += 38f;
             this.DrawTextRow(ref y, width, "MapDataDefName".Translate(), ref def.defName);
             this.DrawTextRow(ref y, width, "MapName".Translate(), ref def.label);
@@ -127,9 +129,9 @@ namespace QuestEditor_Library
         private void DrawGenerationSection(ref float y, float width)
         {
             Rect sectionRect = new Rect(0f, y, width, 146f);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             Widgets.Label(new Rect(12f, y + 8f, width - 24f, 25f),
-                "CQF_MapSave_Generation".Translate().Colorize(ColorLibrary.PaleBlue));
+                "CQF_MapSave_Generation".Translate().Colorize(CQFUIStyle.Accent));
             y += 38f;
             this.DrawCheckboxRow(ref y, width, "FoggedWhenPlayerEnter".Translate(), ref def.fogged);
 
@@ -154,9 +156,9 @@ namespace QuestEditor_Library
             bool drawFullMapOptions = !def.isPart;
             float sectionHeight = drawFullMapOptions ? 148f : 82f;
             Rect sectionRect = new Rect(0f, y, width, sectionHeight);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             Widgets.Label(new Rect(12f, y + 8f, width - 24f, 25f),
-                "CQF_MapSave_MapContent".Translate().Colorize(ColorLibrary.PaleBlue));
+                "CQF_MapSave_MapContent".Translate().Colorize(CQFUIStyle.Accent));
             y += 38f;
             this.DrawCheckboxRow(ref y, width, "CustomMapIsPart".Translate(), ref def.isPart,
                 "CustomMapIsPartTip".Translate());
@@ -165,7 +167,7 @@ namespace QuestEditor_Library
                 this.DrawCheckboxRow(ref y, width, "CustomMapDestroyAllThing".Translate(), ref def.destroyAllThing,
                     "CustomMapDestroyAllThingTip".Translate());
                 Rect reserveRect = new Rect(12f, y, width - 24f, 30f);
-                if (Widgets.ButtonText(reserveRect,
+                if (CQFUIStyle.ButtonText(reserveRect,
                         "ReserveGenerationThing".Translate(def.reserveThing == null
                             ? "NoGenerate".Translate().ToString()
                             : def.reserveThing?.stuff?.label + def.reserveThing?.def?.label), false))
@@ -180,18 +182,18 @@ namespace QuestEditor_Library
         private void DrawDataToolsSection(ref float y, float width)
         {
             Rect sectionRect = new Rect(0f, y, width, 88f);
-            Widgets.DrawMenuSection(sectionRect);
+            CQFUIStyle.DrawMenuSection(sectionRect);
             Widgets.Label(new Rect(12f, y + 8f, width - 24f, 25f),
-                "CQF_MapSave_DataTools".Translate().Colorize(ColorLibrary.PaleBlue));
+                "CQF_MapSave_DataTools".Translate().Colorize(CQFUIStyle.Accent));
             y += 40f;
             float buttonWidth = (width - 36f) / 2f;
             Rect replaceRect = new Rect(12f, y, buttonWidth, 32f);
-            if (Widgets.ButtonText(replaceRect, "ReplaceDatas".Translate(), false))
+            if (CQFUIStyle.ButtonText(replaceRect, "ReplaceDatas".Translate(), false))
             {
                 Find.WindowStack.Add(new Window_ReplaceData(def));
             }
             TooltipHandler.TipRegion(replaceRect, "ReplaceDefTip".Translate());
-            if (Widgets.ButtonText(new Rect(replaceRect.xMax + 12f, y, buttonWidth, 32f),
+            if (CQFUIStyle.ButtonText(new Rect(replaceRect.xMax + 12f, y, buttonWidth, 32f),
                     "AdvancedSetting".Translate(), false))
             {
                 Find.WindowStack.Add(new Dialog_MapMisc(def));

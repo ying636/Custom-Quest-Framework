@@ -13,12 +13,13 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.PawnModWorker cqfReceiver, ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
         }
 
         public static Rect DrawRowLabel_1(QuestEditor_Library.PawnModWorker cqfReceiver, ref float y, Rect inRect, float x, string label, float labelWidth = 150f, float height = 30f)
         {
             Rect labelRect = new Rect(x, y + 3f, labelWidth, 25f);
-            Widgets.Label(labelRect, label.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
             return new Rect(x + labelWidth + 8f, y, Mathf.Max(120f, inRect.width - x - labelWidth - 24f), height);
         }
 

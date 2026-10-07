@@ -21,14 +21,15 @@ namespace QuestEditor_Library
 
         public override void DoWindowContents(Rect inRect)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Small;
             QuestBookStepState state = instance?.GetStepState(step.id);
             bool canCheck = instance?.state == QuestBookState.Active && state?.status == QuestBookStepStatus.Active;
-            Widgets.Label(new Rect(4f, 0f, inRect.width - 52f, 32f), "CQF_QuestBook_StepInfo".Translate().Colorize(ColorLibrary.SkyBlue));
+            Widgets.Label(new Rect(4f, 0f, inRect.width - 52f, 32f), "CQF_QuestBook_StepInfo".Translate().Colorize(CQFUIStyle.Accent));
             Color oldColor = GUI.color;
             GUI.color = canCheck ? Color.white : Color.gray;
             Rect checkRect = new Rect(inRect.width - 34f, 2f, 28f, 28f);
-            if (Widgets.ButtonImage(checkRect, TexButton.Reload) && canCheck)
+            if (CQFUIStyle.ButtonImage(checkRect, TexButton.Reload) && canCheck)
             {
                 Messages.Message(instance.CheckObjectives(step.id) ? "CQF_QuestBook_ObjectivesChecked".Translate() : "CQF_QuestBook_ObjectiveCheckUnavailable".Translate(), MessageTypeDefOf.PositiveEvent);
             }
@@ -62,12 +63,12 @@ namespace QuestEditor_Library
         {
             float height = GetStepCardHeight(width);
             Rect card = new Rect(8f, y, width - 16f, height);
-            Widgets.DrawMenuSection(card);
+            CQFUIStyle.DrawMenuSection(card);
             Rect iconRect = new Rect(card.x + 12f, card.y + 12f, 56f, 56f);
             DrawStepIcon(iconRect);
             float textX = iconRect.xMax + 14f;
             float textWidth = card.xMax - textX - 14f;
-            Widgets.Label(new Rect(textX, card.y + 10f, textWidth, 26f), step.Label.Colorize(ColorLibrary.PaleBlue));
+            Widgets.Label(new Rect(textX, card.y + 10f, textWidth, 26f), step.Label.Colorize(CQFUIStyle.Accent));
             string stateKey = state == null ? "CQF_QuestBook_State_Locked" : "CQF_QuestBook_State_" + state.status;
             Widgets.Label(new Rect(textX, card.y + 36f, textWidth, 22f), "CQF_QuestBook_State".Translate(stateKey.Translate()).Colorize(GetStateColor(state?.status)));
             if (!step.Description.NullOrEmpty())
@@ -83,7 +84,7 @@ namespace QuestEditor_Library
                 foreach (Texture2D detailImage in detailImages)
                 {
                     Rect imageRect = new Rect(textX, imageY, textWidth, DetailImageHeight);
-                    Widgets.DrawBox(imageRect, 1);
+                    CQFUIStyle.DrawBox(imageRect, 1);
                     Widgets.DrawTextureFitted(imageRect.ContractedBy(4f), detailImage, 1f);
                     imageY += DetailImageHeight + 12f;
                 }
@@ -110,8 +111,8 @@ namespace QuestEditor_Library
             if (!hasInfo && !hasRewards) return;
             float height = GetRewardCardHeight(width);
             Rect card = new Rect(8f, y, width - 16f, height);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_Rewards".Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 12f, card.y + 8f, card.width - 24f, 24f), "CQF_QuestBook_Rewards".Translate().Colorize(CQFUIStyle.Accent));
             float rowY = card.y + 38f;
             if (hasInfo)
             {
@@ -125,7 +126,7 @@ namespace QuestEditor_Library
                     string label = info.Label.NullOrEmpty() ? "CQF_QuestBook_RewardInfoUnnamed".Translate().ToString() : info.Label;
                     float textX = iconRect.xMax + 12f;
                     float textWidth = row.width - (textX - row.x) - 10f;
-                    Widgets.Label(new Rect(textX, row.y + 7f, textWidth, 22f), label.Colorize(ColorLibrary.PaleBlue));
+                    Widgets.Label(new Rect(textX, row.y + 7f, textWidth, 22f), label.Colorize(CQFUIStyle.Accent));
                     if (!info.Description.NullOrEmpty()) TooltipHandler.TipRegion(row, info.Description);
                     rowY += rowHeight + 6f;
                 }
@@ -138,7 +139,7 @@ namespace QuestEditor_Library
                     Widgets.DrawHighlightIfMouseover(row);
                     Rect iconRect = new Rect(row.x + 8f, row.y + 8f, 40f, 40f);
                     if (reward?.thing != null) Widgets.DefIcon(iconRect, reward.thing, reward.stuff);
-                    Widgets.Label(new Rect(iconRect.xMax + 12f, row.y + 17f, row.width - 76f, 24f), GetRewardLabel(reward).Colorize(ColorLibrary.PaleBlue));
+                    Widgets.Label(new Rect(iconRect.xMax + 12f, row.y + 17f, row.width - 76f, 24f), GetRewardLabel(reward).Colorize(CQFUIStyle.Accent));
                     rowY += RewardRowHeight + 6f;
                 }
             }
@@ -168,8 +169,8 @@ namespace QuestEditor_Library
         {
             float height = GetObjectiveCardHeight(width);
             Rect card = new Rect(8f, y, width - 16f, height);
-            Widgets.DrawMenuSection(card);
-            Widgets.Label(new Rect(card.x + 14f, card.y + 8f, card.width - 28f, 24f), "CQF_QuestBook_Objectives".Translate().Colorize(ColorLibrary.PaleBlue));
+            CQFUIStyle.DrawMenuSection(card);
+            Widgets.Label(new Rect(card.x + 14f, card.y + 8f, card.width - 28f, 24f), "CQF_QuestBook_Objectives".Translate().Colorize(CQFUIStyle.Accent));
             float rowY = card.y + ObjectiveHeaderHeight;
             for (int index = 0; index < step.objectives.Count; index++)
             {
@@ -189,7 +190,7 @@ namespace QuestEditor_Library
                 }
                 else
                 {
-                    Widgets.DrawBox(stateRect, 1);
+                    CQFUIStyle.DrawBox(stateRect, 1);
                 }
                 if (!objective.Description.NullOrEmpty())
                 {
@@ -264,7 +265,7 @@ namespace QuestEditor_Library
         {
             if (status == QuestBookStepStatus.Completed) return ColorLibrary.Green;
             if (status == QuestBookStepStatus.Failed) return ColorLibrary.RedReadable;
-            if (status == QuestBookStepStatus.Active) return ColorLibrary.SkyBlue;
+            if (status == QuestBookStepStatus.Active) return CQFUIStyle.Accent;
             return Color.gray;
         }
 

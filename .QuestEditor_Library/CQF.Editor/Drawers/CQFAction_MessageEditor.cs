@@ -24,10 +24,11 @@ namespace QuestEditor_Library
     {
         public static void Draw_0(QuestEditor_Library.CQFAction_Message cqfReceiver, ref float y, Rect inRect, float x)
         {
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
             CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref cqfReceiver.message, x, 240f);
             y += 30f;
-            if (Widgets.ButtonText(new Rect(x, y, 450f, 25f), "CQFMessageType".Translate(cqfReceiver.type?.defName.Translate().ToString()), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFMessageType".Translate(cqfReceiver.type?.defName.Translate().ToString()), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<MessageTypeDef>.AllDefsListForReading, (d) => cqfReceiver.type = d, (d) => d.defName.Translate());
             }

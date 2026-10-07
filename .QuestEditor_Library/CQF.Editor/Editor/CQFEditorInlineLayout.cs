@@ -16,11 +16,13 @@ namespace QuestEditor_Library
         private void DrawContents(ref float y, float x, float width, Func<Rect, float> draw)
         {
             width = Mathf.Max(120f, width);
-            float contentWidth = Mathf.Max(620f, width);
+            float contentWidth = width;
             float allocatedHeight = this.height + (contentWidth > width ? 18f : 0f);
             Rect outRect = new Rect(x, y, width, allocatedHeight);
             Rect viewRect = new Rect(0f, 0f, contentWidth, this.height);
             Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             try
             {
                 this.height = Mathf.Max(1f, draw(viewRect));
