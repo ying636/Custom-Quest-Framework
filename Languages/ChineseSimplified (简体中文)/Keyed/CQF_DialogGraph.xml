@@ -19,7 +19,6 @@
   <CQF_DialogGraph_Undo>撤销</CQF_DialogGraph_Undo>
   <CQF_DialogGraph_Redo>重做</CQF_DialogGraph_Redo>
   <CQF_DialogGraph_AI>AI 编辑</CQF_DialogGraph_AI>
-  <CQF_DialogGraph_Check>检查</CQF_DialogGraph_Check>
   <CQF_DialogGraph_Preview>预览</CQF_DialogGraph_Preview>
   <CQF_DialogGraph_Expand>详细编辑</CQF_DialogGraph_Expand>
   <CQF_DialogGraph_MoveUp>结果上移。优先采用第一个满足条件的结果。</CQF_DialogGraph_MoveUp>
@@ -27,7 +26,6 @@
   <CQF_DialogGraph_SelectHint>双击节点、选项或结果，在此编辑。将结果的输出端口拖到任意节点即可连接。</CQF_DialogGraph_SelectHint>
   <CQF_DialogGraph_KeepEntry>入口节点不能删除。</CQF_DialogGraph_KeepEntry>
   <CQF_DialogGraph_Error>操作失败：{0}</CQF_DialogGraph_Error>
-  <CQF_DialogGraph_Valid>检查完成：{0} 个节点，其中 {1} 个无法从入口到达。</CQF_DialogGraph_Valid>
   <CQF_DialogGraph_InvalidName>保存前请输入有效的对话树 defName。</CQF_DialogGraph_InvalidName>
   <CQF_DialogGraph_PreviewHint>此预览沿连线浏览，不执行游戏动作。请手动选择结果检查条件分支。条件判断和资源消耗需要在游戏中实际测试。</CQF_DialogGraph_PreviewHint>
   <CQF_DialogGraph_PreviewResult>{0}．{1} · {2} 个条件 · {3} 个动作</CQF_DialogGraph_PreviewResult>

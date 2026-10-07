@@ -283,7 +283,6 @@ namespace QuestEditor_Library
             });
             if (!compact)
             {
-                Image(TexButton.Info, "CQF_DialogGraph_Check", this.CheckTree);
                 Image(TexButton.Save, "Save", this.SaveTree);
             }
             if (CQFAIButton.Draw(new Rect(x, 44f, 32f, 32f), true)) CQFAIBridge.Open(this.AIContext);
@@ -303,8 +302,7 @@ namespace QuestEditor_Library
                 new FloatMenuOption("ResetBinding".Translate(), () => Find.WindowStack.Add(new Dialog_MessageBox(
                     "ConfirmCreateNewDialogTree".Translate(), "Confirm".Translate(),
                     () => this.CurTree = new DialogTreeDef { defName = "CQF_DialogTree_" + Guid.NewGuid().ToString("N").Substring(0, 8) }, "Cancel".Translate()))),
-                new FloatMenuOption("Save".Translate(), this.SaveTree),
-                new FloatMenuOption("CQF_DialogGraph_Check".Translate(), this.CheckTree)
+                new FloatMenuOption("Save".Translate(), this.SaveTree)
             }));
         }
 
@@ -320,19 +318,6 @@ namespace QuestEditor_Library
                     this.CurTree.nodeMoulds.OrderBy(pair => pair.Key).Select(pair => new FloatMenuOption(
                         (pair.Value.text.CanTranslate() ? pair.Value.text.Translate().ToString() : pair.Value.text).Replace('\r', ' ').Replace('\n', ' '), () => this.canvas.Focus(pair.Key))).ToList())))
             }));
-        }
-
-        private void CheckTree()
-        {
-            try
-            {
-                new CQFDialogPatch(this.session).Validate(this.CurTree);
-                Messages.Message("CQF_DialogGraph_Valid".Translate(this.CurTree.nodeMoulds.Count, this.CurTree.idleNodes.Count), MessageTypeDefOf.PositiveEvent);
-            }
-            catch (Exception error)
-            {
-                this.ReportError(error, "validation");
-            }
         }
 
         private void DrawInspector(Rect rect)
