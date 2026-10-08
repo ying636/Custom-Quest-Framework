@@ -150,6 +150,10 @@ namespace QuestEditor_Library
         public override void GameComponentTick()
         {
             base.GameComponentTick();
+            if (this.Request.Count == 0 && this.CACDS.Count == 0 && this.readyRequests.Count == 0)
+            {
+                return;
+            }
             this.readyRequests.Clear();
             foreach (ExecutiveRequest request in this.Request)
             {
