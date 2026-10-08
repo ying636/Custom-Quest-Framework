@@ -7,7 +7,7 @@ namespace QuestEditor_Library
 {
     public class Window_DesignatorTerrainPalette : Window_DesignatorPalette<TerrainDef>
     {
-        public Window_DesignatorTerrainPalette(Designator_Terrain designator)
+        public Window_DesignatorTerrainPalette(Designator_Terrain designator) : base(designator)
         {
             this.designator = designator;
         }

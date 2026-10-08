@@ -7,7 +7,7 @@ namespace QuestEditor_Library
 {
     public class Window_DesignatorThingPalette : Window_DesignatorPalette<DesignatorThingSelection>
     {
-        public Window_DesignatorThingPalette(Designator_SpawnThing designator)
+        public Window_DesignatorThingPalette(Designator_SpawnThing designator) : base(designator)
         {
             this.designator = designator;
             if (cachedAllItems == null || cachedAllItems.Count != Designator_SpawnThing.Bespawnable.Count)

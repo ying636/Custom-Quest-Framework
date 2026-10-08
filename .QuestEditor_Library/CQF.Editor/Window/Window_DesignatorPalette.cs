@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
@@ -9,8 +10,9 @@ namespace QuestEditor_Library
 {
     public abstract class Window_DesignatorPalette<T> : Window where T : class
     {
-        protected Window_DesignatorPalette()
+        protected Window_DesignatorPalette(Designator designator)
         {
+            this.designator = designator;
             this.layer = WindowLayer.GameUI;
             this.closeOnAccept = false;
             this.closeOnCancel = false;
@@ -36,9 +38,31 @@ namespace QuestEditor_Library
             this.RefreshFilteredItems();
         }
 
+        public override void ExtraOnGUI()
+        {
+            base.ExtraOnGUI();
+            if (!WorldRendererUtility.DrawingMap || Find.DesignatorManager.SelectedDesignator != this.designator)
+            {
+                return;
+            }
+            MainTabWindow mainTab = Find.WindowStack.WindowOfType<MainTabWindow>();
+            if (mainTab is MainTabWindow_Architect
+                || mainTab is MainTabWindow_Inspect inspect && (inspect.AnythingSelected || this.designator.AlwaysDoGuiControls))
+            {
+                return;
+            }
+            this.designator.DoExtraGuiControls(0f, UI.screenHeight - 35f);
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+            string searchControlName = "CQF_PaletteSearch_" + this.ID;
+            if (UnityEngine.Event.current.type == EventType.MouseDown && !Mouse.IsOver(inRect)
+                && GUI.GetNameOfFocusedControl() == searchControlName)
+            {
+                GUI.FocusControl(null);
+            }
             GameFont oldFont = Text.Font;
             TextAnchor oldAnchor = Text.Anchor;
             Text.Font = GameFont.Tiny;
@@ -91,6 +115,7 @@ namespace QuestEditor_Library
             y = recentRect.yMax + SectionGap;
 
             GUI.DrawTexture(new Rect(0f, y + 1f, SearchIconSize, SearchIconSize), TexButton.Search);
+            GUI.SetNextControlName("CQF_PaletteSearch_" + this.ID);
             string newSearchTerms = Widgets.TextField(new Rect(SearchIconSize + SearchGap, y, contentWidth - SearchIconSize - SearchGap, SearchHeight), this.searchTerms);
             if (newSearchTerms != this.searchTerms)
             {
@@ -173,6 +198,7 @@ namespace QuestEditor_Library
             }
             if (Widgets.ButtonInvisible(rect))
             {
+                GUI.FocusControl(null);
                 this.SelectItem(item);
             }
             if (Mouse.IsOver(rect))
@@ -235,6 +261,7 @@ namespace QuestEditor_Library
         private const float ToolbarGap = 2f;
         private const float ToolbarWidth = 20f;
 
+        private readonly Designator designator;
         private List<T> filteredItems = new List<T>();
         private readonly Dictionary<T, string> labelCache = new Dictionary<T, string>();
         private readonly Dictionary<T, string> tipCache = new Dictionary<T, string>();
