@@ -47,9 +47,15 @@ namespace QuestEditor_Library
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "InitDegree".Translate(), ref cqfReceiver.initDegree, ref cqfReceiver.buffer, x, 100f);
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "InitMessage".Translate(), ref cqfReceiver.initMessage, x, 100f);
+            string source_initMessage = cqfReceiver.initMessage.CanTranslate() ? cqfReceiver.initMessage.Translate().ToString() : cqfReceiver.initMessage;
+            string edited_initMessage = source_initMessage;
+            CQFEditorTools.DrawLabelAndText_Line(y, "InitMessage".Translate(), ref edited_initMessage, x, 100f);
+            if (edited_initMessage != source_initMessage) cqfReceiver.initMessage = edited_initMessage;
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref cqfReceiver.message, x, 100f);
+            string source_message = cqfReceiver.message.CanTranslate() ? cqfReceiver.message.Translate().ToString() : cqfReceiver.message;
+            string edited_message = source_message;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref edited_message, x, 100f);
+            if (edited_message != source_message) cqfReceiver.message = edited_message;
         }
     }
 }

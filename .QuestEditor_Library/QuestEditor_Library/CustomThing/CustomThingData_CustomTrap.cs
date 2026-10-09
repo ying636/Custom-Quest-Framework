@@ -148,6 +148,7 @@ namespace QuestEditor_Library
         [NoTranslate]
         public List<TrapComp> trapComps = new List<TrapComp>();
 
+        [CQFLocalizableText]
         public string disarmReport = "DisarmTrap";
         public int tickToDisarm = 100;
         public List<CQFAction> disarmActions = new List<CQFAction>();

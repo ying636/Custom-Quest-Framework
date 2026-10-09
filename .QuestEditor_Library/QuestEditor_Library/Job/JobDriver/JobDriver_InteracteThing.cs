@@ -25,7 +25,7 @@ namespace QuestEditor_Library
             if (this.pawn?.Map?.GetComponent<MapComponent_CustomMapData>() is MapComponent_CustomMapData component
                 && component.ExtraOperations.TryGetValue(this.TargetThingA, out List<InteractionOperation> operations) && operation == null)
             {
-                operation = operations.Find(o => o.interactionText.Translate() == text);
+                operation = operations.Find(o => (o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText) == text);
             }
             if (operation != null)
             {

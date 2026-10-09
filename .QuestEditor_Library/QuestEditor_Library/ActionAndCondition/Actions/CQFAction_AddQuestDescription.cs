@@ -45,7 +45,7 @@ namespace QuestEditor_Library
             }
 
             QuestPart_DescriptionPart descriptionPart = quest.AddPart<QuestPart_DescriptionPart>();
-            descriptionPart.descriptionPart = this.description.Translate();
+            descriptionPart.descriptionPart = (this.description.CanTranslate() ? this.description.Translate().ToString() : this.description);
             descriptionPart.inSignalEnable = $"Quest{quest.id}.Part{descriptionPart.Index}.CQFAddQuestDescription";
             descriptionPart.signalListenMode = QuestPart.SignalListenMode.Always;
             Find.SignalManager.SendSignal(new Signal(descriptionPart.inSignalEnable, receivedArgs));
@@ -64,6 +64,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.description, "description");
         }
 
+        [CQFLocalizableText]
         public string description = string.Empty;
     }
 }

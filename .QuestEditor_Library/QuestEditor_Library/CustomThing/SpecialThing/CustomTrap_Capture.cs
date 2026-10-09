@@ -114,8 +114,8 @@ namespace QuestEditor_Library
 				if (selPawn.CanReserveAndReach(this, PathEndMode.Touch, Danger.Deadly))
 				{
 					Job job = JobMaker.MakeJob(QEDefOf.QE_DisarmTrap, this);
-					job.reportStringOverride = this.disarmReport.Translate(this.Pawn.Name.ToString());
-					yield return new FloatMenuOption(this.disarmReport.Translate(), () =>
+					job.reportStringOverride = (this.disarmReport.CanTranslate() ? this.disarmReport.Translate(this.Pawn.Name.ToString()) : this.disarmReport.Formatted(this.Pawn.Name.ToString()).ToString());
+					yield return new FloatMenuOption((this.disarmReport.CanTranslate() ? this.disarmReport.Translate().ToString() : this.disarmReport), () =>
 					{
 						selPawn.jobs.StopAll();
 						selPawn.jobs.StartJob(job);

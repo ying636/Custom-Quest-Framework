@@ -71,7 +71,7 @@ namespace QuestEditor_Library
                 {
                     result.AppendLine();
                 }
-                result.Append(interaction.interactionText);
+                result.Append(interaction.interactionText.CanTranslate() ? interaction.interactionText.Translate().ToString() : interaction.interactionText);
             }
             if (result.Length > 0)
             {
@@ -82,7 +82,7 @@ namespace QuestEditor_Library
         }
         public InteractionOperation GetCurOperation(string operationText) 
         {
-            if (this.AllInteraction.Find(x => x.interactionText.Translate() == operationText) is InteractionOperation operation) 
+            if (this.AllInteraction.Find(x => (x.interactionText.CanTranslate() ? x.interactionText.Translate().ToString() : x.interactionText) == operationText) is InteractionOperation operation)
             {
                 return operation;
             }
@@ -143,7 +143,7 @@ namespace QuestEditor_Library
                     foreach (InteractionOperation operation in this.AllInteraction)
                     {
                         string failReason = "Unkown";
-                        string text = operation.interactionText.Translate();
+                        string text = (operation.interactionText.CanTranslate() ? operation.interactionText.Translate().ToString() : operation.interactionText);
                         if (operation.Satisfied(selPawn, this, out failReason, GameTools.GetQuestFromThing(this)))
                         {
                             Job job = JobMaker.MakeJob(QEDefOf.QE_InteractingWithTarget, this);
@@ -223,6 +223,8 @@ namespace QuestEditor_Library
     }
     public class InteractionOperation : ISaveable , IExposable,IDrawable
     {    
+        public string OutputSignal => this.outputSignal.NullOrEmpty() ? this.interactionText : this.outputSignal;
+
         public void Draw(ref float y, Rect inRect, float x)
 
         {
@@ -354,7 +356,7 @@ namespace QuestEditor_Library
             //        }
             //    });
             //});
-            QuestUtility.SendQuestTargetSignals(thing.questTags, this.interactionText, thing.Named("SUBJECT"));
+            QuestUtility.SendQuestTargetSignals(thing.questTags, this.OutputSignal, thing.Named("SUBJECT"));
 
             if (!GameTools.isGeneratingMap)
             {
@@ -406,6 +408,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.onlyGenerateSingleResult, "InteractionOperation_onlyGenerateSingleResult");
             Scribe_Values.Look(ref this.tickToOperate, "InteractionOperation_tickToOperate");
             Scribe_Values.Look(ref this.interactionText, "InteractionOperation_interactionText");
+            Scribe_Values.Look(ref this.outputSignal, "InteractionOperation_outputSignal", string.Empty);
             Scribe_Collections.Look(ref this.requiredThings, "requiredThings", LookMode.Deep);
             Scribe_Collections.Look(ref this.conditions, "InteractionOperation_conditions", LookMode.Deep);
             Scribe_Collections.Look(ref this.results, "InteractionOperation_results", LookMode.Deep); 
@@ -415,6 +418,7 @@ namespace QuestEditor_Library
         {
             XElement result = new XElement(nodeName);
             result.Add(new XElement("interactionText", this.interactionText));
+            result.Add(new XElement("outputSignal", this.OutputSignal));
             result.Add(new XElement("tickToOperate", this.tickToOperate));
             if (this.onlyGenerateSingleResult)
             {
@@ -447,7 +451,10 @@ namespace QuestEditor_Library
         }
 
         public string buffer;
+        [CQFLocalizableText(nameof(outputSignal))]
         public string interactionText = "DefaultInteractionText";
+        [NoTranslate]
+        public string outputSignal = string.Empty;
         public int tickToOperate = 100;
         public bool onlyGenerateSingleResult = false;
         public List<DialogCondition>  conditions = new List<DialogCondition>();

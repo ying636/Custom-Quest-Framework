@@ -32,9 +32,15 @@ namespace QuestEditor_Library
             }
 
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_CustomName".Translate(), ref cqfReceiver.label, x, 100f);
+            string source_label = cqfReceiver.label.CanTranslate() ? cqfReceiver.label.Translate().ToString() : cqfReceiver.label;
+            string edited_label = source_label;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_CustomName".Translate(), ref edited_label, x, 100f);
+            if (edited_label != source_label) cqfReceiver.label = edited_label;
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_CustomDescription".Translate(), ref cqfReceiver.desc, x, 100f);
+            string source_desc = cqfReceiver.desc.CanTranslate() ? cqfReceiver.desc.Translate().ToString() : cqfReceiver.desc;
+            string edited_desc = source_desc;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_CustomDescription".Translate(), ref edited_desc, x, 100f);
+            if (edited_desc != source_desc) cqfReceiver.desc = edited_desc;
             y += 30f;
             CQFEditorTools.DrawSelectColorButtons(ref y, "HediffColor".Translate(), cqfReceiver.color, c => cqfReceiver.color = c, x);
             y += 5f;

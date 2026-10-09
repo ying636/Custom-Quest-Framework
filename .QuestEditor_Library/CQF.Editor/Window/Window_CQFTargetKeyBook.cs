@@ -10,11 +10,14 @@ namespace QuestEditor_Library
     {
         public Window_CQFTargetKeyBook()
         {
+            this.layer = WindowLayer.GameUI;
             this.doCloseX = true;
             this.draggable = true;
             this.closeOnAccept = false;
-            this.forcePause = true;
-            this.absorbInputAroundWindow = true;
+            this.closeOnCancel = false;
+            this.forcePause = false;
+            this.preventCameraMotion = false;
+            this.absorbInputAroundWindow = false;
             this.RefreshDrafts();
         }
 
@@ -25,6 +28,11 @@ namespace QuestEditor_Library
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+            if (UnityEngine.Event.current.type == EventType.MouseDown && !Mouse.IsOver(inRect)
+                && GUI.GetNameOfFocusedControl().StartsWith("CQF_TargetKeyBook_Entry_", StringComparison.Ordinal))
+            {
+                GUI.FocusControl(null);
+            }
             if (this.revision != CQFTargetKeyBook.Revision)
             {
                 this.RefreshDrafts();

@@ -153,6 +153,10 @@ namespace QuestEditor_Library
                 Thing newThing = GenSpawn.Spawn(ThingMaker.MakeThing(def,def.MadeFromStuff ? this.StuffDef : null), loc, Find.CurrentMap, this.placingRot);
             }
         }
+        public override void RenderHighlight(List<IntVec3> dragCells)
+        {
+            DesignatorUtility.RenderHighlightOverSelectableCells(this, dragCells);
+        }
         protected override void DrawGhost(Color ghostCol)
         {
             if (!(this.PlacingDef.graphic is Graphic_Cluster) && (!((ThingDef)this.PlacingDef).graphicData.Linked || this.PlacingDef.uiIconPath != null) && ((ThingDef)this.PlacingDef).graphicData.onGroundRandomRotateAngle < 0.01f)

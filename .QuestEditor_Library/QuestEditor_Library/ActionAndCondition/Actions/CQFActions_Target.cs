@@ -1191,8 +1191,9 @@ namespace QuestEditor_Library
                         set.GainTrait(trait);
                         if (this.message != null)
                         {
-                            Messages.Message(this.message.Translate(targetPawn.Label
-                                    ,t.Label,trait.Label)
+                            Messages.Message((this.message.CanTranslate() ? this.message.Translate(targetPawn.Label
+                                    ,t.Label,trait.Label) : this.message.Formatted(targetPawn.Label
+                                    ,t.Label,trait.Label).ToString())
                                 , MessageTypeDefOf.PositiveEvent);
                         }
                     }
@@ -1203,7 +1204,7 @@ namespace QuestEditor_Library
                     set.GainTrait(trait);
                     if (this.initMessage != null)
                     {
-                        Messages.Message(this.initMessage.Translate(targetPawn.Label,trait.Label)
+                        Messages.Message((this.initMessage.CanTranslate() ? this.initMessage.Translate(targetPawn.Label,trait.Label) : this.initMessage.Formatted(targetPawn.Label,trait.Label).ToString())
                         , MessageTypeDefOf.PositiveEvent);
                     }
                 }
@@ -1221,7 +1222,9 @@ namespace QuestEditor_Library
         }
 
         public string buffer;
+        [CQFLocalizableText]
         public string initMessage;
+        [CQFLocalizableText]
         public string message;
         public int initDegree = 0;
         public TraitDef trait;
@@ -1761,8 +1764,8 @@ namespace QuestEditor_Library
                             hd.comps.Add(actionComp.Copy());   
                         }
 
-                        hd.overridedLabel = this.label.Translate();
-                        hd.overridedDescription = this.desc.Translate();
+                        hd.overridedLabel = (this.label.CanTranslate() ? this.label.Translate().ToString() : this.label);
+                        hd.overridedDescription = (this.desc.CanTranslate() ? this.desc.Translate().ToString() : this.desc);
                         hd.overridedColor = this.color;
                     }
                     else
@@ -1772,8 +1775,8 @@ namespace QuestEditor_Library
                         {
                             h.comps.Add(actionComp.Copy());   
                         }
-                        h.overridedLabel = this.label.Translate();
-                        h.overridedDescription = this.desc.Translate();
+                        h.overridedLabel = (this.label.CanTranslate() ? this.label.Translate().ToString() : this.label);
+                        h.overridedDescription = (this.desc.CanTranslate() ? this.desc.Translate().ToString() : this.desc);
                         h.overridedColor = this.color;
                     }
                 }
@@ -1797,7 +1800,9 @@ namespace QuestEditor_Library
             }
         }
 
+        [CQFLocalizableText]
         public string label;
+        [CQFLocalizableText]
         public string desc;
         public Color color = Color.white;
         public List<ActionComp> comps = new List<ActionComp>();
@@ -2326,7 +2331,7 @@ namespace QuestEditor_Library
         }
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            GenGameEnd.EndGameDialogMessage(this.message.Translate());
+            GenGameEnd.EndGameDialogMessage((this.message.CanTranslate() ? this.message.Translate().ToString() : this.message));
         }  
         public override void ExposeData()
         {
@@ -2334,6 +2339,7 @@ namespace QuestEditor_Library
         }
 
 
+        [CQFLocalizableText]
         public string message;
     }
 }

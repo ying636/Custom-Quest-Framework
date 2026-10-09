@@ -60,16 +60,18 @@ namespace QuestEditor_Library
                         def.loots = cqfReceiver.loots;
                         DefDatabase<LootDataDef>.Add(def);
                         string path = Path.Combine(CQFContentPaths.Quests, "Data", cqfReceiver.lootBoxName + ".xml");
-                        XElement defs = new XElement("Defs");
                         XElement defXml = new XElement("QuestEditor_Library.LootDataDef");
                         XElement lootsXml = new XElement("loots");
                         cqfReceiver.loots.ForEach(l => lootsXml.Add(l.SaveToXElement("li")));
                         defXml.Add(new XElement("defName", cqfReceiver.lootBoxName));
                         defXml.Add(lootsXml);
-                        defs.Add(defXml);
-                        defs.Save(path);
+                        new CQFContentTextExport(def.defName).Save(defXml, typeof(LootDataDef), path);
                         Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
-                    }, "SavingAsDef".Translate(), true, e => Log.Message(e.Message));
+                    }, "SavingAsDef".Translate(), true, e =>
+                    {
+                        Log.Error("Export loot XML failed: " + e);
+                        Messages.Message("CQF_DialogGraph_Error".Translate(e.Message), MessageTypeDefOf.RejectInput);
+                    });
                 }
 
                 TooltipHandler.TipRegion(saveRect, "SaveAsDef".Translate());
@@ -115,7 +117,10 @@ namespace QuestEditor_Library
             }
 
             cqfReceiver.DrawSectionHeader(ref y, viewRect.width, "CQF_LootSettings".Translate());
-            CQFEditorTools.DrawLabelAndText_Line(y, "JobReport".Translate(), ref cqfReceiver.openReport, 16f, 220f);
+            string source_openReport = cqfReceiver.openReport.CanTranslate() ? cqfReceiver.openReport.Translate().ToString() : cqfReceiver.openReport;
+            string edited_openReport = source_openReport;
+            CQFEditorTools.DrawLabelAndText_Line(y, "JobReport".Translate(), ref edited_openReport, 16f, 220f);
+            if (edited_openReport != source_openReport) cqfReceiver.openReport = edited_openReport;
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "TickToOpenLoot".Translate(), ref cqfReceiver.tickToOpen, ref cqfReceiver.buffer, 16f, 220f);
             y += 30f;

@@ -33,7 +33,10 @@ namespace QuestEditor_Library
             }
 
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFFailReason".Translate(), ref cqfReceiver.failReason, x, 100f);
+            string source = cqfReceiver.failReason.CanTranslate() ? cqfReceiver.failReason.Translate().ToString() : cqfReceiver.failReason;
+            string edited = source;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFFailReason".Translate(), ref edited, x, 100f);
+            if (edited != source) cqfReceiver.failReason = edited;
             y += 30f;
         }
     }

@@ -28,7 +28,9 @@ namespace QuestEditor_Library
                 TooltipHandler.TipRegion(spawnType, "SpawnTypeTip_BuildingTick".Translate());
                 Widgets.TextFieldNumeric(DrawField(ref y, x, "TimeToSpawn".Translate()), ref cqfReceiver.timeToSpawn, ref cqfReceiver.buffer_time);
             }
-            cqfReceiver.spawnMessage = Widgets.TextField(DrawField(ref y, x, "SpawnMessage".Translate()), cqfReceiver.spawnMessage ?? string.Empty);
+            string sourceMessage = cqfReceiver.spawnMessage.CanTranslate() ? cqfReceiver.spawnMessage.Translate().ToString() : cqfReceiver.spawnMessage ?? string.Empty;
+            string editedMessage = Widgets.TextField(DrawField(ref y, x, "SpawnMessage".Translate()), sourceMessage);
+            if (editedMessage != sourceMessage) cqfReceiver.spawnMessage = editedMessage;
             Rect count = DrawField(ref y, x, "QE_Count".Translate(), 190f);
             float part = (count.width - 18f) / 2f;
             int min = cqfReceiver.count.min;

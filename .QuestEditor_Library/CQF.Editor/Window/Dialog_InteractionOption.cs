@@ -41,7 +41,7 @@ namespace QuestEditor_Library
         {
             float x = 10f;
             float y = 8f;
-            Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 30f), this.owner == null ? this.operation.interactionText : this.owner.LabelCap + " " + this.owner.Position);
+            Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 30f), this.owner == null ? (this.operation.interactionText.CanTranslate() ? this.operation.interactionText.Translate().ToString() : this.operation.interactionText) : this.owner.LabelCap + " " + this.owner.Position);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height - 38f, this.height + 12f));
             Widgets.BeginScrollView(new Rect(0f, 38f, inRect.width, inRect.height - 38f), ref this.pos, viewRect);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);

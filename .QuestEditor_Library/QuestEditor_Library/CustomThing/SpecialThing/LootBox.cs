@@ -89,7 +89,7 @@ namespace QuestEditor_Library
             {
                 result.AppendLine();
             }
-            result.Append("CQF_OpenLootbox".Translate(this.openReport.Translate()).ToString().Trim());
+            result.Append("CQF_OpenLootbox".Translate((this.openReport.CanTranslate() ? this.openReport.Translate().ToString() : this.openReport)).ToString().Trim());
             return result.ToString().Trim();
         }
         public void DrawTab()
@@ -168,8 +168,8 @@ namespace QuestEditor_Library
                 if (selPawn.CanReserveAndReach(this, PathEndMode.Touch, Danger.Deadly))
                 {
                     Job job = JobMaker.MakeJob(QEDefOf.QE_Open, this);
-                    job.reportStringOverride = this.openReport.Translate();
-                    yield return new FloatMenuOption(this.openReport.Translate(), () =>
+                    job.reportStringOverride = (this.openReport.CanTranslate() ? this.openReport.Translate().ToString() : this.openReport);
+                    yield return new FloatMenuOption((this.openReport.CanTranslate() ? this.openReport.Translate().ToString() : this.openReport), () =>
                     {
                         if (Input.GetKeyDown(KeyCode.LeftShift))
                         {
@@ -419,7 +419,8 @@ namespace QuestEditor_Library
             {
                 QuestUtility.SendQuestTargetSignals(box.questTags, this.dataName, box.Named("SUBJECT"));
             }
-            Messages.Message(this.message.Translate(text),new LookTargets(pos,map),MessageTypeDefOf.NeutralEvent);
+            if (!string.IsNullOrWhiteSpace(this.message))
+                Messages.Message((this.message.CanTranslate() ? this.message.Translate(text) : this.message.Formatted(text).ToString()),new LookTargets(pos,map),MessageTypeDefOf.NeutralEvent);
             result.ForEach(t =>
             {
                 if (t.TryGetComp<CompQuality>() is CompQuality comp)
@@ -479,6 +480,7 @@ namespace QuestEditor_Library
         public string dataName;
         public float chance = 1f;
         public string buffer;
+        [CQFLocalizableText]
         public string message = null;
         public List<PawnSpawnData> pawnDatas = new List<PawnSpawnData>();
         public List<CQFThingDefCount> things = new List<CQFThingDefCount>();

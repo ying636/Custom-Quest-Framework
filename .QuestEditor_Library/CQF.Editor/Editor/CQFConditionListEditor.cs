@@ -121,7 +121,10 @@ namespace QuestEditor_Library
                 float contentY = 0f;
                 if (condition is DialogCondition_WithSubConditions composite)
                 {
-                    CQFEditorTools.DrawLabelAndText_Line(contentY, "CQFFailReason".Translate(), ref condition.failReason, 0f, 100f);
+                    string source_failReason = condition.failReason.CanTranslate() ? condition.failReason.Translate().ToString() : condition.failReason;
+                    string edited_failReason = source_failReason;
+                    CQFEditorTools.DrawLabelAndText_Line(contentY, "CQFFailReason".Translate(), ref edited_failReason, 0f, 100f);
+                    if (edited_failReason != source_failReason) condition.failReason = edited_failReason;
                     contentY += 32f;
                     if (composite.AllowMultipleChildConditions)
                     {

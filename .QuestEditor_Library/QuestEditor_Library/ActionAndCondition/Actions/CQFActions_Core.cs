@@ -530,7 +530,7 @@ namespace QuestEditor_Library
 
         public string ResolveMessage(Dictionary<string, TargetInfo> targets)
         {
-            string message = this.message.Translate();
+            string message = (this.message.CanTranslate() ? this.message.Translate().ToString() : this.message);
             List<NamedArgument> names = new List<NamedArgument>();
             targets.ToList().ForEach(t =>
             {
@@ -556,6 +556,7 @@ namespace QuestEditor_Library
             Scribe_Defs.Look(ref this.type, "CQFAction_Message_type");
         }
 
+        [CQFLocalizableText]
         public string message;
         public MessageTypeDef type = MessageTypeDefOf.PositiveEvent;
     }

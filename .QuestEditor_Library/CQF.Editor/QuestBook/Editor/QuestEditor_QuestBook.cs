@@ -140,8 +140,7 @@ namespace QuestEditor_Library
                 string path = Path.Combine(directory, curDef.defName + ".xml");
                 XElement language;
                 XElement compiledBook = BuildCompiledBookXml(out language);
-                new XElement("Defs", compiledBook).Save(path);
-                language.Save(Path.Combine(directory, curDef.defName + "_Text.xml"));
+                new CQFContentTextExport(curDef.defName).Save(compiledBook, typeof(QuestBookDef), path, additionalTranslations: language);
                 CQFQuestDefBootstrap.HotLoadQuestBookDef(curDef);
                 Messages.Message("CQF_QuestBook_SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }

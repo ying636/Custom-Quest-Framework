@@ -35,8 +35,10 @@ namespace QuestEditor_Library
         }
 
         [NoTranslate]
+        [CQFLocalizableText]
         public string labelKey;
         [NoTranslate]
+        [CQFLocalizableText]
         public string descriptionKey;
         [NoTranslate]
         public string iconPath;

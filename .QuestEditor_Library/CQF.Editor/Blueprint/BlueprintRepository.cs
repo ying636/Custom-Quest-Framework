@@ -251,9 +251,8 @@ namespace QuestEditor_Library
             LongEventHandler.QueueLongEvent(() =>
             {
                 Directory.CreateDirectory(directory);
-                XDocument document = new XDocument(new XElement("Defs",
-                    def.SaveToXElement("QuestEditor_Library.CustomMapDataDef")));
-                document.Save(path);
+                new CQFContentTextExport(def.defName).Save(
+                    def.SaveToXElement("QuestEditor_Library.CustomMapDataDef"), typeof(CustomMapDataDef), path);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }, "SaveToFile".Translate(), true, exception =>
             {

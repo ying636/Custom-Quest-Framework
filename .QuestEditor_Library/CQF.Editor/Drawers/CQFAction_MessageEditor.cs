@@ -26,7 +26,10 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFActionEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref cqfReceiver.message, x, 240f);
+            string source_message = cqfReceiver.message.CanTranslate() ? cqfReceiver.message.Translate().ToString() : cqfReceiver.message;
+            string edited_message = source_message;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref edited_message, x, 240f);
+            if (edited_message != source_message) cqfReceiver.message = edited_message;
             y += 30f;
             if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFMessageType".Translate(cqfReceiver.type?.defName.Translate().ToString()), false))
             {

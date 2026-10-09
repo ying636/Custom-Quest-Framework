@@ -84,7 +84,7 @@ namespace QuestEditor_Library
                 {
                     continue;
                 }
-                string oldName = operation.interactionText;
+                string oldName = operation.OutputSignal;
                 if (oldName.NullOrEmpty() || !reference.Signal.EndsWith(oldName, StringComparison.Ordinal))
                 {
                     continue;
@@ -211,7 +211,7 @@ namespace QuestEditor_Library
         {
             foreach (InteractionOperation operation in operations ?? Enumerable.Empty<InteractionOperation>())
             {
-                this.AddAutomatic(operation, operation.interactionText, thing, source, template, "", partName);
+                this.AddAutomatic(operation, operation.OutputSignal, thing, source, template, "", partName);
                 foreach (InteractionResult result in operation.results)
                 {
                     this.AddActions(result.actions, thing, source + " / " + operation.interactionText + " / " + result.resultName, template, "", null, partName);

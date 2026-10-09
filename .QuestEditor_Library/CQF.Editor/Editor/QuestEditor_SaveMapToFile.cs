@@ -91,18 +91,19 @@ namespace QuestEditor_Library
             LongEventHandler.QueueLongEvent((Action)(() =>
             {
                 saveAction();
-                XDocument mapXml = new XDocument();
                 XElement defXml = QuestEditor_SaveMapToFile.def.SaveToXElement("QuestEditor_Library.CustomMapDataDef");
-                XElement defs = new XElement("Defs", defXml);
-                mapXml.Add(defs);
-                mapXml.Save(path);
+                new CQFContentTextExport(def.defName).Save(defXml, typeof(CustomMapDataDef), path);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
                 if (!DefDatabase<CustomMapDataDef>.AllDefsListForReading.Exists(d => d.defName == def.defName))
                 {
                     DefDatabase<CustomMapDataDef>.Add(def);
                 }
                 def = new CustomMapDataDef() {isPart = def.isPart, destroyAllThing = def.destroyAllThing};
-            }), "SaveToFile".Translate(), true, (Exception x) => { Log.Message("SaveError:" + x.ToString()); });
+            }), "SaveToFile".Translate(), true, (Exception x) =>
+            {
+                Log.Error("Save map XML failed: " + x);
+                Messages.Message("CQF_DialogGraph_Error".Translate(x.Message), MessageTypeDefOf.RejectInput);
+            });
             this.saveMode = SaveMode.None;
             this.Close();
         }

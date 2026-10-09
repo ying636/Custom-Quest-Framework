@@ -55,7 +55,9 @@ namespace QuestEditor_Library
             if (enabled)
             {
                 Rect editorRect = new Rect(sectionRect.x + 8f, headerRect.yMax + 6f, sectionRect.width - 16f, editorHeight);
-                text = multiline ? Widgets.TextArea(editorRect, text ?? string.Empty) : Widgets.TextField(editorRect, text ?? string.Empty);
+                string source = text.CanTranslate() ? text.Translate().ToString() : text ?? string.Empty;
+                string edited = multiline ? Widgets.TextArea(editorRect, source) : Widgets.TextField(editorRect, source);
+                if (edited != source) text = edited;
             }
 
             CQFUIStyle.DrawBox(sectionRect, 1);

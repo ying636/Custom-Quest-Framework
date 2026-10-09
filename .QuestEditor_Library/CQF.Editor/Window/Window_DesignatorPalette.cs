@@ -23,6 +23,7 @@ namespace QuestEditor_Library
             this.isSelected = isSelected;
             this.getTip = getTip;
             this.layer = WindowLayer.GameUI;
+            this.onlyOneOfTypeAllowed = false;
             this.closeOnAccept = false;
             this.closeOnCancel = false;
             this.doCloseX = false;
@@ -53,6 +54,14 @@ namespace QuestEditor_Library
                 || mainTab is MainTabWindow_Inspect inspect && (inspect.AnythingSelected || this.designator.AlwaysDoGuiControls))
             {
                 return;
+            }
+            foreach (Window window in Find.WindowStack.Windows)
+            {
+                if (window is Window_DesignatorPalette<T> palette && palette.designator == this.designator)
+                {
+                    if (palette != this) return;
+                    break;
+                }
             }
             this.designator.DoExtraGuiControls(0f, UI.screenHeight - 35f);
         }

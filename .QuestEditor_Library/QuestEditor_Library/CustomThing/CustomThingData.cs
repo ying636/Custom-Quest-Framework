@@ -37,7 +37,7 @@ namespace QuestEditor_Library
             {
                 if (compText.useCustomName)
                 {
-                     this.customName = compText.customName.Translate();
+                     this.customName = compText.customName;
                 }
                 if (compText.useCustomDescription)
                 {
@@ -173,19 +173,19 @@ namespace QuestEditor_Library
                 {
                     compText.useCustomName = true;
 
-                    compText.customName = load ? this.customName : this.customName.Translate().ToString();
+                    compText.customName = load ? this.customName : (this.customName.CanTranslate() ? this.customName.Translate().ToString() : this.customName);
                 }
                 if (this.customDescription != null)
                 {
                     compText.useCustomDescription = true;
 
-                    compText.customDescription = load ? this.customDescription : this.customDescription.Translate().ToString();
+                    compText.customDescription = load ? this.customDescription : (this.customDescription.CanTranslate() ? this.customDescription.Translate().ToString() : this.customDescription);
 
                 }
                 if (this.customInspectText != null)
                 {
                     compText.useCustomInspectText = true;
-                    compText.customInspectText = load ? this.customInspectText : this.customInspectText.Translate().ToString();
+                    compText.customInspectText = load ? this.customInspectText : (this.customInspectText.CanTranslate() ? this.customInspectText.Translate().ToString() : this.customInspectText);
                 }
             }
             if (result.TryGetComp<CompColorable>() is CompColorable color)
@@ -301,8 +301,11 @@ namespace QuestEditor_Library
         public int count = 1;
         public float storedEnergy = 0;
 
+        [CQFLocalizableText]
         public string customName = null;
+        [CQFLocalizableText]
         public string customDescription = null;
+        [CQFLocalizableText]
         public string customInspectText = null;
         public List<ActionComp> comps = new List<ActionComp>();
         public List<string> targetKeys = new List<string>();

@@ -192,7 +192,7 @@ namespace QuestEditor_Library
                 Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
                 if (!position.Fogged(map) && this.spawnMessage != null && !this.spawnMessage.NullOrEmpty())
                 {
-                    Messages.Message(this.spawnMessage.Translate(), new LookTargets(position, map), MessageTypeDefOf.NeutralEvent);
+                    Messages.Message((this.spawnMessage.CanTranslate() ? this.spawnMessage.Translate().ToString() : this.spawnMessage), new LookTargets(position, map), MessageTypeDefOf.NeutralEvent);
                 }
                 if (setLord && faction != null && lord == null && this.enableLord)
                 {
@@ -376,6 +376,7 @@ namespace QuestEditor_Library
         public int timeToSpawn = 0;
         public bool enableLord = false;
         public string lordDataName;
+        [CQFLocalizableText]
         public string spawnMessage = null;
 
         public string routeName = null;

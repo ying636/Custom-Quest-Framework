@@ -16,7 +16,10 @@ namespace QuestEditor_Library
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFEditorTools.DrawLabelAndText_Line(y, "TrapName".Translate(), ref cqfReceiver.trapName, x, 250f);
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "DisarmReport".Translate(), ref cqfReceiver.disarmReport, x, 100f);
+            string source_disarmReport = cqfReceiver.disarmReport.CanTranslate() ? cqfReceiver.disarmReport.Translate().ToString() : cqfReceiver.disarmReport;
+            string edited_disarmReport = source_disarmReport;
+            CQFEditorTools.DrawLabelAndText_Line(y, "DisarmReport".Translate(), ref edited_disarmReport, x, 100f);
+            if (edited_disarmReport != source_disarmReport) cqfReceiver.disarmReport = edited_disarmReport;
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "TickToDisarm".Translate(), ref cqfReceiver.tickToDisarm, ref cqfReceiver.buffer, x, 100f);
             y += 30f;

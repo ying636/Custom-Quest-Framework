@@ -27,8 +27,11 @@ namespace QuestEditor_Library
 
         public static void DrawBasicSettings_1(QuestEditor_Library.InteractionOperation cqfReceiver, ref float y, float x, float width)
         {
-            Map? map = CQFEditorContext.Map;
-            cqfReceiver.DrawHeader(ref y, x, width, cqfReceiver.interactionText, () => Find.WindowStack.Add(new Dialog_RenameForQE(name => CQFSignalEditor.RenameInteraction(cqfReceiver, name, map))), "Rename".Translate(), null, null, TexButton.Rename);
+            cqfReceiver.DrawHeader(ref y, x, width, "InteractionOperations".Translate());
+            string source = cqfReceiver.interactionText.CanTranslate() ? cqfReceiver.interactionText.Translate().ToString() : cqfReceiver.interactionText;
+            string edited = Widgets.TextArea(new Rect(x + 8f, y, width - 16f, 58f), source);
+            if (edited != source) CQFSignalEditor.RenameInteraction(cqfReceiver, edited);
+            y += 66f;
             CQFEditorTools.DrawLabelAndText_Line(y, "TickToOperate".Translate(), ref cqfReceiver.tickToOperate, ref cqfReceiver.buffer, x + 8f, 90f);
             y += 36f;
             CQFSignalEditor.DrawInteractionSignal(ref y, new Rect(0f, 0f, x + width + 12f, CQFUIScope.ContentHeight), x, cqfReceiver);

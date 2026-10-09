@@ -158,7 +158,7 @@ namespace QuestEditor_Library
             }
             else
             {
-                reason = this.failReason?.Translate();
+                reason = (this.failReason?.CanTranslate() == true ? this.failReason.Translate().ToString() : this.failReason);
                 return false;
             }
         }
@@ -246,7 +246,7 @@ namespace QuestEditor_Library
                     }
                     else
                     {
-                        reason = this.failReason.Translate(this.skill);
+                        reason = (this.failReason.CanTranslate() ? this.failReason.Translate(this.skill) : this.failReason.Formatted(this.skill).ToString());
                         return false;
                     }
                 }
@@ -362,7 +362,7 @@ namespace QuestEditor_Library
                 }
                 else 
                 {
-                    reason = this.failReason.Translate();
+                    reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
                     return false;
                 }
             }
@@ -506,7 +506,7 @@ namespace QuestEditor_Library
                         }
                         else
                         {
-                            reason = this.failReason.Translate(this.hediff);
+                            reason = (this.failReason.CanTranslate() ? this.failReason.Translate(this.hediff) : this.failReason.Formatted(this.hediff).ToString());
                             return false;
                         }
                     }
@@ -651,7 +651,7 @@ namespace QuestEditor_Library
                     }
                     else
                     {
-                        reason = this.failReason.Translate(this.age);
+                        reason = (this.failReason.CanTranslate() ? this.failReason.Translate(this.age) : this.failReason.Formatted(this.age).ToString());
                         return false;
                     }
                 }
@@ -693,7 +693,7 @@ namespace QuestEditor_Library
                     }
                     else
                     {
-                        reason = this.failReason.Translate(targetPawn.Name.ToString());
+                        reason = (this.failReason.CanTranslate() ? this.failReason.Translate(targetPawn.Name.ToString()) : this.failReason.Formatted(targetPawn.Name.ToString()).ToString());
                         return false;
                     }
                 }
@@ -747,7 +747,7 @@ namespace QuestEditor_Library
                     }
                     else
                     {
-                        reason = this.failReason.Translate(targetPawn.Name.ToString());
+                        reason = (this.failReason.CanTranslate() ? this.failReason.Translate(targetPawn.Name.ToString()) : this.failReason.Formatted(targetPawn.Name.ToString()).ToString());
                         return false;
                     }
                 }
@@ -814,7 +814,7 @@ namespace QuestEditor_Library
                     }
                     else
                     {
-                        reason = this.failReason.Translate(targetPawn.Name.ToString());
+                        reason = (this.failReason.CanTranslate() ? this.failReason.Translate(targetPawn.Name.ToString()) : this.failReason.Formatted(targetPawn.Name.ToString()).ToString());
                         return false;
                     }
                 }

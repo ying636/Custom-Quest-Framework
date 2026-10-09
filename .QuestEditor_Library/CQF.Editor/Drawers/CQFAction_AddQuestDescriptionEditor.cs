@@ -12,7 +12,10 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             CQFAction_TargetEditor.Draw_0(cqfReceiver, ref y, inRect, x);
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQFQuestDescription".Translate(), ref cqfReceiver.description, x, 240f);
+            string source_description = cqfReceiver.description.CanTranslate() ? cqfReceiver.description.Translate().ToString() : cqfReceiver.description;
+            string edited_description = source_description;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFQuestDescription".Translate(), ref edited_description, x, 240f);
+            if (edited_description != source_description) cqfReceiver.description = edited_description;
             y += 30f;
         }
     }

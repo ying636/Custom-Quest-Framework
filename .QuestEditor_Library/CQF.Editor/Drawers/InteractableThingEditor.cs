@@ -47,7 +47,7 @@ namespace QuestEditor_Library
             {
                 InteractionOperation o = cqfReceiver.operations[i];
                 rect.y = y + 4f;
-                if (CQFUIStyle.ButtonText(rect, o.interactionText, false))
+                if (CQFUIStyle.ButtonText(rect, o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText, false))
                 {
                     Find.WindowStack.Add(new Dialog_InteractionOption(o, cqfReceiver));
                 }
@@ -74,18 +74,20 @@ namespace QuestEditor_Library
                                 o
                             };
                             DefDatabase<InteractionDataDef>.Add(def);
-                            string path = Path.Combine(CQFContentPaths.Quests, "Data", o.interactionText + ".xml");
-                            XElement defs = new XElement("Defs");
+                            string path = Path.Combine(CQFContentPaths.Quests, "Data", name + ".xml");
                             XElement defXml = new XElement("QuestEditor_Library.InteractionDataDef");
                             XElement interactionDataDefXml = new XElement("interactions");
                             interactionDataDefXml.Add(o.SaveToXElement("li"));
                             defXml.Add(new XElement("defName", name));
                             defXml.Add(new XElement("label", o.interactionText));
                             defXml.Add(interactionDataDefXml);
-                            defs.Add(defXml);
-                            defs.Save(path);
+                            new CQFContentTextExport(name).Save(defXml, typeof(InteractionDataDef), path);
                             Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
-                        }, "SavingAsDef".Translate(), true, e => Log.Message(e.Message));
+                        }, "SavingAsDef".Translate(), true, e =>
+                        {
+                            Log.Error("Export interaction XML failed: " + e);
+                            Messages.Message("CQF_DialogGraph_Error".Translate(e.Message), MessageTypeDefOf.RejectInput);
+                        });
                     }) { optionalTitle = "SetDefname".Translate() });
                 }
 
@@ -108,7 +110,7 @@ namespace QuestEditor_Library
 
             if (CQFUIStyle.ButtonText(new Rect(20f + buttonWidth, y, buttonWidth, 32f), "Remove".Translate()) && cqfReceiver.operations.Any())
             {
-                CQFEditorTools.DrawFloatMenu(cqfReceiver.operations, o => cqfReceiver.operations.Remove(o), o => o.interactionText);
+                CQFEditorTools.DrawFloatMenu(cqfReceiver.operations, o => cqfReceiver.operations.Remove(o), o => o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText);
             }
 
             if (CQFUIStyle.ButtonImage(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)

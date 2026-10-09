@@ -53,7 +53,10 @@ namespace QuestEditor_Library
 
         public static void DrawBasicSettings_2(QuestEditor_Library.LootData cqfReceiver, ref float y, float x, float width)
         {
-            CQFEditorTools.DrawFieldAndText(ref y, "MessageAfterOpening".Translate(), ref cqfReceiver.message, x + 8f, 400f);
+            string source_message = cqfReceiver.message.CanTranslate() ? cqfReceiver.message.Translate().ToString() : cqfReceiver.message;
+            string edited_message = source_message;
+            CQFEditorTools.DrawFieldAndText(ref y, "MessageAfterOpening".Translate(), ref edited_message, x + 8f, 400f);
+            if (edited_message != source_message) cqfReceiver.message = edited_message;
             y += 40f;
         }
 

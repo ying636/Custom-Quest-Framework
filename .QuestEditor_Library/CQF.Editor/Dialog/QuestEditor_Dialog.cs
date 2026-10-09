@@ -369,8 +369,8 @@ namespace QuestEditor_Library
                 bool compile = CustomQuestFramework_ModSetting.setting?.autoCompileDialogTextKey ?? true;
                 XElement language = new XElement("LanguageData");
                 XElement document = compile ? this.BuildCompiledTreeXml(out language) : this.CurTree.SaveToXElement("QuestEditor_Library.DialogTreeDef");
-                new XElement("Defs", document).Save(path);
-                if (compile) this.SaveCompiledLanguageFile(language);
+                if (compile) new CQFContentTextExport(this.CurTree.defName).Save(document, typeof(DialogTreeDef), path, additionalTranslations: language);
+                else new XElement("Defs", document).Save(path);
                 CQFQuestDefBootstrap.HotLoadDialogTreeDef(this.CurTree);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
@@ -454,13 +454,6 @@ namespace QuestEditor_Library
                     optionIndex++;
                 }
             }
-        }
-
-        private void SaveCompiledLanguageFile(XElement language)
-        {
-            string dialogDirectory = Path.Combine(CQFContentPaths.Quests, "DialogTree");
-            Directory.CreateDirectory(dialogDirectory);
-            language.Save(Path.Combine(dialogDirectory, this.CurTree.defName + "_Text.xml"));
         }
 
         private void CompileTextElement(XElement? element, string key, XElement language)

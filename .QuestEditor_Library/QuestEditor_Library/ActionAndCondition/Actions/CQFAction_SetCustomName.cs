@@ -46,7 +46,7 @@ namespace QuestEditor_Library
                 }
 
                 comp.useCustomName = true;
-                comp.customName = this.text.Translate().ToString();
+                comp.customName = (this.text.CanTranslate() ? this.text.Translate().ToString() : this.text);
             }
         }
 
@@ -63,6 +63,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.text, "text");
         }
 
+        [CQFLocalizableText]
         public string text = string.Empty;
     }
 }

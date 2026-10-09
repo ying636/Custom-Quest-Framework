@@ -44,7 +44,7 @@ namespace QuestEditor_Library
                     Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
                     if (!position.Fogged(map) && this.spawnMessage != null && !this.spawnMessage.NullOrEmpty())
                     {
-                        Messages.Message(this.spawnMessage.Translate(), new LookTargets(position, map), MessageTypeDefOf.NeutralEvent);
+                        Messages.Message((this.spawnMessage.CanTranslate() ? this.spawnMessage.Translate().ToString() : this.spawnMessage), new LookTargets(position, map), MessageTypeDefOf.NeutralEvent);
                     }
                     PawnGroupMakerParms pawnGroupMakerParms = new PawnGroupMakerParms();
                     pawnGroupMakerParms.groupKind = this.kindDef;

@@ -53,7 +53,7 @@ namespace QuestEditor_Library
                     {
                         if (o.Satisfied(pawn, thing, out string r, GameTools.GetQuestFromThing(thing)))
                         {
-                            string text = o.interactionText.Translate();
+                            string text = (o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText);
                             Job job = JobMaker.MakeJob(QEDefOf.QE_InteractingWithTarget, thing);
                             job.reportStringOverride = text;
                             result.Add(new FloatMenuOption(text, () =>

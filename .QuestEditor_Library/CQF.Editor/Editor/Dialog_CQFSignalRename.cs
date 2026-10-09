@@ -11,7 +11,7 @@ namespace QuestEditor_Library
         public Dialog_CQFSignalRename(InteractionOperation operation, string newName, List<CQFSignalEndpoint> references, List<CQFSignalReferenceChange> changes)
         {
             this.operation = operation;
-            this.previousName = operation.interactionText;
+            this.previousName = operation.OutputSignal;
             this.newName = newName;
             this.changes = changes;
             this.doCloseX = true;
@@ -42,7 +42,7 @@ namespace QuestEditor_Library
             }
             if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 38f, inRect.width * 0.5f - 6f, 36f), "Confirm".Translate()))
             {
-                if (this.operation.interactionText != this.previousName || this.syncReferences && this.changes.Any(change => !change.IsCurrent))
+                if (this.operation.OutputSignal != this.previousName || this.syncReferences && this.changes.Any(change => !change.IsCurrent))
                 {
                     Log.Error("CQF_MapSignals_ChangedReference: " + this.previousName);
                     Messages.Message("CQF_MapSignals_ChangedReference".Translate(), MessageTypeDefOf.RejectInput);
@@ -55,7 +55,7 @@ namespace QuestEditor_Library
                         change.Apply();
                     }
                 }
-                this.operation.interactionText = this.newName;
+                this.operation.outputSignal = this.newName;
                 this.Close();
             }
             if (CQFUIStyle.ButtonText(new Rect(inRect.width * 0.5f + 6f, inRect.height - 38f, inRect.width * 0.5f - 6f, 36f), "Cancel".Translate()))

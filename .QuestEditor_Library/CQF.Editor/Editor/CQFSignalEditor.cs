@@ -60,16 +60,22 @@ namespace QuestEditor_Library
             Rect label = new Rect(left, y, labelWidth, 32f);
             Rect field = new Rect(label.xMax + 8f, y, width - labelWidth - 8f, 32f);
             bool open = CQFUIStyle.ButtonText(label, "OutSignal".Translate(), false, overrideTextAnchor: TextAnchor.MiddleLeft);
-            open |= CQFUIStyle.ButtonText(field, operation.interactionText ?? "Select".Translate().ToString(), overrideTextAnchor: TextAnchor.MiddleLeft);
-            if (open) OpenSelector(operation.interactionText, value => RenameInteraction(operation, value, map), false);
+            open |= CQFUIStyle.ButtonText(field, operation.OutputSignal ?? "Select".Translate().ToString(), overrideTextAnchor: TextAnchor.MiddleLeft);
+            if (open) OpenSelector(operation.OutputSignal, value => RenameInteractionSignal(operation, value, map), false);
             TooltipHandler.TipRegion(label, "CQF_SignalBook_SelectSignal".Translate());
-            TooltipHandler.TipRegion(field, "CQF_MapSignals_InteractionInputHint".Translate());
+            TooltipHandler.TipRegion(field, "CQF_SignalBook_SelectSignal".Translate());
             y += 40f;
         }
 
         public static void RenameInteraction(InteractionOperation operation, string newName, Map? map = null)
         {
-            if (newName == operation.interactionText)
+            operation.outputSignal = operation.OutputSignal;
+            operation.interactionText = newName;
+        }
+
+        public static void RenameInteractionSignal(InteractionOperation operation, string newName, Map? map = null)
+        {
+            if (newName == operation.OutputSignal)
             {
                 return;
             }
@@ -79,7 +85,7 @@ namespace QuestEditor_Library
             List<CQFSignalEndpoint> references = catalog.ReferencesTo(operation);
             if (references.Count == 0)
             {
-                operation.interactionText = newName;
+                operation.outputSignal = newName;
                 return;
             }
             List<CQFSignalReferenceChange> changes = catalog.BuildRenameChanges(operation, newName);

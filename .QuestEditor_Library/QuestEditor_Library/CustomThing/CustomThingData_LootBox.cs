@@ -105,6 +105,7 @@ public override Thing SpawnThing(Map map, Quest quest, out List<Thing> things,
         [NoTranslate]
         public string lootBoxName;
         public int tickToOpen = 100;
+        [CQFLocalizableText]
         public string openReport = "OpenLoot";
         public bool destroyAfterOpening = false;
         public List<LootData> loots = new List<LootData>();

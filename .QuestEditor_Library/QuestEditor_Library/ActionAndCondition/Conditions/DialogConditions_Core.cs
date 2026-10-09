@@ -57,6 +57,7 @@ namespace QuestEditor_Library
         }
 
         [NoTranslate]
+        [CQFLocalizableText]
         public string failReason;
     }
 
@@ -123,7 +124,7 @@ namespace QuestEditor_Library
             }
             else
             {
-                reason = this.failReason.Translate();
+                reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
                 return false;
             }
         }
@@ -165,7 +166,7 @@ namespace QuestEditor_Library
             }
             else
             {
-                reason = this.failReason.Translate();
+                reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
                 return false;
             }
         }
@@ -214,7 +215,7 @@ namespace QuestEditor_Library
                 reason = null;
                 return true;
             }
-            reason = this.failReason.Translate();
+            reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
             return false;
         }
         public override void Draw(ref float y, Rect inRect, float x)
@@ -283,7 +284,7 @@ namespace QuestEditor_Library
                 return true;
             }
 
-            reason = this.failReason.Translate();
+            reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
             return false;
         }
 
@@ -364,7 +365,7 @@ namespace QuestEditor_Library
                 reason = null;
                 return true;
             }
-            reason = this.failReason.Translate();
+            reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
             return false;
         }
 
@@ -405,7 +406,7 @@ namespace QuestEditor_Library
             string r = null;
             if (this.condition.Satisfied(targets, out r, quest))
             {
-                reason = this.failReason.Translate();
+                reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
                 return false;
             }
             reason = null;
@@ -445,7 +446,7 @@ namespace QuestEditor_Library
                 reason = null;
                 return true;
             }
-            reason = this.failReason.Translate();
+            reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
             return false;
         }
 
@@ -487,7 +488,7 @@ namespace QuestEditor_Library
                 reason = null;
                 return true;
             }
-            reason = this.failReason.Translate();
+            reason = (this.failReason.CanTranslate() ? this.failReason.Translate().ToString() : this.failReason);
             return false;
         }
 
