@@ -39,7 +39,14 @@ namespace QuestEditor_Library
                 });
                 yield return new FloatMenuOption("CQF_OpenFloatingPalette".Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Window_DesignatorTerrainPalette(this));
+                    Find.WindowStack.Add(new Window_DesignatorPalette<TerrainDef>(
+                        this, DefDatabase<TerrainDef>.AllDefsListForReading, RecentSelections,
+                        item => item.label ?? item.defName,
+                        (item, rect) => Widgets.DefIcon(rect, item, null, 1f, null, true, item.DrawColor),
+                        this.SelectTerrain,
+                        item => item == terrain,
+                        item => (item.label ?? item.defName)
+                            + (item.description.NullOrEmpty() ? "" : "\n\n" + item.description)));
                 });
                 yield break;
             }

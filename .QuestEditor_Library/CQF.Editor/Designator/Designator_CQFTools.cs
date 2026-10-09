@@ -29,8 +29,9 @@ namespace QuestEditor_Library
 
         public override ThingStyleDef ThingStyleDefForPreview => null;
 
-        public override ThingDef StuffDef => stuff;
+        public override ThingDef? StuffDef => stuff;
         public override Color IconDrawColor => this.PlacingDef.MadeFromStuff && this.StuffDef != null ? this.PlacingDef?.GetColorForStuff(this.StuffDef) ?? base.IconDrawColor : base.IconDrawColor;
+        public static IReadOnlyList<DesignatorThingSelection> RecentSelections => recentSelections;
         public static List<ThingDef> Basespawnable
         {
             get
@@ -71,52 +72,72 @@ namespace QuestEditor_Library
                  {
                      Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CQFTools.Basespawnable, x => x.uiIcon, x => x.label + $"({Designator_CQFTools.GetCQFToolTypeLabel(x)})", x =>
             {
-                Designator_CQFTools.thing = x;
-                this.iconProportions = x.graphicData.drawSize.RotatedBy(x.defaultPlacingRot);
-                string label = x.label;
-                if (Designator_CQFTools.IsCQFTool(x))
+                this.SelectThing(x);
+            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)), "Select".Translate()));
+                 });
+                yield return new FloatMenuOption("CQF_OpenFloatingPalette".Translate(), () =>
                 {
-                    label = label.Colorize(CQFUIStyle.Accent);
-                }
-                this.defaultLabel = label;
-                stuff = null;
-                this.defaultDesc = x.description.Colorize(CQFUIStyle.Accent);
-                if (x.graphicData.onGroundRandomRotateAngle > 0.01f)
+                    Find.WindowStack.Add(new Window_DesignatorPalette<DesignatorThingSelection>(
+                        this, Basespawnable.Select(def => new DesignatorThingSelection(def)), RecentSelections,
+                        item => (item.Stuff == null ? "" : item.Stuff.LabelAsStuff + " ")
+                            + (item.Thing.label ?? item.Thing.defName) + " (" + GetCQFToolTypeLabel(item.Thing) + ")",
+                        (item, rect) => Widgets.DefIcon(rect, item.Thing, item.Stuff, drawPlaceholder: true),
+                        item =>
+                        {
+                            if (item.Stuff == null) this.SelectThing(item.Thing);
+                            else this.SelectThing(item.Thing, item.Stuff);
+                        },
+                        item => item.Thing == thing && (item.Stuff == null || item.Stuff == stuff),
+                        item => (item.Stuff == null ? "" : item.Stuff.LabelAsStuff + " ")
+                            + (item.Thing.label ?? item.Thing.defName) + " (" + GetCQFToolTypeLabel(item.Thing) + ")"
+                            + (item.Thing.description.NullOrEmpty() ? "" : "\n\n" + item.Thing.description)));
+                });
+                yield break;
+            }
+        }
+
+        public void SelectThing(ThingDef def)
+        {
+            if (def.MadeFromStuff)
+            {
+                Find.WindowStack.Add(new Dialog_Select<ThingDef>(
+                    new TextureSelectDrawer<ThingDef>(
+                        GenStuff.AllowedStuffsFor(def).ToList(),
+                        selectedStuff => selectedStuff.uiIcon,
+                        selectedStuff => selectedStuff.label,
+                        selectedStuff => this.SelectThing(def, selectedStuff),
+                        selectedStuff => selectedStuff.graphic?.Color ?? Color.white,
+                        (selectedStuff, rect) => Widgets.DefIcon(rect, selectedStuff, null)),
+                    "SelectStuff".Translate()));
+                return;
+            }
+            this.SelectThing(def, null);
+        }
+
+        public void SelectThing(ThingDef def, ThingDef? stuffDef)
+        {
+            Designator_CQFTools.thing = def;
+            Designator_CQFTools.stuff = stuffDef;
+            this.defaultLabel = def.label.Colorize(CQFUIStyle.Accent);
+            this.defaultDesc = def.description.Colorize(CQFUIStyle.Accent);
+            if (stuffDef != null)
+            {
+                this.defaultLabel = stuffDef.LabelAsStuff.Colorize(CQFUIStyle.Accent) + this.defaultLabel;
+            }
+            if (def.drawerType != DrawerType.None && def.graphicData != null)
+            {
+                this.iconProportions = def.graphicData.drawSize.RotatedBy(def.defaultPlacingRot);
+                if (def.graphicData.onGroundRandomRotateAngle > 0.01f)
                 {
-                    this.icon = Widgets.GetIconFor(x);
+                    this.icon = Widgets.GetIconFor(def, stuffDef);
                 }
                 else
                 {
-                    this.icon = x.GetUIIconForStuff(this.StuffDef) ?? x.graphic.MatSingle.mainTexture;
+                    this.icon = def.GetUIIconForStuff(stuffDef) ?? def.graphic?.MatSingle?.mainTexture ?? def.uiIcon;
                 }
-                if (x.MadeFromStuff)
-                {
-                    Find.WindowStack.Add(new Dialog_Select<ThingDef>(
-                        new TextureSelectDrawer<ThingDef>(
-                            GenStuff.AllowedStuffsFor(x).ToList(),
-                            s => s.uiIcon,
-                            s => s.label,
-                            s =>
-                            {
-                                stuff = s;
-                                this.defaultLabel = s.LabelAsStuff.Colorize(CQFUIStyle.Accent) + this.defaultLabel;
-                                if (x.graphicData.onGroundRandomRotateAngle > 0.01f)
-                                {
-                                    this.icon = Widgets.GetIconFor(x, s);
-                                }
-                                else
-                                {
-                                    this.icon = x.GetUIIconForStuff(s);
-                                }
-                            },
-                            t => t.graphic?.Color ?? Color.white,
-                            (t, r) => Widgets.DefIcon(r, t, null)),
-                        "SelectStuff".Translate()));
-                }
-            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)), "Select".Translate()));
-                 });
-                yield break;
             }
+            this.RecordRecentSelection(def, stuffDef);
+            Find.DesignatorManager.Select(this);
         }
 
         public override void DesignateSingleCell(IntVec3 loc)
@@ -144,8 +165,20 @@ namespace QuestEditor_Library
             return true;
         }
 
+        private void RecordRecentSelection(ThingDef def, ThingDef? stuffDef)
+        {
+            recentSelections.RemoveAll(selection => selection.Thing == def && selection.Stuff == stuffDef);
+            recentSelections.Insert(0, new DesignatorThingSelection(def, stuffDef));
+            if (recentSelections.Count > RecentSelectionLimit)
+            {
+                recentSelections.RemoveRange(RecentSelectionLimit, recentSelections.Count - RecentSelectionLimit);
+            }
+        }
+
         public static ThingDef thing = QEDefOf.QE_Spawner_Editor;
-        public static ThingDef stuff = ThingDefOf.WoodLog;
+        public static ThingDef? stuff = ThingDefOf.WoodLog;
+        private const int RecentSelectionLimit = 5;
+        private static readonly List<DesignatorThingSelection> recentSelections = new List<DesignatorThingSelection>();
         private static List<ThingDef> bespawnable = new List<ThingDef>();
     }
 }

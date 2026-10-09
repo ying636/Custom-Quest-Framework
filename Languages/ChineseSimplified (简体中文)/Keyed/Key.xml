@@ -496,14 +496,6 @@
 
   <!-- EN: Special building -->
   <CQFSpecialBuilding>特殊建筑</CQFSpecialBuilding>
-  <!-- EN: Fixed wall -->
-  <CQFFixedWallLabel>固定的墙</CQFFixedWallLabel>
-  <!-- EN: An impassable wall capable of holding up a roof. It cannot be damaged or destroyed. -->
-  <CQFFixedWallDescription>一道不可通过且可支撑屋顶的固定墙，无法受到伤害或摧毁。</CQFFixedWallDescription>
-  <!-- EN: Fixed door -->
-  <CQFFixedDoorLabel>固定的门</CQFFixedDoorLabel>
-  <!-- EN: A special door that cannot be broken by brute force. -->
-  <CQFFixedDoorDescription>一个特殊的门，无法靠蛮力破坏。</CQFFixedDoorDescription>
 
   <UseCustomInspectText>使用自定义检查文本：</UseCustomInspectText>
   <CQF_CustomInspectText>自定义检查文本：</CQF_CustomInspectText>

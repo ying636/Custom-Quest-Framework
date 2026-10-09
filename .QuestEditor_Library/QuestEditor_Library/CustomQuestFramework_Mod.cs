@@ -19,7 +19,6 @@ namespace QuestEditor_Library
             CQFConditionalLoadFolders folders = new CQFConditionalLoadFolders(content, this.setting);
             CQFEditorLoader.Load(content, folders.GetFolders(nameof(CustomQuestFramework_ModSetting.enableEditor)));
             if (!CQFEditorBridge.IsLoaded) folders.Exclude(nameof(CustomQuestFramework_ModSetting.enableEditor));
-            LongEventHandler.ExecuteWhenFinished(ApplySpecialBuildingTranslations);
         }
         public override string SettingsCategory()
         {
@@ -55,16 +54,6 @@ namespace QuestEditor_Library
             if (CQFUIStyle.ButtonText(new Rect(inRect.x, y, Mathf.Min(260f, inRect.width), 32f), "CQF_AI_Settings".Translate())) CQFEditorBridge.Module!.OpenSettings();
             y += 40f;
             Widgets.CheckboxLabeled(new Rect(inRect.x, y, inRect.width, 30f), "AutoCompileDialogTextKey".Translate(), ref this.setting.autoCompileDialogTextKey);
-        }
-        private static void ApplySpecialBuildingTranslations()
-        {
-            ThingDef fixedWall = DefDatabase<ThingDef>.GetNamed("QF_MiracleWall");
-            fixedWall.label = "CQFFixedWallLabel".Translate();
-            fixedWall.description = "CQFFixedWallDescription".Translate();
-
-            ThingDef fixedDoor = DefDatabase<ThingDef>.GetNamed("QF_MiracleDoor");
-            fixedDoor.label = "CQFFixedDoorLabel".Translate();
-            fixedDoor.description = "CQFFixedDoorDescription".Translate();
         }
         public CustomQuestFramework_ModSetting setting = null;
         private readonly bool editorEnabledAtStartup;

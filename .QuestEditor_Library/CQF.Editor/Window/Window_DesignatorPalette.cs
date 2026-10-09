@@ -8,11 +8,20 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public abstract class Window_DesignatorPalette<T> : Window where T : class
+    public class Window_DesignatorPalette<T> : Window where T : class
     {
-        protected Window_DesignatorPalette(Designator designator)
+        public Window_DesignatorPalette(Designator designator, IEnumerable<T> allItems, IReadOnlyList<T> recentItems,
+            Func<T, string> getLabel, Action<T, Rect> drawIcon, Action<T> selectItem, Func<T, bool> isSelected,
+            Func<T, string>? getTip = null)
         {
             this.designator = designator;
+            this.allItems = allItems.ToList();
+            this.recentItems = recentItems;
+            this.getLabel = getLabel;
+            this.drawIcon = drawIcon;
+            this.selectItem = selectItem;
+            this.isSelected = isSelected;
+            this.getTip = getTip;
             this.layer = WindowLayer.GameUI;
             this.closeOnAccept = false;
             this.closeOnCancel = false;
@@ -25,12 +34,6 @@ namespace QuestEditor_Library
         public override Vector2 InitialSize => new Vector2(200f, 150f);
 
         protected override float Margin => 6f;
-
-        protected abstract string PaletteTitle { get; }
-
-        protected abstract IReadOnlyList<T> AllItems { get; }
-
-        protected abstract IReadOnlyList<T> RecentItems { get; }
 
         public override void PreOpen()
         {
@@ -78,16 +81,6 @@ namespace QuestEditor_Library
             }
         }
 
-        protected abstract string GetLabel(T item);
-
-        protected abstract string GetTip(T item);
-
-        protected abstract void DrawIcon(T item, Rect rect);
-
-        protected abstract void SelectItem(T item);
-
-        protected abstract bool IsSelected(T item);
-
         private void DrawPaletteContents(Rect inRect)
         {
             float contentWidth = inRect.width - ToolbarWidth;
@@ -131,7 +124,7 @@ namespace QuestEditor_Library
 
         private void DrawRecentItems(Rect rect)
         {
-            IReadOnlyList<T> recentItems = this.RecentItems;
+            IReadOnlyList<T> recentItems = this.recentItems;
             if (recentItems.Count == 0)
             {
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -181,7 +174,7 @@ namespace QuestEditor_Library
 
         private void DrawItem(T item, Rect rect, bool drawLabel)
         {
-            if (this.IsSelected(item))
+            if (this.isSelected(item))
             {
                 CQFUIStyle.DrawHighlightSelected(rect);
             }
@@ -189,7 +182,7 @@ namespace QuestEditor_Library
             Rect iconRect = drawLabel
                 ? new Rect(rect.x + (rect.width - IconSize) / 2f, rect.y + IconPadding, IconSize, IconSize)
                 : rect.ContractedBy(RecentIconPadding);
-            this.DrawIcon(item, iconRect);
+            this.drawIcon(item, iconRect);
             if (drawLabel)
             {
                 Text.Anchor = TextAnchor.UpperCenter;
@@ -199,7 +192,7 @@ namespace QuestEditor_Library
             if (Widgets.ButtonInvisible(rect))
             {
                 GUI.FocusControl(null);
-                this.SelectItem(item);
+                this.selectItem(item);
             }
             if (Mouse.IsOver(rect))
             {
@@ -209,7 +202,7 @@ namespace QuestEditor_Library
 
         private void RefreshFilteredItems()
         {
-            IEnumerable<T> items = this.AllItems;
+            IEnumerable<T> items = this.allItems;
             if (!this.searchTerms.NullOrEmpty())
             {
                 items = items.Where(item => this.GetCachedLabel(item).IndexOf(this.searchTerms, StringComparison.OrdinalIgnoreCase) >= 0);
@@ -222,7 +215,7 @@ namespace QuestEditor_Library
         {
             if (!this.labelCache.TryGetValue(item, out string label))
             {
-                label = this.GetLabel(item) ?? "";
+                label = this.getLabel(item) ?? "";
                 this.labelCache[item] = label;
             }
             return label;
@@ -232,7 +225,7 @@ namespace QuestEditor_Library
         {
             if (!this.tipCache.TryGetValue(item, out string tip))
             {
-                tip = this.GetTip(item) ?? this.GetCachedLabel(item);
+                tip = this.getTip?.Invoke(item) ?? this.GetCachedLabel(item);
                 this.tipCache[item] = tip;
             }
             return tip;
@@ -262,6 +255,13 @@ namespace QuestEditor_Library
         private const float ToolbarWidth = 20f;
 
         private readonly Designator designator;
+        private readonly List<T> allItems;
+        private readonly IReadOnlyList<T> recentItems;
+        private readonly Func<T, string> getLabel;
+        private readonly Action<T, Rect> drawIcon;
+        private readonly Action<T> selectItem;
+        private readonly Func<T, bool> isSelected;
+        private readonly Func<T, string>? getTip;
         private List<T> filteredItems = new List<T>();
         private readonly Dictionary<T, string> labelCache = new Dictionary<T, string>();
         private readonly Dictionary<T, string> tipCache = new Dictionary<T, string>();

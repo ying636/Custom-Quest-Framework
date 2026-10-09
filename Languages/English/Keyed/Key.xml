@@ -589,10 +589,6 @@ SiteName: SiteName-></RuleTip>
   <MapBackgroundImage_Search>Search:</MapBackgroundImage_Search>
 
   <CQFSpecialBuilding>Special building</CQFSpecialBuilding>
-  <CQFFixedWallLabel>Fixed wall</CQFFixedWallLabel>
-  <CQFFixedWallDescription>An impassable wall capable of holding up a roof. It cannot be damaged or destroyed.</CQFFixedWallDescription>
-  <CQFFixedDoorLabel>Fixed door</CQFFixedDoorLabel>
-  <CQFFixedDoorDescription>A special door that cannot be broken by brute force.</CQFFixedDoorDescription>
 
   <UseCustomInspectText>Use custom inspect text:</UseCustomInspectText>
   <CQF_CustomInspectText>Custom inspect text:</CQF_CustomInspectText>

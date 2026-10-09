@@ -126,10 +126,11 @@
   <!-- EN: A place for working. -->
   <QE_WorkSpot.description>一个用于工作的地点。</QE_WorkSpot.description>
   
-  <!-- EN: Miracle wall -->
-  <QF_MiracleWall.label>奇迹墙</QF_MiracleWall.label>
-  <!-- EN: An impassable wall. Capable of holding up a roof.It is a miracle, indestructible , Undamageable. -->
-  <QF_MiracleWall.description>一个不可通过的可支撑屋顶的墙，这种墙存在本身便是一种奇迹，不可摧毁，不可破坏。</QF_MiracleWall.description>
+  <QF_MiracleWall.label>固定的墙</QF_MiracleWall.label>
+  <QF_MiracleWall.description>一道不可通过且可支撑屋顶的固定墙，无法受到伤害或摧毁。</QF_MiracleWall.description>
+
+  <QF_MiracleDoor.label>固定的门</QF_MiracleDoor.label>
+  <QF_MiracleDoor.description>一个特殊的门，无法靠蛮力破坏。</QF_MiracleDoor.description>
   
   <!-- EN: Strange wall -->
   <QF_StrangeWall.label>奇怪的墙</QF_StrangeWall.label>

@@ -77,7 +77,21 @@ namespace QuestEditor_Library
                  });
                 yield return new FloatMenuOption("CQF_OpenFloatingPalette".Translate(), () =>
                 {
-                    Find.WindowStack.Add(new Window_DesignatorThingPalette(this));
+                    Find.WindowStack.Add(new Window_DesignatorPalette<DesignatorThingSelection>(
+                        this, Bespawnable.Select(def => new DesignatorThingSelection(def)), RecentSelections,
+                        item => item.Stuff == null
+                            ? item.Thing.label ?? item.Thing.defName
+                            : item.Stuff.LabelAsStuff + " " + (item.Thing.label ?? item.Thing.defName),
+                        (item, rect) => Widgets.DefIcon(rect, item.Thing, item.Stuff, drawPlaceholder: true),
+                        item =>
+                        {
+                            if (item.Stuff == null) this.SelectThing(item.Thing);
+                            else this.SelectThing(item.Thing, item.Stuff);
+                        },
+                        item => item.Thing == thing && (item.Stuff == null || item.Stuff == stuff),
+                        item => (item.Stuff == null ? "" : item.Stuff.LabelAsStuff + " ")
+                            + (item.Thing.label ?? item.Thing.defName)
+                            + (item.Thing.description.NullOrEmpty() ? "" : "\n\n" + item.Thing.description)));
                 });
                 yield break;
             }
@@ -123,6 +137,10 @@ namespace QuestEditor_Library
             }
             this.RecordRecentSelection(def, stuffDef);
             Find.DesignatorManager.Select(this);
+        }
+        public override void RenderHighlight(List<IntVec3> dragCells)
+        {
+            DesignatorUtility.RenderHighlightOverSelectableCells(this, dragCells);
         }
         protected override void DrawGhost(Color ghostCol)
         {
