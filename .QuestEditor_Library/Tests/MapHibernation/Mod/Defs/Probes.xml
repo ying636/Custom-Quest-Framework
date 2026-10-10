@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef>
+    <defName>CQF_HibernationProbeNormal</defName>
+    <label>CQF_HibernationProbeNormal</label>
+    <thingClass>CQF.HibernationChecks.HibernationProbe</thingClass>
+    <category>Item</category>
+    <useHitPoints>false</useHitPoints>
+    <tickerType>Normal</tickerType>
+    <graphicData><texPath>UI/Null</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
+  </ThingDef>
+  <ThingDef>
+    <defName>CQF_HibernationProbeRare</defName>
+    <label>CQF_HibernationProbeRare</label>
+    <thingClass>CQF.HibernationChecks.HibernationProbe</thingClass>
+    <category>Item</category>
+    <useHitPoints>false</useHitPoints>
+    <tickerType>Rare</tickerType>
+    <graphicData><texPath>UI/Null</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
+  </ThingDef>
+  <ThingDef>
+    <defName>CQF_HibernationProbeLong</defName>
+    <label>CQF_HibernationProbeLong</label>
+    <thingClass>CQF.HibernationChecks.HibernationProbe</thingClass>
+    <category>Item</category>
+    <useHitPoints>false</useHitPoints>
+    <tickerType>Long</tickerType>
+    <graphicData><texPath>UI/Null</texPath><graphicClass>Graphic_Single</graphicClass></graphicData>
+  </ThingDef>
+</Defs>

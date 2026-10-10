@@ -20,6 +20,10 @@ namespace QuestEditor_Library
             CaravanDropInventoryMode dropInventoryMode = CaravanDropInventoryMode.DoNotDrop,
             bool draftColonists = false, Predicate<IntVec3> extraCellValidator = null)
         {
+            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(map))
+            {
+                hibernation.Activate(map);
+            }
             if (enterMode != CaravanEnterMode.Edge || !TryGetCustomMapData(map, out CustomMapDataDef def) ||
                 !def.TryGetEnterSpot(map, out IntVec3 enterSpot))
             {

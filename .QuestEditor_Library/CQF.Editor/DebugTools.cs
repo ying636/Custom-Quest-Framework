@@ -12,7 +12,7 @@ namespace QuestEditor_Library
 {
     public static class DebugTools
 	{
-        [DebugAction("QuestEditor", "Clear mutant", false, false, false, false, false, 0, false, actionType = DebugActionType.ToolWorld, allowedGameStates = AllowedGameStates.PlayingOnWorld, requiresOdyssey = true)]
+        [DebugAction("CQF", "Clear mutant", false, false, false, false, false, 0, false, actionType = DebugActionType.ToolWorld, allowedGameStates = AllowedGameStates.PlayingOnWorld, requiresOdyssey = true)]
         private static void ClearMutant()
         {
             PlanetTile tile = GenWorld.MouseTile(false);
@@ -25,7 +25,7 @@ namespace QuestEditor_Library
                 Find.World.renderer.GetLayer<WorldDrawLayer_Terrain>(tile.Layer).RegenerateNow();
             }
         }
-        [DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
+        [DebugAction("CQF", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
         private static void GetQuestTag()
         {
             if (UI.MouseCell().GetThingList(Find.CurrentMap).First() is Thing thing)
@@ -46,7 +46,7 @@ namespace QuestEditor_Library
 				Log.Message(building.ToString().Trim());
             }
         }
-        [DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
+        [DebugAction("CQF", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetQuestFromTarget()
 		{
 			if (UI.MouseCell().GetThingList(Find.CurrentMap).First() is Thing thing) 
@@ -54,7 +54,7 @@ namespace QuestEditor_Library
 				Log.Message(GameTools.GetQuestFromThing(thing)?.name ?? "Null quest");
 			}
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetCoreRect()
 		{
 			if (UI.MouseCell().InBounds(Find.CurrentMap) && UI.MouseCell().GetFirstThing<ZoneCore>(Find.CurrentMap) is ZoneCore core)
@@ -89,7 +89,7 @@ CQFMapGenerationState.Cells.AddRange(core.GetRect(core.CoreRotation, d2.Value.si
 				Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
 			}
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.ToolMap, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetCoreSize()
 		{
 			if (UI.MouseCell().GetThingList(Find.CurrentMap).Find(t => t is ZoneCore) is ZoneCore thing)
@@ -97,7 +97,7 @@ CQFMapGenerationState.Cells.AddRange(core.GetRect(core.CoreRotation, d2.Value.si
 				Log.Message(thing.size.ToString());
 			}
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetCustomMapDataInformation()
 		{
 			List<DebugMenuOption> options = new List<DebugMenuOption>();
@@ -129,23 +129,23 @@ CQFMapGenerationState.Cells.AddRange(core.GetRect(core.CoreRotation, d2.Value.si
 			}
 			Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void ClearGenerationCells()
 		{
 			GenStep_CustomMap.disgenerate = new List<IntVec3>();
 CQFMapGenerationState.Cells= new List<IntVec3>();
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void ShowCells()
 		{
 			GameComponent_Editor.showCells = true;
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void ShowReplaceDic()
 		{
 		 Log.Message(GenStep_CustomMap.replaceData.ToString());
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void AddDialog()
 		{
 			List<DebugMenuOption> options = new List<DebugMenuOption>();
@@ -162,19 +162,19 @@ CQFMapGenerationState.Cells= new List<IntVec3>();
 			}
 			Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void DisclearGenerationData()
 		{
 CQFMapGenerationState.ClearGenerationData= !CQFMapGenerationState.ClearGenerationData;
 			Log.Message(CQFMapGenerationState.ClearGenerationData.ToString());
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void DisgenerateByCore()
 		{
 CQFMapGenerationState.DisgenerateByCore= !CQFMapGenerationState.DisgenerateByCore;
 			Log.Message(CQFMapGenerationState.DisgenerateByCore.ToString());
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetMapInformation()
 		{
 			Map map = Find.CurrentMap;
@@ -198,7 +198,7 @@ CQFMapGenerationState.DisgenerateByCore= !CQFMapGenerationState.DisgenerateByCor
 			}
 		}
 
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetComponentInformation()
 		{
 			GameComponent_Editor component = GameComponent_Editor.Instance;
@@ -226,7 +226,7 @@ CQFMapGenerationState.DisgenerateByCore= !CQFMapGenerationState.DisgenerateByCor
 			information.AppendLine(component.GlobalDatabase.ToString());
 			Log.Message(information.ToString().Trim());
 		}
-		[DebugAction("QuestEditor", null, false, false,
+		[DebugAction("CQF", null, false, false,
 			actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GetGameConditionInformation()
 		{ 
@@ -244,7 +244,7 @@ CQFMapGenerationState.DisgenerateByCore= !CQFMapGenerationState.DisgenerateByCor
 			}
 			Log.Message(information.ToString().Trim());
 		}
-		[DebugAction("QuestEditor", null, false, false,
+		[DebugAction("CQF", null, false, false,
 			actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void TriggerCustomGameCondition()
 		{ 
@@ -261,7 +261,7 @@ CQFMapGenerationState.DisgenerateByCore= !CQFMapGenerationState.DisgenerateByCor
 
 			Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
 		}
-		[DebugAction("QuestEditor", null, false, false,
+		[DebugAction("CQF", null, false, false,
 			actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void EndCustomGameCondition()
 		{ 
@@ -278,7 +278,7 @@ CQFMapGenerationState.DisgenerateByCore= !CQFMapGenerationState.DisgenerateByCor
 
 			Find.WindowStack.Add(new Dialog_DebugOptionListLister(options));
 		}
-		[DebugAction("QuestEditor", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
+		[DebugAction("CQF", null, false, false, actionType = DebugActionType.Action, allowedGameStates = AllowedGameStates.Playing)]
 		private static void GenerateCustomMapData()
 		{
 			List<DebugMenuOption> options = new List<DebugMenuOption>();

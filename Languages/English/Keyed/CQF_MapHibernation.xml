@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_MapHibernation>CQF_MapHibernation</CQF_MapHibernation>
+  <CQF_HibernateMap>CQF_HibernateMap</CQF_HibernateMap>
+  <CQF_ActivateMap>CQF_ActivateMap</CQF_ActivateMap>
+  <CQFAction_HibernateMap>CQFAction_HibernateMap</CQFAction_HibernateMap>
+  <CQFAction_ActivateMap>CQFAction_ActivateMap</CQFAction_ActivateMap>
+</LanguageData>

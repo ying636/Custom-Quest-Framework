@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CQF.HibernationChecks</AssemblyName>
+    <RimWorldDir>$(MSBuildThisFileDirectory)..\..\..\..\..</RimWorldDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+    <Reference Include="Assembly-CSharp"><HintPath>$(RimWorldDir)\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(RimWorldDir)\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

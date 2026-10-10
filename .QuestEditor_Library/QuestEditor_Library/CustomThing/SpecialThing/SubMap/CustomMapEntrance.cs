@@ -347,6 +347,10 @@ namespace QuestEditor_Library
             {
                 this.GenerateCustomMap(this.Map,null);
             }
+            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.customMap))
+            {
+                hibernation.Activate(this.customMap);
+            }
             return this.customMap;
         }
 
@@ -405,6 +409,10 @@ namespace QuestEditor_Library
                 this.exit.Position == null || this.exit.Map == null)
             {
                 return;
+            }
+            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.exit.Map))
+            {
+                hibernation.Activate(this.exit.Map);
             }
             this.thereIsPawnIsEntering = true;
             if (thing.Spawned)
