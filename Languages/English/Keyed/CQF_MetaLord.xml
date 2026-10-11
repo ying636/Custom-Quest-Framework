@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQFAction_MetaLord>Multi-level organization action</CQFAction_MetaLord>
+  <LordJob_MetaLord>Multi-level organization group</LordJob_MetaLord>
+  <CQF_MetaLordName>Organization name</CQF_MetaLordName>
+  <CQF_MetaLordMapKey>Map target key</CQF_MetaLordMapKey>
+  <CQF_MetaLordGroup>Group name or tag</CQF_MetaLordGroup>
+  <CQF_MetaLordTimeout>Move timeout (ticks)</CQF_MetaLordTimeout>
+  <CQF_MetaLordSignal>Signal tag</CQF_MetaLordSignal>
+  <CQF_MetaLordCapacity>Group capacity (0 = unlimited)</CQF_MetaLordCapacity>
+  <CQF_MetaLordEvents>Organization events</CQF_MetaLordEvents>
+  <CQF_MetaLordTags>Group tags</CQF_MetaLordTags>
+  <CQF_MetaLordOperation_CreateGroup>Create group</CQF_MetaLordOperation_CreateGroup>
+  <CQF_MetaLordOperation_Join>Join organization</CQF_MetaLordOperation_Join>
+  <CQF_MetaLordOperation_Leave>Leave organization</CQF_MetaLordOperation_Leave>
+  <CQF_MetaLordOperation_Move>Move between map layers</CQF_MetaLordOperation_Move>
+  <CQF_MetaLordOperation_CancelMove>Cancel move</CQF_MetaLordOperation_CancelMove>
+  <CQF_MetaLordOperation_RemoveGroup>Remove group</CQF_MetaLordOperation_RemoveGroup>
+  <CQF_MetaLordOperation_Signal>Send organization signal</CQF_MetaLordOperation_Signal>
+  <CQF_MetaLordOperation_Disband>Disband organization</CQF_MetaLordOperation_Disband>
+</LanguageData>

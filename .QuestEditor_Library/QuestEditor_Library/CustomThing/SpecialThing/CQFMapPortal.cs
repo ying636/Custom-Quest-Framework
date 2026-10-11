@@ -13,6 +13,7 @@ namespace QuestEditor_Library
     {
         public virtual CQFMapPortal Exit => this;
         public virtual CQFMapPortal MapEntrance => this;
+        public virtual CQFMapPortal CooldownDestination => this.Exit;
         public Dictionary<Pawn, Lord> PawnAndLords
         {
             get
@@ -37,8 +38,8 @@ namespace QuestEditor_Library
         }
         public virtual bool IsAllowed(Pawn pawn)
         {
-            return !pawn.IsColonist || GameComponent_LevelSchedule.Instance.GetSchedule(pawn).
-                allowedLevels.Contains(this.MapEntrance);
+            return !pawn.IsColonist || GameComponent_LevelSchedule.Instance.GetSchedule(pawn)?.
+                allowedLevels.Contains(this.MapEntrance) == true;
         }
         public bool IsAvailable(Pawn pawn)
         {
@@ -47,25 +48,25 @@ namespace QuestEditor_Library
         public override void OnEntered(Pawn pawn)
         {
             this.Notify_ThingAdded(pawn);
+            MetaLord owner = Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(pawn);
+            owner?.PawnArrivedNewLevel(pawn, pawn.Map);
             if (pawn.GetLord() is Lord l) 
             {
-                if (l.LordJob is MultLevelLordJobBase job && job.metaLord is
-    MetaLord metaLord)
-                {
-                    metaLord.PawnArrivedNewLevel(pawn, pawn.Map);
-                }
-                if ((l.LordJob is LordJob_AssaultColony)
+                if (owner == null && ((l.LordJob is LordJob_AssaultColony)
                     || pawn.mindState.duty?.def == DutyDefOf.AssaultColony)
+                    )
                 {
                     this.PawnAndLords.SetOrAdd(pawn, pawn.GetLord());
                 }
             }
-            if (this.Exit.CD.Find(c => c.pawn == pawn) is LevelCD cd)
+            if (this.CooldownDestination == null)
+                throw new InvalidOperationException("[CQF] Portal has no cooldown destination: " + this.ThingID);
+            if (this.CooldownDestination.CD.Find(c => c.pawn == pawn) is LevelCD cd)
             {
                 cd.cd = 1200;
                 return;
             }
-            this.Exit.CD.Add(new LevelCD() { pawn = pawn, cd = 1200 }); 
+            this.CooldownDestination.CD.Add(new LevelCD() { pawn = pawn, cd = 1200 });
         }
         protected override void Tick()
         {

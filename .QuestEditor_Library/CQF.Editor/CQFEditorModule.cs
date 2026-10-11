@@ -22,6 +22,7 @@ namespace QuestEditor_Library
 
         public void RegisterDrawers()
         {
+            CQFEditorBridge.Register("QuestEditor_Library.CQFAction_MetaLord.Draw(Ref:float,None:UnityEngine.Rect,None:float)", typeof(CQFAction_MetaLordEditor), "Draw_0");
             CQFEditorBridge.Register("QuestEditor_Library.CQFFilter.Draw(Ref:float,None:UnityEngine.Rect,None:float)", typeof(CQFFilterEditor), "Draw_0");
             CQFEditorBridge.Register("QuestEditor_Library.ThingData.OpenSelectDialog()", typeof(ThingDataEditor), "OpenSelectDialog_0");
             CQFEditorBridge.Register("QuestEditor_Library.CustomMapGenerationSet.Draw(Ref:float,None:UnityEngine.Rect,None:float)", typeof(CustomMapGenerationSetEditor), "Draw_0");

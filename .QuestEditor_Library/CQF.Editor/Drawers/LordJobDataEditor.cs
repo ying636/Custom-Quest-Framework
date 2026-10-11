@@ -33,7 +33,7 @@ namespace QuestEditor_Library
             }
 
             y += 38f;
-            if (cqfReceiver.lordJob == typeof(LordJob_ComplexCustom))
+            if (typeof(LordJob_ComplexCustom).IsAssignableFrom(cqfReceiver.lordJob))
             {
                 cqfReceiver.DrawComplexDutyMap(ref y, x);
             }

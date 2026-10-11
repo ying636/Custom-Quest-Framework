@@ -6,11 +6,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RimWorldDir Condition="'$(RimWorldDir)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\..</RimWorldDir>
+    <HarmonyPath Condition="'$(HarmonyPath)' == ''">$(RimWorldDir)\..\..\workshop\content\294100\2009463077\Current\Assemblies\0Harmony.dll</HarmonyPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QuestEditor_Library"><HintPath>$(MSBuildThisFileDirectory)..\..\..\1.6\Assemblies\net48\QuestEditor_Library.dll</HintPath></Reference>
     <Reference Include="Assembly-CSharp"><HintPath>$(RimWorldDir)\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath></Reference>
     <Reference Include="UnityEngine.CoreModule"><HintPath>$(RimWorldDir)\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath></Reference>
+    <Reference Include="0Harmony"><HintPath>$(HarmonyPath)</HintPath></Reference>
     <Compile Include="..\DialogGraph\ChecksLogHandler.cs" Link="ChecksLogHandler.cs" />
   </ItemGroup>
 </Project>

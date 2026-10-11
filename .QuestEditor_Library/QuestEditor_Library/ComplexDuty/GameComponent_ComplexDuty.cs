@@ -27,6 +27,11 @@ namespace QuestEditor_Library
             }
         }
 
+        public CustomDutyMap TryGetRuntime(Pawn pawn)
+        {
+            return pawn != null && this.Runtimes.TryGetValue(pawn, out CustomDutyMap runtime) ? runtime : null;
+        }
+
         public CustomDutyMap GetRuntime(Pawn pawn)
         {
             if (pawn == null)

@@ -1,113 +1,75 @@
-using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RimWorld;
+using RimWorld.Planet;
 using Verse;
 
 namespace QuestEditor_Library
 {
     public static class LevelPather
     {
-        public static List<MapPortal> GetPathPortal(Map root, Map destination)
+        public static Map GetRoot(Map map)
         {
-            List<MapPortal> result = new List<MapPortal>();
-            List<Map> destinationToRoot = GetAllParentMaps(destination);
-            if (destinationToRoot.Contains(root))
-            {
-                result.AddRange(GetPathLine(root, destination));
-            }
-            else if (root.Parent is MapParent_Custom custom)
-            {
-                List<Map> rootParent = GetAllParentMaps(destination);
-                Map BranchMap = destination;
-                while (BranchMap.Parent is MapParent_Custom parent)
-                {
-                    if (!rootParent.Contains(BranchMap) && parent.entrance != null)
-                    {
-                        BranchMap = parent.entrance.Map;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                result.AddRange(GetPathLineReverse(custom.Map, BranchMap));
-            }
-            else
-            {
-                StringBuilder log = new StringBuilder("?There is a strange bug in Ancient Market Mod");
-                log.AppendLine(destination.ToString());
-                Log.Error(log.ToString().Trim());
+            List<Map> parents = GetAllParentMaps(map);
+            return parents.Count == 0 ? null : parents[parents.Count - 1];
+        }
 
-            }
-            return result;
-        }
-        public static List<MapPortal> GetPathLineReverse(Map root, Map destination)
+        public static List<MapPortal> GetPathPortal(Map source, Map destination)
         {
-            List<MapPortal> result = new List<MapPortal>();
-            Map curMap = root;
-            while (curMap.Parent as MapParent_Custom != null)
+            if (source == null || destination == null || source.Disposed || destination.Disposed)
+                throw new ArgumentException("[CQF] MetaLord route requires valid source and destination maps.");
+            List<Map> sourceParents = GetAllParentMaps(source);
+            List<Map> targetParents = GetAllParentMaps(destination);
+            HashSet<Map> targetSet = new HashSet<Map>(targetParents);
+            Map common = sourceParents.Find(targetSet.Contains);
+            if (common == null)
+                throw new InvalidOperationException("[CQF] MetaLord maps have no common ancestor.");
+            List<MapPortal> route = new List<MapPortal>();
+            for (int i = 0; sourceParents[i] != common; i++)
             {
-                if (curMap.Parent is MapParent_Custom map)
-                {
-                    result.Add(map.Exit);
-                    if (curMap == destination)
-                    {
-                        break;
-                    }
-                    curMap = map.sourceMap;
-                }
+                if (!(sourceParents[i].Parent is MapParent_Custom parent) || parent.Exit == null)
+                    throw new InvalidOperationException("[CQF] MetaLord route has no CQF exit: " + sourceParents[i]);
+                route.Add(parent.Exit);
             }
-            return result;
+            for (int i = targetParents.IndexOf(common) - 1; i >= 0; i--)
+            {
+                if (!(targetParents[i].Parent is MapParent_Custom parent) || parent.entrance == null)
+                    throw new InvalidOperationException("[CQF] MetaLord route has no CQF entrance: " + targetParents[i]);
+                route.Add(parent.entrance);
+            }
+            return route;
         }
-        public static List<CQFMapPortal> GetPathLine(Map root, Map destination)
+
+        public static List<CQFMapPortal> GetPathLine(Map source, Map destination)
         {
             List<CQFMapPortal> result = new List<CQFMapPortal>();
-
-            Map curMap = destination;
-            while (curMap.Parent as MapParent_Custom != null)
-            {
-                if (curMap.Parent is MapParent_Custom map)
-                {
-                    result.Add(map.entrance);
-                    curMap = map.sourceMap;
-                    if (curMap == root)
-                    {
-                        break;
-                    }
-                }
-            }
+            foreach (MapPortal portal in GetPathPortal(source, destination))
+                result.Add((CQFMapPortal)portal);
             return result;
         }
 
-        public static List<Map> GetAllParentMaps(Map target)
+        public static List<MapPortal> GetPathLineReverse(Map source, Map destination)
+        {
+            return GetPathPortal(source, destination);
+        }
+
+        public static List<Map> GetAllParentMaps(Map map)
         {
             List<Map> result = new List<Map>();
-            if (target.Parent is MapParent_Custom map)
+            HashSet<Map> visited = new HashSet<Map>();
+            while (map != null)
             {
-                result.AddRange(GetParent(map));
-            }
-            else
-            {
-                result.Add(target);
+                if (!visited.Add(map))
+                    throw new InvalidOperationException("[CQF] Cyclic pocket map parent chain: " + map);
+                result.Add(map);
+                map = (map.Parent as PocketMapParent)?.sourceMap;
             }
             return result;
         }
 
-        public static List<Map> GetParent(MapParent_Custom map)
+        public static List<Map> GetParent(MapParent_Custom parent)
         {
-            List<Map> result = new List<Map>() { map.Map };
-            if (map.sourceMap.Parent is MapParent_Custom map2)
-            {
-                result.AddRange(GetParent(map2));
-            }
-            else
-            {
-                result.Add(map.sourceMap);
-            }
-            return result;
+            return GetAllParentMaps(parent?.Map);
         }
     }
 }

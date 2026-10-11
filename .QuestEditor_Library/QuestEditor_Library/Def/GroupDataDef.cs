@@ -16,7 +16,10 @@ namespace QuestEditor_Library
         public Dictionary<string, TargetInfo> Generate(Map map, IntVec3 pos, Quest quest)
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
-            Lord lord = LordMaker.MakeNewLord(GameTools.GetFaction(this.lord.faction,map), this.lord.lordJobData.CreateJob(map, quest), map);
+            this.lord.Data.lordData = this.lord;
+            LordJob job = this.lord.Data.CreateJob(map, quest);
+            Faction faction = (job as MultLevelLordJobBase)?.metaLord.faction ?? GameTools.GetFaction(this.lord.faction, map);
+            Lord lord = LordMaker.MakeNewLord(faction, job, map);
             this.pawns.ForEach(p =>
             {
                 Dictionary<string, TargetInfo> targets2 = p.Spawn(pos, map, "Quest" + quest?.id, quest, lord);

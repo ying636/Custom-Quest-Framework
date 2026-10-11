@@ -55,6 +55,8 @@ namespace QuestEditor_Library
             }
         }  
         public virtual string GetExitText => "Exit".Translate();
+        public override CQFMapPortal MapEntrance => this.entrance;
+        public override CQFMapPortal CooldownDestination => this.entrance;
         public override void OnEntered(Pawn pawn)
         {
             base.OnEntered(pawn);

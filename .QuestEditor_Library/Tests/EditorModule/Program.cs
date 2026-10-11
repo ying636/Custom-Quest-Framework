@@ -15,6 +15,8 @@ internal static class Program
         AppDomain.CurrentDomain.AssemblyResolve += (_, request) =>
         {
             string file = Path.Combine(game, "RimWorldWin64_Data", "Managed", new AssemblyName(request.Name).Name + ".dll");
+            if (new AssemblyName(request.Name).Name == "0Harmony")
+                file = Path.GetFullPath(Path.Combine(game, "..", "..", "workshop", "content", "294100", "2009463077", "Current", "Assemblies", "0Harmony.dll"));
             return File.Exists(file) ? Assembly.LoadFrom(file) : null;
         };
         try { Run(game, args.Contains("enabled")); }

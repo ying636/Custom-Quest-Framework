@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQFAction_MetaLord>跨层组织操作</CQFAction_MetaLord>
+  <LordJob_MetaLord>跨层组织小组</LordJob_MetaLord>
+  <CQF_MetaLordName>组织名称</CQF_MetaLordName>
+  <CQF_MetaLordMapKey>地图目标键</CQF_MetaLordMapKey>
+  <CQF_MetaLordGroup>小组名称或标签</CQF_MetaLordGroup>
+  <CQF_MetaLordTimeout>移动超时（tick）</CQF_MetaLordTimeout>
+  <CQF_MetaLordSignal>信号标签</CQF_MetaLordSignal>
+  <CQF_MetaLordCapacity>小组容量（0 为不限）</CQF_MetaLordCapacity>
+  <CQF_MetaLordEvents>组织事件</CQF_MetaLordEvents>
+  <CQF_MetaLordTags>小组标签</CQF_MetaLordTags>
+  <CQF_MetaLordOperation_CreateGroup>创建小组</CQF_MetaLordOperation_CreateGroup>
+  <CQF_MetaLordOperation_Join>加入组织</CQF_MetaLordOperation_Join>
+  <CQF_MetaLordOperation_Leave>离开组织</CQF_MetaLordOperation_Leave>
+  <CQF_MetaLordOperation_Move>跨层调动</CQF_MetaLordOperation_Move>
+  <CQF_MetaLordOperation_CancelMove>取消调动</CQF_MetaLordOperation_CancelMove>
+  <CQF_MetaLordOperation_RemoveGroup>移除小组</CQF_MetaLordOperation_RemoveGroup>
+  <CQF_MetaLordOperation_Signal>发送组织信号</CQF_MetaLordOperation_Signal>
+  <CQF_MetaLordOperation_Disband>解散组织</CQF_MetaLordOperation_Disband>
+</LanguageData>

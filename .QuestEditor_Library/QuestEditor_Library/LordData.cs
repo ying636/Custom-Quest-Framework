@@ -23,6 +23,7 @@ namespace QuestEditor_Library
                 {
                     this.lordJobData = new LordJobData() {lordData = this};
                 }
+                this.lordJobData.lordData = this;
                 return lordJobData;
             }
         }
@@ -36,6 +37,10 @@ namespace QuestEditor_Library
             {
                 result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             }
+            if (!this.metaLordName.NullOrEmpty()) result.Add(new XElement("metaLordName", this.metaLordName));
+            if (this.metaLordEvents != null) result.Add(new XElement("metaLordEvents", this.metaLordEvents.defName));
+            if (this.groupTags.Count > 0) result.Add(CQFSerialization.SaveList(this.groupTags, "groupTags"));
+            if (this.capacity > 0) result.Add(new XElement("capacity", this.capacity));
             return result;
         }
 
@@ -57,6 +62,11 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.faction, "faction");
             Scribe_Deep.Look(ref this.lordJobData, "lordJobData");
             Scribe_Collections.Look(ref this.actions,"actions",LookMode.Deep);
+            Scribe_Values.Look(ref this.metaLordName, "metaLordName");
+            Scribe_Defs.Look(ref this.metaLordEvents, "metaLordEvents");
+            Scribe_Collections.Look(ref this.groupTags, "groupTags", LookMode.Value);
+            Scribe_Values.Look(ref this.capacity, "capacity");
+            if (Scribe.mode == LoadSaveMode.PostLoadInit) this.groupTags ??= new List<string>();
             if (Scribe.mode == LoadSaveMode.PostLoadInit && this.lordJobData != null) 
             {
                 this.lordJobData.lordData = this;
@@ -67,6 +77,11 @@ namespace QuestEditor_Library
         public string faction;
         public LordJobData lordJobData;
         public List<CQFAction_Lord> actions = new List<CQFAction_Lord>();
+        [NoTranslate] public string metaLordName;
+        public MetaLordEventDef metaLordEvents;
+        public int capacity;
+        public List<string> groupTags = new List<string>();
+        public string capacityBuffer;
     }
     public class LordJobData : ISaveable, IDrawable, IExposable
     {
@@ -79,6 +94,17 @@ namespace QuestEditor_Library
             {
                 complexJob.defaultDutyMap = this.dutyMap;
                 complexJob.defaultStartNodeId = this.dutyMapStartNodeId;
+            }
+            if (result is MultLevelLordJobBase multiJob)
+            {
+                if (this.lordData == null || this.lordData.metaLordName.NullOrEmpty())
+                    throw new InvalidOperationException("[CQF] Multi-level LordData requires metaLordName.");
+                multiJob.metaLord = map.GetComponent<MapComponent_CQFLord>().Manager.GetOrCreate(
+                    this.lordData.metaLordName, map, GameTools.GetFaction(this.lordData.faction, map),
+                    this.lordData.metaLordEvents, quest);
+                multiJob.groupName = this.lordData.name;
+                multiJob.capacity = this.lordData.capacity;
+                multiJob.groupTags = new List<string>(this.lordData.groupTags);
             }
             return result;
         }

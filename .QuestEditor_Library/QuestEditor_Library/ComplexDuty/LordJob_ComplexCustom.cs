@@ -12,7 +12,7 @@ namespace QuestEditor_Library
     {
         public override bool KeepExistingWhileHasAnyBuilding => true;
         public override bool AlwaysShowWeapon => true; 
-        public Quest Quest => GameTools.GetQuestFromMap(this.Map);
+        public virtual Quest Quest => GameTools.GetQuestFromMap(this.Map);
 
         public override StateGraph CreateGraph()
         {
@@ -31,7 +31,7 @@ namespace QuestEditor_Library
             int tick = Find.TickManager.TicksGame;
             foreach (Pawn pawn in this.lord.ownedPawns.ListFullCopy())
             {
-                CustomDutyMap runtime = GameComponent_ComplexDuty.Instance?.GetRuntime(pawn);
+                CustomDutyMap runtime = GameComponent_ComplexDuty.Instance?.TryGetRuntime(pawn);
                 if (runtime?.dutyMap == null)
                 {
                     continue;
@@ -68,7 +68,7 @@ namespace QuestEditor_Library
             }
         }
 
-        public void ApplyDuty(Pawn pawn, Quest quest = null)
+        public virtual void ApplyDuty(Pawn pawn, Quest quest = null)
         {
             CustomDutyMap runtime = GameComponent_ComplexDuty.Instance.GetRuntime(pawn);
             DutyMapNode node = runtime?.CurrentNode;

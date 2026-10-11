@@ -98,7 +98,10 @@ namespace QuestEditor_Library
                     });
                     def.lordDatas.ForEach(l =>
                     {
-                        Lord lord = LordMaker.MakeNewLord(GameTools.GetFaction(l.faction, map), l.lordJobData.CreateJob(map, quest), map);
+                        l.Data.lordData = l;
+                        LordJob job = l.Data.CreateJob(map, quest);
+                        Faction lordFaction = (job as MultLevelLordJobBase)?.metaLord.faction ?? GameTools.GetFaction(l.faction, map);
+                        Lord lord = LordMaker.MakeNewLord(lordFaction, job, map);
                         map.GetComponent<MapComponent_CustomMapData>().Lords.Add(new LordWithName() { name = l.name, lord = lord });
                         GameComponent_Editor.Instance.GetQuestData(quest)?.Lords.SetOrAdd(l.name, lord);
                         if (!lordsWithName.ContainsKey(l.name))

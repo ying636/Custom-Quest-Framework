@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.DutyMapDef>
+    <defName>CQF_MetaLordCheckDuty</defName><startNodeId>CQF_Guard</startNodeId>
+    <nodes><li><nodeId>CQF_Guard</nodeId><duty>Defend</duty></li></nodes>
+  </QuestEditor_Library.DutyMapDef>
+  <QuestEditor_Library.MetaLordEventDef>
+    <defName>CQF_MetaLordCheckEvents</defName><tickInterval>60</tickInterval>
+    <events>
+      <li><key>CQF_Once</key><once>true</once><trigger><type>External</type><signalTag>CQF_Once</signalTag></trigger>
+        <actions><li Class="CQF.MetaLordChecks.CounterAction"><key>CQF_Once</key></li></actions></li>
+      <li><key>CQF_Cooldown</key><cooldownTicks>180</cooldownTicks><trigger><type>External</type><signalTag>CQF_Cooldown</signalTag></trigger>
+        <actions><li Class="CQF.MetaLordChecks.CounterAction"><key>CQF_Cooldown</key></li></actions></li>
+      <li><key>CQF_Tick</key><trigger><type>Tick</type></trigger>
+        <actions><li Class="CQF.MetaLordChecks.CounterAction"><key>CQF_Tick</key></li></actions></li>
+      <li><key>CQF_Reentrant</key><once>true</once><trigger><type>External</type><signalTag>CQF_Reentrant</signalTag></trigger>
+        <actions><li Class="CQF.MetaLordChecks.CounterAction"><key>CQF_Reentrant</key><repeat>true</repeat></li></actions></li>
+    </events>
+  </QuestEditor_Library.MetaLordEventDef>
+  <QuestEditor_Library.MetaLordEventDef>
+    <defName>CQF_MetaLordCheckRedirectEvents</defName>
+    <events><li><key>CQF_Redirect</key><once>true</once><trigger><type>MoveCancelled</type></trigger>
+      <actions><li Class="CQF.MetaLordChecks.RequestMoveAction" /></actions></li></events>
+  </QuestEditor_Library.MetaLordEventDef>
+  <QuestEditor_Library.MetaLordEventDef>
+    <defName>CQF_MetaLordCheckRemovalEvents</defName>
+    <events><li><key>CQF_RemoveRequest</key><once>true</once><trigger><type>MoveCancelled</type></trigger>
+      <actions><li Class="CQF.MetaLordChecks.RequestMoveAction" /></actions></li></events>
+  </QuestEditor_Library.MetaLordEventDef>
+  <QuestEditor_Library.MetaLordEventDef>
+    <defName>CQF_MetaLordCheckAssignmentEvents</defName>
+    <events><li><key>CQF_AssignmentRedirect</key><once>true</once><trigger><type>PawnAssigned</type></trigger>
+      <actions><li Class="CQF.MetaLordChecks.RequestMoveAction" /></actions></li></events>
+  </QuestEditor_Library.MetaLordEventDef>
+  <QuestEditor_Library.MetaLordEventDef>
+    <defName>CQF_MetaLordCheckJoinDisbandEvents</defName>
+    <events><li><key>CQF_JoinDisband</key><once>true</once><trigger><type>PawnJoined</type></trigger>
+      <actions><li Class="QuestEditor_Library.CQFAction_MetaLord"><operation>Disband</operation>
+        <organizationName>CQF_JoinDisband</organizationName><mapKey>TargetMap</mapKey>
+      </li></actions></li></events>
+  </QuestEditor_Library.MetaLordEventDef>
+</Defs>

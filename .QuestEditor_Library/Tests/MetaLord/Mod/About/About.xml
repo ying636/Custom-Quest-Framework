@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>CQF_MetaLordChecks</name><author>HaiLuan</author><packageId>CQF.MetaLordChecks</packageId>
+  <supportedVersions><li>1.6</li></supportedVersions>
+  <modDependencies><li><packageId>HaiLuan.CustomQuestFramework</packageId><displayName>Custom Quest Framework</displayName></li></modDependencies>
+</ModMetaData>

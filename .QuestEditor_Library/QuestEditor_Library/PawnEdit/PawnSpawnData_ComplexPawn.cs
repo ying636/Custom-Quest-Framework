@@ -55,6 +55,8 @@ namespace QuestEditor_Library
                 pawns.Add(pawn);
                 this.ActionAfterGeneration(pawn, quest, i, questTag);
                 lord?.AddPawn(pawn);
+                if (lord?.LordJob is LordJob_ComplexCustom complexJob)
+                    complexJob.ApplyDefaultDutyMap(pawn, quest);
                 result.SetOrAdd(this.dataName + "." + i, pawn);
             }
             this.SpawnPnaw(pawns, position, map);

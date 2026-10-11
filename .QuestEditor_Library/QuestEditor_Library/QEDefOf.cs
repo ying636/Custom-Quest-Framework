@@ -51,6 +51,7 @@ namespace QuestEditor_Library
         public static GenStepDef QE_CustomSite_GenStep;
 
         public static DutyDef QE_Duty_MoveLevel;
+        public static JobDef CQF_MetaLordMove;
 
 
         public static DrawStyleCategoryDef CQF_Areas;
