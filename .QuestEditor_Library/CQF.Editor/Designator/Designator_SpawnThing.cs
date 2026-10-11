@@ -17,11 +17,11 @@ namespace QuestEditor_Library
             this.useMouseIcon = true;
         }
         public override bool Visible => DebugSettings.godMode;
-        public override DrawStyleCategoryDef DrawStyleCategory
+        public override DrawStyleCategoryDef? DrawStyleCategory
         {
             get
             {
-                return QEDefOf.CQF_Areas;
+                return thing.rotatable ? null : QEDefOf.CQF_Areas;
             }
         }
         public override string Label => "CQFSpawnThing".Translate(base.Label);

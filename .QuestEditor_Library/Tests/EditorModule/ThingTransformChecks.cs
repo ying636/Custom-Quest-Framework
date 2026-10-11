@@ -72,6 +72,7 @@ internal static class ThingTransformChecks
             Check(map.thingGrid.ThingsListAt(blocker.Position).Contains(blocker), "validation preserves the conflicting thing");
             map.thingGrid.Deregister(blocker);
             Check(Report(thing.Position, Rot4.West).Accepted, "counterclockwise rotation accepts its new footprint");
+            ThingPlacementStyleChecks.Run(map, editor);
 
             AcceptanceReport Report(IntVec3 position, Rot4 rotation)
             {

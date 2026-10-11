@@ -237,7 +237,10 @@
   <CQFSetFaction>设置派系：{0}</CQFSetFaction>
   <CQFSetFactionDesc>设置所选事物为指定派系。</CQFSetFactionDesc>
   <CQFSetStyle>设置风格：{0}</CQFSetStyle>
-  <CQFSetStyleDesc>设置所选事物为指定风格。</CQFSetStyleDesc>
+  <CQFSetStyleDesc>右键选择风格或清除风格，再应用到事物。</CQFSetStyleDesc>
+  <CQF_ClearStyle>清除风格</CQF_ClearStyle>
+  <CQF_SetStyleSelectFirst>请先右键选择风格或清除风格。</CQF_SetStyleSelectFirst>
+  <CQF_SetStyleNoTarget>此处没有可设置或清除风格的事物。</CQF_SetStyleNoTarget>
   <CQFSetHitPoints>设置生命值：{0}</CQFSetHitPoints>
   <CQFSetHitPointsDesc>设置所选事物的生命值。右键可以切换模式。</CQFSetHitPointsDesc>
   <CQF_SetHitPointsPercentage>百分比</CQF_SetHitPointsPercentage>

@@ -93,44 +93,5 @@ namespace QuestEditor_Library
             }
         }
 
-        public static void DrawInteractionSignal(ref float y, Rect inRect, float x, InteractionOperation operation)
-        {
-            Map? map = CQFEditorContext.Map;
-            float left = x + 8f;
-            float width = Mathf.Max(80f, inRect.width - left - 12f);
-            float labelWidth = Mathf.Min(160f, width * 0.45f);
-            Rect label = new Rect(left, y, labelWidth, 32f);
-            Rect field = new Rect(label.xMax + 8f, y, width - labelWidth - 8f, 32f);
-            DrawBookField(label, field, "OutSignal".Translate(), operation.outputSignal, value => operation.outputSignal = value, picked: value => RenameInteractionSignal(operation, value, map), allowEmpty: false);
-            y += 40f;
-        }
-
-        public static void RenameInteraction(InteractionOperation operation, string newName, Map? map = null)
-        {
-            operation.outputSignal = operation.OutputSignal;
-            operation.interactionText = newName;
-        }
-
-        public static void RenameInteractionSignal(InteractionOperation operation, string newName, Map? map = null)
-        {
-            if (newName == operation.OutputSignal)
-            {
-                operation.outputSignal = newName;
-                return;
-            }
-
-            map ??= CQFEditorContext.Map;
-            CustomMapDataDef? definition = CQFEditorBridge.Module?.CurrentEditingMap;
-            CQFSignalCatalog catalog = CQFSignalCatalog.Build(map, definition);
-            List<CQFSignalEndpoint> references = catalog.ReferencesTo(operation);
-            if (references.Count == 0)
-            {
-                operation.outputSignal = newName;
-                return;
-            }
-
-            List<CQFSignalReferenceChange> changes = catalog.BuildRenameChanges(operation, newName);
-            Find.WindowStack.Add(new Dialog_CQFSignalRename(operation, newName, references, changes));
-        }
     }
 }

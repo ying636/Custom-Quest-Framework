@@ -28,6 +28,7 @@ namespace QuestEditor_Library
             this.closeOnCancel = false;
             this.doCloseX = false;
             this.draggable = true;
+            this.resizeable = true;
             this.preventCameraMotion = false;
             this.absorbInputAroundWindow = false;
         }
@@ -40,6 +41,15 @@ namespace QuestEditor_Library
         {
             base.PreOpen();
             this.RefreshFilteredItems();
+        }
+
+        public override void WindowUpdate()
+        {
+            base.WindowUpdate();
+            this.windowRect.width = Mathf.Clamp(this.windowRect.width, Mathf.Min(200f, UI.screenWidth), UI.screenWidth);
+            this.windowRect.height = Mathf.Clamp(this.windowRect.height, Mathf.Min(150f, UI.screenHeight), UI.screenHeight);
+            this.windowRect.x = Mathf.Clamp(this.windowRect.x, 0f, UI.screenWidth - this.windowRect.width);
+            this.windowRect.y = Mathf.Clamp(this.windowRect.y, 0f, UI.screenHeight - this.windowRect.height);
         }
 
         public override void ExtraOnGUI()
@@ -126,7 +136,7 @@ namespace QuestEditor_Library
             }
             y += SearchHeight + SectionGap;
 
-            Rect selectionRect = new Rect(0f, y, contentWidth, inRect.height - y);
+            Rect selectionRect = new Rect(0f, y, contentWidth, inRect.height - y - SectionGap);
             CQFUIStyle.DrawMenuSection(selectionRect);
             this.DrawAllItems(selectionRect.ContractedBy(SectionPadding));
         }

@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -15,14 +13,16 @@ namespace QuestEditor_Library
             this.icon = ContentFinder<Texture2D>.Get("UI/Icons/Icon_ChangeStyle");
             this.useMouseIcon = true;
         }
-        public StyleCategoryDef Style 
+        public StyleCategoryDef? Style
         {
             get 
             {
                 return style;
             }
         }
-        public override string Label => "CQFSetStyle".Translate(this.Style?.label ?? "Null".Translate());
+        public override string Label => clearStyle
+            ? "CQF_ClearStyle".Translate()
+            : "CQFSetStyle".Translate(this.Style?.label ?? "Null".Translate());
         public override bool Visible => DebugSettings.godMode;
         public override DrawStyleCategoryDef DrawStyleCategory
         {
@@ -36,11 +36,19 @@ namespace QuestEditor_Library
         {
             get
             {
+                yield return new FloatMenuOption("CQF_ClearStyle".Translate(), () =>
+                {
+                    style = null;
+                    clearStyle = true;
+                    Find.DesignatorManager.Select(this);
+                });
                 foreach(StyleCategoryDef def in DefDatabase<StyleCategoryDef>.AllDefsListForReading)
                 {
                     yield return new FloatMenuOption(def.label, () => 
                     {
                         style = def;
+                        clearStyle = false;
+                        Find.DesignatorManager.Select(this);
                     });
                 }
                 yield break;
@@ -48,23 +56,40 @@ namespace QuestEditor_Library
         }
         public override void DesignateSingleCell(IntVec3 loc)
         {
-            if (loc.InBounds(Find.CurrentMap))
+            AcceptanceReport report = this.CanDesignateCell(loc);
+            if (!report.Accepted)
             {
-                loc.GetThingList(Find.CurrentMap).ForEach(t => 
-                {
-                    if (this.Style.GetStyleForThingDef(t.def) is ThingStyleDef style) 
-                    {
-                        t.SetStyleDef(style);
-                        Find.CurrentMap.mapDrawer.MapMeshDirty(t.Position, MapMeshFlagDefOf.Things);
-                    }
-                });
+                Messages.Message(report.Reason, MessageTypeDefOf.RejectInput, false);
+                return;
+            }
+            foreach (Thing thing in loc.GetThingList(Find.CurrentMap))
+            {
+                if (!this.CanApplyStyle(thing)) continue;
+                thing.SetStyleDef(clearStyle ? null : this.Style!.GetStyleForThingDef(thing.def));
+                thing.Notify_ColorChanged();
             }
         }
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
-            return true;
+            if (Find.CurrentMap == null || !loc.InBounds(Find.CurrentMap))
+                return "OutOfBounds".Translate();
+            if (!clearStyle && this.Style == null)
+                return "CQF_SetStyleSelectFirst".Translate();
+            return loc.GetThingList(Find.CurrentMap).Exists(this.CanApplyStyle)
+                ? AcceptanceReport.WasAccepted
+                : "CQF_SetStyleNoTarget".Translate();
         }
 
-        public static StyleCategoryDef style = null;
+        private bool CanApplyStyle(Thing thing)
+        {
+            if (thing.Destroyed || !(thing is ThingWithComps styledThing) || styledThing.compStyleable == null)
+                return false;
+            return clearStyle
+                ? thing.StyleDef != null
+                : this.Style?.GetStyleForThingDef(thing.def) != null;
+        }
+
+        public static StyleCategoryDef? style = null;
+        private static bool clearStyle;
     }
 }

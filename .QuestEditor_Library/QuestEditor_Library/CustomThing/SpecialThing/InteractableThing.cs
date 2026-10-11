@@ -348,8 +348,6 @@ namespace QuestEditor_Library
 
     public class InteractionOperation : ISaveable, IExposable, IDrawable
     {
-        public string OutputSignal => this.outputSignal.NullOrEmpty() ? this.interactionText : this.outputSignal;
-
         public void Draw(ref float y, Rect inRect, float x)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
@@ -367,11 +365,10 @@ namespace QuestEditor_Library
             string source = this.interactionText.CanTranslate() ? this.interactionText.Translate().ToString() : this.interactionText;
             string edited = Widgets.TextArea(new Rect(x + 8f, y, width - 16f, 58f), source);
             if (edited != source)
-                CQFSignalEditor.RenameInteraction(this, edited);
+                this.interactionText = edited;
             y += 66f;
             CQFEditorTools.DrawLabelAndText_Line(y, "TickToOperate".Translate(), ref this.tickToOperate, ref this.buffer, x + 8f, 90f);
             y += 36f;
-            CQFSignalEditor.DrawInteractionSignal(ref y, new Rect(0f, 0f, x + width + 12f, CQFUIScope.ContentHeight), x, this);
             y += 12f;
         }
 
@@ -492,7 +489,7 @@ namespace QuestEditor_Library
             //        }
             //    });
             //});
-            QuestUtility.SendQuestTargetSignals(thing.questTags, this.OutputSignal, thing.Named("SUBJECT"));
+            QuestUtility.SendQuestTargetSignals(thing.questTags, this.interactionText, thing.Named("SUBJECT"));
             if (!GameTools.isGeneratingMap)
             {
                 GameTools.ClearTemporaryTargets();
@@ -547,7 +544,6 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.onlyGenerateSingleResult, "InteractionOperation_onlyGenerateSingleResult");
             Scribe_Values.Look(ref this.tickToOperate, "InteractionOperation_tickToOperate");
             Scribe_Values.Look(ref this.interactionText, "InteractionOperation_interactionText");
-            Scribe_Values.Look(ref this.outputSignal, "InteractionOperation_outputSignal", string.Empty);
             Scribe_Collections.Look(ref this.requiredThings, "requiredThings", LookMode.Deep);
             Scribe_Collections.Look(ref this.conditions, "InteractionOperation_conditions", LookMode.Deep);
             Scribe_Collections.Look(ref this.results, "InteractionOperation_results", LookMode.Deep);
@@ -557,7 +553,6 @@ namespace QuestEditor_Library
         {
             XElement result = new XElement(nodeName);
             result.Add(new XElement("interactionText", this.interactionText));
-            result.Add(new XElement("outputSignal", this.OutputSignal));
             result.Add(new XElement("tickToOperate", this.tickToOperate));
             if (this.onlyGenerateSingleResult)
             {
@@ -594,10 +589,7 @@ namespace QuestEditor_Library
         }
 
         public string buffer;
-        [CQFLocalizableText(nameof(outputSignal))]
         public string interactionText = "DefaultInteractionText";
-        [NoTranslate]
-        public string outputSignal = string.Empty;
         public int tickToOperate = 100;
         public bool onlyGenerateSingleResult = false;
         public List<DialogCondition> conditions = new List<DialogCondition>();

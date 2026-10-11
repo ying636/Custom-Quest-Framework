@@ -18,11 +18,11 @@ namespace QuestEditor_Library
         }
         public override string Desc => base.Desc + "\n" + "CQFToolsTip".Translate();
         public override bool Visible => DebugSettings.godMode;
-        public override DrawStyleCategoryDef DrawStyleCategory
+        public override DrawStyleCategoryDef? DrawStyleCategory
         {
             get
             {
-                return QEDefOf.CQF_Areas;
+                return thing.rotatable ? null : QEDefOf.CQF_Areas;
             }
         }
         public override BuildableDef PlacingDef => thing;

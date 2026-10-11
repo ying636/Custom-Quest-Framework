@@ -23,15 +23,13 @@ internal static class Program
         Type? Resolve(string name) => typeof(CustomMapDataDef).Assembly.GetType(name);
         string? Translate(string key) => key == "CQF_ExistingText" ? "existing text" : null;
         CQFContentTextExport export = new CQFContentTextExport("CQF_TextChecks", Translate, Resolve);
-        InteractionOperation operation = new InteractionOperation { interactionText = "Original body", outputSignal = "Signal.Original" };
-        CQFSignalEditor.RenameInteraction(operation, "Changed body\nwith more than twenty eight characters");
-        Require(operation.OutputSignal == "Signal.Original", "Editing text renamed the output signal.");
+        InteractionOperation operation = new InteractionOperation { interactionText = "Changed body\nwith more than twenty eight characters" };
+        Require(typeof(InteractionOperation).GetField("outputSignal") == null && typeof(InteractionOperation).GetProperty("OutputSignal") == null,
+            "Interaction still has an independent output signal.");
         XElement operationXml = operation.SaveToXElement("li");
-        Require(operationXml.Element("interactionText")!.Value == operation.interactionText && operationXml.Element("outputSignal")!.Value == "Signal.Original", "Operation serialization lost the independent signal.");
-        InteractionOperation implicitSignal = new InteractionOperation { interactionText = "Original signal" };
-        CQFSignalEditor.RenameInteraction(implicitSignal, "New body");
-        Require(implicitSignal.OutputSignal == "Original signal", "Editing implicit signal text lost existing references.");
-        Console.WriteLine("PASS interaction body edits and serialization preserve output signals, long text and newlines");
+        Require(operationXml.Element("interactionText")!.Value == operation.interactionText && operationXml.Element("outputSignal") == null,
+            "Operation serialization changed text or introduced an output signal.");
+        Console.WriteLine("PASS interaction serialization preserves long text and newlines without adding signal fields");
         XElement source = XElement.Parse("""
             <QuestEditor_Library.CustomMapDataDef>
               <defName>CQF_TextChecks</defName><label>Map label</label><description>Map description</description>
@@ -41,7 +39,7 @@ internal static class Program
                   <customDescription>Line one
             Line two &amp; &lt;tag&gt;</customDescription><customInspectText>Inspect {PAWN_label}</customInspectText>
                   <targetKeys><li>Target.One</li></targetKeys>
-                  <operations><li><interactionText>Interact {0}</interactionText><outputSignal>Signal.Original</outputSignal>
+                  <operations><li><interactionText>Interact {0}</interactionText>
                     <conditions><li Class="QuestEditor_Library.DialogCondition_And"><failReason>Outer failure</failReason>
                       <condition><li Class="QuestEditor_Library.DialogCondition_Bool"><boolName>Bool.ID</boolName><failReason>Inner failure</failReason></li></condition>
                     </li></conditions>
@@ -54,7 +52,7 @@ internal static class Program
                       <li Class="QuestEditor_Library.CQFAction_EndGame"><message>Ending</message></li>
                       <li Class="QuestEditor_Library.CQFAction_SentSignal"><signal>Signal.Original</signal></li>
                     </actions></li></results>
-                  </li><li><interactionText>Unspecified signal body</interactionText></li><li><interactionText>Empty signal body</interactionText><outputSignal /></li></operations>
+                  </li><li><interactionText>Unspecified signal body</interactionText></li><li><interactionText>Empty signal body</interactionText></li></operations>
                 </li>
                 <li Class="QuestEditor_Library.CustomThingData_LootBox"><lootBoxName>Loot.ID</lootBoxName><openReport>Opening</openReport>
                   <loots><li><dataName>Reward.ID</dataName><message>Loot {0}</message><pawnDatas>
@@ -71,16 +69,16 @@ internal static class Program
         string original = source.ToString();
         XElement compiled = export.Compile(source, typeof(CustomMapDataDef));
         Require(source.ToString() == original, "Export mutated the editor source.");
-        string[] texts = { "Object name", "Inspect {PAWN_label}", "Interact {0}", "Outer failure", "Inner failure",
+        string[] texts = { "Object name", "Inspect {PAWN_label}", "Outer failure", "Inner failure",
             "Message {PAWN_label} & {0}", "New name", "Initial {0}", "Upgrade {1}", "Effect name", "Effect description",
-            "Quest detail", "Ending", "Opening", "Loot {0}", "Pawn appeared", "Faction pawn", "Disarm {0}", "Unspecified signal body", "Empty signal body" };
+            "Quest detail", "Ending", "Opening", "Loot {0}", "Pawn appeared", "Faction pawn", "Disarm {0}" };
         foreach (string text in texts)
             Require(export.Keyed.Elements().Any(entry => entry.Value == text), "Missing exported text: " + text);
         Require(export.Keyed.Elements().All(entry => entry.Name.LocalName.StartsWith("CQF_")), "Missing CQF key prefix.");
         Require(export.Keyed.Elements().Select(entry => entry.Name.LocalName).Distinct().Count() == export.Keyed.Elements().Count(), "Duplicate keys.");
-        foreach (string field in new[] { "def", "defName", "targetText", "boolName", "resultName", "dataName", "lootBoxName", "trapName", "exitName", "lordDataName", "signal", "targetKeys", "key" })
+        foreach (string field in new[] { "def", "defName", "targetText", "boolName", "resultName", "dataName", "lootBoxName", "trapName", "exitName", "lordDataName", "signal", "targetKeys", "key", "interactionText" })
             Require(source.Descendants(field).Select(entry => entry.Value).SequenceEqual(compiled.Descendants(field).Select(entry => entry.Value)), "Identifier changed: " + field);
-        Require(compiled.Descendants("outputSignal").Select(entry => entry.Value).SequenceEqual(new[] { "Signal.Original", "Unspecified signal body", "Empty signal body" }), "Interaction signal changed during text compilation.");
+        Require(!compiled.Descendants("outputSignal").Any(), "Text compilation introduced independent interaction signals.");
         Require(compiled.Element("label")!.Value == "Map label" && export.DefInjected.Element("CQF_TextChecks.label")!.Value == "Map label", "Native Def label was replaced with a Keyed key.");
         Require(compiled.Descendants("message").Any(entry => entry.Value == "CQF_ExistingText"), "Existing key was rewritten.");
         Require(!export.Keyed.Elements().Any(entry => entry.Name.LocalName == "CQF_ExistingText"), "External translation was duplicated.");
@@ -104,7 +102,10 @@ internal static class Program
         XElement interaction = XElement.Parse("<QuestEditor_Library.InteractionDataDef><defName>CQF_InteractionCheck</defName><interactions><li><interactionText>Interaction body</interactionText></li></interactions></QuestEditor_Library.InteractionDataDef>");
         CQFContentTextExport interactionExport = new CQFContentTextExport("CQF_InteractionCheck", Translate, Resolve);
         interactionExport.Save(interaction, typeof(InteractionDataDef), Path.Combine(output, "CQF_InteractionCheck.xml"), false);
-        Require(interactionExport.Keyed.Elements().Single().Value == "Interaction body", "Interaction Def text missing.");
+        XElement savedInteraction = XElement.Load(Path.Combine(output, "CQF_InteractionCheck.xml"));
+        Require(savedInteraction.Descendants("interactionText").Single().Value == "Interaction body" && !savedInteraction.Descendants("outputSignal").Any(),
+            "Interaction export changed its implicit signal identity or introduced a new signal field.");
+        Require(!interactionExport.Keyed.Elements().Any(), "Interaction identity was replaced with a generated text key.");
         Require(!File.Exists(Path.Combine(output, "CQF_InteractionCheck_DefInjected.xml")), "English export created DefInjected.");
         XElement loot = XElement.Parse("<QuestEditor_Library.LootDataDef><defName>CQF_LootCheck</defName><loots><li><message>Reward {0}</message><dataName>Reward.ID</dataName></li></loots></QuestEditor_Library.LootDataDef>");
         CQFContentTextExport lootExport = new CQFContentTextExport("CQF_LootCheck", Translate, Resolve);

@@ -74,35 +74,6 @@ namespace QuestEditor_Library
             return this.entries.FirstOrDefault(entry => ReferenceEquals(entry.Owner, owner));
         }
 
-        public List<CQFSignalEndpoint> ReferencesTo(InteractionOperation operation)
-        {
-            List<CQFSignalEndpoint> signals = this.entries.Where(entry => ReferenceEquals(entry.Owner, operation) && entry.IsAutomatic).ToList();
-            return this.entries.Where(entry => entry.IsReceiver && signals.Any(signal => signal.Matches(entry))).ToList();
-        }
-
-        public List<CQFSignalReferenceChange> BuildRenameChanges(InteractionOperation operation, string newName)
-        {
-            List<CQFSignalReferenceChange> changes = new List<CQFSignalReferenceChange>();
-            foreach (CQFSignalEndpoint reference in this.ReferencesTo(operation))
-            {
-                if (changes.Any(change => ReferenceEquals(change.Owner, reference.Owner)) || this.entries.Any(entry => !entry.IsReceiver && entry.Matches(reference) && !ReferenceEquals(entry.Owner, operation)))
-                {
-                    continue;
-                }
-
-                string oldName = operation.OutputSignal;
-                if (oldName.NullOrEmpty() || !reference.Signal.EndsWith(oldName, StringComparison.Ordinal))
-                {
-                    continue;
-                }
-
-                string replacement = reference.Signal.Substring(0, reference.Signal.Length - oldName.Length) + newName;
-                changes.Add(new CQFSignalReferenceChange(reference.Owner, reference.Signal, replacement, reference.SourceLabel));
-            }
-
-            return changes;
-        }
-
         private void AddThing(Thing thing)
         {
             bool template = thing.Map?.Parent is EditorMapObject;
@@ -236,7 +207,7 @@ namespace QuestEditor_Library
         {
             foreach (InteractionOperation operation in operations ?? Enumerable.Empty<InteractionOperation>())
             {
-                this.AddAutomatic(operation, operation.OutputSignal, thing, source, template, "", partName);
+                this.AddAutomatic(operation, operation.interactionText, thing, source, template, "", partName);
                 foreach (InteractionResult result in operation.results)
                 {
                     this.AddActions(result.actions, thing, source + " / " + operation.interactionText + " / " + result.resultName, template, "", null, partName);

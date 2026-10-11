@@ -285,7 +285,10 @@ SiteName: SiteName-></RuleTip>
   <CQFSetFactionDesc>Set the faction for selected things.</CQFSetFactionDesc>
 
   <CQFSetStyle>Set style:{0}</CQFSetStyle>
-  <CQFSetStyleDesc>Set the style for selected things.</CQFSetStyleDesc>
+  <CQFSetStyleDesc>Right-click to choose or clear a style, then apply it to things.</CQFSetStyleDesc>
+  <CQF_ClearStyle>Clear style</CQF_ClearStyle>
+  <CQF_SetStyleSelectFirst>Right-click to choose a style or select Clear style first.</CQF_SetStyleSelectFirst>
+  <CQF_SetStyleNoTarget>No compatible thing here to change or clear its style.</CQF_SetStyleNoTarget>
 
   <CQFSetHitPoints>Set hit points: {0}</CQFSetHitPoints>
   <CQFSetHitPointsDesc>Set the hit points of selected things. Right click to switch modes.</CQFSetHitPointsDesc>

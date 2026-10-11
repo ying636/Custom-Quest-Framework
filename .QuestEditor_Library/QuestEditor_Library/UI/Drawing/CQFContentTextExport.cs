@@ -122,15 +122,6 @@ namespace QuestEditor_Library
                 CQFLocalizableTextAttribute? textField = field.GetCustomAttribute<CQFLocalizableTextAttribute>();
                 if (field.FieldType == typeof(string) && textField != null)
                 {
-                    if (textField.PreserveAs != null)
-                    {
-                        XElement? preserved = node.Element(textField.PreserveAs);
-                        if (preserved == null)
-                            node.Add(new XElement(textField.PreserveAs, child.Value));
-                        else if (string.IsNullOrEmpty(preserved.Value))
-                            preserved.Value = child.Value;
-                    }
-
                     this.CompileText(child, this.prefix + XmlConvert.EncodeLocalName(childPath));
                 }
                 else if (child.HasElements)
