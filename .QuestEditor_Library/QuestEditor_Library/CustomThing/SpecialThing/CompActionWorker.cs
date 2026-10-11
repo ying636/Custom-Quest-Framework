@@ -13,31 +13,33 @@ namespace QuestEditor_Library
 {
     public class CompActionWorker : ThingComp
     {
-        public Quest Quest 
+        public Quest Quest
         {
-            get 
+            get
             {
                 return GameTools.GetQuestFromThing(this.parent);
             }
         }
-        public void PasteSingleComp() 
 
+        public void PasteSingleComp()
         {
-            object[] arguments = new object[]
+            if (CQFEditorTools.actionComp != null)
             {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CompActionWorker.PasteSingleComp()", this, arguments);
+                this.comps.Add(CQFEditorTools.actionComp.Copy());
+            }
         }
-        public Dictionary<string, TargetInfo> GetTargetThis() 
+
+        public Dictionary<string, TargetInfo> GetTargetThis()
         {
             Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
-            result.Add("CustomThing",new TargetInfo(this.parent));
+            result.Add("CustomThing", new TargetInfo(this.parent));
             return result;
         }
+
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             base.PostSpawnSetup(respawningAfterLoad);
-            if (!respawningAfterLoad) 
+            if (!respawningAfterLoad)
             {
                 this.comps?.ForEach(s =>
                 {
@@ -48,24 +50,25 @@ namespace QuestEditor_Library
                 });
             }
         }
+
         public override void CompTick()
         {
             base.CompTick();
             this.comps?.ForEach(s =>
             {
-                if (s.mode == ActionTriggerMode.Tick && s.ValidateTickInterval(this.parent.ThingID)
-                    && this.parent.IsHashIntervalTick(s.tick))
+                if (s.mode == ActionTriggerMode.Tick && s.ValidateTickInterval(this.parent.ThingID) && this.parent.IsHashIntervalTick(s.tick))
                 {
-                    s.actions.ForEach(a => a.Work(this.GetTargetThis(),this.Quest));
+                    s.actions.ForEach(a => a.Work(this.GetTargetThis(), this.Quest));
                 }
             });
         }
+
         public override void Notify_SignalReceived(Signal signal)
         {
             base.Notify_SignalReceived(signal);
             this.comps?.ForEach(s =>
             {
-                if (s.mode == ActionTriggerMode.Signal && signal.tag == s.signal)                 
+                if (s.mode == ActionTriggerMode.Signal && signal.tag == s.signal)
                 {
                     s.actions.ForEach(a => a.Work(this.GetTargetThis(), this.Quest));
                 }
@@ -83,6 +86,7 @@ namespace QuestEditor_Library
                 }
             });
         }
+
         public override void PostDestroy(DestroyMode mode, Map previousMap)
         {
             this.comps?.ForEach(s =>
@@ -91,11 +95,12 @@ namespace QuestEditor_Library
                 {
                     Dictionary<string, TargetInfo> target = this.GetTargetThis();
                     target["CustomThing"] = new TargetInfo(this.parent.Position, previousMap);
-                    s.actions.ForEach(a =>  a.Work(target,GameTools.GetQuestFromMap(previousMap)));
+                    s.actions.ForEach(a => a.Work(target, GameTools.GetQuestFromMap(previousMap)));
                 }
             });
             base.PostDestroy(mode, previousMap);
         }
+
         public override void PostExposeData()
         {
             base.PostExposeData();
@@ -117,18 +122,71 @@ namespace QuestEditor_Library
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
             return result;
         }
-        public void Draw(ref float y, Rect inRect, float x)
 
+        public void Draw(ref float y, Rect inRect, float x)
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            GUI.color = CQFUIStyle.TextColor;
+            using (new CQFUIScope(inRect.width - 42f))
+                CQFEditorTools.DrawLabelAndText_Line(y, "CompName".Translate(), ref this.compName, x, inRect.width - x - 54f);
+            Rect rectCP = new Rect(inRect.width - 40f, y, 25f, 25f);
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Copy, tooltip: "Copy".Translate()))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ActionComp.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.actionComp = this.Copy();
+            }
+
+            y += 36f;
+            float width = Mathf.Max(80f, inRect.width - x - 12f);
+            float labelWidth = Mathf.Min(160f, width * 0.45f);
+            Rect label = new Rect(x, y, labelWidth, 28f);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Text.WordWrap = false;
+            string modeLabel = "CQFActionTriggerMode".Translate(string.Empty);
+            Widgets.Label(label, modeLabel.Truncate(label.width));
+            TooltipHandler.TipRegion(label, modeLabel);
+            if (CQFUIStyle.ButtonText(new Rect(label.xMax + 8f, y, width - labelWidth - 8f, 28f), ("ActionTriggerMode_" + this.mode.ToString()).Translate()))
+            {
+                var actions = new List<ActionTriggerMode>()
+                {
+                    ActionTriggerMode.Signal,
+                    ActionTriggerMode.Tick,
+                    ActionTriggerMode.Damaged,
+                    ActionTriggerMode.Destroy,
+                    ActionTriggerMode.MapGeneration,
+                    ActionTriggerMode.Open
+                };
+                if (this.allowedActions != null)
+                {
+                    actions = this.allowedActions;
+                }
+
+                CQFEditorTools.DrawFloatMenu(actions, m => this.mode = m, m => ("ActionTriggerMode_" + m.ToString()).Translate().ToString());
+            }
+
+            y += 36f;
+            if (this.mode == ActionTriggerMode.Signal)
+            {
+                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), this.signal, value => this.signal = value, x, inRect.width - x - 12f);
+                y += 32f;
+                CQFEditorTools.DrawCheckboxField(y, "SignalOnlyIsValidInPart".Translate(), ref this.signalIsOnlyValidInPart, x, "SignalOnlyIsValidInPartTip".Translate());
+                y += 32f;
+            }
+
+            if (this.mode == ActionTriggerMode.Tick)
+            {
+                CQFEditorTools.DrawLabelAndText_Line(y, "TickToTrigger".Translate(), ref this.tick, ref this.buffer, x);
+                TooltipHandler.TipRegion(new Rect(x, y, 150f, 25f), "TickToTriggerTip".Translate());
+                y += 30f;
+                if (!this.HasValidTickInterval)
+                {
+                    Widgets.Label(new Rect(x, y, inRect.width - x, 25f), "CQF_ActionComp_InvalidTickInterval".Translate().Colorize(Color.red));
+                    y += 30f;
+                }
+            }
+
+            CQFEditorTools.DrawActionList(ref y, x, this.actions, inRect, "InteractionActions".Translate());
         }
+
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.compName, "compName");
@@ -136,7 +194,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.signal, "signal");
             Scribe_Values.Look(ref this.signalIsOnlyValidInPart, "signalIsOnlyValidInPart");
             Scribe_Values.Look(ref this.tick, "tick");
-            Scribe_Collections.Look(ref this.actions, "actions",LookMode.Deep);
+            Scribe_Collections.Look(ref this.actions, "actions", LookMode.Deep);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 this.ValidateTickInterval("PostLoadInit");
@@ -154,18 +212,21 @@ namespace QuestEditor_Library
             {
                 throw new InvalidOperationException($"CQF_ActionComp_InvalidTickInterval: compName={this.compName}, tick={this.tick}");
             }
+
             XElement result = new XElement(nodeName);
-            result.Add(new XElement("compName",this.compName));
+            result.Add(new XElement("compName", this.compName));
             result.Add(new XElement("mode", this.mode));
-            if (this.mode == ActionTriggerMode.Signal && !this.signal.NullOrEmpty()) 
+            if (this.mode == ActionTriggerMode.Signal && !this.signal.NullOrEmpty())
             {
                 result.Add(new XElement("signal", this.signal));
                 result.Add(new XElement("signalIsOnlyValidInPart", this.signalIsOnlyValidInPart));
             }
+
             if (this.mode == ActionTriggerMode.Tick)
             {
                 result.Add(new XElement("tick", this.tick));
             }
+
             XElement actions = new XElement("actions");
             this.actions.ForEach(a => actions.Add(a.SaveToXElement("li")));
             result.Add(actions);
@@ -179,11 +240,13 @@ namespace QuestEditor_Library
                 this.invalidTickIntervalReported = false;
                 return true;
             }
+
             if (!this.invalidTickIntervalReported)
             {
                 Log.Error($"CQF_ActionComp_InvalidTickInterval: compName={this.compName}, tick={this.tick}, context={context}");
                 this.invalidTickIntervalReported = true;
             }
+
             return false;
         }
 
@@ -196,9 +259,7 @@ namespace QuestEditor_Library
         public bool signalIsOnlyValidInPart = false;
         public int tick = 0;
         public List<CQFAction> actions = new List<CQFAction>();
-
         public List<ActionTriggerMode> allowedActions;
-
         [Unsaved]
         private bool invalidTickIntervalReported;
     }

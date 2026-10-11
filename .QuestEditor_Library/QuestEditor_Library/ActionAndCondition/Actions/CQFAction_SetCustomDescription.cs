@@ -1,6 +1,6 @@
+using RimWorld;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,17 +11,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.ThingChange;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetCustomDescription.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            string source_text = this.text.CanTranslate() ? this.text.Translate().ToString() : this.text;
+            string edited_text = source_text;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_CustomDescription".Translate(), ref edited_text, x, 240f);
+            if (edited_text != source_text)
+                this.text = edited_text;
+            y += 30f;
         }
+
         public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (this.text.NullOrEmpty())

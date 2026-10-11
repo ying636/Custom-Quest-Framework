@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -53,8 +52,24 @@ internal static class Program
         CQFEditorLoader.Load(null!, Array.Empty<string>());
         Check(!CQFEditorBridge.IsLoaded && !AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.GetName().Name == "CQF.Editor"), "disabled loader does not touch editor assembly");
         Check(!CQFAIBridge.IsLoaded && CQFAIBridge.GenerateMap == null, "disabled editor leaves AI entry unavailable");
-        foreach (string name in new[] { "Page_QuestEditor", "QuestEditor_Dialog", "CQFEditorTools", "CQFDialogAIClient", "CQFDialogAIWindow", "CQFSignalBook", "Designator_CQFTools" })
+        foreach (string name in new[] { "Page_QuestEditor", "QuestEditor_Dialog", "CQFDialogAIClient", "CQFDialogAIWindow", "Designator_CQFTools" })
             Check(framework.GetType("QuestEditor_Library." + name) == null, "editor type absent: " + name);
+        Check(new[] { typeof(CQFEditorTools), typeof(CQFSignalBook), typeof(CQFTargetKeyBook), typeof(CQFActionListEditor), typeof(CQFConditionListEditor), typeof(CQFContentTextExport) }
+            .All(type => type.Assembly == framework), "shared drawing and selectors belong to framework");
+        Check(!types.Any(type => type.Name == "CQFAction_FinishResearchEditor" || type.Name == "CQFActionEditor"), "object drawer forwarding classes removed");
+        Check(typeof(CQFEditorBridge).GetMethod("Invoke") == null && typeof(CQFEditorBridge).GetMethod("Register") == null, "reflection drawer dispatch removed");
+        DynamicMethod standaloneDraw = new DynamicMethod("CQF_Check_DirectBaseDrawer", typeof(void),
+            new[] { typeof(QuestBookObjective), typeof(float).MakeByRefType(), typeof(Rect), typeof(float) }, typeof(Program).Module, true);
+        ILGenerator standaloneIL = standaloneDraw.GetILGenerator();
+        standaloneIL.Emit(OpCodes.Ldarg_0);
+        standaloneIL.Emit(OpCodes.Ldarg_1);
+        standaloneIL.Emit(OpCodes.Ldarg_2);
+        standaloneIL.Emit(OpCodes.Ldarg_3);
+        standaloneIL.Emit(OpCodes.Call, typeof(QuestBookObjective).GetMethod(nameof(QuestBookObjective.DrawSpecial))!);
+        standaloneIL.Emit(OpCodes.Ret);
+        object[] standaloneArguments = { RuntimeHelpers.GetUninitializedObject(typeof(QuestBookObjective_Resource)), 7f, new Rect(), 0f };
+        standaloneDraw.Invoke(null, standaloneArguments);
+        Check((float)standaloneArguments[1] == 7f && !CQFEditorBridge.IsLoaded, "base object drawing does not require editor initialization");
         Check(new[] { typeof(DialogTreeDef), typeof(CustomMapDataDef), typeof(ComplexPawnDef), typeof(DutyMapDef), typeof(QuestBookDef), typeof(GameComponent_Editor), typeof(CQFComponentOverride), typeof(MapComponent_CQFComponentOverrides) }.All(type => type.Assembly == framework), "runtime types and component save overrides remain in framework");
         Check(CQFSerialization.SaveList(new List<string> { "CQF_Check" }, "values").Element("li")!.Value == "CQF_Check", "serialization works without editor");
         CQFContentPaths.Initialize(Path.Combine(game, "Mods", "CQF"));
@@ -71,7 +86,6 @@ internal static class Program
         DialogTreeDef restored = DirectXmlToObject.ObjectFromXml<DialogTreeDef>(document.DocumentElement!, false);
         restored.ResolveReferences();
         Check(restored.nodeMoulds[0].options[0].results[0].nextIndex == 0, "framework XML loads without editor");
-        MethodInfo invoke = typeof(CQFEditorBridge).GetMethod(nameof(CQFEditorBridge.Invoke))!;
         string[] runtimeMethods = { "Work", "Generate", "GenerateZone", "Spawn", "SpawnThing", "Process", "Check", "SaveToXElement", "ExposeData", "PostSpawnSetup" };
         MethodInfo[] roots = types.SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
             .Where(method => runtimeMethods.Contains(method.Name) && !method.IsAbstract).ToArray();
@@ -100,36 +114,19 @@ internal static class Program
         moduleContent.assemblies.loadedAssemblies.Add(editor);
         GenTypes.ClearCache();
         EditorDesignatorPatchChecks.Run(game, editor, moduleContent);
+        ThingTransformChecks.Run(game, editor);
         conditionalFolders.Exclude("enableEditor");
         EditorDesignatorPatchChecks.Run(game, null, moduleContent);
         Check(!moduleContent.foldersToLoadDescendingOrder.Contains(Path.GetDirectoryName(editorPath)!), "failed module exclusion removes its XML resources");
-        IDictionary methods = (IDictionary)typeof(CQFEditorBridge).GetField("methods", BindingFlags.Static | BindingFlags.NonPublic)!.GetValue(null)!;
-        Check(methods.Count > 250, "editor drawers registered: " + methods.Count);
-        foreach (MethodInfo method in types.SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly)))
-        {
-            if (CalledMethods(method).Any(called => called.DeclaringType == invoke.DeclaringType && called.Name == invoke.Name))
-            {
-                foreach (string key in StringConstants(method).Where(value => value.StartsWith("QuestEditor_Library.")))
-                    Check(methods.Contains(key), "registered framework entry: " + key, false);
-            }
-        }
-        Console.WriteLine("PASS all framework editor entries registered");
-        object[] values = { 2f };
-        Check((int)CQFEditorBridge.Invoke("CQF_Check_Ref", new object(), values)! == 9 && (float)values[0] == 9f, "return and ref arguments preserved");
-        Check((string)CQFEditorBridge.Invoke("CQF_Check_Generic", null, new object[] { 3 }, new[] { typeof(int) })! == "Int32:3", "generic arguments preserved");
-        try { CQFEditorBridge.Invoke("CQF_Check_Error", null, Array.Empty<object>()); throw new Exception("Error was swallowed."); }
-        catch (InvalidDataException error) when (error.Message == "CQF_Check_Error") { Console.WriteLine("PASS original exception preserved"); }
-        object objective = RuntimeHelpers.GetUninitializedObject(typeof(QuestBookObjective_Resource));
-        object[] drawerArguments = { 7f, new Rect(), 0f };
-        CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", objective, drawerArguments);
-        Check((float)drawerArguments[0] == 7f, "base drawer dispatch without UI side effects");
+        Check(ReferenceEquals(CQFEditorBridge.Editor, CQFEditorBridge.Module), "typed editor entry available after attach");
+        Check(!editorTypes.Any(type => type.Name == "CQFAction_FinishResearchEditor" || type.Name == "CQFActionEditor"), "editor assembly contains no object forwarding drawers");
         Console.WriteLine("Editor module checks passed.");
     }
 
     private static bool ReachesEditor(MethodBase method, Assembly framework, HashSet<MethodBase> visited)
     {
         if (!visited.Add(method)) return false;
-        if (method.DeclaringType == typeof(CQFEditorBridge) && method.Name == nameof(CQFEditorBridge.Invoke)) return true;
+        if (method.DeclaringType == typeof(CQFEditorBridge) && method.Name == "get_Editor") return true;
         if (method.DeclaringType?.Assembly != framework) return false;
         IteratorStateMachineAttribute? iterator = method.GetCustomAttribute<IteratorStateMachineAttribute>();
         if (iterator != null && ReachesEditor(iterator.StateMachineType.GetMethod("MoveNext", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!, framework, visited)) return true;
@@ -144,12 +141,6 @@ internal static class Program
                 MethodBase? called = method.Module.ResolveMethod(instruction.token, method.DeclaringType?.GetGenericArguments(), method.IsGenericMethod ? method.GetGenericArguments() : null);
                 if (called != null) yield return called;
             }
-    }
-
-    private static IEnumerable<string> StringConstants(MethodInfo method)
-    {
-        foreach (var instruction in Instructions(method))
-            if (instruction.code.OperandType == OperandType.InlineString) yield return method.Module.ResolveString(instruction.token);
     }
 
     private static IEnumerable<(OpCode code, int token)> Instructions(MethodBase method)

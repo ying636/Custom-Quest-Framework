@@ -13,36 +13,34 @@ namespace QuestEditor_Library
     public class CustomMapExit : CQFMapPortal, IDrawTabable, ICustomThing
     {
         public override string Label => this.TextComp == null || !this.textComp.useCustomName ? base.Label : this.textComp.customName;
-        public override string DescriptionFlavor => this.TextComp == null 
-                                                    || 
-                                                    !this.textComp.useCustomDescription ? 
-            (this.Desc ?? base.DescriptionFlavor) : this.textComp.customDescription;
-        
+        public override string DescriptionFlavor => this.TextComp == null || !this.textComp.useCustomDescription ? (this.Desc ?? base.DescriptionFlavor) : this.textComp.customDescription;
+
         public string Desc
         {
             get
-            { 
-                if (this.entrance is { opended: true } && this.def.GetModExtension<ModExtension_CustomThing>() is {} ex
-                                                       && !ex.openedDesc.NullOrEmpty()) 
+            {
+                if (this.entrance is { opended: true } && this.def.GetModExtension<ModExtension_CustomThing>()is { } ex && !ex.openedDesc.NullOrEmpty())
                 {
                     return ex.openedDesc;
                 }
+
                 return null;
             }
-        } 
+        }
+
         public override Graphic Graphic
         {
             get
             {
-                if (this.entrance is { opended: true } &&
-                    this.def.GetModExtension<ModExtension_CustomThing>() is { openedGraphicdata: { } data } 
-                    && data.GraphicColoredFor(this) is { } g)
+                if (this.entrance is { opended: true } && this.def.GetModExtension<ModExtension_CustomThing>()is { openedGraphicdata: { } data } && data.GraphicColoredFor(this)is { } g)
                 {
                     return g;
-                } 
-                return  base.Graphic;
+                }
+
+                return base.Graphic;
             }
         }
+
         public CompCustomText TextComp
         {
             get
@@ -51,71 +49,94 @@ namespace QuestEditor_Library
                 {
                     this.textComp = this.TryGetComp<CompCustomText>();
                 }
+
                 return this.textComp;
             }
-        }  
+        }
+
         public virtual string GetExitText => "Exit".Translate();
         public override CQFMapPortal MapEntrance => this.entrance;
         public override CQFMapPortal CooldownDestination => this.entrance;
+
         public override void OnEntered(Pawn pawn)
         {
             base.OnEntered(pawn);
             this.TriggerEnterActions(pawn);
         }
+
         public override bool IsEnterable(out string reason)
         {
-            if (!base.IsEnterable(out reason)) 
+            if (!base.IsEnterable(out reason))
             {
                 return false;
-            } 
+            }
+
             if (this.entrance != null && (!this.entrance.opended || !this.entrance.Spawned))
             {
                 reason = "EntranceIsBlocked".Translate();
                 return false;
             }
+
             reason = null;
-            return true;    
+            return true;
         }
+
         public virtual new void Exit(Thing thing)
         {
-            if (thing == null || this.entrance == null || 
-                this.entrance.Position == null || this.entrance.Map == null)
+            if (thing == null || this.entrance == null || this.entrance.Position == null || this.entrance.Map == null)
             {
                 return;
             }
+
             if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
             {
                 hibernation.Activate(this.entrance.Map);
             }
+
             bool moveToRoot = this.Map.designationManager.DesignationOn(thing)?.def == QEDefOf.QE_MoveToRoot;
             if (thing.Spawned)
             {
                 this.thereIsPawnIsEntering = true;
                 thing.DeSpawn();
             }
+
             GenSpawn.Spawn(thing, this.entrance.Position, this.entrance.Map);
             if (thing is Pawn pawn)
             {
                 this.OnEntered(pawn);
             }
+
             this.thereIsPawnIsEntering = false;
             if (moveToRoot && thing.Map.IsPocketMap)
             {
                 this.entrance.Map.designationManager.AddDesignation(new Designation(thing, QEDefOf.QE_MoveToRoot));
             }
+
             if (!(thing is Pawn))
             {
                 this.TriggerEnterActions(thing);
             }
         }
-        public void DrawTab()
 
+        public void DrawTab()
         {
-            object[] arguments = new object[]
-            {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapExit.DrawTab()", this, arguments);
-        } //public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
+            using CQFUIScope scope = new CQFUIScope();
+            Rect outRect = new Rect(8f, 36f, Mathf.Max(80f, Mathf.Min(540f, CQFUIScope.ContentWidth - 16f)), Mathf.Max(40f, Mathf.Min(554f, CQFUIScope.ContentHeight - 44f)));
+            float width = outRect.width - 40f;
+            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.height + 10f));
+            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
+            using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
+            float x = 10f;
+            float y = 10f;
+            this.DrawSectionHeader(ref y, x, width, "CQF_PortalSettingsSection".Translate(), "CQF_PortalSettingsSectionTip".Translate());
+            CQFEditorTools.DrawLabelAndText_Line(y, "ExitName".Translate(), ref this.exitName, x + 8f, 150f);
+            y += 30f;
+            this.DrawActionSection(ref y, x, width);
+            this.height = y + 10f;
+            Widgets.EndScrollView();
+        }
+
         //{
         //    yield return new FloatMenuOption(this.GetExitText, delegate
         //    {
@@ -157,7 +178,7 @@ namespace QuestEditor_Library
 
         public CustomThingData GetData(IntVec3 pos)
         {
-            return new CustomThingData_CustomMapExit(this,pos);
+            return new CustomThingData_CustomMapExit(this, pos);
         }
 
         public override Map GetOtherMap()
@@ -166,6 +187,7 @@ namespace QuestEditor_Library
             {
                 hibernation.Activate(this.entrance.Map);
             }
+
             return this.entrance.Map;
         }
 
@@ -173,36 +195,65 @@ namespace QuestEditor_Library
         {
             return this.entrance == null ? IntVec3.Invalid : this.entrance.Position;
         }
+
         internal void DrawActionSection(ref float y, float x, float width)
-
         {
-            object[] arguments = new object[]
+            this.DrawSectionHeader(ref y, x, width, "CQF_PortalEnterActions".Translate(), "CQF_PortalEnterActionsTip".Translate(), () => CQFEditorTools.OpenCQFActionSelect(type => this.enterActions.Add((CQFAction)Activator.CreateInstance(type))), () => CQFEditorTools.DrawFloatMenu(this.enterActions, action => this.enterActions.Remove(action), action => action.GetType().Name.Translate()), this.enterActions.Any());
+            if (this.enterActions.Any())
             {
-                y,
-                x,
-                width
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapExit.DrawActionSection(Ref:float,None:float,None:float)", this, arguments);
-            y = (float)arguments[0];
-        }
-        internal void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null,
-            Action addAction = null, Action removeAction = null, bool canRemove = false)
+                foreach (CQFAction action in this.enterActions)
+                {
+                    Rect rowRect = new Rect(x + 8f, y, width - 16f, 28f);
+                    Widgets.DrawHighlightIfMouseover(rowRect);
+                    if (CQFUIStyle.ButtonText(rowRect, action.GetType().Name.Translate(), false))
+                    {
+                        Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(action));
+                    }
 
-        {
-            object[] arguments = new object[]
+                    y += 32f;
+                }
+            }
+            else
             {
-                y,
-                x,
-                width,
-                label,
-                tip,
-                addAction,
-                removeAction,
-                canRemove
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapExit.DrawSectionHeader(Ref:float,None:float,None:float,None:string,None:string,None:System.Action,None:System.Action,None:bool)", this, arguments);
-            y = (float)arguments[0];
+                Widgets.Label(new Rect(x + 8f, y + 4f, width - 16f, 25f), "CQF_PortalNoActions".Translate().Colorize(CQFUIStyle.Muted));
+                y += 32f;
+            }
+
+            y += 8f;
         }
+
+        internal void DrawSectionHeader(ref float y, float x, float width, string label, string tip = null, Action addAction = null, Action removeAction = null, bool canRemove = false)
+        {
+            Rect headerRect = new Rect(x + 4f, y - 2f, width - 8f, 32f);
+            Widgets.DrawHighlight(headerRect);
+            Rect labelRect = new Rect(x + 8f, y + 4f, width - 84f, 25f);
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
+            if (!tip.NullOrEmpty())
+            {
+                TooltipHandler.TipRegion(labelRect, tip);
+            }
+
+            if (addAction != null)
+            {
+                Rect buttonRect = new Rect(x + width - 66f, y + 2f, 25f, 25f);
+                if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Plus))
+                {
+                    addAction();
+                }
+
+                TooltipHandler.TipRegion(buttonRect, "Add".Translate());
+                buttonRect.x += 30f;
+                if (CQFUIStyle.ButtonImage(buttonRect, TexButton.Delete) && canRemove)
+                {
+                    removeAction?.Invoke();
+                }
+
+                TooltipHandler.TipRegion(buttonRect, "Remove".Translate());
+            }
+
+            y += 38f;
+        }
+
         private void TriggerEnterActions(Thing thing)
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>
@@ -218,6 +269,7 @@ namespace QuestEditor_Library
                     Log.Error("CQF custom map exit contains a null enter action: " + this.ThingID);
                     continue;
                 }
+
                 action.Work(targets, quest);
             }
         }

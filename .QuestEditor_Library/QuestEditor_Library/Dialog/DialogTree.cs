@@ -1,11 +1,11 @@
+using RimWorld;
+using RimWorld.Planet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
-using RimWorld;
-using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 using Verse.AI.Group;
@@ -15,15 +15,10 @@ namespace QuestEditor_Library
     public class DialogManagerDef : Def, ISaveable
     {
         public void Draw(ref float y)
-
         {
-            object[] arguments = new object[]
-            {
-                y
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.DialogManagerDef.Draw(Ref:float)", this, arguments);
-            y = (float)arguments[0];
+            DrawEntries(this, ref y, 620f);
         }
+
         public DialogTreeDef GetTree(Thing interviewer, Thing interviewee)
         {
             foreach (DialogTreeAndConditions tree in this.trees)
@@ -31,7 +26,7 @@ namespace QuestEditor_Library
                 Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
                 targets.Add("Interviewee", interviewee);
                 targets.Add("Interviewer", interviewer);
-                if (tree.conditions == null || !tree.conditions.Any() || !tree.conditions.Exists(c => !c.Satisfied(targets,out string reason, GameTools.GetQuestFromThing(interviewee) ?? GameTools.GetQuestFromThing(interviewer))))
+                if (tree.conditions == null || !tree.conditions.Any() || !tree.conditions.Exists(c => !c.Satisfied(targets, out string reason, GameTools.GetQuestFromThing(interviewee) ?? GameTools.GetQuestFromThing(interviewer))))
                 {
                     if (tree.tree != null)
                     {
@@ -39,8 +34,10 @@ namespace QuestEditor_Library
                     }
                 }
             }
+
             return null;
         }
+
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -52,24 +49,70 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("removeWhenThingDespawned", this.removeWhenThingDespawned));
             }
+
             if (!this.removeWhenPawnDied)
             {
                 result.Add(new XElement("removeWhenPawnDied", this.removeWhenPawnDied));
             }
-            if (this.iconColor != ColorLibrary.BrightBlue) 
+
+            if (this.iconColor != ColorLibrary.BrightBlue)
             {
                 result.Add(new XElement("iconColor", this.iconColor));
             }
+
             result.Add(CQFSerialization.SaveList(this.tags, "tags"));
-            if (this.genrationConditions != null && this.genrationConditions.Any()) 
+            if (this.genrationConditions != null && this.genrationConditions.Any())
             {
                 result.Add(CQFSerialization.SaveList_Saveable(this.genrationConditions, "genrationConditions"));
             }
+
             if (this.forcedTraits != null && this.forcedTraits.Any())
             {
                 result.Add(CQFSerialization.SaveList_Saveable(this.forcedTraits, "forcedTraits"));
             }
+
             return result;
+        }
+
+        public static void DrawEntries(DialogManagerDef manager, ref float y, float width)
+        {
+            using CQFUIScope scope = new CQFUIScope();
+            for (int i = 0; i < manager.trees.Count; i++)
+            {
+                DialogTreeAndConditions entry = manager.trees[i];
+                float start = y;
+                float cardHeight = 92f + entry.conditions.Count * 38f;
+                Rect card = new Rect(0f, y, width, cardHeight);
+                Widgets.DrawBoxSolid(card, CQFUIStyle.Card);
+                CQFUIStyle.DrawBox(card);
+                Rect tree = new Rect(12f, y + 10f, width - 94f, 32f);
+                if (CQFUIStyle.ButtonText(tree, "DialogTree".Translate(entry.tree?.defName), overrideTextAnchor: TextAnchor.MiddleLeft))
+                    CQFEditorTools.DrawFloatMenu(DefDatabase<DialogTreeDef>.AllDefsListForReading, selected => entry.tree = selected, selected => selected.defName);
+                if (CQFUIStyle.ButtonImage(new Rect(width - 74f, y + 12f, 28f, 28f), TexButton.Play, tooltip: "DialogEditor".Translate()) && entry.tree != null)
+                    Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDialogWindow(entry.tree));
+                if (CQFUIStyle.ButtonImage(new Rect(width - 38f, y + 12f, 28f, 28f), TexButton.Delete, tooltip: "Delete".Translate()))
+                {
+                    manager.trees.RemoveAt(i--);
+                    continue;
+                }
+
+                y += 50f;
+                Widgets.Label(new Rect(12f, y, width - 62f, 28f), "Conditions".Translate().Colorize(CQFUIStyle.Accent));
+                if (CQFUIStyle.ButtonImage(new Rect(width - 38f, y, 28f, 28f), TexButton.Plus, tooltip: "Add".Translate()))
+                    CQFEditorTools.DrawFloatMenu(typeof(DialogCondition).AllSubclassesNonAbstract(), type => entry.conditions.Add((DialogCondition)Activator.CreateInstance(type)), type => type.Name.Translate());
+                y += 32f;
+                for (int j = 0; j < entry.conditions.Count; j++)
+                {
+                    DialogCondition condition = entry.conditions[j];
+                    if (CQFUIStyle.ButtonText(new Rect(12f, y, width - 62f, 32f), condition.GetType().Name.Translate(), overrideTextAnchor: TextAnchor.MiddleLeft))
+                        Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(condition));
+                    if (CQFUIStyle.ButtonImage(new Rect(width - 38f, y + 2f, 28f, 28f), TexButton.Delete, tooltip: "Delete".Translate()))
+                        entry.conditions.RemoveAt(j--);
+                    y += 38f;
+                }
+
+                y = start + cardHeight + 12f;
+            }
         }
 
         public bool removeWhenThingDespawned = true;
@@ -81,16 +124,19 @@ namespace QuestEditor_Library
         public List<DialogCondition> genrationConditions = new List<DialogCondition>();
         public List<TraitData> forcedTraits = new List<TraitData>();
     }
+
     public class DialogTreeAndConditions : ISaveable, IExposable
     {
         public DialogTreeAndConditions()
         {
         }
+
         public DialogTreeAndConditions(DialogTreeDef tree, List<DialogCondition> conditions)
         {
             this.tree = tree;
             this.conditions = conditions;
         }
+
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -111,6 +157,7 @@ namespace QuestEditor_Library
         public DialogTreeDef tree;
         public List<DialogCondition> conditions;
     }
+
     public partial class DialogTreeDef : Def, ISaveable
     {
         public DialogTreeDef()
@@ -129,18 +176,19 @@ namespace QuestEditor_Library
                 node.subNodeIndexs.Clear();
                 node.parentIndex = null;
             }
+
             if (this.nodeMoulds.ContainsKey(0))
             {
                 visited.Add(0);
                 pending.Enqueue(0);
             }
+
             while (pending.Count > 0)
             {
                 DialogNode node = this.nodeMoulds[pending.Dequeue()];
                 foreach (DialogResult result in node.options.SelectMany(option => option.results))
                 {
-                    if (result.nextIndex.HasValue && this.nodeMoulds.TryGetValue(result.nextIndex.Value, out DialogNode next)
-                        && visited.Add(result.nextIndex.Value))
+                    if (result.nextIndex.HasValue && this.nodeMoulds.TryGetValue(result.nextIndex.Value, out DialogNode next) && visited.Add(result.nextIndex.Value))
                     {
                         node.subNodeIndexs.Add(result.nextIndex.Value);
                         next.parentIndex = node.index;
@@ -148,6 +196,7 @@ namespace QuestEditor_Library
                     }
                 }
             }
+
             this.idleNodes.AddRange(this.nodeMoulds.Where(pair => !visited.Contains(pair.Key)).Select(pair => pair.Value));
         }
 
@@ -155,22 +204,25 @@ namespace QuestEditor_Library
         {
             this.Update();
         }
+
         public bool IsIdleNode(DialogNode node)
         {
-            return node.index != 0 && !this.nodeMoulds.Values.ToList().Exists(x => 
-                x.options.Exists(o => o.results.Exists(r => r.nextIndex == node.index)));
+            return node.index != 0 && !this.nodeMoulds.Values.ToList().Exists(x => x.options.Exists(o => o.results.Exists(r => r.nextIndex == node.index)));
         }
-        public void ChangeNextNodeToOtherNode(DialogNode? parent, DialogNode? newNode,DialogResult result, bool isNewNode = false)
+
+        public void ChangeNextNodeToOtherNode(DialogNode? parent, DialogNode? newNode, DialogResult result, bool isNewNode = false)
         {
             result.nextIndex = newNode?.index;
             this.Update();
         }
+
         public DialogNode CreateNewNode(DialogNode? parent)
         {
             while (this.nodeMoulds.ContainsKey(this.curIndex))
             {
                 this.curIndex++;
             }
+
             DialogNode result = new DialogNode(this.curIndex);
             result.text = "CQF_Dialog_Node_" + this.curIndex;
             this.nodeMoulds.Add(this.curIndex, result);
@@ -179,8 +231,10 @@ namespace QuestEditor_Library
             {
                 result.parentIndex = parent.index;
             }
+
             return result;
         }
+
         // public Dialog_NodeTree CreateDialog(Thing interviewer, Thing interviewee,Quest quest = null)
         // {   
         //     quest = quest ?? GameTools.GetQuestFromThing(interviewer) ?? GameTools.GetQuestFromThing(interviewee);
@@ -271,13 +325,11 @@ namespace QuestEditor_Library
         //     Dialog_NodeTree result = new Dialog_NodeTree(nodes.First().Value, false, false, title);
         //     return result;
         // }
-
         public CQFDialogTreeWindow CreateCQFDialog(Thing interviewer, Thing interviewee, Quest quest = null)
         {
             quest = quest ?? GameTools.GetQuestFromThing(interviewer) ?? GameTools.GetQuestFromThing(interviewee);
             string title = GameTools.GetDialogText(this.title, interviewer, interviewee, this, quest);
-            CQFDialogTreeWindow result = new CQFDialogTreeWindow(
-                title,interviewer,interviewee, quest,this);
+            CQFDialogTreeWindow result = new CQFDialogTreeWindow(title, interviewer, interviewee, quest, this);
             return result;
         }
 
@@ -303,10 +355,12 @@ namespace QuestEditor_Library
                 li.Add(nodeMould.Value.SaveToXElement("value"));
                 nodes.Add(li);
             }
+
             if (this.extraThingRefers.Any())
             {
                 result.Add(CQFSerialization.SaveList(this.extraThingRefers, "extraThingRefers"));
             }
+
             result.Add(nodes);
             return result;
         }
@@ -317,23 +371,30 @@ namespace QuestEditor_Library
         public int curIndex = 1;
         public List<string> extraThingRefers = new List<string>();
         public List<DialogNode> idleNodes = new List<DialogNode>();
-        public Dictionary<int, DialogNode> nodeMoulds = new Dictionary<int, DialogNode>() { [0] = new DialogNode(0) };
+        public Dictionary<int, DialogNode> nodeMoulds = new Dictionary<int, DialogNode>()
+        {
+            [0] = new DialogNode(0)
+        };
     }
+
     public class DialogNode : ISaveable
     {
         public DialogNode()
         {
         }
+
         public DialogNode(int index)
         {
             this.index = index;
         }
+
         public DialogNode(int index, DialogNode parent)
         {
             this.index = index;
             parent.subNodeIndexs.Add(this.index.Value);
         }
-        public List<IDialogElement> Get(Thing interviewer, Thing interviewee,DialogTreeDef dialog,Quest quest)
+
+        public List<IDialogElement> Get(Thing interviewer, Thing interviewee, DialogTreeDef dialog, Quest quest)
         {
             List<IDialogElement> result = new List<IDialogElement>();
             this.images.ForEach(x =>
@@ -343,14 +404,12 @@ namespace QuestEditor_Library
                     result.Add(new DialogElement_Image(ContentFinder<Texture2D>.Get(x.imagePath, false), x.scale));
                 }
             });
-            List<string> texts =
-            [
-                this.text
-            ];
+            List<string> texts = [this.text];
             texts.AddRange(this.extraText);
             result.Add(new DialogElement_Text(GameTools.GetDialogText(texts.RandomElement(), interviewer, interviewee, dialog, quest)));
             return result;
         }
+
         public string DebugInformation(DialogTreeDef tree)
         {
             StringBuilder result = new StringBuilder();
@@ -361,12 +420,14 @@ namespace QuestEditor_Library
             result.AppendLine("所需空间：" + this.GetRequiredSpace(tree));
             return result.ToString().Trim();
         }
+
         public float GetRequiredSpace(DialogTreeDef tree)
         {
             float result = 0f;
             this.options.ForEach(o => result += o.GetRequiredSpace(tree));
-            return Math.Max(result,40f);
+            return Math.Max(result, 40f);
         }
+
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -378,13 +439,13 @@ namespace QuestEditor_Library
                 result.Add(new XElement("editorY", this.editorY));
                 result.Add(new XElement("editorPositionSet", true));
             }
+
             if (this.parentIndex != null)
             {
                 result.Add(new XElement("parentIndex", this.parentIndex));
             }
-            XElement options = this.optionsResolved
-                ? new XElement("optionIds", this.optionIds.Select(id => new XElement("li", id)))
-                : new XElement("options", this.options.Select(option => option.SaveToXElement("li")));
+
+            XElement options = this.optionsResolved ? new XElement("optionIds", this.optionIds.Select(id => new XElement("li", id))) : new XElement("options", this.options.Select(option => option.SaveToXElement("li")));
             XElement subNodeIndexs = new XElement("subNodeIndexs");
             this.subNodeIndexs.ForEach(x =>
             {
@@ -398,10 +459,12 @@ namespace QuestEditor_Library
                 this.images.ForEach(x => images.Add(x.SaveToXElement("li")));
                 result.Add(images);
             }
-            if (!this.extraText.NullOrEmpty()) 
+
+            if (!this.extraText.NullOrEmpty())
             {
                 result.Add(CQFSerialization.SaveList(this.extraText, "extraText"));
             }
+
             return result;
         }
 
@@ -420,6 +483,7 @@ namespace QuestEditor_Library
         public float editorY;
         public bool editorPositionSet;
     }
+
     public class DialogImage : ISaveable
     {
         public XElement SaveToXElement(string nodeName)
@@ -434,12 +498,13 @@ namespace QuestEditor_Library
         public float scale = 1f;
         public string buffer_scale = "1";
     }
+
     public class DialogResult : ISaveable
     {
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
-            result.Add(new XElement("resultName",this.resultName));
+            result.Add(new XElement("resultName", this.resultName));
             if (this.actions.Any())
             {
                 XElement actions = new XElement("actions");
@@ -449,19 +514,22 @@ namespace QuestEditor_Library
                 });
                 result.Add(actions);
             }
+
             if (this.nextIndex != null)
             {
                 result.Add(new XElement("nextIndex", this.nextIndex));
             }
+
             if (this.conditions.Any())
             {
                 XElement conditions = new XElement("conditions");
                 this.conditions.ForEach(c =>
                 {
                     conditions.Add(c.SaveToXElement("li"));
-                });    
+                });
                 result.Add(conditions);
             }
+
             return result;
         }
 

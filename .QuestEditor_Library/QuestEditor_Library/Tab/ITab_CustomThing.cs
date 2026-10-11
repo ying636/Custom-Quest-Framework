@@ -1,7 +1,7 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -15,6 +15,7 @@ namespace QuestEditor_Library
             this.labelKey = "ITab_CustomThing";
             this.tutorTag = "CustomThing";
         }
+
         public IDrawTabable Thing
         {
             get
@@ -23,26 +24,30 @@ namespace QuestEditor_Library
                 {
                     return thing;
                 }
+
                 if (this.thing is IDrawTabable thing2)
                 {
                     return thing2;
                 }
+
                 return null;
             }
         }
+
         internal object CQFSelectedObject => this.SelObject;
         internal Vector2 CQFSize => this.size;
-
         public override bool IsVisible => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
         protected override bool StillValid => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
-        protected override void FillTab()
 
+        protected override void FillTab()
         {
-            object[] arguments = new object[]
+            using CQFUIScope scope = new CQFUIScope(this.CQFSize.x, this.CQFSize.y);
+            using (new CQFEditorContext(this.Thing as Thing))
             {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ITab_CustomThing.FillTab()", this, arguments);
+                this.Thing?.DrawTab();
+            }
         }
+
         public Thing thing;
     }
 }

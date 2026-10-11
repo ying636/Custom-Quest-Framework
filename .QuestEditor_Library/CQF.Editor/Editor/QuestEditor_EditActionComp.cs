@@ -10,7 +10,7 @@ namespace QuestEditor_Library
 {
     public class QuestEditor_EditActionComp : Window
     {
-        public QuestEditor_EditActionComp(ActionComp comp, Thing owner = null)
+        public QuestEditor_EditActionComp(ActionComp comp, Thing? owner = null)
         {
             this.comp = comp;
             this.owner = owner ?? CQFEditorContext.SourceThing;

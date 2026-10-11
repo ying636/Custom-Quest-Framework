@@ -1,5 +1,6 @@
 using System.Reflection;
 using QuestEditor_Library;
+using Verse;
 
 internal sealed class CheckEditorModule : ICQFEditorModule
 {
@@ -9,20 +10,36 @@ internal sealed class CheckEditorModule : ICQFEditorModule
     }
 
     public int ApiVersion => CQFEditorBridge.ApiVersion;
+    public DutyMapDef CurrentEditingDutyMap => ((ICQFEditorModule)this.editor).CurrentEditingDutyMap;
+    public CustomMapDataDef? CurrentEditingMap => ((ICQFEditorModule)this.editor).CurrentEditingMap;
 
     public void Initialize()
     {
-        this.editor.GetType().GetMethod("RegisterDrawers")!.Invoke(this.editor, null);
         this.editor.GetType().GetMethod("RegisterAI")!.Invoke(this.editor, null);
-        CQFEditorBridge.Register("CQF_Check_Ref", typeof(ModuleCheckDrawers), nameof(ModuleCheckDrawers.RefValue));
-        CQFEditorBridge.Register("CQF_Check_Generic", typeof(ModuleCheckDrawers), nameof(ModuleCheckDrawers.GenericValue));
-        CQFEditorBridge.Register("CQF_Check_Error", typeof(ModuleCheckDrawers), nameof(ModuleCheckDrawers.FailingValue));
     }
 
     public void OpenSettings()
     {
         throw new NotSupportedException();
     }
+
+    public Window CreateDrawableWindow(IDrawable drawable, QuestBookDef? questBook = null)
+        => ((ICQFEditorModule)this.editor).CreateDrawableWindow(drawable, questBook);
+
+    public Window CreateTabWindow(IDrawTabable drawable)
+        => ((ICQFEditorModule)this.editor).CreateTabWindow(drawable);
+
+    public Window CreateInteractionWindow(InteractionOperation operation, Thing? owner = null)
+        => ((ICQFEditorModule)this.editor).CreateInteractionWindow(operation, owner);
+
+    public Window CreateDialogWindow(DialogTreeDef tree)
+        => ((ICQFEditorModule)this.editor).CreateDialogWindow(tree);
+
+    public Window CreateActionCompWindow(ActionComp comp, Thing? owner = null)
+        => ((ICQFEditorModule)this.editor).CreateActionCompWindow(comp, owner);
+
+    public Window CreatePawnMiscWindow(PawnSpawnData data)
+        => ((ICQFEditorModule)this.editor).CreatePawnMiscWindow(data);
 
     private readonly object editor;
 }

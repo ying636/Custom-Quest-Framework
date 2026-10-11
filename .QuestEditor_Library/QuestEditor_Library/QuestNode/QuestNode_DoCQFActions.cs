@@ -4,40 +4,35 @@ using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
-
-    public class QuestNode_DoCQFActions : QuestNode,IDrawable
+public class QuestNode_DoCQFActions : QuestNode, IDrawable
 {
     protected override void RunInt()
     {
         var slate = QuestGen.slate;
         var part = QuestGen.quest.AddPart<QuestPart_DoCQFActions>();
-        part.inSignal = (QuestGenUtility.HardcodedSignalWithQuestID(this.inSignal.GetValue(slate)) ??
-                         QuestGen.slate.Get<string>("inSignal", null, false));
+        part.inSignal = (QuestGenUtility.HardcodedSignalWithQuestID(this.inSignal.GetValue(slate)) ?? QuestGen.slate.Get<string>("inSignal", null, false));
         part.actions = this.actions;
     }
-    public void Draw(ref float y, Rect inRect, float x)
 
-        {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_DoCQFActions.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
-        }
-        protected override bool TestRunInt(Slate slate)
+    public void Draw(ref float y, Rect inRect, float x)
+    {
+        using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+        CQFSignalEditor.DrawBookField(y, "inSignal".Translate(), this.inSignal.ToString(), value => this.inSignal = new SlateRef<string>(value), x, inRect.width - x - 12f);
+        y += 30f;
+        CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+    }
+
+    protected override bool TestRunInt(Slate slate)
     {
         return true;
     }
-    
+
     [NoTranslate]
     public SlateRef<string> inSignal;
     public List<CQFAction> actions = new List<CQFAction>();
 }
 
-    public class QuestPart_DoCQFActions : QuestPart
+public class QuestPart_DoCQFActions : QuestPart
 {
     public override void Notify_QuestSignalReceived(Signal signal)
     {
@@ -51,6 +46,7 @@ namespace QuestEditor_Library;
                 {
                     continue;
                 }
+
                 if (receivedArg.arg is TargetInfo target)
                 {
                     receivedTargets[receivedArg.label] = target;
@@ -72,7 +68,7 @@ namespace QuestEditor_Library;
     {
         base.ExposeData();
         Scribe_Values.Look<string>(ref this.inSignal, "inSignal", null, false);
-        Scribe_Collections.Look(ref actions,"actions",LookMode.Deep);
+        Scribe_Collections.Look(ref actions, "actions", LookMode.Deep);
     }
 
     public string inSignal;

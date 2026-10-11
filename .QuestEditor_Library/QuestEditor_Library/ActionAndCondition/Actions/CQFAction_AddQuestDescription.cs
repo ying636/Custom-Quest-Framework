@@ -1,6 +1,6 @@
+using RimWorld;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,17 +11,17 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_AddQuestDescription.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            string source_description = this.description.CanTranslate() ? this.description.Translate().ToString() : this.description;
+            string edited_description = source_description;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFQuestDescription".Translate(), ref edited_description, x, 240f);
+            if (edited_description != source_description)
+                this.description = edited_description;
+            y += 30f;
         }
+
         public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (quest == null)
@@ -29,6 +29,7 @@ namespace QuestEditor_Library
                 Log.Error("[CQF] CQFAction_AddQuestDescription cannot add a description because the quest is null.");
                 return;
             }
+
             if (this.description.NullOrEmpty())
             {
                 Log.Error("[CQF] CQFAction_AddQuestDescription cannot add an empty description.");

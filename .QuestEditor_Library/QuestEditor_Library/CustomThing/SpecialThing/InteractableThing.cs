@@ -1,21 +1,22 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RimWorld;
+using System.Xml;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
-using Verse.AI.Group;
 using Verse.AI;
-using System.Xml.Linq;
-using System.Xml;
+using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-    public class InteractableThing : Building, IDrawTabable,IPastableData, ICustomThing
+    public class InteractableThing : Building, IDrawTabable, IPastableData, ICustomThing
     {
         public override string Label => this.TextComp == null || !this.textComp.useCustomName ? base.Label : this.textComp.customName;
         public override string DescriptionFlavor => this.TextComp == null || !this.textComp.useCustomDescription ? base.DescriptionFlavor : this.textComp.customDescription;
+
         public override Graphic Graphic
         {
             get
@@ -24,19 +25,23 @@ namespace QuestEditor_Library
                 {
                     return base.Graphic;
                 }
+
                 if (this.disabledGraphic == null)
                 {
                     Graphic baseGraphic = base.Graphic;
-                    if (this.def.GetModExtension<ModExtension_CustomThing>() is ModExtension_CustomThing me && me.openedGraphicdata != null)
+                    if (this.def.GetModExtension<ModExtension_CustomThing>()is ModExtension_CustomThing me && me.openedGraphicdata != null)
                     {
                         this.disabledGraphic = me.openedGraphicdata.Graphic;
                         return this.disabledGraphic;
                     }
+
                     this.disabledGraphic = GraphicDatabase.Get(this.def.graphicData.graphicClass, this.def.graphicData.texPath + "_disabled", baseGraphic.Shader, baseGraphic.drawSize, baseGraphic.color, baseGraphic.colorTwo, baseGraphic.maskPath == null ? null : baseGraphic.maskPath + "_opened");
                 }
+
                 return this.disabledGraphic;
             }
         }
+
         public CompCustomText TextComp
         {
             get
@@ -45,18 +50,21 @@ namespace QuestEditor_Library
                 {
                     this.textComp = this.TryGetComp<CompCustomText>();
                 }
+
                 return this.textComp;
             }
         }
-        public List<InteractionOperation> AllInteraction 
+
+        public List<InteractionOperation> AllInteraction
         {
-            get 
+            get
             {
                 List<InteractionOperation> result = new List<InteractionOperation>();
                 result.AddRange(this.operations);
                 return result;
             }
         }
+
         public override string GetInspectString()
         {
             StringBuilder result = new StringBuilder(base.GetInspectString());
@@ -71,71 +79,190 @@ namespace QuestEditor_Library
                 {
                     result.AppendLine();
                 }
+
                 result.Append(interaction.interactionText.CanTranslate() ? interaction.interactionText.Translate().ToString() : interaction.interactionText);
             }
+
             if (result.Length > 0)
             {
                 result.AppendLine();
             }
+
             result.Append("CQF_InteracteThing".Translate().ToString().Trim());
             return result.ToString().Trim();
         }
-        public InteractionOperation GetCurOperation(string operationText) 
+
+        public InteractionOperation GetCurOperation(string operationText)
         {
-            if (this.AllInteraction.Find(x => (x.interactionText.CanTranslate() ? x.interactionText.Translate().ToString() : x.interactionText) == operationText) is InteractionOperation operation)
+            if (this.AllInteraction.Find(x => (x.interactionText.CanTranslate() ? x.interactionText.Translate().ToString() : x.interactionText) == operationText)is InteractionOperation operation)
             {
                 return operation;
             }
+
             return null;
         }
+
         public void DrawTab()
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope scope = new CQFUIScope();
+            Rect outRect = new Rect(8f, 36f, Mathf.Min(536f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, Mathf.Min(566f, CQFUIScope.ContentHeight - 44f)));
+            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.height));
+            Widgets.BeginScrollView(outRect, ref this.scrollPos, viewRect);
+            using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
+            float y = 12f;
+            Rect copyAllRect = this.DrawSectionHeader(ref y, viewRect.width, "InteractionOperations".Translate(), true);
+            if (CQFUIStyle.ButtonImage(copyAllRect, TexButton.Copy))
             {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractableThing.DrawTab()", this, arguments);
+                CQFEditorTools.operations.Clear();
+                CQFEditorTools.operationDefs.Clear();
+                this.operations.ForEach(o => CQFEditorTools.operations.Add(o.Copy()));
+                this.operationDefs.ForEach(o => CQFEditorTools.operationDefs.Add(o));
+            }
+
+            TooltipHandler.TipRegion(copyAllRect, "Copy".Translate());
+            this.DrawOperationList(ref y, viewRect.width);
+            y += 18f;
+            this.DrawOperationDefList(ref y, viewRect.width);
+            this.height = y + 10f;
+            Widgets.EndScrollView();
         }
+
         internal void DrawOperationList(ref float y, float width)
-
         {
-            object[] arguments = new object[]
+            float initY = y;
+            Rect rect = new Rect(12f, y + 4f, Mathf.Max(40f, width - 100f), 32f);
+            for (int i = 0; i < this.operations.Count; i++)
             {
-                y,
-                width
+                InteractionOperation o = this.operations[i];
+                rect.y = y + 4f;
+                if (CQFUIStyle.ButtonText(rect, o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText, false))
+                {
+                    Find.WindowStack.Add(CQFEditorBridge.Editor.CreateInteractionWindow(o, this));
+                }
+
+                TooltipHandler.TipRegion(rect, "CQF_ClickToEdit".Translate());
+                if (CQFUIStyle.ButtonImage(new Rect(width - 74f, y + 8f, 25f, 25f), TexButton.Copy))
+                {
+                    CQFEditorTools.operation = o.Copy();
+                }
+
+                TooltipHandler.TipRegion(new Rect(width - 74f, y + 8f, 25f, 25f), "Copy".Translate());
+                Rect save = new Rect(width - 42f, y + 8f, 25f, 25f);
+                if (CQFUIStyle.ButtonImage(save, ContentFinder<Texture2D>.Get("UI/Icon_MoveOut", true)))
+                {
+                    Find.WindowStack.Add(new Dialog_RenameForQE(name =>
+                    {
+                        LongEventHandler.QueueLongEvent(() =>
+                        {
+                            InteractionDataDef def = new InteractionDataDef();
+                            def.defName = name;
+                            def.label = o.interactionText;
+                            def.interactions = new List<InteractionOperation>()
+                            {
+                                o
+                            };
+                            DefDatabase<InteractionDataDef>.Add(def);
+                            string path = Path.Combine(CQFContentPaths.Quests, "Data", name + ".xml");
+                            XElement defXml = new XElement("QuestEditor_Library.InteractionDataDef");
+                            XElement interactionDataDefXml = new XElement("interactions");
+                            interactionDataDefXml.Add(o.SaveToXElement("li"));
+                            defXml.Add(new XElement("defName", name));
+                            defXml.Add(new XElement("label", o.interactionText));
+                            defXml.Add(interactionDataDefXml);
+                            new CQFContentTextExport(name).Save(defXml, typeof(InteractionDataDef), path);
+                            Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
+                        }, "SavingAsDef".Translate(), true, e =>
+                        {
+                            Log.Error("Export interaction XML failed: " + e);
+                            Messages.Message("CQF_DialogGraph_Error".Translate(e.Message), MessageTypeDefOf.RejectInput);
+                        });
+                    }) { optionalTitle = "SetDefname".Translate() });
+                }
+
+                TooltipHandler.TipRegion(save, "SaveAsDef".Translate());
+                y += 40f;
             };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractableThing.DrawOperationList(Ref:float,None:float)", this, arguments);
-            y = (float)arguments[0];
+            if (!this.operations.Any())
+            {
+                Widgets.Label(new Rect(12f, y + 4f, width - 24f, 28f), "CQF_NoInteractionOperations".Translate().Colorize(CQFUIStyle.Muted));
+                y += 34f;
+            }
+
+            CQFUIStyle.DrawBox(new Rect(8f, initY, width - 16f, Mathf.Max(36f, y - initY)));
+            y += 10f;
+            float buttonWidth = Mathf.Min(120f, (width - 68f) / 2f);
+            if (CQFUIStyle.ButtonText(new Rect(12f, y, buttonWidth, 32f), "Add".Translate()))
+            {
+                this.operations.Add(new InteractionOperation());
+            }
+
+            if (CQFUIStyle.ButtonText(new Rect(20f + buttonWidth, y, buttonWidth, 32f), "Remove".Translate()) && this.operations.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(this.operations, o => this.operations.Remove(o), o => o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText);
+            }
+
+            if (CQFUIStyle.ButtonImage(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)
+            {
+                Find.WindowStack.Add(new Dialog_CQFInteractionPaste(this, new[] { CQFEditorTools.operation }));
+            }
+
+            TooltipHandler.TipRegion(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), "Paste".Translate());
+            y += 42f;
         }
+
         internal void DrawOperationDefList(ref float y, float width)
-
         {
-            object[] arguments = new object[]
+            this.DrawSimpleSectionTitle(ref y, width, "InteractionDataDefs".Translate());
+            Rect rect = new Rect(12f, y + 4f, width - 24f, 32f);
+            foreach (InteractionDataDef def in this.operationDefs)
             {
-                y,
-                width
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractableThing.DrawOperationDefList(Ref:float,None:float)", this, arguments);
-            y = (float)arguments[0];
+                rect.y = y + 4f;
+                Widgets.Label(rect, def.label ?? def.defName);
+                y += 36f;
+            }
+
+            if (!this.operationDefs.Any())
+            {
+                Widgets.Label(new Rect(12f, y + 4f, width - 24f, 28f), "CQF_NoInteractionDefs".Translate().Colorize(CQFUIStyle.Muted));
+                y += 34f;
+            }
+
+            y += 6f;
+            float buttonWidth = Mathf.Min(120f, (width - 68f) / 2f);
+            if (CQFUIStyle.ButtonText(new Rect(12f, y, buttonWidth, 32f), "Add".Translate()))
+            {
+                CQFEditorTools.DrawFloatMenu(DefDatabase<InteractionDataDef>.AllDefsListForReading, d => Find.WindowStack.Add(new Dialog_CQFInteractionPaste(this, Enumerable.Empty<InteractionOperation>(), new[] { d })), d => d.label);
+            }
+
+            if (CQFUIStyle.ButtonText(new Rect(20f + buttonWidth, y, buttonWidth, 32f), "Remove".Translate()) && this.operationDefs.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(this.operationDefs, d => this.operationDefs.Remove(d), d => d.label);
+            }
+
+            y += 42f;
         }
+
         public void ProduceResult(Pawn operatorPawn, string operationText)
         {
-            if (this.GetCurOperation(operationText) is InteractionOperation op && op != null) 
+            if (this.GetCurOperation(operationText)is InteractionOperation op && op != null)
             {
                 Quest quest = GameTools.GetQuestFromThing(this);
-                if (DebugSettings.godMode) 
+                if (DebugSettings.godMode)
                 {
                     Log.Message(quest?.name);
                 }
+
                 op.ProduceResult(operatorPawn, this, quest);
-            } 
+            }
         }
+
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn selPawn)
         {
             foreach (FloatMenuOption option in base.GetFloatMenuOptions(selPawn))
             {
                 yield return option;
             }
+
             if (!this.disable)
             {
                 if (selPawn.CanReserveAndReach(this, PathEndMode.Touch, Danger.Deadly))
@@ -165,54 +292,51 @@ namespace QuestEditor_Library
                     yield return new FloatMenuOption("CantReseverveOrReachLootBox".Translate(), null);
                 }
             }
+
             yield break;
         }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref this.disable, "InteractableThing_disable");
-            Scribe_Collections.Look(ref this.operations, "InteractableThing_operations",LookMode.Deep);
+            Scribe_Collections.Look(ref this.operations, "InteractableThing_operations", LookMode.Deep);
             Scribe_Collections.Look(ref this.operationDefs, "operationDefs", LookMode.Def);
         }
 
         public void PasteData()
-
         {
-            object[] arguments = new object[]
-            {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractableThing.PasteData()", this, arguments);
+            Find.WindowStack.Add(new Dialog_CQFInteractionPaste(this, CQFEditorTools.operations, CQFEditorTools.operationDefs));
         }
+
         public CustomThingData GetData(IntVec3 pos)
         {
-            return new CustomThingData_InteractableThing(this,pos);
+            return new CustomThingData_InteractableThing(this, pos);
         }
+
         internal Rect DrawSectionHeader(ref float y, float width, string label, bool drawCopyButton = false)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.Label(new Rect(12f, y, width - (drawCopyButton ? 62f : 24f), 32f), label.Colorize(CQFUIStyle.Accent));
+            Rect copyRect = Rect.zero;
+            if (drawCopyButton)
             {
-                y,
-                width,
-                label,
-                drawCopyButton
-            };
-            object result = CQFEditorBridge.Invoke("QuestEditor_Library.InteractableThing.DrawSectionHeader(Ref:float,None:float,None:string,None:bool)", this, arguments);
-            y = (float)arguments[0];
-            return (UnityEngine.Rect)result;
+                copyRect = new Rect(width - 42f, y + 2f, 25f, 25f);
+            }
+
+            Text.Font = GameFont.Small;
+            y += 32f;
+            return copyRect;
         }
+
         internal void DrawSimpleSectionTitle(ref float y, float width, string label)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                width,
-                label
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractableThing.DrawSimpleSectionTitle(Ref:float,None:float,None:string)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope scope = new CQFUIScope();
+            Widgets.Label(new Rect(12f, y, width - 24f, 32f), label.Colorize(CQFUIStyle.Accent));
+            Text.Font = GameFont.Small;
+            y += 38f;
         }
+
         public float height = 0f;
         public Vector2 scrollPos;
         public bool disable = false;
@@ -221,92 +345,101 @@ namespace QuestEditor_Library
         public List<InteractionDataDef> operationDefs = new List<InteractionDataDef>();
         private CompCustomText textComp = null;
     }
-    public class InteractionOperation : ISaveable , IExposable,IDrawable
-    {    
+
+    public class InteractionOperation : ISaveable, IExposable, IDrawable
+    {
         public string OutputSignal => this.outputSignal.NullOrEmpty() ? this.interactionText : this.outputSignal;
 
         public void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionOperation.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            x += 8f;
+            float width = Mathf.Max(80f, inRect.width - x - 12f);
+            this.DrawBasicSettings(ref y, x, width);
+            this.DrawRequiredThings(ref y, x, width, inRect);
+            this.DrawConditions(ref y, x, width, inRect);
+            this.DrawResults(ref y, x, width, inRect);
         }
+
         internal void DrawBasicSettings(ref float y, float x, float width)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                x,
-                width
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionOperation.DrawBasicSettings(Ref:float,None:float,None:float)", this, arguments);
-            y = (float)arguments[0];
+            this.DrawHeader(ref y, x, width, "InteractionOperations".Translate());
+            string source = this.interactionText.CanTranslate() ? this.interactionText.Translate().ToString() : this.interactionText;
+            string edited = Widgets.TextArea(new Rect(x + 8f, y, width - 16f, 58f), source);
+            if (edited != source)
+                CQFSignalEditor.RenameInteraction(this, edited);
+            y += 66f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "TickToOperate".Translate(), ref this.tickToOperate, ref this.buffer, x + 8f, 90f);
+            y += 36f;
+            CQFSignalEditor.DrawInteractionSignal(ref y, new Rect(0f, 0f, x + width + 12f, CQFUIScope.ContentHeight), x, this);
+            y += 12f;
         }
+
         internal void DrawRequiredThings(ref float y, float x, float width, Rect inRect)
-
         {
-            object[] arguments = new object[]
+            this.DrawHeader(ref y, x, width, "InteractionOption_RequiredThing".Translate(), () => CQFEditorTools.DrawFloatMenu(new List<Type>() { typeof(CQFThingDefCount) }, t =>
             {
-                y,
-                x,
-                width,
-                inRect
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionOperation.DrawRequiredThings(Ref:float,None:float,None:float,None:UnityEngine.Rect)", this, arguments);
-            y = (float)arguments[0];
+                CQFThingData.OpenSelectWindow(t, d => this.requiredThings.Add(d));
+            }, t => t.Name.Translate()), "Add".Translate(), () => CQFEditorTools.DrawFloatMenu(this.requiredThings, d => this.requiredThings.Remove(d), d => d.ToString()), "Remove".Translate());
+            float initY = y;
+            foreach (CQFThingData thing in this.requiredThings)
+            {
+                thing.DrawWithSingleCount(ref y, inRect, x + 10f);
+                y += 6f;
+            }
+
+            if (!this.requiredThings.Any())
+            {
+                Widgets.Label(new Rect(x + 12f, y + 4f, width - 24f, 25f), "CQF_NoRequiredThings".Translate().Colorize(CQFUIStyle.Muted));
+                y += 34f;
+            }
+
+            y += 12f;
         }
+
         internal void DrawConditions(ref float y, float x, float width, Rect inRect)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                x,
-                width,
-                inRect
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionOperation.DrawConditions(Ref:float,None:float,None:float,None:UnityEngine.Rect)", this, arguments);
-            y = (float)arguments[0];
+            CQFConditionListEditor.Draw(ref y, x + 8f, width - 16f, inRect, "InteractionConditions".Translate(), this.conditions);
         }
+
         internal void DrawResults(ref float y, float x, float width, Rect inRect)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                x,
-                width,
-                inRect
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionOperation.DrawResults(Ref:float,None:float,None:float,None:UnityEngine.Rect)", this, arguments);
-            y = (float)arguments[0];
+            CQFInteractionResultEditor.Draw(ref y, x + 8f, width - 16f, inRect, this);
         }
+
         internal void DrawHeader(ref float y, float x, float width, string label, Action addAction = null, string addTip = null, Action removeAction = null, string removeTip = null, Texture2D addIcon = null)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope scope = new CQFUIScope();
+            Rect header = new Rect(x, y, width, 32f);
+            Widgets.DrawBoxSolid(header, CQFUIStyle.Header);
+            CQFUIStyle.DrawBox(header);
+            Widgets.Label(new Rect(x + 8f, y + 3f, Mathf.Max(20f, width - 88f), 26f), label.Colorize(CQFUIStyle.TextColor));
+            Rect button = new Rect(x + width - 60f, y + 2f, 25f, 25f);
+            if (addAction != null && CQFUIStyle.ButtonImage(button, addIcon ?? TexButton.Plus))
             {
-                y,
-                x,
-                width,
-                label,
-                addAction,
-                addTip,
-                removeAction,
-                removeTip,
-                addIcon
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionOperation.DrawHeader(Ref:float,None:float,None:float,None:string,None:System.Action,None:string,None:System.Action,None:string,None:UnityEngine.Texture2D)", this, arguments);
-            y = (float)arguments[0];
+                addAction();
+            }
+
+            if (addAction != null && addTip != null)
+            {
+                TooltipHandler.TipRegion(button, addTip);
+            }
+
+            button.x += 30f;
+            if (removeAction != null && CQFUIStyle.ButtonImage(button, TexButton.Delete))
+            {
+                removeAction();
+            }
+
+            if (removeAction != null && removeTip != null)
+            {
+                TooltipHandler.TipRegion(button, removeTip);
+            }
+
+            y += 42f;
         }
-        public InteractionOperation Copy() 
+
+        public InteractionOperation Copy()
         {
             XElement x = this.SaveToXElement("InteractionOperation");
             XmlNode node = new XmlDocument().ReadNode(x.CreateReader()) as XmlNode;
@@ -314,6 +447,7 @@ namespace QuestEditor_Library
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
             return result;
         }
+
         public void ProduceResult(Pawn interacter, Thing thing, Quest quest)
         {
             foreach (InteractionResult r in this.results)
@@ -327,6 +461,7 @@ namespace QuestEditor_Library
                     }
                 }
             }
+
             Dictionary<ThingCategoryDef, int> categoryAndCount = new Dictionary<ThingCategoryDef, int>();
             foreach (CQFThingData data in this.requiredThings)
             {
@@ -334,11 +469,13 @@ namespace QuestEditor_Library
                 {
                     interacter.inventory.innerContainer.Take(interacter.inventory.innerContainer.ToList().Find(i => i.def == tData.thing), tData.count.min).Destroy();
                 }
+
                 if (data is CQFThingCategoryCount cData)
                 {
                     categoryAndCount.Add(cData.category, cData.count.min);
                 }
             }
+
             //target.inventory.innerContainer.InnerListForReading.ListFullCopy().ForEach(t => 
             //{
             //    categoryAndCount.ToList().ListFullCopy().ForEach(c => 
@@ -352,57 +489,59 @@ namespace QuestEditor_Library
             //            {
             //                categoryAndCount.Remove(c.Key);
             //            }
-
             //        }
             //    });
             //});
             QuestUtility.SendQuestTargetSignals(thing.questTags, this.OutputSignal, thing.Named("SUBJECT"));
-
             if (!GameTools.isGeneratingMap)
             {
                 GameTools.ClearTemporaryTargets();
             }
         }
-        public bool Satisfied(Pawn target,Thing thing,out string reason, Quest quest)
+
+        public bool Satisfied(Pawn target, Thing thing, out string reason, Quest quest)
         {
             foreach (DialogCondition condition in this.conditions)
             {
                 Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
                 targets.Add("Trigger", target);
                 targets.Add("CustomThing", thing);
-                if (!condition.Satisfied(targets, out reason,quest)) 
+                if (!condition.Satisfied(targets, out reason, quest))
                 {
                     return false;
                 }
             }
-            foreach (CQFThingData data in this.requiredThings) 
+
+            foreach (CQFThingData data in this.requiredThings)
             {
-                if (data is CQFThingDefCount tData && target.inventory.Count(tData.thing) < tData.count.min) 
+                if (data is CQFThingDefCount tData && target.inventory.Count(tData.thing) < tData.count.min)
                 {
-                    reason = "NoRequiredThing".Translate(tData.thing.label
-                        , target.inventory.Count(tData.thing), tData.count.min.ToString());
+                    reason = "NoRequiredThing".Translate(tData.thing.label, target.inventory.Count(tData.thing), tData.count.min.ToString());
                     return false;
                 }
+
                 if (data is CQFThingCategoryCount cData)
                 {
-                    //int count = 0;
-                    //target.inventory.innerContainer.ToList().ForEach(t =>
-                    //{
-                    //    if (t.HasThingCategory(cData.category))
-                    //    {
-                    //        count += t.stackCount;
-                    //    }
-                    //});
-                    //if (count < cData.count.min)
-                    //{
-                    //    reason = "NoRequiredThingCategory".Translate(cData.category.label, cData.count.ToString());
-                    //    return false;
-                    //} 
+                //int count = 0;
+                //target.inventory.innerContainer.ToList().ForEach(t =>
+                //{
+                //    if (t.HasThingCategory(cData.category))
+                //    {
+                //        count += t.stackCount;
+                //    }
+                //});
+                //if (count < cData.count.min)
+                //{
+                //    reason = "NoRequiredThingCategory".Translate(cData.category.label, cData.count.ToString());
+                //    return false;
+                //}
                 }
             }
+
             reason = null;
             return true;
         }
+
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.onlyGenerateSingleResult, "InteractionOperation_onlyGenerateSingleResult");
@@ -411,7 +550,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.outputSignal, "InteractionOperation_outputSignal", string.Empty);
             Scribe_Collections.Look(ref this.requiredThings, "requiredThings", LookMode.Deep);
             Scribe_Collections.Look(ref this.conditions, "InteractionOperation_conditions", LookMode.Deep);
-            Scribe_Collections.Look(ref this.results, "InteractionOperation_results", LookMode.Deep); 
+            Scribe_Collections.Look(ref this.results, "InteractionOperation_results", LookMode.Deep);
         }
 
         public XElement SaveToXElement(string nodeName)
@@ -424,6 +563,7 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("onlyGenerateSingleResult", this.onlyGenerateSingleResult));
             }
+
             if (this.results.Any())
             {
                 XElement results = new XElement("results");
@@ -433,11 +573,13 @@ namespace QuestEditor_Library
                 });
                 result.Add(results);
             }
+
             if (this.requiredThings.Any())
             {
                 XElement results = CQFSerialization.SaveList_Saveable(this.requiredThings, "requiredThings");
                 result.Add(results);
             }
+
             if (this.conditions.Any())
             {
                 XElement conditions = new XElement("conditions");
@@ -447,6 +589,7 @@ namespace QuestEditor_Library
                 });
                 result.Add(conditions);
             }
+
             return result;
         }
 
@@ -457,45 +600,43 @@ namespace QuestEditor_Library
         public string outputSignal = string.Empty;
         public int tickToOperate = 100;
         public bool onlyGenerateSingleResult = false;
-        public List<DialogCondition>  conditions = new List<DialogCondition>();
-        public List<InteractionResult>  results = new List<InteractionResult>();
-        public List<CQFThingData>  requiredThings = new List<CQFThingData>();
+        public List<DialogCondition> conditions = new List<DialogCondition>();
+        public List<InteractionResult> results = new List<InteractionResult>();
+        public List<CQFThingData> requiredThings = new List<CQFThingData>();
     }
-    public class InteractionResult : ISaveable, IExposable 
+
+    public class InteractionResult : ISaveable, IExposable
     {
         public void Draw(ref float y, Rect inRect, float x = 0f)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.InteractionResult.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            CQFInteractionResultEditor.DrawResult(ref y, x, inRect.width - x - 35f, inRect, this);
         }
-        public void DoResult(Pawn target, Thing thing,Quest quest) 
+
+        public void DoResult(Pawn target, Thing thing, Quest quest)
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
             targets.Add("Trigger", target);
             targets.Add("CustomThing", thing);
             this.actions.ForEach(x => x.Work(targets, quest));
         }
-        public bool Satisfied(Pawn target, Thing thing, Quest quest) 
+
+        public bool Satisfied(Pawn target, Thing thing, Quest quest)
         {
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
             targets.Add("Trigger", target);
             targets.Add("CustomThing", thing);
             foreach (DialogCondition condition in this.conditions)
             {
-                if (!condition.Satisfied(targets, out string reason,quest))
+                if (!condition.Satisfied(targets, out string reason, quest))
                 {
                     return false;
                 }
             }
+
             return true;
         }
+
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.resultName, "InteractionResult_resultName");
@@ -521,6 +662,7 @@ namespace QuestEditor_Library
             result.Add(conditions);
             return result;
         }
+
         [NoTranslate]
         public string resultName = "DefaultName";
         public List<DialogCondition> conditions = new List<DialogCondition>();

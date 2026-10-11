@@ -129,6 +129,11 @@ namespace QuestEditor_Library
             }
             foreach (FileInfo file in files)
             {
+                if (string.IsNullOrWhiteSpace(Path.GetFileNameWithoutExtension(file.Name)))
+                {
+                    Log.Warning($"CQF_QuestUnnamedFileSkipped: path={file.FullName}, type={typeof(T).Name}");
+                    continue;
+                }
                 XmlDocument xml = new XmlDocument();
                 try
                 {
@@ -144,7 +149,7 @@ namespace QuestEditor_Library
                     try
                     {
                         T def = loadAction(xmlNode);
-                        if (def == null || def.defName.NullOrEmpty())
+                        if (def == null || string.IsNullOrWhiteSpace(def.defName))
                         {
                             Log.Error($"CQF_QuestDefLoadError: path={file.FullName}, type={typeof(T).Name}, node={xmlNode.OuterXml}");
                             continue;

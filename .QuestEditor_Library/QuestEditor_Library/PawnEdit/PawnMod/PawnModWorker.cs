@@ -1,9 +1,9 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using System.Xml;
-using RimWorld;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
@@ -22,18 +22,10 @@ namespace QuestEditor_Library
         }
 
         public virtual void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                pawnDef,
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[1];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
         }
+
         public virtual void ModifyGenerationRequest(ComplexPawnDef pawnDef, ref PawnGenerationRequest request)
         {
         }
@@ -60,21 +52,12 @@ namespace QuestEditor_Library
         }
 
         protected internal Rect DrawRowLabel(ref float y, Rect inRect, float x, string label, float labelWidth = 150f, float height = 30f)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x,
-                label,
-                labelWidth,
-                height
-            };
-            object result = CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker.DrawRowLabel(Ref:float,None:UnityEngine.Rect,None:float,None:string,None:float,None:float)", this, arguments);
-            y = (float)arguments[0];
-            return (UnityEngine.Rect)result;
+            Rect labelRect = new Rect(x, y + 3f, labelWidth, 25f);
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
+            return new Rect(x + labelWidth + 8f, y, Mathf.Max(120f, inRect.width - x - labelWidth - 24f), height);
         }
+
         protected internal void EndRow(ref float y, float height = 30f)
         {
             y += height + 8f;
@@ -92,51 +75,34 @@ namespace QuestEditor_Library
         }
 
         protected internal bool DrawSelectRow(ref float y, Rect inRect, float x, string label, float height = 30f)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x,
-                label,
-                height
-            };
-            object result = CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker.DrawSelectRow(Ref:float,None:UnityEngine.Rect,None:float,None:string,None:float)", this, arguments);
-            y = (float)arguments[0];
-            return (bool)result;
+            Rect rect = new Rect(x, y, inRect.width - x - 20f, height);
+            bool result = this.DrawTextButton(rect, label);
+            this.EndRow(ref y, height);
+            return result;
         }
+
         protected internal void DrawColorRow(ref float y, Rect inRect, float x, string label, Color color, Action<Color> apply)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x,
-                label,
-                color,
-                apply
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker.DrawColorRow(Ref:float,None:UnityEngine.Rect,None:float,None:string,None:UnityEngine.Color,None:System.Action<UnityEngine.Color>)", this, arguments);
-            y = (float)arguments[0];
+            this.DrawColorRow(ref y, inRect, x, label, color, apply, null);
         }
+
         protected internal void DrawColorRow(ref float y, Rect inRect, float x, string label, Color? color, Action<Color> apply, Action clear)
-
         {
-            object[] arguments = new object[]
+            Rect rect = new Rect(x, y, inRect.width - x - 20f, 30f);
+            if (this.DrawTextButton(rect, label))
             {
-                y,
-                inRect,
-                x,
-                label,
-                color,
-                apply,
-                clear
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker.DrawColorRow(Ref:float,None:UnityEngine.Rect,None:float,None:string,None:UnityEngine.Color?,None:System.Action<UnityEngine.Color>,None:System.Action)", this, arguments);
-            y = (float)arguments[0];
+                this.OpenColorDialog(label, color ?? Color.white, apply, clear);
+            }
+
+            if (color != null)
+            {
+                this.DrawColorSwatch(new Rect(rect.xMax - 32f, rect.y + 3f, 24f, 24f), color.Value);
+            }
+
+            this.EndRow(ref y);
         }
+
         protected internal string ValueOrNone(string value)
         {
             return value.NullOrEmpty() ? "CQF_PawnEditor_None".Translate().ToString() : value;
@@ -180,24 +146,30 @@ namespace QuestEditor_Library
             {
                 return result;
             }
+
             foreach (XmlNode li in node.SelectNodes("li"))
             {
                 result.Add(DirectXmlToObject.ObjectFromXml<T>(li, false));
             }
+
             return result;
         }
-        internal void OpenColorDialog(string label, Color color, Action<Color> apply, Action clear = null)
 
+        internal void OpenColorDialog(string label, Color color, Action<Color> apply, Action clear = null)
         {
-            object[] arguments = new object[]
+            List<FloatMenuOption> options = new List<FloatMenuOption>
             {
-                label,
-                color,
-                apply,
-                clear
+                new FloatMenuOption("CQF_PawnEditor_ColorLibrary".Translate(), () => Find.WindowStack.Add(new Dialog_ChooseColor(label, color, DefDatabase<ColorDef>.AllDefsListForReading.Select(def => def.color).ToList(), apply))),
+                new FloatMenuOption("CQF_PawnEditor_HexColor".Translate(), () => Find.WindowStack.Add(new Dialog_RGB(color, apply)))
             };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker.OpenColorDialog(None:string,None:UnityEngine.Color,None:System.Action<UnityEngine.Color>,None:System.Action)", this, arguments);
+            if (clear != null)
+            {
+                options.Add(new FloatMenuOption("CQF_PawnEditor_UseDefaultSkinColor".Translate(), clear));
+            }
+
+            Find.WindowStack.Add(new FloatMenu(options));
         }
+
         internal void DrawColorSwatch(Rect rect, Color color)
         {
             Widgets.DrawBoxSolid(rect, color);

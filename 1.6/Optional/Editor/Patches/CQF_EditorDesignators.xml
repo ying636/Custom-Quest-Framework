@@ -11,6 +11,8 @@
 			<li>QuestEditor_Library.Designator_SpawnThing</li>
 			<li>QuestEditor_Library.Designator_MoveOut</li>
 			<li>QuestEditor_Library.Designator_MoveIn</li>
+			<li>QuestEditor_Library.Designator_MoveThing</li>
+			<li>QuestEditor_Library.Designator_RotateThing</li>
 			<li>QuestEditor_Library.Designator_CQFTools</li>
 			<li>QuestEditor_Library.Designator_CustomTrap</li>
 			<li>QuestEditor_Library.Designator_SetFaction</li>

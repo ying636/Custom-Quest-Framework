@@ -16,36 +16,51 @@ namespace QuestEditor_Library
     public class PawnSpawnData_Faction : PawnSpawnData
     {
         public override void DrawKind(float x, ref float y)
-
         {
-            object[] arguments = new object[]
+            Rect rect = PawnSpawnData.DrawField(ref y, x, "CQF_PawnGroupMaker".Translate(string.Empty));
+            FactionDef? factionDef = this.faction.NullOrEmpty() ? null : DefDatabase<FactionDef>.GetNamedSilentFail(this.faction);
+            if (CQFUIStyle.ButtonText(rect, this.kindDef?.defName ?? "Select".Translate().ToString(), active: factionDef != null && !factionDef.pawnGroupMakers.NullOrEmpty()) && factionDef != null)
             {
-                x,
-                y
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData_Faction.DrawKind(None:float,Ref:float)", this, arguments);
-            y = (float)arguments[1];
+                CQFEditorTools.DrawFloatMenu(factionDef.pawnGroupMakers, (k) => this.kindDef = k.kindDef, (k) =>
+                {
+                    return k.kindDef.defName + ":" + k.commonality;
+                });
+            }
+
+            TooltipHandler.TipRegion(rect, "CQF_PawnGroupMaker_Tip".Translate());
+            Rect points = PawnSpawnData.DrawField(ref y, x, "SpawmPoint".Translate(), 190f);
+            float part = (points.width - 18f) / 2f;
+            int min = this.point.min;
+            int max = this.point.max;
+            Widgets.TextFieldNumeric(new Rect(points.x, points.y, part, points.height), ref min, ref this.buffer1);
+            Widgets.Label(new Rect(points.x + part + 3f, points.y + 4f, 12f, 25f), "~");
+            Widgets.TextFieldNumeric(new Rect(points.x + part + 18f, points.y, part, points.height), ref max, ref this.buffer2);
+            this.point = new IntRange(min, max);
         }
+
         public override bool CanSaveToMap()
         {
             return !this.faction.NullOrEmpty() && this.point.max >= 1;
         }
-        public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null,bool setLord = true)
+
+        public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null, bool setLord = true)
         {
-            if (GameTools.GetFaction(this.faction, map) is Faction f)
+            if (GameTools.GetFaction(this.faction, map)is Faction f)
             {
                 List<PawnGroupMaker> makers = f.def.pawnGroupMakers.FindAll(g => this.kindDef == null ? true : g.kindDef == this.kindDef);
-                if (makers.Any() && makers.RandomElementByWeight(m => m.commonality) is PawnGroupMaker maker)
+                if (makers.Any() && makers.RandomElementByWeight(m => m.commonality)is PawnGroupMaker maker)
                 {
                     if (!Rand.Chance(this.generationChance) || !position.InBounds(map))
                     {
                         return null;
                     }
+
                     Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
                     if (!position.Fogged(map) && this.spawnMessage != null && !this.spawnMessage.NullOrEmpty())
                     {
                         Messages.Message((this.spawnMessage.CanTranslate() ? this.spawnMessage.Translate().ToString() : this.spawnMessage), new LookTargets(position, map), MessageTypeDefOf.NeutralEvent);
                     }
+
                     PawnGroupMakerParms pawnGroupMakerParms = new PawnGroupMakerParms();
                     pawnGroupMakerParms.groupKind = this.kindDef;
                     pawnGroupMakerParms.tile = map.Tile;
@@ -68,11 +83,13 @@ namespace QuestEditor_Library
                             {
                                 job.pawnDutyDatas.Add(p, this.duty);
                             }
+
                             if (lord.LordJob is LordJob_ComplexCustom complexJob)
                             {
                                 complexJob.ApplyDefaultDutyMap(p, quest);
                             }
                         }
+
                         if (p.kindDef == this.kind)
                         {
                             result.SetOrAdd(this.dataName + "." + i, p);
@@ -81,6 +98,7 @@ namespace QuestEditor_Library
                         {
                             result.SetOrAdd(this.dataName + "_" + p.kindDef.defName + "." + i, p);
                         }
+
                         i++;
                     });
                     this.SpawnPnaw(pawns, position, map);
@@ -90,12 +108,15 @@ namespace QuestEditor_Library
                         result.Values.ToList().ForEach(t => ps.Add(t.Thing as Pawn));
                         GameComponent_Editor.Instance.GetQuestData(quest)?.AddGroup(this.dataName, ps);
                     }
+
                     return result;
                 }
             }
+
             Log.Error("Custom Quset Framework Error:Pawn data lack faction");
             return null;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -104,8 +125,10 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("kindDef", this.kindDef.defName));
             }
+
             return result;
         }
+
         public override void ExposeData()
         {
             base.ExposeData();

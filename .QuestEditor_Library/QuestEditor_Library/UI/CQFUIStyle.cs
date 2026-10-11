@@ -3,8 +3,10 @@ using Verse;
 
 namespace QuestEditor_Library
 {
+    [StaticConstructorOnStartup]
     public static class CQFUIStyle
     {
+        public static Texture2D AccentTexture => accentTexture;
         public static Color Canvas => new Color(0.075f, 0.085f, 0.10f);
         public static Color Panel => new Color(0.13f, 0.15f, 0.18f);
         public static Color Card => new Color(0.17f, 0.195f, 0.225f);
@@ -17,9 +19,7 @@ namespace QuestEditor_Library
         public static Color TextColor => new Color(0.96f, 0.97f, 0.98f);
         public static Color Muted => new Color(0.76f, 0.79f, 0.83f);
 
-        public static bool ButtonText(Rect rect, string label, bool drawBackground = true, bool doMouseoverSound = true, bool active = true, TextAnchor? overrideTextAnchor = null)
-            => ButtonText(rect, label, drawBackground, doMouseoverSound, TextColor, active, overrideTextAnchor);
-
+        public static bool ButtonText(Rect rect, string label, bool drawBackground = true, bool doMouseoverSound = true, bool active = true, TextAnchor? overrideTextAnchor = null) => ButtonText(rect, label, drawBackground, doMouseoverSound, TextColor, active, overrideTextAnchor);
         public static bool ButtonText(Rect rect, string label, bool drawBackground, bool doMouseoverSound, Color textColor, bool active = true, TextAnchor? overrideTextAnchor = null)
         {
             using CQFUIScope scope = new CQFUIScope();
@@ -27,7 +27,8 @@ namespace QuestEditor_Library
             GUI.enabled = enabled && active;
             try
             {
-                if (drawBackground) DrawBackground(rect);
+                if (drawBackground)
+                    DrawBackground(rect);
                 Text.Anchor = overrideTextAnchor ?? (drawBackground ? TextAnchor.MiddleCenter : TextAnchor.MiddleLeft);
                 Text.WordWrap = rect.height > 40f;
                 GUI.color *= GUI.enabled ? textColor : Muted;
@@ -35,15 +36,14 @@ namespace QuestEditor_Library
                 Widgets.Label(text, Text.WordWrap ? label : (label ?? string.Empty).Truncate(text.width));
                 return Widgets.ButtonInvisible(rect, doMouseoverSound);
             }
-            finally { GUI.enabled = enabled; }
+            finally
+            {
+                GUI.enabled = enabled;
+            }
         }
 
-        public static bool ButtonImage(Rect rect, Texture2D texture, bool doMouseoverSound = true, string? tooltip = null)
-            => ButtonImage(rect, texture, TextColor, Accent, doMouseoverSound, tooltip);
-
-        public static bool ButtonImage(Rect rect, Texture2D texture, Color baseColor, bool doMouseoverSound = true, string? tooltip = null)
-            => ButtonImage(rect, texture, baseColor, Accent, doMouseoverSound, tooltip);
-
+        public static bool ButtonImage(Rect rect, Texture2D texture, bool doMouseoverSound = true, string? tooltip = null) => ButtonImage(rect, texture, TextColor, Accent, doMouseoverSound, tooltip);
+        public static bool ButtonImage(Rect rect, Texture2D texture, Color baseColor, bool doMouseoverSound = true, string? tooltip = null) => ButtonImage(rect, texture, baseColor, Accent, doMouseoverSound, tooltip);
         public static bool ButtonImage(Rect rect, Texture2D texture, Color baseColor, Color mouseoverColor, bool doMouseoverSound = true, string? tooltip = null)
         {
             Color previous = GUI.color;
@@ -52,8 +52,13 @@ namespace QuestEditor_Library
                 GUI.color *= GUI.enabled ? Mouse.IsOver(rect) ? mouseoverColor : baseColor : Muted;
                 DrawGlyph(rect, texture);
             }
-            finally { GUI.color = previous; }
-            if (tooltip != null) TooltipHandler.TipRegion(rect, tooltip);
+            finally
+            {
+                GUI.color = previous;
+            }
+
+            if (tooltip != null)
+                TooltipHandler.TipRegion(rect, tooltip);
             return Widgets.ButtonInvisible(rect, doMouseoverSound);
         }
 
@@ -72,8 +77,15 @@ namespace QuestEditor_Library
         public static void DrawBox(Rect rect, int thickness = 1, Texture2D? lineTexture = null)
         {
             Color previous = GUI.color;
-            try { GUI.color = new Color(Border.r, Border.g, Border.b, previous.a); Widgets.DrawBox(rect, thickness); }
-            finally { GUI.color = previous; }
+            try
+            {
+                GUI.color = new Color(Border.r, Border.g, Border.b, previous.a);
+                Widgets.DrawBox(rect, thickness);
+            }
+            finally
+            {
+                GUI.color = previous;
+            }
         }
 
         public static void DrawMenuSection(Rect rect)
@@ -87,5 +99,7 @@ namespace QuestEditor_Library
             Widgets.DrawBoxSolid(rect, Header);
             DrawBox(rect);
         }
+
+        private static readonly Texture2D accentTexture = SolidColorMaterials.NewSolidColorTexture(Accent);
     }
 }

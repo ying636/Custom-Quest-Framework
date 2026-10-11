@@ -10,14 +10,19 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 using Verse.AI.Group;
+
 namespace QuestEditor_Library
 {
     public class DutyData
     {
     }
+
     public class HediffInformation : ISaveable, IExposable
     {
-        public HediffInformation() { }
+        public HediffInformation()
+        {
+        }
+
         public HediffInformation(HediffDef hediff, BodyPartDef part, float severity, string partLabel)
         {
             this.partLabel = partLabel;
@@ -26,6 +31,7 @@ namespace QuestEditor_Library
             this.severity = severity;
             this.buffer = "";
         }
+
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -36,6 +42,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("partLabelForSeeing", this.partLabelForSeeing));
             return result;
         }
+
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.partLabelForSeeing, "HediffInformation_partLabelForSeeing");
@@ -44,6 +51,7 @@ namespace QuestEditor_Library
             Scribe_Defs.Look(ref this.part, "HediffInformation_part");
             Scribe_Defs.Look(ref this.hediff, "HediffInformation_hediff");
         }
+
         public string buffer;
         public float severity;
         public string partLabelForSeeing;
@@ -51,29 +59,25 @@ namespace QuestEditor_Library
         public BodyPartDef part;
         public HediffDef hediff;
     }
-    public class ArrivingWay : IExposable,IDrawable
-    {     
-        public virtual void Draw(ref float y, Rect inRect, float x)
 
+    public class ArrivingWay : IExposable, IDrawable
+    {
+        public virtual void Draw(ref float y, Rect inRect, float x)
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ArrivingWay.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
         }
+
         public virtual void SpawnPnaw(List<Pawn> pawns, IntVec3 position, Map map)
         {
-            pawns.ForEach(pawn => GenSpawn.Spawn(pawn, position, map));  
+            pawns.ForEach(pawn => GenSpawn.Spawn(pawn, position, map));
         }
+
         public virtual void ExposeData()
         {
         }
     }
-    public class ArrivingWay_DropPod : ArrivingWay 
+
+    public class ArrivingWay_DropPod : ArrivingWay
     {
         public override void SpawnPnaw(List<Pawn> pawns, IntVec3 position, Map map)
         {
@@ -82,7 +86,8 @@ namespace QuestEditor_Library
             {
                 activeDropPodInfo.innerContainer.TryAdd(item, true);
             }
-            DropPodUtility.MakeDropPodAt(position,map, activeDropPodInfo);
+
+            DropPodUtility.MakeDropPodAt(position, map, activeDropPodInfo);
         }
     }
 }

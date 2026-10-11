@@ -70,7 +70,7 @@ namespace QuestEditor_Library
             {
                 yield return new FloatMenuOption("Select".Translate(), () =>
                  {
-                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_CQFTools.Basespawnable, x => x.uiIcon, x => x.label + $"({Designator_CQFTools.GetCQFToolTypeLabel(x)})", x =>
+                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(CQFEditorTools.CustomThings, x => x.uiIcon, x => x.label + $"({Designator_CQFTools.GetCQFToolTypeLabel(x)})", x =>
             {
                 this.SelectThing(x);
             }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)), "Select".Translate()));

@@ -4,12 +4,11 @@ using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
-
-    public class CustomMapStep_MapBackground : CustomMapStep
+public class CustomMapStep_MapBackground : CustomMapStep
 {
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
-        if (MapComponent_CustomMapData.GetComp(map) is { } comp)
+        if (MapComponent_CustomMapData.GetComp(map)is { } comp)
         {
             List<CustomMapBackgroundEffectDef> backgroundEffects = comp.background?.backgroundEffects;
             comp.background = this.background?.Copy();
@@ -17,6 +16,7 @@ namespace QuestEditor_Library;
             {
                 comp.background.backgroundEffects = backgroundEffects;
             }
+
             if (Current.ProgramState == ProgramState.Playing)
             {
                 map.mapDrawer.RegenerateEverythingNow();
@@ -25,17 +25,12 @@ namespace QuestEditor_Library;
     }
 
     public override void Draw(ref float y, Rect inRect, float x)
+    {
+        using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+        this.background ??= new CustomMapBackgroundData();
+        this.background.Draw(ref y, inRect, x);
+    }
 
-        {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_MapBackground.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
-        }
     public override XElement SaveToXElement(string nodeName)
     {
         XElement result = base.SaveToXElement(nodeName);
@@ -43,6 +38,7 @@ namespace QuestEditor_Library;
         {
             result.Add(this.background.SaveToXElement("background"));
         }
+
         return result;
     }
 

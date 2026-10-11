@@ -3,24 +3,25 @@ using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
-
-    public class CustomMapStep_GenStepDef : CustomMapStep
+public class CustomMapStep_GenStepDef : CustomMapStep
 {
     public override void Draw(ref float y, Rect inRect, float x)
-
+    {
+        using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+        float width = inRect.width - x - 12f;
+        Widgets.Label(new Rect(x, y, width, 30f), "CustomMapStep_GenStepDef".Translate().Colorize(CQFUIStyle.Accent));
+        y += 35f;
+        if (CQFUIStyle.ButtonText(new Rect(x, y, width, 30f), this.step?.label ?? this.step?.defName ?? "CQF_NotSelected".Translate(), false))
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_GenStepDef.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            CQFEditorTools.DrawFloatMenu(DefDatabase<GenStepDef>.AllDefsListForReading, g => this.step = g, g => g.label ?? g.defName);
         }
+
+        y += 35f;
+    }
+
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
-        this.step.genStep.Generate(map,new GenStepParams());
+        this.step.genStep.Generate(map, new GenStepParams());
     }
 
     public override XElement SaveToXElement(string nodeName)

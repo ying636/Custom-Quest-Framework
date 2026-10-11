@@ -1,8 +1,8 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -16,24 +16,44 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            PawnModData_Abilities modData = pawnDef.DataFor<PawnModData_Abilities>();
+            Rect addRect = new Rect(x, y, 120f, 30f);
+            if (this.DrawCommandText(addRect, "CQF_PawnEditor_Add".Translate()))
             {
-                pawnDef,
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Abilities.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[1];
+                this.OpenAbilitySelector(ability => modData.abilities.Add(new AbilityData { def = ability }));
+            }
+
+            Rect deleteRect = new Rect(addRect.xMax + 10f, y, 120f, 30f);
+            if (this.DrawCommandText(deleteRect, "CQF_PawnEditor_Delete".Translate()) && modData.abilities.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(modData.abilities, data => modData.abilities.Remove(data), this.AbilityLabel);
+            }
+
+            y += 42f;
+            this.RemoveDuplicates(modData.abilities);
+            foreach (AbilityData data in modData.abilities)
+            {
+                Rect row = new Rect(x, y, inRect.width - x - 20f, 36f);
+                Widgets.DrawLightHighlight(row);
+                Rect buttonRect = new Rect(row.x + 8f, row.y + 3f, row.width - 16f, 30f);
+                if (this.DrawTextButton(buttonRect, this.AbilityLabel(data)))
+                {
+                    this.OpenAbilitySelector(ability => data.def = ability);
+                }
+
+                y += 42f;
+            }
         }
+
         public override void ApplyToPawn(ComplexPawnDef pawnDef, Pawn pawn, bool preview)
         {
             if (pawn.abilities == null)
             {
                 return;
             }
+
             PawnModData_Abilities modData = pawnDef.DataFor<PawnModData_Abilities>();
             this.RemoveDuplicates(modData.abilities);
             HashSet<AbilityDef> desired = modData.abilities.Where(data => data?.def != null).Select(data => data.def).ToHashSet();
@@ -44,6 +64,7 @@ namespace QuestEditor_Library
                     pawn.abilities.RemoveAbility(ability.def);
                 }
             }
+
             foreach (AbilityDef ability in desired)
             {
                 pawn.abilities.GainAbility(ability);
@@ -57,10 +78,12 @@ namespace QuestEditor_Library
                 pawnDef.DataFor<PawnModData_Abilities>().abilities = this.LoadSaveableList<AbilityData>(node["abilities"]);
             }
         }
+
         internal void OpenAbilitySelector(Action<AbilityDef> action)
         {
             Find.WindowStack.Add(new Dialog_Select<AbilityDef>(new LabeledTextureSelectDrawer<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, ability => ability.uiIcon, ability => ability.label, action, null, null, null, null, ability => ability.defName, null, null), "CQF_PawnEditor_Select".Translate()));
         }
+
         internal void RemoveDuplicates(List<AbilityData> abilities)
         {
             HashSet<AbilityDef> defs = new HashSet<AbilityDef>();
@@ -73,6 +96,7 @@ namespace QuestEditor_Library
                 }
             }
         }
+
         internal string AbilityLabel(AbilityData data)
         {
             return data?.def?.label ?? "CQF_PawnEditor_None".Translate();

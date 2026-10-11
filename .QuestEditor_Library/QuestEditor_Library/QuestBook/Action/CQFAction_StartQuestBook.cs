@@ -1,6 +1,6 @@
+using RimWorld;
 using System.Collections.Generic;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -11,17 +11,19 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.QuestBook;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            string selected = this.bookDef == null ? "CQF_QuestBook_None".Translate().ToString() : (this.bookDef.label.NullOrEmpty() ? this.bookDef.defName : this.bookDef.label);
+            Rect selectRect = new Rect(x, y, Mathf.Max(280f, inRect.width - x - 12f), 28f);
+            if (CQFUIStyle.ButtonText(selectRect, "CQF_QuestBook_ActionStartQuestBook".Translate(selected), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_StartQuestBook.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(DefDatabase<QuestBookDef>.AllDefsListForReading, definition => this.bookDef = definition, definition => definition.label.NullOrEmpty() ? definition.defName : definition.label);
+            }
+
+            y += selectRect.height + 8f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (bookDef == null)
@@ -29,11 +31,13 @@ namespace QuestEditor_Library
                 Log.Error("CQF task book start action has no QuestBookDef.");
                 return;
             }
+
             if (GameComponent_QuestBook.Instance == null)
             {
                 Log.Error("CQF task book start action could not find GameComponent_QuestBook.");
                 return;
             }
+
             if (quest != null)
             {
                 if (GameComponent_QuestBook.Instance.CreateInstance(bookDef, quest) == null)

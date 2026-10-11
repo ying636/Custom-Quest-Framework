@@ -73,7 +73,7 @@ namespace QuestEditor_Library
                     Rect rowRect = new Rect(x + 6f, y, width - 12f, 28f);
                     if (CQFUIStyle.ButtonText(rowRect, action.GetType().Name.Translate(), false))
                     {
-                        Find.WindowStack.Add(new Dialog_EditIDrawable(action));
+                        Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(action));
                     }
                     y += 32f;
                 }

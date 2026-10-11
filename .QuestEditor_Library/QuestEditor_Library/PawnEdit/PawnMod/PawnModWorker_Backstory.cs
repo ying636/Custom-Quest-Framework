@@ -1,8 +1,8 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -21,18 +21,13 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                pawnDef,
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Backstory.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[1];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            PawnModData_Backstory data = pawnDef.DataFor<PawnModData_Backstory>();
+            this.DrawBackstoryButton(ref y, inRect, x, "CQF_PawnEditor_Childhood".Translate(this.ValueOrNone(data.childhood?.title)), backstory => data.childhood = backstory);
+            this.DrawBackstoryButton(ref y, inRect, x, "CQF_PawnEditor_Adulthood".Translate(this.ValueOrNone(data.adulthood?.title)), backstory => data.adulthood = backstory);
         }
+
         public override void ApplyToPawn(ComplexPawnDef pawnDef, Pawn pawn, bool preview)
         {
             PawnModData_Backstory data = pawnDef.DataFor<PawnModData_Backstory>();
@@ -40,10 +35,12 @@ namespace QuestEditor_Library
             {
                 return;
             }
+
             if (data.childhood != null)
             {
                 pawn.story.Childhood = data.childhood;
             }
+
             if (data.adulthood != null)
             {
                 pawn.story.Adulthood = data.adulthood;
@@ -56,19 +53,13 @@ namespace QuestEditor_Library
             data.childhood = DefDatabase<BackstoryDef>.GetNamedSilentFail(node["childhood"]?.InnerText);
             data.adulthood = DefDatabase<BackstoryDef>.GetNamedSilentFail(node["adulthood"]?.InnerText);
         }
-        internal void DrawBackstoryButton(ref float y, Rect inRect, float x, string label, Action<BackstoryDef> action)
 
+        internal void DrawBackstoryButton(ref float y, Rect inRect, float x, string label, Action<BackstoryDef> action)
         {
-            object[] arguments = new object[]
+            if (this.DrawSelectRow(ref y, inRect, x, label))
             {
-                y,
-                inRect,
-                x,
-                label,
-                action
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Backstory.DrawBackstoryButton(Ref:float,None:UnityEngine.Rect,None:float,None:string,None:System.Action<RimWorld.BackstoryDef>)", this, arguments);
-            y = (float)arguments[0];
+                Find.WindowStack.Add(new Dialog_Select<BackstoryDef>(new TextSelectDrawer<BackstoryDef>(DefDatabase<BackstoryDef>.AllDefsListForReading, backstory => backstory.title, action, null, null, null, null, null, null), "CQF_PawnEditor_Select".Translate()));
+            }
         }
-}
+    }
 }

@@ -11,41 +11,52 @@ namespace QuestEditor_Library
     public class GenerationActionWorker : ThingWithComps, IDrawTabable, IPastableData
     {
         public void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.GenerationActionWorker.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "CQFActions".Translate(), a => a.GetType().Name.Translate());
         }
+
         public virtual void DrawTab()
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope scope = new CQFUIScope();
+            Rect viewport = new Rect(8f, 36f, Mathf.Min(490f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, CQFUIScope.ContentHeight - 44f));
+            Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, this.height));
+            Widgets.BeginScrollView(viewport, ref this.scrollPos, content);
+            using CQFUIScope contentScope = new CQFUIScope(content.width);
+            CQFUIStyle.DrawBox(new Rect(8f, 8f, content.width - 16f, Mathf.Max(40f, this.height - 8f)), 1, CQFUIStyle.AccentTexture);
+            float y = 20f;
+            Rect rectCP = new Rect(content.width - 40f, y, 25f, 25f);
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Copy))
             {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.GenerationActionWorker.DrawTab()", this, arguments);
+                this.CopyData();
+            }
+
+            TooltipHandler.TipRegion(rectCP, "Copy".Translate());
+            rectCP.x += 32f;
+            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Paste))
+            {
+                this.PasteData();
+            }
+
+            TooltipHandler.TipRegion(rectCP, "Paste".Translate());
+            y += 36f;
+            CQFEditorTools.DrawActionList_UseWindow(ref y, 15f, this.actions, content, "CQFActions".Translate().Colorize(CQFUIStyle.Accent), a => a.GetType().Name.Translate());
+            this.height = y + 5f;
+            Widgets.EndScrollView();
         }
+
         public void PasteData()
-
         {
-            object[] arguments = new object[]
-            {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.GenerationActionWorker.PasteData()", this, arguments);
+            this.actions.Clear();
+            CQFEditorTools.actions.ForEach(a => this.actions.Add(a.Copy()));
         }
+
         public void CopyData()
-
         {
-            object[] arguments = new object[]
-            {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.GenerationActionWorker.CopyData()", this, arguments);
+            CQFEditorTools.actions.Clear();
+            this.actions.ForEach(a => CQFEditorTools.actions.Add(a.Copy()));
         }
+
         public override IEnumerable<Gizmo> GetGizmos()
         {
             if (DebugSettings.ShowDevGizmos)
@@ -59,12 +70,14 @@ namespace QuestEditor_Library
                     }
                 };
             }
+
             yield break;
         }
+
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(ref this.actions, "actions",LookMode.Deep);
+            Scribe_Collections.Look(ref this.actions, "actions", LookMode.Deep);
         }
 
         public float height = 0f;

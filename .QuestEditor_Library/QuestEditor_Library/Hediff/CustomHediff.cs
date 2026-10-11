@@ -3,25 +3,27 @@ using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
-
-    public class CustomHediff : HediffWithComps
+public class CustomHediff : HediffWithComps
 {
     public Quest Quest
     {
-        get { return GameTools.GetQuestFromThing(this.pawn); }
+        get
+        {
+            return GameTools.GetQuestFromThing(this.pawn);
+        }
     }
 
-    public void PasteSingleComp()
-
-        {
-            object[] arguments = new object[]
-            {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomHediff.PasteSingleComp()", this, arguments);
-        }
-    public override string Label  => this.overridedLabel ?? base.Label;
-    public override string Description  => this.overridedDescription ?? base.Description;
+    public override string Label => this.overridedLabel ?? base.Label;
+    public override string Description => this.overridedDescription ?? base.Description;
     public override Color LabelColor => this.overridedColor ?? base.LabelColor;
+
+    public void PasteSingleComp()
+    {
+        if (CQFEditorTools.actionComp != null)
+        {
+            this.comps.Add(CQFEditorTools.actionComp.Copy());
+        }
+    }
 
     public Dictionary<string, TargetInfo> GetTargetThis()
     {
@@ -55,7 +57,7 @@ namespace QuestEditor_Library;
 
     public override void Notify_PawnPostApplyDamage(DamageInfo dinfo, float totalDamageDealt)
     {
-        base.Notify_PawnPostApplyDamage(dinfo, totalDamageDealt); 
+        base.Notify_PawnPostApplyDamage(dinfo, totalDamageDealt);
         this.comps?.ForEach(s =>
         {
             if (s.mode == ActionTriggerMode.Damaged)

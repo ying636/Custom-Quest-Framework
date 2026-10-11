@@ -1,8 +1,8 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -16,18 +16,19 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            PawnModData_Dialog data = pawnDef.DataFor<PawnModData_Dialog>();
+            if (this.DrawSelectRow(ref y, inRect, x, "CQF_PawnEditor_DialogManager".Translate(this.ValueOrNone(data.dialogManager?.defName))))
             {
-                pawnDef,
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_Dialog.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[1];
+                List<FloatMenuOption> options = new List<FloatMenuOption>
+                {
+                    new FloatMenuOption("CQF_PawnEditor_None".Translate(), () => data.dialogManager = null)
+                };
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, manager => data.dialogManager = manager, manager => manager.defName, options);
+            }
         }
+
         public override void OnPawnSpawned(ComplexPawnDef pawnDef, Pawn pawn, Quest quest)
         {
             DialogManagerDef dialogManager = pawnDef.DataFor<PawnModData_Dialog>().dialogManager;

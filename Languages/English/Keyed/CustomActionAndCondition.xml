@@ -462,4 +462,5 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFActionCategory_Misc>Misc</CQFActionCategory_Misc>
   <CQFActionCategory_Misc_Tip>Actions that do not fit the other categories, including container and inventory utility actions.</CQFActionCategory_Misc_Tip>
 
+  <CQFAction_FinishResearch>Action: complete research</CQFAction_FinishResearch>
 </LanguageData> 

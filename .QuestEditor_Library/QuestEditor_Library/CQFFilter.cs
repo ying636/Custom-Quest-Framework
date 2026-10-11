@@ -14,17 +14,11 @@ namespace QuestEditor_Library
     public class CQFFilter : ISaveable, IDrawable, IExposable
     {
         public void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFFilter.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            throw new NotImplementedException();
         }
+
         public void ExposeData()
         {
             throw new NotImplementedException();

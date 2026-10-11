@@ -9,7 +9,7 @@ namespace QuestEditor_Library
 {
     public class Dialog_InteractionOption : Window, ICQFAIEditorHost
     {
-        public Dialog_InteractionOption(InteractionOperation operation, Thing owner = null)
+        public Dialog_InteractionOption(InteractionOperation operation, Thing? owner = null)
         {
             this.operation = operation;
             this.owner = owner ?? CQFEditorContext.SourceThing;

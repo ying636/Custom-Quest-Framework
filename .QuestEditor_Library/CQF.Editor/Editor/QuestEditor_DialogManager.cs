@@ -31,7 +31,7 @@ namespace QuestEditor_Library
             float width = viewport.width - 20f;
             float y = 0f;
             Widgets.BeginScrollView(viewport, ref this.scrollPos, new Rect(0f, 0f, width, Mathf.Max(viewport.height, this.height)));
-            DialogManagerDefEditor.DrawEntries(this.Manager, ref y, width);
+            DialogManagerDef.DrawEntries(this.Manager, ref y, width);
             Rect button = new Rect(0f, y, width, 32f);
             if (CQFUIStyle.ButtonText(button, "Add".Translate()))
             {

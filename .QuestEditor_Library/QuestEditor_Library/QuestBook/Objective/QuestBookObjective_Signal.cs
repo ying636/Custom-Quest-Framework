@@ -1,7 +1,7 @@
-using System;
-using System.Xml.Linq;
 using RimWorld;
 using RimWorld.QuestGen;
+using System;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
@@ -9,16 +9,8 @@ namespace QuestEditor_Library
 {
     public class QuestBookObjective_Signal : QuestBookObjective_TargetCount
     {
-        [NoTranslate]
-        public string signal;
-
         public override bool UsesSignal => true;
-
-        public override string Signal
-        {
-            get => signal;
-            set => signal = value;
-        }
+        public override string Signal { get => signal; set => signal = value; }
 
         public override bool Process(QuestBookObjectiveProgress progress, Signal incomingSignal)
         {
@@ -26,27 +18,27 @@ namespace QuestEditor_Library
             {
                 return false;
             }
+
             if (incomingSignal.tag != signal && !incomingSignal.tag.EndsWith("." + signal))
             {
                 return false;
             }
+
             progress.currentCount++;
             progress.completed = progress.currentCount >= TargetCount;
             return true;
         }
 
         public override void DrawSpecial(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            this.DrawDetectionSection(ref y, inRect, (Rect card, ref float rowY) =>
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.QuestBookObjective_Signal.DrawSpecial(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                this.DrawTargetCountField(card, ref rowY);
+                CQFSignalEditor.DrawBookField(new Rect(card.x + 14f, rowY, 164f, 28f), new Rect(card.x + 184f, rowY, card.width - 198f, 28f), "CQF_QuestBook_TriggerSignal".Translate(), this.signal, value => this.signal = value);
+                rowY += 36f;
+            });
         }
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -60,7 +52,11 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("signal", signal));
             }
+
             return result;
         }
+
+        [NoTranslate]
+        public string signal;
     }
 }

@@ -10,10 +10,11 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class CustomTrap : ThingWithComps,IDrawable, ICustomThing,IPastableData
+    public class CustomTrap : ThingWithComps, IDrawable, ICustomThing, IPastableData
     {
         public override string Label => this.TextComp == null || !this.textComp.useCustomName ? base.Label : this.textComp.customName;
         public override string DescriptionFlavor => this.TextComp == null || !this.textComp.useCustomDescription ? base.DescriptionFlavor : this.textComp.customDescription;
+
         public CompCustomText TextComp
         {
             get
@@ -22,10 +23,12 @@ namespace QuestEditor_Library
                 {
                     this.textComp = this.TryGetComp<CompCustomText>();
                 }
+
                 return this.textComp;
             }
         }
-        public List<TrapComp> TrapComps 
+
+        public List<TrapComp> TrapComps
         {
             get
             {
@@ -33,51 +36,74 @@ namespace QuestEditor_Library
                 {
                     this.trapComps = new List<TrapComp>();
                 }
+
                 return this.trapComps;
             }
         }
+
         public Dictionary<string, TargetInfo> GetTargetThis()
         {
             Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
             result.Add("CustomThing", this);
             return result;
         }
-        public virtual void Draw(ref float y, Rect inRect, float x)
 
+        public virtual void Draw(ref float y, Rect inRect, float x)
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            Text.Font = GameFont.Small;
+            GUI.color = CQFUIStyle.TextColor;
+            using (new CQFUIScope(inRect.width - 76f))
+                CQFEditorTools.DrawLabelAndText_Line(y, "TrapName".Translate(), ref this.trapName, x, inRect.width - x - 76f);
+            Rect rect = new Rect(inRect.width - 72f, y, 28f, 28f);
+            if (CQFUIStyle.ButtonImage(rect, TexButton.Copy, tooltip: "Copy".Translate()))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomTrap.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.copyTrapComps.Clear();
+                foreach (var trapComp in this.TrapComps)
+                {
+                    CQFEditorTools.copyTrapComps.Add(trapComp.Copy());
+                }
+            }
+
+            rect.x += 35f;
+            if (CQFUIStyle.ButtonImage(rect, TexButton.Paste, tooltip: "Paste".Translate()))
+            {
+                foreach (var trapComp in CQFEditorTools.copyTrapComps)
+                {
+                    this.TrapComps.Add(trapComp.Copy());
+                }
+            }
+
+            y += 38f;
+            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, this.TrapComps, inRect, "TrapComps".Translate().Colorize(CQFUIStyle.Accent), () =>
+            {
+                CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => this.TrapComps.Add(new TrapComp() { mode = m }), m => ("ActionTriggerMode_" + m.ToString()).Translate());
+            }, c => ("ActionTriggerMode_" + c.mode.ToString()).Translate());
         }
+
         protected override void Tick()
         {
             base.Tick();
-            if (this.Spawned) 
+            if (this.Spawned)
             {
                 if (this.IsHashIntervalTick(5))
                 {
-                    if (this.Position.GetFirstPawn(this.Map) is Pawn pawn)
+                    if (this.Position.GetFirstPawn(this.Map)is Pawn pawn)
                     {
                         this.Notify_PawnStepOn(pawn);
                     }
                 }
+
                 this.TrapComps.ForEach(c =>
                 {
-                    if (c.mode == ActionTriggerMode.Tick && c.tick != 0 &&
-                    this.IsHashIntervalTick(c.tick))
+                    if (c.mode == ActionTriggerMode.Tick && c.tick != 0 && this.IsHashIntervalTick(c.tick))
                     {
-                        c.actions.ForEach(a => a.Work(this.GetTargetThis(),
-                            GameTools.GetQuestFromThing(this)));
+                        c.actions.ForEach(a => a.Work(this.GetTargetThis(), GameTools.GetQuestFromThing(this)));
                     }
-                }); 
+                });
             }
         }
- 
+
         public virtual void Notify_PawnStepOn(Pawn pawn)
         {
             this.TrapComps.ForEach(c =>
@@ -88,10 +114,10 @@ namespace QuestEditor_Library
                 }
             });
         }
-        
+
         public override void Notify_SignalReceived(Signal signal)
         {
-            base.Notify_SignalReceived(signal); 
+            base.Notify_SignalReceived(signal);
             this.TrapComps.ForEach(c =>
             {
                 if (signal.tag == c.inSignal)
@@ -112,23 +138,26 @@ namespace QuestEditor_Library
                 };
             });
         }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref this.trapName, "CustomTrap_trapName");
-            Scribe_Collections.Look(ref this.trapComps, "textComp",LookMode.Deep);
+            Scribe_Collections.Look(ref this.trapComps, "textComp", LookMode.Deep);
         }
-        public void PasteData()
 
+        public void PasteData()
         {
-            object[] arguments = new object[]
+            this.trapComps.Clear();
+            foreach (var actionComp in CQFEditorTools.copyTrapComps)
             {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomTrap.PasteData()", this, arguments);
+                this.trapComps.Add(actionComp.Copy());
+            }
         }
+
         public CustomThingData GetData(IntVec3 pos)
         {
-            return new CustomThingData_CustomTrap(this,pos);
+            return new CustomThingData_CustomTrap(this, pos);
         }
 
         public string trapName = "undefined";
@@ -136,7 +165,7 @@ namespace QuestEditor_Library
         private CompCustomText textComp = null;
     }
 
-    public class TrapComp : IDrawable,IExposable, ISaveable
+    public class TrapComp : IDrawable, IExposable, ISaveable
     {
         public TrapComp Copy()
         {
@@ -146,12 +175,14 @@ namespace QuestEditor_Library
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
             return result;
         }
-        public void Trigger(CustomTrap trap,Pawn pawn = null)
+
+        public void Trigger(CustomTrap trap, Pawn pawn = null)
         {
             if (Prefs.DevMode)
             {
                 Log.Message("CQF Trap Trigger:" + trap.trapName);
             }
+
             this.actions.ForEach(a =>
             {
                 if (pawn == null)
@@ -159,23 +190,52 @@ namespace QuestEditor_Library
                     a.Work(trap.GetTargetThis(), GameTools.GetQuestFromThing(trap));
                     return;
                 }
+
                 Dictionary<string, TargetInfo> targets = trap.GetTargetThis();
                 targets.Add("Trigger", pawn);
                 a.Work(targets, GameTools.GetQuestFromThing(trap));
             });
         }
-        public void Draw(ref float y, Rect inRect, float x)
 
+        public void Draw(ref float y, Rect inRect, float x)
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            GUI.color = CQFUIStyle.TextColor;
+            float width = Mathf.Max(80f, inRect.width - x - 12f);
+            float labelWidth = Mathf.Min(160f, width * 0.45f);
+            Rect label = new Rect(x, y, labelWidth, 28f);
+            Rect control = new Rect(label.xMax + 8f, y, width - labelWidth - 8f, 28f);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Text.WordWrap = false;
+            string modeLabel = "CustomTrapMode".Translate(string.Empty);
+            Widgets.Label(label, modeLabel.Truncate(label.width));
+            TooltipHandler.TipRegion(label, modeLabel);
+            if (CQFUIStyle.ButtonText(control, ("ActionTriggerMode_" + this.mode.ToString()).Translate()))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.TrapComp.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(new List<ActionTriggerMode>() { ActionTriggerMode.Signal, ActionTriggerMode.StepOn, ActionTriggerMode.Tick }, m => this.mode = m, m => ("ActionTriggerMode_" + m.ToString()).Translate());
+            }
+
+            y += 36f;
+            if (this.mode == ActionTriggerMode.Signal)
+            {
+                CQFSignalEditor.DrawBookField(y, "TrapInSignal".Translate(), this.inSignal, value => this.inSignal = value, x, inRect.width - x - 12f);
+                y += 32f;
+                CQFEditorTools.DrawCheckboxField(y, "SignalOnlyIsValidInPart".Translate(), ref this.signalIsOnlyValidInPart, x, "SignalOnlyIsValidInPartTip".Translate());
+                y += 32f;
+            }
+
+            if (this.mode == ActionTriggerMode.Tick)
+            {
+                CQFEditorTools.DrawLabelAndText_Line(y, "TickToTrigger".Translate(), ref this.tick, ref this.buffer, x);
+                TooltipHandler.TipRegion(new Rect(x, y, 150f, 25f), "TickToTriggerTip".Translate());
+                y += 32f;
+            }
+
+            CQFEditorTools.DrawCheckboxField(y, "TriggerWhenDamaged".Translate(), ref this.triggerWhenDamaged, x, "CustomTrapTip".Translate());
+            y += 40f;
+            CQFEditorTools.DrawActionList(ref y, x, this.actions, inRect, "TrapActions".Translate());
         }
+
         public virtual void ExposeData()
         {
             Scribe_Values.Look(ref this.triggerWhenDamaged, "triggerWhenDamaged");
@@ -189,18 +249,20 @@ namespace QuestEditor_Library
 
         public virtual XElement SaveToXElement(string nodeName)
         {
-            XElement result = new XElement(nodeName);   
+            XElement result = new XElement(nodeName);
             result.Add(new XElement("mode", this.mode));
             result.Add(new XElement("triggerWhenDamaged", this.triggerWhenDamaged));
             if (this.mode == ActionTriggerMode.Signal)
             {
-                result.Add(new XElement("inSignal", this.inSignal));     
+                result.Add(new XElement("inSignal", this.inSignal));
                 result.Add(new XElement("signalIsOnlyValidInPart", this.signalIsOnlyValidInPart));
             }
+
             if (this.mode == ActionTriggerMode.Tick)
             {
                 result.Add(new XElement("tick", this.tick));
             }
+
             XElement actions = new XElement("actions");
             this.actions.ForEach((x) => actions.Add(x.SaveToXElement("li")));
             result.Add(actions);

@@ -600,5 +600,14 @@ SiteName: SiteName-></RuleTip>
   <CQFAction_SetCustomInspectText_Tip>Sets the inspect text of each target that has CompCustomText.</CQFAction_SetCustomInspectText_Tip>
 
   <CQF_ActionComp_InvalidTickInterval>CQF_ActionComp_InvalidTickInterval</CQF_ActionComp_InvalidTickInterval>
+  <CQF_MoveThing>Move</CQF_MoveThing>
+  <CQF_MoveThingDesc>Select the thing to move, then click its destination. Right-click to cancel.</CQF_MoveThingDesc>
+  <CQF_RotateThing>Rotate</CQF_RotateThing>
+  <CQF_RotateThingDesc>Click a thing to rotate it by 90°. Right-click the command to switch between clockwise and counterclockwise.</CQF_RotateThingDesc>
+  <CQF_RotateThingClockwise>Clockwise</CQF_RotateThingClockwise>
+  <CQF_RotateThingCounterclockwise>Counterclockwise</CQF_RotateThingCounterclockwise>
+  <CQF_TransformThingNoTarget>There is no thing here that can be moved or rotated.</CQF_TransformThingNoTarget>
+  <CQF_TransformThingRotationLocked>This thing's rotation is locked and cannot be changed.</CQF_TransformThingRotationLocked>
+  <CQF_TransformThingFailed>Moving or rotating failed. Check the log for details.</CQF_TransformThingFailed>
 </LanguageData>
 

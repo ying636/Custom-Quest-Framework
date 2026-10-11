@@ -250,7 +250,7 @@ namespace QuestEditor_Library
             {
                 if (rect.Contains(ev.mousePosition))
                 {
-                    CQFUIStyle.DrawBox(rect, 2, QuestEditor_Dialog.blueTex);
+                    CQFUIStyle.DrawBox(rect, 2, CQFUIStyle.AccentTexture);
                 }
             }
             if (this.draggingNode == null || ev.type != EventType.MouseUp || ev.button != 0 || !rect.Contains(ev.mousePosition))
@@ -305,7 +305,7 @@ namespace QuestEditor_Library
             GUI.color = new Color(1f, 1f, 1f, 0.86f);
             Widgets.DrawBoxSolid(previewRect, new Color(0.08f, 0.11f, 0.14f, 0.9f));
             Widgets.DrawBoxSolid(new Rect(previewRect.x, previewRect.y, 4f, previewRect.height), new Color(0.33f, 0.55f, 0.95f, 0.95f));
-            CQFUIStyle.DrawBox(previewRect, 1, QuestEditor_Dialog.blueTex);
+            CQFUIStyle.DrawBox(previewRect, 1, CQFUIStyle.AccentTexture);
             Text.Anchor = TextAnchor.MiddleLeft;
             Widgets.Label(new Rect(previewRect.x + 14f, previewRect.y, previewRect.width - 22f, previewRect.height), this.ThinkNodeLabel(this.draggingNode).Colorize(new Color(0.78f, 0.86f, 1f)));
             Text.Anchor = TextAnchor.UpperLeft;
@@ -341,6 +341,19 @@ namespace QuestEditor_Library
             Widgets.DrawHighlightIfMouseover(rowRect);
             Rect labelRect = new Rect(rowRect.x + 4f, rowRect.y + 4f, Mathf.Min(210f, rowRect.width * 0.38f), 24f);
             Rect controlRect = new Rect(labelRect.xMax + 12f, rowRect.y + 2f, rowRect.xMax - labelRect.xMax - 16f, 24f);
+            bool signalField = key.Substring(key.LastIndexOf('.') + 1).IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (signalField && fieldType == typeof(string))
+            {
+                CQFSignalEditor.DrawBookField(labelRect, controlRect, label, value as string, selected => setValue(selected));
+                y += 32f;
+                return;
+            }
+            if (signalField && (fieldType == typeof(List<string>) || fieldType == typeof(IEnumerable<string>) || fieldType == typeof(string[])))
+            {
+                CQFSignalEditor.DrawBookList(ref y, label, value as IEnumerable<string>, selected => setValue(fieldType == typeof(string[]) ? (object)selected.ToArray() : selected), x, width);
+                y += 4f;
+                return;
+            }
             if (fieldType == typeof(string) && (key.EndsWith(".targetKey", StringComparison.Ordinal)
                 || key.EndsWith(".focusTarget", StringComparison.Ordinal) || key.EndsWith(".focusSecondTarget", StringComparison.Ordinal)
                 || key.EndsWith(".focusThirdTarget", StringComparison.Ordinal)))

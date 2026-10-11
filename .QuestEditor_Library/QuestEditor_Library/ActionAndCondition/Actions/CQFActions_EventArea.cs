@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Xml.Linq;
 using RimWorld;
 using RimWorld.QuestGen;
+using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
@@ -12,17 +12,23 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.EventArea;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_CreateEventArea.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "EventAreaKey".Translate(), ref this.key, x, 150f);
+            y += 30f;
+            Rect rect = new Rect(x, y, 350f, 25f);
+            CQFEditorTools.DrawFactionSelectableText(y, "EventAreaFaction".Translate(), ref this.faction, f => this.faction = f, 20f + x, 120f);
+            TooltipHandler.TipRegion(rect, "EventAreaFactionTip".Translate());
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "EventAreaOnlyHumanlike".Translate(), ref this.onlyHumanlike);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "EventAreaReplaceExisting".Translate(), ref this.replaceExisting);
+            y += 30f;
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -31,29 +37,26 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("faction", this.faction));
             }
+
             if (this.onlyHumanlike)
             {
                 result.Add(new XElement("onlyHumanlike", this.onlyHumanlike));
             }
+
             if (!this.replaceExisting)
             {
                 result.Add(new XElement("replaceExisting", this.replaceExisting));
             }
+
             result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
 
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            if (this.TryGetMap(targets, out Map map) && MapComponent_CustomMapData.GetComp(map) is MapComponent_CustomMapData comp)
+            if (this.TryGetMap(targets, out Map map) && MapComponent_CustomMapData.GetComp(map)is MapComponent_CustomMapData comp)
             {
-                comp.AddOrReplaceEventArea(new CQFEventArea()
-                {
-                    key = this.key,
-                    faction = this.faction,
-                    onlyHumanlike = this.onlyHumanlike,
-                    actions = this.actions.ListFullCopy()
-                }, this.replaceExisting);
+                comp.AddOrReplaceEventArea(new CQFEventArea() { key = this.key, faction = this.faction, onlyHumanlike = this.onlyHumanlike, actions = this.actions.ListFullCopy() }, this.replaceExisting);
             }
         }
 
@@ -80,10 +83,12 @@ namespace QuestEditor_Library
                     }
                 }
             }
+
             if (Find.CurrentMap != null)
             {
                 map = Find.CurrentMap;
             }
+
             return map != null;
         }
 
@@ -98,23 +103,22 @@ namespace QuestEditor_Library
     {
         public CQFAction_AddCellToEventArea()
         {
-            this.targetsText = new List<string>() { "Position" };
+            this.targetsText = new List<string>()
+            {
+                "Position"
+            };
         }
 
         public override CQFActionCategory ActionCategory => CQFActionCategory.EventArea;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_AddCellToEventArea.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "EventAreaKey".Translate(), ref this.key, x, 150f);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -126,8 +130,7 @@ namespace QuestEditor_Library
         {
             foreach (var target in targets)
             {
-                if (target.Value.Map is Map map && MapComponent_CustomMapData.GetComp(map) is MapComponent_CustomMapData comp
-                                              && comp.GetEventArea(this.key) is CQFEventArea area)
+                if (target.Value.Map is Map map && MapComponent_CustomMapData.GetComp(map)is MapComponent_CustomMapData comp && comp.GetEventArea(this.key)is CQFEventArea area)
                 {
                     area.AddCell(target.Value.Cell);
                 }
@@ -147,23 +150,22 @@ namespace QuestEditor_Library
     {
         public CQFAction_DeleteEventArea()
         {
-            this.targetsText = new List<string>() { "Position" };
+            this.targetsText = new List<string>()
+            {
+                "Position"
+            };
         }
 
         public override CQFActionCategory ActionCategory => CQFActionCategory.EventArea;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_DeleteEventArea.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "EventAreaKey".Translate(), ref this.key, x, 150f);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -175,7 +177,7 @@ namespace QuestEditor_Library
         {
             foreach (var target in targets)
             {
-                if (target.Value.Map is Map map && MapComponent_CustomMapData.GetComp(map) is MapComponent_CustomMapData comp)
+                if (target.Value.Map is Map map && MapComponent_CustomMapData.GetComp(map)is MapComponent_CustomMapData comp)
                 {
                     comp.RemoveEventArea(this.key);
                 }

@@ -12,26 +12,19 @@ namespace QuestEditor_Library
     public class ScenPart_GenerateCustomMap : ScenPart
     {
         public override void DoEditInterface(Listing_ScenEdit listing)
-
         {
-            if (!CQFEditorBridge.IsLoaded)
+            Rect scenPartRect = listing.GetScenPartRect(this, 30f + ScenPart.RowHeight);
+            if (CQFUIStyle.ButtonText(scenPartRect, "StartMap".Translate(this.map?.label), false))
             {
-                Widgets.Label(listing.GetScenPartRect(this, ScenPart.RowHeight * 3f), "CQF_Editor_NotLoaded".Translate());
-                return;
+                CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, d => this.map = d, d => d.label);
             }
-
-            object[] arguments = new object[]
-            {
-                listing
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ScenPart_GenerateCustomMap.DoEditInterface(None:Verse.Listing_ScenEdit)", this, arguments);
         }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Defs.Look(ref this.map, "map");
         }
-
 
         public CustomMapDataDef map;
     }

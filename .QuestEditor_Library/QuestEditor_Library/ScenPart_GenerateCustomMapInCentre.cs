@@ -13,19 +13,15 @@ namespace QuestEditor_Library
     public class ScenPart_GenerateCustomMapInCentre : ScenPart
     {
         public override void DoEditInterface(Listing_ScenEdit listing)
-
         {
-            if (!CQFEditorBridge.IsLoaded)
+            Rect scenPartRect = listing.GetScenPartRect(this, this.maps.Count * 30f + ScenPart.RowHeight);
+            CQFEditorTools.DrawButtonWithIcon(scenPartRect.y, () => CQFEditorTools.DrawFloatMenu(DefDatabase<CustomMapDataDef>.AllDefsListForReading, d => this.maps.Add(d), d => d.label), () => CQFEditorTools.DrawFloatMenu(this.maps, d => this.maps.Remove(d), d => d.label), scenPartRect.width + 20f, 20);
+            scenPartRect.y += 30f;
+            this.maps.ForEach(m =>
             {
-                Widgets.Label(listing.GetScenPartRect(this, ScenPart.RowHeight * 3f), "CQF_Editor_NotLoaded".Translate());
-                return;
-            }
-
-            object[] arguments = new object[]
-            {
-                listing
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ScenPart_GenerateCustomMapInCentre.DoEditInterface(None:Verse.Listing_ScenEdit)", this, arguments);
+                Widgets.Label(scenPartRect, m.label);
+                scenPartRect.y += 30f;
+            });
         }
 
         public override void PostMapGenerate(Map map)
@@ -41,9 +37,8 @@ namespace QuestEditor_Library
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(ref this.maps, "maps",LookMode.Def);
+            Scribe_Collections.Look(ref this.maps, "maps", LookMode.Def);
         }
-
 
         public List<CustomMapDataDef> maps = new List<CustomMapDataDef>();
     }

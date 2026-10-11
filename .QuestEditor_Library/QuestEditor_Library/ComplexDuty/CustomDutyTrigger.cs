@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Xml.Linq;
 using RimWorld;
 using RimWorld.QuestGen;
+using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 using Verse.AI.Group;
@@ -11,19 +11,20 @@ namespace QuestEditor_Library
     public abstract class CustomDutyTrigger : ISaveable, IDrawable, IExposable
     {
         public abstract bool Triggered(Pawn pawn, CustomDutyMap runtime, Quest quest, Dictionary<string, TargetInfo> targets);
-
         public virtual void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            string key = "CQF_" + this.GetType().Name;
+            string tipKey = key + "_Tip";
+            Widgets.Label(new Rect(x, y, 260f, 25f), (key.CanTranslate() ? key.Translate().ToString() : this.GetType().Name.Translate().ToString()).Colorize(CQFUIStyle.Accent));
+            if (tipKey.CanTranslate())
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomDutyTrigger.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                TooltipHandler.TipRegion(new Rect(x, y, 260f, 25f), tipKey.Translate());
+            }
+
+            y += 30f;
         }
+
         public virtual XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -44,17 +45,13 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomDutyTrigger_TickInterval.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_IntervalTicks".Translate(), ref this.intervalTicks, ref this.buffer, x, 150f);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -83,22 +80,20 @@ namespace QuestEditor_Library
     {
         public override bool Triggered(Pawn pawn, CustomDutyMap runtime, Quest quest, Dictionary<string, TargetInfo> targets)
         {
-            return runtime?.lastSignalTick == Find.TickManager.TicksGame &&
-                (this.signal.NullOrEmpty() || runtime.lastSignal == this.ResolveSignal(quest));
+            return runtime?.lastSignalTick == Find.TickManager.TicksGame && (this.signal.NullOrEmpty() || runtime.lastSignal == this.ResolveSignal(quest));
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomDutyTrigger_Signal.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), this.signal, value => this.signal = value, x, inRect.width - x - 12f);
+            y += 30f;
+            CQFEditorTools.DrawCheckboxField(y, "CQF_DutySignalAddQuestPrefix".Translate(), ref this.addQuestPrefix, x, "CQF_DutySignalAddQuestPrefix_Tip".CanTranslate() ? "CQF_DutySignalAddQuestPrefix_Tip".Translate().ToString() : null);
+
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -106,10 +101,12 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("signal", this.signal));
             }
+
             if (this.addQuestPrefix)
             {
                 result.Add(new XElement("addQuestPrefix", this.addQuestPrefix));
             }
+
             return result;
         }
 
@@ -125,10 +122,12 @@ namespace QuestEditor_Library
             {
                 return this.signal;
             }
+
             if (!this.addQuestPrefix)
             {
                 return this.signal;
             }
+
             return "Quest" + quest?.id + "." + this.signal;
         }
 
@@ -145,17 +144,13 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomDutyTrigger_LordPawnCountBelow.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_PawnCount".Translate(), ref this.count, ref this.buffer, x, 150f);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);

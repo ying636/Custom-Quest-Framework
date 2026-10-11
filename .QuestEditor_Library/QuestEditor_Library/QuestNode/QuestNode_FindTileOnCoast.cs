@@ -14,39 +14,43 @@ namespace QuestEditor_Library
     public class QuestNode_FindTileOnCoast : QuestNode, IDrawable
     {
         public void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            CQFEditorTools.DrawLabelAndText_SlateRef_Line(y, "StoreAsText".Translate(), ref this.storeAs, x, 100f);
+            y += 30f;
+            CQFEditorTools.DrawIntRange(ref y, "MapDistance".Translate(), ref this.distance, ref this.buffer, ref this.bufferMin, x);
+            Func<Rot4, string> GetText = r => r == Rot4.Invalid ? "Rot_Invalid".Translate().ToString() : r.ToStringHuman().Translate().ToString();
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 350f, 25f), "RequiredRotation".Translate(GetText(this.requiredRot)), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.QuestNode_FindTileOnCoast.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(new List<Rot4>() { Rot4.East, Rot4.West, Rot4.North, Rot4.South, Rot4.Invalid }, r => this.requiredRot = r, r => GetText(r));
+            }
+
+            y += 30f;
         }
+
         protected override void RunInt()
         {
-            if (TileFinder.TryFindPassableTileWithTraversalDistance(Find.AnyPlayerHomeMap.Tile, this.distance.min, this.distance.max, out PlanetTile tile,
-                (x) => 
-                {
-                    Rot4 rot = Find.World.CoastDirectionAt(x);
-                    if (rot.IsValid && (!this.requiredRot.IsValid || rot == this.requiredRot))
-                    {
-                        return true;
-                    }
-                    return false;
-                })) 
+            if (TileFinder.TryFindPassableTileWithTraversalDistance(Find.AnyPlayerHomeMap.Tile, this.distance.min, this.distance.max, out PlanetTile tile, (x) =>
             {
-                
+                Rot4 rot = Find.World.CoastDirectionAt(x);
+                if (rot.IsValid && (!this.requiredRot.IsValid || rot == this.requiredRot))
+                {
+                    return true;
+                }
+
+                return false;
+            }))
+            {
                 Slate slate = QuestGen.slate;
-                slate.Set(this.storeAs.GetValue(slate),tile);
+                slate.Set(this.storeAs.GetValue(slate), tile);
             }
         }
+
         protected override bool TestRunInt(Slate slate)
         {
             return true;
         }
+
         public string buffer;
         public string bufferMin;
         public SlateRef<string> storeAs;

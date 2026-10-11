@@ -1,22 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using RimWorld;
-using Verse;
+using RimWorld.Planet;
+using RimWorld.QuestGen;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using RimWorld.QuestGen;
-using Verse.Grammar;
-using System.Reflection;
+using Unity.Collections;
 using UnityEngine;
-using System.Collections;
+using Verse;
 using Verse.AI;
 using Verse.AI.Group;
-using System.IO;
-using Unity.Collections;
-using RimWorld.Planet;
-using System.Net.NetworkInformation;
-using System.Text;
+using Verse.Grammar;
 
 namespace QuestEditor_Library
 {
@@ -50,44 +50,45 @@ namespace QuestEditor_Library
             DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
             return result;
         }
-        public virtual void Draw(ref float y, Rect inRect, float x)
 
+        public virtual void Draw(ref float y, Rect inRect, float x)
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            Rect rect = new Rect(x, y, 250f, 25f);
+            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
+            if ((this.GetType().Name + "_Tip").CanTranslate())
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
+            }
+
+            y += 30f;
         }
+
         public virtual XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
             result.SetAttributeValue("Class", this.GetType().FullName);
             return result;
         }
+
         public abstract void ExposeData();
         public abstract void Work(Dictionary<string, TargetInfo> targets, Quest quest);
-
     }
+
     public class CQFAction_Loop : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Loop.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "LoopCount".Translate(), ref this.loopCount, ref this.buffer, x, 150f);
+            y += 30f;
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -96,11 +97,12 @@ namespace QuestEditor_Library
             result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            for (int i = 0; i < this.loopCount;i++) 
+            for (int i = 0; i < this.loopCount; i++)
             {
-                this.actions.ForEach(a => a.Work(targets,quest));
+                this.actions.ForEach(a => a.Work(targets, quest));
             }
         }
 
@@ -115,33 +117,33 @@ namespace QuestEditor_Library
         public string buffer;
         public List<CQFAction> actions = new List<CQFAction>();
     }
+
     public class CQFAction_DelayExecute : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_DelayExecute.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "DelayTime".Translate(), ref this.delayTime, ref this.buffer, x, 150f);
+            y += 30f;
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(new XElement("delayTime",this.delayTime));
+            result.Add(new XElement("delayTime", this.delayTime));
             result.Add(new XElement("buffer", this.buffer));
             result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            this.actions.ForEach(a => GameComponent_Editor.Instance.AddExecutiveRequest(delayTime,a,quest,targets));
+            this.actions.ForEach(a => GameComponent_Editor.Instance.AddExecutiveRequest(delayTime, a, quest, targets));
         }
 
         public override void ExposeData()
@@ -155,62 +157,58 @@ namespace QuestEditor_Library
         public string buffer;
         public List<CQFAction> actions = new List<CQFAction>();
     }
+
     public class CQFAction_PostGenerationExecute : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_PostGenerationExecute.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            this.actions.ForEach(a => 
-            GenStep_CustomMap.requests.Add(new ExecutiveRequest(a,quest,targets, 0)));
+            this.actions.ForEach(a => GenStep_CustomMap.requests.Add(new ExecutiveRequest(a, quest, targets, 0)));
         }
 
         public override void ExposeData()
         {
             Scribe_Collections.Look(ref this.actions, "actions", LookMode.Deep);
         }
+
         public List<CQFAction> actions = new List<CQFAction>();
     }
+
     public class CQFAction_Sequence : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Sequence.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             this.actions.ForEach(a => a.Work(targets, quest));
@@ -223,28 +221,26 @@ namespace QuestEditor_Library
 
         public List<CQFAction> actions = new List<CQFAction>();
     }
+
     public class CQFAction_Random : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Random.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             this.actions.RandomElement().Work(targets, quest);
@@ -257,22 +253,21 @@ namespace QuestEditor_Library
 
         public List<CQFAction> actions = new List<CQFAction>();
     }
+
     public class CQFAction_Condition : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Condition.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "TriggerActions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
+            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, this.conditions, inRect, "TriggerConditions".Translate(), a => a.GetType().Name.Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -280,11 +275,12 @@ namespace QuestEditor_Library
             result.Add(CQFSerialization.SaveList_Saveable(this.conditions, "conditions"));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            if (!this.conditions.Exists(c => !c.Satisfied(targets,out string r,quest))) 
+            if (!this.conditions.Exists(c => !c.Satisfied(targets, out string r, quest)))
             {
-                this.actions.ForEach(a =>a.Work(targets, quest));
+                this.actions.ForEach(a => a.Work(targets, quest));
             }
         }
 
@@ -297,22 +293,33 @@ namespace QuestEditor_Library
         public List<CQFAction> actions = new List<CQFAction>();
         public List<DialogCondition> conditions = new List<DialogCondition>();
     }
+
     public class CQFAction_Chance : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.FlowControl;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            if (this.action != null)
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Chance.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                Widgets.DrawLine(new Vector2(x, y), new Vector2(inRect.width, y), CQFUIStyle.Accent, 1f);
+                this.action.Draw(ref y, inRect, x);
+                Widgets.DrawLine(new Vector2(x, y), new Vector2(inRect.width, y), CQFUIStyle.Accent, 1f);
+                y += 5f;
+            }
+
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 150f, 25f), "SelectAction".Translate(), false))
+            {
+                CQFEditorTools.OpenCQFActionSelect(a => this.action = (CQFAction)Activator.CreateInstance(a));
+            }
+
+            y += 30f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "LootChance".Translate(), ref this.chance, ref this.buffer, x, 150f);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -320,6 +327,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("chance", this.chance));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             if (Rand.Chance(this.chance))
@@ -339,22 +347,23 @@ namespace QuestEditor_Library
         public float chance;
         public CQFAction action;
     }
+
     public class CQFAction_SentSignal : CQFAction_Target
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SentSignal.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFSignalEditor.DrawBookField(y, "OutSignal".Translate(), this.signal, value => this.signal = value, x, inRect.width - x - 12f);
+            y += 30f;
+            CQFEditorTools.DrawCheckboxField(y, "SignalOnlyIsValidInPart".Translate(), ref this.signalIsOnlyValidInPart, x, "SignalOnlyIsValidInPartTip".Translate());
+            y += 30f;
+            CQFEditorTools.DrawCheckboxField(y, "AddQuestPrefix".Translate(), ref this.addQuestPrefix, x, "AddQuestPrefixTip".Translate());
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -363,22 +372,24 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("addQuestPrefix", this.addQuestPrefix));
             }
+
             if (this.signalIsOnlyValidInPart)
             {
                 result.Add(new XElement("signalIsOnlyValidInPart", this.signalIsOnlyValidInPart));
             }
+
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            Dictionary<string, TargetInfo> signalTargets = targets == null
-                ? new Dictionary<string, TargetInfo>()
-                : new Dictionary<string, TargetInfo>(targets);
+            Dictionary<string, TargetInfo> signalTargets = targets == null ? new Dictionary<string, TargetInfo>() : new Dictionary<string, TargetInfo>(targets);
             Dictionary<string, TargetInfo> selectedTargets = GameTools.GetTargets(targets, quest, this.targetsText);
             foreach (KeyValuePair<string, TargetInfo> target in selectedTargets)
             {
                 signalTargets[target.Key] = target.Value;
             }
+
             this.RealWork(signalTargets, quest);
         }
 
@@ -389,7 +400,7 @@ namespace QuestEditor_Library
                 if (DebugSettings.godMode)
                 {
                     Log.Message(quest.name);
-                } 
+                }
             }
 
             string s = this.signal;
@@ -406,8 +417,10 @@ namespace QuestEditor_Library
                     receivedArgs.Add(target.Value.Thing.Named(target.Key));
                 }
             }
+
             Find.SignalManager.SendSignal(new Signal(s, receivedArgs));
         }
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -415,27 +428,28 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.addQuestPrefix, "CQFAction_SentSignal_addQuestPrefix");
             Scribe_Values.Look(ref this.signalIsOnlyValidInPart, "CQFAction_SentSignal_signalIsOnlyValidInPart");
         }
+
         [NoTranslate]
         public string signal;
         public bool signalIsOnlyValidInPart = false;
         public bool addQuestPrefix = true;
     }
+
     public class CQFAction_SetBool : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetBool.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "keyOfBoolValue".Translate(), ref this.keyOfBool, x, 350f);
+            y += 30f;
+            Rect rect = new Rect(x, y, 250f, 25f);
+            Widgets.CheckboxLabeled(rect, "valueOfBool".Translate(), ref this.valueOfBool);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -443,10 +457,12 @@ namespace QuestEditor_Library
             result.Add(new XElement("valueOfBool", this.valueOfBool));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             GameComponent_Editor.Instance.GetQuestData(quest)?.SetBool(this.keyOfBool, this.valueOfBool);
         }
+
         public override void ExposeData()
         {
             Scribe_Values.Look(ref this.keyOfBool, "CQFAction_Bool_keyOfBool");
@@ -457,22 +473,22 @@ namespace QuestEditor_Library
         public string keyOfBool;
         public bool valueOfBool;
     }
+
     public class CQFAction_SetGlobalBool : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.SignalState;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetGlobalBool.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFEditorTools.DrawLabelAndText_Line(y, "keyOfBoolValue".Translate(), ref this.keyOfBool, x, 350f);
+            y += 30f;
+            Rect rect = new Rect(x, y, 250f, 25f);
+            Widgets.CheckboxLabeled(rect, "valueOfBool".Translate(), ref this.valueOfBool);
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -480,10 +496,12 @@ namespace QuestEditor_Library
             result.Add(new XElement("valueOfBool", this.valueOfBool));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             GameComponent_Editor.Instance.SetBool(this.keyOfBool, this.valueOfBool);
         }
+
         public override void ExposeData()
         {
             Scribe_Values.Look(ref this.keyOfBool, "CQFAction_Bool_keyOfBool");
@@ -494,22 +512,29 @@ namespace QuestEditor_Library
         public string keyOfBool;
         public bool valueOfBool;
     }
+
     public class CQFAction_Message : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            string source_message = this.message.CanTranslate() ? this.message.Translate().ToString() : this.message;
+            string edited_message = source_message;
+            CQFEditorTools.DrawLabelAndText_Line(y, "CQFMessage".Translate(), ref edited_message, x, 240f);
+            if (edited_message != source_message)
+                this.message = edited_message;
+            y += 30f;
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFMessageType".Translate(this.type?.defName.Translate().ToString()), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Message.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(DefDatabase<MessageTypeDef>.AllDefsListForReading, (d) => this.type = d, (d) => d.defName.Translate());
+            }
+
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -517,14 +542,15 @@ namespace QuestEditor_Library
             result.Add(new XElement("type", this.type?.defName));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            if (targets.TryGetValue("Trigger", out TargetInfo t1) && t1.Thing is Thing thing
-                                                                  && thing.Faction != Faction.OfPlayer)
+            if (targets.TryGetValue("Trigger", out TargetInfo t1) && t1.Thing is Thing thing && thing.Faction != Faction.OfPlayer)
             {
                 return;
             }
-            var message = ResolveMessage(targets); 
+
+            var message = ResolveMessage(targets);
             Messages.Message(message, new LookTargets(targets.Values), this.type);
         }
 
@@ -560,28 +586,30 @@ namespace QuestEditor_Library
         public string message;
         public MessageTypeDef type = MessageTypeDefOf.PositiveEvent;
     }
+
     public class CQFAction_Quest : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFQuestDef".Translate(this.quest?.defName), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Quest.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(DefDatabase<QuestScriptDef>.AllDefsListForReading, (d) => this.quest = d, (d) => d.defName);
+            }
+
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(new XElement("quest", this.quest.defName));
             return result;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             IncidentParms incidentParms = StorytellerUtility.DefaultParmsNow(IncidentCategoryDefOf.GiveQuest, Find.RandomPlayerHomeMap);
@@ -599,33 +627,35 @@ namespace QuestEditor_Library
 
         public QuestScriptDef quest;
     }
+
     public class CQFAction_Incident : CQFAction_Target
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFIncidentDef".Translate(this.incident?.defName), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Incident.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(DefDatabase<IncidentDef>.AllDefsListForReading, (d) => this.incident = d, (d) => d.label);
+            }
+
+            y += 30f;
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(new XElement("incident", this.incident.defName));
             return result;
         }
+
         public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            foreach (KeyValuePair<string,TargetInfo> item in targets)
+            foreach (KeyValuePair<string, TargetInfo> item in targets)
             {
-                if (item.Value.Map is Map map) 
+                if (item.Value.Map is Map map)
                 {
                     IncidentParms incidentParms = StorytellerUtility.DefaultParmsNow(this.incident.category, map);
                     this.incident.Worker.TryExecute(incidentParms);
@@ -640,22 +670,27 @@ namespace QuestEditor_Library
 
         public IncidentDef incident;
     }
+
     public class CQFAction_StartDialog : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(this.dialog?.defName), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_StartDialog.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => this.dialog = m, m => m.defName);
+            }
+
+            y += 30f;
+            CQFTargetKeyEditor.DrawBookField(y, "Interviewer".Translate(), this.interviewerText, value => this.interviewerText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
+            CQFTargetKeyEditor.DrawBookField(y, "Interviewee".Translate(), this.intervieeText, value => this.intervieeText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             Thing interviewer = null;
@@ -666,22 +701,25 @@ namespace QuestEditor_Library
                 {
                     interviewer = t.Value.Thing;
                 }
+
                 if (t.Key == this.intervieeText)
                 {
                     interviewee = t.Value.Thing;
                 }
             });
-            if (interviewer == null && GameTools.GetTargetFromQuestDatabase(quest, this.interviewerText) is TargetInfo target)
+            if (interviewer == null && GameTools.GetTargetFromQuestDatabase(quest, this.interviewerText)is TargetInfo target)
             {
                 interviewer = target.Thing;
             }
-            if (interviewee == null && GameTools.GetTargetFromQuestDatabase(quest, this.intervieeText) is TargetInfo target2)
+
+            if (interviewee == null && GameTools.GetTargetFromQuestDatabase(quest, this.intervieeText)is TargetInfo target2)
             {
                 interviewee = target2.Thing;
             }
-            Find.WindowStack.Add(this.dialog.GetTree(interviewer, interviewee)?.CreateCQFDialog(
-                interviewer, interviewee, quest));
+
+            Find.WindowStack.Add(this.dialog.GetTree(interviewer, interviewee)?.CreateCQFDialog(interviewer, interviewee, quest));
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -690,6 +728,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("intervieeText", this.intervieeText));
             return result;
         }
+
         public override void ExposeData()
         {
             Scribe_Defs.Look(ref this.dialog, "dialog");
@@ -703,22 +742,27 @@ namespace QuestEditor_Library
         [NoTranslate]
         public string intervieeText;
     }
+
     public class CQFAction_SetRelation : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.Pawn;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, 320f, 25f), "CQF_RelationDef".Translate(this.relation?.label), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SetRelation.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu(DefDatabase<PawnRelationDef>.AllDefsListForReading, m => this.relation = m, m => m.label);
+            }
+
+            y += 30f;
+            CQFTargetKeyEditor.DrawBookField(y, "TargetA".Translate(), this.targetA, value => this.targetA = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
+            CQFTargetKeyEditor.DrawBookField(y, "TargetB".Translate(), this.targetB, value => this.targetB = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             Thing targetA = null;
@@ -729,24 +773,28 @@ namespace QuestEditor_Library
                 {
                     targetA = t.Value.Thing;
                 }
+
                 if (t.Key == this.targetB)
                 {
                     targetB = t.Value.Thing;
                 }
             });
-            if (targetA == null && GameTools.GetTargetFromQuestDatabase(quest, this.targetA) is TargetInfo target)
+            if (targetA == null && GameTools.GetTargetFromQuestDatabase(quest, this.targetA)is TargetInfo target)
             {
                 targetA = target.Thing;
             }
-            if (targetB == null && GameTools.GetTargetFromQuestDatabase(quest, this.targetB) is TargetInfo target2)
+
+            if (targetB == null && GameTools.GetTargetFromQuestDatabase(quest, this.targetB)is TargetInfo target2)
             {
                 targetB = target2.Thing;
             }
-            if (targetA is Pawn pawnA && targetB is Pawn pawnB) 
+
+            if (targetA is Pawn pawnA && targetB is Pawn pawnB)
             {
-                pawnA.relations.AddDirectRelation(this.relation,pawnB);
+                pawnA.relations.AddDirectRelation(this.relation, pawnB);
             }
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -755,6 +803,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("targetB", this.targetB));
             return result;
         }
+
         public override void ExposeData()
         {
             Scribe_Defs.Look(ref this.relation, "relation");
@@ -774,17 +823,15 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_LinkEntranceAndExit.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFTargetKeyEditor.DrawBookField(y, "EntranceKey".Translate(), this.entranceText, value => this.entranceText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
+            CQFTargetKeyEditor.DrawBookField(y, "ExitKey".Translate(), this.exitText, value => this.exitText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             CustomMapEntrance entrance = null;
@@ -801,14 +848,12 @@ namespace QuestEditor_Library
                     exit = (CustomMapExit)t.Value.Thing;
                 }
             });
-            if (entrance == null &&
-                GameTools.GetTargetFromQuestDatabase(quest, this.entranceText) is var target)
+            if (entrance == null && GameTools.GetTargetFromQuestDatabase(quest, this.entranceText)is var target)
             {
                 entrance = (CustomMapEntrance)target.Thing;
             }
 
-            if (exit == null &&
-                GameTools.GetTargetFromQuestDatabase(quest, this.exitText) is var target2)
+            if (exit == null && GameTools.GetTargetFromQuestDatabase(quest, this.exitText)is var target2)
             {
                 exit = (CustomMapExit)target2;
             }
@@ -835,8 +880,10 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.exitText, "exitText");
         }
 
-        [NoTranslate] public string entranceText;
-        [NoTranslate] public string exitText;
+        [NoTranslate]
+        public string entranceText;
+        [NoTranslate]
+        public string exitText;
     }
 
     public class CQFAction_Skip : CQFAction
@@ -844,17 +891,15 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_Skip.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
+            CQFTargetKeyEditor.DrawBookField(y, "targetLocationText".Translate(), this.targetLocationText, value => this.targetLocationText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             Thing skipedTarget = null;
@@ -865,25 +910,29 @@ namespace QuestEditor_Library
                 {
                     skipedTarget = t.Value.Thing;
                 }
+
                 if (t.Key == this.targetLocationText)
                 {
                     targetLocation = t.Value;
                 }
             });
-            if (skipedTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.skipedTargetText) is TargetInfo target)
+            if (skipedTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.skipedTargetText)is TargetInfo target)
             {
                 skipedTarget = target.Thing;
             }
-            if (!targetLocation.IsValid && GameTools.GetTargetFromQuestDatabase(quest, this.targetLocationText) is TargetInfo target2)
+
+            if (!targetLocation.IsValid && GameTools.GetTargetFromQuestDatabase(quest, this.targetLocationText)is TargetInfo target2)
             {
                 targetLocation = target2;
             }
+
             if (Prefs.DevMode)
             {
                 Log.Message("SkipTest");
-                Log.Message("目标:"  + (skipedTarget == null));
+                Log.Message("目标:" + (skipedTarget == null));
                 Log.Message(targetLocation.IsValid);
             }
+
             if (skipedTarget != null && targetLocation.IsValid)
             {
                 if (Prefs.DevMode)
@@ -892,10 +941,12 @@ namespace QuestEditor_Library
                     Log.Message(skipedTarget.ToString());
                     Log.Message(targetLocation.ToString());
                 }
+
                 if (skipedTarget.Spawned)
                 {
                     skipedTarget.DeSpawn();
                 }
+
                 GenSpawn.Spawn(skipedTarget, targetLocation.Cell, targetLocation.Map);
                 if (targetLocation.Cell.Fogged(targetLocation.Map))
                 {
@@ -903,6 +954,7 @@ namespace QuestEditor_Library
                 }
             }
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -910,6 +962,7 @@ namespace QuestEditor_Library
             result.Add(new XElement("targetLocationText", this.targetLocationText));
             return result;
         }
+
         public override void ExposeData()
         {
             Scribe_Values.Look(ref this.skipedTargetText, "skipedTargetText");
@@ -921,67 +974,67 @@ namespace QuestEditor_Library
         [NoTranslate]
         public string targetLocationText;
     }
+
     public class CQFAction_SkipToPlayerMap : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.MapAction;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_SkipToPlayerMap.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            Thing skipedTarget = null; 
+            Thing skipedTarget = null;
             targets.ToList().ForEach(t =>
             {
                 if (t.Key == this.skipedTargetText)
                 {
                     skipedTarget = t.Value.Thing;
-                } 
+                }
             });
-            if (skipedTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.skipedTargetText) is TargetInfo target)
+            if (skipedTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.skipedTargetText)is TargetInfo target)
             {
                 skipedTarget = target.Thing;
-            } 
-            if (skipedTarget != null && Find.AnyPlayerHomeMap is Map map &&
-                map.AllCells.ToList().Find(c => c.Walkable(map) && c.Standable(map)
-                && !c.Fogged(map)) is IntVec3 targetLocation)
+            }
+
+            if (skipedTarget != null && Find.AnyPlayerHomeMap is Map map && map.AllCells.ToList().Find(c => c.Walkable(map) && c.Standable(map) && !c.Fogged(map))is IntVec3 targetLocation)
             {
                 if (Prefs.DevMode)
                 {
                     Log.Message("SkipToRandomPlayerMap");
                     Log.Message(skipedTarget.ToString());
                 }
+
                 if (skipedTarget.Spawned)
                 {
                     skipedTarget.DeSpawn();
-                } 
-                GenSpawn.Spawn(skipedTarget, targetLocation,map); 
+                }
+
+                GenSpawn.Spawn(skipedTarget, targetLocation, map);
             }
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(new XElement("skipedTargetText", this.skipedTargetText)); 
+            result.Add(new XElement("skipedTargetText", this.skipedTargetText));
             return result;
         }
+
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref this.skipedTargetText, "skipedTargetText"); 
+            Scribe_Values.Look(ref this.skipedTargetText, "skipedTargetText");
         }
 
         [NoTranslate]
-        public string skipedTargetText; 
+        public string skipedTargetText;
     }
-    
+
     public class CQFAction_ClearMainPawnCache : CQFAction
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
@@ -992,11 +1045,13 @@ namespace QuestEditor_Library
             {
                 return;
             }
+
             MainMapWorldComponent comp = MainMapWorldComponent.Component;
             if (comp == null)
             {
                 return;
             }
+
             List<MainSite> sites = this.clearAllMainMaps ? comp.GetAllMainSites() : comp.GetMainSites(this.mainMapDef);
             foreach (MainSite site in sites)
             {
@@ -1011,14 +1066,17 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("pawnName", this.pawnName));
             }
+
             if (this.mainMapDef != null)
             {
                 result.Add(new XElement("mainMapDef", this.mainMapDef.defName));
             }
+
             if (this.clearAllMainMaps)
             {
                 result.Add(new XElement("clearAllMainMaps", this.clearAllMainMaps));
             }
+
             return result;
         }
 
@@ -1039,17 +1097,13 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_DestroyMainSite.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), this.key, value => this.key = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
             MainMapWorldComponent.Component?.TryDestroyMainSiteByKey(this.key, quest, targets);
@@ -1062,6 +1116,7 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("key", this.key));
             }
+
             return result;
         }
 
@@ -1078,32 +1133,38 @@ namespace QuestEditor_Library
         public override CQFActionCategory ActionCategory => CQFActionCategory.MainMap;
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CQFAction_RecordMainSiteVisitCount.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            base.Draw(ref y, inRect, x);
+            CQFTargetKeyEditor.DrawBookField(y, "MainSiteKey".Translate(), this.key, value => this.key = value, x, 150f, inRect.width - x - 20f);
+            y += 30f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "RecordKeyOfData".Translate(), ref this.recordKey, x, 150f);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToTemporaryBase".Translate(), ref this.recordToTemporaryBase);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToQuestBase".Translate(), ref this.recordToQuestBase);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x, y, 350f, 25f), "RecordToGlobalBase".Translate(), ref this.recordToGlobalBase);
+            y += 30f;
         }
+
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            if (MainMapWorldComponent.Component == null ||
-                !MainMapWorldComponent.Component.TryGetMainSiteByKey(this.key, quest, targets, out MainSite site))
+            if (MainMapWorldComponent.Component == null || !MainMapWorldComponent.Component.TryGetMainSiteByKey(this.key, quest, targets, out MainSite site))
             {
                 return;
             }
+
             if (this.recordToTemporaryBase)
             {
                 GameComponent_Editor.Instance.TemporaryDatabase.SetValue(this.recordKey, site.visitCount);
             }
+
             if (this.recordToQuestBase)
             {
                 GameComponent_Editor.Instance.GetQuestData(quest)?.SetValue(this.recordKey, site.visitCount);
             }
+
             if (this.recordToGlobalBase)
             {
                 GameComponent_Editor.Instance.GlobalDatabase.SetValue(this.recordKey, site.visitCount);
@@ -1117,22 +1178,27 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("key", this.key));
             }
+
             if (!this.recordKey.NullOrEmpty())
             {
                 result.Add(new XElement("recordKey", this.recordKey));
             }
+
             if (this.recordToTemporaryBase)
             {
                 result.Add(new XElement("recordToTemporaryBase", this.recordToTemporaryBase));
             }
+
             if (this.recordToQuestBase)
             {
                 result.Add(new XElement("recordToQuestBase", this.recordToQuestBase));
             }
+
             if (this.recordToGlobalBase)
             {
                 result.Add(new XElement("recordToGlobalBase", this.recordToGlobalBase));
             }
+
             return result;
         }
 

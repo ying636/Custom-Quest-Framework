@@ -39,7 +39,12 @@ namespace QuestEditor_Library
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, this.height + 20f));
             Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
-            this.height = this.option.Draw(viewRect, this.parent, this.node);
+            this.height = this.option.Draw(viewRect, result =>
+            {
+                Window previous = Find.WindowStack.Windows.ToList().Find(window => window.GetType() == typeof(Dialog_EditDialogResult));
+                previous?.Close();
+                Find.WindowStack.Add(new Dialog_EditDialogResult(this.parent, result, this.option, this.node));
+            }, result => this.parent.ShowOptionMenu(this.option, this.node, result), this.parent.InitCurTree);
             Widgets.EndScrollView();
         }
 

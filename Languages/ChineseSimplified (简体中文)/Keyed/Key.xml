@@ -512,5 +512,14 @@
   <CQF_SetReceiverDesc>CQF_SetReceiverDesc</CQF_SetReceiverDesc>
   <Fail>已失败</Fail>
   <CQF_ActionComp_InvalidTickInterval>CQF_ActionComp_InvalidTickInterval</CQF_ActionComp_InvalidTickInterval>
+  <CQF_MoveThing>搬运</CQF_MoveThing>
+  <CQF_MoveThingDesc>先选择要搬运的物体，再点击目标位置。右键取消搬运。</CQF_MoveThingDesc>
+  <CQF_RotateThing>旋转</CQF_RotateThing>
+  <CQF_RotateThingDesc>点击物体将其旋转90°。右键命令可切换顺时针或逆时针方向。</CQF_RotateThingDesc>
+  <CQF_RotateThingClockwise>顺时针</CQF_RotateThingClockwise>
+  <CQF_RotateThingCounterclockwise>逆时针</CQF_RotateThingCounterclockwise>
+  <CQF_TransformThingNoTarget>此处没有可以搬运或旋转的物体。</CQF_TransformThingNoTarget>
+  <CQF_TransformThingRotationLocked>该物体的朝向已锁定，无法旋转。</CQF_TransformThingRotationLocked>
+  <CQF_TransformThingFailed>搬运或旋转失败，详情请查看日志。</CQF_TransformThingFailed>
 </LanguageData>
 

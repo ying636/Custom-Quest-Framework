@@ -14,6 +14,7 @@ namespace QuestEditor_Library
             {
                 return true;
             }
+
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
             foreach (DialogCondition condition in this.conditions)
             {
@@ -22,21 +23,31 @@ namespace QuestEditor_Library
                     return false;
                 }
             }
+
             return true;
         }
 
         public void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            CQFEditorTools.DrawLabelAndText_Line(y, "MainMapConditionName".Translate(), ref this.name, x, 200f);
+            TooltipHandler.TipRegion(new Rect(x, y, 405f, 25f), "MainMapConditionNameTip".Translate());
+            y += 30f;
+            if (this.set == null)
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.MainMapAndCondition.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                this.set = new CustomMapGenerationSet();
+            }
+
+            Rect generationSetRect = new Rect(x, y, 255f, 25f);
+            Widgets.Label(generationSetRect, "MainMapGenerationSet".Translate().Colorize(CQFUIStyle.Accent));
+            TooltipHandler.TipRegion(generationSetRect, "MainMapGenerationSetTip".Translate());
+            y += 30f;
+            this.set.Draw(ref y, inRect, x + 15f);
+            float conditionsY = y;
+            CQFEditorTools.DrawIDrawList_UseWindow(ref y, x, this.conditions, inRect, "MainMapConditions".Translate(), condition => condition.GetType().Name.Translate());
+            TooltipHandler.TipRegion(new Rect(x, conditionsY, 255f, 25f), "MainMapConditionsTip".Translate());
         }
+
         public XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
@@ -44,14 +55,17 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("name", this.name));
             }
+
             if (this.set != null)
             {
                 result.Add(this.set.SaveToXElement("set"));
             }
+
             if (!this.conditions.NullOrEmpty())
             {
                 result.Add(CQFSerialization.SaveList_Saveable(this.conditions, "conditions"));
             }
+
             return result;
         }
 

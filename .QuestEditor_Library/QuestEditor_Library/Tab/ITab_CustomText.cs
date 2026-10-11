@@ -1,7 +1,7 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -20,43 +20,54 @@ namespace QuestEditor_Library
         {
             get
             {
-                if (this.SelObject is ThingWithComps thing && thing.TryGetComp<CompCustomText>() is CompCustomText comp)
+                if (this.SelObject is ThingWithComps thing && thing.TryGetComp<CompCustomText>()is CompCustomText comp)
                 {
                     return comp;
                 }
+
                 return null;
             }
         }
+
         internal object CQFSelectedObject => this.SelObject;
         internal Vector2 CQFSize => this.size;
-
         public override bool IsVisible => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
         protected override bool StillValid => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
 
         protected override void FillTab()
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(this.CQFSize.x, this.CQFSize.y);
+            if (this.Comp == null)
             {
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ITab_CustomText.FillTab()", this, arguments);
+                return;
+            }
+
+            float y = 38f;
+            float width = this.CQFSize.x - 16f;
+            this.DrawTextSection(ref y, width, "CQF_CustomName".Translate(), ref this.Comp.useCustomName, ref this.Comp.customName, false);
+            this.DrawTextSection(ref y, width, "CQF_CustomDescription".Translate(), ref this.Comp.useCustomDescription, ref this.Comp.customDescription, true);
+            this.DrawTextSection(ref y, width, "CQF_CustomInspectText".Translate(), ref this.Comp.useCustomInspectText, ref this.Comp.customInspectText, true);
         }
+
         internal void DrawTextSection(ref float y, float width, string label, ref bool enabled, ref string text, bool multiline)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(width);
+            float editorHeight = multiline ? 58f : 30f;
+            float sectionHeight = 38f + (enabled ? editorHeight + 10f : 0f);
+            Rect sectionRect = new Rect(8f, y, width, sectionHeight);
+            Rect headerRect = new Rect(sectionRect.x, sectionRect.y, sectionRect.width, 32f);
+            Widgets.DrawBoxSolid(sectionRect, CQFUIStyle.Card);
+            Widgets.DrawBoxSolid(headerRect, CQFUIStyle.Header);
+            Widgets.Label(new Rect(headerRect.x + 10f, headerRect.y + 4f, headerRect.width - 50f, 25f), label);
+            Widgets.Checkbox(new Vector2(headerRect.xMax - 30f, headerRect.y + 4f), ref enabled, 24f);
+            if (enabled)
             {
-                y,
-                width,
-                label,
-                enabled,
-                text,
-                multiline
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.ITab_CustomText.DrawTextSection(Ref:float,None:float,None:string,Ref:bool,Ref:string,None:bool)", this, arguments);
-            y = (float)arguments[0];
-            enabled = (bool)arguments[3];
-            text = (string)arguments[4];
+                Rect editorRect = new Rect(sectionRect.x + 8f, headerRect.yMax + 6f, sectionRect.width - 16f, editorHeight);
+                text = multiline ? Widgets.TextArea(editorRect, text ?? string.Empty) : Widgets.TextField(editorRect, text ?? string.Empty);
+            }
+
+            CQFUIStyle.DrawBox(sectionRect, 1);
+            y += sectionHeight + 8f;
         }
-}
+    }
 }

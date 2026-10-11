@@ -1,8 +1,8 @@
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -10,30 +10,62 @@ namespace QuestEditor_Library
 {
     public class PawnModWorker_ActionTrigger : PawnModWorker
     {
+        internal List<ActionTriggerMode> AllowedModes => new List<ActionTriggerMode>
+        {
+            ActionTriggerMode.Damaged
+        };
+
         public override PawnModData CreateData()
         {
             return new PawnModData_ActionTrigger();
         }
 
         public override void Draw(ComplexPawnDef pawnDef, ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            PawnModData_ActionTrigger modData = pawnDef.DataFor<PawnModData_ActionTrigger>();
+            Rect addRect = new Rect(x, y, 28f, 28f);
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
-                pawnDef,
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_ActionTrigger.Draw(None:QuestEditor_Library.ComplexPawnDef,Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[1];
+                modData.actionTriggers.Add(new PawnActionTriggerData { key = pawnDef.defName + "_Damaged" });
+            }
+
+            TooltipHandler.TipRegion(addRect, "CQF_PawnEditor_Add".Translate());
+            Rect deleteRect = new Rect(addRect.xMax + 10f, y, 28f, 28f);
+            if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete) && modData.actionTriggers.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(modData.actionTriggers, data => modData.actionTriggers.Remove(data), this.TriggerLabel);
+            }
+
+            TooltipHandler.TipRegion(deleteRect, "CQF_PawnEditor_Delete".Translate());
+            y += 42f;
+            foreach (PawnActionTriggerData data in modData.actionTriggers)
+            {
+                float panelHeight = this.TriggerPanelHeight(data);
+                Rect panelRect = new Rect(x, y, inRect.width - x - 20f, panelHeight);
+                Widgets.DrawLightHighlight(panelRect);
+                CQFUIStyle.DrawBox(panelRect, 1, CQFUIStyle.AccentTexture);
+                Rect keyRect = new Rect(panelRect.x + 10f, panelRect.y + 8f, panelRect.width - 20f, 30f);
+                Widgets.Label(new Rect(keyRect.x, keyRect.y + 3f, 110f, 24f), "CQF_PawnEditor_TriggerKey".Translate().Colorize(CQFUIStyle.Accent));
+                data.key = Widgets.TextField(new Rect(keyRect.x + 118f, keyRect.y, keyRect.width - 118f, 30f), data.key);
+                Rect modeRect = new Rect(panelRect.x + 10f, keyRect.yMax + 6f, panelRect.width - 20f, 30f);
+                if (this.DrawTextButton(modeRect, "CQF_PawnEditor_TriggerMode".Translate(this.ModeLabel(data.mode))))
+                {
+                    CQFEditorTools.DrawFloatMenu(this.AllowedModes, mode => data.mode = mode, this.ModeLabel);
+                }
+
+                this.DrawActions(data, modeRect.yMax + 8f, panelRect);
+                y += panelHeight + 10f;
+            }
         }
+
         public override void OnPawnSpawned(ComplexPawnDef pawnDef, Pawn pawn, Quest quest)
         {
             if (pawn?.Map == null)
             {
                 return;
             }
+
             MapComponent_CustomMapData comp = MapComponent_CustomMapData.GetComp(pawn.Map);
             foreach (PawnActionTriggerData data in pawnDef.DataFor<PawnModData_ActionTrigger>().actionTriggers)
             {
@@ -41,12 +73,17 @@ namespace QuestEditor_Library
                 {
                     continue;
                 }
+
                 ThingActionTrigger trigger = comp.Triggers.Find(t => t.key == data.key);
                 if (trigger == null)
                 {
-                    trigger = new ThingActionTrigger { key = data.key };
+                    trigger = new ThingActionTrigger
+                    {
+                        key = data.key
+                    };
                     comp.Triggers.Add(trigger);
                 }
+
                 trigger.mode = data.mode;
                 trigger.actions = data.actions.ListFullCopy();
                 if (!trigger.things.Contains(pawn))
@@ -63,33 +100,58 @@ namespace QuestEditor_Library
                 pawnDef.DataFor<PawnModData_ActionTrigger>().actionTriggers = this.LoadSaveableList<PawnActionTriggerData>(node["actionTriggers"]);
             }
         }
+
         internal string TriggerLabel(PawnActionTriggerData data)
         {
             return data?.key.NullOrEmpty() ?? true ? "CQF_PawnEditor_None".Translate() : data.key;
         }
+
         internal string ModeLabel(ActionTriggerMode mode)
         {
             return ("ActionTriggerMode_" + mode).Translate();
         }
-        internal void DrawActions(PawnActionTriggerData data, float y, Rect panelRect)
 
+        internal void DrawActions(PawnActionTriggerData data, float y, Rect panelRect)
         {
-            object[] arguments = new object[]
+            Rect labelRect = new Rect(panelRect.x + 10f, y + 3f, 255f, 24f);
+            string label = "CQF_PawnEditor_TriggerActions".Translate();
+            Widgets.Label(labelRect, label.Colorize(CQFUIStyle.Accent));
+            float buttonX = labelRect.x + Text.CalcSize(label).x + 14f;
+            Rect addRect = new Rect(buttonX, y, 28f, 28f);
+            if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
-                data,
-                y,
-                panelRect
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnModWorker_ActionTrigger.DrawActions(None:QuestEditor_Library.PawnActionTriggerData,None:float,None:UnityEngine.Rect)", this, arguments);
+                CQFEditorTools.OpenCQFActionSelect(type => data.actions.Add((CQFAction)Activator.CreateInstance(type)));
+            }
+
+            TooltipHandler.TipRegion(addRect, "CQF_PawnEditor_Add".Translate());
+            Rect deleteRect = new Rect(addRect.xMax + 8f, y, 28f, 28f);
+            if (CQFUIStyle.ButtonImage(deleteRect, TexButton.Delete) && data.actions.Any())
+            {
+                CQFEditorTools.DrawFloatMenu(data.actions, action => data.actions.Remove(action), this.ActionLabel);
+            }
+
+            TooltipHandler.TipRegion(deleteRect, "CQF_PawnEditor_Delete".Translate());
+            float actionY = y + 34f;
+            foreach (CQFAction action in data.actions)
+            {
+                Rect actionRect = new Rect(panelRect.x + 14f, actionY, panelRect.width - 28f, 26f);
+                if (CQFUIStyle.ButtonText(actionRect, this.ActionLabel(action), false))
+                {
+                    Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(action));
+                }
+
+                actionY += 30f;
+            }
         }
+
         internal float TriggerPanelHeight(PawnActionTriggerData data)
         {
             return 122f + (data.actions?.Count ?? 0) * 30f;
         }
+
         internal string ActionLabel(CQFAction action)
         {
             return action == null ? "CQF_PawnEditor_None".Translate() : action.GetType().Name.Translate();
         }
-        internal List<ActionTriggerMode> AllowedModes => new List<ActionTriggerMode> { ActionTriggerMode.Damaged };
     }
 }

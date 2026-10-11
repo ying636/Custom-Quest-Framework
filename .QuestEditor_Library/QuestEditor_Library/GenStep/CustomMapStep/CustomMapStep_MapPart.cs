@@ -3,8 +3,7 @@ using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
-
-    public class CustomMapStep_MapPart : CustomMapStep
+public class CustomMapStep_MapPart : CustomMapStep
 {
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
@@ -12,33 +11,34 @@ namespace QuestEditor_Library;
         int c = this.count.RandomInRange;
         for (int i = 0; i < c; i++)
         {
-            if (this.set.GetMap() is {} mapDef)
+            if (this.set.GetMap()is { } mapDef)
             {
                 if (Prefs.DevMode)
                 {
                     Log.Message("Spawn Part:" + mapDef.defName);
                 }
+
                 var cellsAvailable = new List<IntVec3>();
                 foreach (var intVec3 in cells)
                 {
                     var size = mapDef.size;
                     size.y = 0;
-                    if (CellRect.FromLimits(intVec3,intVec3 +size ).Cells.All(c2 => 
-                          c2.InBounds(map) && !GenStep_CustomMap.disgenerate.Contains(c2)))
+                    if (CellRect.FromLimits(intVec3, intVec3 + size).Cells.All(c2 => c2.InBounds(map) && !GenStep_CustomMap.disgenerate.Contains(c2)))
                     {
                         cellsAvailable.Add(intVec3);
                     }
                 }
 
                 if (cellsAvailable.Any())
-                {    
-                    var pos =cellsAvailable.RandomElement();
+                {
+                    var pos = cellsAvailable.RandomElement();
                     if (Prefs.DevMode)
                     {
                         Log.Message("Spawn Pos:" + pos);
                     }
+
                     mapDef.GenerateByCore(pos, map, GameTools.GetQuestFromMap(map));
-                    foreach (var intVec3 in CellRect.FromLimits(pos,pos + mapDef.size).Cells)
+                    foreach (var intVec3 in CellRect.FromLimits(pos, pos + mapDef.size).Cells)
                     {
                         if (cells.Contains(intVec3))
                         {
@@ -55,17 +55,14 @@ namespace QuestEditor_Library;
     }
 
     public override void Draw(ref float y, Rect inRect, float x)
+    {
+        using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+        Widgets.Label(new Rect(x, y, inRect.width - x - 12f, 30f), "CustomMapStep_MapPart".Translate().Colorize(CQFUIStyle.Accent));
+        y += 35f;
+        CQFEditorTools.DrawIntRange(ref y, "GenerationCount".Translate(), ref this.count, ref this.buffer, ref this.buffer2, x, 60f);
+        this.set.Draw(ref y, inRect, x);
+    }
 
-        {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_MapPart.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
-        }
     public override XElement SaveToXElement(string nodeName)
     {
         XElement result = base.SaveToXElement(nodeName);

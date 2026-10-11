@@ -768,4 +768,5 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <!-- EN: Actions that do not fit the other categories, including container and inventory utility actions. -->
   <CQFActionCategory_Misc_Tip>不适合其他分类的行为，包括容器和库存工具类行为。</CQFActionCategory_Misc_Tip>
 
+  <CQFAction_FinishResearch>行为：完成研究</CQFAction_FinishResearch>
 </LanguageData>

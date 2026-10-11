@@ -16,25 +16,31 @@ namespace QuestEditor_Library
     public class PawnSpawnData_Group : PawnSpawnData
     {
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            Rect rect = new Rect(20f + x, y, 250f, 25f);
+            if (CQFUIStyle.ButtonText(rect, "CQF_PawnGroupDef".Translate(this.group?.defName), false))
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.PawnSpawnData_Group.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawFloatMenu<GroupDataDef>(DefDatabase<GroupDataDef>.AllDefsListForReading, (k) => this.group = k, (k) =>
+                {
+                    return k.label;
+                });
+            }
+
+            y += 30f;
+            this.DrawCanSaveWarning(ref y, x, inRect);
         }
+
         public override bool CanSaveToMap()
         {
             return this.group != null;
         }
+
         public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null, bool setLord = true)
         {
             return this.group.Generate(map, position, quest);
         }
+
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
@@ -42,8 +48,10 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("group", this.group.defName));
             }
+
             return result;
         }
+
         public override void ExposeData()
         {
             base.ExposeData();

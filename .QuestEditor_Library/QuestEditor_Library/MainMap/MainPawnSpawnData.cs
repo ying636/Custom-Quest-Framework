@@ -18,35 +18,42 @@ namespace QuestEditor_Library
             {
                 return this.SpawnNewPawn(position, map, questTag, quest, lord, setLord);
             }
+
             Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
             if (!this.ConditionsSatisfied(this.generateConditions, quest))
             {
                 return result;
             }
+
             if (site != null && site.TryGetMainPawn(this.dataName, out Pawn cachedPawn))
             {
                 if (this.TrySpawnCachedPawn(cachedPawn, position, map, questTag, quest, lord, result))
                 {
                     return result;
                 }
+
                 if (!this.ShouldRegenerate(cachedPawn, quest))
                 {
                     return result;
                 }
+
                 site.RemoveMainPawnCache(this.dataName);
             }
+
             if (this.TryGetPawnFromDatabase(quest, out Pawn databasePawn))
             {
                 site?.SetMainPawn(this.dataName, databasePawn);
                 this.TrySpawnCachedPawn(databasePawn, position, map, questTag, quest, lord, result);
                 return result;
             }
+
             Dictionary<string, TargetInfo> generated = this.SpawnNewPawn(position, map, questTag, quest, lord, setLord);
             Pawn pawn = this.GetFirstPawn(generated);
             if (site != null && pawn != null)
             {
                 site.SetMainPawn(this.dataName, pawn);
             }
+
             return generated;
         }
 
@@ -62,34 +69,42 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("allowGetFromQuestDatabase", this.allowGetFromQuestDatabase));
             }
+
             if (this.allowGetFromGlobalDatabase)
             {
                 result.Add(new XElement("allowGetFromGlobalDatabase", this.allowGetFromGlobalDatabase));
             }
+
             if (!this.questDatabaseKey.NullOrEmpty())
             {
                 result.Add(new XElement("questDatabaseKey", this.questDatabaseKey));
             }
+
             if (!this.globalDatabaseKey.NullOrEmpty())
             {
                 result.Add(new XElement("globalDatabaseKey", this.globalDatabaseKey));
             }
+
             if (this.spawnData != null)
             {
                 result.Add(this.spawnData.SaveToXElement("spawnData"));
             }
+
             if (this.regenerateIfDead)
             {
                 result.Add(new XElement("regenerateIfDead", this.regenerateIfDead));
             }
+
             if (!this.generateConditions.NullOrEmpty())
             {
                 result.Add(CQFSerialization.SaveList_Saveable<DialogCondition>(this.generateConditions, "generateConditions"));
             }
+
             if (!this.regenerateConditions.NullOrEmpty())
             {
                 result.Add(CQFSerialization.SaveList_Saveable<DialogCondition>(this.regenerateConditions, "regenerateConditions"));
             }
+
             return result;
         }
 
@@ -107,61 +122,99 @@ namespace QuestEditor_Library
         }
 
         public override void Draw(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.MainPawnSpawnData.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+            Rect rect = new Rect(16f + x, y + 10f, 500f, 45f);
+            this.DrawName(ref y, x, rect);
+            this.DrawMainPawnOptions(ref y, inRect, x);
         }
+
         internal void DrawMainPawnOptions(ref float y, Rect inRect, float x)
-
         {
-            object[] arguments = new object[]
+            Widgets.CheckboxLabeled(new Rect(20f + x, y, 300f, 25f), "MainPawnAllowGetFromQuestDatabase".Translate(), ref this.allowGetFromQuestDatabase);
+            y += 30f;
+            if (this.allowGetFromQuestDatabase)
             {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.MainPawnSpawnData.DrawMainPawnOptions(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+                CQFEditorTools.DrawLabelAndText_Line(y, "MainPawnQuestDatabaseKey".Translate(), ref this.questDatabaseKey, x + 20f, 160f);
+                y += 30f;
+            }
+
+            Widgets.CheckboxLabeled(new Rect(20f + x, y, 300f, 25f), "MainPawnAllowGetFromGlobalDatabase".Translate(), ref this.allowGetFromGlobalDatabase);
+            y += 30f;
+            if (this.allowGetFromGlobalDatabase)
+            {
+                CQFEditorTools.DrawLabelAndText_Line(y, "MainPawnGlobalDatabaseKey".Translate(), ref this.globalDatabaseKey, x + 20f, 160f);
+                y += 30f;
+            }
+
+            Widgets.CheckboxLabeled(new Rect(20f + x, y, 300f, 25f), "MainPawnRegenerateIfDead".Translate(), ref this.regenerateIfDead);
+            y += 30f;
+            this.DrawSpawnDataSelector(ref y, x, inRect);
+            this.DrawCanSaveWarning(ref y, x, inRect);
+            this.DrawConditionList(ref y, x + 20f, inRect, this.generateConditions, "MainPawnGenerateConditions".Translate());
+            this.DrawConditionList(ref y, x + 20f, inRect, this.regenerateConditions, "MainPawnRegenerateConditions".Translate());
         }
+
         internal void DrawSpawnDataSelector(ref float y, float x, Rect inRect)
-
         {
-            object[] arguments = new object[]
+            if (this.spawnData == null)
             {
-                y,
-                x,
-                inRect
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.MainPawnSpawnData.DrawSpawnDataSelector(Ref:float,None:float,None:UnityEngine.Rect)", this, arguments);
-            y = (float)arguments[0];
+                this.spawnData = new PawnSpawnData();
+            }
+
+            Rect titleRect = new Rect(20f + x, y, 350f, 25f);
+            Widgets.Label(titleRect, "MainPawnSpawnDataSpawnData".Translate().Colorize(CQFUIStyle.Accent));
+            y += 30f;
+            string label = this.spawnData.GetType().Name.Translate() + ": " + this.spawnData.dataName;
+            Rect row = new Rect(20f + x, y, Mathf.Max(360f, inRect.width - x - 60f), 25f);
+            if (CQFUIStyle.ButtonText(row, label, false))
+            {
+                Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(this.spawnData));
+            }
+
+            TooltipHandler.TipRegion(row, label);
+            y += 30f;
+            if (CQFUIStyle.ButtonText(new Rect(20f + x, y, 220f, 25f), "MainPawnChangeSubPawnData".Translate(), false))
+            {
+                List<Type> types = new List<Type>();
+                types.Add(typeof(PawnSpawnData));
+                types.AddRange(typeof(PawnSpawnData).AllSubclassesNonAbstract().Where(type => type != typeof(MainPawnSpawnData)));
+                CQFEditorTools.DrawFloatMenu(types, type => this.spawnData = (PawnSpawnData)Activator.CreateInstance(type), type => type.Name.Translate());
+            }
+
+            y += 30f;
         }
+
         internal void DrawConditionList(ref float y, float x, Rect inRect, List<DialogCondition> conditions, string title)
-
         {
-            object[] arguments = new object[]
+            Widgets.Label(new Rect(x, y, 255f, 25f), title.Colorize(CQFUIStyle.Accent));
+            CQFEditorTools.DrawButtonForList_UseIcon(y, conditions, condition => condition.GetType().Name.Translate(), () =>
             {
-                y,
-                x,
-                inRect,
-                conditions,
-                title
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.MainPawnSpawnData.DrawConditionList(Ref:float,None:float,None:UnityEngine.Rect,None:System.Collections.Generic.List<QuestEditor_Library.DialogCondition>,None:string)", this, arguments);
-            y = (float)arguments[0];
+                List<Type> types = new List<Type>();
+                types.AddRange(typeof(DialogCondition).AllSubclassesNonAbstract());
+                CQFEditorTools.DrawFloatMenu(types, type => conditions.Add((DialogCondition)Activator.CreateInstance(type)), type => type.Name.Translate());
+            }, inRect.width - 95f, 25f, 35f);
+            y += 30f;
+            foreach (DialogCondition condition in conditions)
+            {
+                string label = condition.GetType().Name.Translate();
+                Rect row = new Rect(x, y, Mathf.Max(300f, inRect.width - x - 115f), 25f);
+                if (CQFUIStyle.ButtonText(row, label, false))
+                {
+                    Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(condition));
+                }
+
+                y += 30f;
+            }
         }
+
         private bool ConditionsSatisfied(List<DialogCondition> conditions, Quest quest)
         {
             if (conditions.NullOrEmpty())
             {
                 return true;
             }
+
             Dictionary<string, TargetInfo> targets = new Dictionary<string, TargetInfo>();
             foreach (DialogCondition condition in conditions)
             {
@@ -170,6 +223,7 @@ namespace QuestEditor_Library
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -179,14 +233,17 @@ namespace QuestEditor_Library
             {
                 return true;
             }
+
             if (pawn.Spawned)
             {
                 return false;
             }
+
             if (pawn.Dead && !this.regenerateIfDead)
             {
                 return false;
             }
+
             return !this.regenerateConditions.NullOrEmpty() && this.ConditionsSatisfied(this.regenerateConditions, quest);
         }
 
@@ -204,6 +261,7 @@ namespace QuestEditor_Library
                     return true;
                 }
             }
+
             if (this.allowGetFromGlobalDatabase)
             {
                 TargetInfo target = GameTools.GetTargetFromGlobalDatabase(quest, globalKey);
@@ -213,6 +271,7 @@ namespace QuestEditor_Library
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -222,6 +281,7 @@ namespace QuestEditor_Library
             {
                 this.spawnData = new PawnSpawnData();
             }
+
             string oldDataName = this.spawnData.dataName;
             this.spawnData.dataName = this.dataName;
             Dictionary<string, TargetInfo> result = this.spawnData.Spawn(position, map, questTag, quest, lord, setLord);
@@ -235,6 +295,7 @@ namespace QuestEditor_Library
             {
                 return false;
             }
+
             GenSpawn.Spawn(pawn, position, map);
             lord?.AddPawn(pawn);
             result.SetOrAdd(this.dataName + ".0", pawn);
@@ -248,6 +309,7 @@ namespace QuestEditor_Library
             {
                 return null;
             }
+
             return targets.Values.Select(target => target.Thing as Pawn).FirstOrDefault(pawn => pawn != null);
         }
 

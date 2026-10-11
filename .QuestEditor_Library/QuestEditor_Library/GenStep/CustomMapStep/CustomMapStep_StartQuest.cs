@@ -1,24 +1,29 @@
-using System.Xml.Linq;
 using RimWorld;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
 namespace QuestEditor_Library;
-
-    public class CustomMapStep_StartQuest : CustomMapStep
+public class CustomMapStep_StartQuest : CustomMapStep
 {
     public override void Draw(ref float y, Rect inRect, float x)
-
+    {
+        using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
+        float width = inRect.width - x - 12f;
+        Widgets.Label(new Rect(x, y, width, 30f), "CustomMapStep_StartQuest".Translate().Colorize(CQFUIStyle.Accent));
+        y += 35f;
+        if (CQFUIStyle.ButtonText(new Rect(x, y, width, 30f), this.quest?.label ?? this.quest?.defName ?? "CQF_NotSelected".Translate(), false))
         {
-            object[] arguments = new object[]
-            {
-                y,
-                inRect,
-                x
-            };
-            CQFEditorBridge.Invoke("QuestEditor_Library.CustomMapStep_StartQuest.Draw(Ref:float,None:UnityEngine.Rect,None:float)", this, arguments);
-            y = (float)arguments[0];
+            CQFEditorTools.DrawFloatMenu(DefDatabase<QuestScriptDef>.AllDefsListForReading, q => this.quest = q, q => q.label ?? q.defName);
         }
+
+        y += 35f;
+        Rect letterRect = new Rect(x, y, width, 30f);
+        Widgets.DrawHighlightIfMouseover(letterRect);
+        Widgets.CheckboxLabeled(letterRect.ContractedBy(6f, 2f), "CQF_StartQuest_SendLetter".Translate(), ref this.sendAvailableLetter);
+        y += 35f;
+    }
+
     public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
     {
         if (this.quest == null)
@@ -47,6 +52,7 @@ namespace QuestEditor_Library;
         {
             result.Add(new XElement("quest", this.quest.defName));
         }
+
         result.Add(new XElement("sendAvailableLetter", this.sendAvailableLetter));
         return result;
     }

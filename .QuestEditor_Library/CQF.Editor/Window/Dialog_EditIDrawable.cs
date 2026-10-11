@@ -10,7 +10,7 @@ namespace QuestEditor_Library
 {
     public class Dialog_EditIDrawable : Window, ICQFAIEditorHost
     {
-        public Dialog_EditIDrawable(IDrawable iDrawable, QuestBookDef questBook = null)
+        public Dialog_EditIDrawable(IDrawable iDrawable, QuestBookDef? questBook = null)
         {
             this.iDrawable = iDrawable;
             this.owner = CQFEditorContext.SourceThing;
@@ -39,7 +39,7 @@ namespace QuestEditor_Library
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
-            Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 28f), this.iDrawable.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
+            Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 28f), (this.iDrawable is TrapComp ? "TrapComps".Translate() : this.iDrawable.GetType().Name.Translate()).Colorize(CQFUIStyle.Accent));
             float top = 36f;
             if (this.iDrawable is PawnSpawnData pawnData)
             {
@@ -67,7 +67,7 @@ namespace QuestEditor_Library
         public float height;
         public Vector2 pos = Vector2.zero;
         private IDrawable iDrawable;
-        private readonly QuestBookDef questBook;
+        private readonly QuestBookDef? questBook;
         private readonly Thing owner;
     }
 }
