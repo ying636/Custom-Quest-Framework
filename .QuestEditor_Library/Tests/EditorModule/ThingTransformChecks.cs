@@ -14,6 +14,7 @@ internal static class ThingTransformChecks
         object prefs = typeof(Prefs).GetField("data", BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)!;
         FieldInfo devMode = prefs.GetType().GetField("devMode")!;
         object previousDevMode = devMode.GetValue(prefs)!;
+        bool previousGodMode = DebugSettings.godMode;
         try
         {
             FieldInfo binding = typeof(DefOfHelper).GetField("bindingNow", BindingFlags.NonPublic | BindingFlags.Static)!;
@@ -50,12 +51,27 @@ internal static class ThingTransformChecks
             Type rotateType = editor.GetType("QuestEditor_Library.Designator_RotateThing")!;
             Designator move = (Designator)RuntimeHelpers.GetUninitializedObject(moveType);
             Designator rotate = (Designator)RuntimeHelpers.GetUninitializedObject(rotateType);
+            Designator signalBook = (Designator)RuntimeHelpers.GetUninitializedObject(editor.GetType("QuestEditor_Library.Designator_CQFSignalBook")!);
+            Designator targetBook = (Designator)RuntimeHelpers.GetUninitializedObject(editor.GetType("QuestEditor_Library.Designator_CQFTargetKeyBook")!);
+            Designator[] tools = { move, rotate, signalBook, targetBook };
             MethodInfo placement = moveType.BaseType!.GetMethod("GetPlacementReport", BindingFlags.NonPublic | BindingFlags.Instance)!;
             Thing thing = MakeThing(new IntVec2(2, 3), new IntVec3(5, 0, 5));
             devMode.SetValue(prefs, false);
-            Check(!move.Visible && !rotate.Visible && !move.CanDesignateThing(thing).Accepted, "tools are hidden and reject interaction outside developer mode");
+            DebugSettings.godMode = false;
+            Check(tools.All(tool => !tool.Visible && !tool.CanRemainSelected()) && !move.CanDesignateThing(thing).Accepted,
+                "move, rotate and both key books are hidden without god mode");
             devMode.SetValue(prefs, true);
-            Check(move.Visible && rotate.Visible && move.CanDesignateThing(thing).Accepted, "developer mode exposes both tools without god mode");
+            Check(tools.All(tool => !tool.Visible) && !move.CanDesignateThing(thing).Accepted,
+                "developer mode alone does not expose god-mode tools");
+            DebugSettings.godMode = true;
+            Check(tools.All(tool => tool.Visible && tool.CanRemainSelected()) && move.CanDesignateThing(thing).Accepted,
+                "god mode exposes all four tools and permits thing selection");
+            move.DesignateThing(thing);
+            DebugSettings.godMode = false;
+            Check(!move.CanRemainSelected() && !move.CanDesignateCell(thing.Position).Accepted,
+                "turning off god mode disables a pending move destination");
+            move.Deselected();
+            DebugSettings.godMode = true;
             Check(move.DrawStyleCategory == null && rotate.DrawStyleCategory == null, "tools use single clicks instead of area dragging");
             Check(Report(new IntVec3(5, 0, 5), Rot4.North).Accepted, "multi-cell thing can stay in its original footprint");
             Check(Report(new IntVec3(8, 0, 8), Rot4.North).Accepted, "multi-cell thing can move to a free destination");
@@ -104,6 +120,7 @@ internal static class ThingTransformChecks
         finally
         {
             devMode.SetValue(prefs, previousDevMode);
+            DebugSettings.godMode = previousGodMode;
             Current.Game = previousGame!;
             LanguageDatabase.activeLanguage = previousLanguage!;
             LanguageDatabase.defaultLanguage = previousDefaultLanguage!;

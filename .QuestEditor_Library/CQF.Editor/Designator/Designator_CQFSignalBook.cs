@@ -12,11 +12,13 @@ namespace QuestEditor_Library
             this.icon = TexButton.OpenDebugActionsMenu;
         }
 
-        public override bool Visible => CQFEditorBridge.IsLoaded;
+        public override bool Visible => CQFEditorBridge.IsLoaded && DebugSettings.godMode;
+
+        public override bool CanRemainSelected() => this.Visible;
 
         public override void ProcessInput(UnityEngine.Event ev)
         {
-            if (this.CheckCanInteract())
+            if (this.Visible && this.CheckCanInteract())
             {
                 CQFSignalEditor.OpenBook();
             }

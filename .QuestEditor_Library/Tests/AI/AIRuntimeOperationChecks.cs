@@ -98,6 +98,7 @@ internal static class AIRuntimeOperationChecks
             Building ordinary = Thing<Building>("CQF_Check_RuntimeBuilding"); registry = Registry(true);
             Operate("<kind>map_target</kind><map_id>791</map_id><key>CQF_Check_BuildingKey</key><thing_id>" + ordinary.ThingID + "</thing_id>");
             Check(map.GetComponent<MapComponent_CQFTargets>().GetTarget("CQF_Check_BuildingKey").Thing == ordinary, "map target operation records an actual map object");
+            TargetKeySaveChecks.Run(map, ordinary, "CQF_Check_BuildingKey", directory);
             Reject(() => Operate("<kind>map_target</kind><map_id>791</map_id><key>CustomThing</key><thing_id>" + ordinary.ThingID + "</thing_id>"), "reserved map target names remain protected"); registry.RuntimeJournal.Undo();
             Check(!map.GetComponent<MapComponent_CQFTargets>().GetTarget("CQF_Check_BuildingKey").IsValid, "map target undo removes the new key");
 

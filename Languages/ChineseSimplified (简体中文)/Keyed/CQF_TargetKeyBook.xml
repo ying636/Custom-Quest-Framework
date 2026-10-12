@@ -9,6 +9,8 @@
   <CQF_TargetKeyBook_AddKey>添加词条</CQF_TargetKeyBook_AddKey>
   <CQF_TargetKeyBook_AddMapTarget>标记事物并添加目标键</CQF_TargetKeyBook_AddMapTarget>
   <CQF_TargetKeyBook_AddMapTargetTip>选择当前地图上的事物，输入目标键并确认，将目标键绑定到该事物并加入目标键本。</CQF_TargetKeyBook_AddMapTargetTip>
+  <CQF_TargetKeyBook_LinkedTarget>链接目标：{0} {1}</CQF_TargetKeyBook_LinkedTarget>
+  <CQF_TargetKeyBook_UnboundTarget>当前地图没有链接目标</CQF_TargetKeyBook_UnboundTarget>
   <CQF_TargetKeyBook_CurrentConfiguration>当前配置</CQF_TargetKeyBook_CurrentConfiguration>
   <CQF_TargetKeyBook_NoConfigurations>暂无已保存的配置</CQF_TargetKeyBook_NoConfigurations>
   <CQF_TargetKeyBook_Error>目标键本操作失败</CQF_TargetKeyBook_Error>

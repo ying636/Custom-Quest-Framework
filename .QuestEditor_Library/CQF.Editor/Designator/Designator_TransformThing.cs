@@ -12,11 +12,13 @@ namespace QuestEditor_Library
             this.useMouseIcon = true;
         }
 
-        public override bool Visible => Prefs.DevMode;
+        public override bool Visible => DebugSettings.godMode;
+
+        public override bool CanRemainSelected() => this.Visible;
 
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
-            if (!Prefs.DevMode || this.Map == null || !loc.InBounds(this.Map))
+            if (!DebugSettings.godMode || this.Map == null || !loc.InBounds(this.Map))
             {
                 return false;
             }
@@ -27,7 +29,7 @@ namespace QuestEditor_Library
 
         public override AcceptanceReport CanDesignateThing(Thing thing)
         {
-            return Prefs.DevMode && thing.Spawned && !thing.Destroyed && thing.Map == this.Map && thing.def.selectable;
+            return DebugSettings.godMode && thing.Spawned && !thing.Destroyed && thing.Map == this.Map && thing.def.selectable;
         }
 
         public override void SelectedUpdate()
@@ -63,7 +65,7 @@ namespace QuestEditor_Library
         protected AcceptanceReport GetPlacementReport(Thing thing, IntVec3 position, Rot4 rotation)
         {
             Map map = this.Map;
-            if (!Prefs.DevMode || map == null || !thing.Spawned || thing.Destroyed || thing.Map != map)
+            if (!DebugSettings.godMode || map == null || !thing.Spawned || thing.Destroyed || thing.Map != map)
             {
                 return "CQF_EditorTargetUnavailable".Translate();
             }

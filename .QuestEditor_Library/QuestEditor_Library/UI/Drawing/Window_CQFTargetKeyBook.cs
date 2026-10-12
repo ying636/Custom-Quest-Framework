@@ -24,9 +24,20 @@ namespace QuestEditor_Library
         public override Vector2 InitialSize => new Vector2(400f, 320f);
         protected override float Margin => 8f;
 
+        public override void WindowUpdate()
+        {
+            base.WindowUpdate();
+            this.RefreshLinkedTargets();
+            if (Time.realtimeSinceStartup - this.lastHoverTime < 0.15f && this.hoveredTarget.IsValid
+                && !this.hoveredTarget.ThingDestroyed && this.hoveredTarget.Map == Find.CurrentMap)
+                GenDraw.DrawTargetHighlight((LocalTargetInfo)this.hoveredTarget);
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+            if (UnityEngine.Event.current.type == EventType.Repaint)
+                this.hoveredTarget = TargetInfo.Invalid;
             if (UnityEngine.Event.current.type == EventType.MouseDown && !Mouse.IsOver(inRect) && GUI.GetNameOfFocusedControl().StartsWith("CQF_TargetKeyBook_Entry_", StringComparison.Ordinal))
             {
                 GUI.FocusControl(null);
@@ -100,16 +111,19 @@ namespace QuestEditor_Library
             {
                 this.drafts.Add(string.Empty);
                 this.focusedEntry = this.drafts.Count - 1;
-                this.scroll.y = Mathf.Max(0f, this.drafts.Count * 28f - outRect.height);
+                this.scroll.y = Mathf.Max(0f, this.drafts.Count * EntryHeight - outRect.height);
             }
 
-            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.drafts.Count * 28f));
+            bool pointerInList = GUI.enabled && Mouse.IsOver(outRect);
+            Rect viewRect = new Rect(0f, 0f, outRect.width - 20f, Mathf.Max(outRect.height, this.drafts.Count * EntryHeight));
             Widgets.BeginScrollView(outRect, ref this.scroll, viewRect);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             bool changed = false;
             for (int index = 0; index < this.drafts.Count; index++)
             {
-                float y = index * 28f;
+                float y = index * EntryHeight;
+                Rect row = new Rect(0f, y, viewRect.width, EntryHeight - 4f);
+                if (pointerInList) Widgets.DrawHighlightIfMouseover(row);
                 Widgets.Label(new Rect(0f, y + 2f, 24f, 24f), (index + 1).ToString());
                 GUI.SetNextControlName("CQF_TargetKeyBook_Entry_" + index);
                 string value = Widgets.TextField(new Rect(28f, y, viewRect.width - 60f, 24f), this.drafts[index]);
@@ -117,6 +131,24 @@ namespace QuestEditor_Library
                 {
                     this.drafts[index] = value;
                     changed = true;
+                }
+
+                TargetInfo target = this.linkedTargets.TryGetValue(this.drafts[index], out TargetInfo linked)
+                    && linked.IsValid && !linked.ThingDestroyed && linked.Map == this.linkedMap ? linked : TargetInfo.Invalid;
+                string linkedText = target.IsValid
+                    ? "CQF_TargetKeyBook_LinkedTarget".Translate(target.Label, target.Cell.ToString()).ToString()
+                    : "CQF_TargetKeyBook_UnboundTarget".Translate().ToString();
+                Rect targetRect = new Rect(28f, y + 26f, viewRect.width - 60f, 22f);
+                using (new CQFUIScope())
+                {
+                    Text.Font = GameFont.Tiny;
+                    Widgets.LabelEllipses(targetRect, linkedText.Colorize(CQFUIStyle.Muted));
+                }
+                TooltipHandler.TipRegion(targetRect, linkedText);
+                if (pointerInList && Mouse.IsOver(row) && UnityEngine.Event.current.type == EventType.Repaint)
+                {
+                    this.hoveredTarget = target;
+                    this.lastHoverTime = Time.realtimeSinceStartup;
                 }
 
                 if (CQFUIStyle.ButtonImage(new Rect(viewRect.width - 22f, y + 1f, 20f, 20f), TexButton.Delete, tooltip: "Remove".Translate()))
@@ -176,6 +208,17 @@ namespace QuestEditor_Library
             }
         }
 
+        private void RefreshLinkedTargets()
+        {
+            Map map = Find.CurrentMap;
+            if (map == this.linkedMap && Time.realtimeSinceStartup < this.nextTargetRefresh) return;
+            this.linkedMap = map;
+            this.nextTargetRefresh = Time.realtimeSinceStartup + 0.5f;
+            this.linkedTargets.Clear();
+            foreach (TargetWithKey entry in CQFTargetSelectionSession.GetAvailableTargets(map))
+                this.linkedTargets[entry.key] = entry.target;
+        }
+
         private void PickMapTarget()
         {
             this.SynchronizeDrafts();
@@ -184,7 +227,8 @@ namespace QuestEditor_Library
             {
                 if (!CQFTargetKeyBook.Keys.Contains(key)) CQFTargetKeyBook.Add(key);
                 this.RefreshDrafts();
-                this.scroll.y = Mathf.Max(0f, this.drafts.Count * 28f - this.windowRect.height + 130f);
+                this.nextTargetRefresh = 0f;
+                this.scroll.y = Mathf.Max(0f, this.drafts.Count * EntryHeight - this.windowRect.height + 130f);
             }), registerNewKey: true).Begin();
         }
 
@@ -262,6 +306,12 @@ namespace QuestEditor_Library
             this.focusedEntry = -1;
         }
 
+        private const float EntryHeight = 54f;
+        private readonly Dictionary<string, TargetInfo> linkedTargets = new Dictionary<string, TargetInfo>(StringComparer.Ordinal);
+        private Map? linkedMap;
+        private float nextTargetRefresh;
+        private TargetInfo hoveredTarget = TargetInfo.Invalid;
+        private float lastHoverTime;
         private List<string> drafts = new List<string>();
         private int revision;
         private Vector2 scroll;
