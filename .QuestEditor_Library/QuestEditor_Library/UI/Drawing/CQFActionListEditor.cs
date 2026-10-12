@@ -75,7 +75,7 @@ namespace QuestEditor_Library
                 }
 
                 Rect labelRect = new Rect(x + 30f, y + 3f, width - 150f, 25f);
-                string label = (i + 1) + ". " + "CQF_ActionLabel".Translate(action.GetType().Name.Translate());
+                string label = (i + 1) + ". " + action.GetType().Name.Translate();
                 Widgets.LabelEllipses(labelRect, label);
                 TooltipHandler.TipRegion(labelRect, CQFEditorEntrySummary.Describe(action));
                 Rect button = new Rect(x + width - 116f, y + 3f, 23f, 23f);

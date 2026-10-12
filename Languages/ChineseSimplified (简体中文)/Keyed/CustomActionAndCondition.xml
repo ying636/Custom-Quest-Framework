@@ -4,7 +4,6 @@
 
   <!-- EN: Dialog actions -->
   <CQFActions>行为：</CQFActions>
-  <CQF_ActionLabel>行为：{0}</CQF_ActionLabel>
   <CQF_RunActions>执行行为</CQF_RunActions>
   <!-- EN: Add dialog action -->
   <AddCQFAction>添加行为</AddCQFAction>
@@ -53,7 +52,7 @@
   <CQFAction_Faction>行为：设置派系</CQFAction_Faction>
 
   <!-- EN: Action list -->
-  <CQFAction_Sequence>行为集合</CQFAction_Sequence>
+  <CQFAction_Sequence>行为：集合</CQFAction_Sequence>
   <!-- EN: Trigger actions: -->
   <TriggerActions>触发行为：</TriggerActions>
 

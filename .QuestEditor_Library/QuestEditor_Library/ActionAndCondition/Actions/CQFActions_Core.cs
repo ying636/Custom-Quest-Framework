@@ -55,7 +55,7 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             Rect rect = new Rect(x, y, 250f, 25f);
-            string title = "CQF_ActionLabel".Translate(this.GetType().Name.Translate());
+            string title = this.GetType().Name.Translate();
             Widgets.Label(rect, title.Colorize(CQFUIStyle.Accent));
             if ((this.GetType().Name + "_Tip").CanTranslate())
             {

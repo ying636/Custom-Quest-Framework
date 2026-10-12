@@ -3,7 +3,6 @@
 
 
   <CQFActions>Dialog actions</CQFActions>
-  <CQF_ActionLabel>Action: {0}</CQF_ActionLabel>
   <CQF_RunActions>Run actions</CQF_RunActions>
   <AddCQFAction>Add dialog action</AddCQFAction>
 
@@ -32,7 +31,7 @@
 
   <CQFAction_Faction>Action: set faction</CQFAction_Faction>
 
-  <CQFAction_Sequence>Action list</CQFAction_Sequence>
+  <CQFAction_Sequence>Action: list</CQFAction_Sequence>
   <TriggerActions>Trigger actions:</TriggerActions>
 
   <CQFAction_StartDialog>Action: start dialog</CQFAction_StartDialog>
@@ -301,7 +300,7 @@ Interacte interactive things</RecordToTemporaryBase_Tip>
   <CQFAction_AddExtraOpteration>Action:add extra operation</CQFAction_AddExtraOpteration>
   <CQFAction_AddExtraOpteration_Tip>Add extra interaction operation to the gave target so that make it interactable</CQFAction_AddExtraOpteration_Tip>
 
-  <CQFAction_DoEffect>Atction:do effect</CQFAction_DoEffect>
+  <CQFAction_DoEffect>Action: do effect</CQFAction_DoEffect>
   <CQF_EffectDef>Effect:{0}</CQF_EffectDef>
 
   <CQFAction_Lightning>Action:lightning</CQFAction_Lightning>

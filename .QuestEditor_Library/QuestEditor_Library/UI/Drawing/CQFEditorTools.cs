@@ -386,7 +386,7 @@ namespace QuestEditor_Library
                 typeTips[label] = CQFEditorTools.GetCQFActionCategoryTip(category);
             }
 
-            Find.WindowStack.Add(new Dialog_Select<CQFAction>(new TextSelectDrawer<CQFAction>(CQFEditorTools.GetCQFActions(), t => "CQF_ActionLabel".Translate(t.GetType().Name.Translate()), action => acceptAction(action.GetType()), null, t => (t.GetType().Name + "_Tip").CanTranslate() ? (t.GetType().Name + "_Tip").Translate().ToString() : "", null, null, null, typeFilters, typeTips), "Select".Translate()));
+            Find.WindowStack.Add(new Dialog_Select<CQFAction>(new TextSelectDrawer<CQFAction>(CQFEditorTools.GetCQFActions(), t => t.GetType().Name.Translate(), action => acceptAction(action.GetType()), null, t => (t.GetType().Name + "_Tip").CanTranslate() ? (t.GetType().Name + "_Tip").Translate().ToString() : "", null, null, null, typeFilters, typeTips), "Select".Translate()));
         }
 
         public static List<Type> GetCQFActionTypes()
