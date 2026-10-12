@@ -78,10 +78,6 @@
   <CQF_QuestBook_DirectionWest>West</CQF_QuestBook_DirectionWest>
   <CQF_QuestBook_SelectImageIcon>Select loaded image</CQF_QuestBook_SelectImageIcon>
   <CQF_QuestBook_ObjectiveIcon>Objective icon</CQF_QuestBook_ObjectiveIcon>
-  <CQFAction_CompleteQuestBookStep>Action: complete quest book step</CQFAction_CompleteQuestBookStep>
-  <CQFAction_FailQuestBookStep>Action: fail quest book step</CQFAction_FailQuestBookStep>
-  <CQFAction_OpenQuestBook>Action: open quest book</CQFAction_OpenQuestBook>
-  <CQFAction_StartQuestBook>Action: start quest book</CQFAction_StartQuestBook>
   <CQF_QuestBook_ActionStep>Select step: {0}</CQF_QuestBook_ActionStep>
   <CQF_QuestBook_ActionBook>Select quest book: {0}</CQF_QuestBook_ActionBook>
   <CQF_QuestBook_SelectBookFirst>Select a quest book first.</CQF_QuestBook_SelectBookFirst>
@@ -155,8 +151,6 @@
   <CQF_QuestBook_AddRewardTip>Add reward</CQF_QuestBook_AddRewardTip>
   <CQF_QuestBook_RemoveRewardTip>Remove reward</CQF_QuestBook_RemoveRewardTip>
   <CQF_QuestBook_RewardInvalid>Invalid reward</CQF_QuestBook_RewardInvalid>
-  <CQFAction_DropReward>Action: drop rewards at colony</CQFAction_DropReward>
-  <CQFAction_DropReward_Tip>Drop the configured items or minifiable buildings at a random player colony.</CQFAction_DropReward_Tip>
   <Signal>Signal</Signal>
   <TargetCount>Target count</TargetCount>
   <CheckInterval>Check interval</CheckInterval>

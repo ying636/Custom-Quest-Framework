@@ -1,62 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
-
-
+  <CQFAction_Pawn_RunDutyMapTransition>Pawn action: run duty map transition</CQFAction_Pawn_RunDutyMapTransition>
+  <CQFAction_Pawn_SetDutyMap>Pawn action: set duty map</CQFAction_Pawn_SetDutyMap>
+  <CQFAction_HibernateMap>Action: hibernate map</CQFAction_HibernateMap>
+  <CQFAction_HibernateMap_Tip>Hibernate the target's map, preserving the map and its things while stopping map and thing updates. Activation resumes the same map without regenerating it.</CQFAction_HibernateMap_Tip>
+  <CQFAction_ActivateMap>Action: activate map</CQFAction_ActivateMap>
+  <CQFAction_ActivateMap_Tip>Activate the target's hibernating map, returning the original map to the active map list and resuming updates without regenerating it.</CQFAction_ActivateMap_Tip>
+  <CQFAction_MetaLord>Action: multi-level organization</CQFAction_MetaLord>
   <CQFActions>Dialog actions</CQFActions>
   <CQF_RunActions>Run actions</CQF_RunActions>
   <AddCQFAction>Add dialog action</AddCQFAction>
-
+  <CQFAction_Letter>Action: send letter</CQFAction_Letter>
+  <CQFAction_Letter_Tip>Send a vanilla envelope notification. Enter a title and body, choose an event type, and optionally add target keys for locating related objects. Text supports translation keys and named target placeholders.</CQFAction_Letter_Tip>
+  <CQF_LetterTitle>Letter title</CQF_LetterTitle>
+  <CQF_LetterBody>Letter body</CQF_LetterBody>
+  <CQF_LetterType>Letter type: {0}</CQF_LetterType>
+  <CQF_LetterType_ThreatBig>Major threat</CQF_LetterType_ThreatBig>
+  <CQF_LetterType_ThreatSmall>Minor threat</CQF_LetterType_ThreatSmall>
+  <CQF_LetterType_NegativeEvent>Negative event</CQF_LetterType_NegativeEvent>
+  <CQF_LetterType_NeutralEvent>Neutral event</CQF_LetterType_NeutralEvent>
+  <CQF_LetterType_PositiveEvent>Positive event</CQF_LetterType_PositiveEvent>
+  <CQF_LetterType_RelicHuntInstallationFound>Relic hunt installation found</CQF_LetterType_RelicHuntInstallationFound>
+  <CQF_LetterType_RitualOutcomePositive>Positive ritual outcome</CQF_LetterType_RitualOutcomePositive>
+  <CQF_LetterType_RitualOutcomeNegative>Negative ritual outcome</CQF_LetterType_RitualOutcomeNegative>
+  <CQF_LetterType_Bossgroup>Boss group</CQF_LetterType_Bossgroup>
+  <CQF_LetterType_HumanPregnancy>Pregnancy</CQF_LetterType_HumanPregnancy>
+  <CQF_LetterInvalidType>Cannot send letter: {0} is not a standard event letter type.</CQF_LetterInvalidType>
+  <CQF_LetterMissingText>Cannot send letter: enter both a title and body.</CQF_LetterMissingText>
+  <CQF_LetterMissingTarget>Cannot send letter: target key {0} could not be resolved in the current context.</CQF_LetterMissingTarget>
   <CQFAction_SentSignal>Action: send signal</CQFAction_SentSignal>
-  <DialogConditions>Dialog conditions</DialogConditions>
-  <AddDialogCondition>Add condition</AddDialogCondition>
   <AddQuestPrefix>Add quest prefix when sending:</AddQuestPrefix>
   <AddQuestPrefixTip>Used to prevent signal interference between different quests</AddQuestPrefixTip>
   <OutSignal>Out signal:</OutSignal>
-
   <CQFAction_Trait>Action: give trait</CQFAction_Trait>
   <GivenTrait>Given trait: {0}</GivenTrait>
   <DegreeOfTrait>Degree of trait</DegreeOfTrait>
-
   <CQFAction_RemoveTrait>Action:remove trait</CQFAction_RemoveTrait>
-
   <CQFAction_Hediff>Action: give hediff</CQFAction_Hediff>
   <GivenHediff>Given hediff: </GivenHediff>
   <SeverityOfHediff>Severity of hediff</SeverityOfHediff>
   <CQFBodyPartForHediff>Body part: {0}</CQFBodyPartForHediff>
-
   <CQFAction_GainMood>Action: give thought</CQFAction_GainMood>
   <CQF_ThoughtDef>Thought def: {0}</CQF_ThoughtDef>
-
   <CQFAction_Spawn>Action: spawn</CQFAction_Spawn>
-
   <CQFAction_Faction>Action: set faction</CQFAction_Faction>
-
   <CQFAction_Sequence>Action: list</CQFAction_Sequence>
   <TriggerActions>Trigger actions:</TriggerActions>
-
   <CQFAction_StartDialog>Action: start dialog</CQFAction_StartDialog>
-
   <CQFAction_GainExperience>Action: gain experience</CQFAction_GainExperience>
   <SkillType>Skill type: {0}</SkillType>
   <Random>Random</Random>
   <GainExperienceRange>Experience range:</GainExperienceRange>
   <PawnGainExperience>{0} gained {1} experience of {2}</PawnGainExperience>
-
   <CQFAction_Chance>Action: chance</CQFAction_Chance>
   <SelectAction>Select action</SelectAction>
-
   <CQFAction_Random>Action: random</CQFAction_Random>
   <CQFAction_Random_Tip>Randomly selects one of its sub actions.</CQFAction_Random_Tip>
-
   <CQFAction_OpenLootBox>Action: open loot box</CQFAction_OpenLootBox>
-
   <CQFAction_SetDuty>Action: set duty</CQFAction_SetDuty>
-
   <CQFAction_SetXenotype>Action: set xenotype</CQFAction_SetXenotype>
   <CQFXenotypeDef>Xenotype: {0}</CQFXenotypeDef>
-
-  <DialogCondition_Skill>Condition: skill</DialogCondition_Skill>
-  <SkillIsntsatisfied>Skill isn't satisfied {0}</SkillIsntsatisfied>
   <TargetIsntPawn>Target isn't pawn</TargetIsntPawn>
   <TargetIsntLikeHumanOrTargetIsNull>Target isn't like human or target is null</TargetIsntLikeHumanOrTargetIsNull>
   <DialogueTarget>Target name:</DialogueTarget>
@@ -68,74 +71,11 @@
   <Position>Position</Position>
   <Inner>Inner</Inner>
   <SelectTarget>Select target</SelectTarget>
-  <RequiredSkill>Required skill</RequiredSkill>
   <Select>Select</Select>
-  <RequiredLevel>Required level</RequiredLevel>
-  <NeedToBeGreater>Needs to be greater</NeedToBeGreater>
-  <DialogCondition_Hediff>Condition: hediff</DialogCondition_Hediff>
-  <TargetHasntRequired>Target hasn't required {0}</TargetHasntRequired>
-  <RequiredHediff>Required hediff</RequiredHediff>
-  <RequiredSeverity>Required severity</RequiredSeverity>
-  <HediffIsntsatisfied>Hediff isn't satisfied {0}</HediffIsntsatisfied>
-
-  <DialogCondition_Trait>Condition: trait</DialogCondition_Trait>
-  <TargetHasntRequiredTrait>Target hasn't required {0} trait</TargetHasntRequiredTrait>
-  <RequiredTrait>Required trait:{0}</RequiredTrait>
-  <RequiredDegree>Required degree</RequiredDegree>
-  <TraitIsntsatisfied>Trait isn't satisfied</TraitIsntsatisfied>
-  <Accurate>Accurate:</Accurate>
-  <Accurate_Tip>Only when the trait is completely given trait will it be satisfied</Accurate_Tip>
-
-
-  <DialogTreeCondition_Faction>Condition: faction</DialogTreeCondition_Faction>
-
-  <DialogCondition_Faction>Condition: faction</DialogCondition_Faction>
-  <RequiredFaction>Required faction:{0}</RequiredFaction>
-  <TargetIsntNumberOfFaction>Target is not number of {0}</TargetIsntNumberOfFaction>
-
-  <DialogCondition_Bool>Condition:bool</DialogCondition_Bool>
-  <DialogCondition_Bool_Tip>Obtain the bool value from the quest database to determine whether to pass</DialogCondition_Bool_Tip>
   <keyOfBoolValue>Key of bool:</keyOfBoolValue>
-  <CQFFailReason>Fail reason:</CQFFailReason>
-
-  <DialogCondition_Age>Condition:age</DialogCondition_Age>
-  <CQFAge>Age:</CQFAge>
-
-  <DialogCondition_Chance>Condition:chance</DialogCondition_Chance>
-
-  <DialogCondition_PrisonerOrSlave>Condition:prisoner or slave</DialogCondition_PrisonerOrSlave>
-
-  <DialogCondition_Thought>Condition:thought</DialogCondition_Thought>
-
-  <DialogCondition_And>Condition:and</DialogCondition_And>
-  <DialogCondition_And_Tip>If all sub conditions are true, return true. Otherwise, it is false. The reason for failure is the reason for the condition that is false</DialogCondition_And_Tip>
-  <DialogCondition_Or>Condition:or</DialogCondition_Or>
-  <DialogCondition_Or_Tip>Any of the sub conditions that are true will return true, otherwise it will be false, and the failure reason will be customized reason of condition</DialogCondition_Or_Tip>
-
-  <DialogCondition_QuestIsGenerated>Condition:quest was not generated</DialogCondition_QuestIsGenerated>
-  <DialogCondition_QuestIsGenerated_Tip>If the provided quest has been generated in the game, return false</DialogCondition_QuestIsGenerated_Tip>
-
-  <DialogCondition_Reversal>Condition:reversal</DialogCondition_Reversal>
-  <DialogCondition_Reversal_Tip>Return the value of the reversed sub condition</DialogCondition_Reversal_Tip>
-
-  <DialogCondition_QuestState>Condition:quest state</DialogCondition_QuestState>
-  <DialogCondition_QuestState_Tip>If no quest def is given, automatically retrieve the quest from the target of the triggering condition</DialogCondition_QuestState_Tip>
-  <QuestState>Quest State:{0}</QuestState>
-  <EndedFailed>Quest fail</EndedFailed>
-  <EndedSuccess>Quest success</EndedSuccess>
-  <Ongoing>Quest ongoing</Ongoing>
-  <EndedOfferExpired>Quest offer expired</EndedOfferExpired>
-
-  <DialogCondition_CapturedPawn>Condition:captured pawn</DialogCondition_CapturedPawn>
-  <DialogCondition_CapturedPawn_Tip>Determine whether the given capture trap, such as a capture net, has captured pawn</DialogCondition_CapturedPawn_Tip>
-
-  <DialogCondition_ContainerIsFull>Condition:container is full</DialogCondition_ContainerIsFull>
-
   <CQFAction_RemoveDialogManager>Action: remove dialog manager</CQFAction_RemoveDialogManager>
-
   <CQFAction_SentSignal_Tip>The actual signal sent is [Data name of the interviewee] + [This signal].</CQFAction_SentSignal_Tip>
   <CQFAction_RemoveDialogManagerl_Tip>In order to reduce computational complexity and improve performance.</CQFAction_RemoveDialogManagerl_Tip>
-
   <ITab_InteractableThing>Interactable Thing</ITab_InteractableThing>
   <InteractionOperations>Interaction operations</InteractionOperations>
   <CQF_NoInteractionOperations>No interaction operations</CQF_NoInteractionOperations>
@@ -150,7 +90,6 @@
   <CQF_CustomLootData>Custom loot data</CQF_CustomLootData>
   <CQF_UseLootDataDef>Use loot data def</CQF_UseLootDataDef>
   <CQF_LootSettings>Opening settings</CQF_LootSettings>
-
   <InteractionConditions>Interaction conditions:</InteractionConditions>
   <InteractionResults>Interaction results:</InteractionResults>
   <CQF_NoRequiredThings>No required things</CQF_NoRequiredThings>
@@ -159,47 +98,17 @@
   <CQF_NoResultConditions>No result conditions</CQF_NoResultConditions>
   <CQF_NoResultActions>No result actions</CQF_NoResultActions>
   <TickToOperate>Time required for interaction（tick):</TickToOperate>
-
-  <DialogCondition_ThingInPosition>Condition:thing position</DialogCondition_ThingInPosition>
-  <DialogCondition_ThingInPosition_Tip>Determine whether the given thing is located at the given position (if the given position includes a map, the map will also be determined)</DialogCondition_ThingInPosition_Tip>
-  <PositionName>Position:</PositionName>
-
-  <DialogCondition_Inventory>Condition:inventory</DialogCondition_Inventory>
-  <RequiredThings>Required things:</RequiredThings>
-
-  <DialogCondition_DatabaseExists>Condition:database exists</DialogCondition_DatabaseExists>
-  <TargetKey>Target key:</TargetKey>
-  <NeedSpawned>Need target is spawned:</NeedSpawned>
-  <CheckGlobalDatabase>Check global database:</CheckGlobalDatabase>
-  <CheckTemporaryDatabase>Check temporary database:</CheckTemporaryDatabase>
-  <CheckQuestDatabase>Check quest database:</CheckQuestDatabase>
-
-  <DialogCondition_SkillCheck>Condition: Skill Check</DialogCondition_SkillCheck>
-  <DialogCondition_SkillCheck_Tip>Roll a random number between 0 and 20. If the result is lower than the target's corresponding skill level plus the check modifier, the condition is passed.</DialogCondition_SkillCheck_Tip>
-  <CheckModifier>Check Modifier:</CheckModifier>
-
-  <DialogCondition_GroupExists>Condition:group exists</DialogCondition_GroupExists>
-
-  <DialogCondition_ColonistCount>Condition:colonist count</DialogCondition_ColonistCount>
-  <NeedCount>Need count:</NeedCount>
-
   <If>If:</If>
   <InteractionActions>Interaction action:</InteractionActions>
-
   <CQFAction_TakeDamage>Action: take damage</CQFAction_TakeDamage>
   <CQF_DamageType>Damage type:</CQF_DamageType>
   <DamageAmount>Damage amount:</DamageAmount>
-
-
   <CQFAction_Explosion>Action: causing explosion</CQFAction_Explosion>
   <ExplostionDamageType>Explosion damage type:</ExplostionDamageType>
   <ExplosionRadius>Explosion radius:</ExplosionRadius>
-
   <CQFAction_Destory>Action: destory</CQFAction_Destory>
-
   <CQFTargetTextTip>Used to determine the goal of the action. "Custom thing" usually refers to the executor of the action, such as the "custom thing" of the action generated by a custom trap, which is itself. The same applies to interactable things. "Trigger" is usually a pawn who triggered the trap. Target can be also "null", which can be used in dialogs where interviewee is a wall or an animal.
   It is also possible to use the "key" of things recorded in the "quest database" to get them as targets.</CQFTargetTextTip>
-
   <CQFAction_Message>Action: send message</CQFAction_Message>
   <CQFMessage>Message:</CQFMessage>
   <CQFMessageType>Message type: {0}</CQFMessageType>
@@ -218,28 +127,19 @@
   <RejectInput>Reject input</RejectInput>
   <CautionInput>Caution input</CautionInput>
   <SilentInput>Silent input</SilentInput>
-
   <CQFAction_Replace>Action: replace</CQFAction_Replace>
   <CQFReplaceThing>Replace with: {0}</CQFReplaceThing>
   <UseSameStuff>Use the same stuff:</UseSameStuff>
-
-
   <CQFAction_Quest>Action: give quest</CQFAction_Quest>
   <CQFQuestDef>Quest: {0}</CQFQuestDef>
-
   <CQFAction_Incident>Action: execute incident</CQFAction_Incident>
   <CQFIncidentDef>Incident: {0}</CQFIncidentDef>
-
   <SpawnAfterAction_GiveTrait>Action: give trait</SpawnAfterAction_GiveTrait>
-
   <SpawnAfterAction_DoAction>Action:do actions</SpawnAfterAction_DoAction>
-
   <CQFAction_AddDialogManager>Action:add dialog manager</CQFAction_AddDialogManager>
-
   <CQFAction_StartMentalState>Action:start mental state</CQFAction_StartMentalState>
   <CQFMentalState>Mental state:{0}</CQFMentalState>
   <stateTargetText>State target:</stateTargetText>
-
   <CQFAction_RecordToDatabase>Action:record to database</CQFAction_RecordToDatabase>
   <CQFAction_RecordToDatabase_Tip>Record the target to the database so that it can be used as a target object elsewhere</CQFAction_RecordToDatabase_Tip>
   <RecordKeyOfData>Record key of data:</RecordKeyOfData>
@@ -250,170 +150,118 @@ Open the loot box
 Interacte interactive things</RecordToTemporaryBase_Tip>
   <RecordToQuestBase>Record to quest base:</RecordToQuestBase>
   <RecordToGlobalBase>Record to global base:</RecordToGlobalBase>
-
   <CQFAction_GetThingToRecord>Action:get thing to record</CQFAction_GetThingToRecord>
   <CQFAction_GetThingToRecord_Tip>Get the first thing at the given target location (excluding the given target) and record it in the database</CQFAction_GetThingToRecord_Tip>
-
   <CQFAction_GetCellToRecord>Action:get cell to record</CQFAction_GetCellToRecord>
   <CQFAction_GetCellToRecord_Tip>Get the cell of the given target and record it in the database</CQFAction_GetCellToRecord_Tip>
-
   <CQFAction_SpawnAndAddToContainer>Action:spawn and add to container</CQFAction_SpawnAndAddToContainer>
   <CQFAction_SpawnAndAddToContainer_Tip>Spawn things and add them to the target container</CQFAction_SpawnAndAddToContainer_Tip>
-
   <CQFAction_ReleaseFromContainer>Action: release from container</CQFAction_ReleaseFromContainer>
   <CQFAction_ReleaseFromContainer_Tip>Release the contents of the container from it</CQFAction_ReleaseFromContainer_Tip>
-
   <CQFAction_SetBool>Action: set bool</CQFAction_SetBool>
   <CQFAction_SetBool_Tip>Set a bool value (true or false) to the quest database</CQFAction_SetBool_Tip>
   <valueOfBool>Value of bool:</valueOfBool>
-
   <CQFAction_Skip>Action:skip</CQFAction_Skip>
   <skipedTargetText>Skiped target:</skipedTargetText>
   <targetLocationText>Target location:</targetLocationText>
-
   <CQFAction_SetGlobalBool>Action: set global bool</CQFAction_SetGlobalBool>
   <CQFAction_SetGlobalBool_Tip>Set a global bool(true or no) to the quest database, which will take effect throughout the entire save</CQFAction_SetGlobalBool_Tip>
-
   <LordNameTip>Search for lords with matching names from the database as the target. If it is in the group editor or custom lord, the edited lord will be automatically selected as the target. This field can be left blank</LordNameTip>
-
   <CQFAction_ReplaceUsingCustomThing>Action:replace(custom thing)</CQFAction_ReplaceUsingCustomThing>
   <EditCustomThing>Edit Custom Thing</EditCustomThing>
   <EditActionAndText>Edit Action And Text</EditActionAndText>
-
   <CQFAction_ActivateCustomMap>Action:activate custom map</CQFAction_ActivateCustomMap>
   <CQFAction_ActivateCustomMap_Tip>If the target is a custom map entrance and the entrance does not generate a custom map, activate the entrance to generate a custom map</CQFAction_ActivateCustomMap_Tip>
-
   <CQFAction_DelayExecute>Action:delay execute</CQFAction_DelayExecute>
   <CQFAction_DelayExecute_Tip>The sub actions will be triggered after the delay time</CQFAction_DelayExecute_Tip>
   <DelayTime>Delay time:</DelayTime>
-
   <CQFAction_Loop>Action:loop</CQFAction_Loop>
   <LoopCount>Loop Count:</LoopCount>
-
   <CQFAction_Condition>Action:condition</CQFAction_Condition>
   <CQFAction_Condition_Tip>Trigger sub actions when conditions are satisfied</CQFAction_Condition_Tip>
   <TriggerConditions>Trigger conditions:</TriggerConditions>
-
   <CQFAction_Pollute>Action:polluate</CQFAction_Pollute>
   <PolluatingRadius>Polluating radius:</PolluatingRadius>
-
   <CQFAction_AddExtraOpteration>Action:add extra operation</CQFAction_AddExtraOpteration>
   <CQFAction_AddExtraOpteration_Tip>Add extra interaction operation to the gave target so that make it interactable</CQFAction_AddExtraOpteration_Tip>
-
   <CQFAction_DoEffect>Action: do effect</CQFAction_DoEffect>
   <CQF_EffectDef>Effect:{0}</CQF_EffectDef>
-
   <CQFAction_Lightning>Action:lightning</CQFAction_Lightning>
-
   <CQFAction_MakeMoteStatic>Action:make static mote</CQFAction_MakeMoteStatic>
   <CQF_MoteDef>Mote:{0}</CQF_MoteDef>
   <MoteOffset>Mote offset:</MoteOffset>
   <MoteScale>Scale:</MoteScale>
-
   <CQFAction_ThrowMote>Action:throw mote</CQFAction_ThrowMote>
-
   <CQFAction_SwtichEntranceStatus>Action:set entrance opening status</CQFAction_SwtichEntranceStatus>
   <OpeningStatus>Status:</OpeningStatus>
   <AlwaysIsOpposite>Always is opposite:</AlwaysIsOpposite>
-
   <CQFAction_EndGame>Action:end game</CQFAction_EndGame>
   <CQFAction_EndGame_Message>message:</CQFAction_EndGame_Message>
-
-
   <CQFAction_ChangeGoodwillOfFaction>Action:change goodwill with faction</CQFAction_ChangeGoodwillOfFaction>
   <CQFAction_ChangeGoodwillOfFaction_Tip>Change the goodwill of the faction, if the given faction is null, it will change the goodwill of the faction of the selected target</CQFAction_ChangeGoodwillOfFaction_Tip>
   <IsIncrease>Is ncrease:</IsIncrease>
   <SendLetter>Send letter:</SendLetter>
   <GoodwillValue>Goodwill value:</GoodwillValue>
-
   <CQFAction_ConsumeInInventory>Action:consume things in Inventory</CQFAction_ConsumeInInventory>
-
   <CQFAction_SpawnAndAddToInventory>Action:spawn and add to inventory</CQFAction_SpawnAndAddToInventory>
-
   <CQFAction_AddQuestTag>Action:add quest tag</CQFAction_AddQuestTag>
   <CQFAction_AddQuestTag_Tip>Add quest tag to the target, and things with quest tag can send signals</CQFAction_AddQuestTag_Tip>
-
   <CQFAction_SetRelation>Action:set relation</CQFAction_SetRelation>
   <CQF_RelationDef>Relation:{0}</CQF_RelationDef>
   <TargetA>Target A:</TargetA>
   <TargetB>Target B:</TargetB>
-
   <CQFAction_GenerateSubMap>Action:generate submap</CQFAction_GenerateSubMap>
+  <CQFAction_GenerateSubMap_Tip>Create a new submap under the target's map. The target determines the parent map, not a placement cell. Use Edit map set to choose map templates or tags; a template is selected by weight. Start position is the player's initial cell in the submap and should be within its bounds. This action generates the map without moving pawns or creating linked entrances and exits. Each valid map target generates a separate submap.</CQFAction_GenerateSubMap_Tip>
   <StartPosition>Start position:</StartPosition>
   <EditCustomMapGenerationSet>Edit map set</EditCustomMapGenerationSet>
-
-
   <CQFAction_Fog>Action:fog</CQFAction_Fog>
   <CQFAction_Fog_Tip>make target cell foged</CQFAction_Fog_Tip>
-
   <CQFAction_FloodUnfog>Action:flood unfog</CQFAction_FloodUnfog>
   <CQFAction_FloodUnfog_Tip>Clears the fog starting from the target cell, and continues clearing adjacent fog until a building is encountered.</CQFAction_FloodUnfog_Tip>
-
-
   <CQFAction_PostGenerationExecute>Action:execute post map generation</CQFAction_PostGenerationExecute>
-
   <CQFAction_SetGameCondition>Action:set game condition</CQFAction_SetGameCondition>
   <IsPermanent>Is permanent:</IsPermanent>
   <Duration>Duration:</Duration>
   <CQFGameConditionDef>COndition:{0}</CQFGameConditionDef>
-
   <CQFAction_InfectTarget>Action:infect target</CQFAction_InfectTarget>
   <CQFAction_InfectTarget_Tip>（Rustspark Crisis）infect target to become biometal</CQFAction_InfectTarget_Tip>
-
   <CQFAction_RecordStartCell>Action:record start cell</CQFAction_RecordStartCell>
   <CQFAction_RecordStartCell_Tip>Record the start cell into the map database,the start cell is used to create a rectangle.</CQFAction_RecordStartCell_Tip>
-
   <CQFAction_FinishRect>Action:finish rectangle</CQFAction_FinishRect>
   <CQFAction_FinishRect_Tip>Create a rectangle using the target cell and the start cell recorded in the map database.Execute actions on every cell within the rectangle.The target key for each cell is:[Position]</CQFAction_FinishRect_Tip>
-
   <CQFAction_AddThingActionTrigger>Action:add thing action trigger</CQFAction_AddThingActionTrigger>
   <CQFAction_AddThingActionTrigger_Tip>Add a thing action trigger to the map.When the thing encounters a specific event, the corresponding trigger is executed.</CQFAction_AddThingActionTrigger_Tip>
   <TriggerMode>Trigger mode:{0}</TriggerMode>
-
   <CQFAction_SkipToPlayerMap>Action:skip to player map</CQFAction_SkipToPlayerMap>
-
-
   <CQFAction_RecordToGroup>Action: Record to Group</CQFAction_RecordToGroup>
   <CQFAction_RecordToGroup_Tip>Add the target Pawn to the group data in the task database.  
 Group data can contain multiple Pawns, and when actions is executed, it will be applied to each Pawn individually.</CQFAction_RecordToGroup_Tip>
-
   <CQFAction_LinkEntranceAndExit>Action: Link Entrance and Exit</CQFAction_LinkEntranceAndExit>
   <EntranceKey>Entrance Key:</EntranceKey>
   <ExitKey>Exit Key:</ExitKey>
-
   <CQFAction_SetGameConditionWithActions>Action:Set Game Condition With Actions</CQFAction_SetGameConditionWithActions>
   <UseTick>Periodic trigger:</UseTick>
-
   <CQFAction_AddRandomDialogManager>Action:Add Random Dialog</CQFAction_AddRandomDialogManager>
-
   <CQFAction_SpawnCustomThing>Action:Spawn Custom Thing</CQFAction_SpawnCustomThing>
   <SpawnThing>Thing:</SpawnThing>
-
   <CQFAction_DoActionForGroup>Action: Execute Group Actions</CQFAction_DoActionForGroup>
   <CQFAction_DoActionForGroup_Tip>Get all pawns in the group, use each pawn as the target, and execute each sub-action separately with the key as Target.</CQFAction_DoActionForGroup_Tip>
-
   <CQFAction_SetCustomHediff>Action:set custom hediff</CQFAction_SetCustomHediff>
   <HediffColor>Hediff color:</HediffColor>
-
   <CQFAction_UpgradeTrait>Action: Upgrade Trait</CQFAction_UpgradeTrait>
   <CQFAction_UpgradeTrait_Tip>If the target does not have the specified trait, it will be granted. If the target already has it, the trait will be upgraded.</CQFAction_UpgradeTrait_Tip>
   <GiveTrait>Give Trait:</GiveTrait>
   <InitDegree>Init degree:</InitDegree>
   <InitMessage>Init message:</InitMessage>
-
   <CQFAction_Ability>Action:gain ability</CQFAction_Ability>
   <CQFAbilityDef>Ability def:</CQFAbilityDef>
-
   <CQFAction_JoinHiveGroup>HCF Action: Join Hive</CQFAction_JoinHiveGroup>
   <CQFAction_JoinHiveGroup_Tip>Use the key to obtain the corresponding entity and its hive group, allowing the target to join the retrieved hive group</CQFAction_JoinHiveGroup_Tip>
   <HiveKey>Hive Key:</HiveKey>
-
   <CQFAction_SetHiveGroupMode>HCF Action:Set Group Mode</CQFAction_SetHiveGroupMode>
-
   <CQFAction_DestroyMainSite>Action: destroy main site</CQFAction_DestroyMainSite>
   <CQFAction_DestroyMainSite_Tip>Destroy the main site resolved from the given key. The key can point to a recorded main-site map target, or be the site's MainMapKey directly.</CQFAction_DestroyMainSite_Tip>
   <MainSiteKey>Main site key:</MainSiteKey>
-
   <CQFAction_RecordMainSiteVisitCount>Action: record main site visit count</CQFAction_RecordMainSiteVisitCount>
   <CQFAction_RecordMainSiteVisitCount_Tip>Get the visit count of the main site resolved from the given key, then write it into the selected database.</CQFAction_RecordMainSiteVisitCount_Tip>
   <CQFAction_ClearMainPawnCache>Action: clear main pawn cache</CQFAction_ClearMainPawnCache>
@@ -421,7 +269,6 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <pawnName>Main pawn name:</pawnName>
   <mainMapDef>Main map def:</mainMapDef>
   <clearAllMainMaps>Clear all main maps:</clearAllMainMaps>
-
   <CQFAction_CreateEventArea>Action: create event area</CQFAction_CreateEventArea>
   <CQFAction_CreateEventArea_Tip>Create an area that triggers actions when a matching pawn enters it. Cells can be added with Add Cell To Event Area.</CQFAction_CreateEventArea_Tip>
   <CQFAction_AddCellToEventArea>Action: add event area cell</CQFAction_AddCellToEventArea>
@@ -433,7 +280,6 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <EventAreaFactionTip>Filters which pawn factions can trigger the event area. Random hostile/neutral/ally matches factions with that relation, map faction matches the current map faction, and a specific faction defName can also be entered.</EventAreaFactionTip>
   <EventAreaOnlyHumanlike>Only humanlike:</EventAreaOnlyHumanlike>
   <EventAreaReplaceExisting>Replace existing area:</EventAreaReplaceExisting>
-
   <CQFActionCategory_FlowControl>Flow control</CQFActionCategory_FlowControl>
   <CQFActionCategory_FlowControl_Tip>Actions that control execution order, branches, chance, loops, or delayed execution.</CQFActionCategory_FlowControl_Tip>
   <CQFActionCategory_SignalState>Signal and state</CQFActionCategory_SignalState>
@@ -462,6 +308,28 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFActionCategory_EventArea_Tip>Actions that create, modify, or delete event areas.</CQFActionCategory_EventArea_Tip>
   <CQFActionCategory_Misc>Misc</CQFActionCategory_Misc>
   <CQFActionCategory_Misc_Tip>Actions that do not fit the other categories, including container and inventory utility actions.</CQFActionCategory_Misc_Tip>
-
   <CQFAction_FinishResearch>Action: complete research</CQFAction_FinishResearch>
-</LanguageData> 
+  <CQFAction_SetCustomName>Action: set custom name</CQFAction_SetCustomName>
+  <CQFAction_SetCustomName_Tip>Sets the custom name of each target that has CompCustomText.</CQFAction_SetCustomName_Tip>
+  <CQFAction_SetCustomDescription>Action: set custom description</CQFAction_SetCustomDescription>
+  <CQFAction_SetCustomDescription_Tip>Sets the custom description of each target that has CompCustomText.</CQFAction_SetCustomDescription_Tip>
+  <CQFAction_SetCustomInspectText>Action: set custom inspect text</CQFAction_SetCustomInspectText>
+  <CQFAction_SetCustomInspectText_Tip>Sets the inspect text of each target that has CompCustomText.</CQFAction_SetCustomInspectText_Tip>
+  <CQFAction_Lord_Visit>Lord action:visit colony</CQFAction_Lord_Visit>
+  <CQFAction_Lord_Visit_Tip>Set the lord job as tovisit colony, and the group will leave the map after the duration</CQFAction_Lord_Visit_Tip>
+  <CQFAction_CompleteQuestBookStep>Action: complete quest book step</CQFAction_CompleteQuestBookStep>
+  <CQFAction_FailQuestBookStep>Action: fail quest book step</CQFAction_FailQuestBookStep>
+  <CQFAction_OpenQuestBook>Action: open quest book</CQFAction_OpenQuestBook>
+  <CQFAction_StartQuestBook>Action: start quest book</CQFAction_StartQuestBook>
+  <CQFAction_DropReward>Action: drop rewards at colony</CQFAction_DropReward>
+  <CQFAction_DropReward_Tip>Drop the configured items or minifiable buildings at a random player colony.</CQFAction_DropReward_Tip>
+  <WorldAction_Chance>World action: chance</WorldAction_Chance>
+  <WorldAction_GenerateMapAndEnter>World action: generate map and enter</WorldAction_GenerateMapAndEnter>
+  <WorldAction_GenerateSiteAndEnter>World action: generate site and enter</WorldAction_GenerateSiteAndEnter>
+  <WorldAction_GenerateCustomMapAndEnter>World action: generate custom map and enter</WorldAction_GenerateCustomMapAndEnter>
+  <WorldAction_GenerateQuest>World action: generate quest</WorldAction_GenerateQuest>
+  <SitePartDef>Site part: {0}</SitePartDef>
+  <SetCaravanTileAsTarget>Set caravan tile as target:</SetCaravanTileAsTarget>
+  <SentDefeatLetter>Send defeat letter:</SentDefeatLetter>
+  <ReplaceMapGeneration>Replace map generation:</ReplaceMapGeneration>
+</LanguageData>

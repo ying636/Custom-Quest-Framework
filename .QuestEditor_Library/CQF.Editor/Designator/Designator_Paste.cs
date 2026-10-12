@@ -77,26 +77,15 @@ namespace QuestEditor_Library
                 .Select(c => c.GetThingList(Find.CurrentMap).Find(t => this.pasteActionComp
                     ? t.TryGetComp<CompActionWorker>() != null : this.type.IsAssignableFrom(t.GetType())))
                 .Where(t => t != null).Distinct().ToList();
-            if (!this.pasteActionComp && this.type == typeof(InteractableThing))
+            foreach (Thing target in targets)
             {
-                if (targets.Any())
+                if (this.pasteActionComp)
                 {
-                    Find.WindowStack.Add(new Dialog_CQFInteractionPaste(targets.Cast<InteractableThing>(),
-                        CQFEditorTools.operations, CQFEditorTools.operationDefs));
+                    target.TryGetComp<CompActionWorker>().PasteSingleComp();
                 }
-            }
-            else
-            {
-                foreach (Thing target in targets)
+                else if (target is IPastableData pastable)
                 {
-                    if (this.pasteActionComp)
-                    {
-                        target.TryGetComp<CompActionWorker>().PasteSingleComp();
-                    }
-                    else if (target is IPastableData pastable)
-                    {
-                        pastable.PasteData();
-                    }
+                    pastable.PasteData();
                 }
             }
             this.Finalize(targets.Any());

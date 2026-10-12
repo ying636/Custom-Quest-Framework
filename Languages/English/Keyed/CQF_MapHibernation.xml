@@ -3,8 +3,4 @@
   <CQF_MapHibernation>Map hibernation</CQF_MapHibernation>
   <CQF_HibernateMap>Hibernate map</CQF_HibernateMap>
   <CQF_ActivateMap>Activate map</CQF_ActivateMap>
-  <CQFAction_HibernateMap>Action: hibernate map</CQFAction_HibernateMap>
-  <CQFAction_HibernateMap_Tip>Hibernate the target's map, preserving the map and its things while stopping map and thing updates. Activation resumes the same map without regenerating it.</CQFAction_HibernateMap_Tip>
-  <CQFAction_ActivateMap>Action: activate map</CQFAction_ActivateMap>
-  <CQFAction_ActivateMap_Tip>Activate the target's hibernating map, returning the original map to the active map list and resuming updates without regenerating it.</CQFAction_ActivateMap_Tip>
 </LanguageData>

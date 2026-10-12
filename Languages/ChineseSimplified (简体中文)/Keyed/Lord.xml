@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
 
   <!-- EN: Lord name: -->
@@ -31,10 +31,6 @@
 
   <!-- EN: Group Editor -->
   <GroupEditor>集群编辑器</GroupEditor>
-  <!-- EN: Lord action:visit colony -->
-  <CQFAction_Lord_Visit>集群行为：访问殖民地</CQFAction_Lord_Visit>
-  <!-- EN: Set the lord job as tovisit colony, and the group will leave the map after the duration -->
-  <CQFAction_Lord_Visit_Tip>将集群行为设置为访问殖民地，集群将在持续时间之后离开地图</CQFAction_Lord_Visit_Tip>
 
   <!-- EN: Visit colony -->
   <LordJob_VisitColony>访问殖民地</LordJob_VisitColony>

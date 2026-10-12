@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <QuestEditor>任务编辑器</QuestEditor>
   <SelectOutputMod>输出Mod：{0}</SelectOutputMod>
@@ -502,12 +502,6 @@
 
   <UseCustomInspectText>使用自定义检查文本：</UseCustomInspectText>
   <CQF_CustomInspectText>自定义检查文本：</CQF_CustomInspectText>
-  <CQFAction_SetCustomName>行为：设置自定义名称</CQFAction_SetCustomName>
-  <CQFAction_SetCustomName_Tip>设置所有带有 CompCustomText 的目标的自定义名称。</CQFAction_SetCustomName_Tip>
-  <CQFAction_SetCustomDescription>行为：设置自定义描述</CQFAction_SetCustomDescription>
-  <CQFAction_SetCustomDescription_Tip>设置所有带有 CompCustomText 的目标的自定义描述。</CQFAction_SetCustomDescription_Tip>
-  <CQFAction_SetCustomInspectText>行为：设置自定义检查文本</CQFAction_SetCustomInspectText>
-  <CQFAction_SetCustomInspectText_Tip>设置所有带有 CompCustomText 的目标的检查文本。</CQFAction_SetCustomInspectText_Tip>
 
   <CurRotMode>CurRotMode {0}</CurRotMode>
   <Dessicated>Dessicated</Dessicated>

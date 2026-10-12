@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <DialogConditions>Dialog conditions</DialogConditions>
+  <AddDialogCondition>Add condition</AddDialogCondition>
+  <DialogCondition_Skill>Condition: skill</DialogCondition_Skill>
+  <SkillIsntsatisfied>Skill isn't satisfied {0}</SkillIsntsatisfied>
+  <RequiredSkill>Required skill</RequiredSkill>
+  <RequiredLevel>Required level</RequiredLevel>
+  <NeedToBeGreater>Needs to be greater</NeedToBeGreater>
+  <DialogCondition_Hediff>Condition: hediff</DialogCondition_Hediff>
+  <TargetHasntRequired>Target hasn't required {0}</TargetHasntRequired>
+  <RequiredHediff>Required hediff</RequiredHediff>
+  <RequiredSeverity>Required severity</RequiredSeverity>
+  <HediffIsntsatisfied>Hediff isn't satisfied {0}</HediffIsntsatisfied>
+  <DialogCondition_Trait>Condition: trait</DialogCondition_Trait>
+  <TargetHasntRequiredTrait>Target hasn't required {0} trait</TargetHasntRequiredTrait>
+  <RequiredTrait>Required trait:{0}</RequiredTrait>
+  <RequiredDegree>Required degree</RequiredDegree>
+  <TraitIsntsatisfied>Trait isn't satisfied</TraitIsntsatisfied>
+  <Accurate>Accurate:</Accurate>
+  <Accurate_Tip>Only when the trait is completely given trait will it be satisfied</Accurate_Tip>
+  <DialogTreeCondition_Faction>Condition: faction</DialogTreeCondition_Faction>
+  <DialogCondition_Faction>Condition: faction</DialogCondition_Faction>
+  <RequiredFaction>Required faction:{0}</RequiredFaction>
+  <TargetIsntNumberOfFaction>Target is not number of {0}</TargetIsntNumberOfFaction>
+  <DialogCondition_Bool>Condition:bool</DialogCondition_Bool>
+  <DialogCondition_Bool_Tip>Obtain the bool value from the quest database to determine whether to pass</DialogCondition_Bool_Tip>
+  <CQFFailReason>Fail reason:</CQFFailReason>
+  <DialogCondition_Age>Condition:age</DialogCondition_Age>
+  <CQFAge>Age:</CQFAge>
+  <DialogCondition_Chance>Condition:chance</DialogCondition_Chance>
+  <DialogCondition_PrisonerOrSlave>Condition:prisoner or slave</DialogCondition_PrisonerOrSlave>
+  <DialogCondition_Thought>Condition:thought</DialogCondition_Thought>
+  <DialogCondition_And>Condition:and</DialogCondition_And>
+  <DialogCondition_And_Tip>If all sub conditions are true, return true. Otherwise, it is false. The reason for failure is the reason for the condition that is false</DialogCondition_And_Tip>
+  <DialogCondition_Or>Condition:or</DialogCondition_Or>
+  <DialogCondition_Or_Tip>Any of the sub conditions that are true will return true, otherwise it will be false, and the failure reason will be customized reason of condition</DialogCondition_Or_Tip>
+  <DialogCondition_QuestIsGenerated>Condition:quest was not generated</DialogCondition_QuestIsGenerated>
+  <DialogCondition_QuestIsGenerated_Tip>If the provided quest has been generated in the game, return false</DialogCondition_QuestIsGenerated_Tip>
+  <DialogCondition_Reversal>Condition:reversal</DialogCondition_Reversal>
+  <DialogCondition_Reversal_Tip>Return the value of the reversed sub condition</DialogCondition_Reversal_Tip>
+  <DialogCondition_QuestState>Condition:quest state</DialogCondition_QuestState>
+  <DialogCondition_QuestState_Tip>If no quest def is given, automatically retrieve the quest from the target of the triggering condition</DialogCondition_QuestState_Tip>
+  <QuestState>Quest State:{0}</QuestState>
+  <EndedFailed>Quest fail</EndedFailed>
+  <EndedSuccess>Quest success</EndedSuccess>
+  <Ongoing>Quest ongoing</Ongoing>
+  <EndedOfferExpired>Quest offer expired</EndedOfferExpired>
+  <DialogCondition_CapturedPawn>Condition:captured pawn</DialogCondition_CapturedPawn>
+  <DialogCondition_CapturedPawn_Tip>Determine whether the given capture trap, such as a capture net, has captured pawn</DialogCondition_CapturedPawn_Tip>
+  <DialogCondition_ContainerIsFull>Condition:container is full</DialogCondition_ContainerIsFull>
+  <DialogCondition_ThingInPosition>Condition:thing position</DialogCondition_ThingInPosition>
+  <DialogCondition_ThingInPosition_Tip>Determine whether the given thing is located at the given position (if the given position includes a map, the map will also be determined)</DialogCondition_ThingInPosition_Tip>
+  <PositionName>Position:</PositionName>
+  <DialogCondition_Inventory>Condition:inventory</DialogCondition_Inventory>
+  <RequiredThings>Required things:</RequiredThings>
+  <DialogCondition_DatabaseExists>Condition:database exists</DialogCondition_DatabaseExists>
+  <TargetKey>Target key:</TargetKey>
+  <NeedSpawned>Need target is spawned:</NeedSpawned>
+  <CheckGlobalDatabase>Check global database:</CheckGlobalDatabase>
+  <CheckTemporaryDatabase>Check temporary database:</CheckTemporaryDatabase>
+  <CheckQuestDatabase>Check quest database:</CheckQuestDatabase>
+  <DialogCondition_SkillCheck>Condition: Skill Check</DialogCondition_SkillCheck>
+  <DialogCondition_SkillCheck_Tip>Roll a random number between 0 and 20. If the result is lower than the target's corresponding skill level plus the check modifier, the condition is passed.</DialogCondition_SkillCheck_Tip>
+  <CheckModifier>Check Modifier:</CheckModifier>
+  <DialogCondition_GroupExists>Condition:group exists</DialogCondition_GroupExists>
+  <DialogCondition_ColonistCount>Condition:colonist count</DialogCondition_ColonistCount>
+  <NeedCount>Need count:</NeedCount>
+  <WorldCondition_WorldObject>Condition: world object</WorldCondition_WorldObject>
+  <WorldCondition_And>Condition: and</WorldCondition_And>
+  <WorldCondition_And_Tip>All sub world conditions must be true.</WorldCondition_And_Tip>
+  <WorldCondition_Or>Condition: or</WorldCondition_Or>
+  <WorldCondition_Or_Tip>Any sub world condition can be true.</WorldCondition_Or_Tip>
+  <WorldCondition_Reversal>Condition: reversal</WorldCondition_Reversal>
+  <WorldCondition_Reversal_Tip>Returns the opposite result of the selected world condition.</WorldCondition_Reversal_Tip>
+  <WorldCondition_Landmark>Condition: landmark</WorldCondition_Landmark>
+  <WorldCondition_Biome>Condition: biome</WorldCondition_Biome>
+  <WorldCondition_TileMutator>Condition: tile mutator</WorldCondition_TileMutator>
+  <WorldCondition_TotalSkill>Condition: caravan total skill</WorldCondition_TotalSkill>
+  <WorldObjectDef>World object: {0}</WorldObjectDef>
+  <WorldConditionFaction>Map faction: {0}</WorldConditionFaction>
+  <LandmarkDef>Landmark: {0}</LandmarkDef>
+  <BiomeDef>Biome: {0}</BiomeDef>
+  <TileMutatorDef>Tile mutator: {0}</TileMutatorDef>
+  <SkillDef>Skill: {0}</SkillDef>
+  <NonHostile>Non-hostile:</NonHostile>
+  <NonPlayer>Non-player:</NonPlayer>
+  <ZoneCondition_Size>Zone condition:Size</ZoneCondition_Size>
+  <ZoneCondition_Size_Tip>Passes only when both the map part width and height are within the configured ranges.</ZoneCondition_Size_Tip>
+  <RangeOfX>Width(X):</RangeOfX>
+  <RangeOfZ>Height(Z):</RangeOfZ>
+  <ZoneCondition_Tag>Zone condition:Tag</ZoneCondition_Tag>
+  <ZoneCondition_Tag_Tip>Passes when the map part contains at least one of the specified map tags.</ZoneCondition_Tag_Tip>
+  <ZoneCondition_Wealth>Zone condition:Wealth</ZoneCondition_Wealth>
+  <ZoneCondition_Wealth_Tip>It will met,when the player's wealth is not within the set range or when sub conditions are met.</ZoneCondition_Wealth_Tip>
+  <WealthRange>Wealth range:</WealthRange>
+  <SelectCondition>Select condition</SelectCondition>
+  <ZoneCondition_CoreTag>Zone condition:Core tag</ZoneCondition_CoreTag>
+  <ZoneCondition_CoreTag_Tip>Without Invert result, cores with a matching tag are excluded; with it enabled, only matching cores are accepted as docking cores.</ZoneCondition_CoreTag_Tip>
+  <CoreTags>Core tags:</CoreTags>
+  <InvertResult>Invert result:</InvertResult>
+  <ZoneCondition_Invert>Zone condition:Invert</ZoneCondition_Invert>
+  <ZoneCondition_Invert_Tip>Inverts the result of the selected sub-condition.</ZoneCondition_Invert_Tip>
+  <ZoneCondition_FactionMeme>Zone condition:Meme</ZoneCondition_FactionMeme>
+  <ZoneCondition_FactionMeme_Tip>Passes when the selected faction's primary ideology contains the specified meme.</ZoneCondition_FactionMeme_Tip>
+  <RequiredMeme>Requried meme:{0}</RequiredMeme>
+</LanguageData>

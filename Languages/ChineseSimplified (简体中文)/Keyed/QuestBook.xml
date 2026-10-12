@@ -78,10 +78,6 @@
   <CQF_QuestBook_DirectionWest>西</CQF_QuestBook_DirectionWest>
   <CQF_QuestBook_SelectImageIcon>选择已加载图片</CQF_QuestBook_SelectImageIcon>
   <CQF_QuestBook_ObjectiveIcon>目标图标</CQF_QuestBook_ObjectiveIcon>
-  <CQFAction_CompleteQuestBookStep>行为：完成任务书步骤</CQFAction_CompleteQuestBookStep>
-  <CQFAction_FailQuestBookStep>行为：使任务书步骤失败</CQFAction_FailQuestBookStep>
-  <CQFAction_OpenQuestBook>行为：打开任务书</CQFAction_OpenQuestBook>
-  <CQFAction_StartQuestBook>行为：开始任务书</CQFAction_StartQuestBook>
   <CQF_QuestBook_ActionStep>选择步骤：{0}</CQF_QuestBook_ActionStep>
   <CQF_QuestBook_ActionBook>选择任务书：{0}</CQF_QuestBook_ActionBook>
   <CQF_QuestBook_SelectBookFirst>请先选择任务书。</CQF_QuestBook_SelectBookFirst>
@@ -155,8 +151,6 @@
   <CQF_QuestBook_AddRewardTip>添加奖励</CQF_QuestBook_AddRewardTip>
   <CQF_QuestBook_RemoveRewardTip>移除奖励</CQF_QuestBook_RemoveRewardTip>
   <CQF_QuestBook_RewardInvalid>无效奖励</CQF_QuestBook_RewardInvalid>
-  <CQFAction_DropReward>行为：向殖民地空投奖励</CQFAction_DropReward>
-  <CQFAction_DropReward_Tip>将配置的物品或可打包建筑空投到随机玩家殖民地。</CQFAction_DropReward_Tip>
   <Signal>信号</Signal>
   <TargetCount>目标数量</TargetCount>
   <CheckInterval>检查间隔</CheckInterval>

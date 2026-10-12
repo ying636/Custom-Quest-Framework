@@ -18,7 +18,7 @@ namespace QuestEditor_Library
 
         public static void DrawBookField(float y, string label, string? value, Action<string> selected, float x, float fieldWidth, float width)
         {
-            float labelWidth = Mathf.Min(Text.CalcSize(label).x + 2f, Mathf.Max(100f, width * 0.45f));
+            float labelWidth = Mathf.Min(Text.CalcSize(label).x + 20f, Mathf.Max(100f, width * 0.45f));
             DrawBookField(new Rect(x, y, labelWidth, 25f), new Rect(x + labelWidth + 5f, y, Mathf.Max(60f, Mathf.Min(fieldWidth, width - labelWidth - 5f)), 25f), label, value, selected);
         }
 

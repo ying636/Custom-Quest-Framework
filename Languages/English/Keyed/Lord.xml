@@ -18,8 +18,6 @@
   <TargetPositionName>Defending centre:</TargetPositionName>
 
   <GroupEditor>Group Editor</GroupEditor>
-  <CQFAction_Lord_Visit>Lord action:visit colony</CQFAction_Lord_Visit>
-  <CQFAction_Lord_Visit_Tip>Set the lord job as tovisit colony, and the group will leave the map after the duration</CQFAction_Lord_Visit_Tip>
 
   <LordJob_VisitColony>Visit colony</LordJob_VisitColony>
 

@@ -136,7 +136,5 @@
   <CQF_DutyNode_JobGiver_TargetBase_Tip>Base behavior for reading targets from the duty-map runtime, quest, temporary, or global database. Usually not used directly as a node.</CQF_DutyNode_JobGiver_TargetBase_Tip>
   <CQF_DutyNode_JobGiver_PlayWithGoldenCube>Play with golden cube</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
   <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>Prepare caravan: collect pawns</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
-  <CQFAction_Pawn_RunDutyMapTransition>Pawn action: run duty map transition</CQFAction_Pawn_RunDutyMapTransition>
-  <CQFAction_Pawn_SetDutyMap>Pawn action: set duty map</CQFAction_Pawn_SetDutyMap>
   <CQF_DutyMapUseStartNode>Enter initial node after setting</CQF_DutyMapUseStartNode>
 </LanguageData>

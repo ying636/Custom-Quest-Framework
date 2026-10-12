@@ -201,9 +201,9 @@ namespace QuestEditor_Library
                 CQFEditorTools.DrawFloatMenu(this.operations, o => this.operations.Remove(o), o => o.interactionText.CanTranslate() ? o.interactionText.Translate().ToString() : o.interactionText);
             }
 
-            if (CQFUIStyle.ButtonImage(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), TexButton.Paste) && CQFEditorTools.operation != null)
+            if (CQFUIStyle.ButtonImage(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), TexButton.Paste))
             {
-                Find.WindowStack.Add(new Dialog_CQFInteractionPaste(this, new[] { CQFEditorTools.operation }));
+                this.PasteInteractions(CQFEditorTools.operation == null ? null : new[] { CQFEditorTools.operation });
             }
 
             TooltipHandler.TipRegion(new Rect(28f + buttonWidth * 2f, y + 3f, 25f, 25f), "Paste".Translate());
@@ -231,7 +231,7 @@ namespace QuestEditor_Library
             float buttonWidth = Mathf.Min(120f, (width - 68f) / 2f);
             if (CQFUIStyle.ButtonText(new Rect(12f, y, buttonWidth, 32f), "Add".Translate()))
             {
-                CQFEditorTools.DrawFloatMenu(DefDatabase<InteractionDataDef>.AllDefsListForReading, d => Find.WindowStack.Add(new Dialog_CQFInteractionPaste(this, Enumerable.Empty<InteractionOperation>(), new[] { d })), d => d.label);
+                CQFEditorTools.DrawFloatMenu(DefDatabase<InteractionDataDef>.AllDefsListForReading, d => this.operationDefs.Add(d), d => d.label);
             }
 
             if (CQFUIStyle.ButtonText(new Rect(20f + buttonWidth, y, buttonWidth, 32f), "Remove".Translate()) && this.operationDefs.Any())
@@ -306,7 +306,35 @@ namespace QuestEditor_Library
 
         public void PasteData()
         {
-            Find.WindowStack.Add(new Dialog_CQFInteractionPaste(this, CQFEditorTools.operations, CQFEditorTools.operationDefs));
+            this.PasteInteractions(CQFEditorTools.operations, CQFEditorTools.operationDefs);
+        }
+
+        public void PasteInteractions(IEnumerable<InteractionOperation> sourceOperations, IEnumerable<InteractionDataDef> sourceDefinitions = null)
+        {
+            try
+            {
+                if (this.Destroyed)
+                {
+                    Messages.Message("CQF_EditorTargetUnavailable".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
+                List<InteractionOperation> copies = (sourceOperations ?? Enumerable.Empty<InteractionOperation>()).Select(operation => operation.Copy()).ToList();
+                List<InteractionDataDef> definitions = (sourceDefinitions ?? Enumerable.Empty<InteractionDataDef>()).ToList();
+                if (copies.Count == 0 && definitions.Count == 0)
+                {
+                    Messages.Message("CQF_EditorEmptyClipboard".Translate(), MessageTypeDefOf.RejectInput, false);
+                    return;
+                }
+                this.operations ??= new List<InteractionOperation>();
+                this.operationDefs ??= new List<InteractionDataDef>();
+                this.operations.AddRange(copies);
+                this.operationDefs.AddRange(definitions);
+            }
+            catch (Exception exception)
+            {
+                Log.Error("[CQF] Interaction paste failed: " + exception);
+                Messages.Message("CQF_EditorPasteFailed".Translate() + ": " + exception.Message, MessageTypeDefOf.RejectInput, false);
+            }
         }
 
         public CustomThingData GetData(IntVec3 pos)

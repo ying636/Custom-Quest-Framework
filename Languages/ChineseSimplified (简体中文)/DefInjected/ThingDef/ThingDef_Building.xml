@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <LanguageData>
+  <CQF_StairsEntrance.label>台阶</CQF_StairsEntrance.label>
+  <CQF_StairsEntrance.description>一个通向更深处的台阶</CQF_StairsEntrance.description>
+  <CQF_StairsExit.label>台阶</CQF_StairsExit.label>
+  <CQF_StairsExit.description>一个通向更深处的台阶</CQF_StairsExit.description>
+  <CQF_StairsUpEntrance.label>台阶</CQF_StairsUpEntrance.label>
+  <CQF_StairsUpEntrance.description>一个通向更深处的台阶</CQF_StairsUpEntrance.description>
+  <CQF_StairsDownExit.label>台阶</CQF_StairsDownExit.label>
+  <CQF_StairsDownExit.description>一个通向更深处的台阶</CQF_StairsDownExit.description>
   
   <!-- EN: Ancient cryptosleep casket -->
   <CQF_CryptosleepCasket.label>远古休眠舱</CQF_CryptosleepCasket.label>

@@ -3,8 +3,4 @@
   <CQF_MapHibernation>地图休眠</CQF_MapHibernation>
   <CQF_HibernateMap>休眠地图</CQF_HibernateMap>
   <CQF_ActivateMap>激活地图</CQF_ActivateMap>
-  <CQFAction_HibernateMap>行为：休眠地图</CQFAction_HibernateMap>
-  <CQFAction_HibernateMap_Tip>休眠目标所属地图，保留地图及物件，停止地图和物件更新。激活后继续使用原地图，无需重新生成。</CQFAction_HibernateMap_Tip>
-  <CQFAction_ActivateMap>行为：激活地图</CQFAction_ActivateMap>
-  <CQFAction_ActivateMap_Tip>激活目标所属的休眠地图，将原地图重新加入活动地图列表并恢复更新，无需重新生成。</CQFAction_ActivateMap_Tip>
 </LanguageData>

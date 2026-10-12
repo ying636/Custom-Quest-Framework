@@ -6,12 +6,7 @@
   <CQF_EditorMoveDown>Move down</CQF_EditorMoveDown>
   <CQF_EditorMoveUp>Move up</CQF_EditorMoveUp>
   <CQF_EditorPasteFailed>Failed to paste interactions</CQF_EditorPasteFailed>
-  <CQF_EditorReplace>Replace existing interactions</CQF_EditorReplace>
-  <CQF_EditorSignal>Signal</CQF_EditorSignal>
-  <CQF_EditorStateKey>State key</CQF_EditorStateKey>
-  <CQF_EditorTargetKey>Target key</CQF_EditorTargetKey>
   <CQF_EditorTargetUnavailable>The target is no longer available.</CQF_EditorTargetUnavailable>
-  <CQF_EditorUndoPaste>Undo paste</CQF_EditorUndoPaste>
   <CQF_EditorUnreachableResult>This result cannot be reached in the current execution order.</CQF_EditorUnreachableResult>
   <CQF_MapSignals_Automatic>Automatic signals</CQF_MapSignals_Automatic>
   <CQF_MapSignals_ChangedReference>The referenced signals have changed. Reopen the rename window.</CQF_MapSignals_ChangedReference>

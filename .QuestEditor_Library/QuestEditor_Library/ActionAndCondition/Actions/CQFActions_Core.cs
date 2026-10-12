@@ -680,16 +680,28 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             base.Draw(ref y, inRect, x);
-            if (CQFUIStyle.ButtonText(new Rect(x, y, 320f, 25f), "DialogManagerForSpawner".Translate(this.dialog?.defName), false))
+            float width = Mathf.Max(100f, inRect.width - x - 12f);
+            if (CQFUIStyle.ButtonText(new Rect(x, y, width, 28f), "DialogManagerForSpawner".Translate(this.dialog?.defName ?? "None".Translate().ToString()), false,
+                overrideTextAnchor: TextAnchor.MiddleLeft))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<DialogManagerDef>.AllDefsListForReading, m => this.dialog = m, m => m.defName);
             }
 
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "Interviewer".Translate(), this.interviewerText, value => this.interviewerText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "Interviewee".Translate(), this.intervieeText, value => this.intervieeText = value, x, 150f, inRect.width - x - 20f);
-            y += 30f;
+            y += 36f;
+            string interviewerLabel = "Interviewer".Translate();
+            string intervieweeLabel = "Interviewee".Translate();
+            bool stacked = width < 360f;
+            float labelWidth = stacked ? width : Mathf.Max(Text.CalcSize(interviewerLabel).x, Text.CalcSize(intervieweeLabel).x) + 20f;
+            Rect labelRect = new Rect(x, y, labelWidth, 28f);
+            Rect fieldRect = new Rect(stacked ? x : x + labelWidth + 8f, stacked ? y + 30f : y,
+                stacked ? width : width - labelWidth - 8f, 28f);
+            CQFTargetKeyEditor.DrawBookField(labelRect, fieldRect, interviewerLabel, this.interviewerText, value => this.interviewerText = value);
+            float rowHeight = stacked ? 66f : 36f;
+            y += rowHeight;
+            labelRect.y += rowHeight;
+            fieldRect.y += rowHeight;
+            CQFTargetKeyEditor.DrawBookField(labelRect, fieldRect, intervieweeLabel, this.intervieeText, value => this.intervieeText = value);
+            y += rowHeight;
         }
 
         public override void Work(Dictionary<string, TargetInfo> targets, Quest quest)

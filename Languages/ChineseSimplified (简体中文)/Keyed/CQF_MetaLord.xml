@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQFAction_MetaLord>行为：跨层组织操作</CQFAction_MetaLord>
   <LordJob_MetaLord>跨层组织小组</LordJob_MetaLord>
   <CQF_MetaLordName>组织名称</CQF_MetaLordName>
   <CQF_MetaLordMapKey>地图目标键</CQF_MetaLordMapKey>

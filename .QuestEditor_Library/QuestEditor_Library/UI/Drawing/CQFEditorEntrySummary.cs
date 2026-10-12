@@ -29,6 +29,22 @@ namespace QuestEditor_Library
                 return string.Empty;
             }
 
+            if (entry is CQFAction_Letter letter)
+            {
+                string title = letter.label.CanTranslate() ? letter.label.Translate().ToString() : letter.label;
+                List<string> details = new List<string>();
+                if (!title.NullOrEmpty())
+                {
+                    details.Add(title.Replace('\n', ' ').Replace('\r', ' '));
+                }
+                details.Add(CQFAction_Letter.GetTypeLabel(letter.letterDef));
+                if (letter.targetsText?.Count > 0)
+                {
+                    details.Add("TargetKey".Translate() + " " + string.Join(", ", letter.targetsText));
+                }
+                return string.Join(" · ", details);
+            }
+
             Type type = entry.GetType();
             if (!fields.TryGetValue(type, out FieldInfo[] entryFields))
             {

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <!-- EN: Dialog conditions -->
+  <DialogConditions>条件：</DialogConditions>
+  <!-- EN: Add condition -->
+  <AddDialogCondition>添加条件</AddDialogCondition>
+  <!-- EN: Condition: skill -->
+  <DialogCondition_Skill>条件：技能</DialogCondition_Skill>
+  <!-- EN: Skill isn't satisfied -->
+  <SkillIsntsatisfied>{0}不满足要求</SkillIsntsatisfied>
+  <!-- EN: Required skill -->
+  <RequiredSkill>需要技能：</RequiredSkill>
+  <!-- EN: Required level -->
+  <RequiredLevel>需要等级:</RequiredLevel>
+  <!-- EN: Needs to be greater -->
+  <NeedToBeGreater>需要大于</NeedToBeGreater>
+  <!-- EN: Condition: hediff -->
+  <DialogCondition_Hediff>条件：状态</DialogCondition_Hediff>
+  <!-- EN: Target hasn't required -->
+  <TargetHasntRequired>对话者没有{0}</TargetHasntRequired>
+  <!-- EN: Required hediff -->
+  <RequiredHediff>需要状态：</RequiredHediff>
+  <!-- EN: Required severity -->
+  <RequiredSeverity>需要严重度：</RequiredSeverity>
+  <!-- EN: Hediff isn't satisfied -->
+  <HediffIsntsatisfied>{0}没有达到合适的严重度</HediffIsntsatisfied>
+  <!-- EN: Condition: trait -->
+  <DialogCondition_Trait>条件：特性</DialogCondition_Trait>
+  <!-- EN: Target hasn't required {0} trait -->
+  <TargetHasntRequiredTrait>对话者没有{0}特性</TargetHasntRequiredTrait>
+  <!-- EN: Required trait:{0} -->
+  <RequiredTrait>需要特性：{0}</RequiredTrait>
+  <!-- EN: Required degree -->
+  <RequiredDegree>需要程度：</RequiredDegree>
+  <!-- EN: Trait isn't satisfied -->
+  <TraitIsntsatisfied>特性不满足要求</TraitIsntsatisfied>
+  <!-- EN: Accurate: -->
+  <Accurate>精准：</Accurate>
+  <!-- EN: Only when the trait is completely given trait will it be satisfied -->
+  <Accurate_Tip>只有当特性完全为给出特性时才会满足</Accurate_Tip>
+  <!-- EN: Condition: faction -->
+  <DialogTreeCondition_Faction>条件：派系</DialogTreeCondition_Faction>
+  <!-- EN: Condition: faction -->
+  <DialogCondition_Faction>条件：派系</DialogCondition_Faction>
+  <!-- EN: Required faction:{0} -->
+  <RequiredFaction>需求派系：{0}</RequiredFaction>
+  <!-- EN: Target is not number of {0} -->
+  <TargetIsntNumberOfFaction>目标不属于{0}</TargetIsntNumberOfFaction>
+  <!-- EN: Condition:bool -->
+  <DialogCondition_Bool>条件：判断值</DialogCondition_Bool>
+  <!-- EN: Obtain the bool value from the quest database to determine whether to pass -->
+  <DialogCondition_Bool_Tip>获取任务数据库中判断值来决定是否通过</DialogCondition_Bool_Tip>
+  <!-- EN: Fail reason: -->
+  <CQFFailReason>失败原因：</CQFFailReason>
+  <!-- EN: Condition:age -->
+  <DialogCondition_Age>条件：年龄</DialogCondition_Age>
+  <!-- EN: Age: -->
+  <CQFAge>年龄：</CQFAge>
+  <!-- EN: Condition:chance -->
+  <DialogCondition_Chance>条件：概率</DialogCondition_Chance>
+  <!-- EN: Condition:prisoner or slave -->
+  <DialogCondition_PrisonerOrSlave>条件：俘虏或囚犯</DialogCondition_PrisonerOrSlave>
+  <!-- EN: Condition:thought -->
+  <DialogCondition_Thought>条件：心情</DialogCondition_Thought>
+  <!-- EN: Condition:and -->
+  <DialogCondition_And>条件：与</DialogCondition_And>
+  <!-- EN: If all sub conditions are true, return true. Otherwise, it is false. The reason for failure is the reason for the condition that is false -->
+  <DialogCondition_And_Tip>附属条件中全成立返回真，反之为假，失败原因为不成立的那个条件的原因</DialogCondition_And_Tip>
+  <!-- EN: Condition:or -->
+  <DialogCondition_Or>条件：或</DialogCondition_Or>
+  <!-- EN: Any of the sub conditions that are true will return true, otherwise it will be false, and the failure reason will be customized reason of condition -->
+  <DialogCondition_Or_Tip>附属条件中任一成立返回真，反之为假，失败原因为本条件所自定义的原因</DialogCondition_Or_Tip>
+  <!-- EN: Condition:quest was not generated -->
+  <DialogCondition_QuestIsGenerated>条件：任务已生成</DialogCondition_QuestIsGenerated>
+  <!-- EN: If the provided quest has been generated in the game, return false -->
+  <DialogCondition_QuestIsGenerated_Tip>如果游戏中生成过所提供的任务，则返回假</DialogCondition_QuestIsGenerated_Tip>
+  <!-- EN: Condition:reversal -->
+  <DialogCondition_Reversal>条件：逆转</DialogCondition_Reversal>
+  <!-- EN: Return the value of the reversed sub condition -->
+  <DialogCondition_Reversal_Tip>返回逆转过后的子条件的值</DialogCondition_Reversal_Tip>
+  <!-- EN: Condition:quest state -->
+  <DialogCondition_QuestState>条件：任务状态</DialogCondition_QuestState>
+  <!-- EN: If no quest def is given, automatically retrieve the quest from the target of the triggering condition -->
+  <DialogCondition_QuestState_Tip>如果没有给定任务定义，则自动从触发条件的目标处获取任务</DialogCondition_QuestState_Tip>
+  <!-- EN: Quest State:{0} -->
+  <QuestState>任务状态:{0}</QuestState>
+  <!-- EN: Quest fail -->
+  <EndedFailed>任务失败</EndedFailed>
+  <!-- EN: Quest success -->
+  <EndedSuccess>任务成功</EndedSuccess>
+  <!-- EN: Quest ongoing -->
+  <Ongoing>任务进行中</Ongoing>
+  <!-- EN: Quest offer expired -->
+  <EndedOfferExpired>任务超时</EndedOfferExpired>
+  <!-- EN: Condition:captured pawn -->
+  <DialogCondition_CapturedPawn>条件：是否捕捉到实体</DialogCondition_CapturedPawn>
+  <!-- EN: Determine whether the given capture trap, such as a capture net, has captured pawn -->
+  <DialogCondition_CapturedPawn_Tip>判断给予的捕捉式陷阱，如捕捉网，是否有捕捉到实体</DialogCondition_CapturedPawn_Tip>
+  <!-- EN: Condition:container is full -->
+  <DialogCondition_ContainerIsFull>条件：容器被充满</DialogCondition_ContainerIsFull>
+  <!-- EN: Condition:thing position -->
+  <DialogCondition_ThingInPosition>条件：物体位置</DialogCondition_ThingInPosition>
+  <!-- EN: Determine whether the given thing is located at the given position (if the given position includes a map, the map will also be determined) -->
+  <DialogCondition_ThingInPosition_Tip>判断给予的物体的位置是否给予的位置上（如果给予的位置包含地图，则会同时判断地图）</DialogCondition_ThingInPosition_Tip>
+  <!-- EN: Position: -->
+  <PositionName>位置密匙：</PositionName>
+  <!-- EN: Condition:inventory -->
+  <DialogCondition_Inventory>条件：库存</DialogCondition_Inventory>
+  <!-- EN: Required things: -->
+  <RequiredThings>需求事物：</RequiredThings>
+  <!-- EN: Condition:database exists -->
+  <DialogCondition_DatabaseExists>条件：数据库存在</DialogCondition_DatabaseExists>
+  <!-- EN: Target key: -->
+  <TargetKey>目标密匙：</TargetKey>
+  <!-- EN: Need target is spawned: -->
+  <NeedSpawned>需要事物已生成：</NeedSpawned>
+  <!-- EN: Check global database: -->
+  <CheckGlobalDatabase>检测全局数据库：</CheckGlobalDatabase>
+  <!-- EN: Check temporary database: -->
+  <CheckTemporaryDatabase>检测临时数据库</CheckTemporaryDatabase>
+  <!-- EN: Check quest database: -->
+  <CheckQuestDatabase>检测任务数据库</CheckQuestDatabase>
+  <!-- EN: Condition: Skill Check -->
+  <DialogCondition_SkillCheck>条件：技能检查</DialogCondition_SkillCheck>
+  <!-- EN: Roll a random number between 0 and 20. If the result is lower than the target's corresponding skill level plus the check modifier, the condition is passed. -->
+  <DialogCondition_SkillCheck_Tip>随机生成一个0~20的数，如果数小于目标对应的技能等级 + 判定补偿则该条件通过</DialogCondition_SkillCheck_Tip>
+  <!-- EN: Check Modifier: -->
+  <CheckModifier>判定补偿：</CheckModifier>
+  <!-- EN: Condition:group exists -->
+  <DialogCondition_GroupExists>条件：群组存在</DialogCondition_GroupExists>
+  <DialogCondition_ColonistCount>条件：殖民者数量</DialogCondition_ColonistCount>
+  <NeedCount>需要数量：</NeedCount>
+  <!-- EN: Condition: world object -->
+  <WorldCondition_WorldObject>条件：世界对象</WorldCondition_WorldObject>
+  <!-- EN: Condition: and -->
+  <WorldCondition_And>条件：与</WorldCondition_And>
+  <!-- EN: All sub world conditions must be true. -->
+  <WorldCondition_And_Tip>所有子世界条件都满足时通过。</WorldCondition_And_Tip>
+  <!-- EN: Condition: or -->
+  <WorldCondition_Or>条件：或</WorldCondition_Or>
+  <!-- EN: Any sub world condition can be true. -->
+  <WorldCondition_Or_Tip>任意子世界条件满足时通过。</WorldCondition_Or_Tip>
+  <!-- EN: Condition: reversal -->
+  <WorldCondition_Reversal>条件：逆转</WorldCondition_Reversal>
+  <!-- EN: Returns the opposite result of the selected world condition. -->
+  <WorldCondition_Reversal_Tip>返回所选世界条件的相反结果。</WorldCondition_Reversal_Tip>
+  <!-- EN: Condition: landmark -->
+  <WorldCondition_Landmark>条件：地标</WorldCondition_Landmark>
+  <!-- EN: Condition: biome -->
+  <WorldCondition_Biome>条件：生态</WorldCondition_Biome>
+  <!-- EN: Condition: tile mutator -->
+  <WorldCondition_TileMutator>条件：地图元素</WorldCondition_TileMutator>
+  <!-- EN: Condition: caravan total skill -->
+  <WorldCondition_TotalSkill>条件：队伍总技能</WorldCondition_TotalSkill>
+  <!-- EN: World object: {0} -->
+  <WorldObjectDef>世界对象：{0}</WorldObjectDef>
+  <!-- EN: Map faction: {0} -->
+  <WorldConditionFaction>地图派系：{0}</WorldConditionFaction>
+  <!-- EN: Landmark: {0} -->
+  <LandmarkDef>地标：{0}</LandmarkDef>
+  <!-- EN: Biome: {0} -->
+  <BiomeDef>生态：{0}</BiomeDef>
+  <!-- EN: Tile mutator: {0} -->
+  <TileMutatorDef>地图元素：{0}</TileMutatorDef>
+  <!-- EN: Skill: {0} -->
+  <SkillDef>技能：{0}</SkillDef>
+  <!-- EN: Non-hostile: -->
+  <NonHostile>非敌对：</NonHostile>
+  <!-- EN: Non-player: -->
+  <NonPlayer>非玩家：</NonPlayer>
+  <!-- EN: Zone condition:Size -->
+  <ZoneCondition_Size>区域条件：大小</ZoneCondition_Size>
+  <ZoneCondition_Size_Tip>只有地图部件的宽度和长度都落在设定范围内时才满足。</ZoneCondition_Size_Tip>
+  <!-- EN: Width(X): -->
+  <RangeOfX>宽度范围(X)：</RangeOfX>
+  <!-- EN: Height(Z): -->
+  <RangeOfZ>长度范围(Z)：</RangeOfZ>
+  <!-- EN: Zone condition:Tag -->
+  <ZoneCondition_Tag>区域条件：标签</ZoneCondition_Tag>
+  <ZoneCondition_Tag_Tip>地图部件至少拥有一个指定地图标签时满足。</ZoneCondition_Tag_Tip>
+  <!-- EN: Zone condition:Wealth -->
+  <ZoneCondition_Wealth>区域条件：财富</ZoneCondition_Wealth>
+  <!-- EN: It will met,when the player's wealth is not within the set range or when sub conditions are met. -->
+  <ZoneCondition_Wealth_Tip>当玩家的财富并非在设定范围内或者达成子条件时满足。</ZoneCondition_Wealth_Tip>
+  <!-- EN: Wealth range: -->
+  <WealthRange>财富范围：</WealthRange>
+  <!-- EN: Select condition -->
+  <SelectCondition>选择条件</SelectCondition>
+  <!-- EN: Zone condition:Core tag -->
+  <ZoneCondition_CoreTag>区域条件：核心标签</ZoneCondition_CoreTag>
+  <!-- EN: During generation, only the core with corresponding tag will be selected as the "docking core" for generation -->
+  <ZoneCondition_CoreTag_Tip>未勾选“反转结果”时，拥有指定标签的核心会被排除；勾选后则只接受拥有指定标签的核心作为“对接核心”。</ZoneCondition_CoreTag_Tip>
+  <!-- EN: Core tags: -->
+  <CoreTags>核心标签：</CoreTags>
+  <!-- EN: Invert result: -->
+  <InvertResult>反转结果：</InvertResult>
+  <!-- EN: Zone condition:Invert -->
+  <ZoneCondition_Invert>区域条件：反转</ZoneCondition_Invert>
+  <ZoneCondition_Invert_Tip>将子条件的满足结果反转。</ZoneCondition_Invert_Tip>
+  <!-- EN: Zone condition:Meme -->
+  <ZoneCondition_FactionMeme>区域条件：模因</ZoneCondition_FactionMeme>
+  <ZoneCondition_FactionMeme_Tip>当所选派系的主意识形态包含指定模因时满足。</ZoneCondition_FactionMeme_Tip>
+  <!-- EN: Requried meme:{0} -->
+  <RequiredMeme>需求模因：{0}</RequiredMeme>
+</LanguageData>

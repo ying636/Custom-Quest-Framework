@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQFAction_MetaLord>Action: multi-level organization</CQFAction_MetaLord>
   <LordJob_MetaLord>Multi-level organization group</LordJob_MetaLord>
   <CQF_MetaLordName>Organization name</CQF_MetaLordName>
   <CQF_MetaLordMapKey>Map target key</CQF_MetaLordMapKey>

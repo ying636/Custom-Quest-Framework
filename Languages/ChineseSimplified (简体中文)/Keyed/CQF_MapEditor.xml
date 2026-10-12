@@ -6,12 +6,7 @@
   <CQF_EditorMoveDown>下移</CQF_EditorMoveDown>
   <CQF_EditorMoveUp>上移</CQF_EditorMoveUp>
   <CQF_EditorPasteFailed>粘贴交互失败</CQF_EditorPasteFailed>
-  <CQF_EditorReplace>替换现有交互</CQF_EditorReplace>
-  <CQF_EditorSignal>信号</CQF_EditorSignal>
-  <CQF_EditorStateKey>状态键</CQF_EditorStateKey>
-  <CQF_EditorTargetKey>目标键</CQF_EditorTargetKey>
   <CQF_EditorTargetUnavailable>目标已不可用。</CQF_EditorTargetUnavailable>
-  <CQF_EditorUndoPaste>撤销粘贴</CQF_EditorUndoPaste>
   <CQF_EditorUnreachableResult>按当前执行顺序无法触发此结果。</CQF_EditorUnreachableResult>
   <CQF_MapSignals_Automatic>自动生成的信号</CQF_MapSignals_Automatic>
   <CQF_MapSignals_ChangedReference>引用的信号已发生变化，请重新打开重命名窗口。</CQF_MapSignals_ChangedReference>

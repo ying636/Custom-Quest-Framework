@@ -136,7 +136,5 @@
   <CQF_DutyNode_JobGiver_TargetBase_Tip>用于从职责图运行时、任务、临时或全局数据库读取目标的行为基类，通常不直接作为节点使用。</CQF_DutyNode_JobGiver_TargetBase_Tip>
   <CQF_DutyNode_JobGiver_PlayWithGoldenCube>玩金方块</CQF_DutyNode_JobGiver_PlayWithGoldenCube>
   <CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>准备商队：集合角色</CQF_DutyNode_JobGiver_PrepareCaravan_CollectPawns>
-  <CQFAction_Pawn_RunDutyMapTransition>角色行为：触发职责图切换</CQFAction_Pawn_RunDutyMapTransition>
-  <CQFAction_Pawn_SetDutyMap>角色行为：设置职责图</CQFAction_Pawn_SetDutyMap>
   <CQF_DutyMapUseStartNode>设置后进入初始节点</CQF_DutyMapUseStartNode>
 </LanguageData>

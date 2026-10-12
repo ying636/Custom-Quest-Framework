@@ -143,6 +143,118 @@
         </building>
     </ThingDef>
 
+    <ThingDef ParentName="CustomThing_Entrance">
+        <defName>CQF_StairsEntrance</defName>
+        <label>stairs</label>
+        <description>Stairs leading deeper.</description>
+        <thingClass>QuestEditor_Library.CustomMapEntrance_Chance</thingClass>
+        <category>Building</category>
+        <destroyable>false</destroyable>
+        <size>(2,2)</size>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/SubMap/Stairs/StairsDown</texPath>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <uiIconPath>Things/Building/SubMap/Stairs/StairsDown</uiIconPath>
+        <rotatable>true</rotatable>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <isTargetable>false</isTargetable>
+            <quickTargetable>false</quickTargetable>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThing_Exit">
+        <defName>CQF_StairsExit</defName>
+        <label>stairs</label>
+        <description>Stairs leading deeper.</description>
+        <thingClass>QuestEditor_Library.CustomMapExit</thingClass>
+        <category>Building</category>
+        <destroyable>false</destroyable>
+        <size>(2,2)</size>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/SubMap/Stairs/StairsUp</texPath>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <uiIconPath>Things/Building/SubMap/Stairs/StairsUp</uiIconPath>
+        <rotatable>true</rotatable>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <isTargetable>false</isTargetable>
+            <quickTargetable>false</quickTargetable>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThing_Entrance">
+        <defName>CQF_StairsUpEntrance</defName>
+        <label>stairs</label>
+        <description>Stairs leading deeper.</description>
+        <thingClass>QuestEditor_Library.CustomMapEntrance_Chance</thingClass>
+        <category>Building</category>
+        <destroyable>false</destroyable>
+        <size>(2,2)</size>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/SubMap/Stairs/StairsUp</texPath>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <uiIconPath>Things/Building/SubMap/Stairs/StairsUp</uiIconPath>
+        <rotatable>true</rotatable>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <isTargetable>false</isTargetable>
+            <quickTargetable>false</quickTargetable>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
+    <ThingDef ParentName="CustomThing_Exit">
+        <defName>CQF_StairsDownExit</defName>
+        <label>stairs</label>
+        <description>Stairs leading deeper.</description>
+        <thingClass>QuestEditor_Library.CustomMapExit</thingClass>
+        <category>Building</category>
+        <destroyable>false</destroyable>
+        <size>(2,2)</size>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/SubMap/Stairs/StairsDown</texPath>
+            <drawSize>(2,2)</drawSize>
+        </graphicData>
+        <uiIconPath>Things/Building/SubMap/Stairs/StairsDown</uiIconPath>
+        <rotatable>true</rotatable>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Woody</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <building>
+            <isTargetable>false</isTargetable>
+            <quickTargetable>false</quickTargetable>
+            <expandHomeArea>true</expandHomeArea>
+            <claimable>true</claimable>
+        </building>
+    </ThingDef>
+
     <ThingDef ParentName="CustomToolBase">
         <defName>QE_Flash</defName>
         <label>?</label>

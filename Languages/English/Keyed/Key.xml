@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
   <QuestEditor>Quest Editor</QuestEditor>
@@ -595,12 +595,6 @@ SiteName: SiteName-></RuleTip>
 
   <UseCustomInspectText>Use custom inspect text:</UseCustomInspectText>
   <CQF_CustomInspectText>Custom inspect text:</CQF_CustomInspectText>
-  <CQFAction_SetCustomName>Action: set custom name</CQFAction_SetCustomName>
-  <CQFAction_SetCustomName_Tip>Sets the custom name of each target that has CompCustomText.</CQFAction_SetCustomName_Tip>
-  <CQFAction_SetCustomDescription>Action: set custom description</CQFAction_SetCustomDescription>
-  <CQFAction_SetCustomDescription_Tip>Sets the custom description of each target that has CompCustomText.</CQFAction_SetCustomDescription_Tip>
-  <CQFAction_SetCustomInspectText>Action: set custom inspect text</CQFAction_SetCustomInspectText>
-  <CQFAction_SetCustomInspectText_Tip>Sets the inspect text of each target that has CompCustomText.</CQFAction_SetCustomInspectText_Tip>
 
   <CQF_ActionComp_InvalidTickInterval>CQF_ActionComp_InvalidTickInterval</CQF_ActionComp_InvalidTickInterval>
   <CQF_MoveThing>Move</CQF_MoveThing>
