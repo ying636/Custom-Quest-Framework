@@ -13,35 +13,21 @@ namespace QuestEditor_Library
         public void Draw(ref float y, Rect inRect, float x)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
-            CQFEditorTools.DrawActionList_UseWindow(ref y, x, this.actions, inRect, "CQFActions".Translate(), a => a.GetType().Name.Translate());
+            CQFActionListEditor.Draw(ref y, x, inRect.width - x - 12f, inRect, "CQFActions".Translate(), this.actions,
+                copyList: this.CopyData, pasteList: this.PasteData);
         }
 
         public virtual void DrawTab()
         {
             using CQFUIScope scope = new CQFUIScope();
-            Rect viewport = new Rect(8f, 36f, Mathf.Min(490f, CQFUIScope.ContentWidth - 16f), Mathf.Max(40f, CQFUIScope.ContentHeight - 44f));
+            GUI.color = CQFUIStyle.TextColor;
+            Rect viewport = new Rect(8f, 36f, CQFUIScope.ContentWidth - 16f, Mathf.Max(40f, CQFUIScope.ContentHeight - 44f));
             Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, this.height));
             Widgets.BeginScrollView(viewport, ref this.scrollPos, content);
             using CQFUIScope contentScope = new CQFUIScope(content.width);
-            CQFUIStyle.DrawBox(new Rect(8f, 8f, content.width - 16f, Mathf.Max(40f, this.height - 8f)), 1, CQFUIStyle.AccentTexture);
-            float y = 20f;
-            Rect rectCP = new Rect(content.width - 40f, y, 25f, 25f);
-            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Copy))
-            {
-                this.CopyData();
-            }
-
-            TooltipHandler.TipRegion(rectCP, "Copy".Translate());
-            rectCP.x += 32f;
-            if (CQFUIStyle.ButtonImage(rectCP, TexButton.Paste))
-            {
-                this.PasteData();
-            }
-
-            TooltipHandler.TipRegion(rectCP, "Paste".Translate());
-            y += 36f;
-            CQFEditorTools.DrawActionList_UseWindow(ref y, 15f, this.actions, content, "CQFActions".Translate().Colorize(CQFUIStyle.Accent), a => a.GetType().Name.Translate());
-            this.height = y + 5f;
+            float y = 10f;
+            this.Draw(ref y, content, 8f);
+            this.height = y + 8f;
             Widgets.EndScrollView();
         }
 
@@ -63,7 +49,8 @@ namespace QuestEditor_Library
             {
                 yield return new Command_Action()
                 {
-                    defaultLabel = "DEV:Do actions",
+                    defaultLabel = "CQF_RunActions".Translate(),
+                    icon = TexButton.Play,
                     action = () =>
                     {
                         this.actions.ForEach(a2 => a2.Work(new Dictionary<string, TargetInfo>() { ["Position"] = new TargetInfo(this.Position, this.Map) }, null));

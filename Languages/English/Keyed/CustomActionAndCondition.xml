@@ -3,6 +3,8 @@
 
 
   <CQFActions>Dialog actions</CQFActions>
+  <CQF_ActionLabel>Action: {0}</CQF_ActionLabel>
+  <CQF_RunActions>Run actions</CQF_RunActions>
   <AddCQFAction>Add dialog action</AddCQFAction>
 
   <CQFAction_SentSignal>Action: send signal</CQFAction_SentSignal>

@@ -88,7 +88,14 @@ namespace QuestEditor_Library
 
             TooltipHandler.TipRegion(configurationRect, configurationText + "\n" + "CQF_TargetKeyBook_SelectConfiguration".Translate());
             float errorHeight = this.validationError == null ? 0f : Text.CalcHeight(this.validationError.Message.CanTranslate() ? this.validationError.Message.Translate().ToString() : this.validationError.Message, inRect.width) + 6f;
-            Rect outRect = new Rect(0f, 62f, inRect.width, inRect.height - 66f - errorHeight);
+            bool enabled = GUI.enabled;
+            GUI.enabled = enabled && Find.CurrentMap != null && Current.ProgramState == ProgramState.Playing;
+            Rect registerRect = new Rect(0f, 62f, inRect.width, 32f);
+            if (CQFUIStyle.ButtonText(registerRect, "CQF_TargetKeyBook_AddMapTarget".Translate()))
+                this.PickMapTarget();
+            GUI.enabled = enabled;
+            TooltipHandler.TipRegion(registerRect, "CQF_TargetKeyBook_AddMapTargetTip".Translate());
+            Rect outRect = new Rect(0f, 102f, inRect.width, inRect.height - 106f - errorHeight);
             if (CQFUIStyle.ButtonImage(new Rect(inRect.width - 22f, 30f, 22f, 22f), TexButton.Plus, tooltip: "CQF_TargetKeyBook_AddKey".Translate()))
             {
                 this.drafts.Add(string.Empty);
@@ -167,6 +174,18 @@ namespace QuestEditor_Library
                 this.validationError = exception;
                 CQFTargetKeyBook.ReportError(exception);
             }
+        }
+
+        private void PickMapTarget()
+        {
+            this.SynchronizeDrafts();
+            if (this.validationError != null) return;
+            new CQFTargetSelectionSession(Find.CurrentMap, null, key => this.Execute(() =>
+            {
+                if (!CQFTargetKeyBook.Keys.Contains(key)) CQFTargetKeyBook.Add(key);
+                this.RefreshDrafts();
+                this.scroll.y = Mathf.Max(0f, this.drafts.Count * 28f - this.windowRect.height + 130f);
+            }), registerNewKey: true).Begin();
         }
 
         private void OpenConfigurationName(bool createEmpty)

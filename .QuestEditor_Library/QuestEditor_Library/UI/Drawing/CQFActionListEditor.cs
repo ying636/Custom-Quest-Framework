@@ -8,17 +8,21 @@ namespace QuestEditor_Library
 {
     public static class CQFActionListEditor
     {
-        public static void Draw(ref float y, float x, float width, Rect inRect, string title, List<CQFAction> actions, string tip = null)
+        public static void Draw(ref float y, float x, float width, Rect inRect, string title, List<CQFAction> actions, string tip = null, Action copyList = null, Action pasteList = null)
         {
             width = Mathf.Max(180f, width);
-            Rect titleRect = new Rect(x, y, width - 70f, 28f);
-            Widgets.LabelEllipses(titleRect, title.Colorize(CQFUIStyle.Accent));
+            Rect header = new Rect(x, y, width, 32f);
+            Widgets.DrawBoxSolid(header, CQFUIStyle.Header);
+            CQFUIStyle.DrawBox(header);
+            float toolbarWidth = copyList == null ? 66f : 96f;
+            Rect titleRect = new Rect(x + 8f, y + 3f, width - toolbarWidth - 12f, 26f);
+            Widgets.LabelEllipses(titleRect, title.Colorize(CQFUIStyle.TextColor));
             if (!tip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(titleRect, tip);
             }
 
-            Rect addRect = new Rect(x + width - 58f, y, 25f, 25f);
+            Rect addRect = new Rect(x + width - toolbarWidth, y + 3f, 25f, 25f);
             if (CQFUIStyle.ButtonImage(addRect, TexButton.Plus))
             {
                 CQFEditorTools.OpenCQFActionSelect(type =>
@@ -30,15 +34,22 @@ namespace QuestEditor_Library
             }
 
             TooltipHandler.TipRegion(addRect, "Add".Translate());
-            Rect pasteRect = new Rect(x + width - 28f, y, 25f, 25f);
-            if (Button(pasteRect, TexButton.Paste, "Paste", copiedAction != null))
+            if (copyList != null && Button(new Rect(addRect.x + 30f, y + 3f, 25f, 25f), TexButton.Copy, "Copy", true))
+                copyList();
+            Rect pasteRect = new Rect(x + width - 36f, y + 3f, 25f, 25f);
+            if (Button(pasteRect, TexButton.Paste, "Paste", pasteList != null || copiedAction != null))
             {
-                CQFAction action = copiedAction.Copy();
-                actions.Add(action);
-                expanded.Add(action, action);
+                if (pasteList != null)
+                    pasteList();
+                else
+                {
+                    CQFAction action = copiedAction.Copy();
+                    actions.Add(action);
+                    expanded.Add(action, action);
+                }
             }
 
-            y += 34f;
+            y += 40f;
             Action mutation = null;
             for (int i = 0; i < actions.Count; i++)
             {
@@ -64,7 +75,7 @@ namespace QuestEditor_Library
                 }
 
                 Rect labelRect = new Rect(x + 30f, y + 3f, width - 150f, 25f);
-                string label = (i + 1) + ". " + action.GetType().Name.Translate();
+                string label = (i + 1) + ". " + "CQF_ActionLabel".Translate(action.GetType().Name.Translate());
                 Widgets.LabelEllipses(labelRect, label);
                 TooltipHandler.TipRegion(labelRect, CQFEditorEntrySummary.Describe(action));
                 Rect button = new Rect(x + width - 116f, y + 3f, 23f, 23f);

@@ -55,10 +55,11 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             Rect rect = new Rect(x, y, 250f, 25f);
-            Widgets.Label(rect, this.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
+            string title = "CQF_ActionLabel".Translate(this.GetType().Name.Translate());
+            Widgets.Label(rect, title.Colorize(CQFUIStyle.Accent));
             if ((this.GetType().Name + "_Tip").CanTranslate())
             {
-                TooltipHandler.TipRegion(rect, (this.GetType().Name + "_Tip").Translate());
+                TooltipHandler.TipRegion(rect, title + "\n" + (this.GetType().Name + "_Tip").Translate());
             }
 
             y += 30f;

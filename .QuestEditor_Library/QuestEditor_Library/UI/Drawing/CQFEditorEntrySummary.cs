@@ -18,6 +18,7 @@ namespace QuestEditor_Library
             }
 
             string title = entry.GetType().Name.Translate();
+            if (entry is CQFAction) title = "CQF_ActionLabel".Translate(title);
             string details = Details(entry);
             return details.Length == 0 ? title : title + " · " + details;
         }

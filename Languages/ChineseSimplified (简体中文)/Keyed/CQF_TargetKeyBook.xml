@@ -7,6 +7,8 @@
   <CQF_TargetKeyBook_DefaultConfiguration>默认配置</CQF_TargetKeyBook_DefaultConfiguration>
   <CQF_TargetKeyBook_ConfigurationName>配置名称</CQF_TargetKeyBook_ConfigurationName>
   <CQF_TargetKeyBook_AddKey>添加词条</CQF_TargetKeyBook_AddKey>
+  <CQF_TargetKeyBook_AddMapTarget>标记事物并添加目标键</CQF_TargetKeyBook_AddMapTarget>
+  <CQF_TargetKeyBook_AddMapTargetTip>选择当前地图上的事物，输入目标键并确认，将目标键绑定到该事物并加入目标键本。</CQF_TargetKeyBook_AddMapTargetTip>
   <CQF_TargetKeyBook_CurrentConfiguration>当前配置</CQF_TargetKeyBook_CurrentConfiguration>
   <CQF_TargetKeyBook_NoConfigurations>暂无已保存的配置</CQF_TargetKeyBook_NoConfigurations>
   <CQF_TargetKeyBook_Error>目标键本操作失败</CQF_TargetKeyBook_Error>

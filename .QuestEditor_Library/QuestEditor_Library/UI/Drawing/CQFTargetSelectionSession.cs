@@ -9,11 +9,12 @@ namespace QuestEditor_Library
 {
     public class CQFTargetSelectionSession
     {
-        public CQFTargetSelectionSession(Map map, Thing source, Action<string> assign)
+        public CQFTargetSelectionSession(Map map, Thing source, Action<string> assign, bool registerNewKey = false)
         {
             this.map = map;
             this.source = source;
             this.assign = assign;
+            this.registerNewKey = registerNewKey;
         }
 
         public static void DrawField(ref float y, Rect inRect, float x, string value, Action<string> assign)
@@ -175,6 +176,12 @@ namespace QuestEditor_Library
                 return;
             }
 
+            if (this.registerNewKey)
+            {
+                Find.WindowStack.Add(new Dialog_CQFTargetKey(this.selected, this.assign));
+                return;
+            }
+
             List<string> keys = GetAvailableTargets(this.map).Where(entry => entry.target.Thing == this.selected).Select(entry => entry.key).Distinct().ToList();
             if (keys.Count == 1)
             {
@@ -201,6 +208,7 @@ namespace QuestEditor_Library
         private readonly Map map;
         private readonly Thing source;
         private readonly Action<string> assign;
+        private readonly bool registerNewKey;
         private readonly List<KeyValuePair<Window, Rect>> windows = new List<KeyValuePair<Window, Rect>>();
         private Thing selected;
     }

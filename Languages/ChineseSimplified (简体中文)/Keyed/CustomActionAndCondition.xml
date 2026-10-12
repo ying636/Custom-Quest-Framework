@@ -4,6 +4,8 @@
 
   <!-- EN: Dialog actions -->
   <CQFActions>行为：</CQFActions>
+  <CQF_ActionLabel>行为：{0}</CQF_ActionLabel>
+  <CQF_RunActions>执行行为</CQF_RunActions>
   <!-- EN: Add dialog action -->
   <AddCQFAction>添加行为</AddCQFAction>
 
