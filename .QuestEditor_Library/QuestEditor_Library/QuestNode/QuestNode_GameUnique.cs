@@ -18,8 +18,9 @@ namespace QuestEditor_Library
 
         protected override bool TestRunInt(Slate slate)
         {
-            Quest quest = QuestGen.quest;
-            return !Find.QuestManager?.QuestsListForReading?.Exists(q => q?.root == quest?.root) ?? true;
+            QuestScriptDef definition = this.questDef ?? QuestGen.quest?.root;
+            return definition == null || !Find.QuestManager.QuestsListForReading.Exists(q => q.root == definition);
         }
+        public QuestScriptDef questDef;
     }
 }

@@ -64,16 +64,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            PawnModData_Appearance data = pawnDef.DataFor<PawnModData_Appearance>();
-            data.hair = DefDatabase<HairDef>.GetNamedSilentFail(node["hair"]?.InnerText) ?? HairDefOf.Bald;
-            data.head = DefDatabase<HeadTypeDef>.GetNamedSilentFail(node["head"]?.InnerText);
-            data.bodyType = DefDatabase<BodyTypeDef>.GetNamedSilentFail(node["bodyType"]?.InnerText);
-            data.hairColor = node["hairColor"] == null ? Color.white : ParseHelper.FromString<Color>(node["hairColor"].InnerText);
-            data.skinColor = node["skinColor"] == null ? null : ParseHelper.FromString<Color>(node["skinColor"].InnerText);
-        }
-
         internal string BodyTypeLabel(BodyTypeDef bodyType)
         {
             if (bodyType == null)

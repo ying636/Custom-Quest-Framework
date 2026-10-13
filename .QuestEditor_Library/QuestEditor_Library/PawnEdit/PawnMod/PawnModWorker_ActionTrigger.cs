@@ -93,14 +93,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["actionTriggers"] != null)
-            {
-                pawnDef.DataFor<PawnModData_ActionTrigger>().actionTriggers = this.LoadSaveableList<PawnActionTriggerData>(node["actionTriggers"]);
-            }
-        }
-
         internal string TriggerLabel(PawnActionTriggerData data)
         {
             return data?.key.NullOrEmpty() ?? true ? "CQF_PawnEditor_None".Translate() : data.key;

@@ -68,18 +68,6 @@ namespace QuestEditor_Library
             return result;
         }
 
-        public void LoadModData(XmlNode node)
-        {
-            if (node.SelectSingleNode("modDatas") != null)
-            {
-                return;
-            }
-            foreach (PawnModDef mod in this.AvailableMods())
-            {
-                mod.Worker.LoadData(this, node);
-            }
-        }
-
         public List<PawnModDef> AvailableMods()
         {
             return DefDatabase<PawnModDef>.AllDefsListForReading

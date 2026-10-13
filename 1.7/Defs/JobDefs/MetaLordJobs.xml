@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef>
+    <defName>CQF_MetaLordMove</defName>
+    <driverClass>QuestEditor_Library.JobDriver_MetaLordMove</driverClass>
+    <reportString>Moving to another map layer.</reportString>
+  </JobDef>
+</Defs>

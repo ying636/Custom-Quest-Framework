@@ -95,19 +95,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            PawnModData_NameAndBody data = pawnDef.DataFor<PawnModData_NameAndBody>();
-            data.randomName = ParseHelper.FromString<bool>(node["randomName"]?.InnerText ?? "false");
-            data.firstName = node["firstName"]?.InnerText ?? "";
-            data.nickName = node["nickName"]?.InnerText ?? "";
-            data.lastName = node["lastName"]?.InnerText ?? "";
-            data.nameMaker = DefDatabase<RulePackDef>.GetNamedSilentFail(node["nameMaker"]?.InnerText);
-            data.gender = node["gender"] == null ? Gender.Male : ParseHelper.FromString<Gender>(node["gender"].InnerText);
-            data.bioAge = node["bioAge"] == null ? 14 : ParseHelper.FromString<int>(node["bioAge"].InnerText);
-            data.chrAge = node["chrAge"] == null ? 14 : ParseHelper.FromString<int>(node["chrAge"].InnerText);
-        }
-
         internal void RandomizeDefName(ComplexPawnDef pawnDef, PawnModData_NameAndBody data)
         {
             RulePackDef maker = data.nameMaker ?? pawnDef.KindDef?.GetNameMaker(data.gender);

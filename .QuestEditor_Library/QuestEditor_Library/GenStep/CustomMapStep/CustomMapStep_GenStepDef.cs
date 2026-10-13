@@ -19,7 +19,7 @@ public class CustomMapStep_GenStepDef : CustomMapStep
         y += 35f;
     }
 
-    public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
+    public override void Generate(Map map, CustomMapDataDef def, CustomMapGenerationContext context)
     {
         this.step.genStep.Generate(map, new GenStepParams());
     }

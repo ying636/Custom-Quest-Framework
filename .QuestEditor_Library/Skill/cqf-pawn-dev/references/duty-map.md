@@ -22,8 +22,8 @@
 
 - `ComplexDuty/QuestEditor_DutyDefEditor.cs`
 - `Extension/ModExtension_CustomDuty.cs`
-- `1.6/Defs/Duty/Duty.xml`
-- `1.6/Defs/Duty/LordDuty.xml`
+- `1.7/Defs/Duty/Duty.xml`
+- `1.7/Defs/Duty/LordDuty.xml`
 
 职责图定义和编辑器：
 
@@ -320,7 +320,7 @@ Dictionary<Pawn, CustomDutyMap>
 2. 读取当前节点。
 3. 调用 `TryChangeByTransition(current, toNodeId)`。
 
-它不是强制跳转；必须存在对应有向边且 trigger、condition 全部满足。旧字段 `nodeId` 会兼容迁移到 `toNodeId`。
+它不是强制跳转；必须存在对应有向边且 trigger、condition 全部满足。使用 `toNodeId`；1.7 已删除旧字段 `nodeId` 的存档迁移。
 
 ## 节点切换
 
@@ -476,7 +476,7 @@ runtime.RecordTarget("RepairTarget", target);
 ### 旧简单 Lord 行为
 
 - `JobGiver_Patrol`：读取 `LordJob_Custom` 的 route 数据。
-- `JobGiver_Wait`：优先按 targetKey 读取数据库，失败时兼容旧防守点。
+- `JobGiver_Wait`：优先按 targetKey 读取数据库；未配置目标时读取当前简单 Lord 的等待路线位置。此路径仍由 PawnSpawnData 生成，属于现有行为。
 - `JobGiver_ExitSubMapAndExitMap`：先找子地图出口，再找地图边缘。
 - `JobGiver_MoveToNewLevel`：处理多层级 Lord 移动请求。
 

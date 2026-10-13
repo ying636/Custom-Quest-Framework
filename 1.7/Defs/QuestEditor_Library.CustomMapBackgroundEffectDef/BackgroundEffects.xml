@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <QuestEditor_Library.CustomMapBackgroundEffectDef>
+        <defName>CQF_BackgroundEffect_BlinkStars</defName>
+        <label>Blinking stars</label>
+        <description>Periodically draws stars that fade in and out above the map background.</description>
+        <workerClass>QuestEditor_Library.BackgroundEffectWorker_BlinkStars</workerClass>
+        <texturePaths>
+            <li>Effect/MapBackgroundEffects/Starfield/Star</li>
+            <li>Effect/MapBackgroundEffects/Starfield/Stars</li>
+        </texturePaths>
+        <spawnIntervalTicks>35~90</spawnIntervalTicks>
+        <lifeTimeTicks>90~220</lifeTimeTicks>
+        <scaleRange>1.4~5.5</scaleRange>
+        <alphaRange>0.2~0.75</alphaRange>
+        <rotationRange>0~360</rotationRange>
+        <maxParticles>80</maxParticles>
+        <startOnRegenerate>true</startOnRegenerate>
+    </QuestEditor_Library.CustomMapBackgroundEffectDef>
+
+    <QuestEditor_Library.CustomMapBackgroundEffectDef>
+        <defName>CQF_BackgroundEffect_Meteors</defName>
+        <label>Meteors</label>
+        <description>Periodically draws meteors crossing above the map background.</description>
+        <workerClass>QuestEditor_Library.BackgroundEffectWorker_Meteor</workerClass>
+        <texturePaths>
+            <li>Effect/MapBackgroundEffects/Starfield/Meteor1</li>
+            <li>Effect/MapBackgroundEffects/Starfield/Meteor2</li>
+            <li>Effect/MapBackgroundEffects/Starfield/Meteor3</li>
+            <li>Effect/MapBackgroundEffects/Starfield/Meteor4</li>
+            <li>Effect/MapBackgroundEffects/Starfield/Meteor5</li>
+        </texturePaths>
+        <spawnIntervalTicks>420~900</spawnIntervalTicks>
+        <lifeTimeTicks>35~70</lifeTimeTicks>
+        <scaleRange>0.67~1.5</scaleRange>
+        <alphaRange>0.35~0.75</alphaRange>
+        <speedRange>0.35~0.65</speedRange>
+        <rotationRange>0~360</rotationRange>
+        <maxParticles>2</maxParticles>
+    </QuestEditor_Library.CustomMapBackgroundEffectDef>
+
+</Defs>

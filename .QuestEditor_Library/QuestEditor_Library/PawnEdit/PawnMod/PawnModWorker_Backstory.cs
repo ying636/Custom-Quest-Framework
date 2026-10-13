@@ -47,13 +47,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            PawnModData_Backstory data = pawnDef.DataFor<PawnModData_Backstory>();
-            data.childhood = DefDatabase<BackstoryDef>.GetNamedSilentFail(node["childhood"]?.InnerText);
-            data.adulthood = DefDatabase<BackstoryDef>.GetNamedSilentFail(node["adulthood"]?.InnerText);
-        }
-
         internal void DrawBackstoryButton(ref float y, Rect inRect, float x, string label, Action<BackstoryDef> action)
         {
             if (this.DrawSelectRow(ref y, inRect, x, label))

@@ -38,9 +38,5 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            pawnDef.DataFor<PawnModData_Dialog>().dialogManager = DefDatabase<DialogManagerDef>.GetNamedSilentFail(node["dialogManager"]?.InnerText);
-        }
     }
 }

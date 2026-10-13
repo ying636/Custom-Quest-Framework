@@ -6,7 +6,7 @@ namespace QuestEditor_Library;
 
 public abstract class CustomMapStep : IDrawable, ISaveable
 {
-    public abstract void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param);
+    public abstract void Generate(Map map, CustomMapDataDef def, CustomMapGenerationContext context);
     public abstract void Draw(ref float y, Rect inRect, float x);
     public virtual XElement SaveToXElement(string nodeName)
     {

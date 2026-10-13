@@ -24,9 +24,19 @@ namespace QuestEditor_Library
             });
         }
 
-        public override void PostMapGenerate(Map map)
+        public override string Summary(Scenario scen)
         {
-            base.PostMapGenerate(map);
+            string[] structures = this.maps?.Where(data => data != null)
+                .Select(data => data.label.NullOrEmpty() ? data.defName : data.LabelCap.ToString()).ToArray()
+                ?? Array.Empty<string>();
+            return structures.Length == 0
+                ? "CQF_Scenario_CentreStructureEmpty".Translate()
+                : "CQF_Scenario_CentreStructureSummary".Translate(string.Join(", ", structures));
+        }
+
+        public override void GenerateIntoMap(Map map)
+        {
+            base.GenerateIntoMap(map);
             if (Find.TickManager.TicksGame < 5f && map != null)
             {
                 CustomMapDataDef data = this.maps.RandomElement();

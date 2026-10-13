@@ -120,8 +120,7 @@ namespace QuestEditor_Library
             this.DrawTextRow(ref y, width, "MapName".Translate(), ref def.label);
             if (!def.isPart)
             {
-                Widgets.Label(new Rect(12f, y + 3f, 130f, 25f), "MapDesc".Translate());
-                def.description = Widgets.TextArea(new Rect(146f, y, width - 158f, 58f), def.description);
+                def.description = Widgets.TextArea(this.DrawRowLabel(y, width, "MapDesc".Translate(), 58f), def.description);
                 y += 66f;
             }
             y = sectionRect.yMax + 10f;
@@ -138,15 +137,15 @@ namespace QuestEditor_Library
 
             Rect chanceRect = new Rect(12f, y, width - 24f, 30f);
             Widgets.DrawHighlightIfMouseover(chanceRect);
-            Widgets.Label(new Rect(chanceRect.x + 6f, y + 3f, 130f, 25f), "GenerationChance".Translate());
-            Widgets.TextFieldPercent(new Rect(chanceRect.x + 140f, y + 2f, chanceRect.width - 146f, 26f),
+            Rect chanceField = this.DrawRowLabel(y, width, "GenerationChance".Translate());
+            chanceField.width += 25f;
+            Widgets.TextFieldPercent(chanceField,
                 ref def.commonality, ref this.buffer);
             y += 32f;
 
             Rect limitRect = new Rect(12f, y, width - 24f, 30f);
             Widgets.DrawHighlightIfMouseover(limitRect);
-            Widgets.Label(new Rect(limitRect.x + 6f, y + 3f, 130f, 25f), "GenerationLimit".Translate());
-            Widgets.TextFieldNumeric(new Rect(limitRect.x + 140f, y + 2f, limitRect.width - 146f, 26f),
+            Widgets.TextFieldNumeric(this.DrawRowLabel(y, width, "GenerationLimit".Translate()),
                 ref def.generationLimit, ref this.buffer2, 0);
             TooltipHandler.TipRegion(limitRect, "GenerationLimitTip".Translate());
             y = sectionRect.yMax + 10f;
@@ -206,7 +205,12 @@ namespace QuestEditor_Library
         {
             Rect rowRect = new Rect(12f, y, width - 24f, 30f);
             Widgets.DrawHighlightIfMouseover(rowRect);
-            Widgets.CheckboxLabeled(rowRect.ContractedBy(6f, 2f), label, ref value);
+            Rect field = this.DrawRowLabel(y, width, label);
+            if (Widgets.ButtonInvisible(new Rect(18f, y + 2f, field.x - 24f, 26f)))
+            {
+                value = !value;
+            }
+            Widgets.Checkbox(new Vector2(field.xMax - 24f, field.y + 1f), ref value, 24f);
             if (!tip.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(rowRect, tip);
@@ -218,9 +222,19 @@ namespace QuestEditor_Library
         {
             Rect rowRect = new Rect(12f, y, width - 24f, 30f);
             Widgets.DrawHighlightIfMouseover(rowRect);
-            Widgets.Label(new Rect(rowRect.x + 6f, y + 3f, 130f, 25f), label);
-            value = Widgets.TextField(new Rect(rowRect.x + 140f, y + 2f, rowRect.width - 146f, 26f), value);
+            value = Widgets.TextField(this.DrawRowLabel(y, width, label), value);
             y += 32f;
+        }
+
+        private Rect DrawRowLabel(float y, float width, string label, float fieldHeight = 26f)
+        {
+            using CQFUIScope scope = new CQFUIScope();
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Text.WordWrap = false;
+            float labelWidth = Mathf.Min(130f, (width - 36f) * 0.4f);
+            Rect labelRect = new Rect(18f, y + 2f, labelWidth, 26f);
+            Widgets.LabelEllipses(labelRect, label);
+            return new Rect(labelRect.xMax + 6f, y + 2f, Mathf.Max(20f, width - labelRect.xMax - 49f), fieldHeight);
         }
 
         private void OpenLoadMenu()

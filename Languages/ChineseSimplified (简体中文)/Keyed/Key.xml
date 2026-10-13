@@ -180,6 +180,7 @@
   <CQF_ChanceCopySettingsTip>复制连接名称和几率池。</CQF_ChanceCopySettingsTip>
   <CQF_ChancePasteSettingsTip>粘贴已复制的连接名称和几率池。</CQF_ChancePasteSettingsTip>
   <CustomMapDef>地图定义：{0}</CustomMapDef>
+  <CustomMapGenerationSet>地图生成设置</CustomMapGenerationSet>
   <MapDefWithChance>地图定义：</MapDefWithChance>
   <MapDefWithChance_Tip>生成时会生成一个含有地图定义和其概率的生成池，根据每个定义的概率来抽取一个进行生成。</MapDefWithChance_Tip>
   <TagWithChance>标签：</TagWithChance>

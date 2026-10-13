@@ -7,7 +7,7 @@ using Verse;
 namespace QuestEditor_Library;
 public class CustomMapStep_BackgroundEffects : CustomMapStep
 {
-    public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
+    public override void Generate(Map map, CustomMapDataDef def, CustomMapGenerationContext context)
     {
         if (MapComponent_CustomMapData.GetComp(map)is { } comp)
         {

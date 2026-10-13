@@ -68,30 +68,6 @@ namespace QuestEditor_Library
             this.ApplyCustomGenes(data, pawn);
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, XmlNode node)
-        {
-            PawnModData_Genes data = pawnDef.DataFor<PawnModData_Genes>();
-            data.xenotype = DefDatabase<XenotypeDef>.GetNamedSilentFail(node["xenotype"]?.InnerText);
-            this.EnsureXenotype(data);
-            data.customGenes.Clear();
-            XmlNode customGenesNode = node.SelectSingleNode("customGenes");
-            if (customGenesNode == null)
-            {
-                return;
-            }
-
-            foreach (XmlNode li in customGenesNode.SelectNodes("li"))
-            {
-                GeneDef gene = DefDatabase<GeneDef>.GetNamedSilentFail(li.InnerText.Trim());
-                if (gene != null)
-                {
-                    data.customGenes.Add(gene);
-                }
-            }
-
-            this.RemoveDuplicateGenes(data.customGenes);
-        }
-
         public override IEnumerable<string> GetPreviewApplyKeyParts(ComplexPawnDef pawnDef)
         {
             foreach (GeneDef gene in pawnDef.DataFor<PawnModData_Genes>().customGenes)

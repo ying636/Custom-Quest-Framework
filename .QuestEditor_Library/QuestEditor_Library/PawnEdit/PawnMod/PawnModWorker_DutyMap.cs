@@ -34,13 +34,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            PawnModData_DutyMap data = pawnDef.DataFor<PawnModData_DutyMap>();
-            data.dutyMap = DefDatabase<DutyMapDef>.GetNamedSilentFail(node["dutyMap"]?.InnerText);
-            data.dutyMapStartNodeId = node["dutyMapStartNodeId"]?.InnerText;
-        }
-
         public override void OnPawnSpawned(ComplexPawnDef pawnDef, Pawn pawn, Quest quest)
         {
             PawnModData_DutyMap data = pawnDef.DataFor<PawnModData_DutyMap>();

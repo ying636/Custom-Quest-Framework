@@ -103,6 +103,10 @@ namespace QuestEditor_Library
             {
                 result.Add(new XElement("recordToQuestBase", recordToQuestBase));
             }
+            if (this.retainQuestDataAfterEnd)
+            {
+                result.Add(new XElement("retainQuestDataAfterEnd", this.retainQuestDataAfterEnd));
+            }
 
             if (this.recordToGlobalBase)
             {
@@ -126,6 +130,9 @@ namespace QuestEditor_Library
             Widgets.CheckboxLabeled(rect, "RecordToQuestBase".Translate(), ref this.recordToQuestBase);
             y += 30f;
             rect.y += 30f;
+            Widgets.CheckboxLabeled(rect, "CQF_RetainQuestDataAfterEnd".Translate(), ref this.retainQuestDataAfterEnd);
+            y += 30f;
+            rect.y += 30f;
             Widgets.CheckboxLabeled(rect, "RecordToGlobalBase".Translate(), ref this.recordToGlobalBase);
             y += 30f;
         }
@@ -140,6 +147,7 @@ namespace QuestEditor_Library
             base.ExposeData();
             Scribe_Values.Look(ref this.recordKey, "CQFAction_Record_recordKey");
             Scribe_Values.Look(ref this.recordToQuestBase, "recordToQuestBase");
+            Scribe_Values.Look(ref this.retainQuestDataAfterEnd, "retainQuestDataAfterEnd");
             Scribe_Values.Look(ref this.recordToTemporaryBase, "CQFAction_Record_recordToTemporaryBase");
             Scribe_Values.Look(ref this.recordToGlobalBase, "recordToGlobalBase");
         }
@@ -155,7 +163,12 @@ namespace QuestEditor_Library
 
                 if (this.recordToQuestBase)
                 {
-                    GameComponent_Editor.Instance.GetQuestData(quest)?.RecordTarget(recordKey, t.Value);
+                    QuestData data = GameComponent_Editor.Instance.GetQuestData(quest);
+                    if (data != null)
+                    {
+                        data.RecordTarget(recordKey, t.Value);
+                        data.retainAfterQuestEnd |= this.retainQuestDataAfterEnd;
+                    }
                 }
 
                 if (this.recordToGlobalBase)
@@ -167,6 +180,7 @@ namespace QuestEditor_Library
 
         public string recordKey;
         public bool recordToQuestBase = false;
+        public bool retainQuestDataAfterEnd;
         public bool recordToTemporaryBase = false;
         public bool recordToGlobalBase = false;
     }

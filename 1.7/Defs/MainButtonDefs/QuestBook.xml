@@ -1,0 +1,12 @@
+<Defs>
+  <MainButtonDef>
+    <defName>CQF_QuestBook</defName>
+    <label>quest book</label>
+    <description>View tutorial and quest progress.</description>
+    <tabWindowClass>QuestEditor_Library.MainTabWindow_QuestBook</tabWindowClass>
+    <workerClass>QuestEditor_Library.MainButtonWorker_QuestBook</workerClass>
+    <order>85</order>
+    <validWithoutMap>true</validWithoutMap>
+    <iconPath>UI/QuestEditor/LoadQuest</iconPath>
+  </MainButtonDef>
+</Defs>

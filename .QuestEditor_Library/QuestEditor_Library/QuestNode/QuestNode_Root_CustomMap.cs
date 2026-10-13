@@ -55,6 +55,7 @@ namespace QuestEditor_Library
                 site.expandingIconPath = this.expandingIconPath;
                 site.quest = quest;
                 site.disdestroyBecauseOfNoColonist = this.disdestroyBecauseOfNoColonist;
+                site.keepMapUntilQuestEnds = this.keepMapUntilQuestEnds;
                 site.customLabel = map.label;
                 site.customDescription = map.description;
                 site.mapDef = map;
@@ -90,6 +91,8 @@ namespace QuestEditor_Library
             CQFEditorTools.DrawLabelAndText_Line(y, "ExpandingIconPath".Translate(), ref this.expandingIconPath, x + 7f, 150f);
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x + 7f, y, 300f, 25f), "DisdestroyBecauseOfNoColonist".Translate(), ref this.disdestroyBecauseOfNoColonist);
+            y += 30f;
+            Widgets.CheckboxLabeled(new Rect(x + 7f, y, Mathf.Max(40f, inRect.width - x - 19f), 25f), "CQF_KeepMapUntilQuestEnds".Translate(), ref this.keepMapUntilQuestEnds);
             y += 30f;
             Widgets.CheckboxLabeled(new Rect(x + 7f, y, 300f, 25f), "Reenterable".Translate(), ref this.reenterable);
             y += 30f;
@@ -341,6 +344,7 @@ namespace QuestEditor_Library
         public string expandingIconPath;
         public bool replaceMapGeneration = false;
         public bool disdestroyBecauseOfNoColonist = false;
+        public bool keepMapUntilQuestEnds;
         public bool reenterable;
         public bool beUnreenterableWhenAllEnemiesDefeated;
         public bool enableBlack = true;

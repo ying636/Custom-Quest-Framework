@@ -79,14 +79,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["apparels"] != null)
-            {
-                pawnDef.DataFor<PawnModData_Apparel>().apparels = this.LoadSaveableList<ThingData>(node["apparels"]);
-            }
-        }
-
         internal void OpenLayerSelectDialog(List<ThingData> apparels, ApparelLayerDef layer)
         {
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => this.ApparelInLayer(def, layer)).ToList();

@@ -100,18 +100,16 @@ namespace QuestEditor_Library
             Find.World.info.seedString = Find.TickManager.TicksGame.ToString();
             LongEventHandler.SetCurrentEventText("GenerateSubMap".Translate());
             DeepProfiler.Start("Generate map");
-            Map customMap = GameTools.GenerateSubMap(this.size, custom, this.generator ?? custom.def.mapGenerator, this.GetSteps(questID, pos), parent);
+            Map customMap = GameTools.GenerateSubMap(this.size, custom, this.generator ?? custom.def.mapGenerator, this.GetSteps(), parent);
             QuestUtility.AddQuestTag(ref customMap.Parent.questTags, "Quest" + questID + "." + this.defName);
             QuestUtility.AddQuestTag(ref customMap.Parent.questTags, "Quest" + questID + "." + custom.level);
             Find.World.info.seedString = seed;
             DeepProfiler.End();
         }
 
-        public IEnumerable<GenStepWithParams> GetSteps(string questID, IntVec3 pos)
+        public IEnumerable<GenStepWithParams> GetSteps()
         {
-            yield return new GenStepWithParams(QEDefOf.QE_CustomSite_GenStep, new GenStepParams() { sitePart = new SitePart(null, QEDefOf.QE_CustomSite, new CustomSitePartParams { mapData = this, quest = questID != null ? Find.QuestManager.QuestsListForReading.Find(q => q.id.ToString() == questID) : null, spot = pos, isSubMap = true }) });
-            // yield return new GenStepWithParams(DefDatabase<GenStepDef>.GetNamed("Fog"), new GenStepParams());
-            yield break;
+            yield return new GenStepWithParams(QEDefOf.QE_CustomSite_GenStep, new GenStepParams());
         }
 
         public CustomMapDataDef GetDataByCore(CustomThingData_ZoneCore coreData)

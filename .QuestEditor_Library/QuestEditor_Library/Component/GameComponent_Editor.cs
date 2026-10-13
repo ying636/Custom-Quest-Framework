@@ -273,7 +273,7 @@ namespace QuestEditor_Library
             {
                 this.dialogsWithTargets.RemoveAll(d => (d.Value.removeWhenThingDespawned && !d.Key.Spawned) || (d.Value.removeWhenPawnDied && d.Key is Pawn p && p.Dead));
                 List<Quest> qs = Find.QuestManager.QuestsListForReading.FindAll(q => q.Historical);
-                this.datas.RemoveAll(v => qs.Exists(q=> q.id == v.Key));
+                this.datas.RemoveAll(v => !v.Value.retainAfterQuestEnd && qs.Exists(q=> q.id == v.Key));
             } 
             Scribe_Deep.Look(ref this.globalData, "globalData");
             Scribe_Collections.Look(ref this.requests, "QE_GameComponent_Editor_requests",LookMode.Deep);
@@ -436,6 +436,11 @@ namespace QuestEditor_Library
         }
         public void ExposeData()
         {
+            Scribe_Values.Look(ref this.retainAfterQuestEnd, "retainAfterQuestEnd");
+            if (Scribe.mode == LoadSaveMode.Saving && this.retainAfterQuestEnd)
+            {
+                this.TargetDatas.RemoveAll(t => t.target.Map != null && t.target.Map.Disposed);
+            }
             Scribe_Collections.Look(ref this.pawnGroups, "QuestData_pawnGroups", LookMode.Deep);
             Scribe_Collections.Look(ref this.targetDatas, "QuestData_targetDatas", LookMode.Deep);
             Scribe_Collections.Look(ref this.values, "QuestData_values", LookMode.Value, LookMode.Value);
@@ -457,6 +462,7 @@ namespace QuestEditor_Library
         }
 
 
+        public bool retainAfterQuestEnd;
         Dictionary<string, Lord> lords = new Dictionary<string, Lord>();
         public List<string> tmpNames;
         public List<Lord> tmpLord;

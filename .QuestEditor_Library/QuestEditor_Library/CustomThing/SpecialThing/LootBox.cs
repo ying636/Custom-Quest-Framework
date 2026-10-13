@@ -750,7 +750,7 @@ namespace QuestEditor_Library
             this.count = new IntRange(min, max);
             if (this.CanSelectStuff)
             {
-                Rect rect = new Rect(180f + x, y + 3f, 150f, 25f);
+                Rect rect = new Rect(180f + x, y + 3f, Mathf.Max(20f, Mathf.Min(150f, inRect.width - x - 192f)), 25f);
                 if (CQFUIStyle.ButtonText(rect, "SelectStuff".Translate(this.stuff?.label), false))
                 {
                     CQFEditorTools.DrawFloatMenu<ThingDef>(DefDatabase<ThingDef>.AllDefsListForReading.FindAll((t) => t.IsStuff), (t) => this.stuff = t, (t) => t.label, new List<FloatMenuOption>() { new FloatMenuOption("Null".Translate(), () => this.stuff = null) });

@@ -13,7 +13,9 @@ public static class RuntimeChecksStartup
             Application.runInBackground = true;
             GameObject gameObject = new GameObject("CQF_RuntimeChecks");
             UnityEngine.Object.DontDestroyOnLoad(gameObject);
-            gameObject.AddComponent<RuntimeChecksDriver>();
+            if (System.IO.File.Exists(System.IO.Path.Combine(GenFilePaths.SaveDataFolderPath, "version17")))
+                gameObject.AddComponent<Version17RuntimeChecksDriver>();
+            else gameObject.AddComponent<RuntimeChecksDriver>();
         });
     }
 }

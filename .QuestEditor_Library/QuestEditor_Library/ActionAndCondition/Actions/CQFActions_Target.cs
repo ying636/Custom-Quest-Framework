@@ -2661,12 +2661,6 @@ namespace QuestEditor_Library
             base.ExposeData();
             Scribe_Defs.Look(ref this.dutyMap, "dutyMap");
             Scribe_Values.Look(ref this.toNodeId, "toNodeId");
-            string legacyNodeId = null;
-            Scribe_Values.Look(ref legacyNodeId, "nodeId");
-            if (this.toNodeId.NullOrEmpty())
-            {
-                this.toNodeId = legacyNodeId;
-            }
         }
 
         public DutyMapDef dutyMap;

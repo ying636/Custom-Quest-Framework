@@ -198,14 +198,13 @@ CQF 地图体系的核心概念：
 
 ### 主要地图 / MainSite 生命周期
 
-CQF 1.6 的主要地图由 `MainSite` 世界对象承载，长期状态应保存在 `MainSite` 或 `MainMapWorldComponent`，不要只依赖运行中的 `Map`。
+CQF 1.7 的主要地图由 `MainSite` 世界对象承载，长期状态应保存在 `MainSite` 或 `MainMapWorldComponent`，不要只依赖运行中的 `Map`。
 
 核心约定：
 - `MainSite.killed` 默认 `false`。如果设为 `true`，`MainSite.Notify_MyMapRemoved` 会在主要站点地图离开/移除后销毁对应世界站点。
 - 主要站点销毁统一走 `MainMapWorldComponent.DestroyMainSite(MainSite site, bool destroyMap = true, bool notifyPlayer = true)`，这样会同步移除地图、销毁世界对象并清理索引。
 - 需要通过脚本 Key 销毁主要站点时使用 `CQFAction_DestroyMainSite`。Key 可以指向数据库中记录的主要站点地图目标，也可以直接填写站点的 `MainMapKey`（格式如 `MainMap:ID`）或 ID。
 - 需要读取主要站点访问次数时使用 `CQFAction_RecordMainSiteVisitCount`，它会把 `MainSite.visitCount` 写入指定数据库。
-- 倒计时销毁主要站点地图使用 `CQF_DestroyMainSiteCountdown` 这个 `GameConditionDef`，运行类为 `GameCondition_DestroyMainSite`。它的 label 带 `{0}`，会显示剩余时间，结束后销毁当前地图及其 `MainSite`。
 
 ### 自定义地图生成时的临时数据库
 
@@ -219,7 +218,7 @@ CQF 1.6 的主要地图由 `MainSite` 世界对象承载，长期状态应保存
 
 ### 地图背景与动态背景特效
 
-CQF 1.6 的自定义地图背景由 `MapComponent_CustomMapData.background` 管理。背景图本体由 `CustomMapStep_MapBackground` 编辑和应用；动态背景特效已从背景图步骤中拆出，由独立的 `CustomMapStep_BackgroundEffects` 编辑和应用。
+CQF 1.7 的自定义地图背景由 `MapComponent_CustomMapData.background` 管理。背景图本体由 `CustomMapStep_MapBackground` 编辑和应用；动态背景特效已从背景图步骤中拆出，由独立的 `CustomMapStep_BackgroundEffects` 编辑和应用。
 
 核心类型：
 - `CustomMapBackgroundData`：保存背景贴图、颜色、透明度、绘制尺寸、偏移、是否为背景地图（`enableTerrainEdges`）以及启用的背景特效 Def 列表。动态特效不再需要单独启用字段，列表非空即可绘制。
@@ -234,7 +233,7 @@ CQF 1.6 的自定义地图背景由 `MapComponent_CustomMapData.background` 管�
 - 全景背景不要另建独立 CustomMapStep，优先并入 `CustomMapBackgroundData`，用绘制范围区分：`drawScope=Map` 仍按地图尺寸绘制，`drawScope=CameraVisible` 按相机可视范围绘制。
 - `CameraVisible` 背景不要走 `MapDrawLayer` 缓存网格生成大静态平面；应在 `MapDrawLayer_CQFCustomBackground.DrawLayer()` 中按当前 `Find.Camera.orthographicSize` 和 `Find.Camera.aspect` 每帧绘制 `MeshPool.plane10`，参考原版 `GravshipRenderer.DrawLayer`。
 - 原版地图外灰色区域来自 `MapEdgeClipDrawer.DrawClippers`，执行顺序在 `mapDrawer.DrawMapMesh()` 之后，且使用 `AltitudeLayer.WorldClipper` / `ShaderDatabase.MetaOverlay`。如果要让全景背景显示在地图外，给 `Map.DrawMapClippers` getter 加小范围 Harmony postfix：仅当当前地图背景 `Enabled && DrawOnCameraVisibleArea` 时返回 `false`。
-- 避免把一张纹理极端拉伸成大静态平面。`CameraVisible` 背景应支持 `fitMode`：`Tile` 平铺、`Stretch` 单张拉伸、`Cover` 单张等比覆盖并裁切边缘。默认保留 `Tile` 以兼容旧数据；整张星图类背景用 `Cover`。
+- 避免把一张纹理极端拉伸成大静态平面。`CameraVisible` 背景应支持 `fitMode`：`Tile` 平铺、`Stretch` 单张拉伸、`Cover` 单张等比覆盖并裁切边缘。`Tile` 是平铺模式的默认值；整张星图类背景用 `Cover`。
 - `Tile` 模式用 `texture.wrapMode=Repeat`，按可视宽高 / tileSize 设置 `material.mainTextureScale`，并按相机世界坐标设置 `mainTextureOffset`，这样移动相机时背景连续平铺。`Stretch/Cover` 用 `Clamp`；`Cover` 根据贴图宽高比与相机宽高比计算 UV scale/offset，保证不变形。
 - Quest 星图背景示例：`<drawScope>CameraVisible</drawScope>` + `<fitMode>Cover</fitMode>`。
 内置背景特效：
@@ -346,9 +345,9 @@ AI 设计地图时，先明确：
 
 `GenStep_CustomMap.SpawnCustomMap` 的关键顺序：
 
-1. 创建共享的 `CustomSitePartParams`，写入调用方传入的 `quest`、当前 `mapData` 和 `isSubMap`。
+1. 创建临时 `CustomMapGenerationContext`，将调用方的任务写入 `Quest`。地图定义直接来自 `CustomSite.mapDef`、`MapParent_Custom.mapDataDef` 或 `EditorMapObject.mapDef`，不再通过站点参数传递。
 2. 依次执行 `preCustomSteps`。
-3. 从共享参数重新读取 `quest`，再计算 `questId`。
+3. 从共享上下文重新读取 `Quest`，再计算 `questId`。
 4. 使用更新后的任务生成建筑、CustomThing、Pawn、Lord、区域、GenerationAction 和任务标签。
 5. 生成主体结束后执行 `customSteps`。
 
@@ -363,7 +362,7 @@ AI 设计地图时，先明确：
 </preCustomSteps>
 ```
 
-`CustomMapStep_StartQuest` 使用当前地图的任务事件点数生成任务，并将结果写入共享的 `CustomSitePartParams.quest`。后续内容由现有生成流程统一获得 `Quest{id}` 标签和任务引用，不要在步骤中逐个补标签。
+`CustomMapStep_StartQuest` 使用当前地图的任务事件点数生成任务，并将结果写入共享的 `CustomMapGenerationContext.Quest`。后续内容由现有生成流程统一获得 `Quest{id}` 标签和任务引用，不要在步骤中逐个补标签。
 
 注意：
 
@@ -792,7 +791,7 @@ Pawn 生成点。数据存在 `CustomMapDataDef.pawns` 字典中，不在物件 
 - 通过 `CQFAction_ActivateCustomMap`、`CQFAction_SwtichEntranceStatus` 等动作操作入口时，通常需要在动作的 `targetsText` 中指定入口 key
 
 使用要点：
-- RimWorld 1.6 的右键进入由原版 `JobDriver_EnterPortal` 完成，成功传送后调用入口的 `OnEntered(Pawn)`；入口运行时行为必须挂在 `OnEntered`，不能只挂在旧的 `TryEnter` / 自定义 JobDriver 路径
+- RimWorld 1.7 的右键进入由原版 `JobDriver_EnterPortal` 完成，成功传送后调用入口的 `OnEntered(Pawn)`；入口运行时行为必须挂在 `OnEntered`，不能只挂在旧的 `TryEnter` / 自定义 JobDriver 路径
 - 入口要跨对象联动时，先把入口记录到数据库，再由信号或动作引用
 - `LinkEntranceAndExit` 使用 `entranceText` / `exitText` 指向已记录的入口与出口
 
@@ -830,7 +829,7 @@ Pawn 生成点。数据存在 `CustomMapDataDef.pawns` 字典中，不在物件 
 - 被其他动作操作时，通常需要先记录出口 key，再通过 `targetsText` 或专用字段引用
 
 使用要点：
-- RimWorld 1.6 的右键离开同样经过原版 `JobDriver_EnterPortal`，成功传送后调用出口的 `OnEntered(Pawn)`；出口运行时行为必须挂在 `OnEntered`，不能只挂在旧的 `Exit(Thing)` 路径
+- RimWorld 1.7 的右键离开同样经过原版 `JobDriver_EnterPortal`，成功传送后调用出口的 `OnEntered(Pawn)`；出口运行时行为必须挂在 `OnEntered`，不能只挂在旧的 `Exit(Thing)` 路径
 - 出口和入口联动时优先记录 `Entrance` / `Exit` 两个稳定 key
 - 需要对进入者执行行为时，直接在 `enterActions` 中使用 `Trigger` 密匙
 
@@ -966,7 +965,7 @@ ThingData 有三种位置字段，分别对应不同场景：
 3. 最终写入 XML 时：有 `allRect` 则写 `allRect`，没有则写 `position`
 
 **生成时的读取顺序**（`GenStep_CustomMap.SpawnThings`）：
-1. 有 `allPositions` → 用它（兼容旧数据或手动写入的脏数据）
+1. 有 `allPositions` → 使用显式位置列表；此字段仍参与地图复制、旋转和压缩，不是仅为旧存档保留的迁移字段
 2. 没有 `allPositions`，有 `allRect` → 展开所有格子
 3. 两者都没有 → 用 `position`（单物品回退）
 
@@ -2617,7 +2616,7 @@ CQFAction_Target 的子类通过 `targetsText` 指定目标来源。常用 key�
 | `Target` | 群组动作的当前目标 |
 | `null` | 空目标 |
 
-> 所有的 action 字段名和 XML 结构均来自 `D:\Code\Git\QuestEditor_Library\QuestEditor_Library\CQFUtility.cs` 中对应类的 `SaveToXElement()` 方法。
+> 所有的 action 字段名和 XML 结构均来自 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\ActionAndCondition` 下对应类的 `SaveToXElement()` 方法；共用目标与序列化结构同时核对 `CQFUtility.cs`。
 
 ## DialogCondition API 速查
 

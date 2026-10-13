@@ -5,7 +5,7 @@ using Verse;
 namespace QuestEditor_Library;
 public class CustomMapStep_MapPart : CustomMapStep
 {
-    public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
+    public override void Generate(Map map, CustomMapDataDef def, CustomMapGenerationContext context)
     {
         List<IntVec3> cells = map.AllCells.Where(c => !GenStep_CustomMap.disgenerate.Contains(c)).ToList();
         int c = this.count.RandomInRange;

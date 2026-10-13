@@ -79,14 +79,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["traits"] != null)
-            {
-                pawnDef.DataFor<PawnModData_Traits>().traits = this.LoadSaveableList<TraitData>(node["traits"]);
-            }
-        }
-
         internal void OpenTraitSelector(Action<TraitData> action)
         {
             List<KeyValuePair<TraitDef, TraitDegreeData>> stagets = new List<KeyValuePair<TraitDef, TraitDegreeData>>();

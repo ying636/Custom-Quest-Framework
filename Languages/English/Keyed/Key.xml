@@ -222,6 +222,7 @@ SiteName: SiteName-></RuleTip>
   <CQF_ChancePasteSettingsTip>Paste the copied link name and chance pools.</CQF_ChancePasteSettingsTip>
 
   <CustomMapDef>MapDef:{0}</CustomMapDef>
+  <CustomMapGenerationSet>Map generation settings</CustomMapGenerationSet>
   <MapDefWithChance>Map Defs:</MapDefWithChance>
   <MapDefWithChance_Tip>When generating, a generation pool containing map def and their chance will be generated, and one will be extracted based on the chance of each def for generation.</MapDefWithChance_Tip>
 

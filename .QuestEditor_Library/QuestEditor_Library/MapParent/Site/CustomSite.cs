@@ -67,6 +67,11 @@ namespace QuestEditor_Library
         }
         public override bool ShouldRemoveMapNow(out bool alsoRemoveWorldObject)
         {
+            if (this.keepMapUntilQuestEnds && this.quest != null && !this.quest.Historical)
+            {
+                alsoRemoveWorldObject = false;
+                return false;
+            }
             bool result = base.ShouldRemoveMapNow(out alsoRemoveWorldObject);
             return result && Find.TickManager.TicksGame - this.creationGameTicks > 5 
                 && this.ShouldRemoveMapBySubmap(ref alsoRemoveWorldObject) && (!this.disdestroyBecauseOfNoColonist || this.forceRemoveWorldObjectWhenMapRemoved);
@@ -120,6 +125,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.beUnreenterableWhenAllEnemiesDefeated, "beUnreenterableWhenAllEnemiesDefeated");
 
             Scribe_Values.Look(ref this.disdestroyBecauseOfNoColonist, "disdestroyBecauseOfNoColonist");
+            Scribe_Values.Look(ref this.keepMapUntilQuestEnds, "keepMapUntilQuestEnds");
             Scribe_Values.Look(ref this.customDescription, "customDescription");
             Scribe_References.Look(ref this.quest, "quest");
             Scribe_Defs.Look(ref this.mapDef, "mapDef");
@@ -139,6 +145,7 @@ namespace QuestEditor_Library
         public bool reenterable;
         public bool beUnreenterableWhenAllEnemiesDefeated;
         public bool disdestroyBecauseOfNoColonist = false;
+        public bool keepMapUntilQuestEnds;
         public string customDescription;
         public CustomMapDataDef mapDef;
         public List<MapParent_Custom> allSubMaps = new List<MapParent_Custom>();

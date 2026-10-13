@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Xml;
 using QuestEditor_Library;
+using RimWorld;
 using Verse;
 
 internal static class EditorDesignatorPatchChecks
@@ -30,7 +31,7 @@ internal static class EditorDesignatorPatchChecks
             Console.WriteLine("PASS disabled editor XML never enters native patch loading");
             return;
         }
-        string expectedFile = Path.Combine(modRoot, "1.6", "Optional", "Editor", key);
+        string expectedFile = Path.Combine(modRoot, VersionControl.CurrentVersionStringWithoutBuild, "Optional", "Editor", key);
         if (files[key].FullName != expectedFile) throw new InvalidOperationException("Editor patch did not come from its conditional folder.");
         if (files.Values.Count(file => file.Name == "CQF_EditorDesignators.xml") != 1)
             throw new InvalidOperationException("Editor patch was loaded more than once.");

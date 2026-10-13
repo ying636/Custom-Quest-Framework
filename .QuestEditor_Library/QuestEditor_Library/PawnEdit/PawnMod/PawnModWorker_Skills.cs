@@ -59,14 +59,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["skills"] != null)
-            {
-                pawnDef.DataFor<PawnModData_Skills>().skills = this.LoadSaveableList<SkillData>(node["skills"]);
-            }
-        }
-
         internal SkillData DataFor(List<SkillData> list, SkillDef skill)
         {
             SkillData result = list.FirstOrDefault(data => data.def == skill);

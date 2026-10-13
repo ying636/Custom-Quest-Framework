@@ -65,14 +65,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["weapon"] != null)
-            {
-                pawnDef.DataFor<PawnModData_Weapon>().weapon = DirectXmlToObject.ObjectFromXml<ThingData>(node["weapon"], false);
-            }
-        }
-
         internal void OpenSelectDialog(ThingData data)
         {
             List<ThingDef> defs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.IsWeapon).ToList();

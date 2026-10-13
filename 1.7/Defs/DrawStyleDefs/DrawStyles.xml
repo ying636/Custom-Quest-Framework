@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <DrawStyleDef>
+    <defName>CQF_Random</defName>
+    <label>random</label>
+    <uiIconPath>UI/Widgets/DrawStyles/Random</uiIconPath>
+    <drawStyleType>QuestEditor_Library.DrawStyle_RandomLittleShape</drawStyleType>
+    <drawArea>false</drawArea>
+    <drawShortSideMeasurement>false</drawShortSideMeasurement>
+    <canSnap>false</canSnap>
+  </DrawStyleDef>
+
+  <DrawStyleDef>
+    <defName>CQF_RandomMed</defName>
+    <label>medium random</label>
+    <uiIconPath>UI/Widgets/DrawStyles/MediumRandom</uiIconPath>
+    <drawStyleType>QuestEditor_Library.DrawStyle_RandomMediumShape</drawStyleType>
+    <drawArea>false</drawArea>
+    <drawShortSideMeasurement>false</drawShortSideMeasurement>
+    <canSnap>false</canSnap>
+  </DrawStyleDef>
+
+  <DrawStyleDef>
+    <defName>CQF_Lump</defName>
+    <label>random</label>
+    <uiIconPath>UI/Widgets/DrawStyles/Random2</uiIconPath>
+    <drawStyleType>QuestEditor_Library.DrawStyle_RandomLittleLump</drawStyleType>
+    <drawArea>false</drawArea>
+    <drawShortSideMeasurement>false</drawShortSideMeasurement>
+    <canSnap>false</canSnap>
+  </DrawStyleDef>
+
+  <DrawStyleDef>
+    <defName>CQF_LumpMed</defName>
+    <label>medium random</label>
+    <uiIconPath>UI/Widgets/DrawStyles/MediumRandom2</uiIconPath>
+    <drawStyleType>QuestEditor_Library.DrawStyle_RandomMediumLump</drawStyleType>
+    <drawArea>false</drawArea>
+    <drawShortSideMeasurement>false</drawShortSideMeasurement>
+    <canSnap>false</canSnap>
+  </DrawStyleDef>
+
+</Defs>

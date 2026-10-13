@@ -18,7 +18,7 @@
 核心文件：
 
 - `PawnEdit/ComplexPawnDef.cs`
-- `PawnEdit/QuestEditor_PawnDataEditor.cs`
+- `CQF.Editor/PawnEdit/QuestEditor_PawnDataEditor.cs`（编辑器项目）
 - `PawnEdit/PawnSpawnData_ComplexPawn.cs`
 - `PawnEdit/PawnMod/PawnModDef.cs`
 - `PawnEdit/PawnMod/PawnModWorker.cs`
@@ -33,7 +33,7 @@
 
 Def 注册：
 
-- `1.6/Defs/QuestEditor_Library.PawnModDef/PawnMods.xml`
+- `1.7/Defs/QuestEditor_Library.PawnModDef/PawnMods.xml`
 
 ## 数据模型
 
@@ -84,19 +84,7 @@ Quests/Pawn/<defName>.xml
 
 `CQFQuestDefBootstrap` 启动时扫描 `Quests/Pawn`，读取 `QuestEditor_Library.ComplexPawnDef` 并加入 `DefDatabase<ComplexPawnDef>`。
 
-加载流程：
-
-1. 克隆 XML 节点。
-2. 只保留 `defName`、`label`、`modDatas`。
-3. 通过 `DirectXmlToObject` 读取新结构。
-4. 仅当原 XML 没有 `modDatas` 时，依次调用 Worker 的 `LoadData` 迁移旧平铺字段。
-5. 解析交叉引用并执行 `ConfigErrors`。
-
-因此：
-
-- 新 XML 只写 `modDatas`。
-- 一旦存在 `modDatas`，旧平铺字段不会再合并进入模块。
-- 旧格式兼容只放在 `LoadData`，不要继续生成旧格式。
+加载流程：DirectXmlToObject 直接读取 ComplexPawnDef，随后解析交叉引用并执行 ConfigErrors。1.7 只支持 modDatas；旧平铺字段不再过滤或迁移，未知字段由原版 XML 加载器报告。
 
 热加载会从 DefDatabase 移除同名 Def 再加入当前对象。已经持有旧 Def 引用的运行时对象不会自动全部换成新引用；验证时应重新生成相关实体或重新绑定职责。
 
@@ -161,7 +149,7 @@ Quests/Pawn/<defName>.xml
 | `Draw` | 实体编辑器 | 编辑模块字段 |
 | `ModifyGenerationRequest` | PawnGenerator 前 | 性别、年龄、xenotype、名字约束 |
 | `ApplyToPawn` | 预览和生成 | 外观、装备、技能、trait、hediff、ability |
-| `LoadData` | 旧 XML 迁移 | 从旧平铺节点读取模块字段 |
+
 | `GetPreviewApplyKeyParts` | 预览刷新判断 | 未直接体现在 SaveToXElement 的预览依赖 |
 | `OnPawnSpawned` | 放置到地图后 | 对话、触发器、DutyMap、Quest 绑定 |
 
@@ -313,7 +301,7 @@ Quests/Pawn/<defName>.xml
 1. 在 `PawnEdit/PawnMod` 下新增独立 Worker 文件。
 2. 在数据文件中新增 `PawnModData_X`，或按代码组织要求拆成独立文件。
 3. 注册 PawnModDef。
-4. 实现旧数据迁移和新 XML 保存。
+4. 在 PawnModData 中实现 `modDatas` XML 保存；不增加旧数据迁移。
 5. 明确生成前、应用和生成后三个阶段。
 6. Keyed UI 补英文和简体中文；Def 的英文名称与描述直接写在 Def，简体中文使用 DefInjected。
 7. 验证人类、动物、缺失 tracker 和预览场景。

@@ -14,8 +14,8 @@ namespace QuestEditor_Library
             : this.mapDataDef?.label ?? this.def?.label);
         public override bool ShouldRemoveMapNow(out bool alsoRemoveWorldObject)
         {
-            bool result = (!this.permanent && (this.sourceMap == null || !this.sourceMap.Parent.Spawned 
-                || this.sourceMap.Parent.Destroyed)) || this.forceRemoveWorldObjectWhenMapRemoved;
+            bool result = (!this.permanent && (this.sourceMap == null || this.sourceMap.Disposed
+                || this.sourceMap.Parent.Destroyed || !Find.Maps.Contains(this.sourceMap))) || this.forceRemoveWorldObjectWhenMapRemoved;
             alsoRemoveWorldObject = result;
             if (!result && Prefs.DevMode)
             {

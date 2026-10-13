@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>CQF_RSMF</AssemblyName>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <Import Project="..\RimWorld.props" />
+  <PropertyGroup>
+    <OutputPath>$(MSBuildThisFileDirectory)..\..\$(RimWorldVersion)\Mod\RimSimManagementFramework\Assemblies\</OutputPath>
+    <RimSimManagementPath Condition="'$(RimSimManagementPath)' == ''">$(RimWorldDir)\..\..\workshop\content\294100\3736621496\1.6\Assemblies\SimManagementLib.dll</RimSimManagementPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+    <Reference Include="SimManagementLib"><HintPath>$(RimSimManagementPath)</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

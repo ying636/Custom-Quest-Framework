@@ -47,7 +47,7 @@ description: "开发、扩展、审查或调试 CQF 的实体/NPC 与职责系�
    - `ModifyGenerationRequest`：生成前约束。
    - `ApplyToPawn`：可作用于预览和生成 pawn 的实体状态。
    - `OnPawnSpawned`：只在进入地图后注册的运行时状态。
-5. 兼容旧平铺 XML 时实现 `LoadData`，但新保存格式只写 `modDatas`。
+5. 实体定义只使用 `modDatas`；1.7 已删除旧平铺 XML 迁移接口，不再实现 `LoadData`。
 6. UI 文本使用 Keyed；模块名称和描述维护 PawnModDef 翻译。
 7. 验证预览不会因为普通字段变化反复重建。
 
@@ -57,8 +57,8 @@ description: "开发、扩展、审查或调试 CQF 的实体/NPC 与职责系�
 
 - 新建 `PawnModData_X`，重写 `ModDef` 和 `SaveToXElement`。
 - 新建 `PawnModWorker_X`，重写 `CreateData`。
-- 按需要实现 `CanAddFor`、`Draw`、`ModifyGenerationRequest`、`ApplyToPawn`、`LoadData`、`GetPreviewApplyKeyParts`、`OnPawnSpawned`。
-- 在 `1.6/Defs/QuestEditor_Library.PawnModDef/PawnMods.xml` 注册 `PawnModDef` 和稳定的 `order`。
+- 按需要实现 `CanAddFor`、`Draw`、`ModifyGenerationRequest`、`ApplyToPawn`、`GetPreviewApplyKeyParts`、`OnPawnSpawned`。
+- 在 `1.7/Defs/QuestEditor_Library.PawnModDef/PawnMods.xml` 注册 `PawnModDef` 和稳定的 `order`。
 - 英文模块名称和描述直接写在 Def；简体中文使用 DefInjected；UI Key 同时维护英文和简体中文。
 
 `PawnModDef.Worker` 是每个 Def 缓存的 Worker 实例。Worker 字段只能保存编辑器缓冲或无实体归属的状态；实体数据必须放入 `PawnModData_*`。
@@ -131,7 +131,7 @@ description: "开发、扩展、审查或调试 CQF 的实体/NPC 与职责系�
 - 实体生成数据：`Languages/*/Keyed/PawnData.xml`。
 - Lord：`Languages/*/Keyed/Lord.xml`。
 - Duty/DutyMap 编辑器：`Languages/*/Keyed/CQF_DutyMap.xml`。
-- PawnModDef：英文直接使用 Def 中的原文；简体中文放在 `Languages/ChineseSimplified (简体中文)/DefInjected/PawnModDef/PawnMods.xml`，存在兼容路径时同步维护。
+- PawnModDef：英文直接使用 Def 中的原文；简体中文放在 `Languages/ChineseSimplified (简体中文)/DefInjected/QuestEditor_Library.PawnModDef/PawnMods.xml`；不保留缺少命名空间的重复目录。
 - DutyDef：英文直接使用 Def 中的原文；简体中文放在 `Languages/ChineseSimplified (简体中文)/DefInjected/DutyDef/*.xml`。
 
 DLL 文本使用 Key + 双语翻译。不要硬编码中文。内部 key、signal、nodeId、route key、target key 和 record key 不翻译。使用 PowerShell 读取中文 XML 时显式指定 UTF-8。

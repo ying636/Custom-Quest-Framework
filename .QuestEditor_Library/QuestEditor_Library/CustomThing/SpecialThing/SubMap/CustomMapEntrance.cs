@@ -361,9 +361,7 @@ namespace QuestEditor_Library
 
         public IEnumerable<GenStepWithParams> GetSteps()
         {
-            yield return new GenStepWithParams(QEDefOf.QE_CustomSite_GenStep, new GenStepParams() { sitePart = new SitePart(null, QEDefOf.QE_CustomSite, new CustomSitePartParams { mapData = this.MapDef, quest = this.questID != null ? Find.QuestManager.QuestsListForReading.Find(q => q.id.ToString() == this.questID) : null, spot = this.Position, isSubMap = true }) });
-            // yield return new GenStepWithParams(DefDatabase<GenStepDef>.GetNamed("Fog"), new GenStepParams());
-            yield break;
+            yield return new GenStepWithParams(QEDefOf.QE_CustomSite_GenStep, new GenStepParams());
         }
 
         public override void ExposeData()

@@ -36,14 +36,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            PawnModData_Basic data = pawnDef.DataFor<PawnModData_Basic>();
-            data.unique = ParseHelper.FromString<bool>(node["unique"]?.InnerText ?? "false");
-            data.kindDef = DefDatabase<PawnKindDef>.GetNamedSilentFail(node["kindDef"]?.InnerText);
-            data.faction = DefDatabase<FactionDef>.GetNamedSilentFail(node["faction"]?.InnerText);
-        }
-
         internal void OpenPawnKindSelector(Action<PawnKindDef> action)
         {
             List<PawnKindDef> kinds = DefDatabase<PawnKindDef>.AllDefsListForReading;

@@ -5,6 +5,12 @@ internal sealed class ChecksLogHandler : ILogHandler
 {
     public static int ErrorCount { get; private set; }
 
+    public static void RecordError(string text)
+    {
+        ErrorCount++;
+        Console.WriteLine("Error: " + text);
+    }
+
     public void LogException(Exception exception, UnityEngine.Object context)
     {
         ErrorCount++;

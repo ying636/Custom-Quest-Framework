@@ -24,7 +24,7 @@ public class CustomMapStep_StartQuest : CustomMapStep
         y += 35f;
     }
 
-    public override void Generate(Map map, CustomMapDataDef def, CustomSitePartParams param)
+    public override void Generate(Map map, CustomMapDataDef def, CustomMapGenerationContext context)
     {
         if (this.quest == null)
         {
@@ -38,7 +38,7 @@ public class CustomMapStep_StartQuest : CustomMapStep
             return;
         }
 
-        param.quest = generatedQuest;
+        context.Quest = generatedQuest;
         if (this.sendAvailableLetter && !generatedQuest.hidden && this.quest.sendAvailableLetter)
         {
             QuestUtility.SendLetterQuestAvailable(generatedQuest);

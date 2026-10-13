@@ -17,7 +17,7 @@ namespace QuestEditor_Library
         [HarmonyPrefix]
         public static bool postfix(ref IEnumerable<GenStepWithParams> genStepDefs)
         {
-            if (genStepDefs.ToList().Find(p0 => p0.parms.sitePart?.parms is CustomSitePartParams) is GenStepWithParams p && p.parms.sitePart is SitePart part)
+            if (genStepDefs.Any(step => step.def == QEDefOf.QE_CustomSite_GenStep))
             {
                 genStepDefs = get(genStepDefs);
             }

@@ -73,7 +73,8 @@ namespace QuestEditor_Library
                 return;
             }
             MapGenerator.PlayerStartSpot = new IntVec3(size.x / 2, 1, size.z / 2);
-            MapParent customMap = (MapParent)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("QE_CustomMap_Editor"));
+            EditorMapObject customMap = (EditorMapObject)WorldObjectMaker.MakeWorldObject(DefDatabase<WorldObjectDef>.GetNamed("QE_CustomMap_Editor"));
+            customMap.mapDef = def;
             customMap.Tile = TileFinder.RandomSettlementTileFor(Faction.OfPlayer);
             customMap.SetFaction(Find.FactionManager.OfPlayer);
             Find.WorldObjects.Add(customMap);
@@ -85,14 +86,7 @@ namespace QuestEditor_Library
             {
                 size.y = 1;
                 Map map = MapGenerator.GenerateMap(size, customMap, customMap.MapGeneratorDef, def == null ? customMap.ExtraGenStepDefs :
-                    Gen.YieldSingle(new GenStepWithParams(QEDefOf.QE_CustomSite_GenStep, new GenStepParams()
-                    {
-                        sitePart = new SitePart(null, QEDefOf.QE_CustomSite, new CustomSitePartParams()
-                        {
-                            mapData = def,
-                            dev = true
-                        })
-                    })));
+                    Gen.YieldSingle(new GenStepWithParams(QEDefOf.QE_CustomSite_GenStep, new GenStepParams())));
                 Current.Game.CurrentMap = map;
                 if (def == null && enableTerrainEdges)
                 {

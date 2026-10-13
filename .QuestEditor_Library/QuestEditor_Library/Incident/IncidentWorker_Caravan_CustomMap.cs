@@ -50,12 +50,9 @@ namespace QuestEditor_Library
                 {
                     faction = Find.FactionManager.RandomEnemyFaction();
                 }
-                CustomSitePartParams siteParms = new CustomSitePartParams
-                {
-                    mapData = mapDef, 
-                };
-                CustomSite site = this.GenerateCustomSite(Gen.YieldSingle<SitePartDefWithParams>(new SitePartDefWithParams(DefDatabase<SitePartDef>.GetNamed("QE_CustomSite"), siteParms))
+                CustomSite site = this.GenerateCustomSite(Gen.YieldSingle<SitePartDefWithParams>(new SitePartDefWithParams(QEDefOf.QE_CustomSite, new SitePartParams()))
                     , c.Tile, faction, false);
+                site.mapDef = mapDef;
                 site.siteIconPath = extension.siteIconPath;
                 site.expandingIconPath = extension.expandingIconPath;
                 site.disdestroyBecauseOfNoColonist = false;

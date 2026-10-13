@@ -30,8 +30,8 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 
 ## 仓库与信息源
 
-CQF 源码仓库：
-- `D:\Code\Git\QuestEditor_Library`
+CQF 源码目录（与 Mod 包共用 Git 仓库）：
+- `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`
 
 CQF Mod 包：
 - `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF`
@@ -40,6 +40,10 @@ CQF Mod 包：
 - 需要理解框架能力、扩展入口、运行模型时，优先看源码仓库
 - 需要理解已发布 Def、翻译、版本目录和资源落点时，优先看 Mod 包
 - 已有稳定入口时，不要每次全仓重扫
+
+## 当前版本与构建
+
+当前维护 RimWorld 1.7。处理构建、版本迁移、DLL 输出或旧系统清理时，读取 [版本与构建](references/version-build.md)。默认不做旧存档兼容；已删除的特殊站点参数、PawnMod 平铺 XML 迁移和职责图旧字段迁移不得重新引入。
 
 ## CQF 是什么
 

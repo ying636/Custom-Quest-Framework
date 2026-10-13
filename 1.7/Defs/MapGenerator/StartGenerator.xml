@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+
+    <MapGeneratorDef>
+        <defName>CQF_Base_Player</defName>
+        <genSteps>
+            <li>ElevationFertility</li>
+            <li>FindPlayerStartSpot</li>
+            <li>QE_CustomMap_Step_Terrain</li>
+            <li>QE_CustomMap_Step_ScenPart</li>
+            <li>ScenParts</li>
+            <li>QE_CustomMap_Step_Fog</li>
+        </genSteps>
+    </MapGeneratorDef>
+
+    <GenStepDef>
+        <defName>QE_CustomMap_Step_ScenPart</defName>
+        <order>650</order>
+        <genStep Class="QuestEditor_Library.GenStep_GenerateStartMap"/>
+    </GenStepDef>
+
+</Defs>

@@ -34,14 +34,6 @@ namespace QuestEditor_Library
         {
         }
 
-        public virtual void SaveData(ComplexPawnDef pawnDef, XElement root)
-        {
-        }
-
-        public virtual void LoadData(ComplexPawnDef pawnDef, XmlNode node)
-        {
-        }
-
         public virtual IEnumerable<string> GetPreviewApplyKeyParts(ComplexPawnDef pawnDef)
         {
             yield break;
@@ -112,47 +104,6 @@ namespace QuestEditor_Library
         {
             color.a = 1f;
             return color;
-        }
-
-        protected void AddText(XElement root, string name, string value)
-        {
-            if (!value.NullOrEmpty())
-            {
-                root.Add(new XElement(name, value));
-            }
-        }
-
-        protected void AddDef(XElement root, string name, Def value)
-        {
-            if (value != null)
-            {
-                root.Add(new XElement(name, value.defName));
-            }
-        }
-
-        protected void AddColor(XElement root, string name, Color? value)
-        {
-            if (value != null)
-            {
-                Color color = value.Value;
-                root.Add(new XElement(name, $"({color.r}, {color.g}, {color.b}, {color.a})"));
-            }
-        }
-
-        protected List<T> LoadSaveableList<T>(XmlNode node)
-        {
-            List<T> result = new List<T>();
-            if (node == null)
-            {
-                return result;
-            }
-
-            foreach (XmlNode li in node.SelectNodes("li"))
-            {
-                result.Add(DirectXmlToObject.ObjectFromXml<T>(li, false));
-            }
-
-            return result;
         }
 
         internal void OpenColorDialog(string label, Color color, Action<Color> apply, Action clear = null)

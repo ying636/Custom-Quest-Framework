@@ -21,12 +21,21 @@ namespace QuestEditor_Library
             this.absorbInputAroundWindow = true;
             this.closeOnClickedOutside = false;
             this.doCloseX = true;
+            this.draggable = true;
+            this.resizeable = true;
         }
         public override Vector2 InitialSize => new Vector2(760f, 680f);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(nameof(InteractionOperation), () => this.operation, value =>
         {
             foreach (var field in new CQFAIModel().Fields(typeof(InteractionOperation))) field.SetValue(this.operation, field.GetValue(value));
         }, isValid: () => Find.WindowStack.Windows.Contains(this) && (this.owner == null || !this.owner.Destroyed), owner: this);
+
+        public override void WindowUpdate()
+        {
+            base.WindowUpdate();
+            this.windowRect.width = Mathf.Clamp(this.windowRect.width, Mathf.Min(380f, UI.screenWidth - 20f), UI.screenWidth - 20f);
+            this.windowRect.height = Mathf.Clamp(this.windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+        }
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -39,7 +48,7 @@ namespace QuestEditor_Library
 
         private void DrawContents(Rect inRect)
         {
-            float x = 10f;
+            float x = 0f;
             float y = 8f;
             Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 30f), this.owner == null ? (this.operation.interactionText.CanTranslate() ? this.operation.interactionText.Translate().ToString() : this.operation.interactionText) : this.owner.LabelCap + " " + this.owner.Position);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height - 38f, this.height + 12f));

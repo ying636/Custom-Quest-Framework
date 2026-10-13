@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+  <DrawStyleCategoryDef ParentName="Default2D">
+    <defName>CQF_Areas</defName>
+    <styles>
+      <li>CQF_Random</li>
+      <li>CQF_RandomMed</li>
+      <li>CQF_Lump</li>
+      <li>CQF_LumpMed</li>
+    </styles>
+  </DrawStyleCategoryDef>
+
+</Defs>

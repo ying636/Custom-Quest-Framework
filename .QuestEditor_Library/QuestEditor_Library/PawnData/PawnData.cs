@@ -13,10 +13,6 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-    public class DutyData
-    {
-    }
-
     public class HediffInformation : ISaveable, IExposable
     {
         public HediffInformation()

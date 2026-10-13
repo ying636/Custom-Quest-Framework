@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>CQFAndRS</AssemblyName>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <Import Project="..\RimWorld.props" />
+  <PropertyGroup>
+    <OutputPath>$(MSBuildThisFileDirectory)..\..\$(RimWorldVersion)\Mod\AllsparkCrisis\Assemblies\</OutputPath>
+    <AllsparkCrisisPath Condition="'$(AllsparkCrisisPath)' == ''">$(RimWorldDir)\Mods\火种危机\$(RimWorldVersion)\Assemblies\AllsparkCrisis.dll</AllsparkCrisisPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+    <Reference Include="AllsparkCrisis"><HintPath>$(AllsparkCrisisPath)</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

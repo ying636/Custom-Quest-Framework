@@ -2,7 +2,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using HarmonyLib;
 using QuestEditor_Library;
+using RimWorld;
 using Verse;
 using UnityEngine;
 
@@ -13,12 +15,16 @@ internal static class Program
         string game = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", "..", ".."));
         AppDomain.CurrentDomain.AssemblyResolve += (_, request) =>
         {
-            string file = Path.Combine(game, "RimWorldWin64_Data", "Managed", new AssemblyName(request.Name).Name + ".dll");
+            string file = Path.Combine(game, new AssemblyName(request.Name).Name + ".dll");
             if (new AssemblyName(request.Name).Name == "0Harmony")
-                file = Path.GetFullPath(Path.Combine(game, "..", "..", "workshop", "content", "294100", "2009463077", "Current", "Assemblies", "0Harmony.dll"));
+                file = Path.GetFullPath(Path.Combine(game, "..", "..", "workshop", "content", "294100", "2009463077", "1.7", "Assemblies", "0Harmony.dll"));
             return File.Exists(file) ? Assembly.LoadFrom(file) : null;
         };
-        try { Run(game, args.Contains("enabled")); }
+        try
+        {
+            if (args.Contains("patches")) Version17Checks.Run(game);
+            else Run(game, args.Contains("enabled"));
+        }
         catch (Exception error) { Console.WriteLine(error); Environment.Exit(1); }
     }
 
@@ -26,6 +32,8 @@ internal static class Program
     private static void Run(string game, bool enabled)
     {
         Debug.unityLogger.logHandler = new ChecksLogHandler();
+        new Harmony("CQF.Checks.ErrorLog").Patch(typeof(Log).GetMethod(nameof(Log.Error)),
+            prefix: new HarmonyMethod(typeof(ChecksLogHandler).GetMethod(nameof(ChecksLogHandler.RecordError))));
         FieldInfo prefs = typeof(Prefs).GetField("data", BindingFlags.Static | BindingFlags.NonPublic)!;
         prefs.SetValue(null, RuntimeHelpers.GetUninitializedObject(prefs.FieldType));
         Assembly framework = typeof(DialogTreeDef).Assembly;
@@ -36,7 +44,7 @@ internal static class Program
         XmlDocument loadFoldersXml = new XmlDocument();
         loadFoldersXml.LoadXml(File.ReadAllText(Path.Combine(modRoot, "LoadFolders.xml"), System.Text.Encoding.UTF8));
         ModLoadFolders nativeFolders = DirectXmlToObject.ObjectFromXml<ModLoadFolders>(loadFoldersXml.DocumentElement!, false);
-        moduleContent.foldersToLoadDescendingOrder = nativeFolders.FoldersForVersion("1.6").Where(folder => folder.requiredAnyOfPackageIds == null && folder.requiredAllOfPackageIds == null && folder.disallowedAnyOfPackageIds == null && folder.ShouldLoad)
+        moduleContent.foldersToLoadDescendingOrder = nativeFolders.FoldersForVersion(VersionControl.CurrentVersionStringWithoutBuild).Where(folder => folder.requiredAnyOfPackageIds == null && folder.requiredAllOfPackageIds == null && folder.disallowedAnyOfPackageIds == null && folder.ShouldLoad)
             .Reverse().Select(folder => Path.Combine(modRoot, folder.folderName)).ToList();
         Check(!ModContentPack.GetAllFilesForMod(moduleContent, "Assemblies", extension => extension == ".dll").Values.Any(file => file.Name == "CQF.Editor.dll"), "initial native assembly scan cannot load editor before settings");
         List<string> initialFolders = moduleContent.foldersToLoadDescendingOrder.ToList();
@@ -52,6 +60,7 @@ internal static class Program
         CQFEditorLoader.Load(null!, Array.Empty<string>());
         Check(!CQFEditorBridge.IsLoaded && !AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.GetName().Name == "CQF.Editor"), "disabled loader does not touch editor assembly");
         Check(!CQFAIBridge.IsLoaded && CQFAIBridge.GenerateMap == null, "disabled editor leaves AI entry unavailable");
+        CustomMapGenerationChecks.Run();
         foreach (string name in new[] { "Page_QuestEditor", "QuestEditor_Dialog", "CQFDialogAIClient", "CQFDialogAIWindow", "Designator_CQFTools" })
             Check(framework.GetType("QuestEditor_Library." + name) == null, "editor type absent: " + name);
         Check(new[] { typeof(CQFEditorTools), typeof(CQFSignalBook), typeof(CQFTargetKeyBook), typeof(CQFActionListEditor), typeof(CQFConditionListEditor), typeof(CQFContentTextExport) }
@@ -104,7 +113,7 @@ internal static class Program
         Assembly editor = Assembly.LoadFrom(editorPath);
         Type[] editorTypes = editor.GetTypes();
         Check(editor.GetType("QuestEditor_Library.Page_QuestEditor") != null, "editor types available after explicit load");
-        Check(!Directory.GetFiles(Path.Combine(game, "Mods", "CQF", "1.6", "Assemblies"), "CQF.Editor.dll", SearchOption.AllDirectories).Any(), "editor outside automatic assembly directory");
+        Check(!Directory.GetFiles(Path.Combine(game, "Mods", "CQF", VersionControl.CurrentVersionStringWithoutBuild, "Assemblies"), "CQF.Editor.dll", SearchOption.AllDirectories).Any(), "editor outside automatic assembly directory");
         object entry = Activator.CreateInstance(editor.GetType("QuestEditor_Library.CQFEditorModule")!)!;
         CQFEditorBridge.Attach(new CheckEditorModule(entry));
         Check(CQFEditorBridge.IsLoaded, "editor registration succeeds");

@@ -11,8 +11,11 @@ namespace QuestEditor_Library
     {
         public static void Draw(ref float y, float x, float width, Rect inRect, InteractionOperation operation)
         {
-            Widgets.LabelEllipses(new Rect(x, y, width - 70f, 28f), "InteractionResults".Translate().Colorize(CQFUIStyle.Accent));
-            Rect button = new Rect(x + width - 58f, y, 25f, 25f);
+            Rect header = new Rect(x, y, width, 32f);
+            Widgets.DrawBoxSolid(header, CQFUIStyle.Header);
+            CQFUIStyle.DrawBox(header);
+            Widgets.LabelEllipses(new Rect(x + 8f, y + 3f, width - 82f, 26f), "InteractionResults".Translate().Colorize(CQFUIStyle.TextColor));
+            Rect button = new Rect(x + width - 66f, y + 3f, 25f, 25f);
             if (Button(button, TexButton.Plus, "Add", true))
             {
                 InteractionResult result = new InteractionResult();
@@ -28,7 +31,7 @@ namespace QuestEditor_Library
                 expanded.Add(result, result);
             }
 
-            y += 36f;
+            y += 40f;
             string modeKey = operation.onlyGenerateSingleResult ? "CQF_EditorFirstMatchingResult" : "CQF_EditorAllMatchingResults";
             if (CQFUIStyle.ButtonText(new Rect(x, y, width, 30f), modeKey.Translate()))
             {

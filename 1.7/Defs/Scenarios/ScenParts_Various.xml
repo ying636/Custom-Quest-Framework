@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <ScenPartDef>
+    <defName>CQF_StartWithStructure</defName>
+    <label>start with structure</label>
+    <category>Misc</category>
+    <scenPartClass>QuestEditor_Library.ScenPart_GenerateCustomMapInCentre</scenPartClass>
+    <maxUses>1</maxUses>
+  </ScenPartDef>
+
+  <ScenPartDef>
+    <defName>CQF_StartMap</defName>
+    <label>start map</label>
+    <category>Misc</category>
+    <scenPartClass>QuestEditor_Library.ScenPart_GenerateCustomMap</scenPartClass>
+    <maxUses>1</maxUses>
+  </ScenPartDef>
+
+</Defs>

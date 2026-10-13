@@ -19,4 +19,12 @@
     <li IfModActive="HaiLuan.HiveCreatureFramework">1.6/Mod/HCF</li> 
     <li IfModActive="chezhou.Framework.RimSimManagementFramework">1.6/Mod/RimSimManagementFramework</li>
   </v1.6>
+  <v1.7>
+    <li>/</li>
+    <li>1.7</li>
+    <li IfCQFSetting="enableEditor">1.7/Optional/Editor</li>
+    <li IfModActive="Ludeon.RimWorld.Odyssey">1.7/DLC/Odyssey</li>
+    <li IfModActive="HaiLuan.AllsparkCrisis">1.7/Mod/AllsparkCrisis</li>
+    <li IfModActive="chezhou.Framework.RimSimManagementFramework">1.7/Mod/RimSimManagementFramework</li>
+  </v1.7>
 </loadFolders>

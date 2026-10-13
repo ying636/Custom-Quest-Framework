@@ -71,14 +71,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["abilities"] != null)
-            {
-                pawnDef.DataFor<PawnModData_Abilities>().abilities = this.LoadSaveableList<AbilityData>(node["abilities"]);
-            }
-        }
-
         internal void OpenAbilitySelector(Action<AbilityDef> action)
         {
             Find.WindowStack.Add(new Dialog_Select<AbilityDef>(new LabeledTextureSelectDrawer<AbilityDef>(DefDatabase<AbilityDef>.AllDefsListForReading, ability => ability.uiIcon, ability => ability.label, action, null, null, null, null, ability => ability.defName, null, null), "CQF_PawnEditor_Select".Translate()));

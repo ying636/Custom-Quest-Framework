@@ -90,14 +90,6 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void LoadData(ComplexPawnDef pawnDef, System.Xml.XmlNode node)
-        {
-            if (node["hediffs"] != null)
-            {
-                pawnDef.DataFor<PawnModData_Hediff>().hediffs = this.LoadSaveableList<HediffData>(node["hediffs"]);
-            }
-        }
-
         internal void OpenHediffSelector(Action<HediffData> action)
         {
             Find.WindowStack.Add(new Dialog_Select<HediffDef>(new TextSelectDrawer<HediffDef>(DefDatabase<HediffDef>.AllDefsListForReading, def => def.label, def =>

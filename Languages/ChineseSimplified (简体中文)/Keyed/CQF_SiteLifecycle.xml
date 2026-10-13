@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_KeepMapUntilQuestEnds>keepMapUntilQuestEnds</CQF_KeepMapUntilQuestEnds>
+  <CQF_RetainQuestDataAfterEnd>retainQuestDataAfterEnd</CQF_RetainQuestDataAfterEnd>
+</LanguageData>
