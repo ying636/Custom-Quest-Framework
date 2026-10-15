@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThingDef ParentName="CQF_StairsEntrance">
+        <defName>CQF_StairsEntranceThreeByThree</defName>
+        <label>stairs (3x3)</label>
+        <size>(3,3)</size>
+        <graphicData>
+            <drawSize>(5.840304,5.626374)</drawSize>
+            <drawOffsetNorth>(0.005703,0,-0.434066)</drawOffsetNorth>
+            <drawOffsetEast>(-0.434066,0,-0.005703)</drawOffsetEast>
+            <drawOffsetSouth>(-0.005703,0,0.434066)</drawOffsetSouth>
+            <drawOffsetWest>(0.434066,0,0.005703)</drawOffsetWest>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_StairsExit">
+        <defName>CQF_StairsExitThreeByThree</defName>
+        <label>stairs (3x3)</label>
+        <size>(3,3)</size>
+        <graphicData>
+            <drawSize>(5.840304,3.096774)</drawSize>
+            <drawOffsetNorth>(0.005703,0,0)</drawOffsetNorth>
+            <drawOffsetEast>(0,0,-0.005703)</drawOffsetEast>
+            <drawOffsetSouth>(-0.005703,0,0)</drawOffsetSouth>
+            <drawOffsetWest>(0,0,0.005703)</drawOffsetWest>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_StairsUpEntrance">
+        <defName>CQF_StairsUpEntranceThreeByThree</defName>
+        <label>stairs (3x3)</label>
+        <size>(3,3)</size>
+        <graphicData>
+            <drawSize>(5.840304,3.096774)</drawSize>
+            <drawOffsetNorth>(0.005703,0,0)</drawOffsetNorth>
+            <drawOffsetEast>(0,0,-0.005703)</drawOffsetEast>
+            <drawOffsetSouth>(-0.005703,0,0)</drawOffsetSouth>
+            <drawOffsetWest>(0,0,0.005703)</drawOffsetWest>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_StairsDownExit">
+        <defName>CQF_StairsDownExitThreeByThree</defName>
+        <label>stairs (3x3)</label>
+        <size>(3,3)</size>
+        <graphicData>
+            <drawSize>(5.840304,5.626374)</drawSize>
+            <drawOffsetNorth>(0.005703,0,-0.434066)</drawOffsetNorth>
+            <drawOffsetEast>(-0.434066,0,-0.005703)</drawOffsetEast>
+            <drawOffsetSouth>(-0.005703,0,0.434066)</drawOffsetSouth>
+            <drawOffsetWest>(0.434066,0,0.005703)</drawOffsetWest>
+        </graphicData>
+    </ThingDef>
+</Defs>

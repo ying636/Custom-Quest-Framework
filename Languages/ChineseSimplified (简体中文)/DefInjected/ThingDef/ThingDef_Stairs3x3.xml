@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+  <CQF_StairsEntranceThreeByThree.label>台阶（3×3）</CQF_StairsEntranceThreeByThree.label>
+  <CQF_StairsEntranceThreeByThree.description>一个通向更深处的台阶</CQF_StairsEntranceThreeByThree.description>
+  <CQF_StairsExitThreeByThree.label>台阶（3×3）</CQF_StairsExitThreeByThree.label>
+  <CQF_StairsExitThreeByThree.description>一个通向更深处的台阶</CQF_StairsExitThreeByThree.description>
+  <CQF_StairsUpEntranceThreeByThree.label>台阶（3×3）</CQF_StairsUpEntranceThreeByThree.label>
+  <CQF_StairsUpEntranceThreeByThree.description>一个通向更深处的台阶</CQF_StairsUpEntranceThreeByThree.description>
+  <CQF_StairsDownExitThreeByThree.label>台阶（3×3）</CQF_StairsDownExitThreeByThree.label>
+  <CQF_StairsDownExitThreeByThree.description>一个通向更深处的台阶</CQF_StairsDownExitThreeByThree.description>
+</LanguageData>
