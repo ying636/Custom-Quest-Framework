@@ -47,7 +47,7 @@ CQF 自己提供可选目录：
 子 Mod 在自己的当前版本条目中声明：
 
 ```xml
-<li RequiresCQFModule="Domain">1.7/Domain</li>
+<li RequiresCQFModule="Domain">1.7</li>
 ```
 
 从 CQF 3.4 起，领域必须通过上述声明启用。需求在游戏启动时解析；变更启用的子 Mod 或 LoadFolders 后须重新启动游戏，不能在运行中切换模块。
@@ -60,7 +60,7 @@ CQF 自己提供可选目录：
 
 `IfCQFModule` / `RequiresCQFModule` 是 CQF 的自定义属性，不是原版功能。提供方限于 CQF，子 Mod 使用需求属性。未知模块、缺少模块 DLL、错误目录和类型加载失败会记录包含子 Mod packageId 与路径的错误并抛出。没有任何请求时领域 DLL 不加载、领域 MapComponent 和补丁不注册、领域状态不创建。1.6 将上述路径中的版本改为 1.6，并构建匹配的 DLL。
 
-寂屋邪祭已使用 `1.7/Domain/RSH.dll` 和 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`；后者保留玩家能力框架的 IfModActive 条件。1.6 使用对应版本目录。不能残留旧 Assemblies 中的重复文件。
+寂屋邪祭已将主 DLL 合入版本目录，使用 `1.7/RSH.dll` 和 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`；版本目录自身声明 RequiresCQFModule，后者保留玩家能力框架的 IfModActive 条件。1.6 使用对应版本目录。不能残留旧 Domain 或 Assemblies 中的重复文件。
 
 先读相关 CQF / 子 Mod 源码；原版类型和 API 用 Rimsage 核对。Rimsage 不索引 Mod 源码。
 

@@ -33,7 +33,7 @@ dotnet build .QuestEditor_Library/CQF.Editor/CQF.Editor.csproj -c Release
 - 只读取当前启用 Mod 的原版已选目录，保留版本和 `IfModActive` 等条件；模块先加载，需求目录中的子 Mod DLL 后加载，再进入 Def 解析。
 - 依赖领域的子 Mod DLL 同样放在需求目录根部。延后加载的 DLL 不得包含 `Mod` 派生入口类；独立的入口留在普通 Assemblies，且不能直接引用尚未加载的领域类型。
 - 没有请求时不加载领域 DLL、不注册领域补丁、不创建领域运行对象。主库只保留 `ICQFMapModule` 生命周期接口；领域运行对象由唯一的 `GameComponent_MapManager` 持有，不增加 GComp。
-- 寂屋邪祭输出为 `1.7/Domain/RSH.dll`，可选玩家能力适配为 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`，1.6 对应同名版本目录。不要保留旧 Assemblies 中的重复 DLL。
+- 寂屋邪祭输出为 `1.7/RSH.dll`，版本目录自身声明 RequiresCQFModule；可选玩家能力适配为 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`，1.6 对应同名版本目录。不要保留旧 Domain 或 Assemblies 中的重复 DLL。
 
 构建领域模块会先构建主库：
 

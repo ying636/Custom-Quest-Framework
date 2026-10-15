@@ -9,6 +9,6 @@
   <Import Project="..\..\RimWorld.props" />
   <ItemGroup>
     <ProjectReference Include="..\..\CQF.Domain\CQF.Domain.csproj" Private="false" />
-    <Reference Include="RSH"><HintPath>$(RimWorldDir)\Mods\寂屋邪祭\1.7\Domain\RSH.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="RSH"><HintPath>$(RimWorldDir)\Mods\寂屋邪祭\1.7\RSH.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 </Project>
