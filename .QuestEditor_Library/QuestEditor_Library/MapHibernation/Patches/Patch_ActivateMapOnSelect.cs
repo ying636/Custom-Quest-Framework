@@ -9,7 +9,7 @@ namespace QuestEditor_Library
         public static void Prefix(Game __instance, Map value)
         {
             GameComponent_MapHibernation component = __instance.GetComponent<GameComponent_MapHibernation>();
-            if (component?.IsHibernating(value) == true)
+            if (component != null && (component.IsHibernating(value) || component.IsHibernateRequested(value)))
             {
                 component.Activate(value);
             }

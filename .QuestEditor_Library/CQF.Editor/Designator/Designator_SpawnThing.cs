@@ -7,7 +7,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_SpawnThing : Designator_Place
+    public class Designator_SpawnThing : Designator_CQFPlace
     {
         public Designator_SpawnThing()
         {
@@ -17,13 +17,6 @@ namespace QuestEditor_Library
             this.useMouseIcon = true;
         }
         public override bool Visible => DebugSettings.godMode;
-        public override DrawStyleCategoryDef? DrawStyleCategory
-        {
-            get
-            {
-                return thing.rotatable ? null : QEDefOf.CQF_Areas;
-            }
-        }
         public override string Label => "CQFSpawnThing".Translate(base.Label);
         public override string Desc => base.Desc + "\n" + "CQFSpawnThingTip".Translate();
         public override BuildableDef PlacingDef => Designator_SpawnThing.thing;

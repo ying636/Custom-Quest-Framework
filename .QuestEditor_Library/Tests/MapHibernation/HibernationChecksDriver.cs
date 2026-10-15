@@ -42,6 +42,9 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 GameComponent_MapHibernation component = GameComponent_MapHibernation.Instance!;
                 Current.Game.CurrentMap = tail;
                 component.Hibernate(middle);
+                Check(component.IsHibernateRequested(middle) && Current.Game.Maps.Contains(middle) && !component.IsHibernating(middle),
+                    "hibernation requests always queue until component update");
+                component.GameComponentUpdate();
                 Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "middle map detached without disposal");
                 Check(!middle.Disposed && probes.All(probe => probe.Spawned && probe.Map == middle), "hibernating thing map and spawned state preserved");
                 Check(regions.All(region => region.Map == middle) && districts.All(district => district.Map == middle), "hibernating regions and districts preserve map");
@@ -70,31 +73,71 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(inventoryProbe.Ticks == 2100, "inventory ticking resumes through its pawn without duplicate registration");
                 Check(tailProbe.Ticks == 4200, "active maps are unaffected by activation");
                 component.Hibernate(middle);
+                component.GameComponentUpdate();
                 Map retrieved = GetOrGenerateMapUtility.GetOrGenerateMap(middle.Tile, middle.Size, null);
                 Check(ReferenceEquals(retrieved, middle) && !component.IsHibernating(middle), "GetOrGenerateMap activates existing map without generation");
                 int beforeRepeat = probes[0].Ticks;
-                component.Hibernate(middle); component.Hibernate(middle); component.Activate(middle); component.Activate(middle);
+                component.Hibernate(middle); component.Hibernate(middle); component.GameComponentUpdate();
+                component.Activate(middle); component.Activate(middle);
                 RunTicks(10);
                 Check(probes[0].Ticks == beforeRepeat + 10, "repeated transitions never duplicate tick registrations");
-                component.BeginExecution(); component.Hibernate(middle);
-                Check(component.IsHibernateRequested(middle) && Current.Game.Maps.Contains(middle), "hibernation queues during execution");
-                component.Activate(middle); component.EndExecution(true);
-                Check(!component.IsHibernating(middle), "activation cancels pending hibernation");
                 component.Hibernate(middle);
+                RunTicks(1);
+                Check(component.IsHibernateRequested(middle) && Current.Game.Maps.Contains(middle), "DoSingleTick does not flush queued hibernation");
+                component.Activate(middle); component.GameComponentUpdate();
+                Check(!component.IsHibernating(middle) && !component.IsHibernateRequested(middle), "activation cancels pending hibernation");
+                component.Hibernate(middle);
+                retrieved = GetOrGenerateMapUtility.GetOrGenerateMap(middle.Tile, middle.Size, null);
+                component.GameComponentUpdate();
+                Check(ReferenceEquals(retrieved, middle) && !component.IsHibernating(middle) && !component.IsHibernateRequested(middle),
+                    "retrieving an active map cancels its pending hibernation");
+                component.Hibernate(middle);
+                Current.Game.CurrentMap = middle;
+                component.GameComponentUpdate();
+                Check(!component.IsHibernating(middle) && !component.IsHibernateRequested(middle), "map selection cancels queued hibernation");
+                component.Hibernate(middle);
+                component.GameComponentUpdate();
                 Current.Game.CurrentMap = middle;
                 Check(!component.IsHibernating(middle) && Current.Game.CurrentMap == middle, "map selection activates before switching");
                 component.Hibernate(middle);
+                component.GameComponentUpdate();
                 GenSpawn.Spawn(ThingMaker.MakeThing(probes[0].def), new IntVec3(15, 0, 10), middle);
                 Check(!component.IsHibernating(middle), "spawning activates destination map");
                 component.Hibernate(middle);
+                component.GameComponentUpdate();
                 probes[0].DeSpawn();
                 Check(!component.IsHibernating(middle) && !probes[0].Spawned, "despawning activates source map before deregistration");
                 GenSpawn.Spawn(probes[0], new IntVec3(10, 0, 10), middle);
+                component.Hibernate(middle);
+                GenSpawn.Spawn(ThingMaker.MakeThing(probes[0].def), new IntVec3(16, 0, 10), middle);
+                component.GameComponentUpdate();
+                Check(!component.IsHibernating(middle) && !component.IsHibernateRequested(middle), "spawning cancels queued hibernation");
+                component.Hibernate(middle);
+                probes[0].DeSpawn();
+                component.GameComponentUpdate();
+                Check(!component.IsHibernating(middle) && !component.IsHibernateRequested(middle), "despawning cancels queued hibernation");
+                GenSpawn.Spawn(probes[0], new IntVec3(10, 0, 10), middle);
                 component.Hibernate(home);
+                component.GameComponentUpdate();
                 Current.Game.gameEnder.CheckOrUpdateGameOver();
                 Check(!Current.Game.gameEnder.gameEnding, "hibernating colonists prevent false game over");
                 component.Activate(home);
                 component.Hibernate(middle);
+                component.GameComponentUpdate();
+                component.Hibernate(tail);
+                component.BeginSave();
+                try
+                {
+                    component.GameComponentUpdate();
+                    Check(component.IsHibernateRequested(tail) && Current.Game.Maps.Contains(tail), "component update does not process requests during saving");
+                }
+                finally { component.EndSave(); }
+                GameDataSaveLoader.SaveGame("CQF_PendingHibernationChecks");
+                XDocument pendingSave = XDocument.Load(GenFilePaths.FilePathForSavedGame("CQF_PendingHibernationChecks"));
+                Check(pendingSave.Descendants("CQF_hibernatingMaps").Elements("li").Any(element => element.Value == tail.GetUniqueLoadID()),
+                    "save records pending hibernation requests");
+                Check(component.IsHibernateRequested(tail) && Current.Game.Maps.Contains(tail), "saving preserves pending runtime requests");
+                component.Activate(tail);
                 middleID = middle.uniqueID;
                 tailID = tail.uniqueID;
                 savedProbeTicks = probes.Select(probe => probe.Ticks).ToArray();
@@ -108,8 +151,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(save.Descendants("maps").First().Elements("li").Count() == component.TotalMapCount,
                     "save includes active and hibernating maps");
                 Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "save restores runtime hibernation");
-                Current.Game.Dispose();
-                SavedGameLoaderNow.LoadGameFromSaveFileNow("CQF_HibernationChecks");
+                GameDataSaveLoader.LoadGame("CQF_HibernationChecks");
                 stage = 1;
                 return;
             }
@@ -132,16 +174,22 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 RunTicks(10);
                 Check(loadedProbes[0].Ticks == beforeTick + 10, "loaded map ticks resume without duplicates");
                 component.Hibernate(loaded);
+                component.GameComponentUpdate();
                 PocketMapUtility.DestroyPocketMap(loaded);
                 Check(loaded.Disposed && !component.IsHibernating(loaded) && !Current.Game.Maps.Contains(loaded), "explicit destruction cleans hibernating map");
                 Check(Current.Game.Maps.Any(map => map.uniqueID == tailID), "destroying hibernating map preserves other maps");
+                Map queuedRemoval = GenerateMap(Current.Game.Maps.First());
+                component.Hibernate(queuedRemoval);
+                PocketMapUtility.DestroyPocketMap(queuedRemoval);
+                component.GameComponentUpdate();
+                Check(queuedRemoval.Disposed && !component.IsHibernateRequested(queuedRemoval), "map removal cancels queued hibernation");
                 foreach (Map map in Current.Game.Maps.ToArray()) component.Hibernate(map);
+                component.GameComponentUpdate();
                 Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null, "all maps can hibernate");
                 GameDataSaveLoader.SaveGame("CQF_AllMapsHibernating");
                 Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null, "saving all hibernating maps restores empty active list");
                 Check(File.Exists(GenFilePaths.FilePathForSavedGame("CQF_AllMapsHibernating")), "all hibernating maps save written");
-                Current.Game.Dispose();
-                SavedGameLoaderNow.LoadGameFromSaveFileNow("CQF_AllMapsHibernating");
+                GameDataSaveLoader.LoadGame("CQF_AllMapsHibernating");
                 stage = 2;
                 return;
             }

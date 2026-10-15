@@ -68,17 +68,21 @@ internal static class ThingPlacementStyleChecks
                 Designator placement = (Designator)RuntimeHelpers.GetUninitializedObject(type);
                 selection.SetValue(null, definition);
                 definition.rotatable = true;
-                Check(placement.DrawStyleCategory == null, name + " disables area placement for rotatable things");
-                Check(type.GetMethod("DoExtraGuiControls")!.DeclaringType == typeof(Designator_Place)
-                    && type.GetMethod("SelectedProcessInput")!.DeclaringType == typeof(Designator_Place),
-                    name + " inherits native rotation controls and shortcuts");
+                Check(placement.DrawStyleCategory == QuestEditor_Library.QEDefOf.CQF_Areas,
+                    name + " uses area placement for nonbuildings even with rotatable true");
+                definition.category = ThingCategory.Building;
+                Check(placement.DrawStyleCategory == null, name + " disables area placement for rotatable buildings");
+                Check(type.GetMethod("DoExtraGuiControls")!.DeclaringType == editor.GetType("QuestEditor_Library.Designator_CQFPlace")
+                    && type.GetMethod("SelectedProcessInput")!.DeclaringType == editor.GetType("QuestEditor_Library.Designator_CQFPlace"),
+                    name + " dispatches placement controls and input through shared category rules");
                 definition.rotatable = false;
                 Check(placement.DrawStyleCategory == QuestEditor_Library.QEDefOf.CQF_Areas,
-                    name + " preserves area placement for non-rotatable things");
+                    name + " preserves area placement for nonrotatable buildings");
             }
             finally
             {
                 selection.SetValue(null, previous);
+                definition.category = ThingCategory.Item;
             }
         }
     }

@@ -15,8 +15,19 @@ namespace QuestEditor_Library
             instance = this;
         }
 
-        public static GameComponent_MapHibernation? Instance =>
-            instance != null && ReferenceEquals(instance.game, Current.Game) ? instance : null;
+        public static GameComponent_MapHibernation? Instance
+        {
+            get
+            {
+                Game currentGame = Current.Game;
+                if (currentGame == null) return null;
+                if (instance == null || !ReferenceEquals(instance.game, currentGame))
+                {
+                    instance = currentGame.GetComponent<GameComponent_MapHibernation>();
+                }
+                return instance;
+            }
+        }
         public IReadOnlyList<Map> HibernatingMaps => hibernatingMaps.AsReadOnly();
         public bool HasHibernatingMaps => records.Count > 0;
         public int TotalMapCount => game.Maps.Count + (saving ? 0 : hibernatingMaps.Count);
@@ -41,12 +52,7 @@ namespace QuestEditor_Library
             {
                 return;
             }
-            if (executionDepth > 0)
-            {
-                pendingHibernation.Add(map);
-                return;
-            }
-            HibernateNow(map);
+            pendingHibernation.Add(map);
         }
 
         public Map Activate(Map map)
@@ -121,19 +127,9 @@ namespace QuestEditor_Library
             return hibernatingMaps.FirstOrDefault(map => map.Tile == tile);
         }
 
-        public void BeginExecution()
+        public override void GameComponentUpdate()
         {
-            executionDepth++;
-        }
-
-        public void EndExecution(bool completed)
-        {
-            if (executionDepth <= 0)
-            {
-                throw new InvalidOperationException("[CQF] Unbalanced map hibernation execution scope.");
-            }
-            executionDepth--;
-            if (completed && executionDepth == 0 && !saving)
+            if (!saving && pendingHibernation.Count > 0)
             {
                 FlushRequests();
             }
@@ -252,7 +248,7 @@ namespace QuestEditor_Library
         {
             foreach (Map map in pendingHibernation.ToArray())
             {
-                pendingHibernation.Remove(map);
+                if (!pendingHibernation.Remove(map)) continue;
                 ValidateMap(map);
                 HibernateNow(map);
             }
@@ -275,7 +271,7 @@ namespace QuestEditor_Library
                 Find.SoundRoot.sustainerManager.EndAllInMap(map);
                 if (selected == map)
                 {
-                    selected = game.Maps.FirstOrDefault(other => other != map);
+                    selected = game.Maps.FirstOrDefault(other => other != map && !pendingHibernation.Contains(other));
                     game.CurrentMap = selected;
                     if (selected == null)
                     {
@@ -389,7 +385,6 @@ namespace QuestEditor_Library
         private readonly Dictionary<MapParent, Map> parentMaps = new Dictionary<MapParent, Map>();
         private readonly HashSet<Map> pendingHibernation = new HashSet<Map>();
         private List<Map> savedHibernatingMaps = new List<Map>();
-        private int executionDepth;
         private bool saving;
         private sbyte saveCurrentMapIndex;
         private static GameComponent_MapHibernation? instance;

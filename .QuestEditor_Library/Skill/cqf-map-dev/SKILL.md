@@ -429,6 +429,20 @@ AI 设计地图时，先明确：
 - 如果要保存“门已打开、奖励已领取、Boss 已死亡”等状态，应设计稳定 key 写入 `MainSite` 或数据库，而不是依赖旧地图仍存在。
 - 如果需要短期完全保留玩家改造过的地图，不应使用当前 MainMap 机制；RimWorld 原版没有可靠的轻量 Map 休眠 API。
 
+### 独立地图休眠
+
+地图休眠由 `GameComponent_MapHibernation` 管理，与 MainMap 的长期状态系统分开。休眠保留运行时 Map 和其中的物件，暂停更新；它没有增加原版地图索引的容量。
+
+- `Hibernate(Map)` 验证地图后只加入请求队列，不立即修改 `Game.Maps`。
+- `GameComponentUpdate()` 在原版 Tick 和 MapUpdate 遍历结束后的组件更新阶段提交请求；保存期间和队列为空时不处理。
+- 已移除 `Patch_MapHibernationExecution` 以及 `BeginExecution`、`EndExecution`、`executionDepth`，不要重新对 `Game.UpdatePlay` 或 `TickManager.DoSingleTick` 加休眠执行补丁。
+- `Activate(Map)` 会取消排队请求。选图、重新取图、生成/移除物件和移除地图入口也处理尚未执行的请求。
+- 当前地图休眠后，备用地图只能从未排队休眠的活动地图中选择；所有地图都排队时允许切回世界视图。
+- 保存会记录已经休眠和正在排队的地图；加载后恢复休眠状态。处理错误仍由原版组件更新异常日志报告，不能吞掉错误或自动反复重试。
+- 调用 Hibernate 后需要即时判断请求是否已提交时，区分 `IsHibernateRequested` 与 `IsHibernating`；不要假设同一调用中已休眠完成。
+
+回归检查：`pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`。测试使用独立临时存档目录，覆盖排队取消、各种 Tick 类型、地图引用和索引、存档重载与全部地图休眠；临时测试 Mod 结束后归档到测试目录。
+
 ### ZoneCore
 
 本质：

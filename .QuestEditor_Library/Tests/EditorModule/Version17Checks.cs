@@ -40,6 +40,18 @@ internal static class Version17Checks
         if (typeof(Site).GetField("allEnemiesDefeatedSignalSent", BindingFlags.NonPublic | BindingFlags.Instance) == null)
             throw new MissingFieldException(typeof(Site).FullName, "allEnemiesDefeatedSignalSent");
         Console.WriteLine("PASS old compatibility APIs removed and site field verified");
+        if (framework.GetType("QuestEditor_Library.Patch_MapHibernationExecution") != null)
+            throw new InvalidOperationException("Global hibernation execution patch remains.");
+        foreach (MethodBase method in new[]
+        {
+            AccessTools.Method(typeof(Verse.Game), nameof(Verse.Game.UpdatePlay)),
+            AccessTools.Method(typeof(Verse.TickManager), nameof(Verse.TickManager.DoSingleTick))
+        })
+        {
+            if (Harmony.GetPatchInfo(method)?.Owners.Contains("CQF.Checks.Version17.QuestEditor_Library") == true)
+                throw new InvalidOperationException("CQF still patches " + method.Name);
+        }
+        Console.WriteLine("PASS framework registers no UpdatePlay or DoSingleTick patches");
         AppDomain.CurrentDomain.AssemblyResolve += (_, request) =>
         {
             string? name = new AssemblyName(request.Name).Name;

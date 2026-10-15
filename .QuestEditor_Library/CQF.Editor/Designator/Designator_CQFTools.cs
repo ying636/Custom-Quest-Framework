@@ -7,7 +7,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_CQFTools : Designator_Place
+    public class Designator_CQFTools : Designator_CQFPlace
     {
         public Designator_CQFTools()
         {
@@ -18,13 +18,6 @@ namespace QuestEditor_Library
         }
         public override string Desc => base.Desc + "\n" + "CQFToolsTip".Translate();
         public override bool Visible => DebugSettings.godMode;
-        public override DrawStyleCategoryDef? DrawStyleCategory
-        {
-            get
-            {
-                return thing.rotatable ? null : QEDefOf.CQF_Areas;
-            }
-        }
         public override BuildableDef PlacingDef => thing;
 
         public override ThingStyleDef ThingStyleDefForPreview => null;

@@ -54,6 +54,7 @@ internal static class Program
         moduleContent.assemblies.loadedAssemblies.Add(framework);
         LoadedModManager.RunningModsListForReading.Add(moduleContent);
         GenTypes.ClearCache();
+        MapHibernationInstanceChecks.Run();
         Check(!framework.GetReferencedAssemblies().Any(reference => reference.Name == "CQF.Editor"), "framework has no editor assembly reference");
         Check(framework.GetType("QuestEditor_Library.PatchOperation_CQFEditorDesignators") == null, "editor registration no longer requires a custom patch operation");
         Check(!new CustomQuestFramework_ModSetting().enableEditor, "editor defaults off");
@@ -124,6 +125,7 @@ internal static class Program
         GenTypes.ClearCache();
         EditorDesignatorPatchChecks.Run(game, editor, moduleContent);
         ThingTransformChecks.Run(game, editor);
+        PlacementRotationChecks.Run(editor);
         conditionalFolders.Exclude("enableEditor");
         EditorDesignatorPatchChecks.Run(game, null, moduleContent);
         Check(!moduleContent.foldersToLoadDescendingOrder.Contains(Path.GetDirectoryName(editorPath)!), "failed module exclusion removes its XML resources");

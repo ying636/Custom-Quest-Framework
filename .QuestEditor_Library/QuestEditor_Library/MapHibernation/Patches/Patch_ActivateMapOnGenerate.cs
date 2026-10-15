@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
@@ -13,7 +14,10 @@ namespace QuestEditor_Library
     {
         public static bool Prefix(PlanetTile tile, ref Map __result)
         {
-            if (GameComponent_MapHibernation.Instance is { } component && component.FindHibernatingMap(tile) is { } map)
+            if (GameComponent_MapHibernation.Instance is not { } component) return true;
+            Map map = component.FindHibernatingMap(tile)
+                ?? Find.Maps.FirstOrDefault(activeMap => activeMap.Tile == tile && component.IsHibernateRequested(activeMap));
+            if (map != null)
             {
                 __result = component.Activate(map);
                 return false;
