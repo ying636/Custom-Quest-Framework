@@ -1,6 +1,6 @@
 ---
 name: "cqf-overview"
-description: "Explains CQF systems, responsibilities, extension entry points, and shared UI conventions. Invoke for CQF submods, runtime logic, quests, custom things, CQF editor or runtime UI, or choosing a CQF subsystem."
+description: "Explains CQF systems, responsibilities, extension entry points, and shared UI conventions. Invoke for CQF submods, domains (DomainDef/DomainWorker), runtime logic, quests, custom things, CQF editor or runtime UI, or choosing a CQF subsystem."
 ---
 
 # CQF Overview
@@ -25,6 +25,8 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 - 用户要快速了解 CQF 的结构与能力
 
 如果任务明确是“做 CQF 地图 / 子地图 / 区域拼装 / 地图入口出口 / 地图流程设计”，优先继续调用 `cqf-map-dev`。
+
+涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。领域地图池与通用地图休眠统一由 `GameComponent_MapManager` 管理；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
 
 修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
 
@@ -56,11 +58,12 @@ CQF 不是单一玩法 Mod，而是一套用于制作以下内容的框架：
 - 任务节点与任务联动
 - 数据库存档与信号驱动流程
 - 编辑器式内容制作
+- 领域战斗空间、共享血量、参与者往返与转场
 
 理解 CQF 的关键点：
 - 它不是只靠单个 Def 生效
 - 它的大部分玩法来自“对象 + 条件 + 动作 + 信号 + 数据库”的组合
-- 它本质上是一套领域脚本系统
+- 它通过组合这些系统承载玩法脚本
 
 ## CQF 的主要系统
 
@@ -211,6 +214,12 @@ CQF 不是单一玩法 Mod，而是一套用于制作以下内容的框架：
 
 overview 只负责系统归类，不在这里维护 Pawn 细节，避免和 `cqf-pawn-dev` 的备份内容重复。
 
+## 领域系统
+
+核心入口为 `DomainDef`、`GameComponent_MapManager`、`MapComponent_Domain` 和 `DomainWorker`，命名空间为 `QuestEditor_Library`。领域不是单个血海玩法：CQF 管理地图池、进入与返回、共享血量、外部载体和转场生命周期；子 Mod 通过 Worker、地图生成器及转场实现具体规则和表现。全局地图管理只有一个 GComp，地图休眠、领域地图池与转场通过 partial 分文件维护。
+
+调用方使用 `Acquire(definition, caster)` 获取或唤醒地图，再调用 `Enter(caster, targets)`。正常退出走 `RequestReturn`，崩塌走 `Collapse`，返回完成后由框架回收并休眠地图。实现字段、回调顺序、异常处理、1.6/1.7 转场差异和验证入口见 [领域系统开发参考](references/domain-system.md)。
+
 ## CQF 里最重要的三组认知
 
 ### 1. Action 和 Condition 的关系
@@ -241,6 +250,7 @@ overview 只负责系统归类，不在这里维护 Pawn 细节，避免和 `cqf
 - 需要“给一个普通对象挂被动触发逻辑”时，优先用 `CompActionWorker`
 - 需要“任务里控制何时生成或何时执行一串行为”时，优先用 `QuestNode_*`
 - 需要“地图生产与地图切换”时，优先用 `cqf-map-dev`
+- 需要“领域展开、共享血量、外部载体、参与者返回或领域转场”时，读取 [领域系统开发参考](references/domain-system.md)，以 `DomainWorker` 扩展玩法
 - 需要“新增执行效果”时，优先扩展 `CQFAction_*`
 - 需要“新增判定方式”时，优先扩展 `DialogCondition_*`
 
@@ -265,7 +275,7 @@ overview 只负责系统归类，不在这里维护 Pawn 细节，避免和 `cqf
 - DLL / UI 文本优先采用 `Key + 翻译`
 - Def 文本要走翻译体系
 - UI 类文本优先视为 `Keyed`
-- Def 的 `label / description` 优先走 `DefInjected`
+- Def 的 `label / description` 使用英文原文，中文放入对应 `DefInjected`；自定义 Def 使用完整命名空间目录，不建立英文 `DefInjected`
 
 ## 工作方式
 

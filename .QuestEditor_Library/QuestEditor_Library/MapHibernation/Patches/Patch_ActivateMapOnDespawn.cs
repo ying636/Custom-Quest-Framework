@@ -8,7 +8,7 @@ namespace QuestEditor_Library
     {
         public static void Prefix(Thing __instance)
         {
-            if (GameComponent_MapHibernation.Instance is not { } component) return;
+            if (GameComponent_MapManager.Instance is not { } component) return;
             if (component.TryGetMap(__instance, out Map map))
             {
                 component.Activate(map);

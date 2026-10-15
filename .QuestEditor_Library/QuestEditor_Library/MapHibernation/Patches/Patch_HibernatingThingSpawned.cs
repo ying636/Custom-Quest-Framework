@@ -8,7 +8,7 @@ namespace QuestEditor_Library
     {
         public static bool Prefix(Thing __instance, ref bool __result)
         {
-            if (GameComponent_MapHibernation.Instance is { } component && component.TryGetMap(__instance, out _))
+            if (GameComponent_MapManager.Instance is { } component && component.TryGetMap(__instance, out _))
             {
                 __result = true;
                 return false;

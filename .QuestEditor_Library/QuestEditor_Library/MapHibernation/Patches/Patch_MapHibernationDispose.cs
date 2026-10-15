@@ -8,7 +8,7 @@ namespace QuestEditor_Library
     {
         public static void Prefix(Game __instance)
         {
-            __instance.GetComponent<GameComponent_MapHibernation>()?.DisposeHibernatingMaps();
+            __instance.GetComponent<GameComponent_MapManager>()?.DisposeMaps();
         }
     }
 }

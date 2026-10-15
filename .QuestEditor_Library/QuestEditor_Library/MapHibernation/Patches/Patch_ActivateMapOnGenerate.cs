@@ -14,7 +14,7 @@ namespace QuestEditor_Library
     {
         public static bool Prefix(PlanetTile tile, ref Map __result)
         {
-            if (GameComponent_MapHibernation.Instance is not { } component) return true;
+            if (GameComponent_MapManager.Instance is not { } component) return true;
             Map map = component.FindHibernatingMap(tile)
                 ?? Find.Maps.FirstOrDefault(activeMap => activeMap.Tile == tile && component.IsHibernateRequested(activeMap));
             if (map != null)

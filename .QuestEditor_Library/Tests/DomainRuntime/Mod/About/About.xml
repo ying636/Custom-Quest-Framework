@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>CQF.DomainChecks</name>
+  <author>HaiLuan</author>
+  <packageId>CQF.DomainChecks</packageId>
+  <supportedVersions><li>1.7</li></supportedVersions>
+  <modDependencies>
+    <li><packageId>HaiLuan.CustomQuestFramework</packageId><displayName>Custom Quest Framework</displayName></li>
+    <li><packageId>HaiLuan.RitesOfTheSilentHouse</packageId><displayName>Rites of the Silent House</displayName></li>
+  </modDependencies>
+</ModMetaData>

@@ -9,7 +9,7 @@ namespace QuestEditor_Library
         public static DebugActionNode MapHibernation()
         {
             DebugActionNode root = new DebugActionNode("CQF_MapHibernation".Translate());
-            GameComponent_MapHibernation component = GameComponent_MapHibernation.Instance
+            GameComponent_MapManager component = GameComponent_MapManager.Instance
                 ?? throw new System.InvalidOperationException("[CQF] Map hibernation component is unavailable.");
             foreach (Map map in Current.Game.Maps)
             {

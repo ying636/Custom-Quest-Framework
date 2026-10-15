@@ -88,7 +88,7 @@ namespace QuestEditor_Library
                 return;
             }
 
-            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
+            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
             {
                 hibernation.Activate(this.entrance.Map);
             }
@@ -183,7 +183,7 @@ namespace QuestEditor_Library
 
         public override Map GetOtherMap()
         {
-            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
+            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
             {
                 hibernation.Activate(this.entrance.Map);
             }

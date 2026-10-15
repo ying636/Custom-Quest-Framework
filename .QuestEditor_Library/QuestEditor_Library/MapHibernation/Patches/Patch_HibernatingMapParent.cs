@@ -9,7 +9,7 @@ namespace QuestEditor_Library
     {
         public static void Postfix(MapParent __instance, ref Map __result)
         {
-            if (__result == null && GameComponent_MapHibernation.Instance is { } component &&
+            if (__result == null && GameComponent_MapManager.Instance is { } component &&
                 component.TryGetMap(__instance, out Map map))
             {
                 __result = map;

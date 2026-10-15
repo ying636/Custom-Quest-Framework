@@ -8,7 +8,7 @@ namespace QuestEditor_Library
     {
         public static bool Prefix(WorldObject __instance)
         {
-            return __instance is not MapParent parent || GameComponent_MapHibernation.Instance is not { } component ||
+            return __instance is not MapParent parent || GameComponent_MapManager.Instance is not { } component ||
                 !component.TryGetMap(parent, out _);
         }
     }

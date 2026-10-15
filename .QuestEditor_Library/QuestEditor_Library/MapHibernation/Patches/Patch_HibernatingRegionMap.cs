@@ -16,7 +16,7 @@ namespace QuestEditor_Library
 
         public static bool Prefix(object __instance, ref Map __result)
         {
-            if (GameComponent_MapHibernation.Instance is not { } component)
+            if (GameComponent_MapManager.Instance is not { } component)
             {
                 return true;
             }

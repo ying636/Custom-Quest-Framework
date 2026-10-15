@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">$(MSBuildThisFileDirectory)..\..\..\..\..</RimWorldDir>
+  </PropertyGroup>
+  <Import Project="..\..\RimWorld.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\QuestEditor_Library\QuestEditor_Library.csproj" />
+    <Reference Update="Assembly-CSharp;UnityStubs;Waylith;0Harmony"><Private>true</Private></Reference>
+  </ItemGroup>
+</Project>

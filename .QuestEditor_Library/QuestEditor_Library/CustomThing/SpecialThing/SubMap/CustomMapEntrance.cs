@@ -389,7 +389,7 @@ namespace QuestEditor_Library
                 this.GenerateCustomMap(this.Map, null);
             }
 
-            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.customMap))
+            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.customMap))
             {
                 hibernation.Activate(this.customMap);
             }
@@ -472,7 +472,7 @@ namespace QuestEditor_Library
                 return;
             }
 
-            if (GameComponent_MapHibernation.Instance is { } hibernation && hibernation.IsHibernating(this.exit.Map))
+            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.exit.Map))
             {
                 hibernation.Activate(this.exit.Map);
             }

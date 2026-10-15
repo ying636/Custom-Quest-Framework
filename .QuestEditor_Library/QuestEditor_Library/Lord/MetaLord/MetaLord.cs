@@ -269,7 +269,7 @@ namespace QuestEditor_Library
                     this.RemoveMember(pawn, "ExitedScope");
                     continue;
                 }
-                bool sleeping = GameComponent_MapHibernation.Instance?.IsHibernating(pawn.Map) == true;
+                bool sleeping = GameComponent_MapManager.Instance?.IsHibernating(pawn.Map) == true;
                 MoveRequirment move = this.GetMove(pawn);
                 if (sleeping)
                 {
@@ -351,7 +351,7 @@ namespace QuestEditor_Library
                     this.FinishMove(move, MetaLordMoveStatus.Failed, "MapRemoved");
             }
             foreach (Pawn pawn in this.members)
-                if (pawn.Spawned && GameComponent_MapHibernation.Instance?.IsHibernating(pawn.Map) != true)
+                if (pawn.Spawned && GameComponent_MapManager.Instance?.IsHibernating(pawn.Map) != true)
                     this.RefreshDuty(pawn, false);
         }
 

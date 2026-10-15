@@ -11,7 +11,7 @@ namespace QuestEditor_Library
 
         public override void RealWork(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            GameComponent_MapHibernation component = GameComponent_MapHibernation.Instance
+            GameComponent_MapManager component = GameComponent_MapManager.Instance
                 ?? throw new InvalidOperationException("[CQF] Map hibernation component is unavailable.");
             HashSet<Map> maps = new HashSet<Map>();
             foreach (KeyValuePair<string, TargetInfo> target in targets)

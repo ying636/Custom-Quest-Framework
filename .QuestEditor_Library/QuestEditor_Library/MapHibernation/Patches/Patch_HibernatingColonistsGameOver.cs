@@ -8,7 +8,7 @@ namespace QuestEditor_Library
     {
         public static bool Prefix(GameEnder __instance)
         {
-            if (GameComponent_MapHibernation.Instance?.HasHibernatingColonists == true)
+            if (GameComponent_MapManager.Instance?.HasHibernatingColonists == true)
             {
                 __instance.gameEnding = false;
                 return false;

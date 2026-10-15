@@ -20,7 +20,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
             if (stage == 0)
             {
                 root = GenFilePaths.SaveDataFolderPath;
-                Check(GameComponent_MapHibernation.Instance != null, "component initialized");
+                Check(GameComponent_MapManager.Instance != null, "component initialized");
                 File.WriteAllLines(Path.Combine(root, "TranslationErrors.txt"), LanguageDatabase.activeLanguage.loadErrors, Encoding.UTF8);
                 Current.Game.tickManager.CurTimeSpeed = TimeSpeed.Paused;
                 home = Current.Game.CurrentMap;
@@ -39,7 +39,12 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 regions = middle.regionGrid.AllRegions_NoRebuild_InvalidAllowed.ToArray();
                 districts = middle.regionGrid.allDistricts.ToArray();
                 Check(regions.Length > 0 && districts.Length > 0, "map has regions and districts");
-                GameComponent_MapHibernation component = GameComponent_MapHibernation.Instance!;
+                GameComponent_MapManager component = GameComponent_MapManager.Instance!;
+                component.GameComponentUpdate();
+                long idleAllocated = GC.GetAllocatedBytesForCurrentThread();
+                for (int update = 0; update < 256; update++) component.GameComponentUpdate();
+                idleAllocated = GC.GetAllocatedBytesForCurrentThread() - idleAllocated;
+                Check(idleAllocated == 0, "idle unified manager allocates zero bytes across 256 updates");
                 Current.Game.CurrentMap = tail;
                 component.Hibernate(middle);
                 Check(component.IsHibernateRequested(middle) && Current.Game.Maps.Contains(middle) && !component.IsHibernating(middle),
@@ -157,7 +162,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
             }
             if (stage == 1)
             {
-                GameComponent_MapHibernation component = GameComponent_MapHibernation.Instance!;
+                GameComponent_MapManager component = GameComponent_MapManager.Instance!;
                 Map loaded = component.HibernatingMaps.Single(map => map.uniqueID == middleID);
                 Check(!Current.Game.Maps.Contains(loaded) && !loaded.Disposed, "load restores hibernation after map initialization");
                 HibernationProbe[] loadedProbes = savedThingIDs.Select(id => loaded.listerThings.AllThings.OfType<HibernationProbe>().Single(probe => probe.ThingID == id)).ToArray();
@@ -195,7 +200,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
             }
             if (stage == 2)
             {
-                GameComponent_MapHibernation component = GameComponent_MapHibernation.Instance!;
+                GameComponent_MapManager component = GameComponent_MapManager.Instance!;
                 Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null && component.HibernatingMaps.Count == 2,
                     "load restores all maps hibernating with no active map");
                 Map loaded = component.HibernatingMaps.Single(map => map.uniqueID == tailID);

@@ -202,7 +202,7 @@ public sealed class MetaLordChecksDriver : MonoBehaviour
                 owner.RequestMove(pawn, a, "CQF_A");
                 homeID = home.uniqueID;
                 targetID = a.uniqueID;
-                GameComponent_MapHibernation.Instance.Hibernate(home);
+                GameComponent_MapManager.Instance.Hibernate(home);
                 int before = CounterAction.Counts["CQF_Tick"];
                 int requestTick = owner.GetMove(pawn)!.createdTick;
                 RunTicks(120);
@@ -216,7 +216,7 @@ public sealed class MetaLordChecksDriver : MonoBehaviour
             }
             if (stage == 1)
             {
-                GameComponent_MapHibernation hibernation = GameComponent_MapHibernation.Instance;
+                GameComponent_MapManager hibernation = GameComponent_MapManager.Instance;
                 home = hibernation.HibernatingMaps.Single(m => m.uniqueID == homeID);
                 MetaLordManager manager = home.GetComponent<MapComponent_CQFLord>().Manager;
                 MetaLord owner = manager.Get("CQF_Check", home);

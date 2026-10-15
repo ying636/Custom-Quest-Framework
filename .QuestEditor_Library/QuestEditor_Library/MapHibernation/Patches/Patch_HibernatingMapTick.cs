@@ -17,7 +17,7 @@ namespace QuestEditor_Library
 
         public static bool Prefix(Map __instance)
         {
-            return GameComponent_MapHibernation.Instance?.IsHibernating(__instance) != true;
+            return GameComponent_MapManager.Instance?.IsHibernating(__instance) != true;
         }
     }
 }

@@ -54,7 +54,7 @@ internal static class Program
         moduleContent.assemblies.loadedAssemblies.Add(framework);
         LoadedModManager.RunningModsListForReading.Add(moduleContent);
         GenTypes.ClearCache();
-        MapHibernationInstanceChecks.Run();
+        MapManagerInstanceChecks.Run();
         Check(!framework.GetReferencedAssemblies().Any(reference => reference.Name == "CQF.Editor"), "framework has no editor assembly reference");
         Check(framework.GetType("QuestEditor_Library.PatchOperation_CQFEditorDesignators") == null, "editor registration no longer requires a custom patch operation");
         Check(!new CustomQuestFramework_ModSetting().enableEditor, "editor defaults off");
