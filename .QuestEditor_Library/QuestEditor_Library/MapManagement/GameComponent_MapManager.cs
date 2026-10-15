@@ -8,6 +8,7 @@ public sealed partial class GameComponent_MapManager : GameComponent
     {
         this.game = game;
         instance = this;
+        Module = CQFModuleLoader.CreateMapModule(this);
     }
 
     public static GameComponent_MapManager? Instance
@@ -22,17 +23,15 @@ public sealed partial class GameComponent_MapManager : GameComponent
         }
     }
 
+    public Game Game => game;
+    public ICQFMapModule? Module { get; }
+
     public override void GameComponentUpdate()
     {
         if (saving) return;
         try
         {
-            UpdateDomainTransition();
-            if (LongEventHandler.AnyEventNowOrWaiting) return;
-            ProcessDomainPreloads();
-            UpdateDomains();
-            ProcessDomainReturns();
-            ProcessDomainOpenings();
+            Module?.Update();
         }
         finally
         {
@@ -40,41 +39,30 @@ public sealed partial class GameComponent_MapManager : GameComponent
         }
     }
 
-    public override void GameComponentOnGUI() => transition?.Draw();
+    public override void GameComponentOnGUI() => Module?.OnGUI();
 
-    public override void StartedNewGame() => InitializeDomainPreloads();
+    public override void StartedNewGame() => Module?.StartedNewGame();
 
     public override void LoadedGame()
     {
         RestoreHibernatingMaps();
-        InitializeDomainPreloads();
-        LongEventHandler.ExecuteWhenFinished(() =>
-        {
-            if (Current.Game != game) return;
-            foreach (Map realm in domainMaps) realm.GetComponent<MapComponent_Domain>().EndArrivalTransition();
-            foreach (Map loaded in game.Maps) loaded.GetComponent<MapComponent_DomainTransitionLock>().End();
-        });
+        Module?.LoadedGame();
     }
 
     public override void ExposeData()
     {
         ExposeHibernationData();
-        Scribe_Collections.Look(ref domainMaps, "domainMaps", LookMode.Reference);
-        if (Scribe.mode == LoadSaveMode.PostLoadInit) domainMaps ??= new();
+        if (Module != null && Scribe.EnterNode("cqfMapModule"))
+        {
+            try { Module.ExposeData(); }
+            finally { Scribe.ExitNode(); }
+        }
     }
 
     public void DisposeMaps()
     {
-        SetTransition(null);
-        foreach (Map realm in domainMaps) realm.GetComponent<MapComponent_Domain>().Worker?.Dispose();
-        domainMaps.Clear();
+        Module?.Dispose();
         DisposeHibernatingMaps();
-        openings.Clear();
-        returns.Clear();
-        pendingDomainPreloads.Clear();
-        preparing.Clear();
-        failedPreparation.Clear();
-        updatingDomains.Clear();
         if (ReferenceEquals(instance, this)) instance = null;
     }
 

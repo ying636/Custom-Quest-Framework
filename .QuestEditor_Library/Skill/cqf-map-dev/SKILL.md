@@ -431,7 +431,7 @@ AI 设计地图时，先明确：
 
 ### 独立地图休眠
 
-地图休眠由统一的 `GameComponent_MapManager` 管理，该组件同时负责领域地图池与转场，使用 partial 分文件维护，仅有一个 GComp。MainMap 的长期状态仍由其原有系统管理。休眠保留运行时 Map 和其中的物件，暂停更新；它没有增加原版地图索引的容量。
+地图休眠由统一的 `GameComponent_MapManager` 管理，领域通过独立 `CQF.Domain` 模块中的普通运行对象接入该组件，仍只有一个地图管理 GComp；领域模块需要子 Mod 在 LoadFolders 中声明。MainMap 的长期状态仍由其原有系统管理。休眠保留运行时 Map 和其中的物件，暂停更新；它没有增加原版地图索引的容量。
 
 - `Hibernate(Map)` 验证地图后只加入请求队列，不立即修改 `Game.Maps`。
 - `GameComponentUpdate()` 在原版 Tick 和 MapUpdate 遍历结束后的组件更新阶段提交请求；保存期间和队列为空时不处理。

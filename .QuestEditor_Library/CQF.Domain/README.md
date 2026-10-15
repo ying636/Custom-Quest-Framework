@@ -1,10 +1,14 @@
 # 领域系统
 
-领域系统位于 `QuestEditor_Library` 主库中，支持 RimWorld 1.6 和 1.7。框架管理领域生命周期、共享血量、外部载体、参与者转移、地图池和转场调度。领域的具体战斗规则与表现通过 `DomainWorker` 和 `DomainTransition` 扩展。
+领域系统位于可选的 `CQF.Domain` 模块中，支持 RimWorld 1.6 和 1.7。框架管理领域生命周期、共享血量、外部载体、参与者转移、地图池和转场调度。领域的具体战斗规则与表现通过 `DomainWorker` 和 `DomainTransition` 扩展。
 
-全局入口统一为 `GameComponent_MapManager`，同时管理地图休眠与领域地图池，仅创建一个 GameComponent。实现位于同级 `MapManagement` 目录，按主入口、Hibernation、Domains 和 Transitions 拆分 partial 文件。`DomainMaps` 包含已登记领域地图，`HibernatingMaps` 包含所有已休眠地图。
+主库保留唯一的 `GameComponent_MapManager` 管理通用地图休眠，通过 `ICQFMapModule` 将生命周期转发给普通对象 `CQFDomainRuntime`。领域 API 使用 `CQFDomainRuntime.Instance`，不会创建额外 GComp。主库不包含领域 Def、MapComponent 或领域补丁。
 
-更新顺序为转场、无长事件时的预加载/Worker 安全更新/返回/展开，最后提交休眠请求。预加载在新建或加载游戏时初始化，新增地图和领域地图移除时按需安排；空闲帧不扫描所有领域定义，也不为队列创建空快照。`ManagedUpdate` 仍对已登记领域地图调用，不按 Active 自动过滤。
+CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</li>`；子 Mod 使用 `<li RequiresCQFModule="Domain">1.7/Domain</li>` 声明需求。这两个属性由 CQF 处理，保留原版的版本和 IfModActive 条件。没有启用子 Mod 请求时不加载领域 DLL。
+
+领域和依赖它的子 Mod DLL 均放在声明目录根部，不放 Assemblies；加载顺序为主库、领域、子 Mod DLL、Def 解析。延后加载的 DLL 不得包含 Mod 派生入口类。多个请求共享一个模块，每个游戏独立创建运行对象。1.6 使用对应版本路径。
+
+更新顺序为转场、无长事件时的预加载/Worker 安全更新/返回/展开，宿主最后提交休眠请求。预加载按需安排，不每帧扫描全部领域定义；ManagedUpdate 保留现有调用语义。默认不迁移拆分前旧存档。
 
 ## 定义
 
@@ -34,7 +38,7 @@
 
 ## 生命周期与扩展方法
 
-通过 `GameComponent_MapManager.Instance!.Acquire(definition, caster)` 取得领域地图，再调用该地图的 `MapComponent_Domain.Enter(caster, targets)` 进入。目标筛选由调用方完成；框架过滤重复、死亡和不在施术者地图上的目标。
+通过 `CQFDomainRuntime.Instance.Acquire(definition, caster)` 取得领域地图，再调用该地图的 `MapComponent_Domain.Enter(caster, targets)` 进入。目标筛选由调用方完成；框架过滤重复、死亡和不在施术者地图上的目标。
 
 每张领域地图对应一个 `MapComponent_Domain` 和一个独立的 `DomainWorker`。普通地图也有通用组件，尚未配置领域时 `Worker` 为 `null`；使用 `GetWorker<T>()` 查询具体实现时需处理返回空值的情况。
 
@@ -69,7 +73,7 @@
 
 `DomainTransition` 管理地图切换、等待领域地形完成绘制、入场和返回期间的人物锁定、过渡结束及资源清理。具体实现提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect` 和 `ReleaseVisuals`。截图采集、材质和动画细节留在子 Mod。
 
-使用 `GameComponent_MapManager.SetTransition` 管理当前转场。展开中的视觉对象可继承 `DomainOpening`，通过 `QueueOpening` 调度完成操作。返回锁定使用 `MapComponent_DomainTransitionLock`，结束时恢复人物原有的剩余眩晕时间。
+使用 `CQFDomainRuntime.Instance.SetTransition` 管理当前转场。展开中的视觉对象可继承 `DomainOpening`，通过 `QueueOpening` 调度完成操作。返回锁定使用 `MapComponent_DomainTransitionLock`，结束时恢复人物原有的剩余眩晕时间。
 
 `DomainOpening` 必须提供 `Definition`、`Caster`、`Active` 和两个完成方法。基类在 `SpawnSetup` 自动登记展开物件，在 `DeSpawn` 自动移除登记；覆盖这两个生命周期方法时须调用基类，以便所有领域共用展开保护，读档后也会重新登记。
 

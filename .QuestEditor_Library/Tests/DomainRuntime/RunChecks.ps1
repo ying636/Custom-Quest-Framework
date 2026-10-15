@@ -15,9 +15,10 @@ if ($LASTEXITCODE -ne 0) { throw 'Failed to build domain checks.' }
 
 try {
     New-Item -ItemType Directory -Path (Join-Path $runDirectory 'Config') -Force | Out-Null
-    New-Item -ItemType Directory -Path (Join-Path $testModDirectory 'Assemblies') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $testModDirectory 'Domain') -Force | Out-Null
     Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Mod\About') -Destination $testModDirectory -Recurse
-    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'bin\Release\net10.0\CQF.DomainRuntimeChecks.dll') -Destination (Join-Path $testModDirectory 'Assemblies')
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Mod\LoadFolders.xml') -Destination $testModDirectory
+    Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'bin\Release\net10.0\CQF.DomainRuntimeChecks.dll') -Destination (Join-Path $testModDirectory 'Domain')
     @'
 <?xml version="1.0" encoding="utf-8"?>
 <ModsConfigData>

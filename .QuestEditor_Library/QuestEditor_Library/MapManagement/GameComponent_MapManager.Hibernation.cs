@@ -153,7 +153,7 @@ public sealed partial class GameComponent_MapManager
         {
             throw new InvalidOperationException("[CQF] Active and hibernating maps reached the vanilla map index limit.");
         }
-        preloadCheckRequested = true;
+        if (map != null) Module?.MapAdded(map);
     }
 
     private void ExposeHibernationData()

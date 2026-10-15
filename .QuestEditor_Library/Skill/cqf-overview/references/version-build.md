@@ -1,10 +1,12 @@
-# CQF 1.7 版本与构建
+# CQF 版本与构建
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
+当前 CQF 发布版本为 `3.4`，版本字段为 `About/About.xml` 的 `modVersion`。本版将领域拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
 ## 引用与输出
 
-本机已验证版本为 `1.7.4976 rev1043`。RimWorld 1.7 使用 .NET 10；先读取游戏 `Version.txt` 和 `RimWorld.runtimeconfig.json`，不要沿用旧 Unity Managed 目录。
+本机构建与程序集检查使用游戏版本 `1.7.4979 rev109`。RimWorld 1.7 使用 .NET 10；先读取游戏 `Version.txt` 和 `RimWorld.runtimeconfig.json`，不要沿用旧 Unity Managed 目录。
 
 主库与编辑器共用 `.QuestEditor_Library/RimWorld.props`，默认 `RimWorldVersion=1.7`：
 
@@ -13,7 +15,7 @@
 - 原版引用：游戏根目录的 `Assembly-CSharp.dll`、`UnityStubs.dll`、`Waylith.dll`，均不复制到 Mod。
 - Harmony：默认引用 Steam 工坊 `2009463077/1.7/Assemblies/0Harmony.dll`；可用 `HarmonyPath` 指定其他安装位置。
 - `RimWorldDir` 可覆盖默认游戏路径。
-- `-p:RimWorldVersion=1.6` 保留 `net48` 和 `Krafs.Rimworld.Ref 1.6.4633` 构建入口。改源码时不要覆盖已发布的旧版 DLL；验证旧版构建时指定临时 `OutputPath`。
+- `-p:RimWorldVersion=1.6` 保留 `net48` 和 `Krafs.Rimworld.Ref 1.6.4633` 构建入口。仅验证旧版构建时指定临时 `OutputPath`；发布跨版本功能时分别构建对应主库和可选模块，本次 3.4 同步更新 1.6 / 1.7 输出。
 
 构建：
 
@@ -22,6 +24,24 @@ dotnet build .QuestEditor_Library/CQF.Editor/CQF.Editor.csproj -c Release
 ```
 
 编辑器仅由 `LoadFolders.xml` 中的 `IfCQFSetting="enableEditor"` 入口加载。不要把编辑器 DLL 放进自动扫描的主库 Assemblies 目录，也不要把游戏或 Harmony DLL 打包到 CQF。
+
+## 可选领域模块
+
+- 工程：`.QuestEditor_Library/CQF.Domain/CQF.Domain.csproj`，源码与主库完全分开；类型命名空间保持 `QuestEditor_Library`。
+- 输出：`1.7/Optional/Domain/CQF.Domain.dll`，1.6 对应 `1.6/Optional/Domain/CQF.Domain.dll`；DLL 放在条件目录根部，不放 `Assemblies`。
+- 主库的 `LoadFolders.xml` 用 `IfCQFModule="Domain"` 标记提供目录；子 Mod 用 `RequiresCQFModule="Domain"` 标记需求目录。两个属性由 `CQFModuleLoader` 实现，不是原版条件。
+- 只读取当前启用 Mod 的原版已选目录，保留版本和 `IfModActive` 等条件；模块先加载，需求目录中的子 Mod DLL 后加载，再进入 Def 解析。
+- 依赖领域的子 Mod DLL 同样放在需求目录根部。延后加载的 DLL 不得包含 `Mod` 派生入口类；独立的入口留在普通 Assemblies，且不能直接引用尚未加载的领域类型。
+- 没有请求时不加载领域 DLL、不注册领域补丁、不创建领域运行对象。主库只保留 `ICQFMapModule` 生命周期接口；领域运行对象由唯一的 `GameComponent_MapManager` 持有，不增加 GComp。
+- 寂屋邪祭输出为 `1.7/Domain/RSH.dll`，可选玩家能力适配为 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`，1.6 对应同名版本目录。不要保留旧 Assemblies 中的重复 DLL。
+
+构建领域模块会先构建主库：
+
+```powershell
+dotnet build .QuestEditor_Library/CQF.Domain/CQF.Domain.csproj -c Release
+```
+
+完整打包须包含同一版本的主库、领域模块和已更新引用的子 Mod。不要混用拆分前后的 DLL。字段、调用和加载验证见 [领域系统开发参考](domain-system.md)。
 
 ## 旧系统清理后的接口
 
@@ -39,6 +59,8 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- patches
 ```
 
+领域加载验证另见 `Tests/EditorModule/OptionalModuleChecks.cs`：独立进程运行 `modules-disabled`、`modules-filtered`、`modules-enabled`、`modules-adapter`、`modules-multiple`、`modules-invalid` 和 `modules-layout`；最后两项验证错误必须记录并抛出。领域规则验证入口为 `Tests/Domain/Checks.csproj`。
+
 检查覆盖编辑器条件加载、类型解析、原版 XML Patch、运行时对编辑器的依赖、父对象地图生成参数和实际 Harmony 注册。1.7 的 Verse.Log 使用新日志后端；测试不能仅靠 `Debug.unityLogger.logHandler` 判断是否调用 `Log.Error`。
 
 涉及原版 API 时通过 Rimsage 查询，并与当前本机程序集的编译/反射结果核对。涉及第三方适配时先确认前置 Mod 的版本与 API；缺少源码、DLL 或 1.7 前置版本时明确报告，不能把目录复制当作兼容验证。
@@ -53,3 +75,5 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 已删除无对应 Def/运行类的 `CQF_DestroyMainSiteCountdown` 残留翻译，并删除错误短类型目录和重复英文 PawnMod DefInjected。自定义 Def 的中文翻译使用完整命名空间目录。
 
 `Tests/GameRuntime` 的 `version17` 标记模式验证游戏内编辑器开关、编辑器地图、子地图和站点地图生成。使用独立 `-savedatafolder` 与临时测试 Mod，结束后归档测试 Mod；不要改用户实际配置或存档。原 AI HTTP 综合测试属于另一套测试，不能替代此版本适配验证。
+
+当前领域发布验证：1.6 / 1.7 编译、32 项领域规则检查及上述 7 种模块加载场景通过；空闲宿主在模块启用/禁用两种情况下，预热后 256 次更新均为 0 字节分配。游戏内集成测试在测试入口前因 `D3DSCache.dll`、异常码 `0xc0000409` 退出，未产生通过标记；不能据此宣称领域进出、存读档或视觉转场已通过游戏内验证。

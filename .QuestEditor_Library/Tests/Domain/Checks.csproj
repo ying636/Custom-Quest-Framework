@@ -9,6 +9,7 @@
   <Import Project="..\..\RimWorld.props" />
   <ItemGroup>
     <ProjectReference Include="..\..\QuestEditor_Library\QuestEditor_Library.csproj" />
+    <ProjectReference Include="..\..\CQF.Domain\CQF.Domain.csproj" />
     <Reference Update="Assembly-CSharp;UnityStubs;Waylith;0Harmony"><Private>true</Private></Reference>
   </ItemGroup>
 </Project>

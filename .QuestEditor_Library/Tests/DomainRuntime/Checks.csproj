@@ -8,7 +8,7 @@
   </PropertyGroup>
   <Import Project="..\..\RimWorld.props" />
   <ItemGroup>
-    <ProjectReference Include="..\..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
-    <Reference Include="RSH"><HintPath>$(RimWorldDir)\Mods\寂屋邪祭\1.7\Assemblies\RSH.dll</HintPath><Private>false</Private></Reference>
+    <ProjectReference Include="..\..\CQF.Domain\CQF.Domain.csproj" Private="false" />
+    <Reference Include="RSH"><HintPath>$(RimWorldDir)\Mods\寂屋邪祭\1.7\Domain\RSH.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 </Project>

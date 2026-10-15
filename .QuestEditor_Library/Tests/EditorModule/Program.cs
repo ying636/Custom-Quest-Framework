@@ -22,7 +22,8 @@ internal static class Program
         };
         try
         {
-            if (args.Contains("patches")) Version17Checks.Run(game);
+            if (args.Any(arg => arg.StartsWith("modules-", StringComparison.Ordinal))) OptionalModuleChecks.Run(game, args.Single());
+            else if (args.Contains("patches")) Version17Checks.Run(game);
             else Run(game, args.Contains("enabled"));
         }
         catch (Exception error) { Console.WriteLine(error); Environment.Exit(1); }

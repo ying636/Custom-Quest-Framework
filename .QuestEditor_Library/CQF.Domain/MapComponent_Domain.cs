@@ -228,7 +228,7 @@ public class MapComponent_Domain : MapComponent
             if (caster != null && caster.Spawned && caster.Map == destination) Find.Selector.Select(caster);
         }
         worker.Returned(destination, focus, returnedPawns);
-        GameComponent_MapManager.Instance!.Recycle(this, destination);
+        CQFDomainRuntime.Instance.Recycle(this, destination);
         active = false;
         closing = false;
         caster = null;
@@ -244,7 +244,7 @@ public class MapComponent_Domain : MapComponent
         catch (Exception exception)
         {
             closing = false;
-            GameComponent_MapManager.Instance!.FinishTransitionFor(map);
+            CQFDomainRuntime.Instance.FinishTransitionFor(map);
             Log.Error("[CQF] Domain return failed; retaining the remaining map: " + exception);
         }
         finally { returnQueued = false; }
@@ -315,7 +315,7 @@ public class MapComponent_Domain : MapComponent
         worker?.Update();
         if (!active || !closing || returnQueued) return;
         returnQueued = true;
-        GameComponent_MapManager.Instance!.QueueReturn(this);
+        CQFDomainRuntime.Instance.QueueReturn(this);
     }
 
     public override void MapComponentDraw()
@@ -365,7 +365,7 @@ public class MapComponent_Domain : MapComponent
     public override void MapRemoved()
     {
         openings.Clear();
-        Current.Game?.GetComponent<GameComponent_MapManager>()?.UnregisterDomainMap(map);
+        (Current.Game?.GetComponent<GameComponent_MapManager>()?.Module as CQFDomainRuntime)?.UnregisterDomainMap(map);
         worker?.Dispose();
         base.MapRemoved();
     }

@@ -1,6 +1,6 @@
 ---
 name: "cqf-overview"
-description: "Explains CQF systems, responsibilities, extension entry points, and shared UI conventions. Invoke for CQF submods, domains (DomainDef/DomainWorker), runtime logic, quests, custom things, CQF editor or runtime UI, or choosing a CQF subsystem."
+description: "Explains CQF systems, responsibilities, extension entry points, and shared UI conventions. Invoke for CQF submods, domains (DomainDef/DomainWorker), optional module loading (LoadFolders), runtime logic, quests, custom things, CQF editor or runtime UI, or choosing a CQF subsystem."
 ---
 
 # CQF Overview
@@ -26,7 +26,7 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 
 如果任务明确是“做 CQF 地图 / 子地图 / 区域拼装 / 地图入口出口 / 地图流程设计”，优先继续调用 `cqf-map-dev`。
 
-涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。领域地图池与通用地图休眠统一由 `GameComponent_MapManager` 管理；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
+涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。通用地图休眠由 `GameComponent_MapManager` 管理，领域模块通过普通运行对象接入同一个 GComp；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
 
 修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
 
@@ -216,9 +216,9 @@ overview 只负责系统归类，不在这里维护 Pawn 细节，避免和 `cqf
 
 ## 领域系统
 
-核心入口为 `DomainDef`、`GameComponent_MapManager`、`MapComponent_Domain` 和 `DomainWorker`，命名空间为 `QuestEditor_Library`。领域不是单个血海玩法：CQF 管理地图池、进入与返回、共享血量、外部载体和转场生命周期；子 Mod 通过 Worker、地图生成器及转场实现具体规则和表现。全局地图管理只有一个 GComp，地图休眠、领域地图池与转场通过 partial 分文件维护。
+领域由独立的 `CQF.Domain.dll` 提供，核心入口为 `DomainDef`、`CQFDomainRuntime`、`MapComponent_Domain` 和 `DomainWorker`，命名空间仍为 `QuestEditor_Library`。子 Mod 须在自己的 `LoadFolders.xml` 中使用 `RequiresCQFModule="Domain"` 声明需求；没有启用的子 Mod 请求时不加载领域 DLL。领域不是单个血海玩法：CQF 管理地图池、进入与返回、共享血量、外部载体和转场生命周期；子 Mod 通过 Worker、地图生成器及转场实现具体规则和表现。`GameComponent_MapManager` 是唯一的地图管理 GComp；`CQFDomainRuntime` 是按游戏创建的普通对象，通过主库接口接收生命周期调用，partial 只在各自程序集内部拆分。
 
-调用方使用 `Acquire(definition, caster)` 获取或唤醒地图，再调用 `Enter(caster, targets)`。正常退出走 `RequestReturn`，崩塌走 `Collapse`，返回完成后由框架回收并休眠地图。实现字段、回调顺序、异常处理、1.6/1.7 转场差异和验证入口见 [领域系统开发参考](references/domain-system.md)。
+调用方使用 `CQFDomainRuntime.Instance.Acquire(definition, caster)` 获取或唤醒地图，再调用 `Enter(caster, targets)`。正常退出走 `RequestReturn`，崩塌走 `Collapse`，返回完成后由框架回收并休眠地图。实现字段、回调顺序、异常处理、1.6/1.7 转场差异和验证入口见 [领域系统开发参考](references/domain-system.md)。
 
 ## CQF 里最重要的三组认知
 

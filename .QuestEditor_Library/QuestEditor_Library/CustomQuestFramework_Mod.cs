@@ -17,6 +17,7 @@ namespace QuestEditor_Library
             CQFContentPaths.Initialize(content.RootDir);
             this.editorEnabledAtStartup = this.setting.enableEditor;
             CQFConditionalLoadFolders folders = new CQFConditionalLoadFolders(content, this.setting);
+            CQFModuleLoader.Load(content, LoadedModManager.RunningModsListForReading);
             CQFEditorLoader.Load(content, folders.GetFolders(nameof(CustomQuestFramework_ModSetting.enableEditor)));
             if (!CQFEditorBridge.IsLoaded) folders.Exclude(nameof(CustomQuestFramework_ModSetting.enableEditor));
         }

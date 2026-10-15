@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <Import Project="..\RimWorld.props" />
+  <PropertyGroup>
+    <OutputPath>$(MSBuildThisFileDirectory)..\..\$(RimWorldVersion)\Optional\Domain\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+  </ItemGroup>
+</Project>

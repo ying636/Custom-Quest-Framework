@@ -2,7 +2,7 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public sealed partial class GameComponent_MapManager
+public sealed partial class CQFDomainRuntime
 {
     public DomainTransition? Transition => transition;
 

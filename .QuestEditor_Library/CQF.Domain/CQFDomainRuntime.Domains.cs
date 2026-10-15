@@ -4,7 +4,7 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public sealed partial class GameComponent_MapManager
+public sealed partial class CQFDomainRuntime
 {
     public IReadOnlyList<Map> DomainMaps => domainMaps;
 
@@ -20,7 +20,7 @@ public sealed partial class GameComponent_MapManager
         if (realm == null) realm = GenerateDomain(definition, pawn.Map);
         else
         {
-            if (IsHibernating(realm) || IsHibernateRequested(realm)) Activate(realm);
+            if (host.IsHibernating(realm) || host.IsHibernateRequested(realm)) host.Activate(realm);
             if (!game.Maps.Contains(realm)) throw new InvalidOperationException("[CQF] Domain activation did not register its map.");
         }
         ((MapParent_Domain)realm.Parent).sourceMap = pawn.Map;
@@ -36,7 +36,7 @@ public sealed partial class GameComponent_MapManager
         foreach (Thing thing in realm.listerThings.AllThings.ToList()) thing.Destroy();
         foreach (Verse.AI.Group.Lord lord in realm.lordManager.lords.ToList()) realm.lordManager.RemoveLord(lord);
         domain.Worker!.Recycling(destination);
-        Hibernate(realm);
+        host.Hibernate(realm);
     }
 
     public void QueueReturn(MapComponent_Domain domain)
@@ -95,7 +95,7 @@ public sealed partial class GameComponent_MapManager
                     preloadCheckRequested = true;
                     return;
                 }
-                Hibernate(GenerateDomain(definition, source));
+                host.Hibernate(GenerateDomain(definition, source));
             }
             catch (Exception exception)
             {

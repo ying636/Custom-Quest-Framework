@@ -34,7 +34,7 @@ public sealed class DomainChecksDriver : MonoBehaviour
                 Check(caster.Map == realm && enemy.Map == realm && caster.Drafted, "participants enter with drafted state");
                 Check(domain.Definition == DomainWorker_BloodSea.BloodSeaDefinition && domain.MaximumHealth == 100000f, "blood sea uses CQF domain definition");
                 Check(domain.Anchor?.Domain == domain, "external blood sea anchor links to generic domain");
-                Check(GameComponent_MapManager.Instance!.DomainMaps.Contains(realm), "unified manager registers active domains");
+                Check(CQFDomainRuntime.Instance.DomainMaps.Contains(realm), "unified manager registers active domains");
                 Check(!realm.terrainGrid.TerrainAt(realm.Center).temporary && realm.terrainGrid.BaseTerrainAt(realm.Center).defName == "RSH_BloodSeaFloor", "blood sea has permanent base terrain");
                 domain.DrainHealth(123f);
                 Check(domain.Health == 99877f && domain.Anchor!.HitPoints == 99877, "domain health synchronizes external anchor");
@@ -50,7 +50,7 @@ public sealed class DomainChecksDriver : MonoBehaviour
             }
             else if (stage == 1)
             {
-                realm = GameComponent_MapManager.Instance!.GetMaps(DomainWorker_BloodSea.BloodSeaDefinition)
+                realm = CQFDomainRuntime.Instance.GetMaps(DomainWorker_BloodSea.BloodSeaDefinition)
                     .FirstOrDefault(map => map.GetComponent<MapComponent_Domain>().Active);
                 if (realm == null) return;
                 MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
@@ -88,14 +88,14 @@ public sealed class DomainChecksDriver : MonoBehaviour
                 Check(!realm!.GetComponent<MapComponent_Domain>().Active, "collapsed domain returns occupants and hibernates");
                 Map removed = realm;
                 PocketMapUtility.DestroyPocketMap(removed);
-                Check(removed.Disposed && !GameComponent_MapManager.Instance!.DomainMaps.Contains(removed),
+                Check(removed.Disposed && !CQFDomainRuntime.Instance.DomainMaps.Contains(removed),
                     "destroyed domain leaves the unified map pool");
                 stage = 4;
             }
             else if (stage == 4)
             {
                 GameComponent_MapManager manager = GameComponent_MapManager.Instance!;
-                Map? replacement = manager.GetMaps(DomainWorker_BloodSea.BloodSeaDefinition).FirstOrDefault();
+                Map? replacement = CQFDomainRuntime.Instance.GetMaps(DomainWorker_BloodSea.BloodSeaDefinition).FirstOrDefault();
                 if (replacement == null || !manager.IsHibernating(replacement)) return;
                 Check(replacement != realm && replacement.GetComponent<MapComponent_Domain>().Available,
                     "removing the last domain schedules one replacement preload and hibernates it");

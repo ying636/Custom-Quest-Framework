@@ -4,7 +4,7 @@
 
 ## 源码入口与职责
 
-主库目录：`D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\QuestEditor_Library\Domain`，类型均位于 `QuestEditor_Library` 命名空间。
+领域模块源码目录：`D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\CQF.Domain`，类型均位于 `QuestEditor_Library` 命名空间。
 
 | 源文件 / 类型 | 职责 |
 | --- | --- |
@@ -20,16 +20,47 @@
 | `DomainTransition.cs` | 镜头切换、入场/返回锁定和转场资源释放 |
 | `MapComponent_DomainTransitionLock.cs` / `DomainTransitionLifetime.cs` | 返回人员锁定，以及离开游戏时释放视觉资源 |
 
-统一管理器位于同级 `MapManagement` 目录，仅有一个 `GameComponent_MapManager` 实例，通过 partial 按职责分文件：
+领域工程为 `.QuestEditor_Library/CQF.Domain/CQF.Domain.csproj`，输出到版本目录的 `Optional/Domain/CQF.Domain.dll`。主库不引用这个 DLL，也不保留领域 Def、MapComponent 或领域补丁类型。
 
 | 源文件 | 职责 |
 | --- | --- |
-| `GameComponent_MapManager.cs` | 唯一构造函数、Instance、Update/OnGUI、存读档与释放入口 |
-| `GameComponent_MapManager.Hibernation.cs` | 所有地图的休眠、激活、引用和索引恢复 |
-| `GameComponent_MapManager.Domains.cs` | 领域地图池、预加载、获取、回收、Worker 安全更新与返回队列 |
-| `GameComponent_MapManager.Transitions.cs` | 展开队列、当前转场与转场更新 |
+| 主库 `MapManagement/GameComponent_MapManager.cs` | 唯一 GComp、游戏实例缓存、通用地图休眠、可选模块生命周期转发 |
+| 主库 `MapManagement/GameComponent_MapManager.Hibernation.cs` | 所有地图的休眠、激活、引用和索引恢复 |
+| 主库 `Modules/CQFModuleLoader.cs` | 解析需求、按顺序加载框架模块及子 Mod DLL、登记工厂 |
+| 领域 `CQFDomainModule.cs` | 注册领域补丁和运行对象工厂 |
+| 领域 `CQFDomainRuntime.cs` | 按游戏创建的普通运行对象、领域存档和释放入口 |
+| 领域 `CQFDomainRuntime.Domains.cs` | 领域地图池、预加载、获取、回收、Worker 安全更新与返回队列 |
+| 领域 `CQFDomainRuntime.Transitions.cs` | 展开队列、当前转场与转场更新 |
 
-统一 Update 先更新转场；没有长事件时依次处理预加载、Worker.ManagedUpdate、返回与展开，最后提交休眠请求。保存范围内不处理这些更新。新增地图管理需求优先接入现有管理器，不为同一套地图调度另建 GComp。
+`CQFDomainRuntime.Instance` 从当前游戏的 `GameComponent_MapManager.Module` 获取领域运行对象；模块未启用时抛出可诊断异常，不自动创建全局替代实例。领域模块不新增 GameComponent。partial 不能跨程序集使用，领域 API 不再挂在主库 GComp 上。
+
+统一 Update 在保存范围之外调用可选模块，模块先更新转场；没有长事件时依次处理预加载、Worker.ManagedUpdate、返回与展开，宿主最后提交休眠请求。主库存读档、地图添加、OnGUI 和释放也通过 `ICQFMapModule` 转发。模块状态保存于 `cqfMapModule` 节点，默认不迁移拆分前的旧存档。
+
+## LoadFolders 声明与打包
+
+CQF 自己提供可选目录：
+
+```xml
+<li IfCQFModule="Domain">1.7/Optional/Domain</li>
+```
+
+子 Mod 在自己的当前版本条目中声明：
+
+```xml
+<li RequiresCQFModule="Domain">1.7/Domain</li>
+```
+
+从 CQF 3.4 起，领域必须通过上述声明启用。需求在游戏启动时解析；变更启用的子 Mod 或 LoadFolders 后须重新启动游戏，不能在运行中切换模块。
+
+需求条目可与原版 `IfModActive` 等条件组合。加载器只处理当前启用 Mod 在原版版本/依赖条件筛选后保留的目录；被排除的目录和未启用 Mod 不会触发需求。多个请求共用一份领域模块，不需要在 CQF 硬编码子 Mod packageId，也不依赖玩家设置。
+
+加载顺序为主库 → 领域 DLL → 各子 Mod 需求目录根部的 DLL → Def 解析。子 Mod 之间按原有加载顺序处理，同一子 Mod 按 LoadFolders 声明顺序处理需求目录。先声明主领域 DLL 目录，再声明依赖它的适配目录。需要自己在 About 中声明 CQF 依赖和正确的前后加载关系。
+
+**依赖领域的 DLL 必须放在需求目录根部，不能放 `Assemblies` 子目录或普通自动加载目录。** 原版会在 CQF Mod 构造函数之前检查普通程序集的类型，此时继承 `DomainWorker` 等类型会因缺少模块而失败。条件 DLL 不包含 `Mod` 派生入口类；需要 Mod 入口时，放在独立普通 DLL，入口不能提前引用领域类型。
+
+`IfCQFModule` / `RequiresCQFModule` 是 CQF 的自定义属性，不是原版功能。提供方限于 CQF，子 Mod 使用需求属性。未知模块、缺少模块 DLL、错误目录和类型加载失败会记录包含子 Mod packageId 与路径的错误并抛出。没有任何请求时领域 DLL 不加载、领域 MapComponent 和补丁不注册、领域状态不创建。1.6 将上述路径中的版本改为 1.6，并构建匹配的 DLL。
+
+寂屋邪祭已使用 `1.7/Domain/RSH.dll` 和 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`；后者保留玩家能力框架的 IfModActive 条件。1.6 使用对应版本目录。不能残留旧 Assemblies 中的重复文件。
 
 先读相关 CQF / 子 Mod 源码；原版类型和 API 用 Rimsage 核对。Rimsage 不索引 Mod 源码。
 
@@ -79,11 +110,11 @@ XML 根类型使用 `QuestEditor_Library.DomainDef`。字段大小写和类型�
 最小调用链：
 
 ```csharp
-Map realm = GameComponent_MapManager.Instance!.Acquire(definition, caster);
+Map realm = CQFDomainRuntime.Instance.Acquire(definition, caster);
 realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 ```
 
-`Acquire` 先找同 Def 的 `Available` 地图，激活其休眠状态；无空闲地图时按需生成。它只获取地图，不转移人物，也不预留地图；获取后应在同一流程中进入。`DomainMaps` 是所有已登记领域地图，`HibernatingMaps` 是所有已休眠地图，两者不是同一份列表。领域地图池和休眠由同一管理器直接协调。
+`Acquire` 先找同 Def 的 `Available` 地图，激活其休眠状态；无空闲地图时按需生成。它只获取地图，不转移人物，也不预留地图；获取后应在同一流程中进入。`DomainMaps` 是所有已登记领域地图，`HibernatingMaps` 是所有已休眠地图，两者不是同一份列表。领域运行对象通过其宿主直接调用通用休眠与激活。
 
 预加载在新建/加载游戏后初始化待办，新增或唤醒地图时检查尚待处理的定义，最后一张同 Def 领域地图移除后补充预加载。不会每帧扫描全部 `DomainDef`，也不保证始终留有一张空闲地图。预加载失败报告错误并在本局停止对该定义自动重试。队列为空时不创建快照；Worker 更新复用缓冲列表，仍保留对已登记地图调用 `ManagedUpdate` 的语义。
 
@@ -147,7 +178,7 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 ## 转场与展开物件
 
-具体 `DomainTransition` 提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect(float progress)`、`ReleaseVisuals()`。截图、材质、Shader 与动画属于子 Mod。使用管理器 `SetTransition(value)`，替换时会 Dispose 旧转场；当前游戏只有一个管理中的转场。
+具体 `DomainTransition` 提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect(float progress)`、`ReleaseVisuals()`。截图、材质、Shader 与动画属于子 Mod。使用 `CQFDomainRuntime.Instance.SetTransition(value)`，替换时会 Dispose 旧转场；当前游戏只有一个管理中的转场。
 
 - `Bind(realm)` 关联领域并开始入场锁定。
 - `BindReturn(destination, focus, pawns)` 关联返回地图，用 `MapComponent_DomainTransitionLock` 锁定返回人员。
@@ -180,4 +211,4 @@ pwsh -File .QuestEditor_Library/Tests/DomainRuntime/RunChecks.ps1
 
 `Tests/Domain` 使用真实游戏程序集验证 Worker 隔离、共享血量、伤害上限、保护溢出、崩塌只执行一次、展开保护及配置错误。`Tests/DomainRuntime` 依赖当前寂屋邪祭，检查统一管理器实例、领域进出、尸体与物品返回、复用休眠、崩塌、活动领域存读档，以及最后一张领域地图移除后的预加载；它会启动游戏，运行前要求没有 RimWorld 进程。运行脚本使用独立配置/存档目录并将临时测试 Mod 移入日志目录归档。该集成检查不能代替视觉转场的实际观察，且不能当作 1.6 运行验证。
 
-地图休眠回归入口为 `pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`，包含空闲管理器连续更新的分配检查，以及排队取消、Tick 停止/恢复、引用、索引和全部地图休眠的存读档检查。组件实例缓存切换见 `Tests/EditorModule/MapManagerInstanceChecks.cs`。
+地图休眠回归入口为 `pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`，包含空闲管理器连续更新的分配检查，以及排队取消、Tick 停止/恢复、引用、索引和全部地图休眠的存读档检查。组件实例缓存切换见 `Tests/EditorModule/MapManagerInstanceChecks.cs`。模块边界与加载顺序见 `Tests/EditorModule/OptionalModuleChecks.cs`，独立进程运行 modules-disabled、modules-filtered、modules-enabled、modules-adapter、modules-multiple、modules-invalid 和 modules-layout 模式。
