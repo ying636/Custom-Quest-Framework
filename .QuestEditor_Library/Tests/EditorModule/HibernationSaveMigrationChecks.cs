@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using QuestEditor_Library;
 using Verse;
 
+// TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新移除旧格式迁移用例；保留新格式往返、跨地图引用和损坏数据校验，并同步调整 HibernationSchedulingChecks 调用。
 internal static class HibernationSaveMigrationChecks
 {
     public static void Run(Game game, string fixtureSavePath)

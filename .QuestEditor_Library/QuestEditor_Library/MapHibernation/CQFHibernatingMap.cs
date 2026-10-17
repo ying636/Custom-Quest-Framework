@@ -7,6 +7,7 @@ internal sealed class CQFHibernatingMap : IExposable
 {
     public CQFHibernatingMap() { }
 
+    // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除旧档构造入口及 allowLegacy/legacyReference/OwnsMapData；保留新格式深度读写。
     public CQFHibernatingMap(bool allowLegacy) { this.allowLegacy = allowLegacy; }
 
     public CQFHibernatingMap(Map map)
@@ -26,6 +27,7 @@ internal sealed class CQFHibernatingMap : IExposable
         Scribe_Values.Look(ref regionUpdaterEnabled, "regionUpdaterEnabled", true);
         if (Scribe.mode != LoadSaveMode.Saving)
         {
+            // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除旧节点归一化和引用读取分支，仅保留 Scribe_Deep 读取。
             if (Scribe.mode == LoadSaveMode.LoadingVars && allowLegacy)
             {
                 System.Xml.XmlNode parent = Scribe.loader.curXmlParent;

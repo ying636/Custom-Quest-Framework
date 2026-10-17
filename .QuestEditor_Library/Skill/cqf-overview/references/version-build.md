@@ -60,6 +60,21 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- hibernation
 ```
 
+## 3.6 临时休眠存档兼容
+
+按用户要求，本次保留兼容，**下次更新删除兼容部分**。代码统一标记 `TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE)`；本要求替代之前“不得删除该迁移路径”的约束。
+
+必须先用包含本次兼容修复的 3.6 成功加载旧档并重新保存；保存只写 `CQF_ownedHibernatingMaps` 和 `CQF_pendingHibernation`，重存后的文件无需旧格式兼容。仅看到版本号 3.6、经过一段时间或发布下一版不代表迁移完成。未重新保存的旧档和旧备份仍需先用本次修复版加载、保存，再交给删除兼容后的版本读取。
+
+下次清理范围：
+
+- `MapHibernation/CQFHibernatingMap.cs`：删除 bool 构造入口、`allowLegacy` / `legacyReference` 字段、`OwnsMapData` 属性、旧节点归一化、引用读取分支和旧格式专用错误分支，保留新格式的 `Scribe_Deep` 读写。
+- `MapManagement/GameComponent_MapManager.Hibernation.cs`：删除 `CQF_hibernatingMaps` / `CQF_mapPauses` 读取块、`RestoreLegacyHibernation` 方法及调用、`legacyMaps` / `legacyPauses` / `legacyReferences` 字段及所有相关恢复、校验、清理语句。
+- `Tests/EditorModule/HibernationSaveMigrationChecks.cs`：移除旧格式迁移用例，同步调整 `HibernationSchedulingChecks` 中的调用和 fixture 辅助入口；新格式往返、跨地图引用和损坏数据校验须保留或移入常规休眠测试。
+- 同步更新仓库内与已安装的 cqf-overview / cqf-map-dev Skill，删除旧格式仍受支持的描述；如原生集成测试仍构造旧格式，应一并改为当前格式。
+
+不得随兼容代码删除当前格式字段、正常地图深度读写、身份冲突和排队引用校验、原版读档初始化调度及普通休眠/唤醒流程。清理后验证当前格式保存、加载、再次保存及跨地图引用。
+
 ## 旧系统清理后的接口
 
 - 已删除 `CustomSitePartParams` 和 `Patch_SitePartParams`。站点地图从 `CustomSite.mapDef/quest` 读取；子地图从 `MapParent_Custom.mapDataDef/quest` 读取；编辑器地图从 `EditorMapObject.mapDef` 读取。

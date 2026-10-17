@@ -65,6 +65,7 @@ public sealed partial class GameComponent_MapManager
         }
         Scribe_Collections.Look(ref savedMaps, "CQF_ownedHibernatingMaps", LookMode.Deep);
         Scribe_Collections.Look(ref savedRequests, "CQF_pendingHibernation", LookMode.Reference);
+        // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除本旧字段读取块；保留上方两个新格式字段。
         if (Scribe.mode != LoadSaveMode.Saving)
         {
             Scribe_Collections.Look(ref legacyMaps, "CQF_hibernatingMaps", LookMode.Deep, true);
@@ -74,6 +75,7 @@ public sealed partial class GameComponent_MapManager
 
     private void RestoreHibernatingMaps()
     {
+        // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除本调用及本文件全部 legacyMaps/legacyPauses/legacyReferences 读写和字段；保留新格式校验与恢复。
         RestoreLegacyHibernation();
         Dictionary<int, Map> registered = new();
         foreach (Map map in game.Maps) registered.Add(map.uniqueID, map);
@@ -156,6 +158,7 @@ public sealed partial class GameComponent_MapManager
         foreach (Map map in maps) map.Dispose();
     }
 
+    // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除本迁移方法；只有用本次修复版成功加载并重新保存的旧档才已完成迁移。
     private void RestoreLegacyHibernation()
     {
         foreach (List<CQFHibernatingMap>? legacy in new[] { legacyMaps, legacyPauses })
