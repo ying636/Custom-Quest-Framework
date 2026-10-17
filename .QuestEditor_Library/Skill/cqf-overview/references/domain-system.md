@@ -36,7 +36,7 @@
 
 统一 Update 在保存范围之外调用可选模块，模块先更新转场；没有长事件时依次处理预加载、Worker.ManagedUpdate、返回与展开，宿主最后提交休眠请求。主库存读档、地图添加、OnGUI 和释放也通过 `ICQFMapModule` 转发。模块状态保存于 `cqfMapModule` 节点，默认不迁移拆分前的旧存档。
 
-领域池中的休眠地图移出原版 Game.Maps，由统一组件持有和深度保存。Thing 按原版未生成处理，Spawned=false、Map=null，不补出物件或 MapParent 的地图引用；唤醒后复用原图并恢复索引与 Tick 登记。回收要求无人物，空图休眠/唤醒不扫描全局 Tick 表。CQF_ownedHibernatingMaps 保存托管 Map，CQF_pendingHibernation 引用保存排队地图；单图保存范围内临时提供原版区域索引，Thing 仍未生成。边界见地图 Skill 的独立地图休眠段落。
+领域池中的休眠地图移出原版 Game.Maps，由统一组件持有和深度保存。Thing 按原版未生成处理，Spawned=false、Map=null，不补出物件或 MapParent 的地图引用；唤醒后复用原图并恢复索引与 Tick 登记。回收要求无人物，空图休眠/唤醒不扫描全局 Tick 表。CQF_ownedHibernatingMaps 保存托管 Map，CQF_pendingHibernation 引用保存排队地图；单图保存范围内临时提供原版区域索引，Thing 仍未生成。本次升级兼容旧休眠引用列表、暂停引用及旧节点的完整 Map，读档时迁移，保存只写新格式。边界见地图 Skill 的独立地图休眠段落。
 
 ## LoadFolders 声明与打包
 

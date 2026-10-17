@@ -440,13 +440,13 @@ AI 设计地图时，先明确：
 - 休眠只剩取图、选图和退出清理三个 Harmony 入口。不补丁物件/区域属性、Thing.DoTick、WorldObject.DoTick、地图 PreTick/PostTick/Update、Tick 登记、自动移除判断、Game.ExposeData/AddMap、GameEnder 或全局 UpdatePlay/DoSingleTick。
 - 休眠物件不再通过 SpawnSetup/DeSpawn 自动唤醒。调用方应先 Activate 再生成、移除或操作该图物件；原生物件活动只取消尚未提交的休眠请求。1.7 事件区继续使用 Map.events；1.6 只保留原有的两个 Pawn 事件区补丁。
 - MapParent.Map/HasMap 按原版显示没有活动地图；CQF 自有入口通过直接 Map 引用唤醒，出口通过 PocketMapParent.sourceMap 返回。不要根据休眠 Thing.Map 判断目的地图。
-- `CQF_ownedHibernatingMaps` 深度保存组件托管的 Map，`CQF_pendingHibernation` 引用保存尚在活动列表中的排队地图。活动地图仍由原版保存，不做旧格式迁移。因为原版温度保存依赖区域索引，单图 ExposeData 范围内临时追加地图并恢复区域索引，finally 撤回；Thing 始终保持未生成，不重新登记 Tick，不使用全局存档补丁。
+- `CQF_ownedHibernatingMaps` 深度保存组件托管的 Map，`CQF_pendingHibernation` 引用保存尚在活动列表中的排队地图。活动地图仍由原版保存。本次升级读取旧 CQF_hibernatingMaps 引用列表/完整托管记录和 CQF_mapPauses 暂停引用，迁移后只写新格式，保留地图对象、物件和原区域更新开关。因为原版温度保存依赖区域索引，单图 ExposeData 范围内临时追加地图并恢复区域索引，finally 撤回；Thing 始终保持未生成，不重新登记 Tick，不使用全局存档补丁。
 - 读档后的托管地图在长事件结束队列中完成一次原版 FinalizeLoading，相关延迟初始化执行后再次移出并注销 Tick。普通唤醒不重复 FinalizeLoading。全部地图休眠后允许 Game.Maps 为空并使用世界视图。
 - 明确销毁时先 Activate，再走原版地图销毁入口；MapRemoved/Dispose 清理托管状态和事件订阅。退出时组件负责 Dispose 所有仍托管的地图。休眠人物不伪装为活动殖民者，不补丁游戏结束判断。
 - 既有 IncidentWorker.CanFireNow 拒绝显式传入的休眠/待休眠目标。第三方直接调用 Thing.DoTick 或直接操作休眠地图不在自动拦截范围。
 - 框架生成子地图时检查活动加休眠地图总量的原版索引上限；唤醒和单图保存同样检查活动索引容量，超限明确报错。
 
-离线入口：`dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- hibernation`。使用真实 TickList、Thing 序列化和 Scribe 验证调度、未生成状态、中间地图移出后的索引、组件所有权存档、全部地图休眠保存和空闲分配；Map.ExposeData/FinalizeLoading 在离线检查中使用精简夹具，不能视为完整地图存读档通过。完整游戏入口为 `pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`，使用独立配置和存档并归档临时测试 Mod；只有产生 COMPLETE 才算游戏内通过。
+离线入口：`dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- hibernation`。使用真实 TickList、Thing 序列化和 Scribe 验证调度、未生成状态、中间地图移出后的索引、组件所有权存档、全部地图休眠保存和空闲分配；Map.ExposeData/FinalizeLoading 在离线检查中使用精简夹具，不能视为完整地图存读档通过。完整游戏入口为 `pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`，使用独立配置和存档并归档临时测试 Mod；只有产生 COMPLETE 才算游戏内通过。FrameworkBuildRoot 可指定待替换的发布目录，测试复制临时框架并使用独立包名，不覆盖正式 Mod。
 
 ### ZoneCore
 

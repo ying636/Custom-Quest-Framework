@@ -65,10 +65,34 @@ public sealed partial class GameComponent_MapManager
         }
         Scribe_Collections.Look(ref savedMaps, "CQF_ownedHibernatingMaps", LookMode.Deep);
         Scribe_Collections.Look(ref savedRequests, "CQF_pendingHibernation", LookMode.Reference);
+        if (Scribe.mode != LoadSaveMode.Saving)
+        {
+            Scribe_Collections.Look(ref legacyMaps, "CQF_hibernatingMaps", LookMode.Deep, true);
+            Scribe_Collections.Look(ref legacyPauses, "CQF_mapPauses", LookMode.Deep, true);
+        }
     }
 
     private void RestoreHibernatingMaps()
     {
+        RestoreLegacyHibernation();
+        Dictionary<int, Map> registered = new();
+        foreach (Map map in game.Maps) registered.Add(map.uniqueID, map);
+        if (savedMaps != null)
+            foreach (CQFHibernatingMap record in savedMaps)
+            {
+                if (record == null) throw new InvalidOperationException("[CQF] CQF_ownedHibernatingMaps contains an empty map record.");
+                Map map = record.Map;
+                if (registered.ContainsKey(map.uniqueID))
+                    throw new InvalidOperationException("[CQF] Duplicate saved map identity: " + map.GetUniqueLoadID());
+                registered.Add(map.uniqueID, map);
+            }
+        if (savedRequests != null)
+            foreach (Map map in savedRequests)
+                if (map == null || !registered.TryGetValue(map.uniqueID, out Map? saved) || !ReferenceEquals(saved, map))
+                    throw new InvalidOperationException("[CQF] A saved hibernation request has an unresolved or unregistered map.");
+        foreach (Map map in legacyReferences.Keys)
+            if (!registered.TryGetValue(map.uniqueID, out Map? saved) || !ReferenceEquals(saved, map))
+                throw new InvalidOperationException("[CQF] A legacy hibernation reference points to an unregistered map: " + map.GetUniqueLoadID());
         if (savedMaps != null)
         {
             foreach (CQFHibernatingMap record in savedMaps)
@@ -100,9 +124,21 @@ public sealed partial class GameComponent_MapManager
             }
             savedMaps.Clear();
         }
-        if (savedRequests == null) return;
-        foreach (Map map in savedRequests) Hibernate(map);
-        savedRequests.Clear();
+        foreach (Map map in legacyReferences.Keys)
+            if (!IsHibernating(map)) pendingHibernation.Add(map);
+        foreach (KeyValuePair<Map, CQFHibernatingMap> entry in legacyReferences)
+            if (!IsHibernating(entry.Key))
+            {
+                pendingHibernation.Remove(entry.Key);
+                HibernateNow(entry.Key, entry.Value);
+            }
+        legacyReferences.Clear();
+        if (savedRequests != null)
+        {
+            foreach (Map map in savedRequests)
+                if (!IsHibernating(map)) Hibernate(map);
+            savedRequests.Clear();
+        }
         if (pendingHibernation.Count > 0) FlushRequests();
     }
 
@@ -114,7 +150,34 @@ public sealed partial class GameComponent_MapManager
         pendingHibernation.Clear();
         savedMaps?.Clear();
         savedRequests?.Clear();
+        legacyMaps?.Clear();
+        legacyPauses?.Clear();
+        legacyReferences.Clear();
         foreach (Map map in maps) map.Dispose();
+    }
+
+    private void RestoreLegacyHibernation()
+    {
+        foreach (List<CQFHibernatingMap>? legacy in new[] { legacyMaps, legacyPauses })
+        {
+            if (legacy == null) continue;
+            foreach (CQFHibernatingMap record in legacy)
+            {
+                if (record == null) throw new InvalidOperationException("[CQF] Legacy hibernation contains an empty map record.");
+                Map map = record.Map;
+                if (record.OwnsMapData)
+                {
+                    savedMaps ??= new();
+                    savedMaps.Add(record);
+                }
+                else
+                {
+                    if (!legacyReferences.ContainsKey(map) || !record.RegionUpdaterEnabled)
+                        legacyReferences[map] = record;
+                }
+            }
+            legacy.Clear();
+        }
     }
 
     private void ValidateMap(Map map)
@@ -175,4 +238,7 @@ public sealed partial class GameComponent_MapManager
     private readonly HashSet<Map> pendingHibernation = new();
     private List<CQFHibernatingMap>? savedMaps;
     private List<Map>? savedRequests;
+    private List<CQFHibernatingMap>? legacyMaps;
+    private List<CQFHibernatingMap>? legacyPauses;
+    private readonly Dictionary<Map, CQFHibernatingMap> legacyReferences = new();
 }

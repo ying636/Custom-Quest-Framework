@@ -120,7 +120,7 @@ internal static class HibernationSchedulingChecks
                 or "Patch_HibernatingMapTick" or "Patch_HibernatingTickRegistration" or "Patch_HibernatingMapRemoval"
                 or "Patch_ActivateMapOnSpawn" or "Patch_ActivateMapOnDespawn"), "object attributes map ticking registration saving and spawn/despawn need no hibernation patches");
             restored.Activate(active);
-            CheckStoredFormats(game);
+            HibernationSaveMigrationChecks.Run(game, fixtureSavePath);
             Check(ChecksLogHandler.ErrorCount == 0, "native scheduling and Scribe ownership checks log no errors");
         }
         finally
@@ -189,34 +189,8 @@ internal static class HibernationSchedulingChecks
         Scribe.saver.FinalizeSaving();
         Check(game.Maps.Count == 0 && XDocument.Load(allFile).Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == 4,
             "all-detached save owns every map without retaining a map in the native list");
+        fixtureSavePath = file;
         Console.WriteLine("Detached map fixture save: " + file);
-    }
-
-    private static void CheckStoredFormats(Game game)
-    {
-        Map[] before = game.Maps.ToArray();
-        int errors = ChecksLogHandler.ErrorCount;
-        string file = Path.Combine(Path.GetTempPath(), "CQF_MapSchemaChecks_" + Guid.NewGuid().ToString("N") + ".xml");
-        File.WriteAllText(file, "<checks><manager><CQF_hibernatingMaps><li>Map_1</li></CQF_hibernatingMaps></manager></checks>");
-        Scribe.loader.InitLoading(file);
-        GameComponent_MapManager loaded = null!;
-        Scribe_Deep.Look(ref loaded, "manager", game);
-        Scribe.loader.FinalizeLoading();
-        loaded.LoadedGame();
-        Check(loaded.HibernatingMaps.Count == 0 && game.Maps.SequenceEqual(before),
-            "legacy reference-only node is not interpreted as owned map data and native maps remain active");
-        Check(ChecksLogHandler.ErrorCount == errors, "legacy field collision produces no missing-map errors");
-        loaded.DisposeMaps();
-        File.WriteAllText(file, "<checks><manager><CQF_ownedHibernatingMaps><li /></CQF_ownedHibernatingMaps></manager></checks>");
-        Scribe.loader.InitLoading(file);
-        loaded = null!;
-        Scribe_Deep.Look(ref loaded, "manager", game);
-        Scribe.loader.FinalizeLoading();
-        bool rejected = false;
-        try { loaded.LoadedGame(); }
-        catch (InvalidOperationException error) { rejected = error.Message.Contains("CQF_ownedHibernatingMaps"); }
-        finally { loaded.DisposeMaps(); }
-        Check(rejected, "malformed owned-map data still raises an explicit diagnostic instead of being discarded");
     }
 
     private static Map CreateMap(int id)
@@ -272,6 +246,7 @@ internal static class HibernationSchedulingChecks
             savedUnspawned = probes.All(probe => !probe.Spawned && probe.Map == null);
             savedRegionsValid = Regions(__instance).All(region => region.Map == __instance);
         }
+        HibernationSaveMigrationChecks.ExposeFixtureLink(__instance);
         Scribe_Collections.Look(ref probes, "things", LookMode.Deep);
         if (Scribe.mode == LoadSaveMode.LoadingVars)
             foreach (PauseProbeThing probe in probes) __instance.spawnedThings.TryAdd(probe, canMergeWithExistingStacks: false);
@@ -321,6 +296,7 @@ internal static class HibernationSchedulingChecks
 
     private static void CountTickRemoval() => tickRemovalCalls++;
 
+    private static string fixtureSavePath = string.Empty;
     private static int tickRemovalCalls;
     private static int finalizations;
     private static bool savedUnspawned;

@@ -52,7 +52,7 @@ dotnet build .QuestEditor_Library/CQF.Domain/CQF.Domain.csproj -c Release
 - 建筑受伤、人物受伤和建筑销毁三个补丁本轮保留：ThingComp 的受伤回调位于原方法内部，不能覆盖建筑提前免疫返回后的现有通知；PostDestroy 又晚于离图和 Lord 清理。替换前须单独核对触发次数、伤害来源、地图和 Lord 引用。
 - 1.7 主库有 18 个补丁目标，其中休眠为 3；领域为 0，编辑器为 1，模拟经营适配为 2。1.6 比 1.7 多保留两个 Pawn 事件区进出目标，不保留 Thing 休眠唤醒补丁。
 - 休眠地图移出 Game.Maps 并由统一组件托管，Thing 原版状态为 Spawned=false、Map=null。没有对象/区域属性、Thing.DoTick、WorldObject.DoTick、地图更新、Tick 登记、自动移除、GameEnder、保存或 AddMap 补丁；只保留选图、取图、退出清理。
-- CQF_ownedHibernatingMaps 使用独立字段深度保存组件托管地图，不复用旧 CQF_hibernatingMaps 引用列表；CQF_pendingHibernation 引用保存排队地图，不做旧格式迁移。单图保存时临时提供区域索引，Thing 仍未生成，finally 撤回。读档长事件结束时完成原版地图初始化及其延迟动作，再移出；普通唤醒不重复初始化。操作/销毁前显式激活，不通过原生物件生成/离图入口自动唤醒。
+- CQF_ownedHibernatingMaps 使用独立字段深度保存组件托管地图，不复用旧字段；CQF_pendingHibernation 引用保存排队地图。本次 3.6 专项兼容旧 CQF_hibernatingMaps 引用列表/完整 Map 记录及 CQF_mapPauses 暂停引用；按节点形状区分，交给原版 Scribe 解析完整地图和引用。迁移保留原地图对象、区域更新开关，重复引用合并；缺失或冲突身份在改动地图列表前明确报错。保存只写新格式，不回写旧节点。单图保存时临时提供区域索引，Thing 仍未生成，finally 撤回。读档长事件结束时完成原版地图初始化及其延迟动作，再移出；普通唤醒不重复初始化。操作/销毁前显式激活，不通过原生物件生成/离图入口自动唤醒。
 
 ```powershell
 dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- callbacks
@@ -93,6 +93,6 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 
 `Tests/GameRuntime` 的 `version17` 标记模式验证游戏内编辑器开关、编辑器地图、子地图和站点地图生成。使用独立 `-savedatafolder` 与临时测试 Mod，结束后归档测试 Mod；不要改用户实际配置或存档。原 AI HTTP 综合测试属于另一套测试，不能替代此版本适配验证。
 
-休眠离线检查 32 项通过：使用真实原版 Tick 列表验证 Normal/Rare/Long 暂停与恢复，使用原版 Thing 序列化及真实 Scribe 验证组件托管的 Map 夹具深度保存与引用往返。Map.ExposeData/FinalizeLoading 使用精简夹具，不代表完整地图存读档通过。空地图休眠与唤醒不调用全局 Tick 移除，预热后 256 次宿主更新为 0 字节分配；框架子地图入口检查总地图容量。
+基础休眠与迁移检查 74 项通过，本机旧存档管理器节点额外 7 项、合计 81 项通过：使用真实原版 Tick 列表验证 Normal/Rare/Long 暂停与恢复，使用原版 Thing 序列化及真实 Scribe 验证组件托管的 Map 夹具深度保存与引用往返。Map.ExposeData/FinalizeLoading 使用精简夹具；覆盖旧引用、暂停记录、完整 Map、显式 Class、混合节点去重、跨图引用及迁移后再次存读档。CQF_CHECKS_LEGACY_SAVE 可指定旧存档，只提取管理器节点，不修改原文件，也不代表该完整游戏存档已通过。空地图休眠与唤醒不调用全局 Tick 移除，预热后 256 次宿主更新为 0 字节分配；框架子地图入口检查总地图容量。
 
-当前领域发布验证：1.6 / 1.7 编译、52 项领域规则与组件生命周期检查及上述 7 种模块加载场景通过；空闲宿主在模块启用/禁用两种情况下，预热后 256 次更新均为 0 字节分配。游戏内集成测试在测试入口前因 `D3DSCache.dll`、异常码 `0xc0000409` 退出，未产生通过标记；不能据此宣称领域进出、存读档或视觉转场已通过游戏内验证。
+当前领域发布验证：1.6 / 1.7 编译、52 项领域规则与组件生命周期检查及上述 7 种模块加载场景通过；空闲宿主在模块启用/禁用两种情况下，预热后 256 次更新均为 0 字节分配。此前游戏内集成测试在入口前因 `D3DSCache.dll`、异常码 `0xc0000409` 退出；最新隔离框架测试在启动加载阶段 180 秒超时，仍未产生 COMPLETE。临时框架与测试 Mod 已归档，未覆盖正式 DLL 或修改原存档；不能据此宣称完整旧存档、领域进出或视觉转场已通过游戏内验证。

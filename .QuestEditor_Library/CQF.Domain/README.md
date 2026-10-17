@@ -85,4 +85,4 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 `.QuestEditor_Library/Tests/DomainRuntime/RunChecks.ps1` 使用独立配置与存档目录运行血海领域集成检查，覆盖进出、尸体与物品返回、领域复用、崩塌和存档往返。临时测试 Mod 在运行结束后移入本次日志目录归档，不修改玩家配置与存档。
 
-领域空地图休眠时移出 Game.Maps，由统一组件托管；Thing 按原版未生成处理，唤醒时复用原图并恢复索引与 Tick 登记。框架不补丁 Thing.Map/Spawned 或地图更新入口。CQF_ownedHibernatingMaps 深度保存休眠地图，单图保存范围内临时提供区域索引，Thing 保持未生成；不迁移旧格式。
+领域空地图休眠时移出 Game.Maps，由统一组件托管；Thing 按原版未生成处理，唤醒时复用原图并恢复索引与 Tick 登记。框架不补丁 Thing.Map/Spawned 或地图更新入口。CQF_ownedHibernatingMaps 深度保存休眠地图，单图保存范围内临时提供区域索引，Thing 保持未生成；本次升级兼容旧休眠引用列表、暂停引用和旧节点内的完整 Map，迁移后只保存新格式。

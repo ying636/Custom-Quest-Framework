@@ -135,7 +135,22 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(save.Descendants("maps").First().Elements("li").Count() + save.Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == component.TotalMapCount,
                     "save includes active and hibernating maps");
                 Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "save returns the sleeping map to component ownership");
-                GameDataSaveLoader.LoadGame("CQF_HibernationChecks");
+                XElement gameNode = save.Root!.Element("game")!;
+                XElement managerNode = gameNode.Descendants("li").Single(element =>
+                    element.Attribute("Class")?.Value == "QuestEditor_Library.GameComponent_MapManager");
+                XElement owned = managerNode.Element("CQF_ownedHibernatingMaps")!;
+                XElement references = new("CQF_hibernatingMaps");
+                foreach (XElement record in owned.Elements("li"))
+                {
+                    XElement mapData = record.Element("map")!;
+                    references.Add(new XElement("li", "Map_" + mapData.Element("uniqueID")!.Value));
+                    gameNode.Element("maps")!.Add(new XElement("li", mapData.Attributes(), mapData.Elements()));
+                }
+                owned.Remove();
+                managerNode.Add(references);
+                save.Save(GenFilePaths.FilePathForSavedGame("CQF_LegacyHibernationChecks"));
+                Check(references.Elements("li").Count() == 1, "pre-3.6 reference-list save fixture written with full native maps");
+                GameDataSaveLoader.LoadGame("CQF_LegacyHibernationChecks");
                 stage = 1;
                 return;
             }
@@ -202,6 +217,9 @@ public sealed class HibernationChecksDriver : MonoBehaviour
     private static Map GenerateMap(Map source)
     {
         MapParent_Custom parent = (MapParent_Custom)WorldObjectMaker.MakeWorldObject(QEDefOf.QE_CustomMap_SubMap);
+        parent.Tile = new PlanetTile(0, source.Tile.Layer);
+        while (Current.Game.Maps.Any(map => map.Tile == parent.Tile))
+            parent.Tile = new PlanetTile(parent.Tile.tileId + 1, source.Tile.Layer);
         parent.permanent = true;
         parent.SetFaction(Faction.OfPlayer);
         return GameTools.GenerateSubMap(new IntVec3(40, 1, 40), parent, parent.def.mapGenerator, Enumerable.Empty<GenStepWithParams>(), source);
