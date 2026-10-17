@@ -52,6 +52,27 @@ internal static class Version17Checks
                 throw new InvalidOperationException("CQF still patches " + method.Name);
         }
         Console.WriteLine("PASS framework registers no UpdatePlay or DoSingleTick patches");
+        foreach (MethodBase method in new[]
+        {
+            AccessTools.PropertyGetter(typeof(Verse.Thing), nameof(Verse.Thing.Map)),
+            AccessTools.PropertyGetter(typeof(Verse.Thing), nameof(Verse.Thing.Spawned)),
+            AccessTools.PropertyGetter(typeof(Verse.Region), nameof(Verse.Region.Map)),
+            AccessTools.PropertyGetter(typeof(Verse.District), nameof(Verse.District.Map)),
+            AccessTools.PropertyGetter(typeof(MapParent), nameof(MapParent.Map)),
+            AccessTools.Method(typeof(Verse.Thing), nameof(Verse.Thing.DoTick)),
+            AccessTools.Method(typeof(WorldObject), nameof(WorldObject.DoTick)),
+            AccessTools.Method(typeof(Verse.Game), nameof(Verse.Game.ExposeData)),
+            AccessTools.Method(typeof(Verse.Game), nameof(Verse.Game.AddMap)),
+            AccessTools.Method(typeof(Verse.Map), nameof(Verse.Map.MapPreTick)),
+            AccessTools.Method(typeof(Verse.Map), nameof(Verse.Map.MapPostTick)),
+            AccessTools.Method(typeof(Verse.Map), nameof(Verse.Map.MapUpdate)),
+            AccessTools.Method(typeof(Verse.TickManager), nameof(Verse.TickManager.RegisterAllTickabilityFor)),
+            AccessTools.Method(typeof(MapParent), nameof(MapParent.CheckRemoveMapNow)),
+            AccessTools.Method(typeof(GameEnder), nameof(GameEnder.CheckOrUpdateGameOver))
+        })
+            if (Harmony.GetPatchInfo(method)?.Owners.Contains("CQF.Checks.Version17.QuestEditor_Library") == true)
+                throw new InvalidOperationException("CQF still patches global object or save/index entry " + method.Name);
+        Console.WriteLine("PASS global object attributes, map ticking, tick registration, map removal and save/index methods remain unpatched");
         AppDomain.CurrentDomain.AssemblyResolve += (_, request) =>
         {
             string? name = new AssemblyName(request.Name).Name;

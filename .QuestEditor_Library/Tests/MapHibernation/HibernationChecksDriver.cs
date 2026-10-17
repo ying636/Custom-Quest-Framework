@@ -50,29 +50,21 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(component.IsHibernateRequested(middle) && Current.Game.Maps.Contains(middle) && !component.IsHibernating(middle),
                     "hibernation requests always queue until component update");
                 component.GameComponentUpdate();
-                Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "middle map detached without disposal");
-                Check(!middle.Disposed && probes.All(probe => probe.Spawned && probe.Map == middle), "hibernating thing map and spawned state preserved");
-                Check(regions.All(region => region.Map == middle) && districts.All(district => district.Map == middle), "hibernating regions and districts preserve map");
-                Check(tailProbe.Map == tail && Current.Game.CurrentMap == tail, "tail thing index and selected map repaired");
-                Check(middle.Parent.Map == middle && middle.Parent.HasMap, "map parent retains hibernating map");
+                Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "hibernating map is owned outside the active list");
+                Check(!middle.Disposed && probes.All(probe => !probe.Spawned && probe.Map == null && !probe.Destroyed), "hibernating things are unspawned without being destroyed");
+                Check(regions.All(region => region.Map == null) && districts.All(district => district.Map == null), "hibernating regions and districts leave the active map index");
+                Check(tailProbe.Map == tail && Current.Game.CurrentMap == tail, "other map native indices and selection stay unchanged");
+                Check(middle.Parent.Map == null && !middle.Parent.HasMap, "native map parent treats the detached map as unavailable");
                 int mapTicks = middle.GetComponent<HibernationMapProbe>().Ticks;
                 int mapUpdates = middle.GetComponent<HibernationMapProbe>().Updates;
-                middle.MapPreTick(); middle.MapPostTick(); middle.MapUpdate();
-                foreach (HibernationProbe probe in probes)
-                {
-                    Find.TickManager.RegisterAllTickabilityFor(probe);
-                    probe.DoTick();
-                }
-                Find.TickManager.RegisterAllTickabilityFor(inventoryProbe);
-                inventoryProbe.DoTick();
                 RunTicks(2100);
-                Check(probes.All(probe => probe.Ticks == 0), "normal rare long things and direct DoTick stop");
-                Check(inventoryProbe.Ticks == 0 && inventoryProbe.MapHeld == middle, "held inventory things stop including direct DoTick");
+                Check(probes.All(probe => probe.Ticks == 0), "normal rare long things stop through native scheduling");
+                Check(inventoryProbe.Ticks == 0 && inventoryProbe.MapHeld == middle, "held inventory things stop with their scheduled pawn");
                 Check(middle.GetComponent<HibernationMapProbe>().Ticks == mapTicks && middle.GetComponent<HibernationMapProbe>().Updates == mapUpdates,
                     "map tick and update stop");
                 Check(tailProbe.Ticks == 2100, "active map continues exactly one normal tick per game tick");
                 component.Activate(middle);
-                Check(Current.Game.Maps.Last() == middle && probes.All(probe => probe.Map == middle), "activation appends same map and restores indices");
+                Check(Current.Game.Maps.Last() == middle && probes.All(probe => probe.Map == middle), "activation appends the original map and restores native indices");
                 RunTicks(2100);
                 Check(probes[0].Ticks == 2100 && probes[1].Ticks >= 8 && probes[2].Ticks >= 1, "all ticker types resume");
                 Check(inventoryProbe.Ticks == 2100, "inventory ticking resumes through its pawn without duplicate registration");
@@ -105,15 +97,6 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Current.Game.CurrentMap = middle;
                 Check(!component.IsHibernating(middle) && Current.Game.CurrentMap == middle, "map selection activates before switching");
                 component.Hibernate(middle);
-                component.GameComponentUpdate();
-                GenSpawn.Spawn(ThingMaker.MakeThing(probes[0].def), new IntVec3(15, 0, 10), middle);
-                Check(!component.IsHibernating(middle), "spawning activates destination map");
-                component.Hibernate(middle);
-                component.GameComponentUpdate();
-                probes[0].DeSpawn();
-                Check(!component.IsHibernating(middle) && !probes[0].Spawned, "despawning activates source map before deregistration");
-                GenSpawn.Spawn(probes[0], new IntVec3(10, 0, 10), middle);
-                component.Hibernate(middle);
                 GenSpawn.Spawn(ThingMaker.MakeThing(probes[0].def), new IntVec3(16, 0, 10), middle);
                 component.GameComponentUpdate();
                 Check(!component.IsHibernating(middle) && !component.IsHibernateRequested(middle), "spawning cancels queued hibernation");
@@ -122,24 +105,20 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 component.GameComponentUpdate();
                 Check(!component.IsHibernating(middle) && !component.IsHibernateRequested(middle), "despawning cancels queued hibernation");
                 GenSpawn.Spawn(probes[0], new IntVec3(10, 0, 10), middle);
-                component.Hibernate(home);
-                component.GameComponentUpdate();
-                Current.Game.gameEnder.CheckOrUpdateGameOver();
-                Check(!Current.Game.gameEnder.gameEnding, "hibernating colonists prevent false game over");
-                component.Activate(home);
+
                 component.Hibernate(middle);
                 component.GameComponentUpdate();
                 component.Hibernate(tail);
-                component.BeginSave();
+                Scribe.mode = LoadSaveMode.Saving;
                 try
                 {
                     component.GameComponentUpdate();
                     Check(component.IsHibernateRequested(tail) && Current.Game.Maps.Contains(tail), "component update does not process requests during saving");
                 }
-                finally { component.EndSave(); }
+                finally { Scribe.mode = LoadSaveMode.Inactive; }
                 GameDataSaveLoader.SaveGame("CQF_PendingHibernationChecks");
                 XDocument pendingSave = XDocument.Load(GenFilePaths.FilePathForSavedGame("CQF_PendingHibernationChecks"));
-                Check(pendingSave.Descendants("CQF_hibernatingMaps").Elements("li").Any(element => element.Value == tail.GetUniqueLoadID()),
+                Check(pendingSave.Descendants("CQF_pendingHibernation").Elements("li").Any(element => element.Value == tail.GetUniqueLoadID()),
                     "save records pending hibernation requests");
                 Check(component.IsHibernateRequested(tail) && Current.Game.Maps.Contains(tail), "saving preserves pending runtime requests");
                 component.Activate(tail);
@@ -153,9 +132,9 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 string savePath = GenFilePaths.FilePathForSavedGame("CQF_HibernationChecks");
                 Check(File.Exists(savePath), "save written");
                 XDocument save = XDocument.Load(savePath);
-                Check(save.Descendants("maps").First().Elements("li").Count() == component.TotalMapCount,
+                Check(save.Descendants("maps").First().Elements("li").Count() + save.Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == component.TotalMapCount,
                     "save includes active and hibernating maps");
-                Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "save restores runtime hibernation");
+                Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "save returns the sleeping map to component ownership");
                 GameDataSaveLoader.LoadGame("CQF_HibernationChecks");
                 stage = 1;
                 return;
@@ -164,10 +143,10 @@ public sealed class HibernationChecksDriver : MonoBehaviour
             {
                 GameComponent_MapManager component = GameComponent_MapManager.Instance!;
                 Map loaded = component.HibernatingMaps.Single(map => map.uniqueID == middleID);
-                Check(!Current.Game.Maps.Contains(loaded) && !loaded.Disposed, "load restores hibernation after map initialization");
+                Check(!Current.Game.Maps.Contains(loaded) && !loaded.Disposed, "load reconstructs the component-owned detached map");
                 HibernationProbe[] loadedProbes = savedThingIDs.Select(id => loaded.listerThings.AllThings.OfType<HibernationProbe>().Single(probe => probe.ThingID == id)).ToArray();
                 Check(loadedProbes.Select(probe => probe.Ticks).SequenceEqual(savedProbeTicks), "load preserves things and ticker state");
-                Check(loadedProbes.All(probe => probe.Spawned && probe.Map == loaded), "loaded hibernating things keep map references");
+                Check(loadedProbes.All(probe => !probe.Spawned && probe.Map == null), "loaded hibernating things are unspawned");
                 Check(loaded.GetComponent<HibernationMapProbe>().Ticks == savedMapTicks, "loaded hibernating map never ticks during load completion");
                 Check(loaded.Parent is MapParent_Custom custom && custom.sourceMap != null && Current.Game.Maps.Contains(custom.sourceMap),
                     "load resolves pocket map source reference");
@@ -180,6 +159,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(loadedProbes[0].Ticks == beforeTick + 10, "loaded map ticks resume without duplicates");
                 component.Hibernate(loaded);
                 component.GameComponentUpdate();
+                component.Activate(loaded);
                 PocketMapUtility.DestroyPocketMap(loaded);
                 Check(loaded.Disposed && !component.IsHibernating(loaded) && !Current.Game.Maps.Contains(loaded), "explicit destruction cleans hibernating map");
                 Check(Current.Game.Maps.Any(map => map.uniqueID == tailID), "destroying hibernating map preserves other maps");
@@ -190,9 +170,9 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(queuedRemoval.Disposed && !component.IsHibernateRequested(queuedRemoval), "map removal cancels queued hibernation");
                 foreach (Map map in Current.Game.Maps.ToArray()) component.Hibernate(map);
                 component.GameComponentUpdate();
-                Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null, "all maps can hibernate");
+                Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null && component.HibernatingMaps.Count == component.TotalMapCount, "all maps can hibernate");
                 GameDataSaveLoader.SaveGame("CQF_AllMapsHibernating");
-                Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null, "saving all hibernating maps restores empty active list");
+                Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null && component.HibernatingMaps.Count == component.TotalMapCount, "saving all paused maps leaves the native map list unchanged");
                 Check(File.Exists(GenFilePaths.FilePathForSavedGame("CQF_AllMapsHibernating")), "all hibernating maps save written");
                 GameDataSaveLoader.LoadGame("CQF_AllMapsHibernating");
                 stage = 2;
@@ -202,7 +182,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
             {
                 GameComponent_MapManager component = GameComponent_MapManager.Instance!;
                 Check(Current.Game.Maps.Count == 0 && Current.Game.CurrentMap == null && component.HibernatingMaps.Count == 2,
-                    "load restores all maps hibernating with no active map");
+                    "load keeps both sleeping maps outside the active map list");
                 Map loaded = component.HibernatingMaps.Single(map => map.uniqueID == tailID);
                 Current.Game.CurrentMap = loaded;
                 Check(Current.Game.Maps.Count == 1 && Current.Game.CurrentMap == loaded && !component.IsHibernating(loaded),

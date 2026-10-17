@@ -1,4 +1,3 @@
-using System.Reflection;
 using Verse;
 
 namespace QuestEditor_Library;
@@ -19,16 +18,8 @@ public class Hediff_DomainProtection : Hediff
 
     public void EnsureProtection()
     {
-        List<ThingComp>? comps = (List<ThingComp>?)CompsField.GetValue(pawn);
-        if (comps == null)
-        {
-            comps = new List<ThingComp>();
-            CompsField.SetValue(pawn, comps);
-        }
-        if (protection != null && comps.Contains(protection)) return;
-        protection = new Comp_DomainProtection(this) { parent = pawn };
-        protection.Initialize(new CompProperties(typeof(Comp_DomainProtection)));
-        comps.Insert(0, protection);
+        protection = Comp_DomainProtection.Ensure(pawn);
+        protection.Protection = this;
     }
 
     public override void Notify_PawnDied(DamageInfo? dinfo, Hediff? culprit = null)
@@ -38,7 +29,7 @@ public class Hediff_DomainProtection : Hediff
 
     public override void PostRemoved()
     {
-        if (protection != null) pawn.AllComps.Remove(protection);
+        if (protection?.Protection == this) protection.Protection = null;
         protection = null;
         base.PostRemoved();
     }
@@ -56,9 +47,6 @@ public class Hediff_DomainProtection : Hediff
         if (Scribe.mode == LoadSaveMode.PostLoadInit && Domain?.Active == true) EnsureProtection();
     }
 
-    private static readonly FieldInfo CompsField = typeof(ThingWithComps).GetField("comps",
-        BindingFlags.Instance | BindingFlags.NonPublic)
-        ?? throw new MissingFieldException(typeof(ThingWithComps).FullName, "comps");
     private Map? domainMap;
     private Comp_DomainProtection? protection;
 }

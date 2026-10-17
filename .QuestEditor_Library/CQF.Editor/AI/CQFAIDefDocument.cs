@@ -89,7 +89,7 @@ namespace QuestEditor_Library
             Type type = value.GetType();
             if (type.IsEnum || type.IsPrimitive || type == typeof(string) || type == typeof(decimal))
                 return new XElement(name, Convert.ToString(value, CultureInfo.InvariantCulture));
-            if (DirectXmlSaver.IsSimpleTextType(type)) return DirectXmlSaver.XElementFromObject(value, declared, name);
+            if (DirectXmlSaver.IsSimpleTextType(type)) return CQFSerialization.XElementFromObject(value, declared, name);
             if (!type.IsValueType && !ancestors.Add(value)) throw new InvalidDataException("CQF_AI_Cycle: " + type.FullName);
             try
             {

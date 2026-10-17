@@ -43,6 +43,14 @@ CQF Mod 包：
 - 需要理解已发布 Def、翻译、版本目录和资源落点时，优先看 Mod 包
 - 已有稳定入口时，不要每次全仓重扫
 
+## 原版扩展接口与补丁
+
+优先使用原版事件、组件回调、虚方法和 CQF 自有调用入口；缺少等价扩展接口时再使用 Harmony。替换时检查通知时机、存读档重建和重复注册，组件只附加给参与功能的对象。
+
+1.7 的地图人物进出由 `MapComponent_CustomMapData` 订阅 `Map.events`；建筑认领使用 `Comp_CustomLordBuilding.CompPreventClaimingBy`；CQF XML 导出调用 `CQFSerialization.XElementFromObject`；领域保护使用原生 AbilityComp / ThingComp，领域模块不注册 Harmony 补丁。版本差异和验证入口见 [版本与构建](references/version-build.md)。
+
+地图休眠移出原版 Game.Maps，由同一组件持有和保存；休眠 Thing 视为未生成，Spawned=false、Map=null，不为它们伪装生成状态或补出引用。休眠/唤醒只在边界切换索引和原版 Tick 登记；剩余补丁仅取图、选图和退出清理。存档区域索引范围及验证限制见 `cqf-map-dev` 的独立地图休眠段落。
+
 ## 当前版本与构建
 
 当前维护 RimWorld 1.7。处理构建、版本迁移、DLL 输出或旧系统清理时，读取 [版本与构建](references/version-build.md)。默认不做旧存档兼容；已删除的特殊站点参数、PawnMod 平铺 XML 迁移和职责图旧字段迁移不得重新引入。

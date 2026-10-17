@@ -104,7 +104,7 @@ namespace QuestEditor_Library
                         }
                         if (field.GetValue(def) is object ob && !Attribute.IsDefined(field, typeof(UnsavedAttribute)))
                         {
-                            XElement node = DirectXmlSaver.XElementFromObject(ob, field.FieldType, field.Name, null,false);
+                            XElement node = CQFSerialization.XElementFromObject(ob, field.FieldType, field.Name, null,false);
                             root.Add(node);
                         }
                     }

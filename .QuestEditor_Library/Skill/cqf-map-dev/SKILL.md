@@ -45,6 +45,8 @@ description: "Detailed skill for building CQF maps, submaps, zone layouts, inter
 - 一组地图中的交互对象、陷阱、箱子、门禁与事件
 - 一套由条件、动作、数据库、信号串起来的地图脚本
 
+1.7 的人物进出通知使用 `Map.events.ThingSpawned/ThingDespawned`，由 `MapComponent_CustomMapData` 管理订阅和清理；1.6 保留版本专用补丁。新增地图行为先查原版事件、组件回调和 CQF 调用入口，确认没有等价接口再加 Harmony 补丁。
+
 ## 地图制作的五层模型
 
 CQF 地图不是“铺砖 + 放东西”。
@@ -413,7 +415,7 @@ AI 设计地图时，先明确：
 
 持久化原则：
 - 不要尝试保存完整 `Map` 到 `WorldComponent`。
-- 不要从 `Game.Maps` 手动移除地图来模拟休眠。
+- MainMap 的离开流程继续销毁地图，不自动启用独立地图休眠。
 - 不要维护 dormant map、dormant pawn、`regenerateAfterTicks`、`keepMapDormant` 或 `maxDormantTicks`。
 - 需要长期保留的内容应保存为 `MainSite` 状态、任务数据库状态、全局数据库状态或重要 Pawn 缓存。
 - 重要 NPC 使用 `MainPawnSpawnData.dataName` 作为缓存 key，并优先从 `MainSite.mainPawns` 复用。
@@ -431,17 +433,20 @@ AI 设计地图时，先明确：
 
 ### 独立地图休眠
 
-地图休眠由统一的 `GameComponent_MapManager` 管理，领域通过独立 `CQF.Domain` 模块中的普通运行对象接入该组件，仍只有一个地图管理 GComp；领域模块需要子 Mod 在 LoadFolders 中声明。MainMap 的长期状态仍由其原有系统管理。休眠保留运行时 Map 和其中的物件，暂停更新；它没有增加原版地图索引的容量。
+地图休眠由唯一的 `GameComponent_MapManager` 托管。领域通过可选 `CQF.Domain` 模块接入同一组件。休眠地图移出原版 `Game.Maps`，不再参与地图和物件调度；其中 Thing 视为未生成，原版 `Spawned=false`、`Map=null`，但对象没有被销毁。不要为休眠物件补出生成状态或地图引用。
 
-- `Hibernate(Map)` 验证地图后只加入请求队列，不立即修改 `Game.Maps`。
-- `GameComponentUpdate()` 在原版 Tick 和 MapUpdate 遍历结束后的组件更新阶段提交请求；保存期间和队列为空时不处理。
-- 已移除 `Patch_MapHibernationExecution` 以及 `BeginExecution`、`EndExecution`、`executionDepth`，不要重新对 `Game.UpdatePlay` 或 `TickManager.DoSingleTick` 加休眠执行补丁。
-- `Activate(Map)` 会取消排队请求。选图、重新取图、生成/移除物件和移除地图入口也处理尚未执行的请求。
-- 当前地图休眠后，备用地图只能从未排队休眠的活动地图中选择；所有地图都排队时允许切回世界视图。
-- 保存会记录已经休眠和正在排队的地图；加载后恢复休眠状态。处理错误仍由原版组件更新异常日志报告，不能吞掉错误或自动反复重试。
-- 调用 Hibernate 后需要即时判断请求是否已提交时，区分 `IsHibernateRequested` 与 `IsHibernating`；不要假设同一调用中已休眠完成。
+- `Hibernate(Map)` 只排队，`GameComponentUpdate()` 在原版地图遍历结束后提交。休眠时从原版 Tick 表注销该图物件，把 Thing、Region、District 索引设为 -1，再移出地图。仅修正其后活动地图的索引，不建立逐物件的休眠引用字典。
+- `Activate(Map)` 取消排队；已休眠地图追加回活动列表，恢复索引、原区域更新开关和 Tick 登记。复用同一个 Map，不重新生成。空地图休眠和唤醒不扫描全局物件 Tick 表；空闲更新不遍历休眠地图。
+- 休眠只剩取图、选图和退出清理三个 Harmony 入口。不补丁物件/区域属性、Thing.DoTick、WorldObject.DoTick、地图 PreTick/PostTick/Update、Tick 登记、自动移除判断、Game.ExposeData/AddMap、GameEnder 或全局 UpdatePlay/DoSingleTick。
+- 休眠物件不再通过 SpawnSetup/DeSpawn 自动唤醒。调用方应先 Activate 再生成、移除或操作该图物件；原生物件活动只取消尚未提交的休眠请求。1.7 事件区继续使用 Map.events；1.6 只保留原有的两个 Pawn 事件区补丁。
+- MapParent.Map/HasMap 按原版显示没有活动地图；CQF 自有入口通过直接 Map 引用唤醒，出口通过 PocketMapParent.sourceMap 返回。不要根据休眠 Thing.Map 判断目的地图。
+- `CQF_ownedHibernatingMaps` 深度保存组件托管的 Map，`CQF_pendingHibernation` 引用保存尚在活动列表中的排队地图。活动地图仍由原版保存，不做旧格式迁移。因为原版温度保存依赖区域索引，单图 ExposeData 范围内临时追加地图并恢复区域索引，finally 撤回；Thing 始终保持未生成，不重新登记 Tick，不使用全局存档补丁。
+- 读档后的托管地图在长事件结束队列中完成一次原版 FinalizeLoading，相关延迟初始化执行后再次移出并注销 Tick。普通唤醒不重复 FinalizeLoading。全部地图休眠后允许 Game.Maps 为空并使用世界视图。
+- 明确销毁时先 Activate，再走原版地图销毁入口；MapRemoved/Dispose 清理托管状态和事件订阅。退出时组件负责 Dispose 所有仍托管的地图。休眠人物不伪装为活动殖民者，不补丁游戏结束判断。
+- 既有 IncidentWorker.CanFireNow 拒绝显式传入的休眠/待休眠目标。第三方直接调用 Thing.DoTick 或直接操作休眠地图不在自动拦截范围。
+- 框架生成子地图时检查活动加休眠地图总量的原版索引上限；唤醒和单图保存同样检查活动索引容量，超限明确报错。
 
-回归检查：`pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`，包含空闲管理器连续 256 次更新的零分配检查。测试使用独立临时存档目录，覆盖排队取消、各种 Tick 类型、地图引用和索引、存档重载与全部地图休眠；临时测试 Mod 结束后归档到测试目录。
+离线入口：`dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- hibernation`。使用真实 TickList、Thing 序列化和 Scribe 验证调度、未生成状态、中间地图移出后的索引、组件所有权存档、全部地图休眠保存和空闲分配；Map.ExposeData/FinalizeLoading 在离线检查中使用精简夹具，不能视为完整地图存读档通过。完整游戏入口为 `pwsh -File .QuestEditor_Library/Tests/MapHibernation/RunChecks.ps1`，使用独立配置和存档并归档临时测试 Mod；只有产生 COMPLETE 才算游戏内通过。
 
 ### ZoneCore
 

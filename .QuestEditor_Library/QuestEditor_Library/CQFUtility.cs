@@ -46,6 +46,8 @@ namespace QuestEditor_Library
 
         public static Map GenerateSubMap(IntVec3 size, PocketMapParent parent, MapGeneratorDef generatorDef, IEnumerable<GenStepWithParams> extraGenStepDefs, Map sourceMap)
         {
+            if ((GameComponent_MapManager.Instance?.TotalMapCount ?? Current.Game.Maps.Count) > sbyte.MaxValue)
+                throw new InvalidOperationException("[CQF] Cannot generate a submap: the vanilla map index limit has been reached.");
             parent.sourceMap = sourceMap;
             Map result = MapGenerator.GenerateMap(size, parent, generatorDef, extraGenStepDefs, null, true);
             Find.World.pocketMaps.Add(parent);

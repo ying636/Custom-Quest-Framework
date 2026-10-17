@@ -17,10 +17,6 @@ namespace QuestEditor_Library
             bool result = (!this.permanent && (this.sourceMap == null || this.sourceMap.Disposed
                 || this.sourceMap.Parent.Destroyed || !Find.Maps.Contains(this.sourceMap))) || this.forceRemoveWorldObjectWhenMapRemoved;
             alsoRemoveWorldObject = result;
-            if (!result && Prefs.DevMode)
-            {
-                Log.Message("CQF Map Destroy:No player pawn");
-            }
             return result;
         }
         public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Caravan caravan)

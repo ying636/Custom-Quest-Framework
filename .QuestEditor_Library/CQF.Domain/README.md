@@ -6,9 +6,11 @@
 
 CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</li>`；子 Mod 使用 `<li RequiresCQFModule="Domain">1.7</li>` 声明需求。这两个属性由 CQF 处理，保留原版的版本和 IfModActive 条件。没有启用子 Mod 请求时不加载领域 DLL。
 
+领域保护通过原生 AbilityComp / ThingComp 回调实现，模块不安装 Harmony 补丁。领域能力通过 DomainDef.openingAbility 自动配置组件；若展开物件在 SpawnSetup 后才设置 Caster，初始化时须再次调用 MapComponent_Domain.RegisterOpening。
+
 领域和依赖它的子 Mod DLL 均放在声明目录根部，不放 Assemblies；加载顺序为主库、领域、子 Mod DLL、Def 解析。延后加载的 DLL 不得包含 Mod 派生入口类。多个请求共享一个模块，每个游戏独立创建运行对象。1.6 使用对应版本路径。
 
-更新顺序为转场、无长事件时的预加载/Worker 安全更新/返回/展开，宿主最后提交休眠请求。预加载按需安排，不每帧扫描全部领域定义；ManagedUpdate 保留现有调用语义。默认不迁移拆分前旧存档。
+更新顺序为转场、无长事件时的预加载/Worker 安全更新/返回/展开，宿主最后提交休眠请求。预加载按需安排，不每帧扫描全部领域定义；ManagedUpdate 只处理未休眠地图，仍不按 Active 过滤。默认不迁移拆分前旧存档。
 
 ## 定义
 
@@ -69,7 +71,7 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 ## 转场
 
-`Patch_DomainOpeningProtection` 统一保护领域施术者：执行已配置的展开能力、活动展开物件存在、同步进入领域以及入场锁定期间，伤害置零并跳过后续处理，不消耗领域血量。展开和入场结束后恢复通常的领域血量吸收；其他参与者、普通能力和已失效展开不会获得该无敌。死亡或倒地人物不适用展开保护。
+`Comp_DomainProtection` 通过原生伤害回调保护领域施术者：执行已配置的展开能力、活动展开物件存在、同步进入领域以及入场锁定期间，伤害置零并跳过后续处理，不消耗领域血量。展开和入场结束后恢复通常的领域血量吸收；其他参与者、普通能力和已失效展开不会获得该无敌。死亡或倒地人物不适用展开保护。
 
 `DomainTransition` 管理地图切换、等待领域地形完成绘制、入场和返回期间的人物锁定、过渡结束及资源清理。具体实现提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect` 和 `ReleaseVisuals`。截图采集、材质和动画细节留在子 Mod。
 
@@ -82,3 +84,5 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 `dotnet run --project .QuestEditor_Library/Tests/Domain/Checks.csproj -c Release` 使用实际游戏程序集检查领域血量、伤害吸收、外部载体同步及配置错误。
 
 `.QuestEditor_Library/Tests/DomainRuntime/RunChecks.ps1` 使用独立配置与存档目录运行血海领域集成检查，覆盖进出、尸体与物品返回、领域复用、崩塌和存档往返。临时测试 Mod 在运行结束后移入本次日志目录归档，不修改玩家配置与存档。
+
+领域空地图休眠时移出 Game.Maps，由统一组件托管；Thing 按原版未生成处理，唤醒时复用原图并恢复索引与 Tick 登记。框架不补丁 Thing.Map/Spawned 或地图更新入口。CQF_ownedHibernatingMaps 深度保存休眠地图，单图保存范围内临时提供区域索引，Thing 保持未生成；不迁移旧格式。

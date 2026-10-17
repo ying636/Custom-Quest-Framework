@@ -28,7 +28,7 @@ public sealed partial class GameComponent_MapManager : GameComponent
 
     public override void GameComponentUpdate()
     {
-        if (saving) return;
+        if (Scribe.mode != LoadSaveMode.Inactive) return;
         try
         {
             Module?.Update();
@@ -61,9 +61,12 @@ public sealed partial class GameComponent_MapManager : GameComponent
 
     public void DisposeMaps()
     {
-        Module?.Dispose();
-        DisposeHibernatingMaps();
-        if (ReferenceEquals(instance, this)) instance = null;
+        try { Module?.Dispose(); }
+        finally
+        {
+            DisposeHibernatingMaps();
+            if (ReferenceEquals(instance, this)) instance = null;
+        }
     }
 
     private readonly Game game;

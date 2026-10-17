@@ -71,7 +71,8 @@ namespace QuestEditor_Library
                 return false;
             }
 
-            if (this.entrance != null && (!this.entrance.opended || !this.entrance.Spawned))
+            if (this.entrance != null && (this.entrance.Destroyed || !this.entrance.opended || (!this.entrance.Spawned &&
+                GameComponent_MapManager.Instance?.IsHibernating((this.Map?.Parent as RimWorld.Planet.PocketMapParent)?.sourceMap) != true)))
             {
                 reason = "EntranceIsBlocked".Translate();
                 return false;
@@ -83,15 +84,12 @@ namespace QuestEditor_Library
 
         public virtual new void Exit(Thing thing)
         {
-            if (thing == null || this.entrance == null || this.entrance.Position == null || this.entrance.Map == null)
+            if (thing == null || this.entrance == null)
             {
                 return;
             }
-
-            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
-            {
-                hibernation.Activate(this.entrance.Map);
-            }
+            this.GetOtherMap();
+            if (this.entrance.Map == null) throw new InvalidOperationException("[CQF] Portal source is not active after map activation.");
 
             bool moveToRoot = this.Map.designationManager.DesignationOn(thing)?.def == QEDefOf.QE_MoveToRoot;
             if (thing.Spawned)
@@ -183,12 +181,9 @@ namespace QuestEditor_Library
 
         public override Map GetOtherMap()
         {
-            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.entrance.Map))
-            {
-                hibernation.Activate(this.entrance.Map);
-            }
-
-            return this.entrance.Map;
+            Map destination = this.entrance?.Map ?? (this.Map?.Parent as RimWorld.Planet.PocketMapParent)?.sourceMap;
+            if (destination == null) throw new InvalidOperationException("[CQF] Portal exit has no source map reference.");
+            return GameComponent_MapManager.Instance?.Activate(destination) ?? destination;
         }
 
         public override IntVec3 GetDestinationLocation()

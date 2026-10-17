@@ -1,3 +1,4 @@
+#if !RIMWORLD_1_7
 using HarmonyLib;
 using Verse;
 
@@ -29,3 +30,4 @@ namespace QuestEditor_Library
         }
     }
 }
+#endif

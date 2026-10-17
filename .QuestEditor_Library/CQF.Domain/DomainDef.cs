@@ -6,6 +6,18 @@ namespace QuestEditor_Library;
 
 public class DomainDef : Def
 {
+    public override void ResolveReferences()
+    {
+        base.ResolveReferences();
+        if (openingAbility == null) return;
+        lock (openingAbility)
+        {
+            openingAbility.comps ??= new List<AbilityCompProperties>();
+            if (!openingAbility.comps.Any(properties => properties is AbilityCompProperties_DomainProtection))
+                openingAbility.comps.Add(new AbilityCompProperties_DomainProtection());
+        }
+    }
+
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (string error in base.ConfigErrors()) yield return error;

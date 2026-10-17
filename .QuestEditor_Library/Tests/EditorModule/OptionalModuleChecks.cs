@@ -17,7 +17,8 @@ internal static class OptionalModuleChecks
         Check(!framework.GetReferencedAssemblies().Any(reference => reference.Name == "CQF.Domain"), "core has no domain assembly reference");
         Check(framework.GetType("QuestEditor_Library.DomainDef") == null, "domain definitions are absent from core");
         Check(!AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.GetName().Name == "CQF.Domain"), "domain starts unloaded");
-        ModContentPack owner = CreateContent(Path.Combine(game, "Mods", "CQF"), "hailuan.customquestframework", new[] { "hailuan.customquestframework" });
+        string providerRoot = Environment.GetEnvironmentVariable("CQF_CHECKS_PROVIDER_ROOT") ?? Path.Combine(game, "Mods", "CQF");
+        ModContentPack owner = CreateContent(providerRoot, "hailuan.customquestframework", new[] { "hailuan.customquestframework" });
         owner.assemblies.loadedAssemblies.Add(framework);
         List<ModContentPack> active = new() { owner };
         string? fixture = null;

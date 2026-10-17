@@ -7,11 +7,13 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
-    public class MapComponent_CustomMapData : MapComponent
+    public class MapComponent_CustomMapData : MapComponent, IDisposable
     {
         public MapComponent_CustomMapData(Map map) : base(map)
         {
-
+#if RIMWORLD_1_7
+            if (map.events != null) SubscribeMapEvents();
+#endif
         }
         public List<MapParent_Custom> Submaps 
         {
@@ -91,6 +93,31 @@ namespace QuestEditor_Library
             }
         }
         public string QuestTag => this.questTag.NullOrEmpty() ? null : this.questTag;
+        public override void FinalizeInit()
+        {
+            base.FinalizeInit();
+#if RIMWORLD_1_7
+            SubscribeMapEvents();
+#endif
+            GameComponent_MapManager.Instance?.Module?.MapAdded(map);
+        }
+        public override void MapRemoved()
+        {
+            Dispose();
+            base.MapRemoved();
+        }
+        public void Dispose()
+        {
+            Current.Game?.GetComponent<GameComponent_MapManager>()?.ForgetMap(map);
+#if RIMWORLD_1_7
+            if (subscribedEvents != null)
+            {
+                subscribedEvents.ThingSpawned -= Notify_ThingSpawned;
+                subscribedEvents.ThingDespawned -= Notify_ThingDespawned;
+                subscribedEvents = null;
+            }
+#endif
+        }
         public bool TryGetLord(string name, out Lord lord)
         {
             LordWithName l = null;
@@ -259,6 +286,30 @@ namespace QuestEditor_Library
                 this.EventAreas.RemoveAll(a => a == null || a.key.NullOrEmpty());
             }
         }
+#if RIMWORLD_1_7
+        private void SubscribeMapEvents()
+        {
+            if (ReferenceEquals(subscribedEvents, map.events)) return;
+            if (subscribedEvents != null)
+            {
+                subscribedEvents.ThingSpawned -= Notify_ThingSpawned;
+                subscribedEvents.ThingDespawned -= Notify_ThingDespawned;
+            }
+            subscribedEvents = map.events ?? throw new InvalidOperationException("[CQF] Map events are unavailable during map initialization.");
+            subscribedEvents.ThingSpawned += Notify_ThingSpawned;
+            subscribedEvents.ThingDespawned += Notify_ThingDespawned;
+        }
+        private void Notify_ThingSpawned(Thing thing)
+        {
+            GameComponent_MapManager.Instance?.NotifyMapActivity(map);
+            if (thing is Pawn pawn) Notify_PawnSpawned(pawn);
+        }
+        private void Notify_ThingDespawned(Thing thing)
+        {
+            GameComponent_MapManager.Instance?.NotifyMapActivity(map);
+            if (thing is Pawn pawn) Notify_PawnDespawned(pawn);
+        }
+#endif
         private void CheckEventAreas()
         {
             if (!this.EventAreas.Any())
@@ -333,6 +384,9 @@ namespace QuestEditor_Library
         }
 
         private readonly List<CQFEventArea> eventAreaCheckBuffer = new List<CQFEventArea>();
+#if RIMWORLD_1_7
+        private MapEvents? subscribedEvents;
+#endif
     }
     public class LordWithName : IExposable
     {

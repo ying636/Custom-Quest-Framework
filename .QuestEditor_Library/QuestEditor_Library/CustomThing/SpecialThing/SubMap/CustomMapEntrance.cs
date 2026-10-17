@@ -225,6 +225,7 @@ namespace QuestEditor_Library
             base.DeSpawn(mode);
             if (!this.preserveMapOnDespawn && this.DestroyMapWhenDeSpawn && this.CustomMap != null)
             {
+                GameComponent_MapManager.Instance?.Activate(this.CustomMap);
                 PocketMapUtility.DestroyPocketMap(this.CustomMap);
                 this.CustomMap = null;
             }
@@ -235,6 +236,7 @@ namespace QuestEditor_Library
             base.Destroy(mode);
             if (this.DestroyMapWhenDestroy && this.CustomMap != null)
             {
+                GameComponent_MapManager.Instance?.Activate(this.CustomMap);
                 PocketMapUtility.DestroyPocketMap(this.CustomMap);
                 this.CustomMap = null;
             }
@@ -389,7 +391,7 @@ namespace QuestEditor_Library
                 this.GenerateCustomMap(this.Map, null);
             }
 
-            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.customMap))
+            if (GameComponent_MapManager.Instance is { } hibernation)
             {
                 hibernation.Activate(this.customMap);
             }
@@ -467,15 +469,12 @@ namespace QuestEditor_Library
 
         private void Enter(Thing thing)
         {
-            if (thing == null || this.exit == null || this.exit.Position == null || this.exit.Map == null)
+            if (thing == null || this.exit == null)
             {
                 return;
             }
-
-            if (GameComponent_MapManager.Instance is { } hibernation && hibernation.IsHibernating(this.exit.Map))
-            {
-                hibernation.Activate(this.exit.Map);
-            }
+            this.GetOtherMap();
+            if (this.exit.Map == null) throw new InvalidOperationException("[CQF] Portal destination is not active after map activation.");
 
             this.thereIsPawnIsEntering = true;
             if (thing.Spawned)

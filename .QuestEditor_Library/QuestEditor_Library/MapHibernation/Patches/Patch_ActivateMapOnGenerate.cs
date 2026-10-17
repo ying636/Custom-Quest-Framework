@@ -14,15 +14,11 @@ namespace QuestEditor_Library
     {
         public static bool Prefix(PlanetTile tile, ref Map __result)
         {
-            if (GameComponent_MapManager.Instance is not { } component) return true;
-            Map map = component.FindHibernatingMap(tile)
-                ?? Find.Maps.FirstOrDefault(activeMap => activeMap.Tile == tile && component.IsHibernateRequested(activeMap));
-            if (map != null)
-            {
-                __result = component.Activate(map);
-                return false;
-            }
-            return true;
+            if (GameComponent_MapManager.Instance is not { } manager) return true;
+            Map map = manager.Game.FindMap(tile) ?? manager.HibernatingMaps.FirstOrDefault(candidate => candidate.Tile == tile);
+            if (map == null) return true;
+            __result = manager.Activate(map);
+            return false;
         }
     }
 }

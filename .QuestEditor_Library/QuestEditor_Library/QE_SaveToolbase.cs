@@ -95,7 +95,7 @@ namespace QuestEditor_Library
                     result.Add(nodeXml);
                     continue;
                 }
-                XElement node = DirectXmlSaver.XElementFromObject(fieledOb,type,f.Name, null, false);
+                XElement node = CQFSerialization.XElementFromObject(fieledOb,type,f.Name, null, false);
                 result.Add(node);
             } 
             return result;

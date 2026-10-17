@@ -32,10 +32,16 @@ public class MapComponent_Domain : MapComponent
     {
         if (pawn.Dead || pawn.Downed) return false;
         if (active && (entering || arrivalLocked) && caster == pawn) return true;
-        return openings.Any(opening => !opening.Destroyed && opening.Active && opening.Caster == pawn);
+        foreach (DomainOpening opening in openings)
+            if (!opening.Destroyed && opening.Active && opening.Caster == pawn) return true;
+        return false;
     }
 
-    public void RegisterOpening(DomainOpening opening) => openings.Add(opening);
+    public void RegisterOpening(DomainOpening opening)
+    {
+        openings.Add(opening);
+        if (opening.Caster != null) Comp_DomainProtection.Ensure(opening.Caster);
+    }
 
     public void UnregisterOpening(DomainOpening opening) => openings.Remove(opening);
 
@@ -54,6 +60,7 @@ public class MapComponent_Domain : MapComponent
     {
         if (!Available || !pawn.Spawned || pawn.Dead || pawn.Downed || pawn.Map == map)
             throw new InvalidOperationException("[CQF] Invalid domain entry state.");
+        Comp_DomainProtection.Ensure(pawn);
         List<Pawn> entrants = new() { pawn };
         entrants.AddRange(targets.Where(target => target != pawn && !target.Dead && target.Spawned && target.Map == pawn.Map).Distinct());
         sourceMap = pawn.Map;
@@ -330,8 +337,11 @@ public class MapComponent_Domain : MapComponent
     public override void FinalizeInit()
     {
         if (active && caster != null)
+        {
+            Comp_DomainProtection.Ensure(caster);
             foreach (Hediff_DomainProtection protection in caster.health.hediffSet.hediffs.OfType<Hediff_DomainProtection>())
                 protection.EnsureProtection();
+        }
         worker?.FinalizeInit();
     }
 

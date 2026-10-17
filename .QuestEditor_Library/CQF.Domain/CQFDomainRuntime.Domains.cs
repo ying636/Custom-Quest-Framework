@@ -12,11 +12,11 @@ public sealed partial class CQFDomainRuntime
         && !map.Parent.Destroyed && map.GetComponent<MapComponent_Domain>().Definition == definition);
 
     public bool HasAvailable(DomainDef definition) => GetMaps(definition)
-        .Any(map => map.GetComponent<MapComponent_Domain>().Available);
+        .Any(map => map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
 
     public Map Acquire(DomainDef definition, Pawn pawn)
     {
-        Map? realm = GetMaps(definition).FirstOrDefault(map => map.GetComponent<MapComponent_Domain>().Available);
+        Map? realm = GetMaps(definition).FirstOrDefault(map => map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
         if (realm == null) realm = GenerateDomain(definition, pawn.Map);
         else
         {
@@ -70,8 +70,8 @@ public sealed partial class CQFDomainRuntime
         InitializeDomainPreloads();
         if (!preloadCheckRequested || pendingDomainPreloads.Count == 0) return;
         preloadCheckRequested = false;
-        Map? source = game.Maps.FirstOrDefault(map => map.IsPlayerHome && map.Parent is not MapParent_Domain)
-            ?? game.Maps.FirstOrDefault(map => map.Parent is not MapParent_Domain);
+        Map? source = game.Maps.FirstOrDefault(map => map.IsPlayerHome && map.Parent is not MapParent_Domain && !host.IsHibernating(map) && !host.IsHibernateRequested(map))
+            ?? game.Maps.FirstOrDefault(map => map.Parent is not MapParent_Domain && !host.IsHibernating(map) && !host.IsHibernateRequested(map));
         if (source == null) return;
         foreach (DomainDef definition in pendingDomainPreloads.ToArray())
         {
@@ -122,13 +122,14 @@ public sealed partial class CQFDomainRuntime
     private void UpdateDomains()
     {
         if (domainMaps.Count == 0) return;
-        updatingDomains.AddRange(domainMaps);
+        foreach (Map realm in game.Maps)
+            if (realm.Parent is MapParent_Domain && domainMaps.Contains(realm)) updatingDomains.Add(realm);
         try
         {
             foreach (Map realm in updatingDomains)
             {
                 if (realm.Disposed || realm.Parent.Destroyed) UnregisterDomainMap(realm);
-                else realm.GetComponent<MapComponent_Domain>().Worker?.ManagedUpdate();
+                else if (!host.IsHibernating(realm)) realm.GetComponent<MapComponent_Domain>().Worker?.ManagedUpdate();
             }
         }
         finally { updatingDomains.Clear(); }

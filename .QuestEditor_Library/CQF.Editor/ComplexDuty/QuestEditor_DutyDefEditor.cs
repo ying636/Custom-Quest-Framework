@@ -863,7 +863,7 @@ namespace QuestEditor_Library
             {
                 return;
             }
-            result.Add(DirectXmlSaver.XElementFromObject(node, typeof(ThinkNode), nodeName));
+            result.Add(CQFSerialization.XElementFromObject(node, typeof(ThinkNode), nodeName));
         }
 
         private void OpenThinkNodeTypeSelect(Action<Type> acceptAction)

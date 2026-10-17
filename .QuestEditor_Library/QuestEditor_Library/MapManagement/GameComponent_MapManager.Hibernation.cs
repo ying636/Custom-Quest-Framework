@@ -1,358 +1,178 @@
-using HarmonyLib;
-using RimWorld.Planet;
 using Verse;
 
 namespace QuestEditor_Library;
 
 public sealed partial class GameComponent_MapManager
 {
-    public IReadOnlyList<Map> HibernatingMaps => hibernatingMaps.AsReadOnly();
+    public IReadOnlyList<Map> HibernatingMaps => hibernatingMaps;
     public bool HasHibernatingMaps => records.Count > 0;
-    public int TotalMapCount => game.Maps.Count + (saving ? 0 : hibernatingMaps.Count);
-    public bool HasHibernatingColonists => hibernatingMaps.Any(map =>
-        map.mapPawns.FreeColonistsSpawnedOrInPlayerEjectablePodsCount > 0 ||
-        map.mapPawns.AllPawnsSpawned.Any(pawn => pawn.carryTracker?.CarriedThing is Pawn carried && carried.IsFreeColonist));
+    public int TotalMapCount => game.Maps.Count + hibernatingMaps.Count;
 
-    public bool IsHibernating(Map map)
-    {
-        return map != null && records.ContainsKey(map);
-    }
+    public bool IsHibernating(Map? map) => map != null && records.ContainsKey(map);
 
-    public bool IsHibernateRequested(Map map)
-    {
-        return map != null && pendingHibernation.Contains(map);
-    }
+    public bool IsHibernateRequested(Map? map) => map != null && pendingHibernation.Contains(map);
 
     public void Hibernate(Map map)
     {
         ValidateMap(map);
-        if (IsHibernating(map) || pendingHibernation.Contains(map))
-        {
-            return;
-        }
-        pendingHibernation.Add(map);
+        if (!IsHibernating(map)) pendingHibernation.Add(map);
     }
 
     public Map Activate(Map map)
     {
         ValidateMap(map);
         pendingHibernation.Remove(map);
-        if (!records.TryGetValue(map, out CQFHibernatingMap record))
-        {
-            return map;
-        }
-        List<Map> originalMaps = new List<Map>(game.Maps);
-        sbyte originalCurrentIndex = game.currentMapIndex;
+        if (!records.TryGetValue(map, out CQFHibernatingMap? record)) return map;
+        if (game.Maps.Count > sbyte.MaxValue)
+            throw new InvalidOperationException("[CQF] Cannot activate a map: the vanilla map index limit has been reached.");
+        game.Maps.Add(map);
         try
         {
-            game.AddMap(map);
-            if (!game.Maps.Contains(map))
-            {
-                throw new InvalidOperationException("[CQF] Failed to register hibernating map " + map.GetUniqueLoadID());
-            }
-            ReindexMap(map, (sbyte)game.Maps.IndexOf(map));
-            RemoveReferences(record);
-            records.Remove(map);
-            hibernatingMaps.Remove(map);
+            CQFHibernatingMap.SetMapIndex(map, (sbyte)map.Index);
             map.regionAndRoomUpdater.Enabled = record.RegionUpdaterEnabled;
-            Find.TickManager.RemoveAllFromMap(map);
-            foreach (Thing thing in record.Things)
-            {
-                Find.TickManager.RegisterAllTickabilityFor(thing);
-            }
-            Find.ColonistBar.MarkColonistsDirty();
-            return map;
+            foreach (Thing thing in map.spawnedThings) Find.TickManager.RegisterAllTickabilityFor(thing);
         }
         catch (Exception error)
         {
-            Find.TickManager.RemoveAllFromMap(map);
-            game.Maps.Clear();
-            game.Maps.AddRange(originalMaps);
-            game.currentMapIndex = originalCurrentIndex;
-            records[map] = record;
-            if (!hibernatingMaps.Contains(map))
-            {
-                hibernatingMaps.Add(map);
-            }
-            AddReferences(record);
+            if (map.spawnedThings.Count > 0) Find.TickManager.RemoveAllFromMap(map);
+            CQFHibernatingMap.SetMapIndex(map, -1);
+            game.Maps.Remove(map);
             map.regionAndRoomUpdater.Enabled = false;
             throw new InvalidOperationException("[CQF] Map activation failed: " + map.GetUniqueLoadID(), error);
         }
+        records.Remove(map);
+        hibernatingMaps.Remove(map);
+        if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
+        Module?.MapAdded(map);
+        return map;
     }
 
-    public bool TryGetMap(Thing thing, out Map map)
-    {
-        return thingMaps.TryGetValue(thing, out map);
-    }
+    public void NotifyMapActivity(Map map) => pendingHibernation.Remove(map);
 
-    public bool TryGetMap(Region region, out Map map)
+    public void ForgetMap(Map map)
     {
-        return regionMaps.TryGetValue(region, out map);
-    }
-
-    public bool TryGetMap(District district, out Map map)
-    {
-        return districtMaps.TryGetValue(district, out map);
-    }
-
-    public bool TryGetMap(MapParent parent, out Map map)
-    {
-        return parentMaps.TryGetValue(parent, out map);
-    }
-
-    public Map? FindHibernatingMap(PlanetTile tile)
-    {
-        return hibernatingMaps.FirstOrDefault(map => map.Tile == tile);
-    }
-
-    public void BeginSave()
-    {
-        if (saving)
-        {
-            throw new InvalidOperationException("[CQF] Nested map hibernation save scope.");
-        }
-        if (TotalMapCount > sbyte.MaxValue + 1)
-        {
-            throw new InvalidOperationException("[CQF] Too many maps to serialize with vanilla map indices.");
-        }
-        Map[] appended = hibernatingMaps.ToArray();
-        saveCurrentMapIndex = game.currentMapIndex;
-        saving = true;
-        game.Maps.AddRange(appended);
-        if (game.currentMapIndex < 0 && game.Maps.Count > 0)
-        {
-            game.currentMapIndex = 0;
-        }
-        for (int i = 0; i < appended.Length; i++)
-        {
-            ReindexMap(appended[i], (sbyte)game.Maps.IndexOf(appended[i]));
-        }
-    }
-
-    public void EndSave()
-    {
-        if (!saving)
-        {
-            return;
-        }
-        foreach (Map map in hibernatingMaps)
-        {
-            game.Maps.Remove(map);
-        }
-        game.currentMapIndex = saveCurrentMapIndex;
-        saving = false;
-    }
-
-    public void CheckCanAddMap(Map map)
-    {
-        if (saving)
-        {
-            throw new InvalidOperationException("[CQF] Cannot register maps during serialization.");
-        }
-        if (map != null && !game.Maps.Contains(map) && !IsHibernating(map) && TotalMapCount >= sbyte.MaxValue + 1)
-        {
-            throw new InvalidOperationException("[CQF] Active and hibernating maps reached the vanilla map index limit.");
-        }
-        if (map != null) Module?.MapAdded(map);
+        pendingHibernation.Remove(map);
+        records.Remove(map);
+        hibernatingMaps.Remove(map);
     }
 
     private void ExposeHibernationData()
     {
         if (Scribe.mode == LoadSaveMode.Saving)
         {
-            savedHibernatingMaps = hibernatingMaps.Concat(pendingHibernation).Distinct().ToList();
+            savedMaps = records.Values.ToList();
+            savedRequests = pendingHibernation.ToList();
         }
-        Scribe_Collections.Look(ref savedHibernatingMaps, "CQF_hibernatingMaps", LookMode.Reference);
+        Scribe_Collections.Look(ref savedMaps, "CQF_ownedHibernatingMaps", LookMode.Deep);
+        Scribe_Collections.Look(ref savedRequests, "CQF_pendingHibernation", LookMode.Reference);
     }
 
     private void RestoreHibernatingMaps()
     {
-        if (savedHibernatingMaps == null)
+        if (savedMaps != null)
         {
-            return;
+            foreach (CQFHibernatingMap record in savedMaps)
+            {
+                Map map = record.Map;
+                if (game.Maps.Contains(map) || records.ContainsKey(map))
+                    throw new InvalidOperationException("[CQF] Duplicate saved hibernating map: " + map.GetUniqueLoadID());
+                if (game.Maps.Count > sbyte.MaxValue)
+                    throw new InvalidOperationException("[CQF] Cannot initialize a hibernating map: the vanilla map index limit has been reached.");
+                records.Add(map, record);
+                hibernatingMaps.Add(map);
+                LongEventHandler.ExecuteWhenFinished(() =>
+                {
+                    if (Current.Game != game || map.Disposed) return;
+                    if (game.Maps.Count > sbyte.MaxValue)
+                        throw new InvalidOperationException("[CQF] Cannot initialize a hibernating map: the vanilla map index limit has been reached.");
+                    game.Maps.Add(map);
+                    try
+                    {
+                        map.FinalizeLoading();
+                        map.Parent?.FinalizeLoading();
+                    }
+                    finally
+                    {
+                        if (map.spawnedThings.Count > 0) Find.TickManager.RemoveAllFromMap(map);
+                        LongEventHandler.ExecuteWhenFinished(() => DetachMap(map));
+                    }
+                });
+            }
+            savedMaps.Clear();
         }
-        foreach (Map map in savedHibernatingMaps)
-        {
-            ValidateMap(map);
-            HibernateNow(map);
-        }
-        savedHibernatingMaps.Clear();
+        if (savedRequests == null) return;
+        foreach (Map map in savedRequests) Hibernate(map);
+        savedRequests.Clear();
+        if (pendingHibernation.Count > 0) FlushRequests();
     }
 
     private void DisposeHibernatingMaps()
     {
-        foreach (Map map in hibernatingMaps)
-        {
-            map.Dispose();
-        }
+        Map[] maps = hibernatingMaps.ToArray();
         hibernatingMaps.Clear();
         records.Clear();
-        thingMaps.Clear();
-        regionMaps.Clear();
-        districtMaps.Clear();
-        parentMaps.Clear();
         pendingHibernation.Clear();
-        savedHibernatingMaps?.Clear();
+        savedMaps?.Clear();
+        savedRequests?.Clear();
+        foreach (Map map in maps) map.Dispose();
     }
 
     private void ValidateMap(Map map)
     {
-        if (map == null)
-        {
-            throw new ArgumentNullException(nameof(map), "[CQF] A map is required for hibernation or activation.");
-        }
-        if (saving)
-        {
+        if (map == null) throw new ArgumentNullException(nameof(map), "[CQF] A map is required for hibernation or activation.");
+        if (Scribe.mode != LoadSaveMode.Inactive)
             throw new InvalidOperationException("[CQF] Cannot change map hibernation during serialization.");
-        }
-        if (map.Disposed || (!game.Maps.Contains(map) && !IsHibernating(map)))
-        {
-            throw new InvalidOperationException("[CQF] Map is disposed or does not belong to this game: " + map.GetUniqueLoadID());
-        }
+        if (map.Disposed || (!game.Maps.Contains(map) && !records.ContainsKey(map)))
+            throw new InvalidOperationException("[CQF] Map is not managed by this game: " + map.GetUniqueLoadID());
     }
 
     private void FlushRequests()
     {
         foreach (Map map in pendingHibernation.ToArray())
         {
-            if (!pendingHibernation.Remove(map)) continue;
+            pendingHibernation.Remove(map);
             ValidateMap(map);
-            HibernateNow(map);
+            HibernateNow(map, new CQFHibernatingMap(map));
         }
     }
 
-    private void HibernateNow(Map map)
+    private void HibernateNow(Map map, CQFHibernatingMap record)
     {
-        map.regionAndRoomUpdater.TryRebuildDirtyRegionsAndRooms();
-        CQFHibernatingMap record = new CQFHibernatingMap(map);
-        List<Map> originalMaps = new List<Map>(game.Maps);
-        sbyte originalCurrentIndex = game.currentMapIndex;
-        Map selected = game.CurrentMap;
-        try
+        Map? selected = game.CurrentMap;
+        if (Current.ProgramState == ProgramState.Playing)
         {
-            AddReferences(record);
-            records.Add(map, record);
-            hibernatingMaps.Add(map);
-            Find.TickManager.RemoveAllFromMap(map);
             map.weatherManager.EndAllSustainers();
             Find.SoundRoot.sustainerManager.EndAllInMap(map);
-            if (selected == map)
-            {
-                selected = game.Maps.FirstOrDefault(other => other != map && !pendingHibernation.Contains(other));
-                game.CurrentMap = selected;
-                if (selected == null)
-                {
-                    game.World.renderer.wantedMode = WorldRenderMode.Planet;
-                }
-            }
-            game.Maps.Remove(map);
-            for (int i = 0; i < game.Maps.Count; i++)
-            {
-                ReindexMap(game.Maps[i], (sbyte)i);
-            }
-            game.currentMapIndex = (sbyte)(selected == null ? -1 : game.Maps.IndexOf(selected));
-            map.regionAndRoomUpdater.Enabled = false;
-            Find.ColonistBar.MarkColonistsDirty();
         }
-        catch (Exception error)
+        if (selected == map)
         {
-            game.Maps.Clear();
-            game.Maps.AddRange(originalMaps);
-            RemoveReferences(record);
-            records.Remove(map);
-            hibernatingMaps.Remove(map);
-            for (int i = 0; i < game.Maps.Count; i++)
-            {
-                ReindexMap(game.Maps[i], (sbyte)i);
-            }
-            game.currentMapIndex = originalCurrentIndex;
-            map.regionAndRoomUpdater.Enabled = record.RegionUpdaterEnabled;
-            Find.TickManager.RemoveAllFromMap(map);
-            foreach (Thing thing in record.Things)
-            {
-                Find.TickManager.RegisterAllTickabilityFor(thing);
-            }
-            throw new InvalidOperationException("[CQF] Map hibernation failed: " + map.GetUniqueLoadID(), error);
+            selected = game.Maps.FirstOrDefault(other => other != map && !IsHibernateRequested(other));
+            game.CurrentMap = selected;
+            if (selected == null && Current.ProgramState == ProgramState.Playing)
+                game.World.renderer.wantedMode = RimWorld.Planet.WorldRenderMode.Planet;
         }
+        if (map.spawnedThings.Count > 0) Find.TickManager.RemoveAllFromMap(map);
+        DetachMap(map);
+        records.Add(map, record);
+        hibernatingMaps.Add(map);
+        if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
     }
 
-    private void AddReferences(CQFHibernatingMap record)
+    private void DetachMap(Map map)
     {
-        foreach (Thing thing in record.Things)
-        {
-            thingMaps[thing] = record.Map;
-        }
-        foreach (Region region in record.Regions)
-        {
-            regionMaps[region] = record.Map;
-        }
-        foreach (District district in record.Districts)
-        {
-            districtMaps[district] = record.Map;
-        }
-        if (record.Map.Parent != null)
-        {
-            parentMaps[record.Map.Parent] = record.Map;
-        }
+        Map? selected = game.CurrentMap;
+        int index = game.Maps.IndexOf(map);
+        if (index < 0) throw new InvalidOperationException("[CQF] Cannot detach an unregistered map: " + map.GetUniqueLoadID());
+        CQFHibernatingMap.SetMapIndex(map, -1);
+        game.Maps.RemoveAt(index);
+        for (int i = index; i < game.Maps.Count; i++) CQFHibernatingMap.SetMapIndex(game.Maps[i], (sbyte)i);
+        game.currentMapIndex = selected == null || selected == map ? (sbyte)-1 : (sbyte)game.Maps.IndexOf(selected);
+        map.regionAndRoomUpdater.Enabled = false;
     }
 
-    private void RemoveReferences(CQFHibernatingMap record)
-    {
-        foreach (Thing thing in record.Things)
-        {
-            thingMaps.Remove(thing);
-        }
-        foreach (Region region in record.Regions)
-        {
-            regionMaps.Remove(region);
-        }
-        foreach (District district in record.Districts)
-        {
-            districtMaps.Remove(district);
-        }
-        if (record.Map.Parent != null)
-        {
-            parentMaps.Remove(record.Map.Parent);
-        }
-    }
-
-    private static void ReindexMap(Map map, sbyte index)
-    {
-        foreach (Thing thing in map.spawnedThings)
-        {
-            thingMapIndex(thing) = index;
-        }
-        foreach (Region region in map.regionGrid.AllRegions_NoRebuild_InvalidAllowed)
-        {
-            region.mapIndex = index;
-            if (region.District != null)
-            {
-                region.District.mapIndex = index;
-            }
-        }
-        foreach (District district in map.regionGrid.allDistricts)
-        {
-            district.mapIndex = index;
-        }
-        foreach (Room room in map.regionGrid.AllRooms)
-        {
-            foreach (District district in room.Districts)
-            {
-                district.mapIndex = index;
-            }
-        }
-    }
-
-    private readonly List<Map> hibernatingMaps = new List<Map>();
-    private readonly Dictionary<Map, CQFHibernatingMap> records = new Dictionary<Map, CQFHibernatingMap>();
-    private readonly Dictionary<Thing, Map> thingMaps = new Dictionary<Thing, Map>();
-    private readonly Dictionary<Region, Map> regionMaps = new Dictionary<Region, Map>();
-    private readonly Dictionary<District, Map> districtMaps = new Dictionary<District, Map>();
-    private readonly Dictionary<MapParent, Map> parentMaps = new Dictionary<MapParent, Map>();
-    private readonly HashSet<Map> pendingHibernation = new HashSet<Map>();
-    private List<Map> savedHibernatingMaps = new List<Map>();
-    private bool saving;
-    private sbyte saveCurrentMapIndex;
-    private static readonly AccessTools.FieldRef<Thing, sbyte> thingMapIndex =
-        AccessTools.FieldRefAccess<Thing, sbyte>("mapIndexOrState");
+    private readonly List<Map> hibernatingMaps = new();
+    private readonly Dictionary<Map, CQFHibernatingMap> records = new();
+    private readonly HashSet<Map> pendingHibernation = new();
+    private List<CQFHibernatingMap>? savedMaps;
+    private List<Map>? savedRequests;
 }

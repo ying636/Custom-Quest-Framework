@@ -13,9 +13,16 @@ namespace QuestEditor_Library
         public override bool KeepExistingWhileHasAnyBuilding => true;
         public override StateGraph CreateGraph()
         {
+            foreach (Building building in this.lord.ownedBuildings)
+                Comp_CustomLordBuilding.Ensure(building);
             StateGraph result = new StateGraph();
             result.AddToil(new LordToil_Custom());
             return result;
+        }
+        public override void Notify_BuildingAdded(Building building)
+        {
+            base.Notify_BuildingAdded(building);
+            Comp_CustomLordBuilding.Ensure(building);
         }
         public override void ExposeData()
         {

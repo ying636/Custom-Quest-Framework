@@ -15,6 +15,12 @@ namespace QuestEditor_Library
         [HarmonyPrefix]
         public static bool prefix(IncidentWorker __instance, ref bool __result, IncidentParms parms)
         {
+            if (parms.target is Map paused && GameComponent_MapManager.Instance is { } manager &&
+                (manager.IsHibernating(paused) || manager.IsHibernateRequested(paused)))
+            {
+                __result = false;
+                return false;
+            }
             if (parms.target is Map map && map.Parent is MapParent_Custom parent && (__instance.def.tags == null || !__instance.def.tags.Exists(t => parent.tags.Contains(t) || (parent.mapDataDef is CustomMapDataDef def && def.tags.Contains(t)))))
             {
                 __result = false;
