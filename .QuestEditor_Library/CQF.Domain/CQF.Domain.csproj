@@ -11,5 +11,9 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+    <Content Include="Content\$(RimWorldVersion)\**\*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

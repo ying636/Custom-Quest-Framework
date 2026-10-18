@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.DomainVisualDef>
+    <defName>CQF_DomainVisuals</defName>
+  </QuestEditor_Library.DomainVisualDef>
+  <ThingDef>
+    <defName>CQF_DomainOpening</defName>
+    <label>CQF_DomainOpening</label>
+    <thingClass>QuestEditor_Library.DomainOpening_Basic</thingClass>
+    <category>Ethereal</category>
+    <tickerType>Normal</tickerType>
+    <drawerType>RealtimeOnly</drawerType>
+    <altitudeLayer>Filth</altitudeLayer>
+    <useHitPoints>false</useHitPoints>
+    <selectable>false</selectable>
+    <rotatable>false</rotatable>
+    <showInSearch>false</showInSearch>
+    <canLoadIntoCaravan>false</canLoadIntoCaravan>
+  </ThingDef>
+</Defs>

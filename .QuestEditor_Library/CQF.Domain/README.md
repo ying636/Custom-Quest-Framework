@@ -73,11 +73,21 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 `Comp_DomainProtection` 通过原生伤害回调保护领域施术者：执行已配置的展开能力、活动展开物件存在、同步进入领域以及入场锁定期间，伤害置零并跳过后续处理，不消耗领域血量。展开和入场结束后恢复通常的领域血量吸收；其他参与者、普通能力和已失效展开不会获得该无敌。死亡或倒地人物不适用展开保护。
 
-`DomainTransition` 管理地图切换、等待领域地形完成绘制、入场和返回期间的人物锁定、过渡结束及资源清理。具体实现提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect` 和 `ReleaseVisuals`。截图采集、材质和动画细节留在子 Mod。
+`DomainTransition` 管理地图切换、等待领域地形完成绘制、入场和返回期间的人物锁定、过渡结束及资源清理。具体实现提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect` 和 `ReleaseVisuals`。基础截图、材质和动画由 DomainMaterialTransition / DomainOpeningVisuals 提供，特殊表现仍可由子 Mod 扩展。
 
 使用 `CQFDomainRuntime.Instance.SetTransition` 管理当前转场。展开中的视觉对象可继承 `DomainOpening`，通过 `QueueOpening` 调度完成操作。返回锁定使用 `MapComponent_DomainTransitionLock`，结束时恢复人物原有的剩余眩晕时间。
 
 `DomainOpening` 必须提供 `Definition`、`Caster`、`Active` 和两个完成方法。基类在 `SpawnSetup` 自动登记展开物件，在 `DeSpawn` 自动移除登记；覆盖这两个生命周期方法时须调用基类，以便所有领域共用展开保护，读档后也会重新登记。
+
+## 基础展开与换皮
+
+`DomainDef.visuals` 可引用 `DomainVisualDef`，中性预设为 `CQF_DomainVisuals`。配置贴图、噪声、颜色、流动、扭曲、半径和时间即可换皮。普通领域使用 `DomainWorker_Visual`，通过 `DomainOpening_Basic.Start(definition, caster, targets)` 展开；目标筛选由调用方负责。基础 Shader 保证切图期间全遮盖，1.7 的通用 Worker 验证原版地形实际提交后揭幕。
+
+`DomainOpeningVisuals` 和 `DomainMaterialTransition` 支持传入自定义 Material 模板，框架复制并释放自己的实例。通用资源在 `Content/1.6` 和 `Content/1.7`，构建时与模块 DLL 一起复制到输出；发布必须同时部署 Defs 和 Shaders/AssetBundles。无 Domain 请求时不加载这些资源，不新增补丁或 GComp。
+
+详细字段、材质参数和构建方法见 [基础领域视觉](../Skill/cqf-overview/references/domain-visuals.md)。寂屋邪祭本次保持原有视觉实现，下次更新再接入；框架不引用血海程序集或专有资源。
+
+测试能力 `CQF_TestDomainExpansion`（展开基础领域）可在开发者调试动作的 CQF 分类中选择人物授予。第一次施放生成测试地图后播放展开，仅带施术者进入；领域内再次施放返回。测试地图不预加载。
 
 ## 验证
 
@@ -85,4 +95,4 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 `.QuestEditor_Library/Tests/DomainRuntime/RunChecks.ps1` 使用独立配置与存档目录运行血海领域集成检查，覆盖进出、尸体与物品返回、领域复用、崩塌和存档往返。临时测试 Mod 在运行结束后移入本次日志目录归档，不修改玩家配置与存档。
 
-领域空地图休眠时移出 Game.Maps，由统一组件托管；Thing 按原版未生成处理，唤醒时复用原图并恢复索引与 Tick 登记。框架不补丁 Thing.Map/Spawned 或地图更新入口。CQF_ownedHibernatingMaps 深度保存休眠地图，单图保存范围内临时提供区域索引，Thing 保持未生成；本次升级兼容旧休眠引用列表、暂停引用和旧节点内的完整 Map，迁移后只保存新格式。
+领域空地图休眠时移出 Game.Maps，由统一组件托管；Thing 按原版未生成处理，唤醒时复用原图并恢复索引与 Tick 登记。框架不补丁 Thing.Map/Spawned 或地图更新入口。CQF_ownedHibernatingMaps 深度保存休眠地图，单图保存范围内临时提供区域索引，Thing 保持未生成；3.7 已删除临时旧格式迁移，只读写当前格式；未迁移旧档须先用带兼容修复的 3.6 加载并重新保存。

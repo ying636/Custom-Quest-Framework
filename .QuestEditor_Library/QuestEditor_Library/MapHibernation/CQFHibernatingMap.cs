@@ -7,42 +7,21 @@ internal sealed class CQFHibernatingMap : IExposable
 {
     public CQFHibernatingMap() { }
 
-    // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除旧档构造入口及 allowLegacy/legacyReference/OwnsMapData；保留新格式深度读写。
-    public CQFHibernatingMap(bool allowLegacy) { this.allowLegacy = allowLegacy; }
-
     public CQFHibernatingMap(Map map)
     {
         this.map = map;
         regionUpdaterEnabled = map.regionAndRoomUpdater.Enabled;
     }
 
-    public Map Map => map ?? throw new InvalidOperationException(allowLegacy
-        ? "[CQF] Legacy hibernation has an unresolved map reference or missing map data."
-        : "[CQF] Saved hibernating map is missing in CQF_ownedHibernatingMaps.");
+    public Map Map => map ?? throw new InvalidOperationException("[CQF] Saved hibernating map is missing in CQF_ownedHibernatingMaps.");
     public bool RegionUpdaterEnabled => regionUpdaterEnabled;
-    public bool OwnsMapData => !legacyReference;
 
     public void ExposeData()
     {
         Scribe_Values.Look(ref regionUpdaterEnabled, "regionUpdaterEnabled", true);
         if (Scribe.mode != LoadSaveMode.Saving)
         {
-            // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除旧节点归一化和引用读取分支，仅保留 Scribe_Deep 读取。
-            if (Scribe.mode == LoadSaveMode.LoadingVars && allowLegacy)
-            {
-                System.Xml.XmlNode parent = Scribe.loader.curXmlParent;
-                System.Xml.XmlNode? node = parent["map"];
-                if (node == null && !parent.ChildNodes.OfType<System.Xml.XmlElement>().Any())
-                {
-                    System.Xml.XmlElement reference = parent.OwnerDocument!.CreateElement("map");
-                    reference.InnerText = parent.InnerText.Trim();
-                    parent.AppendChild(reference);
-                    node = reference;
-                }
-                legacyReference = node != null && !node.ChildNodes.OfType<System.Xml.XmlElement>().Any();
-            }
-            if (legacyReference) Scribe_References.Look(ref map, "map");
-            else Scribe_Deep.Look(ref map, "map");
+            Scribe_Deep.Look(ref map, "map");
             return;
         }
         List<Map> maps = Current.Game.Maps;
@@ -76,7 +55,5 @@ internal sealed class CQFHibernatingMap : IExposable
 
     private Map? map;
     private bool regionUpdaterEnabled;
-    private readonly bool allowLegacy;
-    private bool legacyReference;
     private static readonly AccessTools.FieldRef<Thing, sbyte> thingMapIndex = AccessTools.FieldRefAccess<Thing, sbyte>("mapIndexOrState");
 }

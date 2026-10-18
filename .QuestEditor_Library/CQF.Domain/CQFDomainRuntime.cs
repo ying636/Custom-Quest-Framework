@@ -38,6 +38,10 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
 
     public void MapAdded(Map map) => preloadCheckRequested = true;
 
+    internal void RegisterVisuals(DomainOpeningVisuals visuals) => openingVisuals.Add(visuals);
+
+    internal void UnregisterVisuals(DomainOpeningVisuals visuals) => openingVisuals.Remove(visuals);
+
     public void ExposeData()
     {
         Scribe_Collections.Look(ref domainMaps, "domainMaps", LookMode.Reference);
@@ -48,6 +52,7 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
     {
         SetTransition(null);
         foreach (Map realm in domainMaps) realm.GetComponent<MapComponent_Domain>().Worker?.Dispose();
+        foreach (DomainOpeningVisuals visuals in openingVisuals.ToArray()) visuals.Dispose();
         domainMaps.Clear();
         openings.Clear();
         returns.Clear();
@@ -58,4 +63,5 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
     }
 
     private readonly GameComponent_MapManager host;
+    private readonly HashSet<DomainOpeningVisuals> openingVisuals = new();
 }

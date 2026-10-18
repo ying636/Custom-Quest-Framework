@@ -135,22 +135,7 @@ public sealed class HibernationChecksDriver : MonoBehaviour
                 Check(save.Descendants("maps").First().Elements("li").Count() + save.Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == component.TotalMapCount,
                     "save includes active and hibernating maps");
                 Check(!Current.Game.Maps.Contains(middle) && component.IsHibernating(middle), "save returns the sleeping map to component ownership");
-                XElement gameNode = save.Root!.Element("game")!;
-                XElement managerNode = gameNode.Descendants("li").Single(element =>
-                    element.Attribute("Class")?.Value == "QuestEditor_Library.GameComponent_MapManager");
-                XElement owned = managerNode.Element("CQF_ownedHibernatingMaps")!;
-                XElement references = new("CQF_hibernatingMaps");
-                foreach (XElement record in owned.Elements("li"))
-                {
-                    XElement mapData = record.Element("map")!;
-                    references.Add(new XElement("li", "Map_" + mapData.Element("uniqueID")!.Value));
-                    gameNode.Element("maps")!.Add(new XElement("li", mapData.Attributes(), mapData.Elements()));
-                }
-                owned.Remove();
-                managerNode.Add(references);
-                save.Save(GenFilePaths.FilePathForSavedGame("CQF_LegacyHibernationChecks"));
-                Check(references.Elements("li").Count() == 1, "pre-3.6 reference-list save fixture written with full native maps");
-                GameDataSaveLoader.LoadGame("CQF_LegacyHibernationChecks");
+                GameDataSaveLoader.LoadGame("CQF_HibernationChecks");
                 stage = 1;
                 return;
             }

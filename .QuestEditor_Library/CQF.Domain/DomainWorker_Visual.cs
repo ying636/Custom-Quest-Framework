@@ -1,0 +1,62 @@
+using RimWorld.Planet;
+using UnityEngine;
+using Verse;
+
+namespace QuestEditor_Library;
+
+public class DomainWorker_Visual : DomainWorker
+{
+#if RIMWORLD_1_7
+    public override bool HandlesEntryView => CQFDomainRuntime.Instance.Transition is DomainMaterialTransition;
+
+    public override void Draw()
+    {
+        if (CQFDomainRuntime.Instance.Transition is not DomainMaterialTransition transition || transition.IsReturning) return;
+        CellRect view = Find.CameraDriver.CurrentViewRect;
+        view.ClipInsideMap(map);
+        if (view.IsEmpty) return;
+        SectionLayer? terrain = map.mapDrawer.SectionAt(view.CenterCell).GetLayer(typeof(SectionLayer_Terrain));
+        if (terrain?.Visible != true) return;
+        terrainCommands.Clear();
+        try
+        {
+            Waylith.Rendering.MeshDrawSubmission.CopyPendingCommands(terrainCommands, Find.Camera.cullingMask);
+            foreach (LayerSubMesh subMesh in terrain.subMeshes)
+                if (subMesh.finalized && !subMesh.disabled && subMesh.mesh.vertexCount > 0)
+                    foreach (Waylith.Rendering.MeshDrawCommand command in terrainCommands)
+                        if (ReferenceEquals(command.Mesh, subMesh.mesh.EngineMesh))
+                        {
+                            LastTerrainRenderedFrame = Time.frameCount;
+                            return;
+                        }
+        }
+        finally { terrainCommands.Clear(); }
+    }
+#endif
+
+    public override void BeforeReturn(bool visible)
+    {
+        returnTransition = null;
+        if (!visible || Domain.Definition.visuals == null || !WorldRendererUtility.DrawingMap || Screen.width <= 0 || Screen.height <= 0) return;
+        CQFDomainRuntime manager = CQFDomainRuntime.Instance;
+        manager.SetTransition(null);
+        try
+        {
+            returnTransition = new DomainMaterialTransition(Domain.Definition.visuals, caster?.PositionHeld ?? map.Center, true);
+            manager.SetTransition(returnTransition);
+        }
+        catch (Exception error) { Log.Error("[CQF] Could not capture basic domain return transition: " + error); }
+    }
+
+    public override void Returned(Map destination, IntVec3 focus, IReadOnlyList<Pawn> pawns)
+    {
+        if (returnTransition != null && ReferenceEquals(CQFDomainRuntime.Instance.Transition, returnTransition))
+            returnTransition.BindReturn(destination, focus, pawns);
+        returnTransition = null;
+    }
+
+#if RIMWORLD_1_7
+    private readonly List<Waylith.Rendering.MeshDrawCommand> terrainCommands = new();
+#endif
+    private DomainMaterialTransition? returnTransition;
+}

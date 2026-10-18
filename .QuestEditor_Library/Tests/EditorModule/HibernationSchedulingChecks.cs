@@ -120,7 +120,7 @@ internal static class HibernationSchedulingChecks
                 or "Patch_HibernatingMapTick" or "Patch_HibernatingTickRegistration" or "Patch_HibernatingMapRemoval"
                 or "Patch_ActivateMapOnSpawn" or "Patch_ActivateMapOnDespawn"), "object attributes map ticking registration saving and spawn/despawn need no hibernation patches");
             restored.Activate(active);
-            HibernationSaveMigrationChecks.Run(game, fixtureSavePath);
+            HibernationPersistenceChecks.Run(game, fixtureSavePath);
             Check(ChecksLogHandler.ErrorCount == 0, "native scheduling and Scribe ownership checks log no errors");
         }
         finally
@@ -246,7 +246,7 @@ internal static class HibernationSchedulingChecks
             savedUnspawned = probes.All(probe => !probe.Spawned && probe.Map == null);
             savedRegionsValid = Regions(__instance).All(region => region.Map == __instance);
         }
-        HibernationSaveMigrationChecks.ExposeFixtureLink(__instance);
+        HibernationPersistenceChecks.ExposeFixtureLink(__instance);
         Scribe_Collections.Look(ref probes, "things", LookMode.Deep);
         if (Scribe.mode == LoadSaveMode.LoadingVars)
             foreach (PauseProbeThing probe in probes) __instance.spawnedThings.TryAdd(probe, canMergeWithExistingStacks: false);

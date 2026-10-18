@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ShaderDef>
+    <defName>CQF_DomainOpening</defName>
+    <shaderProgram>
+      <vertexShaderFileName>CQF_DomainOpening.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>CQF_DomainOpening.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <blendMode>Custom</blendMode>
+      <blendSrcFactor>SrcAlpha</blendSrcFactor>
+      <blendDstFactor>OneMinusSrcAlpha</blendDstFactor>
+      <depthTest>false</depthTest>
+      <depthWrite>false</depthWrite>
+      <cullMode>None</cullMode>
+      <renderQueue>3600</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+  <ShaderDef>
+    <defName>CQF_DomainTransition</defName>
+    <shaderProgram>
+      <vertexShaderFileName>CQF_DomainTransition.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>CQF_DomainTransition.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <blendMode>Custom</blendMode>
+      <blendSrcFactor>SrcAlpha</blendSrcFactor>
+      <blendDstFactor>OneMinusSrcAlpha</blendDstFactor>
+      <depthTest>false</depthTest>
+      <depthWrite>false</depthWrite>
+      <cullMode>None</cullMode>
+      <renderQueue>4000</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+</Defs>

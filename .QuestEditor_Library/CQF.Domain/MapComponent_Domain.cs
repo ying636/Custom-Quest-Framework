@@ -374,6 +374,8 @@ public class MapComponent_Domain : MapComponent
 
     public override void MapRemoved()
     {
+        foreach (DomainOpening opening in openings)
+            if (opening is DomainOpening_Basic basic) basic.ReleaseVisuals();
         openings.Clear();
         (Current.Game?.GetComponent<GameComponent_MapManager>()?.Module as CQFDomainRuntime)?.UnregisterDomainMap(map);
         worker?.Dispose();

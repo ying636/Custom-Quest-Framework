@@ -65,18 +65,10 @@ public sealed partial class GameComponent_MapManager
         }
         Scribe_Collections.Look(ref savedMaps, "CQF_ownedHibernatingMaps", LookMode.Deep);
         Scribe_Collections.Look(ref savedRequests, "CQF_pendingHibernation", LookMode.Reference);
-        // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除本旧字段读取块；保留上方两个新格式字段。
-        if (Scribe.mode != LoadSaveMode.Saving)
-        {
-            Scribe_Collections.Look(ref legacyMaps, "CQF_hibernatingMaps", LookMode.Deep, true);
-            Scribe_Collections.Look(ref legacyPauses, "CQF_mapPauses", LookMode.Deep, true);
-        }
     }
 
     private void RestoreHibernatingMaps()
     {
-        // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除本调用及本文件全部 legacyMaps/legacyPauses/legacyReferences 读写和字段；保留新格式校验与恢复。
-        RestoreLegacyHibernation();
         Dictionary<int, Map> registered = new();
         foreach (Map map in game.Maps) registered.Add(map.uniqueID, map);
         if (savedMaps != null)
@@ -92,9 +84,6 @@ public sealed partial class GameComponent_MapManager
             foreach (Map map in savedRequests)
                 if (map == null || !registered.TryGetValue(map.uniqueID, out Map? saved) || !ReferenceEquals(saved, map))
                     throw new InvalidOperationException("[CQF] A saved hibernation request has an unresolved or unregistered map.");
-        foreach (Map map in legacyReferences.Keys)
-            if (!registered.TryGetValue(map.uniqueID, out Map? saved) || !ReferenceEquals(saved, map))
-                throw new InvalidOperationException("[CQF] A legacy hibernation reference points to an unregistered map: " + map.GetUniqueLoadID());
         if (savedMaps != null)
         {
             foreach (CQFHibernatingMap record in savedMaps)
@@ -126,15 +115,6 @@ public sealed partial class GameComponent_MapManager
             }
             savedMaps.Clear();
         }
-        foreach (Map map in legacyReferences.Keys)
-            if (!IsHibernating(map)) pendingHibernation.Add(map);
-        foreach (KeyValuePair<Map, CQFHibernatingMap> entry in legacyReferences)
-            if (!IsHibernating(entry.Key))
-            {
-                pendingHibernation.Remove(entry.Key);
-                HibernateNow(entry.Key, entry.Value);
-            }
-        legacyReferences.Clear();
         if (savedRequests != null)
         {
             foreach (Map map in savedRequests)
@@ -152,35 +132,7 @@ public sealed partial class GameComponent_MapManager
         pendingHibernation.Clear();
         savedMaps?.Clear();
         savedRequests?.Clear();
-        legacyMaps?.Clear();
-        legacyPauses?.Clear();
-        legacyReferences.Clear();
         foreach (Map map in maps) map.Dispose();
-    }
-
-    // TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新删除本迁移方法；只有用本次修复版成功加载并重新保存的旧档才已完成迁移。
-    private void RestoreLegacyHibernation()
-    {
-        foreach (List<CQFHibernatingMap>? legacy in new[] { legacyMaps, legacyPauses })
-        {
-            if (legacy == null) continue;
-            foreach (CQFHibernatingMap record in legacy)
-            {
-                if (record == null) throw new InvalidOperationException("[CQF] Legacy hibernation contains an empty map record.");
-                Map map = record.Map;
-                if (record.OwnsMapData)
-                {
-                    savedMaps ??= new();
-                    savedMaps.Add(record);
-                }
-                else
-                {
-                    if (!legacyReferences.ContainsKey(map) || !record.RegionUpdaterEnabled)
-                        legacyReferences[map] = record;
-                }
-            }
-            legacy.Clear();
-        }
     }
 
     private void ValidateMap(Map map)
@@ -241,7 +193,4 @@ public sealed partial class GameComponent_MapManager
     private readonly HashSet<Map> pendingHibernation = new();
     private List<CQFHibernatingMap>? savedMaps;
     private List<Map>? savedRequests;
-    private List<CQFHibernatingMap>? legacyMaps;
-    private List<CQFHibernatingMap>? legacyPauses;
-    private readonly Dictionary<Map, CQFHibernatingMap> legacyReferences = new();
 }

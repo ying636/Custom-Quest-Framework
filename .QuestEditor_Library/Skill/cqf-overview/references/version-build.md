@@ -2,7 +2,7 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `3.6`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `3.7`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
 
 ## 引用与输出
 
@@ -41,6 +41,8 @@ dotnet build .QuestEditor_Library/CQF.Editor/CQF.Editor.csproj -c Release
 dotnet build .QuestEditor_Library/CQF.Domain/CQF.Domain.csproj -c Release
 ```
 
+基础领域视觉资源位于 `CQF.Domain/Content/<版本>`，构建自动复制 Defs、GLSL 或 AssetBundle 到领域模块输出目录；发布必须与对应 DLL 同时部署。参数、换皮入口和 Shader 构建见 [基础领域视觉](domain-visuals.md)。寂屋邪祭本次不接入新视觉，留到下次更新。
+
 完整打包须包含同一版本的主库、领域模块和已更新引用的子 Mod。不要混用拆分前后的 DLL。字段、调用和加载验证见 [领域系统开发参考](domain-system.md)。
 
 ## 原生回调替代补丁
@@ -52,7 +54,7 @@ dotnet build .QuestEditor_Library/CQF.Domain/CQF.Domain.csproj -c Release
 - 建筑受伤、人物受伤和建筑销毁三个补丁本轮保留：ThingComp 的受伤回调位于原方法内部，不能覆盖建筑提前免疫返回后的现有通知；PostDestroy 又晚于离图和 Lord 清理。替换前须单独核对触发次数、伤害来源、地图和 Lord 引用。
 - 1.7 主库有 18 个补丁目标，其中休眠为 3；领域为 0，编辑器为 1，模拟经营适配为 2。1.6 比 1.7 多保留两个 Pawn 事件区进出目标，不保留 Thing 休眠唤醒补丁。
 - 休眠地图移出 Game.Maps 并由统一组件托管，Thing 原版状态为 Spawned=false、Map=null。没有对象/区域属性、Thing.DoTick、WorldObject.DoTick、地图更新、Tick 登记、自动移除、GameEnder、保存或 AddMap 补丁；只保留选图、取图、退出清理。
-- CQF_ownedHibernatingMaps 使用独立字段深度保存组件托管地图，不复用旧字段；CQF_pendingHibernation 引用保存排队地图。本次 3.6 专项兼容旧 CQF_hibernatingMaps 引用列表/完整 Map 记录及 CQF_mapPauses 暂停引用；按节点形状区分，交给原版 Scribe 解析完整地图和引用。迁移保留原地图对象、区域更新开关，重复引用合并；缺失或冲突身份在改动地图列表前明确报错。保存只写新格式，不回写旧节点。单图保存时临时提供区域索引，Thing 仍未生成，finally 撤回。读档长事件结束时完成原版地图初始化及其延迟动作，再移出；普通唤醒不重复初始化。操作/销毁前显式激活，不通过原生物件生成/离图入口自动唤醒。
+- CQF_ownedHibernatingMaps 使用独立字段深度保存组件托管地图，不复用旧字段；CQF_pendingHibernation 引用保存排队地图。3.7 只读取当前格式，已删除 3.6 的旧字段迁移。缺失或冲突身份仍在改动地图列表前明确报错。单图保存时临时提供区域索引，Thing 仍未生成，finally 撤回。读档长事件结束时完成原版地图初始化及其延迟动作，再移出；普通唤醒不重复初始化。操作/销毁前显式激活，不通过原生物件生成/离图入口自动唤醒。
 
 ```powershell
 dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- callbacks
@@ -60,20 +62,13 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Release -- hibernation
 ```
 
-## 3.6 临时休眠存档兼容
+## 3.7 更新与存档边界
 
-按用户要求，本次保留兼容，**下次更新删除兼容部分**。代码统一标记 `TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE)`；本要求替代之前“不得删除该迁移路径”的约束。
+本次加入可换皮的基础展开与转场 Shader、通用展开物件、视觉 Worker 和测试能力，并修复测试口袋地图使用温带森林导致原版植物生长率计算访问无效世界格子的问题。测试生态使用独立的 CQF_TestDomainBiome，不新增补丁或 GComp；寂屋邪祭视觉本次未接入。
 
-必须先用包含本次兼容修复的 3.6 成功加载旧档并重新保存；保存只写 `CQF_ownedHibernatingMaps` 和 `CQF_pendingHibernation`，重存后的文件无需旧格式兼容。仅看到版本号 3.6、经过一段时间或发布下一版不代表迁移完成。未重新保存的旧档和旧备份仍需先用本次修复版加载、保存，再交给删除兼容后的版本读取。
+按用户预先要求，3.7 已删除 3.6 临时休眠兼容：旧 CQF_hibernatingMaps / CQF_mapPauses 读取、旧记录识别与归一化、迁移方法及临时字段均已移除。保留 CQF_ownedHibernatingMaps / CQF_pendingHibernation、当前格式深度读写、身份校验和原版初始化调度。测试改为 HibernationPersistenceChecks，覆盖当前格式再次保存/读取、跨地图引用、区域更新标记和损坏数据拒绝；原生集成夹具不再构造旧格式。
 
-下次清理范围：
-
-- `MapHibernation/CQFHibernatingMap.cs`：删除 bool 构造入口、`allowLegacy` / `legacyReference` 字段、`OwnsMapData` 属性、旧节点归一化、引用读取分支和旧格式专用错误分支，保留新格式的 `Scribe_Deep` 读写。
-- `MapManagement/GameComponent_MapManager.Hibernation.cs`：删除 `CQF_hibernatingMaps` / `CQF_mapPauses` 读取块、`RestoreLegacyHibernation` 方法及调用、`legacyMaps` / `legacyPauses` / `legacyReferences` 字段及所有相关恢复、校验、清理语句。
-- `Tests/EditorModule/HibernationSaveMigrationChecks.cs`：移除旧格式迁移用例，同步调整 `HibernationSchedulingChecks` 中的调用和 fixture 辅助入口；新格式往返、跨地图引用和损坏数据校验须保留或移入常规休眠测试。
-- 同步更新仓库内与已安装的 cqf-overview / cqf-map-dev Skill，删除旧格式仍受支持的描述；如原生集成测试仍构造旧格式，应一并改为当前格式。
-
-不得随兼容代码删除当前格式字段、正常地图深度读写、身份冲突和排队引用校验、原版读档初始化调度及普通休眠/唤醒流程。清理后验证当前格式保存、加载、再次保存及跨地图引用。
+已用带兼容修复的 3.6 成功加载并重新保存的文件可继续使用当前格式。未重存的旧档及旧备份仍须先用该 3.6 版本转换；仅看到版本号 3.6 或经过一段时间不代表已转换。不得重新引入本次删除的迁移壳。
 
 ## 旧系统清理后的接口
 
@@ -102,12 +97,12 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 - 火种危机：构建 `.QuestEditor_Library/CQF.AllsparkCrisis/CQF.AllsparkCrisis.csproj`；输出 `1.7/Mod/AllsparkCrisis/Assemblies/CQFAndRS.dll`。默认引用火种危机 `1.7/Assemblies/AllsparkCrisis.dll`；`AllsparkCrisisPath` 可覆盖前置 DLL 路径。原适配仅有 DLL，当前源码依据其实际实现恢复。
 - 模拟经营：构建 `.QuestEditor_Library/CQF.RimSimManagementFramework/CQF.RimSimManagementFramework.csproj`；输出 `1.7/Mod/RimSimManagementFramework/Assemblies/CQF_RSMF.dll`。`RimSimManagementPath` 可覆盖前置 DLL 路径。本机依赖仍在工坊 `3736621496/1.6/Assemblies`；两个顾客生成方法为 private，通过 Harmony TargetMethods 查找，并读取 out spawnedPawn，避免扫描整张地图收集新 pawn。
 - Bill：本机未找到 BillDoorsPredefinedCharacter 的前置 DLL 或适配源码，1.7 未启用该加载入口，不把旧二进制复制视为适配完成。
-- HCF：原 1.6 对应目录没有适配 DLL；1.7 删除空加载入口，不影响实际 HCF 在自身 Mod 中提供的联动项目。
+- HCF：联动实际由独立 HiveCreatureFramework 仓库的 Mods/CQF 工程提供，不能在 CQF 空目录补装另一份。2026-10-18 核对其 GitHub master 为 43c6aa2，已有 1.6 联动源码与 DLL；本地 1.7 联动 DLL、工程迁移、RimWorld.Build.props 和 LoadFolders 修改尚未提交，须在 HCF 仓库单独整理发布。
 
 已删除无对应 Def/运行类的 `CQF_DestroyMainSiteCountdown` 残留翻译，并删除错误短类型目录和重复英文 PawnMod DefInjected。自定义 Def 的中文翻译使用完整命名空间目录。
 
 `Tests/GameRuntime` 的 `version17` 标记模式验证游戏内编辑器开关、编辑器地图、子地图和站点地图生成。使用独立 `-savedatafolder` 与临时测试 Mod，结束后归档测试 Mod；不要改用户实际配置或存档。原 AI HTTP 综合测试属于另一套测试，不能替代此版本适配验证。
 
-基础休眠与迁移检查 74 项通过，本机旧存档管理器节点额外 7 项、合计 81 项通过：使用真实原版 Tick 列表验证 Normal/Rare/Long 暂停与恢复，使用原版 Thing 序列化及真实 Scribe 验证组件托管的 Map 夹具深度保存与引用往返。Map.ExposeData/FinalizeLoading 使用精简夹具；覆盖旧引用、暂停记录、完整 Map、显式 Class、混合节点去重、跨图引用及迁移后再次存读档。CQF_CHECKS_LEGACY_SAVE 可指定旧存档，只提取管理器节点，不修改原文件，也不代表该完整游戏存档已通过。空地图休眠与唤醒不调用全局 Tick 移除，预热后 256 次宿主更新为 0 字节分配；框架子地图入口检查总地图容量。
+3.7 当前格式休眠检查 56 项通过：使用真实原版 Tick 列表验证 Normal/Rare/Long 暂停与恢复，使用原版 Thing 序列化及真实 Scribe 验证组件托管的 Map 夹具深度保存、再次存读档、跨地图引用、原区域更新开关和损坏数据拒绝。Map.ExposeData/FinalizeLoading 使用精简夹具；旧格式迁移用例及 CQF_CHECKS_LEGACY_SAVE 入口已删除。空地图休眠与唤醒不调用全局 Tick 移除，预热后 256 次宿主更新为 0 字节分配；框架子地图入口检查总地图容量。
 
-当前领域发布验证：1.6 / 1.7 编译、52 项领域规则与组件生命周期检查及上述 7 种模块加载场景通过；空闲宿主在模块启用/禁用两种情况下，预热后 256 次更新均为 0 字节分配。此前游戏内集成测试在入口前因 `D3DSCache.dll`、异常码 `0xc0000409` 退出；最新隔离框架测试在启动加载阶段 180 秒超时，仍未产生 COMPLETE。临时框架与测试 Mod 已归档，未覆盖正式 DLL 或修改原存档；不能据此宣称完整旧存档、领域进出或视觉转场已通过游戏内验证。
+当前领域发布验证：1.6 / 1.7 编译、52 项领域规则与组件生命周期、29 项 Shader/测试能力/生态检查及上述 7 种模块加载场景通过；两个 Unity Shader 已回读，10 次 GPU 像素检查验证全遮盖、端点透明、贴图换皮及径向裁切。空闲宿主在模块启用/禁用两种情况下，预热后 256 次更新均为 0 字节分配。此前游戏内集成测试在入口前因 `D3DSCache.dll`、异常码 `0xc0000409` 退出；最新隔离框架测试在启动加载阶段 180 秒超时，仍未产生 COMPLETE。临时框架与测试 Mod 已归档；这些隔离运行未修改原存档。基础视觉测试包后来按用户确认安装至本机 1.7，完整动画仍需实际游玩验证；不能据此宣称完整旧存档、领域进出或视觉转场已通过游戏内验证。

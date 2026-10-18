@@ -48,4 +48,5 @@ public class DomainDef : Def
     public HediffDef? protection;
     public AbilityDef? openingAbility;
     public bool preload = true;
+    public DomainVisualDef? visuals;
 }

@@ -9,10 +9,11 @@ using Verse.AI;
 
 internal static class Program
 {
-    private static void Main()
+    private static void Main(string[] args)
     {
         try
         {
+            if (args.Contains("visuals")) { DomainVisualChecks.Run(); return; }
             Run();
             Console.WriteLine("Domain checks passed: " + checks);
         }

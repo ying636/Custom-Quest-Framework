@@ -26,7 +26,7 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 
 如果任务明确是“做 CQF 地图 / 子地图 / 区域拼装 / 地图入口出口 / 地图流程设计”，优先继续调用 `cqf-map-dev`。
 
-涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。通用地图休眠由 `GameComponent_MapManager` 管理，领域模块通过普通运行对象接入同一个 GComp；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
+涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。制作换皮领域或通用展开/转场时，读取 [基础领域视觉](references/domain-visuals.md)。寂屋邪祭暂不迁移视觉，留到下次更新接入。通用地图休眠由 `GameComponent_MapManager` 管理，领域模块通过普通运行对象接入同一个 GComp；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
 
 修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
 
@@ -53,7 +53,7 @@ CQF Mod 包：
 
 ## 当前版本与构建
 
-当前维护 RimWorld 1.7。处理构建、版本迁移、DLL 输出或旧系统清理时，读取 [版本与构建](references/version-build.md)。默认不做旧存档兼容；本次 3.6 按用户要求临时兼容 3.4/3.5 和中间测试版本的地图休眠存档，下次更新删除该兼容部分；删除范围和重新保存条件见版本与构建中的“3.6 临时休眠存档兼容”。已删除的特殊站点参数、PawnMod 平铺 XML 迁移和职责图旧字段迁移不得重新引入。
+当前维护 RimWorld 1.7。处理构建、版本迁移、DLL 输出或旧系统清理时，读取 [版本与构建](references/version-build.md)。默认不做旧存档兼容；3.7 已按用户要求删除 3.6 临时休眠迁移，只读取当前托管地图格式；未迁移旧档必须先用带兼容修复的 3.6 加载并重新保存。已删除的特殊站点参数、PawnMod 平铺 XML 迁移和职责图旧字段迁移不得重新引入。
 
 ## CQF 是什么
 

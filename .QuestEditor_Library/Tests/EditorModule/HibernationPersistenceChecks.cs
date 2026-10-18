@@ -4,41 +4,22 @@ using System.Xml.Linq;
 using QuestEditor_Library;
 using Verse;
 
-// TODO(CQF_3_6_SAVE_MIGRATION_REMOVE_NEXT_RELEASE): 下次更新移除旧格式迁移用例；保留新格式往返、跨地图引用和损坏数据校验，并同步调整 HibernationSchedulingChecks 调用。
-internal static class HibernationSaveMigrationChecks
+internal static class HibernationPersistenceChecks
 {
     public static void Run(Game game, string fixtureSavePath)
     {
         XElement saved = XDocument.Load(fixtureSavePath).Root!.Element("manager")!
             .Element("CQF_ownedHibernatingMaps")!.Elements("li").Single();
-        XElement reference = new("CQF_hibernatingMaps", new XElement("li", "Map_1"));
-        XElement pause = new("CQF_mapPauses", new XElement("li",
-            new XElement("map", "Map_1"), new XElement("regionUpdaterEnabled", false)));
-        CheckCase(game, new XElement("manager", reference), new[] { 1 }, true, false, "3.4/3.5 reference list");
-        CheckCase(game, new XElement("manager", pause), new[] { 1 }, false, false, "reference pause record");
-        CheckCase(game, new XElement("manager", new XElement("CQF_hibernatingMaps", new XElement(saved))),
-            new[] { 2 }, true, false, "intermediate owned-map node");
-        XElement typed = new(saved);
-        typed.SetAttributeValue("Class", "QuestEditor_Library.CQFHibernatingMap");
-        CheckCase(game, new XElement("manager", new XElement("CQF_hibernatingMaps", typed)),
-            new[] { 2 }, true, false, "typed intermediate owned-map node");
+        CheckCase(game, new XElement("manager", new XElement("CQF_ownedHibernatingMaps", new XElement(saved))),
+            new[] { 2 }, true, false, "current owned-map format");
+        XElement disabled = new(saved);
+        disabled.SetElementValue("regionUpdaterEnabled", false);
+        CheckCase(game, new XElement("manager", new XElement("CQF_ownedHibernatingMaps", disabled)),
+            new[] { 2 }, false, false, "current owned-map disabled region updater");
         XElement linked = new(saved);
         linked.Element("map")!.SetElementValue("CQF_Check_source", "Map_1");
-        XElement mixed = new("CQF_hibernatingMaps", new XElement("li", "Map_1"), linked);
-        CheckCase(game, new XElement("manager", mixed, pause,
-            new XElement("CQF_pendingHibernation", new XElement("li", "Map_1"))),
-            new[] { 1, 2 }, false, true, "mixed old formats and duplicate pause requests");
-        CheckCase(game, new XElement("manager", reference,
-            new XElement("CQF_ownedHibernatingMaps", linked)),
-            new[] { 1, 2 }, true, true, "legacy reference plus current owned map");
-        string? supplied = Environment.GetEnvironmentVariable("CQF_CHECKS_LEGACY_SAVE");
-        if (!string.IsNullOrEmpty(supplied))
-        {
-            XElement manager = XDocument.Load(supplied).Descendants("li").Single(element =>
-                element.Attribute("Class")?.Value == "QuestEditor_Library.GameComponent_MapManager");
-            CheckCase(game, new XElement("manager", manager.Elements().Select(element => new XElement(element))),
-                new[] { 1 }, true, false, "supplied pre-update save manager");
-        }
+        CheckCase(game, new XElement("manager", new XElement("CQF_ownedHibernatingMaps", linked)),
+            new[] { 2 }, true, true, "current owned-map native source reference");
         Map[] before = game.Maps.ToArray();
         string invalid = WriteFixture(new XElement("manager", new XElement("CQF_ownedHibernatingMaps", new XElement("li"))));
         GameComponent_MapManager malformed = ReadManager(game, invalid);
@@ -68,9 +49,9 @@ internal static class HibernationSaveMigrationChecks
             loaded.LoadedGame();
             Check(loaded.HibernatingMaps.Select(map => map.uniqueID).OrderBy(id => id).SequenceEqual(expected)
                 && loaded.HibernatingMaps.All(map => !game.Maps.Contains(map)), name + " preserves every map and restores dormancy");
-            if (expected.Contains(1))
-                Check(ReferenceEquals(loaded.HibernatingMaps.Single(map => map.uniqueID == 1), before.Single(map => map.uniqueID == 1)),
-                    name + " reuses the native map object instead of regenerating it");
+            if (expected.Contains(2))
+                Check(!ReferenceEquals(loaded.HibernatingMaps.Single(map => map.uniqueID == 2), before.FirstOrDefault(map => map.uniqueID == 2)),
+                    name + " reconstructs the component-owned map from saved data");
             if (expected.Contains(2))
             {
                 Map restored = loaded.HibernatingMaps.Single(map => map.uniqueID == 2);
@@ -80,24 +61,24 @@ internal static class HibernationSaveMigrationChecks
             }
             if (linked)
             {
-                Map root = loaded.HibernatingMaps.Single(map => map.uniqueID == 1);
+                Map root = loaded.HibernatingMaps.Concat(game.Maps).Single(map => map.uniqueID == 1);
                 Map child = loaded.HibernatingMaps.Single(map => map.uniqueID == 2);
                 Check(links.TryGetValue(child, out Map? source) && ReferenceEquals(source, root),
                     name + " retains cross-map reference identity");
             }
-            string converted = Path.Combine(Path.GetTempPath(), "CQF_MigratedSave_" + Guid.NewGuid().ToString("N") + ".xml");
-            Scribe.saver.InitSaving(converted, "checks");
+            string roundTripPath = Path.Combine(Path.GetTempPath(), "CQF_PersistenceSave_" + Guid.NewGuid().ToString("N") + ".xml");
+            Scribe.saver.InitSaving(roundTripPath, "checks");
             Scribe_Deep.Look(ref loaded, "manager", game);
             foreach (Map map in game.Maps) Scribe.saver.loadIDsErrorsChecker.RegisterDeepSaved(map, "externalMapFixture");
             Scribe.saver.FinalizeSaving();
-            XDocument xml = XDocument.Load(converted);
+            XDocument xml = XDocument.Load(roundTripPath);
             Check(xml.Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == expected.Length
                 && !xml.Descendants("CQF_hibernatingMaps").Any() && !xml.Descendants("CQF_mapPauses").Any(),
                 name + " saves only the current owned-map format without dropping maps");
-            CheckConvertedSave(game, converted, expected, updater, linked, name);
-            if (expected.Contains(1))
+            CheckRoundTripSave(game, roundTripPath, expected, updater, linked, name);
+            if (expected.Contains(2))
             {
-                Map root = loaded.HibernatingMaps.Single(map => map.uniqueID == 1);
+                Map root = loaded.HibernatingMaps.Single(map => map.uniqueID == 2);
                 loaded.Activate(root);
                 Check(root.regionAndRoomUpdater.Enabled == updater, name + " preserves the original region updater flag");
             }
@@ -110,14 +91,15 @@ internal static class HibernationSaveMigrationChecks
         Check(game.Maps.SequenceEqual(before), name + " leaves the test world's active maps intact");
     }
 
-    private static void CheckConvertedSave(Game original, string file, int[] expected, bool updater, bool linked, string name)
+    private static void CheckRoundTripSave(Game original, string file, int[] expected, bool updater, bool linked, string name)
     {
         Game clone = (Game)RuntimeHelpers.GetUninitializedObject(typeof(Game));
         clone.components = new();
         clone.currentMapIndex = -1;
         clone.tickManager = new TickManager();
         typeof(Game).GetField("worldInt", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(clone, original.World);
-        typeof(Game).GetField("maps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(clone, new List<Map>());
+        Map[] nativeMaps = linked ? original.Maps.Where(map => map.uniqueID == 1).ToArray() : Array.Empty<Map>();
+        typeof(Game).GetField("maps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(clone, nativeMaps.ToList());
         Current.Game = clone;
         GameComponent_MapManager? loaded = null;
         try
@@ -125,25 +107,25 @@ internal static class HibernationSaveMigrationChecks
             loaded = ReadManager(clone, file);
             clone.components.Add(loaded);
             loaded.LoadedGame();
-            Check(clone.Maps.Count == 0 && loaded.HibernatingMaps.Select(map => map.uniqueID).OrderBy(id => id).SequenceEqual(expected),
-                name + " reloads after conversion with all owned maps present");
+            Check(clone.Maps.SequenceEqual(nativeMaps) && loaded.HibernatingMaps.Select(map => map.uniqueID).OrderBy(id => id).SequenceEqual(expected),
+                name + " reloads the current format with all owned maps present");
             if (linked)
             {
                 Map child = loaded.HibernatingMaps.Single(map => map.uniqueID == 2);
                 Check(links.TryGetValue(child, out Map? source)
-                    && ReferenceEquals(source, loaded.HibernatingMaps.Single(map => map.uniqueID == 1)),
+                    && ReferenceEquals(source, nativeMaps.Single()),
                     name + " retains cross-map references after a second save/load");
             }
-            if (expected.Contains(1))
+            if (expected.Contains(2))
             {
-                Map root = loaded.HibernatingMaps.Single(map => map.uniqueID == 1);
+                Map root = loaded.HibernatingMaps.Single(map => map.uniqueID == 2);
                 loaded.Activate(root);
                 Check(root.regionAndRoomUpdater.Enabled == updater, name + " retains the updater flag after a second save/load");
             }
         }
         finally
         {
-            if (loaded != null) ReleaseFixtureManager(clone, loaded, Array.Empty<Map>());
+            if (loaded != null) ReleaseFixtureManager(clone, loaded, nativeMaps);
             Current.Game = original;
         }
     }
@@ -176,7 +158,7 @@ internal static class HibernationSaveMigrationChecks
 
     private static string WriteFixture(XElement manager)
     {
-        string file = Path.Combine(Path.GetTempPath(), "CQF_MigrationFixture_" + Guid.NewGuid().ToString("N") + ".xml");
+        string file = Path.Combine(Path.GetTempPath(), "CQF_PersistenceFixture_" + Guid.NewGuid().ToString("N") + ".xml");
         new XDocument(new XElement("checks", manager)).Save(file);
         return file;
     }

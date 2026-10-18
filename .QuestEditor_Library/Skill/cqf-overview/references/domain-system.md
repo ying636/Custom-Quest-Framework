@@ -36,7 +36,7 @@
 
 统一 Update 在保存范围之外调用可选模块，模块先更新转场；没有长事件时依次处理预加载、Worker.ManagedUpdate、返回与展开，宿主最后提交休眠请求。主库存读档、地图添加、OnGUI 和释放也通过 `ICQFMapModule` 转发。模块状态保存于 `cqfMapModule` 节点，默认不迁移拆分前的旧存档。
 
-领域池中的休眠地图移出原版 Game.Maps，由统一组件持有和深度保存。Thing 按原版未生成处理，Spawned=false、Map=null，不补出物件或 MapParent 的地图引用；唤醒后复用原图并恢复索引与 Tick 登记。回收要求无人物，空图休眠/唤醒不扫描全局 Tick 表。CQF_ownedHibernatingMaps 保存托管 Map，CQF_pendingHibernation 引用保存排队地图；单图保存范围内临时提供原版区域索引，Thing 仍未生成。本次升级兼容旧休眠引用列表、暂停引用及旧节点的完整 Map，读档时迁移，保存只写新格式。边界见地图 Skill 的独立地图休眠段落。
+领域池中的休眠地图移出原版 Game.Maps，由统一组件持有和深度保存。Thing 按原版未生成处理，Spawned=false、Map=null，不补出物件或 MapParent 的地图引用；唤醒后复用原图并恢复索引与 Tick 登记。回收要求无人物，空图休眠/唤醒不扫描全局 Tick 表。CQF_ownedHibernatingMaps 保存托管 Map，CQF_pendingHibernation 引用保存排队地图；单图保存范围内临时提供原版区域索引，Thing 仍未生成。3.7 已删除临时旧格式迁移，只读写当前字段；未转换的旧档须先经带兼容修复的 3.6 重存。边界见地图 Skill 的独立地图休眠段落。
 
 ## LoadFolders 声明与打包
 
@@ -84,6 +84,7 @@ XML 根类型使用 `QuestEditor_Library.DomainDef`。字段大小写和类型�
 | `protection` | 可省略 `HediffDef`；`hediffClass` 继承 `Hediff_DomainProtection` |
 | `openingAbility` | 可省略 `AbilityDef`；执行该能力工作期间给予施术者展开保护 |
 | `preload` | `true`；管理器在该 Def 尚无地图时预生成一张并休眠 |
+| `visuals` | 可省略 `DomainVisualDef`；通用展开、材质和时间参数，见 [基础领域视觉](domain-visuals.md) |
 
 新 Def 使用所属 Mod 的前缀。显示文本使用用户给定文本，没有文本时使用同名占位符；Def 原文为英语，中文放入 `Languages/ChineseSimplified (简体中文)/DefInjected/QuestEditor_Library.DomainDef`，不创建英文 DefInjected。DLL / UI 文本使用 Key 与中英 Keyed 翻译。
 
@@ -180,7 +181,7 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 ## 转场与展开物件
 
-具体 `DomainTransition` 提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect(float progress)`、`ReleaseVisuals()`。截图、材质、Shader 与动画属于子 Mod。使用 `CQFDomainRuntime.Instance.SetTransition(value)`，替换时会 Dispose 旧转场；当前游戏只有一个管理中的转场。
+具体 `DomainTransition` 提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect(float progress)`、`ReleaseVisuals()`。基础截图、材质、Shader 与动画可使用 CQF 提供的通用实现，见 [基础领域视觉](domain-visuals.md)；特殊效果仍由子 Mod 扩展。使用 `CQFDomainRuntime.Instance.SetTransition(value)`，替换时会 Dispose 旧转场；当前游戏只有一个管理中的转场。
 
 - `Bind(realm)` 关联领域并开始入场锁定。
 - `BindReturn(destination, focus, pawns)` 关联返回地图，用 `MapComponent_DomainTransitionLock` 锁定返回人员。
