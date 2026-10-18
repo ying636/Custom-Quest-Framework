@@ -5,6 +5,13 @@ namespace QuestEditor_Library;
 
 public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
 {
+    public override string ExtraTooltipPart()
+    {
+        MapComponent_Domain? domain = parent.pawn.MapHeld?.GetComponent<MapComponent_Domain>();
+        return domain?.Active == true && domain.Caster == parent.pawn
+            ? domain.Health.ToString("N0") + " / " + domain.MaximumHealth.ToString("N0") : string.Empty;
+    }
+
     public override bool GizmoDisabled(out string reason)
     {
         Pawn pawn = parent.pawn;

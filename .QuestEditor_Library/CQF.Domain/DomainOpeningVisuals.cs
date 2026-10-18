@@ -11,10 +11,15 @@ public sealed class DomainOpeningVisuals : IDisposable
         runtime = GameComponent_MapManager.Instance?.Module as CQFDomainRuntime;
         try
         {
-            ground = template == null ? definition.CreateMaterial(false) : new Material(template);
-            ground.renderQueue = 3600;
-            back = new Material(ground) { renderQueue = 3601 };
-            front = new Material(ground) { renderQueue = 3603 };
+            back = template == null ? definition.CreateMaterial(false) : new Material(template);
+            back.renderQueue = 3601;
+            front = new Material(back) { renderQueue = 3603 };
+#if RIMWORLD_1_7
+            ground = template == null ? definition.CreateMaterial(false, definition.groundShader) : new Material(template);
+            ground.renderQueue = 2900;
+#else
+            ground = new Material(back) { renderQueue = 3600 };
+#endif
             runtime?.RegisterVisuals(this);
         }
         catch

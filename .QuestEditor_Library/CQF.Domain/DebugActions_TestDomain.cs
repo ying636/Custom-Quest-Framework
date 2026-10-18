@@ -9,7 +9,7 @@ public static class DebugActions_TestDomain
     [DebugAction("CQF", "CQF_TestDomainExpansion", allowedGameStates = AllowedGameStates.PlayingOnMap)]
     public static DebugActionNode GiveTestDomainExpansion()
     {
-        DebugActionNode root = new("CQF_TestDomainExpansion".Translate());
+        DebugActionNode root = new("CQF_TestDomainExpansion");
         foreach (Pawn pawn in Find.CurrentMap.mapPawns.AllPawnsSpawned)
         {
             if (pawn.Dead || pawn.Faction != Faction.OfPlayer || !pawn.RaceProps.Humanlike) continue;

@@ -82,6 +82,7 @@ internal static class Program
         CheckOpeningProtection(caster);
         CheckProtectionLifecycle(caster);
         CheckPausedWorker();
+        CheckReturnGate();
         Check(!typeof(DomainDef).Assembly.GetTypes().Any(type => type.IsDefined(typeof(HarmonyPatch), false)), "domain module contains no Harmony patches");
     }
 
@@ -277,6 +278,35 @@ internal static class Program
             Current.ProgramState = previousState;
             Current.Game = previous;
         }
+    }
+
+    private static void CheckReturnGate()
+    {
+        Game previous = Current.Game;
+        Game game = (Game)RuntimeHelpers.GetUninitializedObject(typeof(Game));
+        game.currentMapIndex = -1;
+        Map source = (Map)RuntimeHelpers.GetUninitializedObject(typeof(Map));
+        MapComponent_Domain domain = CreateDomain(1000f);
+        domain.Configure(new DomainDef { defName = "CQF_Check_ReturnGate", workerClass = typeof(ReturnGateWorker) });
+        Set(domain, "active", true);
+        Set(domain, "closing", true);
+        Set(domain, "arrivalLocked", true);
+        Set(domain, "sourceMap", source);
+        typeof(Game).GetField("maps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(game, new List<Map> { source, domain.map });
+        Current.Game = game;
+        try
+        {
+            Set(domain, "returnQueued", true);
+            domain.CompleteReturn();
+            Check(domain.Active && !domain.Ready && domain.SourceMap == source && domain.ArrivalLocked,
+                "return awaiting full cover retains domain state and occupant locks");
+            Check(!(bool)typeof(MapComponent_Domain).GetField("returnQueued", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(domain)!,
+                "deferred return releases its queue flag for the next update");
+            domain.CompleteReturn();
+            Check(domain.GetWorker<ReturnGateWorker>()!.Attempts == 2 && domain.Active && game.Maps.Count == 2,
+                "pending return retries without recycling or transferring the domain early");
+        }
+        finally { Current.Game = previous; }
     }
 
     private static MapComponent_Domain CreateDomain(float maximum)

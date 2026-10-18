@@ -35,7 +35,7 @@ public abstract class DomainTransition : IDisposable
             if (displayMap == null) return 0f;
             float progress = Mathf.Clamp01((Time.realtimeSinceStartup - startedAt) / Duration);
 #if RIMWORLD_1_7
-            if (!IsReturning && !revealReady) return Mathf.Min(progress, RevealProgress);
+            if ((!IsReturning || stagedReturn) && !revealReady) return Mathf.Min(progress, RevealProgress);
 #endif
             return progress;
         }
@@ -51,6 +51,19 @@ public abstract class DomainTransition : IDisposable
             ) || Progress >= 1f);
 
 #if RIMWORLD_1_7
+    public bool ReturnCovered => stagedReturn && coveredFrame >= 0 && Time.frameCount > coveredFrame;
+
+    public void BeginReturn(MapComponent_Domain owner)
+    {
+        if (!IsReturning) throw new InvalidOperationException("[CQF] An entry transition cannot stage a domain return.");
+        domain = owner;
+        displayMap = owner.map;
+        stagedReturn = true;
+        returnPending = true;
+        owner.BeginArrivalTransition();
+        startedAt = Time.realtimeSinceStartup;
+    }
+
     public void BindOpening(DomainOpening owner)
     {
         opening = owner;
@@ -81,12 +94,65 @@ public abstract class DomainTransition : IDisposable
         returnLock.Begin(pawns);
         Find.CameraDriver.shaker.DoShake(0.12f);
         startedAt = Time.realtimeSinceStartup;
+#if RIMWORLD_1_7
+        if (stagedReturn)
+        {
+            returnPending = false;
+            switchedFrame = Time.frameCount;
+            terrainWaitStartedAt = Time.realtimeSinceStartup;
+            startedAt -= Duration * RevealProgress;
+        }
+#endif
     }
 
 #if RIMWORLD_1_7
     public void Update()
     {
-        if (IsReturning || displayMap == null || Finished) return;
+        if (displayMap == null || Finished) return;
+        if (IsReturning)
+        {
+            if (!stagedReturn) return;
+            if (Find.CurrentMap != displayMap)
+            {
+                Dispose();
+                return;
+            }
+            if (returnPending || revealReady) return;
+            if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap)
+            {
+                CellRect view = Find.CameraDriver.CurrentViewRect;
+                view.ClipInsideMap(displayMap);
+                SectionLayer? terrain = view.IsEmpty ? null
+                    : displayMap.mapDrawer.SectionAt(view.CenterCell).GetLayer(typeof(SectionLayer_Terrain));
+                if (terrain?.Visible == true)
+                {
+                    returnTerrainCommands.Clear();
+                    try
+                    {
+                        Waylith.Rendering.MeshDrawSubmission.CopyPendingCommands(returnTerrainCommands, Find.Camera.cullingMask);
+                        foreach (LayerSubMesh subMesh in terrain.subMeshes)
+                            if (subMesh.finalized && !subMesh.disabled && subMesh.mesh.vertexCount > 0
+                                && returnTerrainCommands.Any(command => ReferenceEquals(command.Mesh, subMesh.mesh.EngineMesh)))
+                            {
+                                terrainReadyFrame = Time.frameCount;
+                                break;
+                            }
+                    }
+                    finally { returnTerrainCommands.Clear(); }
+                }
+            }
+            if (terrainReadyFrame >= 0 && Time.frameCount > terrainReadyFrame)
+            {
+                revealReady = true;
+                startedAt = Time.realtimeSinceStartup - Duration * RevealProgress;
+            }
+            else if (Time.realtimeSinceStartup - terrainWaitStartedAt >= 5f)
+            {
+                Log.Error("[CQF] Return map terrain did not report a rendered frame within 5 seconds; releasing the transition and return locks.");
+                Dispose();
+            }
+            return;
+        }
         if (Find.CurrentMap != (entered ? displayMap : sourceMap))
         {
             Dispose();
@@ -114,6 +180,7 @@ public abstract class DomainTransition : IDisposable
             }
             entered = true;
             switchedFrame = Time.frameCount;
+            terrainWaitStartedAt = Time.realtimeSinceStartup;
         }
         else if (entered && !revealReady)
         {
@@ -123,6 +190,11 @@ public abstract class DomainTransition : IDisposable
             {
                 revealReady = true;
                 startedAt = Time.realtimeSinceStartup - Duration * RevealProgress;
+            }
+            else if (Time.realtimeSinceStartup - terrainWaitStartedAt >= 5f)
+            {
+                Log.Error("[CQF] Domain terrain did not report a rendered frame within 5 seconds; releasing the transition and arrival locks.");
+                Dispose();
             }
         }
     }
@@ -140,7 +212,7 @@ public abstract class DomainTransition : IDisposable
         float progress = Progress;
         DrawEffect(progress);
 #if RIMWORLD_1_7
-        if (!IsReturning && !entered && progress >= CoverProgress && coveredFrame < 0)
+        if ((!IsReturning && !entered || stagedReturn && returnPending) && progress >= CoverProgress && coveredFrame < 0)
             coveredFrame = Time.frameCount;
 #endif
     }
@@ -192,6 +264,10 @@ public abstract class DomainTransition : IDisposable
     private int coveredFrame = -1;
     private int switchedFrame;
     private int terrainReadyFrame = -1;
+    private float terrainWaitStartedAt;
+    private bool stagedReturn;
+    private bool returnPending;
+    private readonly List<Waylith.Rendering.MeshDrawCommand> returnTerrainCommands = new();
 #endif
     private float startedAt;
     private bool disposed;

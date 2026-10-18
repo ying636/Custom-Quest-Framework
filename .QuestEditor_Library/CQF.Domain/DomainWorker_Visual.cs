@@ -9,8 +9,20 @@ public class DomainWorker_Visual : DomainWorker
 #if RIMWORLD_1_7
     public override bool HandlesEntryView => CQFDomainRuntime.Instance.Transition is DomainMaterialTransition;
 
-    public override void Draw()
+    public override bool PrepareReturn(bool visible)
     {
+        if (returnTransition != null && ReferenceEquals(CQFDomainRuntime.Instance.Transition, returnTransition)
+            && !returnTransition.Finished)
+            return returnTransition.ReturnCovered;
+        BeforeReturn(visible);
+        if (returnTransition == null) return true;
+        returnTransition.BeginReturn(Domain);
+        return false;
+    }
+
+    public override void Update()
+    {
+        if (Find.CurrentMap != map || !WorldRendererUtility.DrawingMap) return;
         if (CQFDomainRuntime.Instance.Transition is not DomainMaterialTransition transition || transition.IsReturning) return;
         CellRect view = Find.CameraDriver.CurrentViewRect;
         view.ClipInsideMap(map);

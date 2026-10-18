@@ -8,6 +8,7 @@ public sealed class DomainMaterialTransition : DomainTransition
     public DomainMaterialTransition(DomainVisualDef definition, IntVec3 origin, bool returning, Material? template = null) : base(returning)
     {
         this.definition = definition;
+        destinationFocus = origin;
         try
         {
             Camera camera = Find.Camera;

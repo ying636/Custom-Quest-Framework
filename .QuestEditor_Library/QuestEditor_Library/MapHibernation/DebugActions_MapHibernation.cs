@@ -8,17 +8,17 @@ namespace QuestEditor_Library
         [DebugAction("CQF", "CQF_MapHibernation", allowedGameStates = AllowedGameStates.Playing)]
         public static DebugActionNode MapHibernation()
         {
-            DebugActionNode root = new DebugActionNode("CQF_MapHibernation".Translate());
+            DebugActionNode root = new DebugActionNode("Map hibernation");
             GameComponent_MapManager component = GameComponent_MapManager.Instance
                 ?? throw new System.InvalidOperationException("[CQF] Map hibernation component is unavailable.");
             foreach (Map map in Current.Game.Maps)
             {
-                root.AddChild(new DebugActionNode("CQF_HibernateMap".Translate() + " " + map.GetUniqueLoadID(),
+                root.AddChild(new DebugActionNode("Hibernate map " + map.GetUniqueLoadID(),
                     action: () => component.Hibernate(map)));
             }
             foreach (Map map in component.HibernatingMaps)
             {
-                root.AddChild(new DebugActionNode("CQF_ActivateMap".Translate() + " " + map.GetUniqueLoadID(),
+                root.AddChild(new DebugActionNode("Activate map " + map.GetUniqueLoadID(),
                     action: () => Current.Game.CurrentMap = component.Activate(map)));
             }
             return root;

@@ -34,11 +34,70 @@
     <worldObject>CQF_TestDomain</worldObject>
     <mapGenerator>CQF_TestDomainGenerator</mapGenerator>
     <workerClass>QuestEditor_Library.DomainWorker_Visual</workerClass>
+    <anchor>CQF_TestDomainBuilding</anchor>
+    <protection>CQF_TestDomainProtection</protection>
+    <maximumHealth>1000</maximumHealth>
     <visuals>CQF_DomainVisuals</visuals>
     <openingAbility>CQF_TestDomainExpansion</openingAbility>
     <size>(60,1,60)</size>
-    <preload>false</preload>
+    <preload>true</preload>
   </QuestEditor_Library.DomainDef>
+  <HediffDef>
+    <defName>CQF_TestDomainProtection</defName>
+    <label>CQF_TestDomainProtection</label>
+    <description>CQF_TestDomainProtection</description>
+    <hediffClass>QuestEditor_Library.Hediff_DomainProtection</hediffClass>
+    <initialSeverity>1</initialSeverity>
+    <isBad>false</isBad>
+    <scenarioCanAdd>false</scenarioCanAdd>
+  </HediffDef>
+  <ThingDef>
+    <defName>CQF_TestDomainBuilding</defName>
+    <label>CQF_TestDomainBuilding</label>
+    <description>CQF_TestDomainBuilding</description>
+    <thingClass>QuestEditor_Library.Building_DomainVisual</thingClass>
+    <category>Building</category>
+    <tickerType>Never</tickerType>
+    <drawerType>RealtimeOnly</drawerType>
+    <altitudeLayer>Filth</altitudeLayer>
+    <selectable>true</selectable>
+    <hasCustomRectForSelector>true</hasCustomRectForSelector>
+    <rotatable>false</rotatable>
+    <size>(1,1)</size>
+    <passability>Standable</passability>
+    <fillPercent>0</fillPercent>
+    <blockLight>false</blockLight>
+    <blockPlants>false</blockPlants>
+    <wipesPlants>false</wipesPlants>
+    <destroyable>true</destroyable>
+    <useHitPoints>true</useHitPoints>
+    <drawDamagedOverlay>false</drawDamagedOverlay>
+    <canGenerateDefaultDesignator>false</canGenerateDefaultDesignator>
+    <forceDebugSpawnable>false</forceDebugSpawnable>
+    <canLoadIntoCaravan>false</canLoadIntoCaravan>
+    <bringAlongOnGravship>false</bringAlongOnGravship>
+    <statBases>
+      <MaxHitPoints>1000</MaxHitPoints>
+      <Flammability>0</Flammability>
+      <DeteriorationRate>0</DeteriorationRate>
+    </statBases>
+    <graphicData>
+      <texPath>Terrain/Surfaces/Blood</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <shaderType>Transparent</shaderType>
+      <drawSize>(26,26)</drawSize>
+    </graphicData>
+    <building>
+      <isEdifice>false</isEdifice>
+      <deconstructible>false</deconstructible>
+      <repairable>false</repairable>
+      <claimable>false</claimable>
+      <neverBuildable>true</neverBuildable>
+      <expandHomeArea>false</expandHomeArea>
+      <artificialForMeditationPurposes>false</artificialForMeditationPurposes>
+      <canBeDamagedByAttacks>true</canBeDamagedByAttacks>
+    </building>
+  </ThingDef>
   <WorldObjectDef>
     <defName>CQF_TestDomain</defName>
     <label>CQF_TestDomain</label>

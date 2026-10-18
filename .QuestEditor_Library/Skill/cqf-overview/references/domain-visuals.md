@@ -49,13 +49,13 @@ DomainOpening_Basic.Start(definition, caster, targets);
 
 转场的 `_MainTex` 保留给原地图截图，换皮表面使用 `_SurfaceTex`；`_NoiseTex` 为噪声。转场还提供 `_SourceUV`、`_SourceSaturation`、`_Origin`、`_Destination`、`_Returning`、`_CoverProgress`、`_RevealProgress`、`_RevealEnd`。自定义转场 Shader 必须在 coverProgress 到 revealProgress 之间完全不透明；基础 Shader 会强制保证该区间的遮盖，不让表面透明度造成切图漏帧。
 
-1.7 的 `DomainWorker_Visual.Draw` 在转场期间检查视野中心原版 SectionLayer_Terrain 的已提交网格，确认实际绘制后记录 LastTerrainRenderedFrame；不每帧扫描所有地图或全部地形。特殊地形若完全替代原版地形层，需要自己的 Draw / SectionLayer 提供实际地形帧标记，不能只重写 Draw 而丢失就绪通知。
+1.7 的 `DomainWorker_Visual.Update` 在转场期间检查视野中心原版 SectionLayer_Terrain 的已提交网格，确认实际绘制后记录 LastTerrainRenderedFrame；不每帧扫描所有地图或全部地形。原版 MapComponentDraw 在本帧 MapUpdate 提交地形前调用，不能在该回调检查待提交命令；MapComponentUpdate 位于地图绘制提交之后。切图后等待地形就绪超过 5 秒会记录错误并释放转场及入场锁，避免永久遮屏。特殊地形若完全替代原版地形层，需要自己的 Update / SectionLayer 提供实际地形帧标记，覆盖 Update 时须保留基类就绪通知。
 
 ## 游戏内测试能力
 
 Domain 模块内提供 `CQF_TestDomainExpansion`，中文名称使用用户给定的“展开基础领域”。开发者模式打开调试动作，进入 CQF 分类的 `CQF_TestDomainExpansion`，选择人物即可授予；未征召也会显示能力。
 
-第一次施放先在长事件中生成 60×60 的测试地图，然后播放原地图展开、幕墙和转场；只转移施术者，不带其他人物。地图为 Soil / PavedTile 网格，使用独立的 CQF_TestDomainBiome（无野生动植物、禁用天空光照与阴影），测试领域引用 `CQF_DomainVisuals`，`preload=false`，不会在游戏启动时自动生成。进入后再点同一能力请求返回，可观察返回转场和地图回收。测试期间保持正常速度且不要暂停，以便展开 tick 推进。
+1.7 在新游戏或读档后由 GameComponent_MapManager 驱动 CQFDomainRuntime，提前生成 60×60 的测试地图并休眠；施放时唤醒复用，再播放原地图展开、幕墙和转场；只转移施术者，不带其他人物。地图为 Soil / PavedTile 网格，使用独立的 CQF_TestDomainBiome（无野生动植物、禁用天空光照与阴影），测试领域引用 `CQF_DomainVisuals`，1.7 设置 `preload=true`，1.6 保留 `preload=false`。进入后再点同一能力请求返回；1.7 基础视觉通过 `PrepareReturn` 在领域内开始转场，实际绘出全屏遮盖后才允许人物与镜头返回，目的地图地形提交并经过完整帧后才揭幕。原有 Worker 默认仍调用 `BeforeReturn` 并立即返回，不改血海专有视觉。退出后的地图走统一 `Recycle → Hibernate`，再次施放走 `Acquire → Activate`，复用同一个 Map；`preload=false` 只关闭首次预生成，不关闭退出休眠。测试期间保持正常速度且不要暂停，以便展开 tick 推进。
 
 定义位于 `Content/<版本>/Defs/CQF_TestDomain.xml`；授予入口为 `DebugActions_TestDomain`，施放组件为 `AbilityComp_TestDomainExpansion`，地形步骤为 `GenStep_TestDomain`。测试入口仍属于可选 Domain 模块，没有请求时不加载，测试能力不自动授予人物；寂屋邪祭维持自己的原实现。
 
@@ -75,3 +75,5 @@ dotnet run --project .QuestEditor_Library/Tests/Domain/Checks.csproj -c Release 
 ```
 
 打包脚本回读两个 Shader，检查 UnityFS、Shader 名称和 pass，再通过 GPU 像素读回检查进入/返回遮盖及换皮表面。验证成功后将 cqf_domain_win 放回 Content/1.6/AssetBundles 再构建模块。1.7 的 visuals 检查使用游戏自带编译器编译四个阶段并检查接口、材质布局、配置和打包结构；它不等于完整游戏内视觉验收。测试指定 `CQF_CHECKS_PROVIDER_ROOT` 时应指向待发布包根目录，默认读取源码 Content 与模组目录。
+
+1.7 的地面使用独立 CQF_DomainGround ShaderDef（groundShader），开启深度检测、不写深度、队列 2900；幕墙仍使用 openingShader 的 3601 / 3603 队列。更换展开 Shader 时应同时提供适配的 groundShader；自定义模板材质由调用方设置地面深度状态。基础领域配置 CQF_TestDomainBuilding，使用 Building_DomainVisual，在原施放位置保留可选中、可攻击的外部载体，复用通用共享血量、崩塌和返回移除流程。未提供名称和说明时，中英均保留同名占位符。

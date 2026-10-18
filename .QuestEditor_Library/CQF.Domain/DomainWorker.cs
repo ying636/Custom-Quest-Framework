@@ -27,6 +27,11 @@ public class DomainWorker : IExposable, IDisposable
     public virtual void Entering() { }
     public virtual void Entered(IReadOnlyList<Pawn> entrants) { }
     public virtual void BeforeReturn(bool visible) { }
+    public virtual bool PrepareReturn(bool visible)
+    {
+        BeforeReturn(visible);
+        return true;
+    }
     public virtual void PawnLeaving(Pawn pawn) { }
     public virtual void Returned(Map destination, IntVec3 focus, IReadOnlyList<Pawn> pawns) { }
     public virtual void Recycling(Map destination) { }

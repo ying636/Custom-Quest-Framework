@@ -6,8 +6,11 @@ namespace QuestEditor_Library;
 public class DomainVisualDef : Def
 {
     public Material CreateMaterial(bool transition)
+        => CreateMaterial(transition, null);
+
+    public Material CreateMaterial(bool transition, string? shaderOverride)
     {
-        string shaderName = transition ? transitionShader : openingShader;
+        string shaderName = shaderOverride ?? (transition ? transitionShader : openingShader);
 #if RIMWORLD_1_7
         if (!Waylith.Rendering.ShaderRegistry.TryResolve(shaderName, out _))
             throw new InvalidOperationException("[CQF] Domain shader is not registered: " + shaderName);
@@ -70,11 +73,12 @@ public class DomainVisualDef : Def
             secondaryColor.r, secondaryColor.g, secondaryColor.b, secondaryColor.a, edgeColor.r, edgeColor.g, edgeColor.b, edgeColor.a })
             if (float.IsNaN(value) || float.IsInfinity(value)) yield return "Domain material parameters must be finite.";
         if (distortion < 0f) yield return "Domain distortion cannot be negative.";
-        if (string.IsNullOrWhiteSpace(openingShader) || string.IsNullOrWhiteSpace(transitionShader)
+        if (string.IsNullOrWhiteSpace(groundShader) || string.IsNullOrWhiteSpace(openingShader) || string.IsNullOrWhiteSpace(transitionShader)
             || string.IsNullOrWhiteSpace(openingUnityShader) || string.IsNullOrWhiteSpace(transitionUnityShader))
             yield return "Domain visuals require shader names for both renderer versions.";
     }
 
+    public string groundShader = "CQF_DomainGround";
     public string openingShader = "CQF_DomainOpening";
     public string transitionShader = "CQF_DomainTransition";
     public string openingUnityShader = "CQF/DomainOpening";

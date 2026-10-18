@@ -170,7 +170,6 @@ public class MapComponent_Domain : MapComponent
     public void ReturnToSource()
     {
         if (!active) return;
-        EndArrivalTransition();
         Map? destination = sourceMap != null && Find.Maps.Contains(sourceMap) ? sourceMap
             : Find.Maps.FirstOrDefault(candidate => candidate != map && candidate.IsPlayerHome);
         if (destination == null)
@@ -185,7 +184,8 @@ public class MapComponent_Domain : MapComponent
         }
         bool visible = Find.CurrentMap == map || ((Find.CurrentMap == null || caster?.Dead == true)
             && Time.frameCount - LastRenderedFrame <= 2);
-        worker!.BeforeReturn(visible);
+        if (!worker!.PrepareReturn(visible)) return;
+        EndArrivalTransition();
         if (caster != null)
             foreach (Hediff_DomainProtection protection in caster.health.hediffSet.hediffs.OfType<Hediff_DomainProtection>()
                 .Where(protection => protection.Domain == this).ToList()) caster.health.RemoveHediff(protection);

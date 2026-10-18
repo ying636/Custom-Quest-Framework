@@ -83,9 +83,26 @@ internal static class DomainVisualChecks
                 && ability.comps.Single() is AbilityCompProperties_TestDomainExpansion, version + " native test ability XML and component");
             Check(ability.verbProperties.verbClass == typeof(Verb_CastAbility) && ability.verbProperties.targetParams.canTargetSelf
                 && ability.verbProperties.range == 0f, version + " test ability casts on its owner without a target");
-            Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/preload")!.InnerText == "false"
+            Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/preload")!.InnerText == (version == "1.7" ? "true" : "false")
                 && test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/visuals")!.InnerText == "CQF_DomainVisuals",
-                version + " test domain uses base visuals without preloading a map");
+                version + " test domain uses base visuals and the configured preload policy");
+            if (version == "1.7")
+            {
+                ThingDef anchor = DirectXmlToObject.ObjectFromXml<ThingDef>(test.SelectSingleNode("/Defs/ThingDef")!, false);
+                Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/anchor")!.InnerText == anchor.defName
+                    && anchor.thingClass == typeof(Building_DomainVisual) && anchor.selectable && anchor.useHitPoints
+                    && anchor.building.canBeDamagedByAttacks,
+                    "base domain configures a selectable damageable shared-health anchor");
+                HediffDef protection = DirectXmlToObject.ObjectFromXml<HediffDef>(test.SelectSingleNode("/Defs/HediffDef")!, false);
+                Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/protection")!.InnerText == protection.defName
+                    && protection.hediffClass == typeof(Hediff_DomainProtection)
+                    && test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/maximumHealth")!.InnerText == "1000",
+                    "base domain connects caster damage to its explicit 1000 shared health");
+                XElement shaders = XDocument.Load(Path.Combine(module, "Defs", "CQF_DomainShaders.xml")).Root!;
+                XElement ground = shaders.Elements("ShaderDef").Single(def => def.Element("defName")!.Value == valid.groundShader).Element("shaderProgram")!;
+                Check(ground.Element("depthTest")!.Value == "true" && ground.Element("depthWrite")!.Value == "false"
+                    && ground.Element("renderQueue")!.Value == "2900", "ground uses depth testing below the pawn transparent queue");
+            }
             BiomeDef biome = DirectXmlToObject.ObjectFromXml<BiomeDef>(test.SelectSingleNode("/Defs/BiomeDef")!, false);
             Check(test.SelectSingleNode("/Defs/MapGeneratorDef/pocketMapProperties/biome")!.InnerText == biome.defName
                 && !biome.generatesNaturally && !biome.canAutoChoose && biome.AllWildPlants.Count == 0
