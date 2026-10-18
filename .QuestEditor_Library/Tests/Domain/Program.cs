@@ -83,6 +83,7 @@ internal static class Program
         CheckProtectionLifecycle(caster);
         CheckPausedWorker();
         CheckReturnGate();
+        CheckHealthGizmo(caster);
         Check(!typeof(DomainDef).Assembly.GetTypes().Any(type => type.IsDefined(typeof(HarmonyPatch), false)), "domain module contains no Harmony patches");
     }
 
@@ -278,6 +279,33 @@ internal static class Program
             Current.ProgramState = previousState;
             Current.Game = previous;
         }
+    }
+
+    private static void CheckHealthGizmo(Pawn caster)
+    {
+        MapComponent_Domain domain = CreateDomain(1000f);
+        domain.Definition.visuals = new DomainVisualDef();
+        Set(domain, "active", true);
+        Set(domain, "health", 1000f);
+        Set(domain, "caster", caster);
+        Hediff_DomainProtection protection = new() { pawn = caster };
+        protection.Initialize(domain);
+        Comp_DomainProtection component = Comp_DomainProtection.Ensure(caster);
+        Gizmo_DomainHealth gizmo = component.CompGetGizmosExtra().OfType<Gizmo_DomainHealth>().Single();
+        Check(gizmo.Visible && gizmo.Domain == domain && ReferenceEquals(gizmo,
+            component.CompGetGizmosExtra().OfType<Gizmo_DomainHealth>().Single()), "selected caster exposes one cached domain health bar");
+        PropertyInfo fraction = typeof(Gizmo_DomainHealth).GetProperty("ValuePercent", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        PropertyInfo label = typeof(Gizmo_DomainHealth).GetProperty("BarLabel", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        domain.DrainHealth(250f);
+        Check((float)fraction.GetValue(gizmo)! == 0.75f && (string)label.GetValue(gizmo)! == 750f.ToString("N0") + " / " + 1000f.ToString("N0"),
+            "domain health bar immediately reflects shared damage and current maximum values");
+        domain.RestoreHealth(250f);
+        Check((float)fraction.GetValue(gizmo)! == 1f && gizmo.GroupsWith(new Gizmo_DomainHealth(domain)),
+            "domain healing refills the bar and selections of the same domain group together");
+        Set(domain, "active", false);
+        Check(!gizmo.Visible && !component.CompGetGizmosExtra().OfType<Gizmo_DomainHealth>().Any(),
+            "ending the domain removes its health bar from the caster");
+        component.Protection = null;
     }
 
     private static void CheckReturnGate()

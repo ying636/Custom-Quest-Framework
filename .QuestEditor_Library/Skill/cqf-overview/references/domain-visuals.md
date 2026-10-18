@@ -76,4 +76,6 @@ dotnet run --project .QuestEditor_Library/Tests/Domain/Checks.csproj -c Release 
 
 打包脚本回读两个 Shader，检查 UnityFS、Shader 名称和 pass，再通过 GPU 像素读回检查进入/返回遮盖及换皮表面。验证成功后将 cqf_domain_win 放回 Content/1.6/AssetBundles 再构建模块。1.7 的 visuals 检查使用游戏自带编译器编译四个阶段并检查接口、材质布局、配置和打包结构；它不等于完整游戏内视觉验收。测试指定 `CQF_CHECKS_PROVIDER_ROOT` 时应指向待发布包根目录，默认读取源码 Content 与模组目录。
 
-1.7 的地面使用独立 CQF_DomainGround ShaderDef（groundShader），开启深度检测、不写深度、队列 2900；幕墙仍使用 openingShader 的 3601 / 3603 队列。更换展开 Shader 时应同时提供适配的 groundShader；自定义模板材质由调用方设置地面深度状态。基础领域配置 CQF_TestDomainBuilding，使用 Building_DomainVisual，在原施放位置保留可选中、可攻击的外部载体，复用通用共享血量、崩塌和返回移除流程。未提供名称和说明时，中英均保留同名占位符。
+1.7 的地面使用独立 CQF_DomainGround ShaderDef（groundShader），开启深度检测、不写深度、队列 2900；底盘高度为 LayingPawn 下方 0.01，覆盖 LowPlant / Building 层的草木，保留倒地和站立人物的深度遮挡。植物仅由展开底盘遮蔽，不销毁、不离图；展开进度与径向边界继续由 Shader 控制，展开取消或载体移除后恢复原显示。幕墙仍使用 openingShader 的 3601 / 3603 队列。更换展开 Shader 时应同时提供适配的 groundShader；自定义模板材质由调用方设置地面深度状态。基础领域配置 CQF_TestDomainBuilding，使用 Building_DomainVisual，在原施放位置保留可选中、可攻击的外部载体，复用通用共享血量、崩塌和返回移除流程。未提供名称和说明时，中英均保留同名占位符。
+
+Gizmo_DomainHealth 复用原版只读 Gizmo_Slider，标题沿用领域 label，血条与数字实时读取同一 MapComponent_Domain 的 Health / MaximumHealth。施术者由 Comp_DomainProtection 提供，外部载体由 Building_DomainVisual 提供；同一领域多选时合并，结束后不再显示。仅能力 Tooltip 的数值不算血条实现。当前离线领域检查为 59 项，覆盖血条提供、缓存、伤害更新、恢复、同领域合并和退出隐藏；实际 UI 与植物遮蔽仍需游戏内查看。

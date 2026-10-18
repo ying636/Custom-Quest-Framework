@@ -37,7 +37,11 @@ public sealed class DomainOpeningVisuals : IDisposable
         properties.SetFloat("_EffectTime", elapsedSeconds);
         properties.SetFloat("_Radius", definition.radius);
         properties.SetFloat("_Mode", 0f);
+#if RIMWORLD_1_7
+        center.y = AltitudeLayer.LayingPawn.AltitudeFor() - 0.01f;
+#else
         center.y = AltitudeLayer.Filth.AltitudeFor();
+#endif
         float diameter = (definition.radius + definition.edgeWidth + definition.distortion + 1f) * 2f;
         properties.SetFloat("_Diameter", diameter);
         GenDraw.DrawMeshNowOrLater(MeshPool.plane10, Matrix4x4.TRS(center, Quaternion.identity, new Vector3(diameter, 1f, diameter)),

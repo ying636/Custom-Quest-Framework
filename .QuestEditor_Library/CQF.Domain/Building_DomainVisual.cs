@@ -30,6 +30,14 @@ public class Building_DomainVisual : Building_Domain, IAttackTarget
 
     public bool ThreatDisabled(IAttackTargetSearcher disabledFor) => !Spawned || Domain?.Active != true;
 
+    public override IEnumerable<Gizmo> GetGizmos()
+    {
+        foreach (Gizmo gizmo in base.GetGizmos()) yield return gizmo;
+        if (Domain is not { Active: true } domain) yield break;
+        if (healthGizmo?.Domain != domain) healthGizmo = new Gizmo_DomainHealth(domain);
+        yield return healthGizmo;
+    }
+
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
     {
         visuals?.Dispose();
@@ -57,5 +65,6 @@ public class Building_DomainVisual : Building_Domain, IAttackTarget
     }
 
     private DomainOpeningVisuals? visuals;
+    private Gizmo_DomainHealth? healthGizmo;
     private bool visualError;
 }
