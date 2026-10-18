@@ -97,7 +97,7 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 - 火种危机：构建 `.QuestEditor_Library/CQF.AllsparkCrisis/CQF.AllsparkCrisis.csproj`；输出 `1.7/Mod/AllsparkCrisis/Assemblies/CQFAndRS.dll`。默认引用火种危机 `1.7/Assemblies/AllsparkCrisis.dll`；`AllsparkCrisisPath` 可覆盖前置 DLL 路径。原适配仅有 DLL，当前源码依据其实际实现恢复。
 - 模拟经营：构建 `.QuestEditor_Library/CQF.RimSimManagementFramework/CQF.RimSimManagementFramework.csproj`；输出 `1.7/Mod/RimSimManagementFramework/Assemblies/CQF_RSMF.dll`。`RimSimManagementPath` 可覆盖前置 DLL 路径。本机依赖仍在工坊 `3736621496/1.6/Assemblies`；两个顾客生成方法为 private，通过 Harmony TargetMethods 查找，并读取 out spawnedPawn，避免扫描整张地图收集新 pawn。
 - Bill：本机未找到 BillDoorsPredefinedCharacter 的前置 DLL 或适配源码，1.7 未启用该加载入口，不把旧二进制复制视为适配完成。
-- HCF：联动实际由独立 HiveCreatureFramework 仓库的 Mods/CQF 工程提供，不能在 CQF 空目录补装另一份。2026-10-18 核对其 GitHub master 为 43c6aa2，已有 1.6 联动源码与 DLL；本地 1.7 联动 DLL、工程迁移、RimWorld.Build.props 和 LoadFolders 修改尚未提交，须在 HCF 仓库单独整理发布。
+- HCF：联动由独立 HiveCreatureFramework 仓库的 Mods/CQF 工程提供，不能在 CQF 空目录补装另一份。HCF 3.13 已于 2026-10-18 发布至 GitHub master（87835b3），包含 1.6 / 1.7 主库、CQF / CE / VEF 联动 DLL、1.7 Defs / Patches、双版本工程配置和条件加载入口。本机程序集已备份更新；HCF Skill 的 references/version-build.md 记录构建和验证范围。CQF 联动通过 HCF 事件发送任务书信号，不新增 Harmony 补丁。
 
 已删除无对应 Def/运行类的 `CQF_DestroyMainSiteCountdown` 残留翻译，并删除错误短类型目录和重复英文 PawnMod DefInjected。自定义 Def 的中文翻译使用完整命名空间目录。
 
