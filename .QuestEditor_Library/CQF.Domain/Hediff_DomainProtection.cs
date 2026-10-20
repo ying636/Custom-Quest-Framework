@@ -4,7 +4,7 @@ namespace QuestEditor_Library;
 
 public class Hediff_DomainProtection : Hediff
 {
-    public MapComponent_Domain? Domain => domainMap?.GetComponent<MapComponent_Domain>();
+    public MapComponent_Domain? Domain => domainMap?.GetComponent<MapComponent_Domain>().FindDomainFor(pawn);
 
     public override bool Visible => false;
 

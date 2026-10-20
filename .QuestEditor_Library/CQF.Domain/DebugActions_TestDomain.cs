@@ -6,21 +6,13 @@ namespace QuestEditor_Library;
 
 public static class DebugActions_TestDomain
 {
-    [DebugAction("CQF", "CQF_TestDomainExpansion", allowedGameStates = AllowedGameStates.PlayingOnMap)]
-    public static DebugActionNode GiveTestDomainExpansion()
+    [DebugAction("CQF", "CQF_TestDomainExpansion", actionType = DebugActionType.ToolMapForPawns,
+        allowedGameStates = AllowedGameStates.PlayingOnMap)]
+    public static void GiveTestDomainExpansion(Pawn pawn)
     {
-        DebugActionNode root = new("CQF_TestDomainExpansion");
-        foreach (Pawn pawn in Find.CurrentMap.mapPawns.AllPawnsSpawned)
-        {
-            if (pawn.Dead || pawn.Faction != Faction.OfPlayer || !pawn.RaceProps.Humanlike) continue;
-            root.AddChild(new DebugActionNode(pawn.LabelShortCap, action: () =>
-            {
-                pawn.abilities ??= new Pawn_AbilityTracker(pawn);
-                pawn.abilities.GainAbility(DefDatabase<AbilityDef>.GetNamed("CQF_TestDomainExpansion"));
-                Find.Selector.ClearSelection();
-                Find.Selector.Select(pawn);
-            }));
-        }
-        return root;
+        if (pawn.Destroyed || !pawn.Spawned || pawn.Dead) return;
+        pawn.abilities ??= new Pawn_AbilityTracker(pawn);
+        pawn.abilities.GainAbility(DefDatabase<AbilityDef>.GetNamed("CQF_TestDomainExpansion"));
+        DebugActionsUtility.DustPuffFrom(pawn);
     }
 }

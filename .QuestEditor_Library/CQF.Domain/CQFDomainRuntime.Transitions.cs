@@ -8,7 +8,7 @@ public sealed partial class CQFDomainRuntime
 
     public void QueueOpening(DomainOpening opening)
     {
-        if (!openings.Contains(opening)) openings.Add(opening);
+        if (opening.Fusion?.Active != true && !openings.Contains(opening)) openings.Add(opening);
     }
 
     public void SetTransition(DomainTransition? value)
@@ -35,14 +35,33 @@ public sealed partial class CQFDomainRuntime
 
     private void ProcessDomainOpenings()
     {
-        if (openings.Count == 0) return;
-        DomainOpening[] pending = openings.ToArray();
-        openings.Clear();
-        foreach (DomainOpening opening in pending)
+        if (transition != null) return;
+        while (openings.Count > 0)
         {
+            DomainOpening opening = openings[0];
+            openings.RemoveAt(0);
             if (opening.Destroyed || !opening.Spawned) continue;
-            if (HasAvailable(opening.Definition)) opening.CompleteOpening();
+            if (opening is DomainOpening_Fusion fusion && !fusion.Prepared)
+            {
+                LongEventHandler.QueueLongEvent(() =>
+                {
+                    try
+                    {
+                        PrepareFusion(fusion);
+                        LongEventHandler.ExecuteWhenFinished(() => { if (Current.Game == game) QueueOpening(fusion); });
+                    }
+                    catch (Exception error)
+                    {
+                        Log.Error("[CQF] Fused domain map preparation failed: " + error);
+                        if (!fusion.Destroyed) fusion.Destroy();
+                    }
+                }, "GeneratingMap", false, null);
+                return;
+            }
+            bool counter = opening.Caster?.MapHeld?.GetComponent<MapComponent_Domain>().HasActiveDomain == true;
+            if (counter ? HasTerrainTemplate(opening.Definition) : HasAvailable(opening.Definition)) opening.CompleteOpening();
             else LongEventHandler.QueueLongEvent(opening.CompleteOpening, "GeneratingMap", false, null);
+            return;
         }
     }
 

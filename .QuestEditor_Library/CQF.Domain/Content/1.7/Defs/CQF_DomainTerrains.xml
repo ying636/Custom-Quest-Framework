@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <TerrainDef>
+    <defName>CQF_BasicDomainTerrain</defName>
+    <label>CQF_BasicDomainTerrain</label>
+    <description>CQF_BasicDomainTerrain</description>
+    <texturePath>Terrain/Surfaces/PavedTile</texturePath>
+    <dontRender>true</dontRender>
+    <edgeType>Hard</edgeType>
+    <renderPrecedence>400</renderPrecedence>
+    <pathCost>0</pathCost>
+    <fertility>0</fertility>
+    <holdSnowOrSand>false</holdSnowOrSand>
+    <canFreeze>false</canFreeze>
+    <canEverTerraform>false</canEverTerraform>
+    <affordances>
+      <li>Light</li>
+      <li>Medium</li>
+      <li>Heavy</li>
+      <li>Walkable</li>
+    </affordances>
+  </TerrainDef>
+</Defs>

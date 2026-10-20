@@ -5,15 +5,20 @@ using Verse.AI.Group;
 
 namespace QuestEditor_Library;
 
-public class MapComponent_Domain : MapComponent
+public sealed partial class MapComponent_Domain : MapComponent
 {
-    public MapComponent_Domain(Map map) : base(map) { }
+    public MapComponent_Domain(Map map) : this(map, false) { }
+
+    public MapComponent_Domain(Map map, bool independentInstance) : base(map)
+    {
+        this.independentInstance = independentInstance;
+    }
 
     public DomainDef Definition => definition ?? throw new InvalidOperationException("[CQF] Map has no domain definition.");
     public DomainWorker? Worker => worker;
     public bool Active => active;
     public bool Ready => active && !closing;
-    public bool Available => !active && !closing && participants.Count == 0;
+    public bool Available => !active && !closing && !trapped && participants.Count == 0 && (challenger == null || challenger.Available);
     public bool ArrivalLocked => arrivalLocked;
     public Pawn? Caster => caster;
     public Map? SourceMap => sourceMap;
@@ -23,6 +28,7 @@ public class MapComponent_Domain : MapComponent
     public float MaximumHealth => Definition.maximumHealth;
     public float HealthFraction => Mathf.Clamp01(health / MaximumHealth);
     public Building_Domain? Anchor => anchor;
+    public DomainLayout? Layout => layout;
     public int LastRenderedFrame { get; set; } = -100;
     public int LastTerrainRenderedFrame { get; set; } = -100;
 
@@ -32,6 +38,7 @@ public class MapComponent_Domain : MapComponent
     {
         if (pawn.Dead || pawn.Downed) return false;
         if (active && (entering || arrivalLocked) && caster == pawn) return true;
+        if (challenger?.ProtectsFromOpening(pawn) == true) return true;
         foreach (DomainOpening opening in openings)
             if (!opening.Destroyed && opening.Active && opening.Caster == pawn) return true;
         return false;
@@ -74,6 +81,8 @@ public class MapComponent_Domain : MapComponent
         entering = true;
         try
         {
+            layout = new DomainLayout(this, CQFDomainRuntime.Instance.GetMapTemplate(Definition, sourceMap), true);
+            layout.RevealOwned();
             worker!.Entering();
             if (Definition.protection != null)
             {
@@ -98,13 +107,8 @@ public class MapComponent_Domain : MapComponent
                 if (entrant.drafter != null) entrant.drafter.Drafted = entry.drafted;
             }
             worker.Entered(entrants);
-            if (Definition.anchor != null)
-            {
-                anchor = (Building_Domain)ThingMaker.MakeThing(Definition.anchor);
-                anchor.Initialize(map);
-                anchor.SetFaction(pawn.Faction);
-                GenSpawn.Spawn(anchor, sourceOrigin, sourceMap);
-            }
+            CreateAnchor();
+            CQFDomainRuntime.Instance.NotifyDomainEntered(map);
             if (!worker.HandlesEntryView)
             {
                 Current.Game.CurrentMap = map;
@@ -133,6 +137,7 @@ public class MapComponent_Domain : MapComponent
     public bool AbsorbDamage(Pawn pawn, ref DamageInfo damage)
     {
         if (!active || caster != pawn || pawn.Dead || health <= 0f || damage.Amount <= 0f) return false;
+        if (pawn.MapHeld == map && OwnsCell(pawn.PositionHeld)) damage.SetAmount(damage.Amount * 0.7f);
         float absorbed = Mathf.Min(health, damage.Amount);
         damage.SetAmount(damage.Amount - absorbed);
         DrainHealth(absorbed);
@@ -140,9 +145,13 @@ public class MapComponent_Domain : MapComponent
     }
 
     public void DrainHealth(float amount)
+        => SpendHealth(amount, true);
+
+    internal void SpendHealth(float amount, bool notifyDamage)
     {
         if (!active || collapsed || amount <= 0f) return;
         if (float.IsNaN(amount)) throw new ArgumentOutOfRangeException(nameof(amount));
+        if (notifyDamage) Contest?.RecordDamage(this, Mathf.Min(health, amount));
         health = Mathf.Max(0f, health - amount);
         anchor?.SynchronizeHitPoints();
         if (health <= 0f) Collapse("domain health exhausted");
@@ -170,9 +179,14 @@ public class MapComponent_Domain : MapComponent
     public void ReturnToSource()
     {
         if (!active) return;
-        Map? destination = sourceMap != null && Find.Maps.Contains(sourceMap) ? sourceMap
-            : Find.Maps.FirstOrDefault(candidate => candidate != map && candidate.IsPlayerHome);
-        if (destination == null)
+        if (Battlefield.HasOtherActiveDomain(this))
+        {
+            HoldInBattlefield();
+            return;
+        }
+        Map? destination = ResolveReturnMap();
+        MapComponent_Domain? captive = CaptiveDomain;
+        if (destination == null || captive != null && captive.ResolveReturnMap() == null)
         {
             closing = false;
             if (!returnErrorReported)
@@ -185,64 +199,7 @@ public class MapComponent_Domain : MapComponent
         bool visible = Find.CurrentMap == map || ((Find.CurrentMap == null || caster?.Dead == true)
             && Time.frameCount - LastRenderedFrame <= 2);
         if (!worker!.PrepareReturn(visible)) return;
-        EndArrivalTransition();
-        if (caster != null)
-            foreach (Hediff_DomainProtection protection in caster.health.hediffSet.hediffs.OfType<Hediff_DomainProtection>()
-                .Where(protection => protection.Domain == this).ToList()) caster.health.RemoveHediff(protection);
-        List<Pawn> returnedPawns = new();
-        foreach (DomainParticipant entry in participants)
-        {
-            Pawn? pawn = entry.pawn;
-            if (pawn == null || pawn.Dead || pawn.Destroyed || pawn.Spawned || pawn.ParentHolder != null
-                || Find.WorldPawns.Contains(pawn)) continue;
-            IntVec3 target = destination == sourceMap ? entry.originalPosition : sourceOrigin;
-            GenSpawn.Spawn(pawn, FindFreeCell(destination, target, true), destination);
-            worker.PawnLeaving(pawn);
-            RestorePawnState(pawn, entry, destination);
-            returnedPawns.Add(pawn);
-        }
-        foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned.ToList())
-        {
-            worker.PawnLeaving(pawn);
-            DomainParticipant? entry = participants.FirstOrDefault(candidate => candidate.pawn == pawn);
-            IntVec3 target = destination == sourceMap && entry != null ? entry.originalPosition : sourceOrigin;
-            IntVec3 cell = FindFreeCell(destination, target, true);
-            pawn.GetLord()?.RemovePawn(pawn);
-            pawn.DeSpawn();
-            GenSpawn.Spawn(pawn, cell, destination);
-            returnedPawns.Add(pawn);
-            RestorePawnState(pawn, entry, destination);
-        }
-        foreach (Thing thing in map.listerThings.AllThings.Where(thing => thing is Corpse || thing.def.category == ThingCategory.Item).ToList())
-        {
-            if (thing is Corpse body) worker.PawnLeaving(body.InnerPawn);
-            DomainParticipant? entry = thing is Corpse corpse
-                ? participants.FirstOrDefault(candidate => candidate.pawn == corpse.InnerPawn) : null;
-            IntVec3 target = destination == sourceMap && entry != null ? entry.originalPosition : sourceOrigin;
-            IntVec3 cell = FindFreeCell(destination, target, false);
-            thing.DeSpawn();
-            GenSpawn.Spawn(thing, cell, destination);
-        }
-        anchor?.RemoveNormally();
-        anchor = null;
-        IntVec3 focus = caster != null && caster.Spawned && caster.Map == destination
-            ? caster.Position : FindFreeCell(destination, sourceOrigin, false);
-        if (visible)
-        {
-            Find.Selector.ClearSelection();
-            Current.Game.CurrentMap = destination;
-            Find.CameraDriver.JumpToCurrentMapLoc(focus);
-            if (caster != null && caster.Spawned && caster.Map == destination) Find.Selector.Select(caster);
-        }
-        worker.Returned(destination, focus, returnedPawns);
-        CQFDomainRuntime.Instance.Recycle(this, destination);
-        active = false;
-        closing = false;
-        caster = null;
-        sourceMap = null;
-        sourceOrigin = IntVec3.Invalid;
-        participants.Clear();
-        health = 0f;
+        FinishReturn(destination, visible, false);
     }
 
     public void CompleteReturn()
@@ -300,6 +257,9 @@ public class MapComponent_Domain : MapComponent
 
     public override void MapComponentTick()
     {
+        challenger?.MapComponentTick();
+        contest?.Tick(this);
+        if (active && Contest == null && GenTicks.TicksGame % 60 == 0) layout?.RevealOwned();
         if (!active || closing || worker!.SuspendLifecycle) return;
         if (!collapsed && health <= 0f) { Collapse("domain health exhausted"); return; }
         if (arrivalLocked)
@@ -319,6 +279,7 @@ public class MapComponent_Domain : MapComponent
 
     public override void MapComponentUpdate()
     {
+        challenger?.MapComponentUpdate();
         worker?.Update();
         if (!active || !closing || returnQueued) return;
         returnQueued = true;
@@ -327,15 +288,23 @@ public class MapComponent_Domain : MapComponent
 
     public override void MapComponentDraw()
     {
+        challenger?.MapComponentDraw();
+        if (Find.CurrentMap == map) contest?.Draw(this);
         if (!active || Find.CurrentMap != map) return;
         LastRenderedFrame = Time.frameCount;
         worker?.Draw();
     }
 
-    public override void MapComponentOnGUI() => worker?.OnGUI();
+    public override void MapComponentOnGUI()
+    {
+        worker?.OnGUI();
+        challenger?.MapComponentOnGUI();
+        DrawScreenBorder();
+    }
 
     public override void FinalizeInit()
     {
+        challenger?.FinalizeInit();
         if (active && caster != null)
         {
             Comp_DomainProtection.Ensure(caster);
@@ -351,6 +320,7 @@ public class MapComponent_Domain : MapComponent
         Scribe_Values.Look(ref active, "active");
         Scribe_Values.Look(ref closing, "closing");
         Scribe_Values.Look(ref collapsed, "collapsed");
+        Scribe_Values.Look(ref trapped, "trapped");
         Scribe_Values.Look(ref health, "domainHealth");
         Scribe_Values.Look(ref arrivalLocked, "arrivalLocked");
         Scribe_Values.Look(ref sourceOrigin, "sourceOrigin");
@@ -358,6 +328,12 @@ public class MapComponent_Domain : MapComponent
         Scribe_References.Look(ref sourceMap, "sourceMap");
         Scribe_References.Look(ref anchor, "domainAnchor");
         Scribe_Collections.Look(ref participants, "participants", LookMode.Deep);
+        Scribe_Deep.Look(ref layout, "layout");
+        if (!independentInstance)
+        {
+            Scribe_Deep.Look(ref challenger, "challenger", map, true);
+            Scribe_Deep.Look(ref contest, "contest");
+        }
         if (Scribe.mode == LoadSaveMode.LoadingVars && definition != null)
         {
             worker = Activator.CreateInstance(definition.workerClass) as DomainWorker
@@ -369,7 +345,18 @@ public class MapComponent_Domain : MapComponent
             try { worker.ExposeData(); }
             finally { Scribe.ExitNode(); }
         }
-        if (Scribe.mode == LoadSaveMode.PostLoadInit) participants ??= new();
+        if (Scribe.mode == LoadSaveMode.PostLoadInit)
+        {
+            participants ??= new();
+            layout?.Bind(this);
+            if (trapped && (active || caster == null))
+                throw new InvalidOperationException("[CQF] Saved captive domain has inconsistent activity or caster identity.");
+            if (!independentInstance && ((challenger == null) != (contest == null)
+                || trapped && challenger?.Active != true || challenger?.trapped == true && !active
+                || contest != null && contest.Partition.CellCount != map.Size.x * map.Size.z
+                || challenger != null && active && challenger.Active && caster == challenger.Caster))
+                throw new InvalidOperationException("[CQF] Saved domain contest has inconsistent participants or territory.");
+        }
     }
 
     public override void MapRemoved()
@@ -377,9 +364,87 @@ public class MapComponent_Domain : MapComponent
         foreach (DomainOpening opening in openings)
             if (opening is DomainOpening_Basic basic) basic.ReleaseVisuals();
         openings.Clear();
+        ReleaseScreenBorder();
+        challenger?.ReleaseScreenBorder();
+        challenger?.Worker?.Dispose();
+        contest?.Dispose();
         (Current.Game?.GetComponent<GameComponent_MapManager>()?.Module as CQFDomainRuntime)?.UnregisterDomainMap(map);
         worker?.Dispose();
         base.MapRemoved();
+    }
+
+    private void FinishReturn(Map destination, bool visible, bool sharedBattlefield)
+    {
+        DomainWorker returnWorker = worker ?? throw new InvalidOperationException("[CQF] Returning domain has no worker.");
+        EndArrivalTransition();
+        Battlefield.Layout?.ReleaseOccupants();
+        Battlefield.Challenger?.Layout?.ReleaseOccupants();
+        if (!sharedBattlefield && CaptiveDomain is { } captive)
+            captive.FinishReturn(captive.ResolveReturnMap()
+                ?? throw new InvalidOperationException("[CQF] Captive domain has no return map."), false, true);
+        if (!trapped) returnWorker.Dissolved();
+        ReleaseScreenBorder();
+        if (caster != null)
+            foreach (Hediff_DomainProtection protection in caster.health.hediffSet.hediffs.OfType<Hediff_DomainProtection>()
+                .Where(protection => protection.Domain == this).ToList()) caster.health.RemoveHediff(protection);
+        List<Pawn> returnedPawns = new();
+        foreach (DomainParticipant entry in participants)
+        {
+            Pawn? pawn = entry.pawn;
+            if (pawn == null || pawn.Dead || pawn.Destroyed || pawn.Spawned || pawn.ParentHolder != null
+                || Find.WorldPawns.Contains(pawn)) continue;
+            IntVec3 target = destination == sourceMap ? entry.originalPosition : sourceOrigin;
+            GenSpawn.Spawn(pawn, FindFreeCell(destination, target, true), destination);
+            returnWorker.PawnLeaving(pawn);
+            RestorePawnState(pawn, entry, destination);
+            returnedPawns.Add(pawn);
+        }
+        foreach (Pawn pawn in map.mapPawns.AllPawnsSpawned.Where(pawn => !sharedBattlefield || OwnsParticipant(pawn)).ToList())
+        {
+            returnWorker.PawnLeaving(pawn);
+            DomainParticipant? entry = participants.FirstOrDefault(candidate => candidate.pawn == pawn);
+            IntVec3 target = destination == sourceMap && entry != null ? entry.originalPosition : sourceOrigin;
+            IntVec3 cell = FindFreeCell(destination, target, true);
+            pawn.GetLord()?.RemovePawn(pawn);
+            pawn.DeSpawn();
+            GenSpawn.Spawn(pawn, cell, destination);
+            returnedPawns.Add(pawn);
+            RestorePawnState(pawn, entry, destination);
+        }
+        foreach (Thing thing in map.listerThings.AllThings.Where(thing => (thing is Corpse || thing.def.category == ThingCategory.Item)
+            && (!sharedBattlefield || thing is Corpse body && OwnsParticipant(body.InnerPawn))).ToList())
+        {
+            if (thing is Corpse body) worker.PawnLeaving(body.InnerPawn);
+            DomainParticipant? entry = thing is Corpse corpse
+                ? participants.FirstOrDefault(candidate => candidate.pawn == corpse.InnerPawn) : null;
+            IntVec3 target = destination == sourceMap && entry != null ? entry.originalPosition : sourceOrigin;
+            IntVec3 cell = FindFreeCell(destination, target, false);
+            thing.DeSpawn();
+            GenSpawn.Spawn(thing, cell, destination);
+        }
+        anchor?.RemoveNormally();
+        anchor = null;
+        IntVec3 focus = caster != null && caster.Spawned && caster.Map == destination
+            ? caster.Position : FindFreeCell(destination, sourceOrigin, false);
+        if (visible)
+        {
+            Find.Selector.ClearSelection();
+            Current.Game.CurrentMap = destination;
+            Find.CameraDriver.JumpToCurrentMapLoc(focus);
+            if (caster != null && caster.Spawned && caster.Map == destination) Find.Selector.Select(caster);
+        }
+        returnWorker.Returned(destination, focus, returnedPawns);
+        layout?.Clear();
+        layout = null;
+        CQFDomainRuntime.Instance.Recycle(this, destination);
+        active = false;
+        closing = false;
+        trapped = false;
+        caster = null;
+        sourceMap = null;
+        sourceOrigin = IntVec3.Invalid;
+        participants.Clear();
+        health = 0f;
     }
 
     private void RestorePawnState(Pawn pawn, DomainParticipant? entry, Map destination)
@@ -393,6 +458,7 @@ public class MapComponent_Domain : MapComponent
     private DomainDef? definition;
     private DomainWorker? worker;
     private bool active;
+    private readonly bool independentInstance;
     private bool entering;
     private bool closing;
     private bool collapsed;
@@ -405,5 +471,6 @@ public class MapComponent_Domain : MapComponent
     private IntVec3 sourceOrigin;
     private Building_Domain? anchor;
     private List<DomainParticipant> participants = new();
+    private DomainLayout? layout;
     private readonly HashSet<DomainOpening> openings = new();
 }

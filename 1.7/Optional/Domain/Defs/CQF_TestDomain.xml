@@ -33,11 +33,12 @@
     <label>CQF_TestDomain</label>
     <worldObject>CQF_TestDomain</worldObject>
     <mapGenerator>CQF_TestDomainGenerator</mapGenerator>
-    <workerClass>QuestEditor_Library.DomainWorker_Visual</workerClass>
+    <workerClass>QuestEditor_Library.DomainWorker_Basic</workerClass>
     <anchor>CQF_TestDomainBuilding</anchor>
     <protection>CQF_TestDomainProtection</protection>
-    <maximumHealth>1000</maximumHealth>
+    <maximumHealth>100000</maximumHealth>
     <visuals>CQF_DomainVisuals</visuals>
+    <surface>CQF_BasicDomainSurface</surface>
     <openingAbility>CQF_TestDomainExpansion</openingAbility>
     <size>(60,1,60)</size>
     <preload>true</preload>
@@ -77,16 +78,11 @@
     <canLoadIntoCaravan>false</canLoadIntoCaravan>
     <bringAlongOnGravship>false</bringAlongOnGravship>
     <statBases>
-      <MaxHitPoints>1000</MaxHitPoints>
+      <MaxHitPoints>100000</MaxHitPoints>
       <Flammability>0</Flammability>
       <DeteriorationRate>0</DeteriorationRate>
     </statBases>
-    <graphicData>
-      <texPath>Terrain/Surfaces/Blood</texPath>
-      <graphicClass>Graphic_Single</graphicClass>
-      <shaderType>Transparent</shaderType>
-      <drawSize>(26,26)</drawSize>
-    </graphicData>
+    <drawOffscreen>true</drawOffscreen>
     <building>
       <isEdifice>false</isEdifice>
       <deconstructible>false</deconstructible>
@@ -141,8 +137,8 @@
     <defName>CQF_TestDomainTerrain</defName>
     <order>210</order>
     <genStep Class="QuestEditor_Library.GenStep_TestDomain">
-      <terrain>Soil</terrain>
-      <gridTerrain>PavedTile</gridTerrain>
+      <terrain>CQF_BasicDomainTerrain</terrain>
+      <gridTerrain>CQF_BasicDomainTerrain</gridTerrain>
     </genStep>
   </GenStepDef>
 </Defs>

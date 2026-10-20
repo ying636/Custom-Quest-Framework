@@ -17,4 +17,18 @@
     <showInSearch>false</showInSearch>
     <canLoadIntoCaravan>false</canLoadIntoCaravan>
   </ThingDef>
+  <ThingDef>
+    <defName>CQF_DomainOpeningFusion</defName>
+    <label>CQF_DomainOpeningFusion</label>
+    <thingClass>QuestEditor_Library.DomainOpening_Fusion</thingClass>
+    <category>Ethereal</category>
+    <tickerType>Normal</tickerType>
+    <drawerType>RealtimeOnly</drawerType>
+    <altitudeLayer>Filth</altitudeLayer>
+    <useHitPoints>false</useHitPoints>
+    <selectable>false</selectable>
+    <rotatable>false</rotatable>
+    <showInSearch>false</showInSearch>
+    <canLoadIntoCaravan>false</canLoadIntoCaravan>
+  </ThingDef>
 </Defs>

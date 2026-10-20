@@ -26,11 +26,17 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 
 如果任务明确是“做 CQF 地图 / 子地图 / 区域拼装 / 地图入口出口 / 地图流程设计”，优先继续调用 `cqf-map-dev`。
 
-涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。制作换皮领域或通用展开/转场时，读取 [基础领域视觉](references/domain-visuals.md)。寂屋邪祭暂不迁移视觉，留到下次更新接入。通用地图休眠由 `GameComponent_MapManager` 管理，领域模块通过普通运行对象接入同一个 GComp；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
+涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。制作换皮领域、通用平面或展开/转场时，读取 [领域视觉](references/domain-visuals.md)。`DomainDef.surface` 是可复用的领域特征材质，与 `visuals` 展开动画分开；寂屋邪祭保留原有展开表现，血海通用平面复用血海地形算法。通用地图休眠由 `GameComponent_MapManager` 管理，领域模块通过普通运行对象接入同一个 GComp；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
 
 修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
 
 ## 仓库与信息源
+
+涉及双领域对抗、反展开、载体范围重叠、按血量分配占地或双方独立退出时，继续读取 [领域对抗](references/domain-contest.md)。`surface` 是可选表现，不是参加对抗的条件；纯地形与建筑领域使用相同入口。预生成缓存包含地形与建筑蓝图，每次实例拥有独立布局；建筑随领地收起时保留原对象。1.7 的规则归属由主分界线和真实侵蚀孔洞共同决定：占比超过 70% 后逐渐侵入弱势方，孔洞计入总面积并补偿主线位置，地形、建筑与技能共用 OwnsCell 查询。新增领域只接入自身规则和资源，不编写两两配对分支。
+
+对抗中取消与崩塌均会滞留在对方领域，保存 Trapped 与原来源记录，最后一个领域结束才分别返回。规则及临时能力清理放在 Dissolved，Returned 仅在实际返回时调用。基础领域通过可选 screenBorderWidth 配置灰白屏幕边缘；无特效领域默认关闭。开局耗时须测量，不能仅凭预生成调用推断其为主要原因，当前四张小型领域地图实测仅约 0.22–0.31 秒。
+
+涉及后续领域架构、统一实例、转移事务、多方对抗或扩展路线时，读取 [领域系统设计](references/domain-design.md)。设计建议与已实现接口须明确区分，较大重构先确认。
 
 CQF 源码目录（与 Mod 包共用 Git 仓库）：
 - `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`
@@ -52,6 +58,10 @@ CQF Mod 包：
 地图休眠移出原版 Game.Maps，由同一组件持有和保存；休眠 Thing 视为未生成，Spawned=false、Map=null，不为它们伪装生成状态或补出引用。休眠/唤醒只在边界切换索引和原版 Tick 登记；剩余补丁仅取图、选图和退出清理。存档区域索引范围及验证限制见 `cqf-map-dev` 的独立地图休眠段落。
 
 ## 当前版本与构建
+
+领域主在对抗的敌方实际领地连续停留 3 游戏秒后，会夺取当前位置半径 2 格，并在成功夺取敌格时恢复 300 领域血量。占领保留到被夺回或本方结束，保护区优先，原地不会重复回血；移动仅在离开敌区时重置。DomainOccupation 保存计时，DomainTerritoryPartition.Claims 保存占领格，所有归属与视觉继续通过同一分区处理。没有新增节点或具体技能。
+
+领域对抗的领地玩法已经接入：双方入场解锁后每秒各损耗最大血量 0.5%，同一战场 tick 同步结算；己方领地内的施术者有 30% 减伤。技能跨区施放与削弱属于子 Mod，CQF 不提供通用技能倍率。ProtectTerritory / RemoveTerritoryProtection 提供计时或来源建筑绑定的真实守区，保护优先于血量配额；RegisterStructure 登记技能建筑，允许配置失地收起或保留。具体新技能的效果、成本与文案仍由子 Mod 制作。侵蚀轮廓采用确定性不规则径向多边形，规则、面积、网格和 Shader 共用同一轮廓，见领域对抗参考。
 
 当前维护 RimWorld 1.7。处理构建、版本迁移、DLL 输出或旧系统清理时，读取 [版本与构建](references/version-build.md)。默认不做旧存档兼容；3.7 已按用户要求删除 3.6 临时休眠迁移，只读取当前托管地图格式；未迁移旧档必须先用带兼容修复的 3.6 加载并重新保存。已删除的特殊站点参数、PawnMod 平铺 XML 迁移和职责图旧字段迁移不得重新引入。
 

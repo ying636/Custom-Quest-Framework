@@ -7,7 +7,7 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
 {
     public override string ExtraTooltipPart()
     {
-        MapComponent_Domain? domain = parent.pawn.MapHeld?.GetComponent<MapComponent_Domain>();
+        MapComponent_Domain? domain = parent.pawn.MapHeld?.GetComponent<MapComponent_Domain>().FindDomainFor(parent.pawn);
         return domain?.Active == true && domain.Caster == parent.pawn
             ? domain.Health.ToString("N0") + " / " + domain.MaximumHealth.ToString("N0") : string.Empty;
     }
@@ -21,8 +21,9 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
             return true;
         }
         MapComponent_Domain domain = pawn.Map.GetComponent<MapComponent_Domain>();
-        if (CQFDomainRuntime.Instance.Transition != null || domain.Active
-            && (domain.Definition.defName != "CQF_TestDomain" || domain.Caster != pawn || !domain.Ready)
+        MapComponent_Domain? ownDomain = domain.FindDomainFor(pawn);
+        if (!CQFDomainRuntime.Instance.CanBeginOpening(pawn) || domain.HasActiveDomain
+            && (ownDomain?.Active == true ? ownDomain.Definition.defName != "CQF_TestDomain" || !ownDomain.Ready : !domain.CanAcceptChallenger)
             || pawn.Map.listerThings.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpening"))
                 .OfType<DomainOpening_Basic>().Any(opening => opening.Active && opening.Caster == pawn))
         {
@@ -45,8 +46,8 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
         if (!Valid(target, true)) return;
         base.Apply(target, dest);
         Pawn pawn = parent.pawn;
-        MapComponent_Domain domain = pawn.Map.GetComponent<MapComponent_Domain>();
-        if (domain.Active)
+        MapComponent_Domain? domain = pawn.Map.GetComponent<MapComponent_Domain>().FindDomainFor(pawn);
+        if (domain?.Active == true)
         {
             domain.RequestReturn();
             return;

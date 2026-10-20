@@ -6,6 +6,7 @@ layout(push_constant) uniform Push { mat4 modelMatrix; } push;
 layout(set = 0, binding = 0) uniform VertexUniforms { mat4 ViewProj; } uVertex;
 layout(location = 0) out vec4 vColor;
 layout(location = 1) out vec2 vUv;
+layout(location = 2) out vec2 vWorld;
 layout(set = 2, binding = 0) uniform MaterialUniforms
 {
     vec4 _Color;
@@ -16,6 +17,9 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     vec4 _SourceUV;
     vec4 _Origin;
     vec4 _Destination;
+    vec4 _FusionCircle;
+    vec4 _FusionRival;
+    vec4 _FusionState;
     float _Progress;
     float _EffectTime;
     float _Radius;
@@ -49,6 +53,7 @@ if (uMaterial._Mode > 0.5)
     vertex.y += mix(0.05,-0.03,smoothstep(-0.15,0.15,sin(inUv0.xy.x)));
 }
     gl_Position = uVertex.ViewProj * push.modelMatrix * vertex;
+    vWorld = (push.modelMatrix * vertex).xz;
     vColor = inColor;
     vUv = inUv0.xy;
 }

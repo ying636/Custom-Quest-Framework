@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.DomainDef>
+    <defName>CQF_CheckSurfaceDomain</defName>
+    <label>CQF_CheckSurfaceDomain</label>
+    <worldObject>CQF_TestDomain</worldObject>
+    <mapGenerator>CQF_CheckPlainDomainGenerator</mapGenerator>
+    <workerClass>QuestEditor_Library.DomainWorker_Visual</workerClass>
+    <anchor>CQF_TestDomainBuilding</anchor>
+    <protection>CQF_TestDomainProtection</protection>
+    <maximumHealth>100000</maximumHealth>
+    <visuals>CQF_DomainVisuals</visuals>
+    <surface>CQF_BasicDomainSurface</surface>
+    <size>(60,1,60)</size>
+    <preload>true</preload>
+  </QuestEditor_Library.DomainDef>
+  <QuestEditor_Library.DomainDef>
+    <defName>CQF_CheckPlainDomain</defName>
+    <label>CQF_CheckPlainDomain</label>
+    <worldObject>CQF_TestDomain</worldObject>
+    <mapGenerator>CQF_CheckPlainDomainGenerator</mapGenerator>
+    <workerClass>QuestEditor_Library.DomainWorker_Visual</workerClass>
+    <anchor>CQF_TestDomainBuilding</anchor>
+    <protection>CQF_TestDomainProtection</protection>
+    <maximumHealth>100000</maximumHealth>
+    <visuals>CQF_DomainVisuals</visuals>
+    <size>(60,1,60)</size>
+    <contestColor>(0.85,0.72,0.35,1)</contestColor>
+    <preload>true</preload>
+  </QuestEditor_Library.DomainDef>
+  <MapGeneratorDef>
+    <defName>CQF_CheckPlainDomainGenerator</defName>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <pocketMapProperties>
+      <biome>CQF_TestDomainBiome</biome>
+      <temperature>21</temperature>
+      <destroyOnParentMapAbandoned>false</destroyOnParentMapAbandoned>
+      <canLaunchGravship>false</canLaunchGravship>
+      <canBeCleaned>false</canBeCleaned>
+    </pocketMapProperties>
+    <genSteps>
+      <li>CQF_CheckPlainDomainLayout</li>
+    </genSteps>
+  </MapGeneratorDef>
+  <GenStepDef>
+    <defName>CQF_CheckPlainDomainLayout</defName>
+    <order>210</order>
+    <genStep Class="CQF.DomainContestRuntimeChecks.GenStep_LayoutChecks" />
+  </GenStepDef>
+</Defs>

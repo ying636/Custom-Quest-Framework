@@ -45,4 +45,19 @@
       <renderQueue>4000</renderQueue>
     </shaderProgram>
   </ShaderDef>
+  <ShaderDef>
+    <defName>CQF_DomainFusionTransition</defName>
+    <shaderProgram>
+      <vertexShaderFileName>CQF_DomainTransition.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>CQF_DomainFusionTransition.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <blendMode>Custom</blendMode>
+      <blendSrcFactor>SrcAlpha</blendSrcFactor>
+      <blendDstFactor>OneMinusSrcAlpha</blendDstFactor>
+      <depthTest>false</depthTest>
+      <depthWrite>false</depthWrite>
+      <cullMode>None</cullMode>
+      <renderQueue>4000</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
 </Defs>

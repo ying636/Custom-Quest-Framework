@@ -1,6 +1,7 @@
 #version 450
 layout(location = 0) in vec4 vColor;
 layout(location = 1) in vec2 vUv;
+layout(location = 2) in vec2 vWorld;
 layout(location = 0) out vec4 outColor;
 layout(set = 2, binding = 0) uniform MaterialUniforms
 {
@@ -12,6 +13,9 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     vec4 _SourceUV;
     vec4 _Origin;
     vec4 _Destination;
+    vec4 _FusionCircle;
+    vec4 _FusionRival;
+    vec4 _FusionState;
     float _Progress;
     float _EffectTime;
     float _Radius;
@@ -71,4 +75,5 @@ float rim = exp(-abs(edge) / max(0.001,uMaterial._EdgeWidth));
 color += rim * uMaterial._EdgeColor.rgb * uMaterial._EdgeColor.a;
 return vec4(color,alpha * surface.a * uMaterial._Color.a);
 }
-void main() { outColor = effect(); }
+#include "CQF_DomainDomeFusion.glsl"
+void main() { outColor = fusedDome(effect(),vWorld); }

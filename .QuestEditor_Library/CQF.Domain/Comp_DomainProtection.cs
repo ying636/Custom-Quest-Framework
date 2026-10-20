@@ -36,14 +36,6 @@ public class Comp_DomainProtection : ThingComp
         return false;
     }
 
-    public override IEnumerable<Gizmo> CompGetGizmosExtra()
-    {
-        foreach (Gizmo gizmo in base.CompGetGizmosExtra()) yield return gizmo;
-        if (Protection?.Domain is not { Active: true } domain || domain.Definition.visuals == null) yield break;
-        if (healthGizmo?.Domain != domain) healthGizmo = new Gizmo_DomainHealth(domain);
-        yield return healthGizmo;
-    }
-
     public override void PostPreApplyDamage(ref DamageInfo dinfo, out bool absorbed)
     {
         if (IsInvulnerable())
@@ -52,10 +44,11 @@ public class Comp_DomainProtection : ThingComp
             absorbed = true;
             return;
         }
-        absorbed = Protection?.Domain?.AbsorbDamage((Pawn)parent, ref dinfo) == true;
+        Pawn pawn = (Pawn)parent;
+        MapComponent_Domain? domain = Protection?.Domain ?? pawn.MapHeld?.GetComponent<MapComponent_Domain>()?.FindDomainFor(pawn);
+        absorbed = domain?.AbsorbDamage(pawn, ref dinfo) == true;
     }
 
-    private Gizmo_DomainHealth? healthGizmo;
     private static readonly FieldInfo CompsField = typeof(ThingWithComps).GetField("comps", BindingFlags.Instance | BindingFlags.NonPublic)
         ?? throw new MissingFieldException(typeof(ThingWithComps).FullName, "comps");
 }

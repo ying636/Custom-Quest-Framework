@@ -21,6 +21,12 @@ public abstract class DomainTransition : IDisposable
     }
 
     public bool IsReturning { get; }
+    public MapComponent_Domain? ReturningDomain => IsReturning ? domain : null;
+#if RIMWORLD_1_7
+    public DomainOpening? OpeningOwner => !entered ? opening : null;
+#else
+    public DomainOpening? OpeningOwner => null;
+#endif
 
     public abstract float Duration { get; }
 
@@ -70,15 +76,27 @@ public abstract class DomainTransition : IDisposable
         displayMap = sourceMap;
         startedAt = Time.realtimeSinceStartup;
     }
+
+    public void DetachOpening() => opening = null;
 #endif
 
+    public void BindContest(MapComponent_Domain first, MapComponent_Domain second)
+    {
+        Bind(first);
+        secondaryDomain = second;
+        second.BeginArrivalTransition();
+    }
+
     public void Bind(Map realm)
+        => Bind(realm.GetComponent<MapComponent_Domain>());
+
+    public void Bind(MapComponent_Domain owner)
     {
 #if RIMWORLD_1_7
         if (displayMap == null) startedAt = Time.realtimeSinceStartup;
 #endif
-        domain = realm.GetComponent<MapComponent_Domain>();
-        displayMap = realm;
+        domain = owner;
+        displayMap = owner.map;
         domain.BeginArrivalTransition();
         Find.CameraDriver.shaker.DoShake(0.18f);
 #if !RIMWORLD_1_7
@@ -228,10 +246,12 @@ public abstract class DomainTransition : IDisposable
             opening = null;
 #endif
             domain?.EndArrivalTransition();
+            secondaryDomain?.EndArrivalTransition();
             returnLock?.End();
         }
         ReleaseVisuals();
         domain = null;
+        secondaryDomain = null;
         returnLock = null;
         displayMap = null;
         lifetime?.Release();
@@ -254,6 +274,7 @@ public abstract class DomainTransition : IDisposable
     protected IntVec3 destinationFocus;
 
     private MapComponent_Domain? domain;
+    private MapComponent_Domain? secondaryDomain;
     private MapComponent_DomainTransitionLock? returnLock;
     private Map? displayMap;
 #if RIMWORLD_1_7

@@ -14,6 +14,10 @@ internal static class Program
         try
         {
             if (args.Contains("visuals")) { DomainVisualChecks.Run(); return; }
+            if (args.Contains("contests")) { DomainContestChecks.Run(); return; }
+            if (args.Contains("invasions")) { DomainInvasionChecks.Run(); return; }
+            if (args.Contains("territory")) { DomainTerritoryRulesChecks.Run(); return; }
+            if (args.Contains("occupation")) { DomainOccupationChecks.Run(); return; }
             Run();
             Console.WriteLine("Domain checks passed: " + checks);
         }
@@ -83,7 +87,6 @@ internal static class Program
         CheckProtectionLifecycle(caster);
         CheckPausedWorker();
         CheckReturnGate();
-        CheckHealthGizmo(caster);
         Check(!typeof(DomainDef).Assembly.GetTypes().Any(type => type.IsDefined(typeof(HarmonyPatch), false)), "domain module contains no Harmony patches");
     }
 
@@ -281,33 +284,6 @@ internal static class Program
         }
     }
 
-    private static void CheckHealthGizmo(Pawn caster)
-    {
-        MapComponent_Domain domain = CreateDomain(1000f);
-        domain.Definition.visuals = new DomainVisualDef();
-        Set(domain, "active", true);
-        Set(domain, "health", 1000f);
-        Set(domain, "caster", caster);
-        Hediff_DomainProtection protection = new() { pawn = caster };
-        protection.Initialize(domain);
-        Comp_DomainProtection component = Comp_DomainProtection.Ensure(caster);
-        Gizmo_DomainHealth gizmo = component.CompGetGizmosExtra().OfType<Gizmo_DomainHealth>().Single();
-        Check(gizmo.Visible && gizmo.Domain == domain && ReferenceEquals(gizmo,
-            component.CompGetGizmosExtra().OfType<Gizmo_DomainHealth>().Single()), "selected caster exposes one cached domain health bar");
-        PropertyInfo fraction = typeof(Gizmo_DomainHealth).GetProperty("ValuePercent", BindingFlags.NonPublic | BindingFlags.Instance)!;
-        PropertyInfo label = typeof(Gizmo_DomainHealth).GetProperty("BarLabel", BindingFlags.NonPublic | BindingFlags.Instance)!;
-        domain.DrainHealth(250f);
-        Check((float)fraction.GetValue(gizmo)! == 0.75f && (string)label.GetValue(gizmo)! == 750f.ToString("N0") + " / " + 1000f.ToString("N0"),
-            "domain health bar immediately reflects shared damage and current maximum values");
-        domain.RestoreHealth(250f);
-        Check((float)fraction.GetValue(gizmo)! == 1f && gizmo.GroupsWith(new Gizmo_DomainHealth(domain)),
-            "domain healing refills the bar and selections of the same domain group together");
-        Set(domain, "active", false);
-        Check(!gizmo.Visible && !component.CompGetGizmosExtra().OfType<Gizmo_DomainHealth>().Any(),
-            "ending the domain removes its health bar from the caster");
-        component.Protection = null;
-    }
-
     private static void CheckReturnGate()
     {
         Game previous = Current.Game;
@@ -333,6 +309,15 @@ internal static class Program
             domain.CompleteReturn();
             Check(domain.GetWorker<ReturnGateWorker>()!.Attempts == 2 && domain.Active && game.Maps.Count == 2,
                 "pending return retries without recycling or transferring the domain early");
+            CQFDomainRuntime runtime = new(new GameComponent_MapManager(game));
+            Action process = typeof(CQFDomainRuntime).GetMethod("ProcessDomainReturns", BindingFlags.NonPublic | BindingFlags.Instance)!
+                .CreateDelegate<Action>(runtime);
+            for (int pass = 0; pass < 64; pass++) { runtime.QueueReturn(domain); process(); }
+            long before = GC.GetAllocatedBytesForCurrentThread();
+            for (int pass = 0; pass < 256; pass++) { runtime.QueueReturn(domain); process(); }
+            long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+            Check(allocated == 0 && domain.Active && game.Maps.Count == 2,
+                "deferred return queue allocates zero bytes across 256 retries while preserving occupants (actual: " + allocated + ")");
         }
         finally { Current.Game = previous; }
     }

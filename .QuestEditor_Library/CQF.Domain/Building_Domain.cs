@@ -6,12 +6,27 @@ namespace QuestEditor_Library;
 
 public class Building_Domain : Building
 {
-    public MapComponent_Domain? Domain => domainMap?.GetComponent<MapComponent_Domain>();
+    public MapComponent_Domain? Domain => domainMap?.GetComponent<MapComponent_Domain>().FindDomainFor(domainCaster);
 
     public virtual void Initialize(Map realm)
     {
         domainMap = realm;
+        domainCaster = realm.GetComponent<MapComponent_Domain>().Caster;
         SynchronizeHitPoints();
+    }
+
+    public void BindDomain(MapComponent_Domain domain)
+    {
+        domainMap = domain.map;
+        domainCaster = domain.Caster;
+        SynchronizeHitPoints();
+    }
+
+    public DomainFusionState DrawFusion()
+    {
+        MapComponent_Domain? domain = Domain;
+        float blend = domain?.Contest?.DrawSource(domain, this) ?? 0f;
+        return blend > 0f ? domain!.Contest!.DomeStateFor(domain, blend) : default;
     }
 
     public void SynchronizeHitPoints()
@@ -70,7 +85,9 @@ public class Building_Domain : Building
     {
         base.ExposeData();
         Scribe_References.Look(ref domainMap, "domainMap");
+        Scribe_References.Look(ref domainCaster, "domainCaster", saveDestroyedThings: true);
     }
 
     private Map? domainMap;
+    private Pawn? domainCaster;
 }

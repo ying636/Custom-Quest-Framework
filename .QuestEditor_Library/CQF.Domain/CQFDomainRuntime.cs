@@ -13,12 +13,14 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
 
     public void Update()
     {
+        if (!LongEventHandler.AnyEventNowOrWaiting) ProcessOpeningFusions();
         UpdateDomainTransition();
         if (LongEventHandler.AnyEventNowOrWaiting) return;
         ProcessDomainPreloads();
         UpdateDomains();
         ProcessDomainReturns();
         ProcessDomainOpenings();
+        ProcessDomainContests();
     }
 
     public void OnGUI() => transition?.Draw();
@@ -27,11 +29,16 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
 
     public void LoadedGame()
     {
+        contestCheckRequested = true;
         InitializeDomainPreloads();
         LongEventHandler.ExecuteWhenFinished(() =>
         {
             if (Current.Game != game) return;
-            foreach (Map realm in domainMaps) realm.GetComponent<MapComponent_Domain>().EndArrivalTransition();
+            foreach (Map realm in domainMaps)
+            {
+                realm.GetComponent<MapComponent_Domain>().EndArrivalTransition();
+                realm.GetComponent<MapComponent_Domain>().Challenger?.EndArrivalTransition();
+            }
             foreach (Map loaded in game.Maps) loaded.GetComponent<MapComponent_DomainTransitionLock>().End();
         });
     }
@@ -42,26 +49,46 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
 
     internal void UnregisterVisuals(DomainOpeningVisuals visuals) => openingVisuals.Remove(visuals);
 
+    internal void RegisterSurface(DomainSurfaceVisuals surface) => surfaces.Add(surface);
+
+    internal void UnregisterSurface(DomainSurfaceVisuals surface) => surfaces.Remove(surface);
+
     public void ExposeData()
     {
         Scribe_Collections.Look(ref domainMaps, "domainMaps", LookMode.Reference);
+        Scribe_Collections.Look(ref mapTemplates, "mapTemplates", LookMode.Def, LookMode.Deep);
         if (Scribe.mode == LoadSaveMode.PostLoadInit) domainMaps ??= new();
     }
 
     public void Dispose()
     {
         SetTransition(null);
-        foreach (Map realm in domainMaps) realm.GetComponent<MapComponent_Domain>().Worker?.Dispose();
+        foreach (Map realm in domainMaps)
+        {
+            MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
+            domain.ReleaseScreenBorder();
+            domain.Challenger?.ReleaseScreenBorder();
+            domain.Worker?.Dispose();
+            domain.Challenger?.Worker?.Dispose();
+            domain.Contest?.Dispose();
+        }
         foreach (DomainOpeningVisuals visuals in openingVisuals.ToArray()) visuals.Dispose();
+        foreach (DomainOpening_Fusion fusion in activeOpenings.OfType<DomainOpening_Fusion>()) fusion.ReleaseVisuals();
+        foreach (DomainSurfaceVisuals surface in surfaces.ToArray()) surface.Dispose();
+        mapTemplates.Clear();
         domainMaps.Clear();
         openings.Clear();
+        activeOpenings.Clear();
         returns.Clear();
+        processingReturns.Clear();
         pendingDomainPreloads.Clear();
         preparing.Clear();
         failedPreparation.Clear();
         updatingDomains.Clear();
+        failedContestPairs.Clear();
     }
 
     private readonly GameComponent_MapManager host;
     private readonly HashSet<DomainOpeningVisuals> openingVisuals = new();
+    private readonly HashSet<DomainSurfaceVisuals> surfaces = new();
 }

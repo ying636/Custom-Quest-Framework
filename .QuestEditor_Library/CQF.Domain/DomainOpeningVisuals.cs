@@ -29,7 +29,9 @@ public sealed class DomainOpeningVisuals : IDisposable
         }
     }
 
-    public void Draw(Vector3 center, float progress, float elapsedSeconds)
+    public void Draw(Vector3 center, float progress, float elapsedSeconds) => Draw(center, progress, elapsedSeconds, default);
+
+    public void Draw(Vector3 center, float progress, float elapsedSeconds, DomainFusionState fusion)
     {
         if (ground == null) throw new ObjectDisposedException(nameof(DomainOpeningVisuals));
         properties ??= new MaterialPropertyBlock();
@@ -37,6 +39,7 @@ public sealed class DomainOpeningVisuals : IDisposable
         properties.SetFloat("_EffectTime", elapsedSeconds);
         properties.SetFloat("_Radius", definition.radius);
         properties.SetFloat("_Mode", 0f);
+        fusion.Apply(properties);
 #if RIMWORLD_1_7
         center.y = AltitudeLayer.LayingPawn.AltitudeFor() - 0.01f;
 #else

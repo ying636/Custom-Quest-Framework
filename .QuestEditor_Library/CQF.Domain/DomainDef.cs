@@ -1,6 +1,7 @@
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using UnityEngine;
 
 namespace QuestEditor_Library;
 
@@ -32,6 +33,11 @@ public class DomainDef : Def
             yield return "Domain maximum health must be finite and positive.";
         if (maximumAnchorDamagePerHit <= 0f || float.IsNaN(maximumAnchorDamagePerHit)) yield return "Domain anchor damage limit must be positive.";
         if (size.x <= 0 || size.z <= 0 || size.y != 1) yield return "Domain requires a positive map size with y=1.";
+        if (contestBoundaryTicks <= 0) yield return "Domain contest boundary duration must be positive.";
+        if (float.IsNaN(contestHealthLossPerSecond) || float.IsInfinity(contestHealthLossPerSecond) || contestHealthLossPerSecond < 0f)
+            yield return "Domain contest health loss must be finite and nonnegative.";
+        foreach (float value in new[] { contestColor.r, contestColor.g, contestColor.b, contestColor.a })
+            if (float.IsNaN(value) || float.IsInfinity(value)) yield return "Domain contest color must be finite.";
         if (anchor != null && !typeof(Building_Domain).IsAssignableFrom(anchor.thingClass))
             yield return "Domain anchor must derive from Building_Domain.";
         if (protection != null && !typeof(Hediff_DomainProtection).IsAssignableFrom(protection.hediffClass))
@@ -43,10 +49,14 @@ public class DomainDef : Def
     public Type workerClass = typeof(DomainWorker);
     public IntVec3 size = new(60, 1, 60);
     public float maximumHealth = 1000f;
+    public int contestBoundaryTicks = 120;
+    public float contestHealthLossPerSecond = 0.005f;
     public float maximumAnchorDamagePerHit = float.MaxValue;
     public ThingDef? anchor;
     public HediffDef? protection;
     public AbilityDef? openingAbility;
     public bool preload = true;
     public DomainVisualDef? visuals;
+    public DomainSurfaceDef? surface;
+    public Color contestColor = new(0.72f, 0.76f, 0.80f, 1f);
 }

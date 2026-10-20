@@ -9,10 +9,36 @@ public sealed partial class CQFDomainRuntime
     public IReadOnlyList<Map> DomainMaps => domainMaps;
 
     public IEnumerable<Map> GetMaps(DomainDef definition) => domainMaps.Where(map => !map.Disposed
-        && !map.Parent.Destroyed && map.GetComponent<MapComponent_Domain>().Definition == definition);
+        && !map.Parent.Destroyed && (map.GetComponent<MapComponent_Domain>().Definition == definition
+            || map.GetComponent<MapComponent_Domain>().Challenger?.Definition == definition));
+
+    public IEnumerable<MapComponent_Domain> GetInstances(DomainDef definition)
+    {
+        foreach (Map realm in GetMaps(definition))
+        {
+            MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
+            if (domain.Definition == definition) yield return domain;
+            if (domain.Challenger?.Definition == definition) yield return domain.Challenger;
+        }
+    }
 
     public bool HasAvailable(DomainDef definition) => GetMaps(definition)
         .Any(map => map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
+
+    public bool HasTerrainTemplate(DomainDef definition) => mapTemplates.ContainsKey(definition);
+
+    internal DomainTerrainSnapshot GetTerrainTemplate(DomainDef definition, Map source)
+        => GetMapTemplate(definition, source).Terrain;
+
+    internal DomainMapTemplate GetMapTemplate(DomainDef definition, Map source)
+    {
+        if (mapTemplates.TryGetValue(definition, out DomainMapTemplate? template)) return template;
+        Map? prepared = domainMaps.FirstOrDefault(map => !map.Disposed && !map.Parent.Destroyed
+            && map.GetComponent<MapComponent_Domain>().Definition == definition && map.GetComponent<MapComponent_Domain>().Available);
+        if (prepared != null) return mapTemplates[definition] = new DomainMapTemplate(prepared);
+        host.Hibernate(GenerateDomain(definition, source));
+        return mapTemplates[definition];
+    }
 
     public Map Acquire(DomainDef definition, Pawn pawn)
     {
@@ -31,11 +57,13 @@ public sealed partial class CQFDomainRuntime
     public void Recycle(MapComponent_Domain domain, Map destination)
     {
         Map realm = domain.map;
+        if (domain.Battlefield.HasOtherActiveDomain(domain)) return;
         if (!domainMaps.Contains(realm) || realm.mapPawns.AllPawns.Count > 0)
             throw new InvalidOperationException("[CQF] Cannot recycle an unregistered or occupied domain map.");
         foreach (Thing thing in realm.listerThings.AllThings.ToList()) thing.Destroy();
         foreach (Verse.AI.Group.Lord lord in realm.lordManager.lords.ToList()) realm.lordManager.RemoveLord(lord);
-        domain.Worker!.Recycling(destination);
+        domain.Battlefield.FinishContest(destination);
+        GetTerrainTemplate(domain.Battlefield.Definition, destination).Restore(realm);
         host.Hibernate(realm);
     }
 
@@ -49,7 +77,7 @@ public sealed partial class CQFDomainRuntime
         FinishTransitionFor(map);
         if (!domainMaps.Remove(map)) return;
         DomainDef definition = map.GetComponent<MapComponent_Domain>().Definition;
-        if (definition.preload && !GetMaps(definition).Any() && !failedPreparation.Contains(definition))
+        if (definition.preload && PreparedMapCount(definition) < 2 && !failedPreparation.Contains(definition))
         {
             pendingDomainPreloads.Add(definition);
             preloadCheckRequested = true;
@@ -61,7 +89,7 @@ public sealed partial class CQFDomainRuntime
         if (domainPreloadsInitialized) return;
         domainPreloadsInitialized = true;
         foreach (DomainDef definition in DefDatabase<DomainDef>.AllDefsListForReading)
-            if (definition.preload && !GetMaps(definition).Any()) pendingDomainPreloads.Add(definition);
+            if (definition.preload && (PreparedMapCount(definition) < 2 || !HasTerrainTemplate(definition))) pendingDomainPreloads.Add(definition);
         preloadCheckRequested = pendingDomainPreloads.Count > 0;
     }
 
@@ -76,7 +104,8 @@ public sealed partial class CQFDomainRuntime
         foreach (DomainDef definition in pendingDomainPreloads.ToArray())
         {
             pendingDomainPreloads.Remove(definition);
-            if (!preparing.Contains(definition) && !failedPreparation.Contains(definition) && !GetMaps(definition).Any())
+            if (!preparing.Contains(definition) && !failedPreparation.Contains(definition)
+                && (PreparedMapCount(definition) < 2 || !HasTerrainTemplate(definition)))
                 QueueDomainPreload(definition, source);
         }
     }
@@ -88,14 +117,15 @@ public sealed partial class CQFDomainRuntime
         {
             try
             {
-                if (Current.Game != game || GetMaps(definition).Any()) return;
+                if (Current.Game != game) return;
                 if (source.Disposed || !game.Maps.Contains(source))
                 {
                     pendingDomainPreloads.Add(definition);
                     preloadCheckRequested = true;
                     return;
                 }
-                host.Hibernate(GenerateDomain(definition, source));
+                while (PreparedMapCount(definition) < 2) host.Hibernate(GenerateDomain(definition, source));
+                GetTerrainTemplate(definition, source);
             }
             catch (Exception exception)
             {
@@ -108,16 +138,24 @@ public sealed partial class CQFDomainRuntime
 
     private Map GenerateDomain(DomainDef definition, Map source)
     {
+        System.Diagnostics.Stopwatch timer = System.Diagnostics.Stopwatch.StartNew();
         MapParent_Domain parent = (MapParent_Domain)WorldObjectMaker.MakeWorldObject(definition.worldObject);
         parent.SetFaction(Faction.OfPlayer);
         parent.mapGenerator = definition.mapGenerator;
         Map realm = GameTools.GenerateSubMap(definition.size, parent, parent.mapGenerator, Array.Empty<GenStepWithParams>(), source);
+        long generationMs = timer.ElapsedMilliseconds;
         realm.GetComponent<MapComponent_Domain>().Configure(definition);
         realm.mapDrawer.RegenerateEverythingNow();
         domainMaps.Add(realm);
+        mapTemplates[definition] = new DomainMapTemplate(realm);
+        Log.Message("[CQF] Prepared domain " + definition.defName + " map " + realm.uniqueID + ": generation=" + generationMs
+            + " ms, rendering/template=" + (timer.ElapsedMilliseconds - generationMs) + " ms, total=" + timer.ElapsedMilliseconds + " ms.");
         pendingDomainPreloads.Remove(definition);
         return realm;
     }
+
+    private int PreparedMapCount(DomainDef definition)
+        => domainMaps.Count(map => !map.Disposed && !map.Parent.Destroyed && map.GetComponent<MapComponent_Domain>().Definition == definition);
 
     private void UpdateDomains()
     {
@@ -129,7 +167,12 @@ public sealed partial class CQFDomainRuntime
             foreach (Map realm in updatingDomains)
             {
                 if (realm.Disposed || realm.Parent.Destroyed) UnregisterDomainMap(realm);
-                else if (!host.IsHibernating(realm)) realm.GetComponent<MapComponent_Domain>().Worker?.ManagedUpdate();
+                else if (!host.IsHibernating(realm))
+                {
+                    MapComponent_Domain battlefield = realm.GetComponent<MapComponent_Domain>();
+                    battlefield.Worker?.ManagedUpdate();
+                    battlefield.Challenger?.Worker?.ManagedUpdate();
+                }
             }
         }
         finally { updatingDomains.Clear(); }
@@ -138,14 +181,24 @@ public sealed partial class CQFDomainRuntime
     private void ProcessDomainReturns()
     {
         if (returns.Count == 0) return;
-        MapComponent_Domain[] pending = returns.ToArray();
+        processingReturns.AddRange(returns);
         returns.Clear();
-        foreach (MapComponent_Domain domain in pending) domain.CompleteReturn();
+        try
+        {
+            foreach (MapComponent_Domain domain in processingReturns)
+            {
+                if (transition != null && transition.ReturningDomain != domain) QueueReturn(domain);
+                else domain.CompleteReturn();
+            }
+        }
+        finally { processingReturns.Clear(); }
     }
 
     private List<Map> domainMaps = new();
+    private Dictionary<DomainDef, DomainMapTemplate> mapTemplates = new();
     private readonly List<Map> updatingDomains = new();
     private readonly List<MapComponent_Domain> returns = new();
+    private readonly List<MapComponent_Domain> processingReturns = new();
     private readonly HashSet<DomainDef> pendingDomainPreloads = new();
     private readonly HashSet<DomainDef> preparing = new();
     private readonly HashSet<DomainDef> failedPreparation = new();

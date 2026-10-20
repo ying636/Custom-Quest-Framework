@@ -6,8 +6,11 @@ namespace QuestEditor_Library;
 
 public class DomainWorker_Visual : DomainWorker
 {
+    public override bool SupportsContests => true;
+
 #if RIMWORLD_1_7
-    public override bool HandlesEntryView => CQFDomainRuntime.Instance.Transition is DomainMaterialTransition;
+    public override bool HandlesEntryView => CQFDomainRuntime.Instance.Transition != null;
+    protected virtual Type TerrainLayerType => typeof(SectionLayer_Terrain);
 
     public override bool PrepareReturn(bool visible)
     {
@@ -23,11 +26,11 @@ public class DomainWorker_Visual : DomainWorker
     public override void Update()
     {
         if (Find.CurrentMap != map || !WorldRendererUtility.DrawingMap) return;
-        if (CQFDomainRuntime.Instance.Transition is not DomainMaterialTransition transition || transition.IsReturning) return;
+        if (CQFDomainRuntime.Instance.Transition is not { IsReturning: false }) return;
         CellRect view = Find.CameraDriver.CurrentViewRect;
         view.ClipInsideMap(map);
         if (view.IsEmpty) return;
-        SectionLayer? terrain = map.mapDrawer.SectionAt(view.CenterCell).GetLayer(typeof(SectionLayer_Terrain));
+        SectionLayer? terrain = map.mapDrawer.SectionAt(view.CenterCell).GetLayer(TerrainLayerType);
         if (terrain?.Visible != true) return;
         terrainCommands.Clear();
         try
@@ -66,6 +69,8 @@ public class DomainWorker_Visual : DomainWorker
             returnTransition.BindReturn(destination, focus, pawns);
         returnTransition = null;
     }
+
+    public override void OnGUI() => DomainHealthBar.Draw(Domain);
 
 #if RIMWORLD_1_7
     private readonly List<Waylith.Rendering.MeshDrawCommand> terrainCommands = new();

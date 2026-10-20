@@ -30,14 +30,6 @@ public class Building_DomainVisual : Building_Domain, IAttackTarget
 
     public bool ThreatDisabled(IAttackTargetSearcher disabledFor) => !Spawned || Domain?.Active != true;
 
-    public override IEnumerable<Gizmo> GetGizmos()
-    {
-        foreach (Gizmo gizmo in base.GetGizmos()) yield return gizmo;
-        if (Domain is not { Active: true } domain) yield break;
-        if (healthGizmo?.Domain != domain) healthGizmo = new Gizmo_DomainHealth(domain);
-        yield return healthGizmo;
-    }
-
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
     {
         visuals?.Dispose();
@@ -50,10 +42,11 @@ public class Building_DomainVisual : Building_Domain, IAttackTarget
         if (Domain?.Active != true || visualError) return;
         try
         {
+            DomainFusionState fusion = DrawFusion();
             DomainVisualDef definition = Domain.Definition.visuals
                 ?? throw new InvalidOperationException("[CQF] Visual domain anchor requires domain visuals.");
             visuals ??= new DomainOpeningVisuals(definition);
-            visuals.Draw(drawLoc, 1f, GenTicks.TicksGame / 60f);
+            visuals.Draw(drawLoc, 1f, GenTicks.TicksGame / 60f, fusion: fusion);
         }
         catch (Exception error)
         {
@@ -65,6 +58,5 @@ public class Building_DomainVisual : Building_Domain, IAttackTarget
     }
 
     private DomainOpeningVisuals? visuals;
-    private Gizmo_DomainHealth? healthGizmo;
     private bool visualError;
 }

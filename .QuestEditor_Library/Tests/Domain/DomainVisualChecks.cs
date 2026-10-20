@@ -40,6 +40,15 @@ internal static class DomainVisualChecks
         Check(typeof(DomainOpening_Basic).IsSubclassOf(typeof(DomainOpening)) && typeof(DomainMaterialTransition).IsSubclassOf(typeof(DomainTransition)),
             "basic visuals reuse domain lifecycle interfaces");
         Check(!typeof(DomainVisualDef).Assembly.GetReferencedAssemblies().Any(name => name.Name == "RSH"), "visuals have no RSH dependency");
+        DomainSurfaceDef surfaceDefinition = new() { defName = "CQF_Check_Surface" };
+        Check(!surfaceDefinition.ConfigErrors().Any(), "domain surface configuration is valid independently of opening visuals");
+        surfaceDefinition.textureScale = float.PositiveInfinity;
+        surfaceDefinition.flowSpeed = new Vector2(float.NaN, 0f);
+        Check(surfaceDefinition.ConfigErrors().Count() >= 2, "invalid generic surface scale and flow report errors");
+        surfaceDefinition.screenBorderWidth = float.NaN;
+        surfaceDefinition.screenBorderOpacity = 2f;
+        Check(surfaceDefinition.ConfigErrors().Count(error => error.Contains("border")) == 2,
+            "invalid optional screen border width and opacity report errors");
         string content = Path.Combine(root, ".QuestEditor_Library", "CQF.Domain", "Content");
         string shaderRoot = Directory.Exists(content) ? Path.Combine(content, "1.7", "Shaders")
             : Path.Combine(root, "1.7", "Optional", "Domain", "Shaders");
@@ -51,15 +60,30 @@ internal static class DomainVisualChecks
         RuntimeShaderCompiler.ConfigureCacheDirectory(Path.Combine(Path.GetTempPath(), "CQF_DomainShaderChecks_" + Guid.NewGuid().ToString("N")));
         try
         {
-            foreach (string kind in new[] { "Opening", "Transition" })
+            foreach (string kind in new[] { "Opening", "Transition", "FusionTransition", "FusionBoundary", "ContestFront", "Surface", "SurfaceScreen", "BloodSeaOpening", "BloodSeaTerrain", "BloodSeaSurfaceScreen", "BloodSeaTransition" })
             {
-                string vertexPath = Path.Combine(shaderRoot, "CQF_Domain" + kind + ".vert.glsl");
-                string fragmentPath = Path.Combine(shaderRoot, "CQF_Domain" + kind + ".frag.glsl");
+                bool blood = kind.StartsWith("BloodSea");
+                string bloodShader = kind switch {
+                    "BloodSeaTerrain" => "RSH_BloodMarshTerrain",
+                    "BloodSeaSurfaceScreen" => "RSH_BloodMarshSurfaceScreen",
+                    "BloodSeaTransition" => "RSH_BloodSeaDomainTransition",
+                    _ => "RSH_BloodSeaDomainOpening" };
+                string bloodRoot = Path.GetFullPath(Path.Combine(root, "..", "RitesOfTheSilentHouse", "1.7", "Shaders"));
+                string vertexPath = blood ? Path.Combine(bloodRoot, bloodShader + ".vert.glsl")
+                    : Path.Combine(shaderRoot, "CQF_Domain" + (kind == "FusionTransition" ? "Transition" : kind is "FusionBoundary" or "ContestFront" ? "Surface" : kind) + ".vert.glsl");
+                string fragmentPath = blood ? Path.Combine(bloodRoot, bloodShader + ".frag.glsl")
+                    : Path.Combine(shaderRoot, "CQF_Domain" + kind + ".frag.glsl");
                 string vertex = File.ReadAllText(vertexPath);
                 string fragment = File.ReadAllText(fragmentPath);
                 Check(!ShaderSourceLoader.HasStageInterfaceErrors(vertexPath, fragmentPath), kind + " native shader stage interface");
                 MaterialLayout layout = ShaderSourceLoader.CreateMaterialLayout(fragmentPath);
-                Check(!layout.HasErrors && layout.UniformSize > 0 && layout.TextureSlots.Length == 3, kind + " native material layout");
+                Check(!layout.HasErrors && layout.UniformSize > 0 && layout.TextureSlots.Length == (kind == "BloodSeaTransition" || kind.StartsWith("Surface") ? 1 : blood || kind is "FusionBoundary" or "ContestFront" ? 0 : 3), kind + " native material layout");
+                if (kind.Contains("Transition") || kind.EndsWith("Screen"))
+                    Check(vertex.Contains("binding = 1) uniform FrameUniforms") && vertex.Contains("mat4 WorldToCamera; mat4 ViewProj;"),
+                        kind + " uses the native GUI frame binding and matrix offsets");
+                if (kind.EndsWith("Screen"))
+                    Check(!fragment.Contains("vWorld") && fragment.Contains("_SurfaceView"),
+                        kind + " reconstructs surface coordinates from GUI UVs without a missing world interpolator");
                 Check(!ShaderSourceLoader.CreateVertexInputLayout(vertexPath).HasErrors, kind + " native vertex annotations");
                 foreach ((string code, string path, RuntimeShaderStage stage) in new[] {
                     (vertex, vertexPath, RuntimeShaderStage.Vertex), (fragment, fragmentPath, RuntimeShaderStage.Fragment) })
@@ -88,6 +112,21 @@ internal static class DomainVisualChecks
                 version + " test domain uses base visuals and the configured preload policy");
             if (version == "1.7")
             {
+                XmlDocument surfaceXml = new();
+                surfaceXml.Load(Path.Combine(module, "Defs", "CQF_DomainSurfaces.xml"));
+                DomainSurfaceDef surface = DirectXmlToObject.ObjectFromXml<DomainSurfaceDef>(surfaceXml.SelectSingleNode("/Defs/QuestEditor_Library.DomainSurfaceDef")!, false);
+                XmlDocument terrainXml = new();
+                terrainXml.Load(Path.Combine(module, "Defs", "CQF_DomainTerrains.xml"));
+                TerrainDef terrain = DirectXmlToObject.ObjectFromXml<TerrainDef>(terrainXml.SelectSingleNode("/Defs/TerrainDef")!, false);
+                Check(terrain.defName == "CQF_BasicDomainTerrain" && terrain.fertility == 0f && terrain.dontRender
+                    && test.SelectSingleNode("/Defs/GenStepDef/genStep/terrain")!.InnerText == terrain.defName
+                    && test.SelectSingleNode("/Defs/GenStepDef/genStep/gridTerrain")!.InnerText == terrain.defName,
+                    "basic domain generates only its special terrain instead of soil or paved tiles");
+                Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/surface")!.InnerText == surface.defName
+                    && surface.shader == "CQF_DomainSurface" && surface.screenShader == "CQF_DomainSurfaceScreen",
+                    "basic domain configures a reusable surface separately from its original opening shader");
+                Check(surface.screenBorderWidth > 0f && surface.screenBorderWidth < 0.3f && surface.screenBorderOpacity <= 1f,
+                    "basic domain enables a narrow screen border independently of its opening animation");
                 ThingDef anchor = DirectXmlToObject.ObjectFromXml<ThingDef>(test.SelectSingleNode("/Defs/ThingDef")!, false);
                 Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/anchor")!.InnerText == anchor.defName
                     && anchor.thingClass == typeof(Building_DomainVisual) && anchor.selectable && anchor.useHitPoints
@@ -96,8 +135,8 @@ internal static class DomainVisualChecks
                 HediffDef protection = DirectXmlToObject.ObjectFromXml<HediffDef>(test.SelectSingleNode("/Defs/HediffDef")!, false);
                 Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/protection")!.InnerText == protection.defName
                     && protection.hediffClass == typeof(Hediff_DomainProtection)
-                    && test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/maximumHealth")!.InnerText == "1000",
-                    "base domain connects caster damage to its explicit 1000 shared health");
+                    && test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/maximumHealth")!.InnerText == "100000",
+                    "base domain connects caster damage to its explicit 100000 shared health");
                 XElement shaders = XDocument.Load(Path.Combine(module, "Defs", "CQF_DomainShaders.xml")).Root!;
                 XElement ground = shaders.Elements("ShaderDef").Single(def => def.Element("defName")!.Value == valid.groundShader).Element("shaderProgram")!;
                 Check(ground.Element("depthTest")!.Value == "true" && ground.Element("depthWrite")!.Value == "false"

@@ -1,8 +1,12 @@
 # CQF 领域系统开发参考
 
+双领域对抗扩展见 [领域对抗](domain-contest.md)。下文的单领域流程仍适用于普通展开；共同战场中的第二实例必须通过 FindDomainFor / GetInstances 获取，不能假设单图 GetWorker 就是当前人物的领域。
+
 用于领域展开、领域内战斗、共享血量、外部载体、人员往返、地图池和转场扩展。以下接口依据当前本地源码核对；领域框架有 RimWorld 1.6 / 1.7 分支，具体构建环境见 [版本与构建](version-build.md)。
 
 ## 源码入口与职责
+
+当前领地玩法的公共接口见 [领域对抗](domain-contest.md)：RestoreHealth 供技能回血；ProtectTerritory / RemoveTerritoryProtection 管理计时或来源绑定的真实守区；RegisterStructure 将技能建筑登记到本次领域布局。自然对抗消耗与主场 30% 减伤由框架处理，敌区技能倍率由子 Mod 自己处理。三个机制均复用同一个领域血量与实际 OwnsCell 查询，不新增 GComp、地图或领域配对分支。
 
 领域模块源码目录：`D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\CQF.Domain`，类型均位于 `QuestEditor_Library` 命名空间。
 
@@ -16,6 +20,8 @@
 | `Building_Domain.cs` | 原地图上的外部载体、受伤限额和共享血量显示 |
 | `Hediff_DomainProtection.cs` / `Comp_DomainProtection.cs` | 施术者伤害吸收、死亡通知和存读档后的保护组件恢复 |
 | `DomainOpening.cs` | 子 Mod 展开物件的调度接口 |
+| `DomainMapTemplate.cs` / `DomainStructureBlueprint.cs` | 预生成地形与初始建筑布局，提供特殊建筑初始化扩展 |
+| `DomainLayout.cs` / `DomainStructure.cs` | 实例建筑的领地显隐、原对象托管、合并与深度保存 |
 | `AbilityCompProperties_DomainProtection.cs` / `AbilityComp_DomainProtection.cs` | 领域能力初始化与读档后的原生伤害组件准备 |
 | `DomainTransition.cs` | 镜头切换、入场/返回锁定和转场资源释放 |
 | `MapComponent_DomainTransitionLock.cs` / `DomainTransitionLifetime.cs` | 返回人员锁定，以及离开游戏时释放视觉资源 |
@@ -83,8 +89,10 @@ XML 根类型使用 `QuestEditor_Library.DomainDef`。字段大小写和类型�
 | `anchor` | 可省略 `ThingDef`；`thingClass` 继承 `Building_Domain` |
 | `protection` | 可省略 `HediffDef`；`hediffClass` 继承 `Hediff_DomainProtection` |
 | `openingAbility` | 可省略 `AbilityDef`；执行该能力工作期间给予施术者展开保护 |
-| `preload` | `true`；管理器在该 Def 尚无地图时预生成一张并休眠 |
+| `preload` | `true`；管理器为该 Def 预生成两张地图并休眠，同时缓存原始地形与建筑蓝图，供同类展开和领域对抗复用 |
 | `visuals` | 可省略 `DomainVisualDef`；通用展开、材质和时间参数，见 [基础领域视觉](domain-visuals.md) |
+| `surface` | 可省略 `DomainSurfaceDef`；领域特征材质，省略时使用真实地形与建筑，不影响参加对抗 |
+| `contestColor` | 默认 `(0.72, 0.76, 0.80, 1)`；公共接触带的领域颜色，不用于整图染色 |
 
 新 Def 使用所属 Mod 的前缀。显示文本使用用户给定文本，没有文本时使用同名占位符；Def 原文为英语，中文放入 `Languages/ChineseSimplified (简体中文)/DefInjected/QuestEditor_Library.DomainDef`，不创建英文 DefInjected。DLL / UI 文本使用 Key 与中英 Keyed 翻译。
 
@@ -119,11 +127,19 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 `Acquire` 先找同 Def 且没有人物的 `Available` 地图，激活其休眠状态；无空闲地图时按需生成。它只获取地图，不转移人物，也不预留地图；获取后应在同一流程中进入。`DomainMaps` 是所有已登记领域地图，`HibernatingMaps` 是所有已休眠地图，两者不是同一份列表。领域运行对象通过其宿主直接调用通用休眠与激活。
 
+反展开只查询 `GetMapTemplate` 的地形与建筑缓存，不再 Acquire / Activate 临时模板地图；同步展开也只唤醒宿主地图。缓存由同一运行对象深度保存，不能从已被对抗改写的活动地图重新采样原始模板。
+
+`DomainMapTemplate` 在原始地图生成后捕获地形及除外部载体之外的 Building。`DomainLayout` 在普通进入时接管原有模板建筑，反展开时从蓝图创建独立建筑；对抗只显示完整占地都归本方的建筑。退让时通过 `DomainStructure` 的 ThingOwner 托管原建筑，夺回时恢复原对象，保留本次使用中的组件状态、损伤及品质。目标占地被人物、物品或建筑占用时等待，之后定期重试，不强行覆盖。已摧毁建筑在本次使用中不重建；返回后清理布局，下次使用从原始蓝图恢复。
+
+1.7 的归属查询包含主分界线与三处随优势生长的侵蚀孔洞。孔洞是真实领地，地形切换、完整建筑占地判定、技能和持续效果均通过 DomainAt / OwnsCell 获取结果；不能仅比较 x 与 BoundaryX。FirstFraction 表示总面积份额，BoundaryX 已按孔洞面积补偿，不再直接等于份额乘地图宽度。新增领域无需实现类型配对或专用孔洞 Shader；公共曲线地形网格适用于普通地形和自定义地形材质。
+
+默认蓝图记录 Def、Stuff、坐标、旋转、血量、阵营、品质、颜色和风格，不克隆任意组件、库存或屋顶。需要额外初始数据的特殊建筑，覆盖 `DomainWorker.CaptureStructure(Building)`，返回独立的 `DomainStructureBlueprint` 子类，在 `Create` / `ExposeData` 中处理自身数据；不要加入领域类型配对判断。运行中的建筑收起保留整个原对象，与初始蓝图捕获范围不同。收起及返回清理前先释放建筑容器中的人物/尸体；原版生成中的 Casket 使用自身 EjectContents，其他持有容器使用原版 TryDrop，失败会报错并保留状态。
+
 预加载在新建/加载游戏后初始化待办，新增或唤醒地图时检查尚待处理的定义，最后一张同 Def 领域地图移除后补充预加载。不会每帧扫描全部 `DomainDef`，也不保证始终留有一张空闲地图。预加载失败报告错误并在本局停止对该定义自动重试。队列为空时不创建快照；Worker 更新只从原版活动地图挑选已登记领域并复用缓冲列表，不逐帧遍历休眠池。预加载来源排除休眠和待休眠地图，新增或唤醒地图后重新检查。
 
 `Enter` 要求领域空闲，施术者存活、已生成、未倒地，且不在目标领域地图。调用方负责敌我、范围、能力条件与是否允许嵌套领域；框架不强制禁止从另一张领域地图进入。目标会按同地图、已生成、存活去重，倒地目标不会被框架排除。
 
-顺序为：记录来源地图和施术者原点、激活并补满血量 → `Entering()` → 安装可选保护 Hediff → 记录并转移参与者 → `Entered(entrants)` → 在原点生成可选外部载体 → 默认镜头切换。进入位置尽量保留相对施术者的位置，安全落点由 `FindFreeCell` 选择。原 Lord 先移除，征召状态在转移后恢复。`Entered` 执行时外部载体尚未生成。
+顺序为：记录来源地图和施术者原点、激活并补满血量 → 建立并显示本次布局 → `Entering()` → 安装可选保护 Hediff → 记录并转移参与者 → `Entered(entrants)` → 在原点生成可选外部载体 → 默认镜头切换。进入位置尽量保留相对施术者的位置，安全落点由 `FindFreeCell` 选择。原 Lord 先移除，征召状态在转移后恢复。`Entered` 执行时外部载体尚未生成。
 
 每张领域地图有一个 Worker，复用地图也复用 Worker；每次展开的专有状态应在 `Entering` / `Recycling` 重置。普通地图也有 `MapComponent_Domain`，未配置时 `Worker` / `GetWorker<T>()` 为 null，访问 `Definition` 会抛异常，不能仅凭组件存在判断领域。
 
@@ -144,9 +160,11 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 | `Update()` / `OnGUI()` | 来自 MapComponent 的对应调用，不自动按 Active 过滤，自行判断状态 |
 | `ManagedUpdate()` | 管理器在没有长事件时对未休眠地图调用，适合复活等结构变更；按休眠过滤，但不按 Active 过滤 |
 | `Draw()` | 当前正在查看且领域 Active 时绘制 |
+| `PrepareReturn(bool visible)` | 反复询问退出是否就绪；默认调用 BeforeReturn 后立即允许，带可见转场的实现需等待自身 ReturnCovered，不能每次重建转场 |
 | `BeforeReturn(bool visible)` | 返回人员前处理玩法状态、特殊载具和退出截图 |
 | `PawnLeaving(Pawn pawn)` | 清理离开人物的专有状态；包括尸体中的 InnerPawn，不只原参与者 |
-| `Returned(Map destination, IntVec3 focus, IReadOnlyList<Pawn> pawns)` | 人物、尸体、物品已转移，外部载体已移除；此时 Caster / Participants 尚可用，可清理能力或绑定返回转场 |
+| `Dissolved()` | 本方领域结束时撤销规则和临时能力；对抗中人物仍会滞留，不能等实际返回才清理 |
+| `Returned(Map destination, IntVec3 focus, IReadOnlyList<Pawn> pawns)` | 人物、尸体、物品实际转移；此时 Caster / Participants 尚可用，用于来源地图规则和返回转场，必须立即失效的能力放在 Dissolved 清理 |
 | `Recycling(Map destination)` | 地图残余 Thing / Lord 已清理，休眠前重置地形和实现状态 |
 | `Collapsed(string reason)` | 共享血量耗尽或载体丢失等崩塌流程中的专有惩罚 |
 | `CasterDied(Pawn pawn)` | 由关联保护 Hediff 的死亡通知转发；未配置保护时不能仅靠此回调捕获死亡 |
@@ -167,9 +185,15 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 外部载体只对 `harmsHealth` 的正伤害按 `maximumAnchorDamagePerHit` 扣共享血量，并吸收该次普通建筑伤害流程，避免重复扣血。载体被 Destroy / DeSpawn 会崩塌；正常退出必须使用 `RemoveNormally()` 先解除关联，再销毁。`Collapse` 只执行一次，血量归零，移除载体，调用玩法惩罚并请求退出；本次领域崩塌后 `RestoreHealth` 不能使其复活。
 
+对抗中另一方仍活动时，RequestReturn 与 Collapse 均进入 Trapped 状态：结束入场锁定、释放特殊载具与布局容器、调用 Dissolved、撤销本方保护/载体/布局及屏幕边缘，人物和尸体保持原地图、原位置。保留施术者、参与者及来源记录并深度保存；不播放返回转场，不执行 Returned。剩余方立即接管整张地图的真实地形和建筑，即使暂停也完成接管。最后一方退出时先验证双方返程地图，完整遮盖后分别按各自记录返回，再统一回收。Trapped 实例不能成为空闲地图，也不能接纳第三方。
+
 ## 正常返回、失败与回收
 
 主动结束调用 `RequestReturn(reason)`；它设置关闭标志，随后由 MapComponentUpdate 排队，管理器在长事件结束后的更新点调用 `CompleteReturn()`。不要在受伤或人物遍历回调里直接执行批量跨地图返回。
+
+待返回队列复用处理缓存。等待遮盖的 `ReturnToSource` 与真正迁移人员的私有 `FinishReturn` 分开，使后续 LINQ 闭包不会在等待阶段提前分配；预热后连续 256 次等待重试新增分配为 0。实际跨图操作仍只在遮盖屏障通过后执行。
+
+1.7 基础与血海 Worker 均等待自身退出转场的 ReturnCovered。血海保留本次转场引用，Returned 仅绑定同一转场，随后清空引用；返回材质在覆盖点至揭幕点保持不透明。不可见退出不创建等待屏障。对抗中的幸存血海和独立血海使用同一流程。
 
 未暂停生命周期且入场已解锁时，施术者缺失、死亡、倒地或不再存在于领域中也会请求正常返回；这些情形本身不等于 `Collapse`。特殊复活流程需要自行配合 `SuspendLifecycle`，恢复后解除暂停。
 

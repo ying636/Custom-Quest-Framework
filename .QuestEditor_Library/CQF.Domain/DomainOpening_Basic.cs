@@ -9,7 +9,11 @@ public class DomainOpening_Basic : DomainOpening
     public override DomainDef Definition => definition ?? throw new InvalidOperationException("[CQF] Basic domain opening has no definition.");
     public override Pawn? Caster => caster;
     public override bool Active => Spawned && caster != null && !caster.Dead && !caster.Downed && caster.MapHeld == Map;
-    public float Progress => Mathf.Clamp01((Find.TickManager.TicksGame - startTick) / (float)Visuals.openingTicks);
+    public override float Progress => Mathf.Clamp01((Find.TickManager.TicksGame - startTick) / (float)Visuals.openingTicks);
+    public override IReadOnlyList<Pawn> Entrants => entrants;
+#if RIMWORLD_1_7
+    public override bool SupportsFusion => true;
+#endif
     public DomainVisualDef Visuals => Definition.visuals ?? throw new InvalidOperationException("[CQF] Basic domain opening requires DomainDef.visuals.");
 
     public static DomainOpening_Basic Start(DomainDef definition, Pawn caster, IEnumerable<Pawn> targets)
@@ -77,10 +81,9 @@ public class DomainOpening_Basic : DomainOpening
         {
             if (!Active) return;
             ReleaseLocks();
-            Map realm = CQFDomainRuntime.Instance.Acquire(Definition, caster!);
-            realm.GetComponent<MapComponent_Domain>().Enter(caster!, entrants.Where(pawn => pawn != caster && pawn != null
+            MapComponent_Domain domain = CQFDomainRuntime.Instance.EnterOrContest(Definition, caster!, entrants.Where(pawn => pawn != caster && pawn != null
                 && pawn.Spawned && !pawn.Dead && pawn.Map == Map));
-            CQFDomainRuntime.Instance.Transition?.Bind(realm);
+            CQFDomainRuntime.Instance.Transition?.Bind(domain);
         }
         catch (Exception error)
         {
@@ -109,6 +112,10 @@ public class DomainOpening_Basic : DomainOpening
         base.DeSpawn(mode);
     }
 
+    public override void ReleaseForFusion() => ReleaseLocks();
+
+    public override void ResumeAfterFusion() => transferQueued = false;
+
     internal void ReleaseVisuals()
     {
         visuals?.Dispose();
@@ -119,7 +126,7 @@ public class DomainOpening_Basic : DomainOpening
     {
         base.Tick();
         if (!Active) { Destroy(); return; }
-        if (Progress < 1f || transferQueued) return;
+        if (Progress < 1f || transferQueued || Fusion?.Active == true) return;
         transferQueued = true;
         CQFDomainRuntime.Instance.QueueOpening(this);
     }
@@ -130,7 +137,7 @@ public class DomainOpening_Basic : DomainOpening
         try
         {
             visuals ??= new DomainOpeningVisuals(Visuals);
-            visuals.Draw(drawLoc, Progress, (Find.TickManager.TicksGame - startTick) / 60f);
+            visuals.Draw(drawLoc, Progress, (Find.TickManager.TicksGame - startTick) / 60f, fusion: Fusion?.DomeStateFor(this) ?? default);
         }
         catch (Exception error)
         {
