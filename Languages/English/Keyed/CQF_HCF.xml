@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_HCF_HiveKey>Hive or node key</CQF_HCF_HiveKey>
+  <CQF_HCF_HiveKey_Tip>The target key of a hive building or node pawn that owns the destination groups.</CQF_HCF_HiveKey_Tip>
+  <CQF_HCF_GroupIndex>Group index</CQF_HCF_GroupIndex>
+  <CQF_HCF_JoinGroupIndex_Tip>-1 selects the first group that can accept each unit. 0 and higher select one group, ordered by its internal ID. Units and the hive or node must be spawned on the same map.</CQF_HCF_JoinGroupIndex_Tip>
+  <CQF_HCF_ModeGroupIndex_Tip>-1 changes all groups owned by each target. 0 and higher select one group, ordered by its internal ID. An ordinary unit targets its current group.</CQF_HCF_ModeGroupIndex_Tip>
+  <CQF_HCF_Mode>Group mode: {0}</CQF_HCF_Mode>
+  <CQF_HCF_SelectMode>Select group mode</CQF_HCF_SelectMode>
+  <CQF_HCF_None>Not selected</CQF_HCF_None>
+  <CQF_HCF_InvalidJoinSettings>[CQF/HCF] Joining a group requires a hive or node key and a group index of -1 or greater.</CQF_HCF_InvalidJoinSettings>
+  <CQF_HCF_InvalidModeSettings>[CQF/HCF] Setting a group mode requires a mode and a group index of -1 or greater.</CQF_HCF_InvalidModeSettings>
+  <CQF_HCF_HiveMissing>[CQF/HCF] No valid hive or node was found for key '{0}'.</CQF_HCF_HiveMissing>
+  <CQF_HCF_GroupMissing>[CQF/HCF] Target '{0}' has no group matching index {1}.</CQF_HCF_GroupMissing>
+  <CQF_HCF_NoTargets>[CQF/HCF] The action resolved no targets.</CQF_HCF_NoTargets>
+  <CQF_HCF_InvalidUnit>[CQF/HCF] Target '{0}' is not a valid pawn for joining a group.</CQF_HCF_InvalidUnit>
+  <CQF_HCF_DifferentMap>[CQF/HCF] Unit '{0}' and hive or node '{1}' must be spawned on the same map before joining a group.</CQF_HCF_DifferentMap>
+  <CQF_HCF_JoinRejected>[CQF/HCF] Unit '{0}' could not join a group belonging to '{1}': {2}</CQF_HCF_JoinRejected>
+  <CQF_HCF_UnknownRejection>The group rejected the unit without providing a reason.</CQF_HCF_UnknownRejection>
+  <CQF_HCF_InvalidGroupTarget>[CQF/HCF] Target '{0}' is not a valid hive, node or group member.</CQF_HCF_InvalidGroupTarget>
+  <CQF_HCF_ModeUnsupported>[CQF/HCF] Group {1} of '{0}' does not support mode '{2}' with its current target.</CQF_HCF_ModeUnsupported>
+</LanguageData>

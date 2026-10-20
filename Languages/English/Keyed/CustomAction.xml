@@ -256,9 +256,10 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFAction_Ability>Action:gain ability</CQFAction_Ability>
   <CQFAbilityDef>Ability def:</CQFAbilityDef>
   <CQFAction_JoinHiveGroup>HCF Action: Join Hive</CQFAction_JoinHiveGroup>
-  <CQFAction_JoinHiveGroup_Tip>Use the key to obtain the corresponding entity and its hive group, allowing the target to join the retrieved hive group</CQFAction_JoinHiveGroup_Tip>
+  <CQFAction_JoinHiveGroup_Tip>Join the target HCF units to a group owned by the hive or node identified by its key. Checks faction, tags, capacity and node ownership before joining.</CQFAction_JoinHiveGroup_Tip>
   <HiveKey>Hive Key:</HiveKey>
   <CQFAction_SetHiveGroupMode>HCF Action:Set Group Mode</CQFAction_SetHiveGroupMode>
+  <CQFAction_SetHiveGroupMode_Tip>Set the mode of groups owned by target hives or nodes, or the current group of each target unit. Uses HCF mode workers and updates group duties.</CQFAction_SetHiveGroupMode_Tip>
   <CQFAction_DestroyMainSite>Action: destroy main site</CQFAction_DestroyMainSite>
   <CQFAction_DestroyMainSite_Tip>Destroy the main site resolved from the given key. The key can point to a recorded main-site map target, or be the site's MainMapKey directly.</CQFAction_DestroyMainSite_Tip>
   <MainSiteKey>Main site key:</MainSiteKey>

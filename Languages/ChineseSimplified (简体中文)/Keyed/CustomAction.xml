@@ -471,9 +471,10 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFAction_Ability>行为：给予能力</CQFAction_Ability>
   <CQFAbilityDef>能力定义：</CQFAbilityDef>
   <CQFAction_JoinHiveGroup>巢群行为：加入巢群</CQFAction_JoinHiveGroup>
-  <CQFAction_JoinHiveGroup_Tip>通过密匙获取对应的事物，并获取事物的巢群，让目标加入获取到的巢群之中</CQFAction_JoinHiveGroup_Tip>
+  <CQFAction_JoinHiveGroup_Tip>通过密匙指定巢穴或节点，让目标 HCF 单位加入其群组。入组前检查派系、标签、容量和节点归属。</CQFAction_JoinHiveGroup_Tip>
   <HiveKey>巢群密匙：</HiveKey>
   <CQFAction_SetHiveGroupMode>巢群行为：设置集群模式</CQFAction_SetHiveGroupMode>
+  <CQFAction_SetHiveGroupMode_Tip>设置目标巢穴或节点拥有的群组模式，或目标单位当前所属群组的模式。使用 HCF 模式 Worker，并更新群组职责。</CQFAction_SetHiveGroupMode_Tip>
   <CQFAction_DestroyMainSite>行为：销毁主要站点</CQFAction_DestroyMainSite>
   <CQFAction_DestroyMainSite_Tip>销毁给定 Key 对应的主要站点。Key 可指向数据库中的主要站点地图目标，也可以直接填写主要站点的 MainMapKey。</CQFAction_DestroyMainSite_Tip>
   <MainSiteKey>主要站点 Key：</MainSiteKey>

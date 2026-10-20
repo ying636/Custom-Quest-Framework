@@ -2,7 +2,11 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.0`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.1`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.1 HCF 行为兼容（2026-10-20）
+
+恢复 CQF 自有的加入巢群和设置群组模式行为，补齐中英文 Keyed 文本、1.6 / 1.7 条件加载和发布 DLL。兼容代码针对已发布 HCF 3.15 构建，双版本编译零警告、零错误，1.7 离线检查 32 项通过；执行端使用探针记录调用，尚未验证完整游戏中的 Lord 调度或编辑器视觉效果。不恢复旧存档字段或旧模式枚举。
 
 ## 4.0 发布范围（2026-10-20）
 
@@ -133,7 +137,7 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 - 火种危机：构建 `.QuestEditor_Library/CQF.AllsparkCrisis/CQF.AllsparkCrisis.csproj`；输出 `1.7/Mod/AllsparkCrisis/Assemblies/CQFAndRS.dll`。默认引用火种危机 `1.7/Assemblies/AllsparkCrisis.dll`；`AllsparkCrisisPath` 可覆盖前置 DLL 路径。原适配仅有 DLL，当前源码依据其实际实现恢复。
 - 模拟经营：构建 `.QuestEditor_Library/CQF.RimSimManagementFramework/CQF.RimSimManagementFramework.csproj`；输出 `1.7/Mod/RimSimManagementFramework/Assemblies/CQF_RSMF.dll`。`RimSimManagementPath` 可覆盖前置 DLL 路径。本机依赖仍在工坊 `3736621496/1.6/Assemblies`；两个顾客生成方法为 private，通过 Harmony TargetMethods 查找，并读取 out spawnedPawn，避免扫描整张地图收集新 pawn。
 - Bill：本机未找到 BillDoorsPredefinedCharacter 的前置 DLL 或适配源码，1.7 未启用该加载入口，不把旧二进制复制视为适配完成。
-- HCF：联动由独立 HiveCreatureFramework 仓库的 Mods/CQF 工程提供，不能在 CQF 空目录补装另一份。HCF 3.13 已于 2026-10-18 发布至 GitHub master（87835b3），包含 1.6 / 1.7 主库、CQF / CE / VEF 联动 DLL、1.7 Defs / Patches、双版本工程配置和条件加载入口。本机程序集已备份更新；HCF Skill 的 references/version-build.md 记录构建和验证范围。CQF 联动通过 HCF 事件发送任务书信号，不新增 Harmony 补丁。
+- HCF：分为两套独立兼容。HCF 仓库的 Mods/CQF 工程负责生产、升级、融合与改造的任务书目标和完成信号。CQF 4.1 的 `.QuestEditor_Library/CQF.HCF` 工程提供 `CQFAction_JoinHiveGroup` 与 `CQFAction_SetHiveGroupMode`，输出双版本 `Mod/HCF/Assemblies/HCFWithCQF.dll`，由 `IfModActive="HaiLuan.HiveCreatureFramework"` 条件加载；主库不依赖 HCF，不新增 Harmony 补丁。两者不能互相替代。行为配置、构建和验证范围见 CQF.HCF/README.md。
 
 已删除无对应 Def/运行类的 `CQF_DestroyMainSiteCountdown` 残留翻译，并删除错误短类型目录和重复英文 PawnMod DefInjected。自定义 Def 的中文翻译使用完整命名空间目录。
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_HCF_HiveKey>巢穴或节点密匙</CQF_HCF_HiveKey>
+  <CQF_HCF_HiveKey_Tip>拥有目标群组的巢穴建筑或节点人物的目标密匙。</CQF_HCF_HiveKey_Tip>
+  <CQF_HCF_GroupIndex>群组序号</CQF_HCF_GroupIndex>
+  <CQF_HCF_JoinGroupIndex_Tip>-1 为每个单位选择首个可接纳它的群组；0 及以上指定一个群组，按内部 ID 排序。单位与巢穴或节点必须已生成在同一地图。</CQF_HCF_JoinGroupIndex_Tip>
+  <CQF_HCF_ModeGroupIndex_Tip>-1 修改每个目标拥有的全部群组；0 及以上指定一个群组，按内部 ID 排序。普通单位则操作其当前所属群组。</CQF_HCF_ModeGroupIndex_Tip>
+  <CQF_HCF_Mode>群组模式：{0}</CQF_HCF_Mode>
+  <CQF_HCF_SelectMode>选择群组模式</CQF_HCF_SelectMode>
+  <CQF_HCF_None>未选择</CQF_HCF_None>
+  <CQF_HCF_InvalidJoinSettings>[CQF/HCF] 加入群组需要填写巢穴或节点密匙，且群组序号不得小于 -1。</CQF_HCF_InvalidJoinSettings>
+  <CQF_HCF_InvalidModeSettings>[CQF/HCF] 设置群组模式需要选择模式，且群组序号不得小于 -1。</CQF_HCF_InvalidModeSettings>
+  <CQF_HCF_HiveMissing>[CQF/HCF] 密匙“{0}”没有对应的有效巢穴或节点。</CQF_HCF_HiveMissing>
+  <CQF_HCF_GroupMissing>[CQF/HCF] 目标“{0}”没有序号为 {1} 的群组。</CQF_HCF_GroupMissing>
+  <CQF_HCF_NoTargets>[CQF/HCF] 行为没有解析到任何目标。</CQF_HCF_NoTargets>
+  <CQF_HCF_InvalidUnit>[CQF/HCF] 目标“{0}”不是可加入群组的有效人物。</CQF_HCF_InvalidUnit>
+  <CQF_HCF_DifferentMap>[CQF/HCF] 单位“{0}”与巢穴或节点“{1}”必须已生成在同一地图，才能加入群组。</CQF_HCF_DifferentMap>
+  <CQF_HCF_JoinRejected>[CQF/HCF] 单位“{0}”无法加入“{1}”的群组：{2}</CQF_HCF_JoinRejected>
+  <CQF_HCF_UnknownRejection>群组拒绝接纳该单位，但没有提供原因。</CQF_HCF_UnknownRejection>
+  <CQF_HCF_InvalidGroupTarget>[CQF/HCF] 目标“{0}”不是有效的巢穴、节点或群组成员。</CQF_HCF_InvalidGroupTarget>
+  <CQF_HCF_ModeUnsupported>[CQF/HCF] “{0}”的群组 {1} 在当前目标下不支持模式“{2}”。</CQF_HCF_ModeUnsupported>
+</LanguageData>
