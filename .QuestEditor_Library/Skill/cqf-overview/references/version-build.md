@@ -2,7 +2,13 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.1`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.2`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.2 HCF 联动合并（2026-10-20）
+
+配套 HCF 3.16，将加入巢群、设置群组模式、原有双语文本及检查迁至 HCF 的 `Mods/CQF` 工程，与任务书目标和完成信号共用 `HiveCreatureFramework.CQF.dll`。CQF 删除双版本 `Mod/HCF` 入口、旧 `HCFWithCQF.dll` 及独立项目；主库 DLL 不变。保留行为类型全名和配置字段，不新增旧存档迁移。两个 Mod 须同时更新，避免旧联动副本残留。
+
+联动在 HCF 最新上游 `c86ad09` 基础上完成 1.6 / 1.7 编译，均零警告、零错误。1.7 离线 41 项检查通过，实际原生启动的仅 HCF、仅 CQF、双开组合共 30 项检查通过；最终成功运行无 ERROR。1.6 仅编译验证，未验证完整 Lord 调度或编辑器视觉。迁移文本逐项保持原文，所有加载目录存在。复跑入口与验证清单由 HCF 仓库维护。
 
 ## 4.1 HCF 行为兼容（2026-10-20）
 
@@ -137,7 +143,7 @@ dotnet run --project .QuestEditor_Library/Tests/EditorModule/Checks.csproj -c Re
 - 火种危机：构建 `.QuestEditor_Library/CQF.AllsparkCrisis/CQF.AllsparkCrisis.csproj`；输出 `1.7/Mod/AllsparkCrisis/Assemblies/CQFAndRS.dll`。默认引用火种危机 `1.7/Assemblies/AllsparkCrisis.dll`；`AllsparkCrisisPath` 可覆盖前置 DLL 路径。原适配仅有 DLL，当前源码依据其实际实现恢复。
 - 模拟经营：构建 `.QuestEditor_Library/CQF.RimSimManagementFramework/CQF.RimSimManagementFramework.csproj`；输出 `1.7/Mod/RimSimManagementFramework/Assemblies/CQF_RSMF.dll`。`RimSimManagementPath` 可覆盖前置 DLL 路径。本机依赖仍在工坊 `3736621496/1.6/Assemblies`；两个顾客生成方法为 private，通过 Harmony TargetMethods 查找，并读取 out spawnedPawn，避免扫描整张地图收集新 pawn。
 - Bill：本机未找到 BillDoorsPredefinedCharacter 的前置 DLL 或适配源码，1.7 未启用该加载入口，不把旧二进制复制视为适配完成。
-- HCF：分为两套独立兼容。HCF 仓库的 Mods/CQF 工程负责生产、升级、融合与改造的任务书目标和完成信号。CQF 4.1 的 `.QuestEditor_Library/CQF.HCF` 工程提供 `CQFAction_JoinHiveGroup` 与 `CQFAction_SetHiveGroupMode`，输出双版本 `Mod/HCF/Assemblies/HCFWithCQF.dll`，由 `IfModActive="HaiLuan.HiveCreatureFramework"` 条件加载；主库不依赖 HCF，不新增 Harmony 补丁。两者不能互相替代。行为配置、构建和验证范围见 CQF.HCF/README.md。
+- HCF：自 CQF 4.2 / HCF 3.16 起，所有双向联动统一由 HCF 的 `.HiveCreatureFramework/HiveCreatureFramework/Mods/CQF` 工程维护，输出双版本 `Mods/CQF/Assemblies/HiveCreatureFramework.CQF.dll`，由 HCF 的 `IfModActive="HaiLuan.CustomQuestFramework"` 条件加载。包括 `CQFAction_JoinHiveGroup`、`CQFAction_SetHiveGroupMode`、五种任务书目标与完成信号。两框架主库均无对方的程序集引用，无新增 Harmony 补丁。配置、构建和检查见该 HCF 工程的 README.md；CQF 不再提供 HCF 联动项目、DLL 或重复翻译。
 
 已删除无对应 Def/运行类的 `CQF_DestroyMainSiteCountdown` 残留翻译，并删除错误短类型目录和重复英文 PawnMod DefInjected。自定义 Def 的中文翻译使用完整命名空间目录。
 
