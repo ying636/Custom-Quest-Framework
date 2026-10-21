@@ -1,4 +1,5 @@
 using HarmonyLib;
+using RimWorld.Planet;
 using Verse;
 
 namespace QuestEditor_Library;
@@ -14,7 +15,9 @@ internal sealed class CQFHibernatingMap : IExposable
     }
 
     public Map Map => map ?? throw new InvalidOperationException("[CQF] Saved hibernating map is missing in CQF_ownedHibernatingMaps.");
+    public Map? MapOrDefault => map;
     public bool RegionUpdaterEnabled => regionUpdaterEnabled;
+    public PocketMapParent? Parent => parent;
 
     public void ExposeData()
     {
@@ -22,6 +25,7 @@ internal sealed class CQFHibernatingMap : IExposable
         if (Scribe.mode != LoadSaveMode.Saving)
         {
             Scribe_Deep.Look(ref map, "map");
+            Scribe_Deep.Look(ref parent, "parent");
             return;
         }
         List<Map> maps = Current.Game.Maps;
@@ -32,6 +36,11 @@ internal sealed class CQFHibernatingMap : IExposable
         {
             SetRegionIndex(Map, (sbyte)(maps.Count - 1));
             Scribe_Deep.Look(ref map, "map");
+            // MapInfo scribes its parent as a reference, so a parent that is no longer kept alive by
+            // World.pocketMaps (see GameComponent_MapManager.DetachPocketMapParent) has to be owned by
+            // the hibernation record itself or map.info.parent would not resolve on the next load.
+            parent = Map.Parent as PocketMapParent;
+            Scribe_Deep.Look(ref parent, "parent");
         }
         finally
         {
@@ -54,6 +63,7 @@ internal sealed class CQFHibernatingMap : IExposable
     }
 
     private Map? map;
+    private PocketMapParent? parent;
     private bool regionUpdaterEnabled;
     private static readonly AccessTools.FieldRef<Thing, sbyte> thingMapIndex = AccessTools.FieldRefAccess<Thing, sbyte>("mapIndexOrState");
 }

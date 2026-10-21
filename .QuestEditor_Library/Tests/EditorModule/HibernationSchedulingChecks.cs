@@ -42,6 +42,8 @@ internal static class HibernationSchedulingChecks
             prefix: Hook(nameof(CountTickRemoval)));
         harmony.Patch(AccessTools.Method(typeof(Map), nameof(Map.ExposeData)), prefix: Hook(nameof(ExposeFixtureMap)));
         harmony.Patch(AccessTools.Method(typeof(Map), nameof(Map.FinalizeLoading)), prefix: Hook(nameof(FinalizeFixtureMap)));
+        harmony.Patch(AccessTools.Method(typeof(MapParent), nameof(MapParent.FinalizeLoading)), prefix: Hook(nameof(SkipParentFinalization)));
+        harmony.Patch(AccessTools.Method(typeof(ContentFinder<UnityEngine.Texture2D>), "Get"), prefix: Hook(nameof(SkipContentFinder)));
         try
         {
             PauseProbeThing activeProbe = SpawnProbe(active, TickerType.Normal, 10);
@@ -134,8 +136,17 @@ internal static class HibernationSchedulingChecks
 
     private static void CheckSaving(Game game, GameComponent_MapManager manager, Map sleeping, Map pending)
     {
+        World world = (World)RuntimeHelpers.GetUninitializedObject(typeof(World));
+        world.factionManager = new FactionManager();
+        world.pocketMaps = new List<PocketMapParent>();
+        typeof(Game).GetField("worldInt", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(game, world);
+        PocketMapParent pocketParent = CreatePocketParent(7001);
+        sleeping.info.parent = pocketParent;
+        world.pocketMaps.Add(pocketParent);
         manager.Hibernate(sleeping);
         manager.GameComponentUpdate();
+        Check(!world.pocketMaps.Contains(pocketParent) && sleeping.info.parent == pocketParent,
+            "hibernation drops the pocket map parent from the world list and keeps it on the map");
         pending.regionAndRoomUpdater.Enabled = false;
         manager.Hibernate(pending);
         Map[] before = game.Maps.ToArray();
@@ -153,10 +164,12 @@ internal static class HibernationSchedulingChecks
             "Scribe owns detached map data and separately references pending active maps");
         Check(savedUnspawned && savedRegionsValid && !sleeping.spawnedThings[0].Spawned && !game.Maps.Contains(sleeping),
             "map serialization scope supplies regional context without spawning things or retaining active membership");
+        XElement recordNode = xml.Descendants("CQF_ownedHibernatingMaps").Elements("li").Single();
+        Check(recordNode.Element("parent")?.Element("def")?.Value == "CQF_Check_PocketParent",
+            "hibernation record deep-saves the pocket map parent so map.info.parent can resolve on load");
         int initialFinalizations = finalizations;
-        World world = (World)RuntimeHelpers.GetUninitializedObject(typeof(World));
-        world.factionManager = new FactionManager();
-        typeof(Game).GetField("worldInt", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(game, world);
+        PocketMapParent orphan = CreatePocketParent(7002);
+        world.pocketMaps.Add(orphan);
         Scribe.loader.InitLoading(file);
         LoadedObjectDirectory directory = (LoadedObjectDirectory)typeof(CrossRefHandler).GetField("loadedObjectDirectory", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(Scribe.loader.crossRefs)!;
         foreach (Map map in before) directory.RegisterLoaded(map);
@@ -170,10 +183,20 @@ internal static class HibernationSchedulingChecks
         Check(!ReferenceEquals(detached, sleeping) && !game.Maps.Contains(detached) && loaded.IsHibernating(pending)
             && detached.spawnedThings.Count == 3 && detached.spawnedThings.All(thing => !thing.Spawned && thing.Map == null),
             "Scribe reconstructs manager-owned map fixtures and restores all pending and detached states");
+        Check(world.pocketMaps.Count == 0 && detached.info.parent is PocketMapParent loadedParent,
+            "loading drops pocket map entries without a live map and re-links the resting map to its record parent");
         Check(finalizations == initialFinalizations + 1 && finalizedBeforeDetach,
             "loaded map initialization and its queued callbacks finish before detaching again");
         loaded.Activate(detached);
         loaded.Activate(pending);
+        Check(detached.info.parent is PocketMapParent activatedParent && world.pocketMaps.Contains(activatedParent)
+            && activatedParent.Map == detached,
+            "activation returns the pocket map parent to the world list and vanilla resolves its map again");
+        PocketMapParent staleParent = CreatePocketParent(7003);
+        world.pocketMaps.Add(staleParent);
+        Patch_PocketMapParentOnMapRemoval.Prefix();
+        Check(world.pocketMaps.Count == 1 && ReferenceEquals(world.pocketMaps[0], detached.info.parent),
+            "the map removal guard drops pocket entries without a live map and keeps resolved ones");
         Check(detached.regionAndRoomUpdater.Enabled && !pending.regionAndRoomUpdater.Enabled,
             "save/load retains the original region updater settings");
         Check(detached.spawnedThings.OfType<PauseProbeThing>().First(probe => probe.def.tickerType == TickerType.Normal).Ticks == 2110,
@@ -181,7 +204,8 @@ internal static class HibernationSchedulingChecks
         game.currentMapIndex = -1;
         foreach (Map map in game.Maps.ToArray()) loaded.Hibernate(map);
         loaded.GameComponentUpdate();
-        Check(game.Maps.Count == 0 && game.CurrentMap == null && loaded.HibernatingMaps.Count == 4,
+        Check(game.Maps.Count == 0 && game.CurrentMap == null && loaded.HibernatingMaps.Count == 4
+            && world.pocketMaps.Count == 0,
             "all maps can leave the native list while remaining component-owned");
         string allFile = Path.ChangeExtension(file, ".all.xml");
         Scribe.saver.InitSaving(allFile, "checks");
@@ -189,6 +213,40 @@ internal static class HibernationSchedulingChecks
         Scribe.saver.FinalizeSaving();
         Check(game.Maps.Count == 0 && XDocument.Load(allFile).Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == 4,
             "all-detached save owns every map without retaining a map in the native list");
+        XDocument legacyFormat = XDocument.Load(allFile);
+        foreach (XElement owned in legacyFormat.Descendants("CQF_ownedHibernatingMaps"))
+        {
+            owned.Name = "CQF_hibernatingMaps";
+            owned.Elements("li").Elements("parent").Remove();
+        }
+        string legacyFile = Path.ChangeExtension(file, ".legacy.xml");
+        legacyFormat.Save(legacyFile);
+        Scribe.loader.InitLoading(legacyFile);
+        GameComponent_MapManager migrated = null!;
+        Scribe_Deep.Look(ref migrated, "manager", game);
+        Scribe.loader.FinalizeLoading();
+        migrated.LoadedGame();
+        Check(migrated.HibernatingMaps.Select(map => map.uniqueID).OrderBy(id => id).SequenceEqual(new[] { 1, 2, 3, 4 }),
+            "a save written under the legacy hibernation key still restores every owned map");
+        string upgraded = Path.ChangeExtension(file, ".upgraded.xml");
+        Scribe.saver.InitSaving(upgraded, "checks");
+        Scribe_Deep.Look(ref migrated, "manager", game);
+        Scribe.saver.FinalizeSaving();
+        XDocument upgradedXml = XDocument.Load(upgraded);
+        Check(!upgradedXml.Descendants("CQF_hibernatingMaps").Any()
+            && upgradedXml.Descendants("CQF_ownedHibernatingMaps").Elements("li").Count() == 4,
+            "the legacy entry is consumed once and then written under the current ownership key");
+        string referenceOnly = Path.ChangeExtension(file, ".reference-only.xml");
+        File.WriteAllText(referenceOnly, "<checks><manager><CQF_hibernatingMaps><li>Map_2</li></CQF_hibernatingMaps></manager></checks>");
+        Scribe.loader.InitLoading(referenceOnly);
+        GameComponent_MapManager unrecoverable = null!;
+        Scribe_Deep.Look(ref unrecoverable, "manager", game);
+        Scribe.loader.FinalizeLoading();
+        unrecoverable.LoadedGame();
+        Check(unrecoverable.HibernatingMaps.Count == 0 && game.Maps.Count == 0,
+            "a legacy entry that only references a map is skipped instead of aborting the load");
+        typeof(GameComponent_MapManager).GetField("instance", BindingFlags.NonPublic | BindingFlags.Static)!
+            .SetValue(null, loaded);
         fixtureSavePath = file;
         Console.WriteLine("Detached map fixture save: " + file);
     }
@@ -198,6 +256,25 @@ internal static class HibernationSchedulingChecks
         Map map = (Map)RuntimeHelpers.GetUninitializedObject(typeof(Map));
         ConfigureFixtureMap(map, id);
         return map;
+    }
+
+    private static PocketMapParent CreatePocketParent(int id)
+    {
+        string name = "CQF_Check_PocketParent";
+        WorldObjectDef definition = DefDatabase<WorldObjectDef>.GetNamedSilentFail(name);
+        if (definition == null)
+        {
+            definition = (WorldObjectDef)RuntimeHelpers.GetUninitializedObject(typeof(WorldObjectDef));
+            definition.defName = name;
+            definition.comps = new List<WorldObjectCompProperties>();
+            DefDatabase<WorldObjectDef>.Add(definition);
+        }
+        PocketMapParent parent = (PocketMapParent)RuntimeHelpers.GetUninitializedObject(typeof(PocketMapParent));
+        parent.def = definition;
+        parent.ID = id;
+        typeof(WorldObject).GetField("comps", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(parent, new List<WorldObjectComp>());
+        return parent;
     }
 
     private static void ConfigureFixtureMap(Map map, int id)
@@ -210,6 +287,7 @@ internal static class HibernationSchedulingChecks
         map.components = new();
         map.cellIndices = new CellIndices(map);
         map.regionGrid = new RegionGrid(map);
+        map.listerThings = new ListerThings(ListerThingsUse.Global);
         Region[] grid = (Region[])typeof(RegionGrid).GetField("regionGrid", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(map.regionGrid)!;
         grid[0] = (Region)RuntimeHelpers.GetUninitializedObject(typeof(Region));
         map.regionGrid.allDistricts.Add(new District());
@@ -266,6 +344,14 @@ internal static class HibernationSchedulingChecks
             finalizedBeforeDetach = Current.Game.Maps.Contains(__instance) && Regions(__instance).All(region => region.Map == __instance));
         return false;
     }
+
+    // Fixture maps carry no lister contents and the harness has no real def database, while the vanilla
+    // implementation only recalculates ship reactor incident targets from the map's thing lister.
+    // WorldObject's startup constructor resolves a command texture, which a console harness off the
+    // Unity main thread cannot do without logging an error.
+    private static bool SkipContentFinder() => false;
+
+    private static bool SkipParentFinalization() => false;
 
     private static IEnumerable<Region> Regions(Map map) => map.regionGrid.AllRegions_NoRebuild_InvalidAllowed;
 

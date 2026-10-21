@@ -36,6 +36,7 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
             if (Current.Game != game) return;
             foreach (Map realm in domainMaps)
             {
+                if (realm == null) continue;
                 realm.GetComponent<MapComponent_Domain>().EndArrivalTransition();
                 realm.GetComponent<MapComponent_Domain>().Challenger?.EndArrivalTransition();
             }
@@ -57,7 +58,21 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
     {
         Scribe_Collections.Look(ref domainMaps, "domainMaps", LookMode.Reference);
         Scribe_Collections.Look(ref mapTemplates, "mapTemplates", LookMode.Def, LookMode.Deep);
-        if (Scribe.mode == LoadSaveMode.PostLoadInit) domainMaps ??= new();
+        if (Scribe.mode != LoadSaveMode.PostLoadInit) return;
+        domainMaps ??= new();
+        DropLostDomainMaps();
+    }
+
+    // A map reference that does not resolve while loading means the map was not saved at all - older
+    // releases could lose every hibernating map (see GameComponent_MapManager.MigrateLegacyHibernatingMaps).
+    // Left in place the hole is dereferenced by every caller that walks the list and is then written
+    // back into the next save, so it has to be dropped as soon as the references are resolved.
+    private void DropLostDomainMaps()
+    {
+        int dropped = domainMaps.RemoveAll(map => map == null);
+        if (dropped > 0)
+            Log.Warning("[CQF] Dropped " + dropped + " domain map reference" + (dropped == 1 ? "" : "s")
+                + " that could not be resolved while loading.");
     }
 
     public void Dispose()
@@ -65,6 +80,7 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
         SetTransition(null);
         foreach (Map realm in domainMaps)
         {
+            if (realm == null) continue;
             MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
             domain.ReleaseScreenBorder();
             domain.Challenger?.ReleaseScreenBorder();
