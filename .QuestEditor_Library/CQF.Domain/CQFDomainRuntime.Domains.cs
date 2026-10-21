@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
@@ -8,8 +9,14 @@ public sealed partial class CQFDomainRuntime
 {
     public IReadOnlyList<Map> DomainMaps => domainMaps;
 
-    public IEnumerable<Map> GetMaps(DomainDef definition) => domainMaps.Where(map => !map.Disposed
-        && !map.Parent.Destroyed && (map.GetComponent<MapComponent_Domain>().Definition == definition
+    // Domain maps can be missing after a load: older releases dropped every hibernating map record,
+    // leaving holes in this list (see CQFDomainRuntime.DropLostDomainMaps). Every walk over the list
+    // has to tolerate them instead of dereferencing Map.Parent.
+    private static bool IsLiveDomainMap([NotNullWhen(true)] Map? map) => map != null && !map.Disposed
+        && map.Parent != null && !map.Parent.Destroyed;
+
+    public IEnumerable<Map> GetMaps(DomainDef definition) => domainMaps.Where(map => IsLiveDomainMap(map)
+        && (map.GetComponent<MapComponent_Domain>().Definition == definition
             || map.GetComponent<MapComponent_Domain>().Challenger?.Definition == definition));
 
     public IEnumerable<MapComponent_Domain> GetInstances(DomainDef definition)
@@ -33,7 +40,7 @@ public sealed partial class CQFDomainRuntime
     internal DomainMapTemplate GetMapTemplate(DomainDef definition, Map source)
     {
         if (mapTemplates.TryGetValue(definition, out DomainMapTemplate? template)) return template;
-        Map? prepared = domainMaps.FirstOrDefault(map => !map.Disposed && !map.Parent.Destroyed
+        Map? prepared = domainMaps.FirstOrDefault(map => IsLiveDomainMap(map)
             && map.GetComponent<MapComponent_Domain>().Definition == definition && map.GetComponent<MapComponent_Domain>().Available);
         if (prepared != null) return mapTemplates[definition] = new DomainMapTemplate(prepared);
         host.Hibernate(GenerateDomain(definition, source));
@@ -155,7 +162,7 @@ public sealed partial class CQFDomainRuntime
     }
 
     private int PreparedMapCount(DomainDef definition)
-        => domainMaps.Count(map => !map.Disposed && !map.Parent.Destroyed && map.GetComponent<MapComponent_Domain>().Definition == definition);
+        => domainMaps.Count(map => IsLiveDomainMap(map) && map.GetComponent<MapComponent_Domain>().Definition == definition);
 
     private void UpdateDomains()
     {

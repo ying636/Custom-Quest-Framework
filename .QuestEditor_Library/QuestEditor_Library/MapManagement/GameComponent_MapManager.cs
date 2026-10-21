@@ -46,6 +46,7 @@ public sealed partial class GameComponent_MapManager : GameComponent
     public override void LoadedGame()
     {
         RestoreHibernatingMaps();
+        CleanPocketMapParents();
         Module?.LoadedGame();
     }
 
