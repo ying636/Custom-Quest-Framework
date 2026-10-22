@@ -36,6 +36,7 @@ public sealed partial class CQFDomainRuntime
     private void ProcessDomainOpenings()
     {
         if (transition != null) return;
+        if (CQFPresentationGate.For(game).IsBusy) return;
         while (openings.Count > 0)
         {
             DomainOpening opening = openings[0];

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_Cinematic_AddChild>Add child</CQF_Cinematic_AddChild>
+  <CQF_Cinematic_AddStep>Add step</CQF_Cinematic_AddStep>
+  <CQF_Cinematic_Alpha>Opacity</CQF_Cinematic_Alpha>
+  <CQF_Cinematic_ApplyXml>Apply XML</CQF_Cinematic_ApplyXml>
+  <CQF_Cinematic_BindCell>Bind cell</CQF_Cinematic_BindCell>
+  <CQF_Cinematic_BindSelected>Bind selected</CQF_Cinematic_BindSelected>
+  <CQF_Cinematic_Blue>Blue</CQF_Cinematic_Blue>
+  <CQF_Cinematic_Cell>Map cell (X, Z)</CQF_Cinematic_Cell>
+  <CQF_Cinematic_Clock_GameTime>Game time</CQF_Cinematic_Clock_GameTime>
+  <CQF_Cinematic_Clock_RealTime>Real time</CQF_Cinematic_Clock_RealTime>
+  <CQF_Cinematic_Context>Quest and targets</CQF_Cinematic_Context>
+  <CQF_Cinematic_CopyFailed>Could not copy step</CQF_Cinematic_CopyFailed>
+  <CQF_Cinematic_CopyStep>Copy step</CQF_Cinematic_CopyStep>
+  <CQF_Cinematic_DefName>Definition ID</CQF_Cinematic_DefName>
+  <CQF_Cinematic_Editor>Cinematic editor</CQF_Cinematic_Editor>
+  <CQF_Cinematic_EditStep>Edit step</CQF_Cinematic_EditStep>
+  <CQF_Cinematic_Export>Export XML</CQF_Cinematic_Export>
+  <CQF_Cinematic_Export_Tip>Save the cinematic to an XML file and register its definition.</CQF_Cinematic_Export_Tip>
+  <CQF_Cinematic_ExportFailed>Could not export cinematic</CQF_Cinematic_ExportFailed>
+  <CQF_Cinematic_ExportSucceeded>Cinematic exported</CQF_Cinematic_ExportSucceeded>
+  <CQF_Cinematic_Field_actions>Actions</CQF_Cinematic_Field_actions>
+  <CQF_Cinematic_Field_addQuestPrefix>Add quest prefix to signals</CQF_Cinematic_Field_addQuestPrefix>
+  <CQF_Cinematic_Field_allowSkip>Allow skipping</CQF_Cinematic_Field_allowSkip>
+  <CQF_Cinematic_Field_cancelledSignal>Cancellation signal</CQF_Cinematic_Field_cancelledSignal>
+  <CQF_Cinematic_Field_clock>Time mode</CQF_Cinematic_Field_clock>
+  <CQF_Cinematic_Field_color>Color</CQF_Cinematic_Field_color>
+  <CQF_Cinematic_Field_completedSignal>Completion signal</CQF_Cinematic_Field_completedSignal>
+  <CQF_Cinematic_Field_conditions>Conditions</CQF_Cinematic_Field_conditions>
+  <CQF_Cinematic_Field_duration>Duration (seconds)</CQF_Cinematic_Field_duration>
+  <CQF_Cinematic_Field_failedSignal>Failure signal</CQF_Cinematic_Field_failedSignal>
+  <CQF_Cinematic_Field_follow>Follow target</CQF_Cinematic_Field_follow>
+  <CQF_Cinematic_Field_fromCurrent>Start from current effect</CQF_Cinematic_Field_fromCurrent>
+  <CQF_Cinematic_Field_height>Height fraction per bar</CQF_Cinematic_Field_height>
+  <CQF_Cinematic_Field_imagePath>Image path</CQF_Cinematic_Field_imagePath>
+  <CQF_Cinematic_Field_intervieweeKey>Interviewee key</CQF_Cinematic_Field_intervieweeKey>
+  <CQF_Cinematic_Field_interviewerKey>Interviewer key</CQF_Cinematic_Field_interviewerKey>
+  <CQF_Cinematic_Field_jobDef>Job definition</CQF_Cinematic_Field_jobDef>
+  <CQF_Cinematic_Field_lockInput>Lock player input</CQF_Cinematic_Field_lockInput>
+  <CQF_Cinematic_Field_magnitude>Shake strength</CQF_Cinematic_Field_magnitude>
+  <CQF_Cinematic_Field_maxDuration>Time limit (real seconds)</CQF_Cinematic_Field_maxDuration>
+  <CQF_Cinematic_Field_offset>Position offset</CQF_Cinematic_Field_offset>
+  <CQF_Cinematic_Field_onCamera>Non-positional sound</CQF_Cinematic_Field_onCamera>
+  <CQF_Cinematic_Field_pauseGame>Pause during playback</CQF_Cinematic_Field_pauseGame>
+  <CQF_Cinematic_Field_pawnKey>Pawn key</CQF_Cinematic_Field_pawnKey>
+  <CQF_Cinematic_Field_rectNormalized>Screen area (fractions)</CQF_Cinematic_Field_rectNormalized>
+  <CQF_Cinematic_Field_restoreCamera>Restore camera on end</CQF_Cinematic_Field_restoreCamera>
+  <CQF_Cinematic_Field_rotation>Facing</CQF_Cinematic_Field_rotation>
+  <CQF_Cinematic_Field_signal>Signal to wait for</CQF_Cinematic_Field_signal>
+  <CQF_Cinematic_Field_size>Camera view size</CQF_Cinematic_Field_size>
+  <CQF_Cinematic_Field_skipActions>Actions on skip</CQF_Cinematic_Field_skipActions>
+  <CQF_Cinematic_Field_skippedSignal>Skip signal</CQF_Cinematic_Field_skippedSignal>
+  <CQF_Cinematic_Field_sound>Sound definition</CQF_Cinematic_Field_sound>
+  <CQF_Cinematic_Field_startNode>Starting node index</CQF_Cinematic_Field_startNode>
+  <CQF_Cinematic_Field_steps>Child steps</CQF_Cinematic_Field_steps>
+  <CQF_Cinematic_Field_targetKey>Target key</CQF_Cinematic_Field_targetKey>
+  <CQF_Cinematic_Field_textKey>Subtitle text key</CQF_Cinematic_Field_textKey>
+  <CQF_Cinematic_Field_timeout>Timeout (seconds)</CQF_Cinematic_Field_timeout>
+  <CQF_Cinematic_Field_tree>Dialog tree</CQF_Cinematic_Field_tree>
+  <CQF_Cinematic_Field_urgency>Move speed</CQF_Cinematic_Field_urgency>
+  <CQF_Cinematic_Field_volume>Volume</CQF_Cinematic_Field_volume>
+  <CQF_Cinematic_Green>Green</CQF_Cinematic_Green>
+  <CQF_Cinematic_Height>Height</CQF_Cinematic_Height>
+  <CQF_Cinematic_Import>Import XML</CQF_Cinematic_Import>
+  <CQF_Cinematic_Import_Tip>Read an XML file or paste cinematic XML, then apply it to the editor.</CQF_Cinematic_Import_Tip>
+  <CQF_Cinematic_ImportFailed>Could not import cinematic</CQF_Cinematic_ImportFailed>
+  <CQF_Cinematic_ImportSucceeded>Cinematic imported</CQF_Cinematic_ImportSucceeded>
+  <CQF_Cinematic_InvalidFile>Check the file path and .xml extension. Files being loaded must exist and be no larger than 2 MiB.</CQF_Cinematic_InvalidFile>
+  <CQF_Cinematic_InvalidName>Use a valid XML name with a mod prefix and underscore, such as CQF_Intro.</CQF_Cinematic_InvalidName>
+  <CQF_Cinematic_InvalidValue>Invalid value</CQF_Cinematic_InvalidValue>
+  <CQF_Cinematic_InvalidXml>XML must contain one valid cinematic definition.</CQF_Cinematic_InvalidXml>
+  <CQF_Cinematic_Load>Load definition</CQF_Cinematic_Load>
+  <CQF_Cinematic_Load_Tip>Choose a loaded cinematic definition to edit.</CQF_Cinematic_Load_Tip>
+  <CQF_Cinematic_LoadFile>Read file</CQF_Cinematic_LoadFile>
+  <CQF_Cinematic_LocomotionUrgency_Amble>Amble</CQF_Cinematic_LocomotionUrgency_Amble>
+  <CQF_Cinematic_LocomotionUrgency_Jog>Jog</CQF_Cinematic_LocomotionUrgency_Jog>
+  <CQF_Cinematic_LocomotionUrgency_None>Unspecified</CQF_Cinematic_LocomotionUrgency_None>
+  <CQF_Cinematic_LocomotionUrgency_Sprint>Sprint</CQF_Cinematic_LocomotionUrgency_Sprint>
+  <CQF_Cinematic_LocomotionUrgency_Walk>Walk</CQF_Cinematic_LocomotionUrgency_Walk>
+  <CQF_Cinematic_New>New cinematic</CQF_Cinematic_New>
+  <CQF_Cinematic_New_Tip>Create a blank cinematic, replacing the current editor contents.</CQF_Cinematic_New_Tip>
+  <CQF_Cinematic_NoDefinitions>No cinematic definitions are available to load.</CQF_Cinematic_NoDefinitions>
+  <CQF_Cinematic_NoGame>Enter a game and open a map first.</CQF_Cinematic_NoGame>
+  <CQF_Cinematic_None>None</CQF_Cinematic_None>
+  <CQF_Cinematic_NoQuest>No linked quest</CQF_Cinematic_NoQuest>
+  <CQF_Cinematic_Outcome_Cancelled>Cancelled</CQF_Cinematic_Outcome_Cancelled>
+  <CQF_Cinematic_Outcome_Completed>Completed</CQF_Cinematic_Outcome_Completed>
+  <CQF_Cinematic_Outcome_Failed>Failed</CQF_Cinematic_Outcome_Failed>
+  <CQF_Cinematic_Outcome_Pending>Queued</CQF_Cinematic_Outcome_Pending>
+  <CQF_Cinematic_Outcome_Playing>Playing</CQF_Cinematic_Outcome_Playing>
+  <CQF_Cinematic_Outcome_Skipped>Skipped</CQF_Cinematic_Outcome_Skipped>
+  <CQF_Cinematic_Parameters>Settings</CQF_Cinematic_Parameters>
+  <CQF_Cinematic_Path>File path</CQF_Cinematic_Path>
+  <CQF_Cinematic_PlayCinematic>Play cinematic</CQF_Cinematic_PlayCinematic>
+  <CQF_Cinematic_PlayFailed>Could not play cinematic</CQF_Cinematic_PlayFailed>
+  <CQF_Cinematic_Preview>Preview visuals</CQF_Cinematic_Preview>
+  <CQF_Cinematic_Preview_Tip>Preview visuals and sound only. Pawn commands, dialog, quest actions, external waits and signals are skipped. Preview playback is not saved.</CQF_Cinematic_Preview_Tip>
+  <CQF_Cinematic_Red>Red</CQF_Cinematic_Red>
+  <CQF_Cinematic_RemoveStep>Delete step</CQF_Cinematic_RemoveStep>
+  <CQF_Cinematic_RemoveTarget>Remove target binding</CQF_Cinematic_RemoveTarget>
+  <CQF_Cinematic_ReorderSameGroup>Drag steps within the same group to reorder them.</CQF_Cinematic_ReorderSameGroup>
+  <CQF_Cinematic_ReturnEditor>Back to editor</CQF_Cinematic_ReturnEditor>
+  <CQF_Cinematic_Rotation_East>East</CQF_Cinematic_Rotation_East>
+  <CQF_Cinematic_Rotation_North>North</CQF_Cinematic_Rotation_North>
+  <CQF_Cinematic_Rotation_South>South</CQF_Cinematic_Rotation_South>
+  <CQF_Cinematic_Rotation_West>West</CQF_Cinematic_Rotation_West>
+  <CQF_Cinematic_Run>Full playback</CQF_Cinematic_Run>
+  <CQF_Cinematic_Run_Tip>Play the full cinematic, including pawn commands, dialog, quest actions and outcome signals.</CQF_Cinematic_Run_Tip>
+  <CQF_Cinematic_SaveFile>Save file</CQF_Cinematic_SaveFile>
+  <CQF_Cinematic_SelectTarget>Enter a target key, then select an object or enter a valid map cell.</CQF_Cinematic_SelectTarget>
+  <CQF_Cinematic_Skip>Skip cinematic</CQF_Cinematic_Skip>
+  <CQF_Cinematic_Step_Actions>Run actions</CQF_Cinematic_Step_Actions>
+  <CQF_Cinematic_Step_Camera>Move camera</CQF_Cinematic_Step_Camera>
+  <CQF_Cinematic_Step_Dialog>Show dialog</CQF_Cinematic_Step_Dialog>
+  <CQF_Cinematic_Step_Fade>Screen fade</CQF_Cinematic_Step_Fade>
+  <CQF_Cinematic_Step_Image>Show image</CQF_Cinematic_Step_Image>
+  <CQF_Cinematic_Step_Letterbox>Letterbox bars</CQF_Cinematic_Step_Letterbox>
+  <CQF_Cinematic_Step_Parallel>Parallel group</CQF_Cinematic_Step_Parallel>
+  <CQF_Cinematic_Step_PawnFace>Turn pawn</CQF_Cinematic_Step_PawnFace>
+  <CQF_Cinematic_Step_PawnJob>Pawn job</CQF_Cinematic_Step_PawnJob>
+  <CQF_Cinematic_Step_PawnMove>Move pawn</CQF_Cinematic_Step_PawnMove>
+  <CQF_Cinematic_Step_PawnWait>Make pawn wait</CQF_Cinematic_Step_PawnWait>
+  <CQF_Cinematic_Step_Sequence>Sequence group</CQF_Cinematic_Step_Sequence>
+  <CQF_Cinematic_Step_Shake>Camera shake</CQF_Cinematic_Step_Shake>
+  <CQF_Cinematic_Step_Sound>Play sound</CQF_Cinematic_Step_Sound>
+  <CQF_Cinematic_Step_Subtitle>Show subtitle</CQF_Cinematic_Step_Subtitle>
+  <CQF_Cinematic_Step_Wait>Wait</CQF_Cinematic_Step_Wait>
+  <CQF_Cinematic_Step_WaitCondition>Wait for conditions</CQF_Cinematic_Step_WaitCondition>
+  <CQF_Cinematic_Step_WaitSignal>Wait for signal</CQF_Cinematic_Step_WaitSignal>
+  <CQF_Cinematic_Stop>Stop playback</CQF_Cinematic_Stop>
+  <CQF_Cinematic_Stop_Tip>Cancel the queued or playing cinematic. Full playback sends its configured cancellation signal.</CQF_Cinematic_Stop_Tip>
+  <CQF_Cinematic_StopFailed>Could not stop cinematic</CQF_Cinematic_StopFailed>
+  <CQF_Cinematic_Subtitle>Sample cinematic subtitle</CQF_Cinematic_Subtitle>
+  <CQF_Cinematic_TargetKey>Target key</CQF_Cinematic_TargetKey>
+  <CQF_Cinematic_TimingEstimate>Estimated time (seconds, approximate)</CQF_Cinematic_TimingEstimate>
+  <CQF_Cinematic_UnsupportedField>This field cannot be edited here</CQF_Cinematic_UnsupportedField>
+  <CQF_Cinematic_Width>Width</CQF_Cinematic_Width>
+  <CQF_Cinematic_X>Horizontal position</CQF_Cinematic_X>
+  <CQF_Cinematic_Y>Vertical position</CQF_Cinematic_Y>
+  <CQFAction_PlayCinematic>Play cinematic</CQFAction_PlayCinematic>
+  <CQFCinematicStep_Subtitle>Sample cinematic subtitle</CQFCinematicStep_Subtitle>
+  <CQF_Cinematic_ProjectName>Cinematic name</CQF_Cinematic_ProjectName>
+  <CQF_Cinematic_RecordCamera>Record camera</CQF_Cinematic_RecordCamera>
+  <CQF_Cinematic_RecordMove>Record movement</CQF_Cinematic_RecordMove>
+  <CQF_Cinematic_RecordFacing>Record facing</CQF_Cinematic_RecordFacing>
+  <CQF_Cinematic_MapPickDestination>Click the destination on the map.</CQF_Cinematic_MapPickDestination>
+  <CQF_Cinematic_MapPickFacing>Click a position for the pawn to face.</CQF_Cinematic_MapPickFacing>
+  <CQF_Cinematic_MapSelectPawn>Select pawn</CQF_Cinematic_MapSelectPawn>
+  <CQF_Cinematic_Inspector>Step settings</CQF_Cinematic_Inspector>
+  <CQF_Cinematic_HideInspector>Hide settings</CQF_Cinematic_HideInspector>
+  <CQF_Cinematic_ShowInspector>Show settings</CQF_Cinematic_ShowInspector>
+  <CQF_Cinematic_SaveProject>Save cinematic</CQF_Cinematic_SaveProject>
+  <CQF_Cinematic_OpenProject>Open cinematic</CQF_Cinematic_OpenProject>
+  <CQF_Cinematic_PreviewSelection>Preview step</CQF_Cinematic_PreviewSelection>
+  <CQF_Cinematic_PreviewAll>Preview all</CQF_Cinematic_PreviewAll>
+  <CQF_Cinematic_PausePreview>Pause preview</CQF_Cinematic_PausePreview>
+  <CQF_Cinematic_ResumePreview>Resume preview</CQF_Cinematic_ResumePreview>
+  <CQF_Cinematic_StepPreview>Step preview</CQF_Cinematic_StepPreview>
+  <CQF_Cinematic_TestCopy>Test a copy</CQF_Cinematic_TestCopy>
+  <CQF_Cinematic_ReturnFromTest>Return to editing</CQF_Cinematic_ReturnFromTest>
+  <CQF_Cinematic_Advanced>Advanced</CQF_Cinematic_Advanced>
+  <CQF_Cinematic_SubtitleChinese>Chinese subtitle</CQF_Cinematic_SubtitleChinese>
+  <CQF_Cinematic_SubtitleEnglish>English subtitle</CQF_Cinematic_SubtitleEnglish>
+  <CQF_Cinematic_ChooseImage>Choose image</CQF_Cinematic_ChooseImage>
+  <CQF_Cinematic_ChooseSound>Choose sound</CQF_Cinematic_ChooseSound>
+  <CQF_Cinematic_CaptureCamera>Capture camera</CQF_Cinematic_CaptureCamera>
+  <CQF_Cinematic_Duration>Duration (seconds)</CQF_Cinematic_Duration>
+  <CQF_Cinematic_NoStepSelected>Select a step first.</CQF_Cinematic_NoStepSelected>
+  <CQF_Cinematic_MapRequired>Enter a game and open a map first.</CQF_Cinematic_MapRequired>
+  <CQF_Cinematic_ProjectSaved>Cinematic saved.</CQF_Cinematic_ProjectSaved>
+  <CQF_Cinematic_ProjectLoadFailed>Could not open the cinematic. Check its definition and editing files.</CQF_Cinematic_ProjectLoadFailed>
+  <CQF_Cinematic_TestFailed>Cinematic test failed: {0}. Restoring the original editing state.</CQF_Cinematic_TestFailed>
+  <CQF_Cinematic_TestRunning>A full test is running in a copy. The original editing state will be restored when it ends.</CQF_Cinematic_TestRunning>
+  <CQF_Cinematic_ReturnToMap>Return to map</CQF_Cinematic_ReturnToMap>
+  <CQF_Cinematic_TargetName>Target name</CQF_Cinematic_TargetName>
+  <CQF_Cinematic_CancelPick>Cancel selection</CQF_Cinematic_CancelPick>
+  <CQF_Cinematic_RecordCamera_Tip>Record the current camera position and zoom as a camera step.</CQF_Cinematic_RecordCamera_Tip>
+  <CQF_Cinematic_RecordMove_Tip>Select a pawn, then click its destination to record a step. Pawns move only during a full test in a copy.</CQF_Cinematic_RecordMove_Tip>
+  <CQF_Cinematic_RecordFacing_Tip>Select a pawn, then click a position to record the direction it should face.</CQF_Cinematic_RecordFacing_Tip>
+  <CQF_Cinematic_PreviewSelection_Tip>Preview the selected step's visuals and sound only. Pawn commands and quest actions are not executed.</CQF_Cinematic_PreviewSelection_Tip>
+  <CQF_Cinematic_PreviewAll_Tip>Preview the whole cinematic's visuals and sound only. Pawn commands and quest actions are not executed.</CQF_Cinematic_PreviewAll_Tip>
+  <CQF_Cinematic_TestCopy_Tip>Save a temporary checkpoint, run the full cinematic in a copy, then restore the original editing state.</CQF_Cinematic_TestCopy_Tip>
+  <CQF_Cinematic_SaveProject_Tip>Save cinematic steps, map target bindings and bilingual subtitles automatically.</CQF_Cinematic_SaveProject_Tip>
+  <CQF_Cinematic_OpenProject_Tip>Open a saved cinematic or create a new one.</CQF_Cinematic_OpenProject_Tip>
+  <CQF_Cinematic_TestBusy>A cinematic test is already running. Return to editing before starting another.</CQF_Cinematic_TestBusy>
+  <CQF_Cinematic_TestSaveBlocked>Saving is unavailable during a full test. Return to editing to save normally.</CQF_Cinematic_TestSaveBlocked>
+  <CQF_Cinematic_TestCheckpointFailed>Could not create the test checkpoint. The test has not started. Save path: {0}</CQF_Cinematic_TestCheckpointFailed>
+  <CQF_Cinematic_TestRecoveryFailed>Could not restore the editing state automatically. The checkpoint has been kept; load it manually to restore the world before the test: {0}</CQF_Cinematic_TestRecoveryFailed>
+  <CQF_Cinematic_TestInterrupted>The previous cinematic test did not end normally. The checkpoint has been kept; load it manually to restore the world before the test: {0}</CQF_Cinematic_TestInterrupted>
+  <CQF_Cinematic_InvalidBinding>The selected object or cell is no longer valid. Select it again on the current map.</CQF_Cinematic_InvalidBinding>
+  <CQF_Cinematic_BindingWorldMismatch>The recorded cinematic targets belong to another world. Bind targets in the current world again.</CQF_Cinematic_BindingWorldMismatch>
+  <CQF_Cinematic_BindingMapMissing>The recorded map no longer exists, so its targets cannot be restored.</CQF_Cinematic_BindingMapMissing>
+  <CQF_Cinematic_BindingThingMissing>A recorded pawn or object no longer exists, so its target cannot be restored.</CQF_Cinematic_BindingThingMissing>
+  <CQF_Cinematic_BindingQuestMissing>The linked quest no longer exists. Select another quest or remove the link.</CQF_Cinematic_BindingQuestMissing>
+  <CQF_Cinematic_DuplicateSubtitle>A subtitle record is duplicated or invalid. Set that subtitle again.</CQF_Cinematic_DuplicateSubtitle>
+  <CQF_Cinematic_SubtitleBothRequired>Enter both the Chinese and English subtitle text before saving.</CQF_Cinematic_SubtitleBothRequired>
+  <CQF_Cinematic_InvalidSubtitleFile>The subtitle resource file is invalid or contains duplicate text keys. Saving was stopped.</CQF_Cinematic_InvalidSubtitleFile>
+  <CQF_Cinematic_InvalidScene>The editing record does not match the cinematic definition and cannot be opened.</CQF_Cinematic_InvalidScene>
+  <CQF_Cinematic_InvalidProject>The cinematic is incomplete or invalid. Check its steps and settings.</CQF_Cinematic_InvalidProject>
+  <CQF_Cinematic_ProjectSaveFailed>Could not save the cinematic. Restoration of the original files was attempted. Check the error log.</CQF_Cinematic_ProjectSaveFailed>
+  <CQF_Cinematic_Review_Key>Key</CQF_Cinematic_Review_Key>
+  <CQF_Cinematic_Review_Purpose>Purpose</CQF_Cinematic_Review_Purpose>
+  <CQF_Cinematic_Review_Chinese>Chinese text</CQF_Cinematic_Review_Chinese>
+  <CQF_Cinematic_Review_English>English text</CQF_Cinematic_Review_English>
+  <CQF_Cinematic_Review_ChineseSource>Chinese source</CQF_Cinematic_Review_ChineseSource>
+  <CQF_Cinematic_Review_EnglishSource>English source</CQF_Cinematic_Review_EnglishSource>
+  <CQF_Cinematic_Review_Status>Review status</CQF_Cinematic_Review_Status>
+  <CQF_Cinematic_Review_ChineseSuggestion>Suggested Chinese</CQF_Cinematic_Review_ChineseSuggestion>
+  <CQF_Cinematic_Review_EnglishSuggestion>Suggested English</CQF_Cinematic_Review_EnglishSuggestion>
+  <CQF_Cinematic_Review_Comments>Review comments</CQF_Cinematic_Review_Comments>
+  <CQF_Cinematic_Review_UserProvided>User-provided text</CQF_Cinematic_Review_UserProvided>
+  <CQF_Cinematic_Review_Pending>Pending review</CQF_Cinematic_Review_Pending>
+  <CQF_Cinematic_Review_SubtitlePurpose>Cinematic subtitle text</CQF_Cinematic_Review_SubtitlePurpose>
+  <CQF_Cinematic_Review_InvalidCsv>The text review CSV has invalid columns or text keys. Saving was stopped to preserve its review content.</CQF_Cinematic_Review_InvalidCsv>
+  <CQF_Cinematic_Elapsed>Elapsed: {0} s</CQF_Cinematic_Elapsed>
+  <CQF_Cinematic_ReplaceDraftConfirm>Replace the current cinematic? Unsaved changes will be replaced.</CQF_Cinematic_ReplaceDraftConfirm>
+  <CQF_Cinematic_MapStudio>Cinematic studio</CQF_Cinematic_MapStudio>
+  <CQF_Cinematic_ActorBindings>Actor bindings</CQF_Cinematic_ActorBindings>
+  <CQF_Cinematic_RoleName>Role name</CQF_Cinematic_RoleName>
+  <CQF_Cinematic_RoleSource>Role source</CQF_Cinematic_RoleSource>
+  <CQF_Cinematic_SourceKey>Binding name</CQF_Cinematic_SourceKey>
+  <CQF_Cinematic_RehearsalPawn>Rehearsal pawn</CQF_Cinematic_RehearsalPawn>
+  <CQF_Cinematic_ChooseRehearsalPawn>Choose rehearsal pawn</CQF_Cinematic_ChooseRehearsalPawn>
+  <CQF_Cinematic_Source_Recorded>Recorded pawn</CQF_Cinematic_Source_Recorded>
+  <CQF_Cinematic_Source_Context>Triggering event</CQF_Cinematic_Source_Context>
+  <CQF_Cinematic_Source_QuestDatabase>Quest database</CQF_Cinematic_Source_QuestDatabase>
+  <CQF_Cinematic_Source_TemporaryDatabase>Temporary database</CQF_Cinematic_Source_TemporaryDatabase>
+  <CQF_Cinematic_Source_GlobalDatabase>Global database</CQF_Cinematic_Source_GlobalDatabase>
+  <CQF_Cinematic_RemoveRole>Remove role binding</CQF_Cinematic_RemoveRole>
+  <CQF_Cinematic_NewRole>New role</CQF_Cinematic_NewRole>
+  <CQF_Cinematic_UnassignedRole>Unassigned</CQF_Cinematic_UnassignedRole>
+  <CQF_Cinematic_RoleNumber>Role {0}</CQF_Cinematic_RoleNumber>
+  <CQF_Cinematic_RoleNoActors>Add a pawn step to configure role bindings.</CQF_Cinematic_RoleNoActors>
+  <CQF_Cinematic_ActorBindings_Tip>Set each pawn role's name, playback source and rehearsal pawn. Event and database sources are resolved again during formal playback.</CQF_Cinematic_ActorBindings_Tip>
+  <CQF_Cinematic_RoleName_Tip>Give the role a recognizable name. You can change it at any time.</CQF_Cinematic_RoleName_Tip>
+  <CQF_Cinematic_RoleSource_Tip>Choose where formal playback gets this role: the recorded pawn, the triggering event or a database. Event and database sources do not fall back to the rehearsal pawn.</CQF_Cinematic_RoleSource_Tip>
+  <CQF_Cinematic_SourceKey_Tip>Enter the target name in the selected source. For a database, use an existing record name. Formal playback uses this name to find the role.</CQF_Cinematic_SourceKey_Tip>
+  <CQF_Cinematic_RehearsalPawn_Tip>The selected pawn is used for editing and tests in a copy. For a recorded-pawn source, choosing another pawn also updates the playback binding. Event and database roles are still resolved at runtime.</CQF_Cinematic_RehearsalPawn_Tip>
+  <CQF_Cinematic_ChooseRehearsalPawn_Tip>Choose a pawn on the map for rehearsal. Event and database roles are still supplied at runtime during formal playback.</CQF_Cinematic_ChooseRehearsalPawn_Tip>
+  <CQF_Cinematic_Source_Recorded_Tip>Formal playback uses the currently recorded pawn. Choosing another pawn updates the binding.</CQF_Cinematic_Source_Recorded_Tip>
+  <CQF_Cinematic_Source_Context_Tip>Formal playback uses the named target passed in by the triggering event. The binding name must match the event target's name.</CQF_Cinematic_Source_Context_Tip>
+  <CQF_Cinematic_Source_QuestDatabase_Tip>Formal playback finds exactly one pawn by the binding name in the linked quest's database.</CQF_Cinematic_Source_QuestDatabase_Tip>
+  <CQF_Cinematic_Source_TemporaryDatabase_Tip>Formal playback finds exactly one pawn by the binding name in the temporary database. Prepare that record before triggering the cinematic.</CQF_Cinematic_Source_TemporaryDatabase_Tip>
+  <CQF_Cinematic_Source_GlobalDatabase_Tip>Formal playback finds exactly one pawn by the binding name in the global database.</CQF_Cinematic_Source_GlobalDatabase_Tip>
+  <CQF_Cinematic_RoleKeyRequired>The binding record for role '{0}' is incomplete. Create this role binding again.</CQF_Cinematic_RoleKeyRequired>
+  <CQF_Cinematic_RoleSourceKeyRequired>Enter a binding name for role '{0}'.</CQF_Cinematic_RoleSourceKeyRequired>
+  <CQF_Cinematic_RoleMissing>Role '{0}' was not found in the selected source. Check its source and binding record.</CQF_Cinematic_RoleMissing>
+  <CQF_Cinematic_RoleNotPawn>The target for role '{0}' is not a valid pawn. Check its binding record.</CQF_Cinematic_RoleNotPawn>
+  <CQF_Cinematic_RoleAmbiguous>Role '{0}' matches multiple targets. Make sure the selected source identifies exactly one pawn.</CQF_Cinematic_RoleAmbiguous>
+  <CQF_Cinematic_RoleNoQuest>Role '{0}' uses the quest database, but this playback has no linked quest.</CQF_Cinematic_RoleNoQuest>
+  <CQF_Cinematic_RoleTestPawnMissing>Role '{0}' has no valid rehearsal pawn. Choose a pawn on the map first.</CQF_Cinematic_RoleTestPawnMissing>
+  <CQF_Cinematic_RoleDuplicate>The binding record for role '{0}' is duplicated. Remove the duplicate and bind the role again.</CQF_Cinematic_RoleDuplicate>
+  <CQF_Cinematic_RoleSourceInvalid>Role '{0}' has an invalid source setting. Select its source again.</CQF_Cinematic_RoleSourceInvalid>
+</LanguageData>

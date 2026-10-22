@@ -576,6 +576,15 @@ namespace QuestEditor_Library
             {
                 Find.WindowStack.Add(new QuestEditor_QuestBook());
             }
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), TexButton.Play, "CQF_Cinematic_Editor"))
+            {
+                if (Current.Game != null && Find.CurrentMap != null)
+                {
+                    Close();
+                    Find.WindowStack.Add(new QuestEditor_Cinematics());
+                }
+                else Messages.Message("CQF_Cinematic_MapRequired".Translate(), MessageTypeDefOf.CautionInput);
+            }
             if (Page_QuestEditor.DrawToolButton(NextToolRect(), mainMapDefEditorIcon, "MainMapDefEditor"))
             {
                 Find.WindowStack.Add(new QuestEditor_MainMapDefEditor());

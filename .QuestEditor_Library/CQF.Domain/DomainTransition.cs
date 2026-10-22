@@ -10,6 +10,7 @@ public abstract class DomainTransition : IDisposable
     protected DomainTransition(bool returning)
     {
         game = Current.Game;
+        presentation = CQFPresentationGate.For(game);
 #if RIMWORLD_1_7
         sourceMap = Find.CurrentMap;
 #endif
@@ -38,7 +39,7 @@ public abstract class DomainTransition : IDisposable
     {
         get
         {
-            if (displayMap == null) return 0f;
+            if (displayMap == null || !presentationStarted || !presentation.IsHeldBy(this)) return 0f;
             float progress = Mathf.Clamp01((Time.realtimeSinceStartup - startedAt) / Duration);
 #if RIMWORLD_1_7
             if ((!IsReturning || stagedReturn) && !revealReady) return Mathf.Min(progress, RevealProgress);
@@ -57,10 +58,11 @@ public abstract class DomainTransition : IDisposable
             ) || Progress >= 1f);
 
 #if RIMWORLD_1_7
-    public bool ReturnCovered => stagedReturn && coveredFrame >= 0 && Time.frameCount > coveredFrame;
+    public bool ReturnCovered => !disposed && presentation.IsHeldBy(this) && stagedReturn && coveredFrame >= 0 && Time.frameCount > coveredFrame;
 
     public void BeginReturn(MapComponent_Domain owner)
     {
+        if (disposed) throw new ObjectDisposedException(GetType().Name);
         if (!IsReturning) throw new InvalidOperationException("[CQF] An entry transition cannot stage a domain return.");
         domain = owner;
         displayMap = owner.map;
@@ -68,13 +70,16 @@ public abstract class DomainTransition : IDisposable
         returnPending = true;
         owner.BeginArrivalTransition();
         startedAt = Time.realtimeSinceStartup;
+        TryStartPresentation();
     }
 
     public void BindOpening(DomainOpening owner)
     {
+        if (disposed) throw new ObjectDisposedException(GetType().Name);
         opening = owner;
         displayMap = sourceMap;
         startedAt = Time.realtimeSinceStartup;
+        TryStartPresentation();
     }
 
     public void DetachOpening() => opening = null;
@@ -82,9 +87,10 @@ public abstract class DomainTransition : IDisposable
 
     public void BindContest(MapComponent_Domain first, MapComponent_Domain second)
     {
-        Bind(first);
+        if (disposed) throw new ObjectDisposedException(GetType().Name);
         secondaryDomain = second;
         second.BeginArrivalTransition();
+        Bind(first);
     }
 
     public void Bind(Map realm)
@@ -92,13 +98,15 @@ public abstract class DomainTransition : IDisposable
 
     public void Bind(MapComponent_Domain owner)
     {
+        if (disposed) throw new ObjectDisposedException(GetType().Name);
 #if RIMWORLD_1_7
         if (displayMap == null) startedAt = Time.realtimeSinceStartup;
 #endif
         domain = owner;
         displayMap = owner.map;
         domain.BeginArrivalTransition();
-        Find.CameraDriver.shaker.DoShake(0.18f);
+        pendingShake = 0.18f;
+        TryStartPresentation();
 #if !RIMWORLD_1_7
         startedAt = Time.realtimeSinceStartup;
 #endif
@@ -106,11 +114,12 @@ public abstract class DomainTransition : IDisposable
 
     public void BindReturn(Map destination, IntVec3 focus, IEnumerable<Pawn> pawns)
     {
+        if (disposed) throw new ObjectDisposedException(GetType().Name);
         displayMap = destination;
         destinationFocus = focus;
         returnLock = destination.GetComponent<MapComponent_DomainTransitionLock>();
         returnLock.Begin(pawns);
-        Find.CameraDriver.shaker.DoShake(0.12f);
+        pendingShake = 0.12f;
         startedAt = Time.realtimeSinceStartup;
 #if RIMWORLD_1_7
         if (stagedReturn)
@@ -121,17 +130,19 @@ public abstract class DomainTransition : IDisposable
             startedAt -= Duration * RevealProgress;
         }
 #endif
+        TryStartPresentation();
     }
 
 #if RIMWORLD_1_7
     public void Update()
     {
-        if (displayMap == null || Finished) return;
+        if (displayMap == null || Finished || !TryStartPresentation()) return;
         if (IsReturning)
         {
             if (!stagedReturn) return;
             if (Find.CurrentMap != displayMap)
             {
+                Log.Error("[CQF] Domain return transition lost its display map; cancelling the presentation.");
                 Dispose();
                 return;
             }
@@ -178,6 +189,7 @@ public abstract class DomainTransition : IDisposable
         }
         if (Find.CurrentMap != (entered ? displayMap : sourceMap))
         {
+            Log.Error("[CQF] Domain entry transition lost its display map; cancelling the presentation.");
             Dispose();
             return;
         }
@@ -225,13 +237,13 @@ public abstract class DomainTransition : IDisposable
 
     public void Draw()
     {
-        if (displayMap == null || Finished
+        if (displayMap == null || Finished || Event.current.type != EventType.Repaint || !TryStartPresentation()
 #if RIMWORLD_1_7
             || Find.CurrentMap != (!IsReturning && !entered ? sourceMap : displayMap)
 #else
             || Find.CurrentMap != displayMap
 #endif
-            || !WorldRendererUtility.DrawingMap || Event.current.type != EventType.Repaint) return;
+            || !WorldRendererUtility.DrawingMap) return;
         float progress = Progress;
         DrawEffect(progress);
 #if RIMWORLD_1_7
@@ -244,23 +256,33 @@ public abstract class DomainTransition : IDisposable
     {
         if (disposed) return;
         disposed = true;
-        if (Current.Game == game && Current.ProgramState == ProgramState.Playing)
+        try
         {
+            if (Current.Game == game && Current.ProgramState == ProgramState.Playing)
+            {
 #if RIMWORLD_1_7
-            if (opening != null && !opening.Destroyed) opening.Destroy();
-            opening = null;
+                if (opening != null && !opening.Destroyed) opening.Destroy();
+                opening = null;
 #endif
-            domain?.EndArrivalTransition();
-            secondaryDomain?.EndArrivalTransition();
-            returnLock?.End();
+                domain?.EndArrivalTransition();
+                secondaryDomain?.EndArrivalTransition();
+                returnLock?.End();
+            }
         }
-        ReleaseVisuals();
-        domain = null;
-        secondaryDomain = null;
-        returnLock = null;
-        displayMap = null;
-        lifetime?.Release();
-        lifetime = null;
+        finally
+        {
+            try { ReleaseVisuals(); }
+            finally
+            {
+                presentation.Release(this);
+                domain = null;
+                secondaryDomain = null;
+                returnLock = null;
+                displayMap = null;
+                lifetime?.Release();
+                lifetime = null;
+            }
+        }
     }
 
     public void DisposeIfMap(Map map)
@@ -274,7 +296,49 @@ public abstract class DomainTransition : IDisposable
 
     protected abstract void DrawEffect(float progress);
 
+    protected virtual void PreparePresentation() { }
+
     protected abstract void ReleaseVisuals();
+
+    private bool TryStartPresentation()
+    {
+        if (disposed || displayMap == null) return false;
+        if (Current.Game != game || Current.ProgramState != ProgramState.Playing)
+        {
+            Dispose();
+            return false;
+        }
+        if (!presentation.TryAcquire(this)) return false;
+        if (!presentationStarted)
+        {
+#if RIMWORLD_1_7
+            Map? expected = !IsReturning && !entered ? sourceMap : displayMap;
+#else
+            Map? expected = displayMap;
+#endif
+            if (Find.CurrentMap != expected)
+            {
+                Log.Error("[CQF] Domain transition scene changed while waiting for presentation access; cancelling the transition.");
+                Dispose();
+                return false;
+            }
+            try { PreparePresentation(); }
+            catch (Exception error)
+            {
+                Log.Error("[CQF] Could not prepare the queued domain presentation: " + error);
+                Dispose();
+                return false;
+            }
+            presentationStarted = true;
+            startedAt = Time.realtimeSinceStartup;
+        }
+        if (pendingShake > 0f)
+        {
+            Find.CameraDriver.shaker.DoShake(pendingShake);
+            pendingShake = 0f;
+        }
+        return true;
+    }
 
     protected IntVec3 destinationFocus;
 
@@ -296,7 +360,10 @@ public abstract class DomainTransition : IDisposable
     private readonly List<Waylith.Rendering.MeshDrawCommand> returnTerrainCommands = new();
 #endif
     private float startedAt;
+    private float pendingShake;
+    private bool presentationStarted;
     private bool disposed;
     private DomainTransitionLifetime? lifetime;
     private readonly Game game;
+    private readonly CQFPresentationGate presentation;
 }

@@ -89,6 +89,7 @@ namespace QuestEditor_Library
             LoadDefs(Path.Combine(questPath, "Duty"), "//DutyDef", DefDatabase<DutyDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyDef>(node, false), def => DefDatabase<DutyDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Duty"), "//QuestEditor_Library.DutyMapDef", DefDatabase<DutyMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DutyMapDef>(node, false), def => DefDatabase<DutyMapDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "QuestBook"), "//QuestEditor_Library.QuestBookDef", DefDatabase<QuestBookDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<QuestBookDef>(node, false), def => DefDatabase<QuestBookDef>.Add(def));
+            LoadDefs(Path.Combine(questPath, "Cinematics"), "//QuestEditor_Library.CQFCinematicDef", DefDatabase<CQFCinematicDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<CQFCinematicDef>(node, false), def => DefDatabase<CQFCinematicDef>.Add(def));
             foreach (System.Type type in typeof(DialogTreeDef).Assembly.GetTypes().Where(type => !type.IsAbstract && typeof(Def).IsAssignableFrom(type)))
                 typeof(CQFQuestDefBootstrap).GetMethod(nameof(LoadAdditionalDefs), BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(type).Invoke(null, null);
             try

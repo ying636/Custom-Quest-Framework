@@ -181,6 +181,8 @@ public sealed partial class CQFDomainRuntime
     private void ProcessDomainReturns()
     {
         if (returns.Count == 0) return;
+        CQFPresentationGate gate = CQFPresentationGate.For(game);
+        if (gate.IsBusy && (transition == null || !gate.IsHeldBy(transition))) return;
         processingReturns.AddRange(returns);
         returns.Clear();
         try

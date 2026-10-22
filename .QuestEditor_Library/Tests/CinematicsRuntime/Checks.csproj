@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CQF.CinematicsRuntimeChecks</AssemblyName>
+    <CQFCoreAssembly Condition="'$(CQFCoreAssembly)' == ''">$(MSBuildThisFileDirectory)..\..\..\1.7\Assemblies\net10.0\QuestEditor_Library.dll</CQFCoreAssembly>
+  </PropertyGroup>
+  <Import Project="..\..\RimWorld.props" />
+  <ItemGroup>
+    <Reference Include="QuestEditor_Library"><HintPath>$(CQFCoreAssembly)</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <Target Name="CheckCoreAssembly" BeforeTargets="ResolveReferences">
+    <Error Condition="!Exists('$(CQFCoreAssembly)')" Text="A built CQFCoreAssembly is required for cinematic runtime checks." />
+  </Target>
+</Project>

@@ -232,6 +232,28 @@ CQF 不是单一玩法 Mod，而是一套用于制作以下内容的框架：
 
 overview 只负责系统归类，不在这里维护 Pawn 细节，避免和 `cqf-pawn-dev` 的备份内容重复。
 
+### 9. 演出与过场系统
+
+`CQFCinematicDef` 定义步骤，`GameComponent_Cinematics` 按游戏保存播放实例与队列，`CQFAction_PlayCinematic` 从现有动作、交互、对话结果和任务入口启动。完成、跳过、取消、失败各有独立信号，可选任务前缀；任务通过信号继续后续流程，不把 `CQFAction.Work` 改为异步接口。
+
+- 定义字段为 `steps`、`bindings`、`roles`、`allowSkip`、`lockInput`、`restoreCamera`、`pauseGame`、`maxDuration`、四个结果信号、`addQuestPrefix` 和 `skipActions`。Def 名使用各自 Mod 的前缀。
+- `CQFCinematicStep_Sequence` 与 `Parallel` 都使用 `steps`；其他步骤包括 Wait、WaitSignal、WaitCondition、Actions、Camera、Shake、Fade、Letterbox、Subtitle、Image、Sound、PawnMove、PawnFace、PawnWait、PawnJob、Dialog。
+- 每个步骤有 `clock` 与 `duration`。真实时间用于暂停时仍播放的画面；游戏时间用于人物移动和等待。强制暂停的定义拒绝游戏时间步骤，等待信号、条件、对话和人物行为都有超时。并行分支不能占用同一镜头、画面或人物通道。
+- 目标沿用 CQF 的 key 与数据库解析；运行实例单独保存目标的 Thing、Map 和 Cell，不能用会丢失休眠地图格子目标的原版 TargetInfo 文本保存作为替代。演出地图优先取实际引用的录制绑定解析后的目标地图，再以动作上下文的 `Position` 地图后备，最后使用其他目标或当前地图。调用方显式提供的同名目标覆盖录制默认绑定，并跳过该默认绑定的世界与对象解析。
+- `CQFCinematicBinding` 只记录世界种子、世界持久标识、地图 ID、Thing 唯一加载 ID 与格子坐标；`CQFCinematicDef.GetReferencedTargetKeys()` 从步骤及跳过动作的 XML 叶值按 Ordinal 精确匹配目标 Key，排除绑定元数据自身。保存前剪除废弃目标和绑定，播放只解析实际引用的默认绑定；删除人物步骤后，已失效的旧人物不会阻止剩余演出。
+- 播放保存步骤快照、进入和完成标记、当前下标、已执行动作下标、等待信号基线和画面状态；读档重建镜头、对话窗口与持续音效，不重发已执行动作。编辑器临时定义按名字和实例快照恢复，不要求已发布 Def；预览实例不写入存档。
+- 跳过只执行明确配置的 `skipActions`，不会依次补放全部未执行步骤。收尾动作失败改为 Failed 并报告；完成、跳过、取消、异常、地图失效和退出游戏都释放演出资源。
+- `CQFPresentationGate` 按游戏隔离并按请求顺序协调通用演出与领域转场；主库不引用可选 Domain DLL。领域取得占用后才截图与推进画面，保留实绘遮盖帧和地形就绪检查。
+- 地图工作台通过地图右下原版播放设置中的演出按钮打开，入口补丁为 `Patch_PlaySettings_CinematicStudio`。实际地图保留可见，底部绘制时间轴，右侧属性面板可收起；支持层级步骤、同级拖拽、子步骤、保存载入和高级参数编辑。镜头记录当前视点与缩放，走位和转向通过原生 `Targeter` 点选人物与地点；常规制作无需手填内部目标 Key。图片和音效可直接选择，字幕内联填写中文与英文正文。
+- `CQFCinematicProject` 管理定义、目标、字幕及显示名称。保存自动写入 `Quests/Cinematics/<defName>.xml`，绑定元数据写入 Def；同名 `.cqfscene` 保存作者字幕与任务关联等制作记录，启动扫描只读取 `*.xml`。字幕自动分配稳定 Key，并合并写入中英 Keyed 资源，保留其他文本键；仅校验当前步骤引用的字幕，废弃记录不会阻止保存。文件使用同目录临时文件与原子替换，失败保留明确错误并尝试回滚本次文件。
+- 可预览当前选择或全部步骤，并暂停、继续和步进；预览由编辑器单独推进，世界时间不推进，跳过游戏状态动作、人物、对话及外部等待。完整测试通过独立原生检查点保存并重新载入副本，执行人物、对话、任务动作和信号后恢复制作基线；测试期间保护普通保存，恢复失败或测试中断保留检查点和恢复路径。世界存档恢复不能回滚第三方动作写入的外部文件或静态状态。
+- 草稿按世界种子与世界持久标识保存内存中的纯值克隆，同世界关窗或重载后重新绑定当前游戏的目标；`CloneForTest` 不复制旧 Game、Thing 或 Quest 引用，新建和载入替换有内容的草稿前会确认。
+- 地图工具栏和人物属性提供角色绑定入口。每个角色有稳定内部槽位、可读名称、正式来源与来源名称，来源为录制人物、触发事件、任务数据库、临时数据库或全局数据库。运行时只查指定来源，必须得到唯一 Pawn；缺任务、缺角色、多人冲突或非人物明确报错。调用者显式提供同槽位目标时覆盖正式来源。角色解析地图优先于录制地点与上下文 `Position`。
+- 动态角色的排演人物只保存到 `.cqfscene` 的 `rehearsalBindings`，正式 Def 不导出其人物 ID；制作与副本测试以槽位覆盖排演，正式 `CQFAction_PlayCinematic` 按当前任务或触发上下文重新取人。Recorded 来源重选人物也更新正式绑定。重选排演人物保留原角色槽位和来源；新建角色显式建立另一槽位。动态排演人物失效会提示并允许打开项目重选。地点和镜头的原有录制绑定仍受世界与地图标识约束，角色来源配置不自动把整段场景变为跨世界地图模板。
+- 界面 252 项文本已按用户授权补齐中英文自然文案，字幕默认值为中性示例。生成文本登记在 `.QuestEditor_Library/TextReview/Cinematics.csv` 和 `.xlsx`，当前待审核；保留稳定 Key，不再以 Key 充当界面文案。游戏内填写的新字幕按用户提供文本登记到 CSV，保留既有建议与意见；XLSX 是离线审核快照，需要后续离线同步，不会由游戏自动更新。编辑器异常消息若本身为翻译 Key，先翻译再显示，普通异常保留原消息。
+
+离线检查入口为 `Tests/Cinematics/Checks.csproj`，既有演出实机夹具为 `Tests/CinematicsRuntime`，地图工作台夹具为 `Tests/CinematicStudioRuntime`。角色绑定最终候选 127 项离线、57 项工作台实机和 44 项演出实机回归通过；工作台点选使用原生 Targeter 回调，跳过按钮使用原生鼠标事件。角色绑定曾因正式游戏运行保留待部署包，后续实际操作前确认游戏已退出，已备份并部署主库和编辑器更新，最终证据与哈希见版本与构建记录。后续构建和测试仍使用临时输出，验证后部署；磁盘紧张时用测试脚本的 `RunRoot` 参数选择有空间的隔离目录，跨盘改为复制游戏根文件。
+
 ## 领域系统
 
 领域由独立的 `CQF.Domain.dll` 提供，核心入口为 `DomainDef`、`CQFDomainRuntime`、`MapComponent_Domain` 和 `DomainWorker`，命名空间仍为 `QuestEditor_Library`。子 Mod 须在自己的 `LoadFolders.xml` 中使用 `RequiresCQFModule="Domain"` 声明需求；没有启用的子 Mod 请求时不加载领域 DLL。领域不是单个血海玩法：CQF 管理地图池、进入与返回、共享血量、外部载体和转场生命周期；子 Mod 通过 Worker、地图生成器及转场实现具体规则和表现。`GameComponent_MapManager` 是唯一的地图管理 GComp；`CQFDomainRuntime` 是按游戏创建的普通对象，通过主库接口接收生命周期调用，partial 只在各自程序集内部拆分。

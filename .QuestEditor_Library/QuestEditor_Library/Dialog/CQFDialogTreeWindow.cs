@@ -6,8 +6,13 @@ namespace QuestEditor_Library;
 
 public class CQFDialogTreeWindow : Window
 {
+    public CQFDialogTreeWindow(string title, Thing interviewer, Thing interviewee, Quest quest, DialogTreeDef tree)
+        : this(title, interviewer, interviewee, quest, tree, 0)
+    {
+    }
+
     public CQFDialogTreeWindow(string title,Thing interviewer, Thing interviewee,Quest quest
-    , DialogTreeDef tree)
+    , DialogTreeDef tree, int startIndex)
     {
         this.title = title;
         this.forcePause = true;
@@ -21,12 +26,14 @@ public class CQFDialogTreeWindow : Window
         this.quest = quest;
         this.tree = tree;
         this.tree.ResolveOptions();
-        this.GoToNode(0);
+        this.GoToNode(startIndex);
     }
 
     protected override float Margin => 15f;
     public override Vector2 InitialSize => new Vector2(620 + Margin, 620 + Margin);
     public float CharacterWidth => 0f;
+    public int CurrentNodeIndex { get; private set; } = -1;
+    public bool IsClosed { get; private set; }
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
@@ -95,6 +102,7 @@ public class CQFDialogTreeWindow : Window
     {
         if (this.tree.nodeMoulds.TryGetValue(index,out var node))
         {
+            this.CurrentNodeIndex = index;
             this.curNode = node;
             this.nextOptions.Clear();
             this.elements.AddRange(this.curNode.Get(interviewer,interviewee,tree,this.quest));
@@ -120,12 +128,22 @@ public class CQFDialogTreeWindow : Window
                     this.nextOptions.Add(op);
                 }
             }
+            this.NodeChanged?.Invoke(index);
+        }
+        else
+        {
+            Log.Error($"CQF dialog {this.tree.defName} has no node {index}.");
         }
     }
 
-    public override void Close(bool doCloseSound = true)
+    public override void PostClose()
     {
-        base.Close(doCloseSound);
+        base.PostClose();
+        if (!this.IsClosed)
+        {
+            this.IsClosed = true;
+            this.Closed?.Invoke();
+        }
     }
 
     public Vector2 pos;
@@ -136,9 +154,11 @@ public class CQFDialogTreeWindow : Window
     public DialogNode curNode;
     public Thing interviewee;
     public Thing interviewer;
-    private Quest quest;
+    public event Action<int>? NodeChanged;
+    public event Action? Closed;
     public DialogTreeDef tree;
 
+    private Quest quest;
     private string title;
 
 
