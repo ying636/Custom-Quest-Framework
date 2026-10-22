@@ -37,7 +37,9 @@ namespace QuestEditor_Library
                 return null;
             }
 
-            return this.datas.RandomElement().Spawn(position, map, questTag, quest, lord, setLord);
+            Dictionary<string, TargetInfo> result = this.datas.RandomElement().Spawn(position, map, questTag, quest, lord, setLord);
+            if (result != null) this.RegisterEntityBookPawns(result.Values.Select(target => target.Thing).OfType<Pawn>(), quest, map);
+            return result;
         }
 
         public override XElement SaveToXElement(string nodeName)

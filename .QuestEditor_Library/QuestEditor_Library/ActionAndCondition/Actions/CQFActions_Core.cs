@@ -695,12 +695,12 @@ namespace QuestEditor_Library
             Rect labelRect = new Rect(x, y, labelWidth, 28f);
             Rect fieldRect = new Rect(stacked ? x : x + labelWidth + 8f, stacked ? y + 30f : y,
                 stacked ? width : width - labelWidth - 8f, 28f);
-            CQFTargetKeyEditor.DrawBookField(labelRect, fieldRect, interviewerLabel, this.interviewerText, value => this.interviewerText = value);
+            CQFTargetKeyEditor.DrawBookField(labelRect, fieldRect, interviewerLabel, this.interviewerText, value => this.interviewerText = value, allowContextKeys: true, allowEntityReferences: true);
             float rowHeight = stacked ? 66f : 36f;
             y += rowHeight;
             labelRect.y += rowHeight;
             fieldRect.y += rowHeight;
-            CQFTargetKeyEditor.DrawBookField(labelRect, fieldRect, intervieweeLabel, this.intervieeText, value => this.intervieeText = value);
+            CQFTargetKeyEditor.DrawBookField(labelRect, fieldRect, intervieweeLabel, this.intervieeText, value => this.intervieeText = value, allowContextKeys: true, allowEntityReferences: true);
             y += rowHeight;
         }
 
@@ -720,6 +720,10 @@ namespace QuestEditor_Library
                     interviewee = t.Value.Thing;
                 }
             });
+            if (interviewer == null && CQFEntityReference.IsReference(this.interviewerText))
+                interviewer = GameTools.GetTarget(targets, quest, this.interviewerText).Thing;
+            if (interviewee == null && CQFEntityReference.IsReference(this.intervieeText))
+                interviewee = GameTools.GetTarget(targets, quest, this.intervieeText).Thing;
             if (interviewer == null && GameTools.GetTargetFromQuestDatabase(quest, this.interviewerText)is TargetInfo target)
             {
                 interviewer = target.Thing;
@@ -770,9 +774,9 @@ namespace QuestEditor_Library
             }
 
             y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "TargetA".Translate(), this.targetA, value => this.targetA = value, x, 150f, inRect.width - x - 20f);
+            CQFTargetKeyEditor.DrawBookField(y, "TargetA".Translate(), this.targetA, value => this.targetA = value, x, 150f, inRect.width - x - 20f, allowEntityReferences: true);
             y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "TargetB".Translate(), this.targetB, value => this.targetB = value, x, 150f, inRect.width - x - 20f);
+            CQFTargetKeyEditor.DrawBookField(y, "TargetB".Translate(), this.targetB, value => this.targetB = value, x, 150f, inRect.width - x - 20f, allowEntityReferences: true);
             y += 30f;
         }
 
@@ -792,6 +796,10 @@ namespace QuestEditor_Library
                     targetB = t.Value.Thing;
                 }
             });
+            if (targetA == null && CQFEntityReference.IsReference(this.targetA))
+                targetA = GameTools.GetTarget(targets, quest, this.targetA).Thing;
+            if (targetB == null && CQFEntityReference.IsReference(this.targetB))
+                targetB = GameTools.GetTarget(targets, quest, this.targetB).Thing;
             if (targetA == null && GameTools.GetTargetFromQuestDatabase(quest, this.targetA)is TargetInfo target)
             {
                 targetA = target.Thing;
@@ -907,9 +915,9 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
+            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f, allowEntityReferences: true);
             y += 30f;
-            CQFTargetKeyEditor.DrawBookField(y, "targetLocationText".Translate(), this.targetLocationText, value => this.targetLocationText = value, x, 150f, inRect.width - x - 20f);
+            CQFTargetKeyEditor.DrawBookField(y, "targetLocationText".Translate(), this.targetLocationText, value => this.targetLocationText = value, x, 150f, inRect.width - x - 20f, allowEntityReferences: true);
             y += 30f;
         }
 
@@ -929,6 +937,10 @@ namespace QuestEditor_Library
                     targetLocation = t.Value;
                 }
             });
+            if (skipedTarget == null && CQFEntityReference.IsReference(this.skipedTargetText))
+                skipedTarget = GameTools.GetTarget(targets, quest, this.skipedTargetText).Thing;
+            if (!targetLocation.IsValid && CQFEntityReference.IsReference(this.targetLocationText))
+                targetLocation = GameTools.GetTarget(targets, quest, this.targetLocationText);
             if (skipedTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.skipedTargetText)is TargetInfo target)
             {
                 skipedTarget = target.Thing;
@@ -996,7 +1008,7 @@ namespace QuestEditor_Library
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             base.Draw(ref y, inRect, x);
-            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f);
+            CQFTargetKeyEditor.DrawBookField(y, "skipedTargetText".Translate(), this.skipedTargetText, value => this.skipedTargetText = value, x, 150f, inRect.width - x - 20f, allowEntityReferences: true);
             y += 30f;
         }
 
@@ -1010,6 +1022,8 @@ namespace QuestEditor_Library
                     skipedTarget = t.Value.Thing;
                 }
             });
+            if (skipedTarget == null && CQFEntityReference.IsReference(this.skipedTargetText))
+                skipedTarget = GameTools.GetTarget(targets, quest, this.skipedTargetText).Thing;
             if (skipedTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.skipedTargetText)is TargetInfo target)
             {
                 skipedTarget = target.Thing;

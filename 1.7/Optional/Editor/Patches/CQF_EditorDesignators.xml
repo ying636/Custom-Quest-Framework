@@ -29,6 +29,7 @@
 			<li>QuestEditor_Library.Designator_CustomLord</li>
 			<li>QuestEditor_Library.Designator_CQFSignalBook</li>
 			<li>QuestEditor_Library.Designator_CQFTargetKeyBook</li>
+			<li>QuestEditor_Library.Designator_CQFEntityBook</li>
 		</value>
 	</Operation>
 

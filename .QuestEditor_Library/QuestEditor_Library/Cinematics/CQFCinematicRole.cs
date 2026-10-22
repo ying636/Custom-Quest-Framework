@@ -14,6 +14,8 @@ public sealed class CQFCinematicRole : ISaveable
         if (!Enum.IsDefined(typeof(CQFCinematicRoleSource), source)) yield return "CQF_Cinematic_RoleSourceInvalid".Translate(DisplayName);
         else if (source != CQFCinematicRoleSource.Recorded && string.IsNullOrWhiteSpace(sourceKey))
             yield return "CQF_Cinematic_RoleSourceKeyRequired".Translate(DisplayName);
+        else if (source == CQFCinematicRoleSource.EntityBook && !CQFEntityReference.TryParse(sourceKey, out _))
+            yield return "CQF_EntityBook_InvalidReference".Translate();
     }
 
     public TargetInfo Resolve(Map fallbackMap, IEnumerable<CQFCinematicBinding> recorded, IDictionary<string, TargetInfo>? context = null, Quest? quest = null)
@@ -27,6 +29,7 @@ public sealed class CQFCinematicRole : ISaveable
             return RequirePawn(matches[0].Resolve(fallbackMap));
         }
         if (string.IsNullOrWhiteSpace(sourceKey)) throw new InvalidOperationException("CQF_Cinematic_RoleSourceKeyRequired".Translate(DisplayName));
+        if (source == CQFCinematicRoleSource.EntityBook) return RequirePawn(new TargetInfo(CQFEntityReference.ResolveSingle(sourceKey, quest, fallbackMap)));
         if (source == CQFCinematicRoleSource.Context)
         {
             if (context == null || !context.TryGetValue(sourceKey, out TargetInfo target))

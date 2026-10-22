@@ -44,6 +44,15 @@ namespace QuestEditor_Library
             if (this.iDrawable is PawnSpawnData pawnData)
             {
                 pawnData.DrawName(ref top, 0f, new Rect(0f, top, inRect.width, 36f));
+                float entityButtonWidth = (inRect.width - 8f) / 2f;
+                if (CQFUIStyle.ButtonText(new Rect(0f, top, entityButtonWidth, 30f), "CQF_EntityBook_Collect".Translate()))
+                    CQFEntityBookBridge.Collect(pawnData);
+                if (CQFUIStyle.ButtonText(new Rect(entityButtonWidth + 8f, top, entityButtonWidth, 30f), "CQF_EntityBook_Title".Translate()))
+                {
+                    CQFEntityBookCatalog.Track(pawnData);
+                    CQFEntityBookBridge.OpenReferences(quest: Find.CurrentMap == null ? null : GameTools.GetQuestFromMap(Find.CurrentMap));
+                }
+                top += 36f;
                 top += 4f;
             }
             Rect outRect = new Rect(0f, top, inRect.width, inRect.height - top);

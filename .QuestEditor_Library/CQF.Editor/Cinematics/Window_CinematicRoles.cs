@@ -37,6 +37,9 @@ public sealed class Window_CinematicRoles : Window
         Rect content = new(0f, 0f, viewport.width - 18f, Mathf.Max(viewport.height, contentHeight));
         Widgets.BeginScrollView(viewport, ref scroll, content);
         float y = 0f;
+        if (CQFUIStyle.ButtonText(new Rect(0f, y, content.width, 30f), "CQF_EntityBook_CinematicAddRole".Translate()))
+            owner.BindEntityReference(token => selectedKey = owner.Project.BindEntityRole(token));
+        y += 38f;
         if (roles.Count == 0)
             Widgets.Label(new Rect(0f, y, content.width, 60f), "CQF_Cinematic_RoleNoActors".Translate());
         else
@@ -54,19 +57,41 @@ public sealed class Window_CinematicRoles : Window
             selected.label = TextField(ref y, content.width, "CQF_Cinematic_RoleName", selected.label);
             Label(ref y, content.width, "CQF_Cinematic_RoleSource");
             Rect sourceRect = new(0f, y, content.width, 30f);
-            if (CQFUIStyle.ButtonText(sourceRect, ("CQF_Cinematic_Source_" + selected.source).Translate()))
+            if (CQFUIStyle.ButtonText(sourceRect, SourceLabel(selected.source)))
             {
                 List<FloatMenuOption> options = Enum.GetValues(typeof(CQFCinematicRoleSource)).Cast<CQFCinematicRoleSource>()
-                    .Select(source => new FloatMenuOption(("CQF_Cinematic_Source_" + source).Translate(), () =>
+                    .Select(source => new FloatMenuOption(SourceLabel(source), () =>
                     {
+                        if (source == CQFCinematicRoleSource.EntityBook)
+                        {
+                            owner.BindEntityReference(token => owner.Project.SetEntityRole(selected.key, token));
+                            return;
+                        }
                         string key = source == CQFCinematicRoleSource.Context && string.IsNullOrWhiteSpace(selected.sourceKey) ? "Trigger" : selected.sourceKey;
                         owner.Project.SetRoleSource(selected.key, source, key);
                     })).ToList();
                 Find.WindowStack.Add(new FloatMenu(options));
             }
-            TooltipHandler.TipRegion(sourceRect, ("CQF_Cinematic_Source_" + selected.source + "_Tip").Translate());
+            TooltipHandler.TipRegion(sourceRect, (selected.source == CQFCinematicRoleSource.EntityBook
+                ? "CQF_EntityBook_CinematicSource_Tip" : "CQF_Cinematic_Source_" + selected.source + "_Tip").Translate());
             y += 38f;
-            if (selected.source != CQFCinematicRoleSource.Recorded)
+            if (selected.source == CQFCinematicRoleSource.EntityBook)
+            {
+                Label(ref y, content.width, "CQF_EntityBook_CinematicReference");
+                if (CQFUIStyle.ButtonText(new Rect(0f, y, content.width, 30f), CQFEntityBookBridge.DisplayReference(selected.sourceKey)))
+                    owner.BindEntityReference(token => owner.Project.SetEntityRole(selected.key, token));
+                y += 38f;
+                if (CQFUIStyle.ButtonText(new Rect(0f, y, content.width, 30f), "CQF_EntityBook_CinematicAdvancedReference".Translate()))
+                    showReference = !showReference;
+                y += 38f;
+                if (showReference)
+                {
+                    float height = Text.CalcHeight(selected.sourceKey, content.width);
+                    Widgets.Label(new Rect(0f, y, content.width, height), selected.sourceKey);
+                    y += height + 8f;
+                }
+            }
+            else if (selected.source != CQFCinematicRoleSource.Recorded)
             {
                 string sourceKey = TextField(ref y, content.width, "CQF_Cinematic_SourceKey", selected.sourceKey);
                 if (sourceKey != selected.sourceKey) owner.Project.SetRoleSource(selected.key, selected.source, sourceKey);
@@ -104,8 +129,12 @@ public sealed class Window_CinematicRoles : Window
         y += 26f;
     }
 
+    private string SourceLabel(CQFCinematicRoleSource source)
+        => (source == CQFCinematicRoleSource.EntityBook ? "CQF_EntityBook_CinematicSource" : "CQF_Cinematic_Source_" + source).Translate();
+
     private readonly QuestEditor_Cinematics owner;
     private string? selectedKey;
     private Vector2 scroll;
     private float contentHeight;
+    private bool showReference;
 }

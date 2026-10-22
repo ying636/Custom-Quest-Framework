@@ -19,8 +19,13 @@ namespace QuestEditor_Library
 
         public static void DrawField(ref float y, Rect inRect, float x, string value, Action<string> assign)
         {
+            DrawField(ref y, inRect, x, value, assign, false);
+        }
+
+        public static void DrawField(ref float y, Rect inRect, float x, string value, Action<string> assign, bool allowEntityGroups)
+        {
             float width = Mathf.Max(210f, inRect.width - x - 12f);
-            CQFTargetKeyEditor.DrawBookField(new Rect(x, y, 110f, 25f), new Rect(x + 114f, y, width - 114f, 25f), "DialogueTarget".Translate(), value, assign);
+            CQFTargetKeyEditor.DrawBookField(new Rect(x, y, 110f, 25f), new Rect(x + 114f, y, width - 114f, 25f), "DialogueTarget".Translate(), value, assign, allowContextKeys: true, allowEntityReferences: true);
             y += 29f;
             Map map = CQFEditorContext.Map ?? Find.CurrentMap;
             Thing source = CQFEditorContext.SourceThing;
@@ -40,10 +45,24 @@ namespace QuestEditor_Library
             GUI.enabled = oldEnabled && map != null && !value.NullOrEmpty();
             if (CQFUIStyle.ButtonText(new Rect(x + (buttonWidth + 4f) * 2f, y, buttonWidth, 25f), "CQF_TargetLocate".Translate()))
             {
-                Locate(ResolveEditorTarget(map, source, value));
+                try
+                {
+                    if (CQFEntityReference.TryParse(value, out CQFEntityReference? entity) && entity!.Group)
+                        CQFEntityBookBridge.OpenReferences(assign, allowEntityGroups, GameTools.GetQuestFromMap(map));
+                    else
+                        Locate(ResolveEditorTarget(map, source, value));
+                }
+                catch (Exception error)
+                {
+                    Log.Error("[CQF] Entity target locate: " + error);
+                    Messages.Message(error.Message, MessageTypeDefOf.RejectInput, false);
+                }
             }
 
             GUI.enabled = oldEnabled;
+            y += 34f;
+            if (CQFUIStyle.ButtonText(new Rect(x, y, width, 28f), "CQF_EntityBook_SelectTarget".Translate()))
+                CQFEntityBookBridge.OpenReferences(assign, allowEntityGroups, map == null ? null : GameTools.GetQuestFromMap(map));
             y += 34f;
         }
 
@@ -105,6 +124,8 @@ namespace QuestEditor_Library
 
         public static TargetInfo ResolveEditorTarget(Map map, Thing source, string key)
         {
+            if (CQFEntityReference.IsReference(key))
+                return new TargetInfo(CQFEntityReference.ResolveSingle(key, map == null ? null : GameTools.GetQuestFromMap(map), map));
             if (key == "CustomThing" && source != null)
             {
                 return source;

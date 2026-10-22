@@ -7,11 +7,25 @@ namespace QuestEditor_Library;
 
 public sealed class CQFCinematicTestSession
 {
-    private CQFCinematicTestSession(CQFCinematicProject project, Action<CQFCinematicProject> reopen, CQFCinematicStep? selected)
+    private CQFCinematicTestSession(CQFCinematicProject project, Action<CQFCinematicProject> reopen, CQFCinematicStep? selected, bool useRehearsal)
     {
         this.project = project.CloneForTest();
         testProject = project.CloneForTest();
-        if (selected != null) testProject.Definition.steps = new List<CQFCinematicStep> { selected.Copy() };
+        foreach (KeyValuePair<string, TargetInfo> target in project.Targets) testProject.Targets.Add(target.Key, target.Value);
+        if (selected != null)
+        {
+            testProject.Definition.steps = new List<CQFCinematicStep> { selected.Copy() };
+            testProject.Definition.skipActions.Clear();
+            testProject.Definition.completedSignal = "";
+            testProject.Definition.skippedSignal = "";
+            testProject.Definition.cancelledSignal = "";
+            testProject.Definition.failedSignal = "";
+        }
+        testProject.CaptureBindings();
+        testProject.Targets.Clear();
+        selectedPath = selected == null ? null : project.StepPath(selected);
+        UsesRehearsal = useRehearsal;
+        if (!useRehearsal) testProject.RehearsalBindings.Clear();
         this.reopen = reopen;
         originalGame = Verse.Current.Game;
         originalTimeSpeed = Find.TickManager.CurTimeSpeed;
@@ -29,8 +43,13 @@ public sealed class CQFCinematicTestSession
     public bool IsBusy => phase is not (TestPhase.Finished or TestPhase.Interrupted);
     public CQFCinematicInstance? Instance => instance;
     public bool Paused => paused;
+    public bool UsesRehearsal { get; }
+    public string? FailedStepPath { get; private set; }
 
     public static CQFCinematicTestSession Start(CQFCinematicProject project, Action<CQFCinematicProject> reopen, bool selectedOnly = false, CQFCinematicStep? selected = null)
+        => Start(project, reopen, selectedOnly, selected, true);
+
+    public static CQFCinematicTestSession Start(CQFCinematicProject project, Action<CQFCinematicProject> reopen, bool selectedOnly, CQFCinematicStep? selected, bool useRehearsal)
     {
         if (current != null || CurrentGameUnavailable()) throw new InvalidOperationException("CQF_Cinematic_TestBusy".Translate());
         if (project == null) throw new ArgumentNullException(nameof(project));
@@ -43,8 +62,8 @@ public sealed class CQFCinematicTestSession
         if (host.Active is { } activePreview) host.Stop(activePreview);
         if (CQFPresentationGate.For(Verse.Current.Game).IsBusy)
             throw new InvalidOperationException("CQF_Cinematic_TestBusy".Translate());
-        project.CaptureBindings();
-        CQFCinematicTestSession session = new(project, reopen, selectedOnly ? selected : null);
+        project.RefreshPreviewTexts();
+        CQFCinematicTestSession session = new(project, reopen, selectedOnly ? selected : null, useRehearsal);
         string[] errors = session.testProject.Definition.ConfigErrors().ToArray();
         if (errors.Length > 0) throw new InvalidDataException("CQF_Cinematic_InvalidProject".Translate() + "\n" + string.Join("\n", errors));
         session.testProject.RebindTargets();
@@ -191,6 +210,13 @@ public sealed class CQFCinematicTestSession
     private void BeginLoad(bool restoring)
     {
         VerifyCheckpoint();
+        if (restoring && instance?.Outcome == CQFCinematicOutcome.Failed)
+        {
+            string? failed = instance.FailedStepPath ?? (instance.StepIndex >= 0 && instance.StepIndex < testProject.Definition.steps.Count
+                ? instance.StepIndex.ToString(System.Globalization.CultureInfo.InvariantCulture) : null);
+            FailedStepPath = selectedPath == null ? failed : failed is { Length: > 1 } && failed.StartsWith("0/", StringComparison.Ordinal)
+                ? selectedPath + failed.Substring(1) : selectedPath;
+        }
         if (restoring && instance?.IsCurrentGame == true)
             GameComponent_Cinematics.Instance?.Stop(instance);
         phase = restoring ? TestPhase.Restoring : TestPhase.LoadingTest;
@@ -329,6 +355,7 @@ public sealed class CQFCinematicTestSession
     private readonly string checkpointName;
     private readonly string checkpointPath;
     private readonly string savesDirectory;
+    private readonly string? selectedPath;
     private CQFCinematicInstance? instance;
     private CQFCinematicTestSaveGuard? guard;
     private CQFCinematicTestDriver? driver;

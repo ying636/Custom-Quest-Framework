@@ -15,6 +15,15 @@ namespace QuestEditor_Library
 {
     public class PawnSpawnData : IExposable, ISaveable, IDrawable
     {
+        public string EntityBookSourceId
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(this.entityBookId)) this.entityBookId = Guid.NewGuid().ToString("N");
+                return "spawn:" + this.entityBookId;
+            }
+        }
+
         public virtual PawnSpawnData Copy()
         {
             XElement x = this.SaveToXElement("PawnSpawnData");
@@ -164,6 +173,7 @@ namespace QuestEditor_Library
         public virtual XElement SaveToXElement(string nodeName)
         {
             XElement result = new XElement(nodeName);
+            result.Add(new XElement("entityBookId", this.EntityBookSourceId.Substring("spawn:".Length)));
             if (this.GetType() != typeof(PawnSpawnData))
             {
                 result.SetAttributeValue("Class", this.GetType().FullName);
@@ -194,6 +204,7 @@ namespace QuestEditor_Library
             }
 
             result.Add(new XElement("count", this.count));
+            result.Add(CQFSerialization.XElementFromObject(this.way, typeof(ArrivingWay), "way"));
             if (this.spawnType == SpawnType.BuildingTick)
             {
                 result.Add(new XElement("timeToSpawn", this.timeToSpawn));
@@ -304,6 +315,7 @@ namespace QuestEditor_Library
                 List<Pawn> pawns = new List<Pawn>();
                 MakePawns(position, questTag, quest, lord, faction, result, kinds, pawns);
                 this.SpawnPnaw(pawns, position, map);
+                this.RegisterEntityBookPawns(pawns, quest, map);
                 if (this.dataName != "undefined")
                 {
                     List<Pawn> ps = new List<Pawn>();
@@ -382,6 +394,13 @@ namespace QuestEditor_Library
             this.way.SpawnPnaw(pawns, position, map);
         }
 
+        public void RegisterEntityBookPawns(IEnumerable<Pawn> pawns, Quest? quest, Map? map)
+        {
+            GameComponent_EntityBook book = Current.Game?.GetComponent<GameComponent_EntityBook>()
+                ?? throw new InvalidOperationException("CQF_EntityBook_Unavailable".Translate());
+            book.RegisterBatch(this.EntityBookSourceId, pawns, quest, map, this.dataName == "undefined" ? this.kind?.label : this.dataName);
+        }
+
         public void ActionAfterGeneration(Pawn pawn, Quest quest, int i, string questTag)
         {
             this.actions.ForEach(x => x.Work(new Dictionary<string, TargetInfo>() { [this.dataName + "." + i] = pawn }, quest));
@@ -424,6 +443,9 @@ namespace QuestEditor_Library
 
         public virtual void ExposeData()
         {
+            if (Scribe.mode == LoadSaveMode.Saving && string.IsNullOrWhiteSpace(this.entityBookId))
+                this.entityBookId = Guid.NewGuid().ToString("N");
+            Scribe_Values.Look(ref this.entityBookId, "entityBookId", "");
             Scribe_Values.Look(ref this.dataName, "QE_PawnData_dataName");
             Scribe_Values.Look(ref this.buffer, "QE_PawnData_buffer");
             Scribe_Values.Look(ref this.bufferMax, "QE_PawnData_bufferMax");
@@ -509,6 +531,8 @@ namespace QuestEditor_Library
 
         [NoTranslate]
         public string dataName = "undefined";
+        [NoTranslate]
+        public string entityBookId = Guid.NewGuid().ToString("N");
         public string buffer;
         public string bufferMax;
         public string buffer_time;

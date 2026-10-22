@@ -26,6 +26,8 @@ public sealed class CQFCinematicProject
     public Dictionary<string, TargetInfo> Targets { get; } = new(StringComparer.Ordinal);
     public List<CQFCinematicSubtitleText> Subtitles { get; } = new();
     public List<CQFCinematicBinding> RehearsalBindings { get; } = new();
+    public Dictionary<string, string> TargetNames { get; } = new(StringComparer.Ordinal);
+    public List<CQFCinematicBinding> Locations { get; } = new();
     public string DisplayName { get => Definition.label ?? Definition.defName; set => Definition.label = value; }
     public string QuestID { get; set; } = "";
     public Quest? Quest
@@ -44,7 +46,7 @@ public sealed class CQFCinematicProject
 
     public string BindTarget(TargetInfo target)
     {
-        CQFCinematicBinding? existing = Definition.bindings.Concat(RehearsalBindings).FirstOrDefault(binding => binding.Matches(target));
+        CQFCinematicBinding? existing = Definition.bindings.Concat(RehearsalBindings).Concat(Locations).FirstOrDefault(binding => binding.Matches(target));
         string key = existing?.key ?? "CQF_Target_" + Guid.NewGuid().ToString("N");
         CQFCinematicBinding recorded = new(key, target);
         List<CQFCinematicBinding> destination = Definition.roles.Any(role => role.key == key && role.source != CQFCinematicRoleSource.Recorded)
@@ -53,6 +55,13 @@ public sealed class CQFCinematicProject
         if (index < 0) destination.Add(recorded);
         else destination[index] = recorded;
         Targets[key] = target;
+        if (!target.HasThing && !TargetNames.ContainsKey(key))
+            TargetNames[key] = "CQF_Cinematic_LocationNumber".Translate(TargetNames.Count + 1);
+        if (!target.HasThing)
+        {
+            Locations.RemoveAll(binding => binding.key == key);
+            Locations.Add(recorded);
+        }
         return key;
     }
 
@@ -95,6 +104,31 @@ public sealed class CQFCinematicProject
         });
         Targets[key] = target;
         return key;
+    }
+
+    public string BindEntityRole(string token, string? label = null)
+    {
+        if (!CQFEntityReference.TryParse(token, out CQFEntityReference? reference) || reference == null || reference.Group)
+            throw new InvalidOperationException("CQF_EntityBook_CinematicReferenceInvalid".Translate());
+        CQFCinematicRole? existing = Definition.roles.FirstOrDefault(role => role.source == CQFCinematicRoleSource.EntityBook && role.sourceKey == token);
+        if (existing != null) return existing.key;
+        string key = "CQF_Role_" + Guid.NewGuid().ToString("N");
+        Definition.roles.Add(new CQFCinematicRole
+        {
+            key = key, label = label ?? CQFEntityBookBridge.DisplayReference(token), source = CQFCinematicRoleSource.EntityBook, sourceKey = token
+        });
+        BindEntityRehearsal(key, reference);
+        return key;
+    }
+
+    public void SetEntityRole(string key, string token, string? label = null)
+    {
+        if (!CQFEntityReference.TryParse(token, out CQFEntityReference? reference) || reference == null || reference.Group)
+            throw new InvalidOperationException("CQF_EntityBook_CinematicReferenceInvalid".Translate());
+        SetRoleSource(key, CQFCinematicRoleSource.EntityBook, token);
+        CQFCinematicRole role = Definition.roles.Single(role => role.key == key);
+        if (label != null) role.label = label;
+        if (!Targets.ContainsKey(key)) BindEntityRehearsal(key, reference);
     }
 
     public void SetRoleSource(string key, CQFCinematicRoleSource source, string sourceKey)
@@ -142,6 +176,7 @@ public sealed class CQFCinematicProject
         Definition.roles.RemoveAll(role => !referenced.Contains(role.key));
         Definition.bindings.RemoveAll(binding => !referenced.Contains(binding.key));
         RehearsalBindings.RemoveAll(binding => !referenced.Contains(binding.key));
+        foreach (string key in TargetNames.Keys.Where(key => !referenced.Contains(key) && !Locations.Any(location => location.key == key)).ToArray()) TargetNames.Remove(key);
         foreach (KeyValuePair<string, TargetInfo> entry in Targets)
         {
             CQFCinematicBinding recorded = new(entry.Key, entry.Value);
@@ -238,6 +273,8 @@ public sealed class CQFCinematicProject
             [Path.ChangeExtension(destination, ".cqfscene")] = new XDocument(new XElement("CQFCinematicScene",
                 new XElement("definition", Definition.defName), new XElement("displayName", DisplayName), new XElement("questID", QuestID),
                 new XElement("subtitles", authored.Select(text => text.SaveToXElement())),
+                new XElement("targetNames", TargetNames.Select(entry => new XElement("li", new XAttribute("key", entry.Key), entry.Value))),
+                new XElement("locations", Locations.Select(binding => binding.SaveToXElement("li"))),
                 new XElement("rehearsalBindings", RehearsalBindings.Select(binding => binding.SaveToXElement("li"))))).ToString()
         };
         foreach (string folder in new[] { "English", ChineseFolder })
@@ -296,7 +333,120 @@ public sealed class CQFCinematicProject
             key = binding.key, worldSeed = binding.worldSeed, worldID = binding.worldID,
             mapID = binding.mapID, thingID = binding.thingID, cell = binding.cell
         }));
+        foreach (KeyValuePair<string, string> entry in TargetNames) clone.TargetNames.Add(entry.Key, entry.Value);
+        clone.Locations.AddRange(Locations.Select(binding => new CQFCinematicBinding
+        {
+            key = binding.key, worldSeed = binding.worldSeed, worldID = binding.worldID,
+            mapID = binding.mapID, thingID = binding.thingID, cell = binding.cell
+        }));
         return clone;
+    }
+
+    public string CaptureSnapshot()
+    {
+        return new XElement("CQFCinematicDraft", new XAttribute("version", 1),
+            new XElement("definition", Definition.SaveToXElement(typeof(CQFCinematicDef).FullName!)),
+            new XElement("questID", QuestID),
+            new XElement("subtitles", Subtitles.Select(text => text.SaveToXElement())),
+            new XElement("targetNames", TargetNames.Select(entry => new XElement("li", new XAttribute("key", entry.Key), entry.Value))),
+            new XElement("locations", Locations.Select(binding => binding.SaveToXElement("li"))),
+            new XElement("rehearsalBindings", RehearsalBindings.Select(binding => binding.SaveToXElement("li"))))
+            .ToString(SaveOptions.DisableFormatting);
+    }
+
+    public void RefreshPreviewTexts()
+    {
+        PublishSubtitles(Subtitles.Where(text => IsOwnedSubtitleKey(text.Key)));
+    }
+
+    public static CQFCinematicProject RestoreSnapshot(string snapshot)
+    {
+        XElement root = ReadXml(snapshot);
+        if (root.Name != "CQFCinematicDraft" || (string?)root.Attribute("version") != "1"
+            || root.Element("definition")?.Elements().Count() != 1)
+            throw new InvalidDataException("CQF_Cinematic_InvalidScene".Translate());
+        CQFCinematicProject restored = FromXml(root.Element("definition")!.Elements().Single().ToString());
+        restored.QuestID = root.Element("questID")?.Value ?? "";
+        restored.ReadLocations(root.Element("locations"));
+        foreach (XElement name in root.Element("targetNames")?.Elements("li") ?? Enumerable.Empty<XElement>())
+        {
+            string key = (string?)name.Attribute("key") ?? "";
+            if (string.IsNullOrEmpty(key) || restored.TargetNames.ContainsKey(key)) throw new InvalidDataException("CQF_Cinematic_InvalidScene".Translate());
+            restored.TargetNames.Add(key, name.Value);
+        }
+        foreach (XElement text in root.Element("subtitles")?.Elements("li") ?? Enumerable.Empty<XElement>())
+        {
+            string key = text.Element("key")?.Value ?? "";
+            if (restored.Subtitles.Any(value => value.Key == key)) throw new InvalidDataException("CQF_Cinematic_DuplicateSubtitle".Translate());
+            restored.Subtitles.Add(new CQFCinematicSubtitleText(key, text.Element("chinese")?.Value ?? "", text.Element("english")?.Value ?? ""));
+        }
+        if (root.Element("rehearsalBindings") is XElement bindings)
+        {
+            XmlDocument document = new() { XmlResolver = null };
+            document.LoadXml(bindings.ToString());
+            restored.RehearsalBindings.AddRange(DirectXmlToObject.ObjectFromXml<List<CQFCinematicBinding>>(document.DocumentElement, false));
+            if (restored.RehearsalBindings.GroupBy(binding => binding.key).Any(group => group.Count() > 1))
+                throw new InvalidDataException("CQF_Cinematic_RoleDuplicate".Translate(restored.DisplayName));
+        }
+        return restored;
+    }
+
+    public string StepPath(CQFCinematicStep? selected)
+    {
+        return FindStepPath(Definition.steps, selected, "") ?? "";
+    }
+
+    public CQFCinematicStep? StepAtPath(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return null;
+        List<CQFCinematicStep> owner = Definition.steps;
+        CQFCinematicStep? step = null;
+        foreach (string part in path.Split('/'))
+        {
+            if (!int.TryParse(part, out int index) || index < 0 || index >= owner.Count) return null;
+            step = owner[index];
+            owner = step switch { CQFCinematicStep_Sequence sequence => sequence.steps, CQFCinematicStep_Parallel parallel => parallel.steps, _ => new() };
+        }
+        return step;
+    }
+
+    public void RemoveLocation(string key)
+    {
+        if (Definition.GetReferencedTargetKeys(Locations.Select(entry => entry.key)).Contains(key))
+            throw new InvalidOperationException("CQF_Cinematic_LocationInUse".Translate());
+        Locations.RemoveAll(binding => binding.key == key);
+        Definition.bindings.RemoveAll(binding => binding.key == key);
+        Targets.Remove(key);
+        TargetNames.Remove(key);
+    }
+
+    private static string? FindStepPath(List<CQFCinematicStep> owner, CQFCinematicStep? selected, string prefix)
+    {
+        if (selected == null) return null;
+        for (int index = 0; index < owner.Count; index++)
+        {
+            string path = prefix + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (ReferenceEquals(owner[index], selected)) return path;
+            List<CQFCinematicStep>? children = owner[index] switch
+            {
+                CQFCinematicStep_Sequence sequence => sequence.steps,
+                CQFCinematicStep_Parallel parallel => parallel.steps,
+                _ => null
+            };
+            if (children != null && FindStepPath(children, selected, path + "/") is string found) return found;
+        }
+        return null;
+    }
+
+    private void BindEntityRehearsal(string key, CQFEntityReference reference)
+    {
+        if (Current.Game == null) return;
+        GameComponent_EntityBook book = Current.Game.GetComponent<GameComponent_EntityBook>()
+            ?? throw new InvalidOperationException("CQF_EntityBook_Unavailable".Translate());
+        List<CQFEntityRecord> records = book.GetRecords(reference.SourceId, Quest)
+            .Where(record => !reference.MemberIndex.HasValue || record.MemberIndex == reference.MemberIndex.Value).ToList();
+        if (records.Count != 1 || records[0].Pawn is not { Spawned: true, Destroyed: false } pawn || pawn.Map != Find.CurrentMap) return;
+        SetRehearsalPawn(key, pawn);
     }
 
     private void ReadScene(string path)
@@ -307,6 +457,13 @@ public sealed class CQFCinematicProject
             throw new InvalidDataException("CQF_Cinematic_InvalidScene".Translate());
         DisplayName = scene.Element("displayName")?.Value ?? DisplayName;
         QuestID = scene.Element("questID")?.Value ?? "";
+        ReadLocations(scene.Element("locations"));
+        foreach (XElement name in scene.Element("targetNames")?.Elements("li") ?? Enumerable.Empty<XElement>())
+        {
+            string key = (string?)name.Attribute("key") ?? "";
+            if (string.IsNullOrEmpty(key) || TargetNames.ContainsKey(key)) throw new InvalidDataException("CQF_Cinematic_InvalidScene".Translate());
+            TargetNames.Add(key, name.Value);
+        }
         if (scene.Element("rehearsalBindings") is XElement bindings)
         {
             XmlDocument document = new() { XmlResolver = null };
@@ -327,6 +484,17 @@ public sealed class CQFCinematicProject
     {
         string value = ReadTranslation(key, ChineseFolder);
         return value.Length > 0 ? value : key.Translate().ToString();
+    }
+
+    private void ReadLocations(XElement? element)
+    {
+        if (element == null) return;
+        XmlDocument document = new() { XmlResolver = null };
+        document.LoadXml(element.ToString());
+        Locations.AddRange(DirectXmlToObject.ObjectFromXml<List<CQFCinematicBinding>>(document.DocumentElement, false));
+        if (Locations.Any(binding => !string.IsNullOrEmpty(binding.thingID))
+            || Locations.GroupBy(binding => binding.key).Any(group => group.Count() > 1))
+            throw new InvalidDataException("CQF_Cinematic_InvalidScene".Translate());
     }
 
     private static CQFCinematicDef ReadDefinition(string xml)

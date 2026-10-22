@@ -17,6 +17,15 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
+        public QuestEditor_PawnDataEditor(ComplexPawnDef template) : this()
+        {
+            System.Xml.XmlDocument document = new System.Xml.XmlDocument { XmlResolver = null };
+            document.LoadXml(template.SaveToXElement("QuestEditor_Library.ComplexPawnDef").ToString());
+            curDef = DirectXmlToObject.ObjectFromXml<ComplexPawnDef>(document.DocumentElement, false);
+            DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
+            ResetPreview();
+        }
+
         public override string PageTitle => "CQF_PawnEditor_Title".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.CurDef.defName, () => this.CurDef,
             value => { QuestEditor_PawnDataEditor.curDef = (ComplexPawnDef)value; this.previewDirty = true; },

@@ -32,7 +32,8 @@ public sealed class Window_CinematicTestPlayback : Window
         using CQFUIScope scope = new(inRect.width, inRect.height);
         CQFCinematicInstance? instance = session.Instance;
         string outcome = instance == null ? "CQF_Cinematic_TestRunning".Translate() : ("CQF_Cinematic_Outcome_" + instance.Outcome).Translate();
-        Widgets.LabelEllipses(new Rect(0f, 0f, inRect.width, 28f), "CQF_Cinematic_TestCopy".Translate() + " · " + outcome);
+        string mode = (session.UsesRehearsal ? "CQF_Cinematic_TestModeRehearsal" : "CQF_Cinematic_TestModeFormal").Translate();
+        Widgets.LabelEllipses(new Rect(0f, 0f, inRect.width, 28f), mode + " · " + outcome);
         float width = (inRect.width - 12f) / 3f;
         bool playing = instance?.Outcome == CQFCinematicOutcome.Playing;
         if (CQFUIStyle.ButtonText(new Rect(0f, 43f, width, 30f), (session.Paused ? "CQF_Cinematic_ResumePreview" : "CQF_Cinematic_PausePreview").Translate(), active: playing))

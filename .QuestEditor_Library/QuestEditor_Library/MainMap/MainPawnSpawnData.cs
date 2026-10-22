@@ -286,11 +286,14 @@ namespace QuestEditor_Library
             this.spawnData.dataName = this.dataName;
             Dictionary<string, TargetInfo> result = this.spawnData.Spawn(position, map, questTag, quest, lord, setLord);
             this.spawnData.dataName = oldDataName;
+            if (result != null) this.RegisterEntityBookPawns(result.Values.Select(target => target.Thing).OfType<Pawn>(), quest, map);
             return result;
         }
 
         private bool TrySpawnCachedPawn(Pawn pawn, IntVec3 position, Map map, string questTag, Quest quest, Lord lord, Dictionary<string, TargetInfo> result)
         {
+            if (pawn?.Spawned == true && !pawn.Dead && !pawn.Destroyed)
+                this.RegisterEntityBookPawns(new[] { pawn }, quest, map);
             if (pawn == null || pawn.Spawned || pawn.Dead || map == null || !position.InBounds(map))
             {
                 return false;
@@ -299,6 +302,7 @@ namespace QuestEditor_Library
             GenSpawn.Spawn(pawn, position, map);
             lord?.AddPawn(pawn);
             result.SetOrAdd(this.dataName + ".0", pawn);
+            this.RegisterEntityBookPawns(new[] { pawn }, quest, map);
             GameComponent_Editor.Instance.GetQuestData(quest)?.AddGroup(this.dataName, new List<Pawn> { pawn });
             return true;
         }

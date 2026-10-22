@@ -12,6 +12,8 @@ public sealed class CQFCinematicTimeline
     public CQFCinematicStep? Selected => selected;
     public Action<CQFCinematicStep?>? SelectionChanged { get; set; }
     public Action<CQFCinematicStep>? StepAdded { get; set; }
+    public Action? ReorderStarting { get; set; }
+    public Action? ReorderFinished { get; set; }
 
     public void Reset()
     {
@@ -19,6 +21,13 @@ public sealed class CQFCinematicTimeline
         dragging = null;
         scroll = Vector2.zero;
         SelectionChanged?.Invoke(null);
+    }
+
+    public void Select(CQFCinematicStep? step)
+    {
+        selected = step;
+        dragging = null;
+        SelectionChanged?.Invoke(step);
     }
 
     public void Draw(Rect rect, CQFCinematicDef definition, Func<CQFCinematicStep, string>? summary = null)
@@ -179,9 +188,11 @@ public sealed class CQFCinematicTimeline
         {
             if (dragMoved && draggingOwner == owner)
             {
+                ReorderStarting?.Invoke();
                 int destination = owner.IndexOf(step);
                 owner.Remove(dragging);
                 owner.Insert(Mathf.Clamp(destination, 0, owner.Count), dragging);
+                ReorderFinished?.Invoke();
             }
             else if (dragMoved && draggingOwner != owner)
                 Messages.Message("CQF_Cinematic_ReorderSameGroup".Translate(), MessageTypeDefOf.CautionInput);

@@ -12,27 +12,43 @@ public abstract class CQFCinematicStep : IExposable, ISaveable
 
     public bool Advance(CQFCinematicContext context, CQFCinematicStepState state, float realSeconds, int gameTicks)
     {
-        if (context.Instance.Outcome != CQFCinematicOutcome.Playing) return false;
-        if (state.completed) return true;
-        Prepare(context, state);
-        if (context.Instance.Outcome != CQFCinematicOutcome.Playing) return false;
-        if (state.completed) return true;
-        state.elapsed += clock == CQFCinematicClock.RealTime ? realSeconds : gameTicks / 60f;
-        if (!OnUpdate(context, state, realSeconds, gameTicks)) return false;
-        state.completed = true;
-        OnExit(context, state, false);
-        return true;
+        try
+        {
+            if (context.Instance.Outcome != CQFCinematicOutcome.Playing) return false;
+            if (state.completed) return true;
+            Prepare(context, state);
+            if (context.Instance.Outcome != CQFCinematicOutcome.Playing) return false;
+            if (state.completed) return true;
+            state.elapsed += clock == CQFCinematicClock.RealTime ? realSeconds : gameTicks / 60f;
+            if (!OnUpdate(context, state, realSeconds, gameTicks)) return false;
+            state.completed = true;
+            OnExit(context, state, false);
+            return true;
+        }
+        catch
+        {
+            context.Instance.RecordStepFailure(this);
+            throw;
+        }
     }
 
     public void Prepare(CQFCinematicContext context, CQFCinematicStepState state)
     {
-        if (context.Instance.Outcome != CQFCinematicOutcome.Playing) return;
-        if (state.completed) return;
-        if (context.IsPreview && !PreviewSafe) { state.completed = true; return; }
-        if (!state.entered)
+        try
         {
-            state.entered = true;
-            OnEnter(context, state);
+            if (context.Instance.Outcome != CQFCinematicOutcome.Playing) return;
+            if (state.completed) return;
+            if (context.IsPreview && !PreviewSafe) { state.completed = true; return; }
+            if (!state.entered)
+            {
+                state.entered = true;
+                OnEnter(context, state);
+            }
+        }
+        catch
+        {
+            context.Instance.RecordStepFailure(this);
+            throw;
         }
     }
 

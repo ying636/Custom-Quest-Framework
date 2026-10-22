@@ -153,6 +153,30 @@ public sealed class StudioChecksDriver : MonoBehaviour
                 case Stage.FullReturning:
                     if (returnedProject == null || CQFCinematicTestSession.Current != null || Current.Game == originalGame) return;
                     CheckRestoration();
+                    StartSelectedEditorTest();
+                    break;
+                case Stage.SelectedEditorPlaying:
+                    if (session?.Instance?.Outcome != CQFCinematicOutcome.Playing) return;
+                    Check(!session.UsesRehearsal && session.Instance.Steps.Count == 1 && session.Instance.Steps[0] is CQFCinematicStep_Wait
+                        && StudioProbeAction.Executions == 1, "the actual studio selected-step command runs only the chosen step in formal-source mode");
+                    session.StopAndReturn();
+                    Go(Stage.SelectedEditorReturning);
+                    break;
+                case Stage.SelectedEditorReturning:
+                    if (CQFCinematicTestSession.Current != null) return;
+                    studio = Find.WindowStack.Windows.OfType<QuestEditor_Cinematics>().Single();
+                    Check(studio.CanUndo && studio.Project.DisplayName == "CQF Selected history" && studio.Selected is CQFCinematicStep_Wait,
+                        "returning through the studio command preserves edit history and the selected step");
+                    studio.UndoEdit();
+                    Check(studio.Project.DisplayName == selectedOriginalName, "an edit made before a full checkpoint test can still be undone after returning");
+                    studio.OpenProjectSettings();
+                    Go(Stage.ProjectSettings);
+                    break;
+                case Stage.ProjectSettings:
+                    if (Age < 0.35f) return;
+                    Capture("08_ProjectSettings", Stage.AllDone);
+                    break;
+                case Stage.AllDone:
                     Finish(true);
                     break;
             }
@@ -178,6 +202,7 @@ public sealed class StudioChecksDriver : MonoBehaviour
         DebugSettings.pauseOnError = false;
         CloseLogWindows();
         SetLanguage("English");
+        StudioUsabilityChecks.Run(Check, Path.Combine(Root, "UsabilityDraftChecks"));
         actor = Find.CurrentMap.mapPawns.FreeColonistsSpawned.First();
         actor.drafter.Drafted = true;
         actor.jobs.EndCurrentJob(JobCondition.InterruptForced);
@@ -190,6 +215,8 @@ public sealed class StudioChecksDriver : MonoBehaviour
         project = new CQFCinematicProject();
         studio = new QuestEditor_Cinematics(project);
         Find.WindowStack.Add(studio);
+        StudioUsabilityChecks.RunEditor(studio, Check);
+        project = studio.Project;
         Go(Stage.EnglishLayout);
     }
 
@@ -471,6 +498,18 @@ public sealed class StudioChecksDriver : MonoBehaviour
             "a real fixture save succeeds after guard removal while the blocked save remains absent");
     }
 
+    private void StartSelectedEditorTest()
+    {
+        studio!.CheckpointEdit();
+        selectedOriginalName = studio.Project.DisplayName;
+        studio.Project.DisplayName = "CQF Selected history";
+        studio.CheckpointEdit();
+        studio.SelectStep(studio.Project.Definition.steps.OfType<CQFCinematicStep_Wait>().Single());
+        studio.StartTest(true, false);
+        session = CQFCinematicTestSession.Current ?? throw new InvalidOperationException("The studio did not start the selected-step test.");
+        Go(Stage.SelectedEditorPlaying);
+    }
+
     private Pawn FindActor() => Find.CurrentMap.mapPawns.AllPawnsSpawned.Single(pawn => pawn.GetUniqueLoadID() == actorID);
 
     private string OwnedSavePath(string name)
@@ -544,9 +583,10 @@ public sealed class StudioChecksDriver : MonoBehaviour
         Application.Quit(success ? 0 : 1);
     }
 
-    private enum Stage { Boot, EnglishLayout, EnglishWorkspace, EnglishSubtitle, EnglishRolesSetup, EnglishRoles, ChineseSetup, ChineseWorkspace, ChineseSubtitle, ChineseRolesSetup, ChineseRoles, WaitScreenshot, PreviewSetup, PreviewPlaying, PreviewPaused, PreviewReturn, DraftRestored, FullPlaying, FullPaused, FullReturning }
+    private enum Stage { Boot, EnglishLayout, EnglishWorkspace, EnglishSubtitle, EnglishRolesSetup, EnglishRoles, ChineseSetup, ChineseWorkspace, ChineseSubtitle, ChineseRolesSetup, ChineseRoles, WaitScreenshot, PreviewSetup, PreviewPlaying, PreviewPaused, PreviewReturn, DraftRestored, FullPlaying, FullPaused, FullReturning, SelectedEditorPlaying, SelectedEditorReturning, ProjectSettings, AllDone }
 
     private readonly string runID = Guid.NewGuid().ToString("N");
+    private string selectedOriginalName = "";
     private static string expectedRoleWarning = "";
     private static bool roleWarningObserved;
     private QuestEditor_Cinematics? studio;

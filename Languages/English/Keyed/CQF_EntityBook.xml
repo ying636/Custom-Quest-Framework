@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <CQF_EntityBook_ChooseMember>Choose member {0}</CQF_EntityBook_ChooseMember>
+  <CQF_EntityBook_ChooseMemberFirst>This source can produce multiple entities. Choose a specific member first.</CQF_EntityBook_ChooseMemberFirst>
+  <CQF_EntityBook_CinematicAddRole>Add actor from entity book</CQF_EntityBook_CinematicAddRole>
+  <CQF_EntityBook_CinematicAdvancedReference>Show internal reference</CQF_EntityBook_CinematicAdvancedReference>
+  <CQF_EntityBook_CinematicChooseActor>Choose actor from entity book</CQF_EntityBook_CinematicChooseActor>
+  <CQF_EntityBook_CinematicRecordFacing>Choose actor from entity book, then record facing</CQF_EntityBook_CinematicRecordFacing>
+  <CQF_EntityBook_CinematicRecordFromMap>Record with an actor from the current map</CQF_EntityBook_CinematicRecordFromMap>
+  <CQF_EntityBook_CinematicRecordMove>Choose actor from entity book, then record movement</CQF_EntityBook_CinematicRecordMove>
+  <CQF_EntityBook_CinematicReference>Entity book actor</CQF_EntityBook_CinematicReference>
+  <CQF_EntityBook_CinematicReferenceInvalid>Select one actor from the entity book. For a source with multiple actors, choose a specific member.</CQF_EntityBook_CinematicReferenceInvalid>
+  <CQF_EntityBook_CinematicReference_Tip>Choose spawn data or an entity template. You can author a scene before the actor has spawned.</CQF_EntityBook_CinematicReference_Tip>
+  <CQF_EntityBook_CinematicSource>Entity book</CQF_EntityBook_CinematicSource>
+  <CQF_EntityBook_CinematicSource_Tip>During normal playback, use the actor actually created by this source. The rehearsal actor is used only while authoring and testing a copy.</CQF_EntityBook_CinematicSource_Tip>
+  <CQF_EntityBook_Collect>Add to entity book</CQF_EntityBook_Collect>
+  <CQF_EntityBook_Collected>Added “{0}” to the entity book.</CQF_EntityBook_Collected>
+  <CQF_EntityBook_ContextQuest>Current quest: {0}</CQF_EntityBook_ContextQuest>
+  <CQF_EntityBook_ContextTip>Shows entities generated from this source within the current quest. Without a quest, only unassigned generation records are shown. Runtime references resolve against the calling quest.</CQF_EntityBook_ContextTip>
+  <CQF_EntityBook_ContextUnassigned>Current context: no assigned quest</CQF_EntityBook_ContextUnassigned>
+  <CQF_EntityBook_Count>Spawn count: {0}</CQF_EntityBook_Count>
+  <CQF_EntityBook_EditRecipe>Edit spawn recipe</CQF_EntityBook_EditRecipe>
+  <CQF_EntityBook_EditTemplate>Open entity editor</CQF_EntityBook_EditTemplate>
+  <CQF_EntityBook_Empty>No entities found.</CQF_EntityBook_Empty>
+  <CQF_EntityBook_Entity>Entity</CQF_EntityBook_Entity>
+  <CQF_EntityBook_Error>Entity book operation failed: {0}</CQF_EntityBook_Error>
+  <CQF_EntityBook_FilterAll>All</CQF_EntityBook_FilterAll>
+  <CQF_EntityBook_FilterRecipes>Recipes</CQF_EntityBook_FilterRecipes>
+  <CQF_EntityBook_FilterTemplates>Templates</CQF_EntityBook_FilterTemplates>
+  <CQF_EntityBook_FromBook>Choose from entity book</CQF_EntityBook_FromBook>
+  <CQF_EntityBook_GroupDisplay>{0} (whole group)</CQF_EntityBook_GroupDisplay>
+  <CQF_EntityBook_InvalidAsset>Invalid entity recipe file: {0}</CQF_EntityBook_InvalidAsset>
+  <CQF_EntityBook_InvalidIdentity>The entity recipe identity is invalid.</CQF_EntityBook_InvalidIdentity>
+  <CQF_EntityBook_InvalidRecipe>Complete the required pawn kind or entity template before saving this recipe.</CQF_EntityBook_InvalidRecipe>
+  <CQF_EntityBook_InvalidReference>This entity reference is invalid. Choose it again from the entity book.</CQF_EntityBook_InvalidReference>
+  <CQF_EntityBook_Locate>Locate</CQF_EntityBook_Locate>
+  <CQF_EntityBook_MemberDisplay>{0} (member {1})</CQF_EntityBook_MemberDisplay>
+  <CQF_EntityBook_MemberNumber>Member number</CQF_EntityBook_MemberNumber>
+  <CQF_EntityBook_MemberNumberTip>Member numbers start at 1 and remain stable in generation order for this source. You can select a future member before generation.</CQF_EntityBook_MemberNumberTip>
+  <CQF_EntityBook_MemberRequired>“{0}” has {1} members. Choose a specific member.</CQF_EntityBook_MemberRequired>
+  <CQF_EntityBook_MemberUnavailable>Member {1} of “{0}” is unavailable. Choose another member.</CQF_EntityBook_MemberUnavailable>
+  <CQF_EntityBook_MissingPawn>Missing object</CQF_EntityBook_MissingPawn>
+  <CQF_EntityBook_NewRecipe>New spawn recipe</CQF_EntityBook_NewRecipe>
+  <CQF_EntityBook_NotGenerated>“{0}” has not spawned or has no available members.</CQF_EntityBook_NotGenerated>
+  <CQF_EntityBook_OpenDescription>Browse spawn recipes and entity templates, inspect generated members, and choose entities for actions or cinematics.</CQF_EntityBook_OpenDescription>
+  <CQF_EntityBook_PreviewActual>The actual generated entity.</CQF_EntityBook_PreviewActual>
+  <CQF_EntityBook_PreviewFailed>Preview failed: {0}</CQF_EntityBook_PreviewFailed>
+  <CQF_EntityBook_PreviewTemplate>Template preview only. It is not placed on the map or registered as a generated entity.</CQF_EntityBook_PreviewTemplate>
+  <CQF_EntityBook_RecipeTitle>Entity spawn recipe</CQF_EntityBook_RecipeTitle>
+  <CQF_EntityBook_RecordMember>Member {0}: {1}</CQF_EntityBook_RecordMember>
+  <CQF_EntityBook_Refresh>Refresh</CQF_EntityBook_Refresh>
+  <CQF_EntityBook_SaveAsNew>Save as new recipe</CQF_EntityBook_SaveAsNew>
+  <CQF_EntityBook_SaveAsNewTip>Creates a separate source. Existing cinematics and actions keep their references to the original recipe.</CQF_EntityBook_SaveAsNewTip>
+  <CQF_EntityBook_SaveRecipe>Collect and save recipe</CQF_EntityBook_SaveRecipe>
+  <CQF_EntityBook_SearchTip>Search by name, source, or identity.</CQF_EntityBook_SearchTip>
+  <CQF_EntityBook_SelectEntity>Use this entity</CQF_EntityBook_SelectEntity>
+  <CQF_EntityBook_SelectEntry>Select an entry on the left to view details.</CQF_EntityBook_SelectEntry>
+  <CQF_EntityBook_SelectGroup>Use the whole entity group</CQF_EntityBook_SelectGroup>
+  <CQF_EntityBook_SelectTarget>Choose target from entity book</CQF_EntityBook_SelectTarget>
+  <CQF_EntityBook_SourceCurrent>Current authoring context</CQF_EntityBook_SourceCurrent>
+  <CQF_EntityBook_SourceMissing>Missing entity source</CQF_EntityBook_SourceMissing>
+  <CQF_EntityBook_SourceRequired>Choose an entity source.</CQF_EntityBook_SourceRequired>
+  <CQF_EntityBook_SourceRuntime>Generation records</CQF_EntityBook_SourceRuntime>
+  <CQF_EntityBook_SourceSaved>Saved spawn recipe</CQF_EntityBook_SourceSaved>
+  <CQF_EntityBook_SourceTemplate>Entity editor template</CQF_EntityBook_SourceTemplate>
+  <CQF_EntityBook_StatusGenerated>Generated</CQF_EntityBook_StatusGenerated>
+  <CQF_EntityBook_StatusMultiple>Multiple members: {0}/{1} available</CQF_EntityBook_StatusMultiple>
+  <CQF_EntityBook_StatusTip>Generation records belong to the current world and quest. You can select a recipe before generation. Sources with multiple members require an explicit member selection. Dead, destroyed, or missing objects are shown as unavailable.</CQF_EntityBook_StatusTip>
+  <CQF_EntityBook_StatusUnavailable>Unavailable</CQF_EntityBook_StatusUnavailable>
+  <CQF_EntityBook_StatusWaiting>Awaiting generation</CQF_EntityBook_StatusWaiting>
+  <CQF_EntityBook_Title>Entity book</CQF_EntityBook_Title>
+  <CQF_EntityBook_Unavailable>The entity book is unavailable in the current game.</CQF_EntityBook_Unavailable>
+  <CQF_EntityBook_UseRecipe>Use a recipe copy</CQF_EntityBook_UseRecipe>
+  <CQF_EntityBook_UseRecipeTip>Copies configuration values so later edits remain independent. The copy keeps the same entity source; multiple generated entities become separate members. Save as a new recipe first when a separate source is required.</CQF_EntityBook_UseRecipeTip>
+</LanguageData>

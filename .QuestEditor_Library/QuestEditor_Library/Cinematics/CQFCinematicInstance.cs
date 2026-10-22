@@ -79,6 +79,7 @@ public sealed class CQFCinematicInstance : IExposable
     public float Elapsed => elapsed;
     public int StepIndex => state.cursor;
     public IReadOnlyList<CQFCinematicStep> Steps => steps;
+    public string? FailedStepPath => failedStepPath;
 
     public void Start()
     {
@@ -170,6 +171,11 @@ public sealed class CQFCinematicInstance : IExposable
 
     internal void MarkFailed() => outcome = CQFCinematicOutcome.Failed;
 
+    internal void RecordStepFailure(CQFCinematicStep step)
+    {
+        failedStepPath ??= FindStepPath(steps, step, "");
+    }
+
     internal void SetEditorControlled(bool controlled) => isEditorControlled = controlled;
 
     internal void SetPreviewPaused(bool paused) => previewPaused = paused;
@@ -220,6 +226,23 @@ public sealed class CQFCinematicInstance : IExposable
         }
     }
 
+    private static string? FindStepPath(List<CQFCinematicStep> entries, CQFCinematicStep failed, string prefix)
+    {
+        for (int index = 0; index < entries.Count; index++)
+        {
+            string path = prefix + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (ReferenceEquals(entries[index], failed)) return path;
+            List<CQFCinematicStep>? children = entries[index] switch
+            {
+                CQFCinematicStep_Sequence sequence => sequence.steps,
+                CQFCinematicStep_Parallel parallel => parallel.steps,
+                _ => null
+            };
+            if (children != null && FindStepPath(children, failed, path + "/") is string found) return found;
+        }
+        return null;
+    }
+
     private CQFCinematicDef definition = null!;
     private string definitionName = "";
     private Map map = null!;
@@ -245,6 +268,7 @@ public sealed class CQFCinematicInstance : IExposable
     private string skippedSignal = "";
     private string cancelledSignal = "";
     private string failedSignal = "";
+    private string? failedStepPath;
     private bool addQuestPrefix = true;
     private Map? originalMap;
     private Vector3 originalCamera;

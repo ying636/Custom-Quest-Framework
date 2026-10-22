@@ -43,8 +43,13 @@ namespace QuestEditor_Library
             {
                 mod.Worker.ModifyGenerationRequest(this, ref request);
             }
+            if (!cacheUnique)
+            {
+                request.ForceGenerateNewPawn = true;
+                request.CanGeneratePawnRelations = false;
+            }
             Pawn result = PawnGenerator.GeneratePawn(request);
-            this.ApplyModsToPawn(result, false);
+            this.ApplyModsToPawn(result, !cacheUnique);
             if (cacheUnique && this.Unique && GameComponent_Editor.Instance is GameComponent_Editor component)
             {
                 component.pawns.SetOrAdd(this.defName, result);
@@ -108,6 +113,10 @@ namespace QuestEditor_Library
 
         public void NotifyPawnSpawned(Pawn pawn, Quest quest)
         {
+            if (pawn == null) throw new ArgumentNullException(nameof(pawn));
+            GameComponent_EntityBook book = Current.Game?.GetComponent<GameComponent_EntityBook>()
+                ?? throw new InvalidOperationException("CQF_EntityBook_Unavailable".Translate());
+            book.RegisterBatch("template:" + this.defName, new[] { pawn }, quest, pawn.MapHeld, this.label);
             foreach (PawnModDef mod in this.AvailableMods())
             {
                 mod.Worker.OnPawnSpawned(this, pawn, quest);

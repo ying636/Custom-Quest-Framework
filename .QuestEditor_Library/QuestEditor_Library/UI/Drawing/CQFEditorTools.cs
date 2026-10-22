@@ -936,6 +936,8 @@ namespace QuestEditor_Library
         public static void DrawPawnDataList_UseWindow(ref float y, float x, List<PawnSpawnData> list, Rect inRect, string title, Func<PawnSpawnData, string> getString)
         {
             Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 120f), 30f), title.Colorize(CQFUIStyle.Accent));
+            if (CQFUIStyle.ButtonImage(new Rect(inRect.width - 38f, y, 30f, 30f), TexButton.OpenDebugActionsMenu, tooltip: "CQF_EntityBook_FromBook".Translate()))
+                CQFEntityBookBridge.OpenRecipes(value => list.Add(value));
             y += 38f;
             foreach (PawnSpawnData d in list)
             {
@@ -961,7 +963,9 @@ namespace QuestEditor_Library
 
         public static void DrawPawnDataList_UseWindow_UseIcon(ref float y, float x, List<PawnSpawnData> list, Rect inRect, string title, Func<PawnSpawnData, string> getString)
         {
-            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 132f), 30f), title.Colorize(CQFUIStyle.Accent));
+            Widgets.Label(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 172f), 30f), title.Colorize(CQFUIStyle.Accent));
+            if (CQFUIStyle.ButtonImage(new Rect(inRect.width - 160f, y, 30f, 30f), TexButton.OpenDebugActionsMenu, tooltip: "CQF_EntityBook_FromBook".Translate()))
+                CQFEntityBookBridge.OpenRecipes(value => list.Add(value));
             Rect button = new Rect(inRect.width - 120f, y, 30f, 30f);
             if (CQFUIStyle.ButtonImage(button, TexButton.Plus))
             {

@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8'?>
+<LanguageData>
+  <CQF_EntityBook_ChooseMember>选择第 {0} 个成员</CQF_EntityBook_ChooseMember>
+  <CQF_EntityBook_ChooseMemberFirst>这个来源可以生成多个实体，请先明确选择成员。</CQF_EntityBook_ChooseMemberFirst>
+  <CQF_EntityBook_CinematicAddRole>从实体本添加演员</CQF_EntityBook_CinematicAddRole>
+  <CQF_EntityBook_CinematicAdvancedReference>查看内部引用</CQF_EntityBook_CinematicAdvancedReference>
+  <CQF_EntityBook_CinematicChooseActor>从实体本选择人物</CQF_EntityBook_CinematicChooseActor>
+  <CQF_EntityBook_CinematicRecordFacing>从实体本选人，记录朝向</CQF_EntityBook_CinematicRecordFacing>
+  <CQF_EntityBook_CinematicRecordFromMap>从当前地图选人录制</CQF_EntityBook_CinematicRecordFromMap>
+  <CQF_EntityBook_CinematicRecordMove>从实体本选人，记录走位</CQF_EntityBook_CinematicRecordMove>
+  <CQF_EntityBook_CinematicReference>实体本对象</CQF_EntityBook_CinematicReference>
+  <CQF_EntityBook_CinematicReferenceInvalid>请选择实体本中的单个人物。多人来源需要明确选择成员。</CQF_EntityBook_CinematicReferenceInvalid>
+  <CQF_EntityBook_CinematicReference_Tip>选择生成数据或实体模板；尚未生成的人物也可以先安排演出。</CQF_EntityBook_CinematicReference_Tip>
+  <CQF_EntityBook_CinematicSource>实体本</CQF_EntityBook_CinematicSource>
+  <CQF_EntityBook_CinematicSource_Tip>正式播放时使用该来源实际生成的人物。排演人物仅用于制作和副本测试。</CQF_EntityBook_CinematicSource_Tip>
+  <CQF_EntityBook_Collect>收录到实体本</CQF_EntityBook_Collect>
+  <CQF_EntityBook_Collected>已将“{0}”收录到实体本。</CQF_EntityBook_Collected>
+  <CQF_EntityBook_ContextQuest>当前任务：{0}</CQF_EntityBook_ContextQuest>
+  <CQF_EntityBook_ContextTip>仅显示当前任务中这个来源实际生成的实体。未关联任务时，只显示无任务的生成记录；正式运行按调用时的任务重新解析。</CQF_EntityBook_ContextTip>
+  <CQF_EntityBook_ContextUnassigned>当前上下文：未关联任务</CQF_EntityBook_ContextUnassigned>
+  <CQF_EntityBook_Count>生成数量：{0}</CQF_EntityBook_Count>
+  <CQF_EntityBook_EditRecipe>编辑生成方案</CQF_EntityBook_EditRecipe>
+  <CQF_EntityBook_EditTemplate>打开实体编辑器</CQF_EntityBook_EditTemplate>
+  <CQF_EntityBook_Empty>没有找到实体。</CQF_EntityBook_Empty>
+  <CQF_EntityBook_Entity>实体</CQF_EntityBook_Entity>
+  <CQF_EntityBook_Error>实体本操作失败：{0}</CQF_EntityBook_Error>
+  <CQF_EntityBook_FilterAll>全部</CQF_EntityBook_FilterAll>
+  <CQF_EntityBook_FilterRecipes>生成方案</CQF_EntityBook_FilterRecipes>
+  <CQF_EntityBook_FilterTemplates>实体模板</CQF_EntityBook_FilterTemplates>
+  <CQF_EntityBook_FromBook>从实体本选用</CQF_EntityBook_FromBook>
+  <CQF_EntityBook_GroupDisplay>{0}（整组）</CQF_EntityBook_GroupDisplay>
+  <CQF_EntityBook_InvalidAsset>实体方案文件无效：{0}</CQF_EntityBook_InvalidAsset>
+  <CQF_EntityBook_InvalidIdentity>实体方案标识无效。</CQF_EntityBook_InvalidIdentity>
+  <CQF_EntityBook_InvalidRecipe>请先补全生成方案所需的类型或模板。</CQF_EntityBook_InvalidRecipe>
+  <CQF_EntityBook_InvalidReference>实体引用无效，请重新从实体本选择。</CQF_EntityBook_InvalidReference>
+  <CQF_EntityBook_Locate>定位</CQF_EntityBook_Locate>
+  <CQF_EntityBook_MemberDisplay>{0}（成员 {1}）</CQF_EntityBook_MemberDisplay>
+  <CQF_EntityBook_MemberNumber>成员序号</CQF_EntityBook_MemberNumber>
+  <CQF_EntityBook_MemberNumberTip>成员序号从 1 开始，按这个来源的实际生成顺序保持稳定。尚未生成时，也可提前指定将来生成的成员。</CQF_EntityBook_MemberNumberTip>
+  <CQF_EntityBook_MemberRequired>“{0}”有 {1} 个成员，请选择具体成员。</CQF_EntityBook_MemberRequired>
+  <CQF_EntityBook_MemberUnavailable>“{0}”的第 {1} 个成员已失效，请重新选择。</CQF_EntityBook_MemberUnavailable>
+  <CQF_EntityBook_MissingPawn>对象已丢失</CQF_EntityBook_MissingPawn>
+  <CQF_EntityBook_NewRecipe>新建生成方案</CQF_EntityBook_NewRecipe>
+  <CQF_EntityBook_NotGenerated>“{0}”尚未生成，或该来源没有可用成员。</CQF_EntityBook_NotGenerated>
+  <CQF_EntityBook_OpenDescription>浏览生成方案与实体模板，查看实际生成的成员，并为动作或演出选择实体。</CQF_EntityBook_OpenDescription>
+  <CQF_EntityBook_PreviewActual>当前实际生成的实体。</CQF_EntityBook_PreviewActual>
+  <CQF_EntityBook_PreviewFailed>预览失败：{0}</CQF_EntityBook_PreviewFailed>
+  <CQF_EntityBook_PreviewTemplate>实体模板预览，仅用于展示，不会放入地图或登记为正式实体。</CQF_EntityBook_PreviewTemplate>
+  <CQF_EntityBook_RecipeTitle>实体生成方案</CQF_EntityBook_RecipeTitle>
+  <CQF_EntityBook_RecordMember>成员 {0}：{1}</CQF_EntityBook_RecordMember>
+  <CQF_EntityBook_Refresh>刷新</CQF_EntityBook_Refresh>
+  <CQF_EntityBook_SaveAsNew>另存为新方案</CQF_EntityBook_SaveAsNew>
+  <CQF_EntityBook_SaveAsNewTip>建立独立的新来源。已有演出和动作仍然引用原方案。</CQF_EntityBook_SaveAsNewTip>
+  <CQF_EntityBook_SaveRecipe>收录并保存方案</CQF_EntityBook_SaveRecipe>
+  <CQF_EntityBook_SearchTip>按名称、来源或标识搜索。</CQF_EntityBook_SearchTip>
+  <CQF_EntityBook_SelectEntity>选用这个实体</CQF_EntityBook_SelectEntity>
+  <CQF_EntityBook_SelectEntry>选择左侧条目查看详情。</CQF_EntityBook_SelectEntry>
+  <CQF_EntityBook_SelectGroup>选用整个实体组</CQF_EntityBook_SelectGroup>
+  <CQF_EntityBook_SelectTarget>从实体本选择目标</CQF_EntityBook_SelectTarget>
+  <CQF_EntityBook_SourceCurrent>当前制作内容</CQF_EntityBook_SourceCurrent>
+  <CQF_EntityBook_SourceMissing>实体来源已丢失</CQF_EntityBook_SourceMissing>
+  <CQF_EntityBook_SourceRequired>请选择实体来源。</CQF_EntityBook_SourceRequired>
+  <CQF_EntityBook_SourceRuntime>实际生成记录</CQF_EntityBook_SourceRuntime>
+  <CQF_EntityBook_SourceSaved>已收录生成方案</CQF_EntityBook_SourceSaved>
+  <CQF_EntityBook_SourceTemplate>实体编辑器模板</CQF_EntityBook_SourceTemplate>
+  <CQF_EntityBook_StatusGenerated>已生成</CQF_EntityBook_StatusGenerated>
+  <CQF_EntityBook_StatusMultiple>多个成员：{0}/{1} 可用</CQF_EntityBook_StatusMultiple>
+  <CQF_EntityBook_StatusTip>生成记录属于当前世界与任务。等待生成的配置仍可预先选用；多人来源需要明确选择成员。对象死亡、销毁或丢失时显示为失效。</CQF_EntityBook_StatusTip>
+  <CQF_EntityBook_StatusUnavailable>已失效</CQF_EntityBook_StatusUnavailable>
+  <CQF_EntityBook_StatusWaiting>等待生成</CQF_EntityBook_StatusWaiting>
+  <CQF_EntityBook_Title>实体本</CQF_EntityBook_Title>
+  <CQF_EntityBook_Unavailable>当前游戏无法使用实体本。</CQF_EntityBook_Unavailable>
+  <CQF_EntityBook_UseRecipe>选用生成配置副本</CQF_EntityBook_UseRecipe>
+  <CQF_EntityBook_UseRecipeTip>复制配置值，后续编辑互不影响。副本保留同一实体来源，实际生成多个实体时会成为不同成员；需要独立来源时请先另存为新方案。</CQF_EntityBook_UseRecipeTip>
+</LanguageData>

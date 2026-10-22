@@ -38,7 +38,9 @@ namespace QuestEditor_Library
 
         public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null, bool setLord = true)
         {
-            return this.group.Generate(map, position, quest);
+            Dictionary<string, TargetInfo> result = this.group.Generate(map, position, quest);
+            if (result != null) this.RegisterEntityBookPawns(result.Values.Select(target => target.Thing).OfType<Pawn>(), quest, map);
+            return result;
         }
 
         public override XElement SaveToXElement(string nodeName)

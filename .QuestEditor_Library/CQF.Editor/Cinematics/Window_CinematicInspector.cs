@@ -12,9 +12,14 @@ namespace QuestEditor_Library;
 
 public sealed class Window_CinematicInspector : Window
 {
-    public Window_CinematicInspector(QuestEditor_Cinematics owner)
+    public Window_CinematicInspector(QuestEditor_Cinematics owner) : this(owner, false)
+    {
+    }
+
+    public Window_CinematicInspector(QuestEditor_Cinematics owner, bool projectSettings)
     {
         this.owner = owner;
+        ProjectSettings = projectSettings;
         layer = WindowLayer.GameUI;
         doCloseX = true;
         absorbInputAroundWindow = false;
@@ -27,6 +32,7 @@ public sealed class Window_CinematicInspector : Window
 
     public override Vector2 InitialSize => new(Mathf.Min(342f, UI.screenWidth * 0.38f), Mathf.Max(170f, Mathf.Min(480f, owner.windowRect.y - 54f)));
     protected override float Margin => 10f;
+    public bool ProjectSettings { get; }
 
     public void RefreshValues()
     {
@@ -42,7 +48,7 @@ public sealed class Window_CinematicInspector : Window
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope scope = new(inRect.width, inRect.height);
-        CQFCinematicStep? step = owner.Selected;
+        CQFCinematicStep? step = ProjectSettings ? null : owner.Selected;
         if (!ReferenceEquals(previousStep, step))
         {
             previousStep = step;
@@ -50,7 +56,7 @@ public sealed class Window_CinematicInspector : Window
             scroll = Vector2.zero;
             advanced = false;
         }
-        string title = step == null ? "CQF_Cinematic_Inspector".Translate()
+        string title = step == null ? "CQF_Cinematic_ProjectSettings".Translate()
             : ("CQF_Cinematic_Step_" + step.GetType().Name.Replace("CQFCinematicStep_", string.Empty)).Translate();
         Widgets.LabelEllipses(new Rect(0f, 0f, inRect.width - 26f, 28f), title.Colorize(CQFUIStyle.Accent));
         Rect viewport = new(0f, 34f, inRect.width, Mathf.Max(35f, inRect.height - 34f));
@@ -73,6 +79,7 @@ public sealed class Window_CinematicInspector : Window
     private void DrawProject(ref float y, float width)
     {
         CQFCinematicDef definition = owner.Project.Definition;
+        if (Button(ref y, width, "CQF_Cinematic_SaveDraft".Translate())) owner.SaveDraftNow();
         if (Button(ref y, width, owner.Project.Quest?.name ?? "CQF_Cinematic_NoQuest".Translate().ToString()))
         {
             List<FloatMenuOption> options = Find.QuestManager.QuestsListForReading.Where(quest => !quest.Historical)
@@ -86,7 +93,8 @@ public sealed class Window_CinematicInspector : Window
         Checkbox(ref y, width, "pauseGame", ref definition.pauseGame);
         DrawNumber(ref y, width, "maxDuration", ref definition.maxDuration, 1f, 86400f);
         if (Button(ref y, width, "CQF_Cinematic_Advanced".Translate()))
-            Find.WindowStack.Add(new Dialog_EditCinematicStep(definition));
+            owner.OpenParameters(definition);
+        DrawLocations(ref y, width);
     }
 
     private void DrawStep(CQFCinematicStep step, ref float y, float width)
@@ -117,6 +125,7 @@ public sealed class Window_CinematicInspector : Window
         {
             PawnButton(ref y, width, move.pawnKey, value => move.pawnKey = value);
             if (Button(ref y, width, "CQF_Cinematic_RecordMove".Translate() + " · " + owner.TargetLabel(move.targetKey))) owner.RecordPawnMove(move);
+            TargetButton(ref y, width, move.targetKey, value => move.targetKey = value);
             DrawNumber(ref y, width, "timeout", ref move.timeout, 0.1f, 86400f);
             DrawEnum(ref y, width, "urgency", move.urgency, value => move.urgency = (Verse.AI.LocomotionUrgency)value);
         }
@@ -124,6 +133,7 @@ public sealed class Window_CinematicInspector : Window
         {
             PawnButton(ref y, width, face.pawnKey, value => face.pawnKey = value);
             if (Button(ref y, width, "CQF_Cinematic_RecordFacing".Translate() + " · " + owner.TargetLabel(face.targetKey))) owner.RecordPawnFacing(face);
+            TargetButton(ref y, width, face.targetKey, value => face.targetKey = value);
         }
         else if (step is CQFCinematicStep_Image image)
         {
@@ -164,7 +174,39 @@ public sealed class Window_CinematicInspector : Window
         if (!advanced) return;
         DrawEnum(ref y, width, "clock", step.clock, value => step.clock = (CQFCinematicClock)value);
         if (Button(ref y, width, "CQF_Cinematic_Parameters".Translate()))
-            Find.WindowStack.Add(new Dialog_EditCinematicStep(step));
+            owner.OpenParameters(step);
+    }
+
+    private void DrawLocations(ref float y, float width)
+    {
+        Widgets.Label(new Rect(0f, y, width, 26f), "CQF_Cinematic_Locations".Translate().Colorize(CQFUIStyle.Accent));
+        y += 32f;
+        if (Button(ref y, width, "CQF_Cinematic_AddLocation".Translate())) owner.BindMapTarget(_ => { }, locationsOnly: true);
+        CQFCinematicBinding[] locations = owner.Project.Definition.bindings.Concat(owner.Project.Locations)
+            .Where(entry => string.IsNullOrEmpty(entry.thingID)).GroupBy(entry => entry.key, StringComparer.Ordinal).Select(group => group.First()).ToArray();
+        if (locations.Length == 0) return;
+        HashSet<string> referenced = owner.Project.Definition.GetReferencedTargetKeys(locations.Select(binding => binding.key));
+        foreach (CQFCinematicBinding binding in locations)
+        {
+            string name = owner.Project.TargetNames.TryGetValue(binding.key, out string? existing) ? existing : binding.cell.ToString();
+            float nameWidth = Mathf.Max(40f, width - 94f);
+            owner.Project.TargetNames[binding.key] = Widgets.TextField(new Rect(0f, y, nameWidth, 28f), name);
+            Rect locate = new(nameWidth + 6f, y, 54f, 28f);
+            if (CQFUIStyle.ButtonText(locate, "CQF_Cinematic_LocateLocation".Translate()))
+                owner.LocateTarget(binding.key);
+            TooltipHandler.TipRegion(locate, "CQF_Cinematic_LocateLocation_Tip".Translate());
+            Rect remove = new(nameWidth + 66f, y, 28f, 28f);
+            bool used = referenced.Contains(binding.key);
+            if (CQFUIStyle.ButtonText(remove, "×", active: !used))
+            {
+                owner.CheckpointEdit();
+                owner.Project.RemoveLocation(binding.key);
+                owner.CheckpointEdit();
+            }
+            TooltipHandler.TipRegion(remove, (used ? "CQF_Cinematic_LocationInUse" : "CQF_Cinematic_RemoveLocation").Translate());
+            y += 35f;
+            TooltipHandler.TipRegion(new Rect(0f, y - 35f, Mathf.Max(40f, width - 62f), 28f), binding.cell.ToString());
+        }
     }
 
     private void DrawFields(CQFCinematicStep step, ref float y, float width)
@@ -275,8 +317,12 @@ public sealed class Window_CinematicInspector : Window
         owner.Project.EnsureRoles();
         if (Button(ref y, width, "CQF_Cinematic_MapSelectPawn".Translate() + " · " + owner.Project.RoleLabel(key)))
         {
-            List<FloatMenuOption> options = owner.Project.Definition.roles.Select(role =>
-                new FloatMenuOption(owner.Project.RoleLabel(role.key), () => accept(role.key))).ToList();
+            List<FloatMenuOption> options = new()
+            {
+                new FloatMenuOption("CQF_EntityBook_CinematicChooseActor".Translate(), () => owner.BindEntityReference(token => accept(owner.Project.BindEntityRole(token))))
+            };
+            options.AddRange(owner.Project.Definition.roles.Select(role =>
+                new FloatMenuOption(owner.Project.RoleLabel(role.key), () => accept(role.key))));
             if (owner.Project.Definition.roles.Any(role => role.key == key))
                 options.Add(new FloatMenuOption("CQF_Cinematic_ChooseRehearsalPawn".Translate(), () => owner.PickRehearsalPawn(key)));
             options.Add(new FloatMenuOption("CQF_Cinematic_NewRole".Translate(), () => owner.BindPawn(accept)));
@@ -287,7 +333,18 @@ public sealed class Window_CinematicInspector : Window
 
     private void TargetButton(ref float y, float width, string key, Action<string> accept)
     {
-        if (Button(ref y, width, "CQF_Cinematic_TargetName".Translate() + " · " + owner.TargetLabel(key))) owner.BindMapTarget(accept);
+        if (!Button(ref y, width, "CQF_Cinematic_TargetName".Translate() + " · " + owner.TargetLabel(key))) return;
+        List<FloatMenuOption> options = new()
+        {
+            new FloatMenuOption("CQF_EntityBook_CinematicChooseActor".Translate(), () => owner.BindEntityReference(token => accept(owner.Project.BindEntityRole(token)))),
+            new FloatMenuOption("CQF_Cinematic_TargetName".Translate(), () => owner.BindMapTarget(accept))
+        };
+        options.AddRange(owner.Project.Definition.roles.Select(role =>
+            new FloatMenuOption(owner.Project.RoleLabel(role.key), () => accept(role.key))));
+        options.AddRange(owner.Project.Definition.bindings.Concat(owner.Project.Locations).Where(binding => string.IsNullOrEmpty(binding.thingID))
+            .GroupBy(binding => binding.key, StringComparer.Ordinal).Select(group => group.First())
+            .Select(binding => new FloatMenuOption(owner.TargetLabel(binding.key), () => owner.UseLocation(binding.key, accept))));
+        Find.WindowStack.Add(new FloatMenu(options));
     }
 
     private void OpenImagePicker(Action<string> accept)

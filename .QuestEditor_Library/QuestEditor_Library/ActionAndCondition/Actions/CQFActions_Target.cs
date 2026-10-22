@@ -38,7 +38,7 @@ namespace QuestEditor_Library
                     {
                         this.targetsText[capturedIndex] = value;
                     }
-                });
+                }, allowEntityGroups: true);
                 if (CQFUIStyle.ButtonText(new Rect(inRect.width - 78f, startY, 70f, 25f), "Remove".Translate()))
                 {
                     this.targetsText.RemoveAt(index);
@@ -2381,7 +2381,7 @@ namespace QuestEditor_Library
             y += 30f;
             if (this.state == MentalStateDefOf.SocialFighting)
             {
-                CQFTargetKeyEditor.DrawBookField(y, "stateTargetText".Translate(), this.stateTargetText, value => this.stateTargetText = value, x, 150f, inRect.width - x - 20f);
+                CQFTargetKeyEditor.DrawBookField(y, "stateTargetText".Translate(), this.stateTargetText, value => this.stateTargetText = value, x, 150f, inRect.width - x - 20f, allowEntityReferences: true);
                 y += 30f;
             }
         }
@@ -2396,6 +2396,8 @@ namespace QuestEditor_Library
                     stateTarget = p;
                 }
             });
+            if (stateTarget == null && CQFEntityReference.IsReference(this.stateTargetText))
+                stateTarget = GameTools.GetTarget(targets, quest, this.stateTargetText).Thing as Pawn;
             if (stateTarget == null && GameTools.GetTargetFromQuestDatabase(quest, this.stateTargetText)is TargetInfo target2 && target2.Thing is Pawn p2)
             {
                 stateTarget = p2;

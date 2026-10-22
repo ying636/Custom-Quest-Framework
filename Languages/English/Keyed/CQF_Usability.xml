@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_EntityBook_ChangeTypeConfirmation>Changing the recipe from {0} to {1} will remove these settings:
+{2}
+
+Compatible settings, including count and chance, will be kept. Continue?</CQF_EntityBook_ChangeTypeConfirmation>
+  <CQF_EntityBook_CommonSettings>Common generation settings</CQF_EntityBook_CommonSettings>
+  <CQF_EntityBook_GenerationChanceTip>Generation chance ranges from 0 to 1; for example, 0.35 means 35%.</CQF_EntityBook_GenerationChanceTip>
+  <CQF_EntityBook_ArrivingWay>Arrival method</CQF_EntityBook_ArrivingWay>
+  <CQF_EntityBook_InvalidGenerationChance>Generation chance must be a valid number between 0 and 1.</CQF_EntityBook_InvalidGenerationChance>
+  <CQF_EntityBook_InvalidCountRange>Spawn count must be at least 1, and the maximum cannot be below the minimum.</CQF_EntityBook_InvalidCountRange>
+  <CQF_EntityBook_FieldTemplate>Entity template</CQF_EntityBook_FieldTemplate>
+  <CQF_EntityBook_FieldGroup>Generation group</CQF_EntityBook_FieldGroup>
+  <CQF_EntityBook_FieldCandidates>Random recipe candidates</CQF_EntityBook_FieldCandidates>
+  <CQF_EntityBook_ConfiguredItems>{0} configured items</CQF_EntityBook_ConfiguredItems>
+  <CQF_EntityBook_CreateRecipe>Create generation recipe</CQF_EntityBook_CreateRecipe>
+  <CQF_EntityBook_PlaceOnMap>Place on map</CQF_EntityBook_PlaceOnMap>
+  <CQF_EntityBook_PlaceOnMapTip>Configure count, chance and arrival method, then choose a generation point on the map. The point is included when you save the map.</CQF_EntityBook_PlaceOnMapTip>
+  <CQF_EntityBook_MemberStatusTip>You can plan for members before they are generated. Dead or missing members cannot be selected. Movement also requires the pawn to be spawned on the destination map and able to stand.</CQF_EntityBook_MemberStatusTip>
+  <CQF_EntityBook_CannotSelectUnavailable>This member cannot be selected: {0}. Choose another member, or generate a new one and try again.</CQF_EntityBook_CannotSelectUnavailable>
+  <CQF_EntityBook_StatusMissing>Pawn missing</CQF_EntityBook_StatusMissing>
+  <CQF_EntityBook_StatusDead>Dead</CQF_EntityBook_StatusDead>
+  <CQF_EntityBook_StatusUnspawned>Not spawned</CQF_EntityBook_StatusUnspawned>
+  <CQF_EntityBook_StatusCurrentMap>Current map</CQF_EntityBook_StatusCurrentMap>
+  <CQF_EntityBook_StatusOtherMap>Another map</CQF_EntityBook_StatusOtherMap>
+  <CQF_EntityBook_StatusDowned>Downed</CQF_EntityBook_StatusDowned>
+  <CQF_EntityBook_MapRequired>Open a map in developer mode before placing an entity spawn point.</CQF_EntityBook_MapRequired>
+  <CQF_EntityBook_PlacementBlocked>Choose a walkable cell inside the map.</CQF_EntityBook_PlacementBlocked>
+  <CQF_EntityBook_PlacementOccupied>This cell already contains a building or entity spawn point. Choose another cell.</CQF_EntityBook_PlacementOccupied>
+  <CQF_EntityBook_PlacementFailed>The entity spawn point could not be placed. See the log for details.</CQF_EntityBook_PlacementFailed>
+  <CQF_EntityBook_PlacementTitle>Place: {0}</CQF_EntityBook_PlacementTitle>
+  <CQF_EntityBook_PlacementDescription>Click a map cell to place the spawn configuration. For damage or destruction triggers, choose the building that should trigger generation; use an empty cell for other recipes. No pawns or spawn events run now. The configuration is included in the map export. You can then edit it or use a member in a cinematic.</CQF_EntityBook_PlacementDescription>
+  <CQF_EntityBook_PlacementReady>Spawn point placed</CQF_EntityBook_PlacementReady>
+  <CQF_EntityBook_PlacementMissing>This spawn point has been removed and can no longer be edited.</CQF_EntityBook_PlacementMissing>
+  <CQF_EntityBook_PlacementMember>Cinematic member</CQF_EntityBook_PlacementMember>
+  <CQF_EntityBook_PlacementMemberTip>Choose a member in its actual generation order, starting at 1. Numbering belongs to the entire source within the current quest, rather than this individual spawn point. Repeated use of the same recipe continues the numbering. You can record movement before generation and assign a rehearsal pawn separately in the actor window.</CQF_EntityBook_PlacementMemberTip>
+  <CQF_EntityBook_PlacementRecordMove>Record this member's movement</CQF_EntityBook_PlacementRecordMove>
+  <CQF_EntityBook_PlacementAddActor>Add this member as an actor</CQF_EntityBook_PlacementAddActor>
+  <CQF_EntityBook_PlacementEdit>Edit this placement</CQF_EntityBook_PlacementEdit>
+  <CQF_EntityBook_PlacementApply>Apply to this spawn point</CQF_EntityBook_PlacementApply>
+  <CQF_EntityBook_PlacementContinue>Place another</CQF_EntityBook_PlacementContinue>
+  <CQF_EntityBook_PlacementQuestMismatch>The current cinematic belongs to another quest. Set its quest to match this map in project settings before adding a member.</CQF_EntityBook_PlacementQuestMismatch>
+  <CQF_EntityBook_PlacementBuildingRequired>This recipe generates pawns when a building is damaged or destroyed. Place the spawn point on the building that should trigger it.</CQF_EntityBook_PlacementBuildingRequired>
+  <CQF_Cinematic_Undo>Undo</CQF_Cinematic_Undo>
+  <CQF_Cinematic_Undo_Tip>Undo the latest change to steps, settings, actors, or subtitles. Continuous typing is grouped into one edit.</CQF_Cinematic_Undo_Tip>
+  <CQF_Cinematic_Redo>Redo</CQF_Cinematic_Redo>
+  <CQF_Cinematic_Redo_Tip>Reapply the change you just undid.</CQF_Cinematic_Redo_Tip>
+  <CQF_Cinematic_ProjectSettings>Project settings</CQF_Cinematic_ProjectSettings>
+  <CQF_Cinematic_ProjectSettings_Tip>Open project settings at any time to choose a quest, change playback rules, and manage named locations.</CQF_Cinematic_ProjectSettings_Tip>
+  <CQF_Cinematic_SaveDraft>Save draft</CQF_Cinematic_SaveDraft>
+  <CQF_Cinematic_DraftSaved>Cinematic draft saved. Unfinished subtitles are preserved too.</CQF_Cinematic_DraftSaved>
+  <CQF_Cinematic_DraftSaveFailed>Could not save the cinematic draft</CQF_Cinematic_DraftSaveFailed>
+  <CQF_Cinematic_DraftLoadFailed>Could not restore the cinematic draft. A recovery copy of the original file is kept at: {0}</CQF_Cinematic_DraftLoadFailed>
+  <CQF_Cinematic_TestRehearsalAll>Test all: rehearsal actors</CQF_Cinematic_TestRehearsalAll>
+  <CQF_Cinematic_TestFormalAll>Test all: formal actor sources</CQF_Cinematic_TestFormalAll>
+  <CQF_Cinematic_TestRehearsalSelected>Test selected step: rehearsal actors</CQF_Cinematic_TestRehearsalSelected>
+  <CQF_Cinematic_TestFormalSelected>Test selected step: formal actor sources</CQF_Cinematic_TestFormalSelected>
+  <CQF_Cinematic_TestModeRehearsal>Copy test: rehearsal actors</CQF_Cinematic_TestModeRehearsal>
+  <CQF_Cinematic_TestModeFormal>Copy test: formal sources</CQF_Cinematic_TestModeFormal>
+  <CQF_Cinematic_TestFailureFocused>The authoring scene has been restored and the failed step is selected. Adjust its properties and test again.</CQF_Cinematic_TestFailureFocused>
+  <CQF_Cinematic_LocationNumber>Location {0}</CQF_Cinematic_LocationNumber>
+  <CQF_Cinematic_Locations>Named locations</CQF_Cinematic_Locations>
+  <CQF_Cinematic_AddLocation>Add location from map</CQF_Cinematic_AddLocation>
+  <CQF_Cinematic_LocateLocation>Locate</CQF_Cinematic_LocateLocation>
+  <CQF_Cinematic_LocateLocation_Tip>Move the camera to this location. Locations retain their recorded world and map.</CQF_Cinematic_LocateLocation_Tip>
+  <CQF_Cinematic_LocationInUse>This location is used by a step. Change that step’s target before removing the location.</CQF_Cinematic_LocationInUse>
+  <CQF_Cinematic_RemoveLocation>Remove this unused location</CQF_Cinematic_RemoveLocation>
+  <CQF_Cinematic_DraftRecoveryFailed>The cinematic draft could not be restored or preserved as a recovery copy. Disk draft writes for this world are blocked; see the log for details.</CQF_Cinematic_DraftRecoveryFailed>
+</LanguageData>

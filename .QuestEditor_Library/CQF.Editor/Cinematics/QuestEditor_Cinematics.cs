@@ -29,14 +29,24 @@ public sealed class QuestEditor_Cinematics : Window
         closeOnAccept = false;
         forcePause = true;
         drawShadow = false;
-        timeline.SelectionChanged = _ => ShowInspector();
+        history = new CQFCinematicEditHistory(project.CaptureSnapshot());
+        timeline.SelectionChanged = _ =>
+        {
+            ObserveEdits();
+            history.EndEdit();
+            ShowInspector();
+        };
         timeline.StepAdded = StepAdded;
+        timeline.ReorderStarting = CheckpointEdit;
+        timeline.ReorderFinished = CheckpointEdit;
     }
 
     public override Vector2 InitialSize => new(Mathf.Max(320f, UI.screenWidth - 16f), Mathf.Min(252f, UI.screenHeight * 0.35f));
     protected override float Margin => 8f;
     public CQFCinematicProject Project => project;
     public CQFCinematicStep? Selected => timeline.Selected;
+    public bool CanUndo => history.CanUndo;
+    public bool CanRedo => history.CanRedo;
 
     public override void PostOpen()
     {
@@ -59,6 +69,8 @@ public sealed class QuestEditor_Cinematics : Window
         rolesWindow = null;
         inspector?.Close(false);
         inspector = null;
+        parameterWindow?.Close(false);
+        parameterWindow = null;
         CancelPick();
         RememberDraft();
         base.PostClose();
@@ -73,21 +85,31 @@ public sealed class QuestEditor_Cinematics : Window
             return;
         }
         DrawMapSelection();
+        float now = Time.realtimeSinceStartup;
+        if (now >= nextObservation)
+        {
+            nextObservation = now + 0.25f;
+            ObserveEdits();
+        }
+        if (draftDirty && now - lastEdit >= 1.5f) RememberDraft();
     }
 
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope scope = new(inRect.width, inRect.height);
-        float nameWidth = Mathf.Clamp(inRect.width * 0.25f, 80f, 280f);
+        float nameWidth = Mathf.Clamp(inRect.width * 0.19f, 60f, 220f);
         TooltipHandler.TipRegion(new Rect(0f, 0f, nameWidth, 28f), "CQF_Cinematic_ProjectName".Translate());
         project.DisplayName = Widgets.TextField(new Rect(0f, 0f, nameWidth, 28f), project.DisplayName);
         float x = nameWidth + 6f;
-        float buttonWidth = Mathf.Max(20f, (inRect.width - x - 60f) / 5f);
+        float buttonWidth = Mathf.Max(20f, (inRect.width - x - 48f) / 8f);
         DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_OpenProject", OpenProjectMenu);
         DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_SaveProject", SaveProject);
+        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_Undo", UndoEdit, CanUndo);
+        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_Redo", RedoEdit, CanRedo);
+        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_ProjectSettings", OpenProjectSettings);
         DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_RecordCamera", () => RecordCamera());
-        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_RecordMove", () => RecordPawnMove());
-        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_RecordFacing", () => RecordPawnFacing());
+        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_RecordMove", OpenMoveRecordingMenu);
+        DrawButton(ref x, 0f, buttonWidth, "CQF_Cinematic_RecordFacing", OpenFacingRecordingMenu);
         (string Key, Action Click, bool Enabled)[] controls =
         {
             ("CQF_Cinematic_AddStep", () => timeline.OpenAddMenu(project.Definition), true),
@@ -95,7 +117,7 @@ public sealed class QuestEditor_Cinematics : Window
             ("CQF_Cinematic_RemoveStep", () => timeline.RemoveSelected(project.Definition.steps), Selected != null),
             ("CQF_Cinematic_PreviewSelection", () => PlayPreview(true), Selected != null),
             ("CQF_Cinematic_PreviewAll", () => PlayPreview(false), project.Definition.steps.Count > 0),
-            ("CQF_Cinematic_TestCopy", StartTest, project.Definition.steps.Count > 0),
+            ("CQF_Cinematic_TestCopy", OpenTestMenu, project.Definition.steps.Count > 0),
             ("CQF_Cinematic_ActorBindings", () => OpenRoleBindings(), true),
             (inspector?.IsOpen == true ? "CQF_Cinematic_HideInspector" : "CQF_Cinematic_ShowInspector", ToggleInspector, true)
         };
@@ -104,6 +126,89 @@ public sealed class QuestEditor_Cinematics : Window
         foreach (var control in controls)
             DrawButton(ref x, 34f, width, control.Key, control.Click, control.Enabled);
         timeline.Draw(new Rect(0f, 69f, inRect.width, Mathf.Max(40f, inRect.height - 69f)), project.Definition, Summary);
+        if (Event.current.type == EventType.KeyDown && Event.current.control && !Event.current.alt)
+        {
+            if (Event.current.keyCode == KeyCode.Z)
+            {
+                if (Event.current.shift) RedoEdit(); else UndoEdit();
+                Event.current.Use();
+            }
+            else if (Event.current.keyCode == KeyCode.Y)
+            {
+                RedoEdit();
+                Event.current.Use();
+            }
+        }
+    }
+
+    public void CheckpointEdit()
+    {
+        ObserveEdits();
+        history.EndEdit();
+    }
+
+    public void UndoEdit()
+    {
+        ObserveEdits();
+        if (!history.Undo()) return;
+        RestoreHistory();
+    }
+
+    public void RedoEdit()
+    {
+        ObserveEdits();
+        if (!history.Redo()) return;
+        RestoreHistory();
+    }
+
+    public void OpenProjectSettings()
+    {
+        rolesWindow?.Close(false);
+        inspector?.Close(false);
+        inspector = new Window_CinematicInspector(this, true);
+        Find.WindowStack.Add(inspector);
+    }
+
+    public void OpenParameters(object value)
+    {
+        parameterWindow?.Close(false);
+        parameterWindow = new Dialog_EditCinematicStep(value);
+        Find.WindowStack.Add(parameterWindow);
+    }
+
+    public void SelectStep(CQFCinematicStep? step)
+    {
+        timeline.Select(step);
+        ShowInspector();
+    }
+
+    public void SaveDraftNow()
+    {
+        CheckpointEdit();
+        RememberDraft();
+        if (lastDraftSnapshot == project.CaptureSnapshot())
+            Messages.Message("CQF_Cinematic_DraftSaved".Translate(), MessageTypeDefOf.TaskCompletion, false);
+    }
+
+    public void AddEntityRole(string token, string? label = null)
+    {
+        CheckpointEdit();
+        string key = project.BindEntityRole(token, label);
+        CheckpointEdit();
+        OpenRoleBindings(key);
+    }
+
+    public void RecordEntityMove(string token)
+    {
+        CheckpointEdit();
+        string key = project.BindEntityRole(token);
+        PickRoleCell(key, "CQF_Cinematic_MapPickDestination", (target, map) =>
+        {
+            CheckpointEdit();
+            CQFCinematicStep_PawnMove step = new() { pawnKey = key, targetKey = project.BindTarget(new TargetInfo(target.Cell, map)) };
+            timeline.Add(project.Definition, step);
+            CheckpointEdit();
+        });
     }
 
     public void RecordCamera(CQFCinematicStep_Camera? existing = null)
@@ -125,6 +230,12 @@ public sealed class QuestEditor_Cinematics : Window
 
     public void RecordPawnMove(CQFCinematicStep_PawnMove? existing = null)
     {
+        if (existing != null && project.Definition.roles.Any(role => role.key == existing.pawnKey && role.source == CQFCinematicRoleSource.EntityBook))
+        {
+            PickRoleCell(existing.pawnKey, "CQF_Cinematic_MapPickDestination", (target, map) =>
+                existing.targetKey = project.BindTarget(new TargetInfo(target.Cell, map)));
+            return;
+        }
         SelectPawn(pawn => PickCell(pawn, "CQF_Cinematic_MapPickDestination", target =>
         {
             CQFCinematicStep_PawnMove step = existing ?? new CQFCinematicStep_PawnMove();
@@ -138,6 +249,12 @@ public sealed class QuestEditor_Cinematics : Window
 
     public void RecordPawnFacing(CQFCinematicStep_PawnFace? existing = null)
     {
+        if (existing != null && project.Definition.roles.Any(role => role.key == existing.pawnKey && role.source == CQFCinematicRoleSource.EntityBook))
+        {
+            PickRoleCell(existing.pawnKey, "CQF_Cinematic_MapPickFacing", (target, map) =>
+                existing.targetKey = project.BindTarget(new TargetInfo(target.Cell, map)));
+            return;
+        }
         SelectPawn(pawn => PickCell(pawn, "CQF_Cinematic_MapPickFacing", target =>
         {
             CQFCinematicStep_PawnFace step = existing ?? new CQFCinematicStep_PawnFace();
@@ -154,6 +271,48 @@ public sealed class QuestEditor_Cinematics : Window
         SelectPawn(pawn => accept(project.BindPawnRole(pawn)), useSelection: false);
     }
 
+    public void BindEntityReference(Action<string> accept)
+    {
+        try
+        {
+            CancelPick();
+            CQFEntityBookBridge.OpenReferences(token =>
+            {
+                try { accept(token); }
+                catch (Exception error) { Report("CQF_Cinematic_SelectTarget", error); }
+            }, allowGroups: false, quest: project.Quest);
+        }
+        catch (Exception error) { Report("CQF_Cinematic_SelectTarget", error); }
+    }
+
+    public void OpenMoveRecordingMenu()
+    {
+        List<FloatMenuOption> options = new()
+        {
+            new FloatMenuOption("CQF_EntityBook_CinematicRecordMove".Translate(), () => BindEntityReference(RecordEntityMove)),
+            new FloatMenuOption("CQF_EntityBook_CinematicRecordFromMap".Translate(), () => RecordPawnMove())
+        };
+        Find.WindowStack.Add(new FloatMenu(options));
+    }
+
+    public void OpenFacingRecordingMenu()
+    {
+        List<FloatMenuOption> options = new()
+        {
+            new FloatMenuOption("CQF_EntityBook_CinematicRecordFacing".Translate(), () => BindEntityReference(token =>
+            {
+                string key = project.BindEntityRole(token);
+                PickRoleCell(key, "CQF_Cinematic_MapPickFacing", (target, map) =>
+                {
+                    CQFCinematicStep_PawnFace step = new() { pawnKey = key, targetKey = project.BindTarget(new TargetInfo(target.Cell, map)) };
+                    timeline.Add(project.Definition, step);
+                });
+            })),
+            new FloatMenuOption("CQF_EntityBook_CinematicRecordFromMap".Translate(), () => RecordPawnFacing())
+        };
+        Find.WindowStack.Add(new FloatMenu(options));
+    }
+
     public void OpenRoleBindings(string? key = null)
     {
         inspector?.Close(false);
@@ -167,21 +326,50 @@ public sealed class QuestEditor_Cinematics : Window
         SelectPawn(pawn => project.SetRehearsalPawn(key, pawn), useSelection: false);
     }
 
-    public void BindMapTarget(Action<string> accept)
+    public void BindMapTarget(Action<string> accept) => BindMapTarget(accept, false);
+
+    public void BindMapTarget(Action<string> accept, bool locationsOnly)
     {
         Map? map = Find.CurrentMap;
         if (map == null) return;
         picking = true;
-        Find.Targeter.BeginTargeting(new TargetingParameters { canTargetLocations = true, canTargetPawns = true, canTargetBuildings = true, canTargetItems = true }, target =>
+        Find.Targeter.BeginTargeting(new TargetingParameters { canTargetLocations = true, canTargetPawns = !locationsOnly, canTargetBuildings = !locationsOnly, canTargetItems = !locationsOnly }, target =>
         {
             picking = false;
             accept(project.BindTarget(target.HasThing ? new TargetInfo(target.Thing) : new TargetInfo(target.Cell, map)));
         }, actionWhenFinished: () => picking = false, requiresCastedSelected: false);
     }
 
+    public void LocateTarget(string key)
+    {
+        try
+        {
+            if (!project.Targets.TryGetValue(key, out TargetInfo target))
+            {
+                CQFCinematicBinding binding = project.Definition.bindings.Concat(project.Locations).First(entry => entry.key == key);
+                target = binding.Resolve(Find.CurrentMap);
+            }
+            CameraJumper.TryJump(target.Cell, target.Map);
+        }
+        catch (Exception error) { Report("CQF_Cinematic_SelectTarget", error); }
+    }
+
+    public void UseLocation(string key, Action<string> accept)
+    {
+        try
+        {
+            CheckpointEdit();
+            CQFCinematicBinding binding = project.Definition.bindings.Concat(project.Locations).First(entry => entry.key == key);
+            accept(project.BindTarget(binding.Resolve(Find.CurrentMap)));
+            CheckpointEdit();
+        }
+        catch (Exception error) { Report("CQF_Cinematic_SelectTarget", error); }
+    }
+
     public string TargetLabel(string key)
     {
         if (project.Definition.roles.Any(role => role.key == key)) return project.RoleLabel(key);
+        if (project.TargetNames.TryGetValue(key ?? string.Empty, out string? name) && !string.IsNullOrWhiteSpace(name)) return name;
         if (!project.Targets.TryGetValue(key ?? string.Empty, out TargetInfo target)) return "CQF_Cinematic_None".Translate();
         return target.HasThing ? target.Thing.LabelShortCap.ToString() : target.Cell.ToString();
     }
@@ -191,6 +379,32 @@ public sealed class QuestEditor_Cinematics : Window
         if (!picking || Current.Game == null) return;
         Find.Targeter.StopTargeting();
         picking = false;
+    }
+
+    public void StartTest(bool selectedOnly = false, bool useRehearsal = true)
+    {
+        try
+        {
+            if (selectedOnly && Selected == null) return;
+            project.RefreshPreviewTexts();
+            CancelPick();
+            CheckpointEdit();
+            RememberDraft();
+            string selectedPath = project.StepPath(Selected);
+            CQFCinematicTestSession? session = null;
+            session = CQFCinematicTestSession.Start(project, restored =>
+            {
+                QuestEditor_Cinematics studio = new(restored);
+                studio.history = history;
+                Find.WindowStack.Add(studio);
+                string focusPath = session?.FailedStepPath ?? selectedPath;
+                studio.SelectStep(restored.StepAtPath(focusPath));
+                if (session?.FailedStepPath != null)
+                    Messages.Message("CQF_Cinematic_TestFailureFocused".Translate(), MessageTypeDefOf.CautionInput, false);
+            }, selectedOnly, Selected, useRehearsal);
+            Close(false);
+        }
+        catch (Exception error) { Report("CQF_Cinematic_TestFailed", error); }
     }
 
     public override void OnCancelKeyPressed()
@@ -212,7 +426,12 @@ public sealed class QuestEditor_Cinematics : Window
     private void DrawButton(ref float x, float y, float width, string key, Action click, bool enabled = true)
     {
         Rect rect = new(x, y, width, 28f);
-        if (CQFUIStyle.ButtonText(rect, key.Translate(), active: enabled)) click();
+        if (CQFUIStyle.ButtonText(rect, key.Translate(), active: enabled))
+        {
+            if (key is not ("CQF_Cinematic_Undo" or "CQF_Cinematic_Redo")) CheckpointEdit();
+            click();
+            if (key is not ("CQF_Cinematic_Undo" or "CQF_Cinematic_Redo")) CheckpointEdit();
+        }
         string tip = key + "_Tip";
         TooltipHandler.TipRegion(rect, tip.CanTranslate() ? tip.Translate() : key.Translate());
         x += width + 6f;
@@ -221,7 +440,8 @@ public sealed class QuestEditor_Cinematics : Window
     private void ShowInspector()
     {
         if (rolesWindow?.IsOpen == true) return;
-        if (inspector?.IsOpen == true) return;
+        if (inspector?.IsOpen == true && !inspector.ProjectSettings) return;
+        inspector?.Close(false);
         inspector = new Window_CinematicInspector(this);
         Find.WindowStack.Add(inspector);
     }
@@ -244,7 +464,8 @@ public sealed class QuestEditor_Cinematics : Window
         CancelPick();
         List<FloatMenuOption> options = new()
         {
-            new FloatMenuOption("CQF_Cinematic_New".Translate(), () => ConfirmReplace(() => ReplaceProject(new CQFCinematicProject())))
+            new FloatMenuOption("CQF_Cinematic_New".Translate(), () => ConfirmReplace(() => ReplaceProject(new CQFCinematicProject()))),
+            new FloatMenuOption("CQF_Cinematic_SaveDraft".Translate(), SaveDraftNow)
         };
         string directory = Path.Combine(CQFContentPaths.Quests, "Cinematics");
         try
@@ -293,7 +514,9 @@ public sealed class QuestEditor_Cinematics : Window
     {
         rolesWindow?.Close(false);
         CancelPick();
+        parameterWindow?.Close(false);
         project = replacement;
+        history = new CQFCinematicEditHistory(project.CaptureSnapshot());
         RememberDraft();
         timeline.Reset();
         ShowInspector();
@@ -315,6 +538,7 @@ public sealed class QuestEditor_Cinematics : Window
         {
             if (selectedOnly && Selected == null) return;
             CQFCinematicProject previewProject = project.CloneForTest();
+            previewProject.RefreshPreviewTexts();
             previewProject.RebindTargets();
             if (selectedOnly) previewProject.Definition.steps = new List<CQFCinematicStep> { Selected!.Copy() };
             previewProject.Definition.pauseGame = false;
@@ -328,16 +552,19 @@ public sealed class QuestEditor_Cinematics : Window
         catch (Exception error) { Report("CQF_Cinematic_PlayFailed", error); }
     }
 
-    private void StartTest()
+    private void OpenTestMenu()
     {
-        try
+        List<FloatMenuOption> options = new()
         {
-            CancelPick();
-            RememberDraft();
-            CQFCinematicTestSession.Start(project, restored => Find.WindowStack.Add(new QuestEditor_Cinematics(restored)));
-            Close(false);
+            new FloatMenuOption("CQF_Cinematic_TestRehearsalAll".Translate(), () => StartTest(false, true)),
+            new FloatMenuOption("CQF_Cinematic_TestFormalAll".Translate(), () => StartTest(false, false))
+        };
+        if (Selected != null)
+        {
+            options.Add(new FloatMenuOption("CQF_Cinematic_TestRehearsalSelected".Translate(), () => StartTest(true, true)));
+            options.Add(new FloatMenuOption("CQF_Cinematic_TestFormalSelected".Translate(), () => StartTest(true, false)));
         }
-        catch (Exception error) { Report("CQF_Cinematic_TestFailed", error); }
+        Find.WindowStack.Add(new FloatMenu(options));
     }
 
     private void SelectPawn(Action<Pawn> accept, string? currentKey = null, bool useSelection = true)
@@ -368,6 +595,31 @@ public sealed class QuestEditor_Cinematics : Window
             picking = false;
             if (target.Cell.InBounds(pawn.Map)) accept(target);
         }, target => DrawMapLine(pawn, target.Cell), target => target.Cell.InBounds(pawn.Map), actionWhenFinished: () => picking = false);
+    }
+
+    private void PickRoleCell(string key, string prompt, Action<LocalTargetInfo, Map> accept)
+    {
+        Map map = Find.CurrentMap ?? throw new InvalidOperationException("CQF_Cinematic_MapRequired".Translate());
+        Messages.Message(prompt.Translate(), MessageTypeDefOf.NeutralEvent);
+        picking = true;
+        Find.Targeter.BeginTargeting(TargetingParameters.ForCell(), target =>
+        {
+            picking = false;
+            try
+            {
+                if (map.Disposed || map != Find.CurrentMap || !target.Cell.InBounds(map))
+                    throw new InvalidOperationException("CQF_Cinematic_MapRequired".Translate());
+                accept(target, map);
+                inspector?.RefreshValues();
+            }
+            catch (Exception error) { Report("CQF_Cinematic_SelectTarget", error); }
+        }, target =>
+        {
+            if (project.Targets.TryGetValue(key, out TargetInfo actor) && actor.Thing is Pawn pawn && pawn.Map == map)
+                DrawMapLine(pawn, target.Cell);
+            else if (target.Cell.InBounds(map))
+                GenDraw.DrawFieldEdges(new List<IntVec3> { target.Cell }, CQFUIStyle.Accent);
+        }, target => !map.Disposed && target.Cell.InBounds(map), actionWhenFinished: () => picking = false);
     }
 
     private void DrawMapSelection()
@@ -422,7 +674,7 @@ public sealed class QuestEditor_Cinematics : Window
 
     private void ConfirmReplace(Action replace)
     {
-        if (project.Definition.steps.Count == 0 && project.Subtitles.Count == 0 && project.DisplayName == "CQF_Cinematic_New".Translate().ToString())
+        if (!HasAuthoredContent())
         {
             replace();
             return;
@@ -430,23 +682,109 @@ public sealed class QuestEditor_Cinematics : Window
         Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("CQF_Cinematic_ReplaceDraftConfirm".Translate(), replace));
     }
 
+    private bool HasAuthoredContent()
+    {
+        CQFCinematicDef definition = project.Definition;
+        return definition.steps.Count > 0 || definition.roles.Count > 0 || definition.bindings.Count > 0 || definition.skipActions.Count > 0
+            || project.Subtitles.Count > 0 || project.Targets.Count > 0 || project.RehearsalBindings.Count > 0
+            || project.Locations.Count > 0 || project.TargetNames.Count > 0 || !string.IsNullOrEmpty(project.QuestID)
+            || project.DisplayName != "CQF_Cinematic_New".Translate().ToString()
+            || !definition.defName.StartsWith("CQF_Cinematic_", StringComparison.Ordinal)
+            || !Guid.TryParseExact(definition.defName.Substring("CQF_Cinematic_".Length), "N", out _)
+            || definition.allowSkip != defaultDefinition.allowSkip || definition.lockInput != defaultDefinition.lockInput
+            || definition.restoreCamera != defaultDefinition.restoreCamera || definition.pauseGame != defaultDefinition.pauseGame
+            || definition.maxDuration != defaultDefinition.maxDuration || definition.addQuestPrefix != defaultDefinition.addQuestPrefix
+            || !string.IsNullOrEmpty(definition.completedSignal) || !string.IsNullOrEmpty(definition.skippedSignal)
+            || !string.IsNullOrEmpty(definition.cancelledSignal) || !string.IsNullOrEmpty(definition.failedSignal);
+    }
+
     private void RememberDraft()
     {
         if (worldIdentity.Length == 0) return;
         try
         {
-            if (Current.ProgramState == ProgramState.Playing && CurrentWorldIdentity() == worldIdentity
-                && project.Targets.Values.All(target => target.Map is { Disposed: false })) project.CaptureBindings();
-            drafts[worldIdentity] = project.CloneForTest();
+            string snapshot = project.CaptureSnapshot();
+            drafts[worldIdentity] = snapshot;
+            if (draftWritesBlocked.Contains(worldIdentity))
+            {
+                draftDirty = false;
+                return;
+            }
+            if (snapshot == lastDraftSnapshot)
+            {
+                draftDirty = false;
+                return;
+            }
+            new CQFCinematicDraftStore(Path.Combine(GenFilePaths.ConfigFolderPath, "CQF_CinematicDrafts")).Write(worldIdentity, snapshot);
+            lastDraftSnapshot = snapshot;
+            draftDirty = false;
         }
-        catch (Exception error) { Report("CQF_Cinematic_ExportFailed", error); }
+        catch (Exception error)
+        {
+            draftDirty = false;
+            Report("CQF_Cinematic_DraftSaveFailed", error);
+        }
+    }
+
+    private void ObserveEdits()
+    {
+        try
+        {
+            if (!history.Observe(project.CaptureSnapshot(), project.StepPath(Selected), Time.realtimeSinceStartup)) return;
+            lastEdit = Time.realtimeSinceStartup;
+            draftDirty = true;
+        }
+        catch (Exception error)
+        {
+            nextObservation = Time.realtimeSinceStartup + 10f;
+            Report("CQF_Cinematic_DraftSaveFailed", error);
+        }
+    }
+
+    private void RestoreHistory()
+    {
+        try
+        {
+            CancelPick();
+            rolesWindow?.Close(false);
+            parameterWindow?.Close(false);
+            project = CQFCinematicProject.RestoreSnapshot(history.Snapshot);
+            try { project.RebindTargets(); }
+            catch (Exception error) { Report("CQF_Cinematic_ProjectLoadFailed", error); }
+            timeline.Select(project.StepAtPath(history.SelectionPath));
+            inspector?.RefreshValues();
+            draftDirty = true;
+            lastEdit = Time.realtimeSinceStartup;
+        }
+        catch (Exception error) { Report("CQF_Cinematic_ProjectLoadFailed", error); }
     }
 
     private static CQFCinematicProject RestoreDraft()
     {
         string identity = CurrentWorldIdentity();
-        if (identity.Length > 0 && drafts.TryGetValue(identity, out CQFCinematicProject? saved))
-            return saved.CloneForTest();
+        if (identity.Length == 0) return new CQFCinematicProject();
+        try
+        {
+            if (drafts.TryGetValue(identity, out string? saved)) return CQFCinematicProject.RestoreSnapshot(saved);
+            string? snapshot = new CQFCinematicDraftStore(Path.Combine(GenFilePaths.ConfigFolderPath, "CQF_CinematicDrafts")).Read(identity);
+            if (snapshot != null) return CQFCinematicProject.RestoreSnapshot(snapshot);
+        }
+        catch (Exception error)
+        {
+            Log.Error("[CQF] Cinematic automatic draft restore failed: " + error);
+            try
+            {
+                string recovery = new CQFCinematicDraftStore(Path.Combine(GenFilePaths.ConfigFolderPath, "CQF_CinematicDrafts")).PreserveInvalidDraft(identity);
+                Log.Error("[CQF] The unreadable cinematic draft was preserved at: " + recovery);
+                Messages.Message("CQF_Cinematic_DraftLoadFailed".Translate(recovery), MessageTypeDefOf.RejectInput, false);
+            }
+            catch (Exception recoveryError)
+            {
+                draftWritesBlocked.Add(identity);
+                Log.Error("[CQF] Cinematic draft recovery copy failed; disk draft writes are blocked for this world: " + recoveryError);
+                Messages.Message("CQF_Cinematic_DraftRecoveryFailed".Translate(), MessageTypeDefOf.RejectInput, false);
+            }
+        }
         return new CQFCinematicProject();
     }
 
@@ -458,9 +796,17 @@ public sealed class QuestEditor_Cinematics : Window
 
     private readonly CQFCinematicTimeline timeline = new();
     private readonly string worldIdentity;
-    private static readonly Dictionary<string, CQFCinematicProject> drafts = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, string> drafts = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> draftWritesBlocked = new(StringComparer.Ordinal);
+    private static readonly CQFCinematicDef defaultDefinition = new();
     private CQFCinematicProject project;
+    private CQFCinematicEditHistory history;
     private Window_CinematicInspector? inspector;
     private Window_CinematicRoles? rolesWindow;
+    private Dialog_EditCinematicStep? parameterWindow;
+    private string? lastDraftSnapshot;
+    private float nextObservation;
+    private float lastEdit;
+    private bool draftDirty;
     private bool picking;
 }

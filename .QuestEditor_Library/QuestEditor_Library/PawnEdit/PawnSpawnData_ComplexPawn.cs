@@ -72,6 +72,9 @@ namespace QuestEditor_Library
             }
 
             this.SpawnPnaw(pawns, position, map);
+            this.RegisterEntityBookPawns(result.Values.Select(target => target.Thing).OfType<Pawn>(), quest, map);
+            Current.Game.GetComponent<GameComponent_EntityBook>().RegisterBatch("template:" + this.pawnDef.defName,
+                result.Values.Select(target => target.Thing).OfType<Pawn>(), quest, map, this.pawnDef.label);
             foreach (Pawn pawn in pawns)
             {
                 this.pawnDef.NotifyPawnSpawned(pawn, quest);

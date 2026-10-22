@@ -6,5 +6,6 @@ public enum CQFCinematicRoleSource
     Context,
     QuestDatabase,
     TemporaryDatabase,
-    GlobalDatabase
+    GlobalDatabase,
+    EntityBook
 }

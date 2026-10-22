@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_EntityBook_ChangeTypeConfirmation>将生成方式从「{0}」改为「{1}」会移除以下设置：
+{2}
+
+数量、概率等兼容设置会保留。是否继续？</CQF_EntityBook_ChangeTypeConfirmation>
+  <CQF_EntityBook_CommonSettings>常用生成设置</CQF_EntityBook_CommonSettings>
+  <CQF_EntityBook_GenerationChanceTip>生成概率为 0 到 1；例如 0.35 表示 35%。</CQF_EntityBook_GenerationChanceTip>
+  <CQF_EntityBook_ArrivingWay>到达方式</CQF_EntityBook_ArrivingWay>
+  <CQF_EntityBook_InvalidGenerationChance>生成概率必须是 0 到 1 之间的有效数字。</CQF_EntityBook_InvalidGenerationChance>
+  <CQF_EntityBook_InvalidCountRange>生成数量必须至少为 1，且最大值不能小于最小值。</CQF_EntityBook_InvalidCountRange>
+  <CQF_EntityBook_FieldTemplate>实体模板</CQF_EntityBook_FieldTemplate>
+  <CQF_EntityBook_FieldGroup>生成组合</CQF_EntityBook_FieldGroup>
+  <CQF_EntityBook_FieldCandidates>随机候选方案</CQF_EntityBook_FieldCandidates>
+  <CQF_EntityBook_ConfiguredItems>已配置 {0} 项</CQF_EntityBook_ConfiguredItems>
+  <CQF_EntityBook_CreateRecipe>创建生成方案</CQF_EntityBook_CreateRecipe>
+  <CQF_EntityBook_PlaceOnMap>在地图放置</CQF_EntityBook_PlaceOnMap>
+  <CQF_EntityBook_PlaceOnMapTip>先设置数量、概率和到达方式，再在地图上选择生成点；保存地图时一并保存。</CQF_EntityBook_PlaceOnMapTip>
+  <CQF_EntityBook_MemberStatusTip>未生成的成员可以预先编排。已死亡或丢失的成员无法选用；走位还需要人物已在目标地图且未倒地。</CQF_EntityBook_MemberStatusTip>
+  <CQF_EntityBook_CannotSelectUnavailable>无法选用此成员：{0}。请选择其他成员，或重新生成后再试。</CQF_EntityBook_CannotSelectUnavailable>
+  <CQF_EntityBook_StatusMissing>对象丢失</CQF_EntityBook_StatusMissing>
+  <CQF_EntityBook_StatusDead>已死亡</CQF_EntityBook_StatusDead>
+  <CQF_EntityBook_StatusUnspawned>未入图</CQF_EntityBook_StatusUnspawned>
+  <CQF_EntityBook_StatusCurrentMap>当前地图</CQF_EntityBook_StatusCurrentMap>
+  <CQF_EntityBook_StatusOtherMap>其他地图</CQF_EntityBook_StatusOtherMap>
+  <CQF_EntityBook_StatusDowned>已倒地</CQF_EntityBook_StatusDowned>
+  <CQF_EntityBook_MapRequired>请在开发者模式下打开一张地图，再放置实体生成点。</CQF_EntityBook_MapRequired>
+  <CQF_EntityBook_PlacementBlocked>请选择地图内可以通行的位置。</CQF_EntityBook_PlacementBlocked>
+  <CQF_EntityBook_PlacementOccupied>这里已有建筑或实体生成点，请换一个位置。</CQF_EntityBook_PlacementOccupied>
+  <CQF_EntityBook_PlacementFailed>实体生成点放置失败，详情请查看日志。</CQF_EntityBook_PlacementFailed>
+  <CQF_EntityBook_PlacementTitle>放置：{0}</CQF_EntityBook_PlacementTitle>
+  <CQF_EntityBook_PlacementDescription>在地图点击位置放置生成配置。建筑受损或摧毁时生成的方案需放在对应建筑上；其他方案请选择空地。现在不会生成人物或执行生成后的事件，导出地图时会保存此配置。放置后可继续编辑或将成员加入演出。</CQF_EntityBook_PlacementDescription>
+  <CQF_EntityBook_PlacementReady>生成点已放置</CQF_EntityBook_PlacementReady>
+  <CQF_EntityBook_PlacementMissing>这个生成点已被移除，无法继续编辑。</CQF_EntityBook_PlacementMissing>
+  <CQF_EntityBook_PlacementMember>演出成员编号</CQF_EntityBook_PlacementMember>
+  <CQF_EntityBook_PlacementMemberTip>选择此来源按实际生成顺序排列的第几个成员，从 1 开始。编号属于当前任务中的整个来源，不是这个生成点的局部编号；多次使用同一方案会继续编号。尚未生成时也可以先记录移动，排演人物可在演员窗口单独指定。</CQF_EntityBook_PlacementMemberTip>
+  <CQF_EntityBook_PlacementRecordMove>为此成员记录移动</CQF_EntityBook_PlacementRecordMove>
+  <CQF_EntityBook_PlacementAddActor>将此成员加入演员</CQF_EntityBook_PlacementAddActor>
+  <CQF_EntityBook_PlacementEdit>编辑此处配置</CQF_EntityBook_PlacementEdit>
+  <CQF_EntityBook_PlacementApply>应用到此生成点</CQF_EntityBook_PlacementApply>
+  <CQF_EntityBook_PlacementContinue>继续放置</CQF_EntityBook_PlacementContinue>
+  <CQF_EntityBook_PlacementQuestMismatch>当前演出属于另一个任务。请先在演出项目设置中切换到此地图的任务，再加入成员。</CQF_EntityBook_PlacementQuestMismatch>
+  <CQF_EntityBook_PlacementBuildingRequired>这个方案需要建筑受损或被摧毁后才生成，请把生成点放在要关联的建筑上。</CQF_EntityBook_PlacementBuildingRequired>
+  <CQF_Cinematic_Undo>撤销</CQF_Cinematic_Undo>
+  <CQF_Cinematic_Undo_Tip>撤销最近的步骤、参数、演员或字幕修改。连续输入会合并为一次修改。</CQF_Cinematic_Undo_Tip>
+  <CQF_Cinematic_Redo>重做</CQF_Cinematic_Redo>
+  <CQF_Cinematic_Redo_Tip>重新应用刚才撤销的修改。</CQF_Cinematic_Redo_Tip>
+  <CQF_Cinematic_ProjectSettings>项目设置</CQF_Cinematic_ProjectSettings>
+  <CQF_Cinematic_ProjectSettings_Tip>随时打开项目设置，选择关联任务、调整播放规则并管理命名地点。</CQF_Cinematic_ProjectSettings_Tip>
+  <CQF_Cinematic_SaveDraft>保存草稿</CQF_Cinematic_SaveDraft>
+  <CQF_Cinematic_DraftSaved>演出草稿已保存。未完成的字幕也会保留。</CQF_Cinematic_DraftSaved>
+  <CQF_Cinematic_DraftSaveFailed>演出草稿保存失败</CQF_Cinematic_DraftSaveFailed>
+  <CQF_Cinematic_DraftLoadFailed>演出草稿恢复失败，原文件已另存为恢复副本：{0}</CQF_Cinematic_DraftLoadFailed>
+  <CQF_Cinematic_TestRehearsalAll>测试全部：使用排演人物</CQF_Cinematic_TestRehearsalAll>
+  <CQF_Cinematic_TestFormalAll>测试全部：检查正式来源</CQF_Cinematic_TestFormalAll>
+  <CQF_Cinematic_TestRehearsalSelected>测试当前步骤：使用排演人物</CQF_Cinematic_TestRehearsalSelected>
+  <CQF_Cinematic_TestFormalSelected>测试当前步骤：检查正式来源</CQF_Cinematic_TestFormalSelected>
+  <CQF_Cinematic_TestModeRehearsal>副本测试：排演人物</CQF_Cinematic_TestModeRehearsal>
+  <CQF_Cinematic_TestModeFormal>副本测试：正式来源</CQF_Cinematic_TestModeFormal>
+  <CQF_Cinematic_TestFailureFocused>已恢复制作现场，并选中失败的步骤。可在属性中修正后再次测试。</CQF_Cinematic_TestFailureFocused>
+  <CQF_Cinematic_LocationNumber>地点 {0}</CQF_Cinematic_LocationNumber>
+  <CQF_Cinematic_Locations>命名地点</CQF_Cinematic_Locations>
+  <CQF_Cinematic_AddLocation>从地图添加地点</CQF_Cinematic_AddLocation>
+  <CQF_Cinematic_LocateLocation>定位</CQF_Cinematic_LocateLocation>
+  <CQF_Cinematic_LocateLocation_Tip>将镜头移动到这个地点。地点保留当前世界和地图的记录。</CQF_Cinematic_LocateLocation_Tip>
+  <CQF_Cinematic_LocationInUse>此地点正在被步骤使用。先修改对应步骤的目标，再删除地点。</CQF_Cinematic_LocationInUse>
+  <CQF_Cinematic_RemoveLocation>删除未使用的地点</CQF_Cinematic_RemoveLocation>
+  <CQF_Cinematic_DraftRecoveryFailed>演出草稿及恢复副本均无法读取或保存。已停止覆盖此世界的磁盘草稿；详细原因见日志。</CQF_Cinematic_DraftRecoveryFailed>
+</LanguageData>

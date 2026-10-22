@@ -101,6 +101,28 @@ namespace QuestEditor_Library
             Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
             targetTexts.ForEach(t =>
             {
+                if (CQFEntityReference.IsReference(t))
+                {
+                    if (targets != null && targets.TryGetValue(t, out TargetInfo explicitTarget) && explicitTarget.IsValid)
+                    {
+                        result.Add(t, explicitTarget);
+                        return;
+                    }
+                    IReadOnlyList<Pawn> pawns = CQFEntityReference.Resolve(t, quest);
+                    if (!CQFEntityReference.TryParse(t, out CQFEntityReference? reference) || reference == null)
+                        throw new InvalidOperationException("CQF_EntityBook_InvalidReference".Translate());
+                    Dictionary<Pawn, int>? memberIndices = reference.Group
+                        ? Current.Game.GetComponent<GameComponent_EntityBook>().GetRecords(reference.SourceId, quest)
+                            .Where(record => record.IsAvailable).ToDictionary(record => record.Pawn!, record => record.MemberIndex)
+                        : null;
+                    foreach (Pawn pawn in pawns)
+                    {
+                        string key = memberIndices != null ? CQFEntityReference.Encode(reference.SourceId,
+                            memberIndices[pawn]) : t;
+                        result.Add(key, new TargetInfo(pawn));
+                    }
+                    return;
+                }
                 if (GetTarget(targets, quest, t)is TargetInfo target)
                 {
                     result.Add(t, target);
@@ -126,17 +148,23 @@ namespace QuestEditor_Library
             TargetInfo target = null;
             if (targets != null)
             {
-                targets.ToList().ForEach(t =>
+                if (targets.Comparer.Equals(StringComparer.Ordinal) || targets.Comparer.Equals(EqualityComparer<string>.Default))
                 {
-                    if (t.Key == targetText)
-                    {
-                        target = t.Value;
-                    }
-                });
+                    if (targets.TryGetValue(targetText, out TargetInfo direct)) target = direct;
+                }
+                else
+                    foreach (KeyValuePair<string, TargetInfo> entry in targets)
+                        if (entry.Key == targetText)
+                        {
+                            target = entry.Value;
+                            break;
+                        }
             }
 
             if (!target.IsValid)
             {
+                if (CQFEntityReference.IsReference(targetText))
+                    return new TargetInfo(CQFEntityReference.ResolveSingle(targetText, quest));
                 target = MapComponent_CQFTargets.Resolve(targets, quest, targetText);
             }
 

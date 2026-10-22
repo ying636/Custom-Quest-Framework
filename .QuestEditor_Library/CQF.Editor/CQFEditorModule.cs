@@ -12,6 +12,7 @@ namespace QuestEditor_Library
         public void Initialize()
         {
             new Harmony("CQF_Editor").PatchAll(typeof(CQFEditorModule).Assembly);
+            CQFEntityBookCatalog.Register();
             RegisterAI();
         }
 

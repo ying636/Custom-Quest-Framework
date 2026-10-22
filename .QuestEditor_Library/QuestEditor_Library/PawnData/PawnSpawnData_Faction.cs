@@ -102,6 +102,7 @@ namespace QuestEditor_Library
                         i++;
                     });
                     this.SpawnPnaw(pawns, position, map);
+                    this.RegisterEntityBookPawns(pawns, quest, map);
                     if (this.dataName != "undefined")
                     {
                         List<Pawn> ps = new List<Pawn>();
