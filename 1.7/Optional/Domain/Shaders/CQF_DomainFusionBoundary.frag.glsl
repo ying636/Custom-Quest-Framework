@@ -1,4 +1,5 @@
 #version 450
+#include "CQF_DomainContact.glsl"
 layout(location = 0) in vec4 vColor;
 layout(location = 1) in vec2 vUv;
 layout(location = 2) in vec2 vWorld;
@@ -24,7 +25,7 @@ void main()
     float secondEdge = length(point-uMaterial._SurfaceRival.xy)-uMaterial._SurfaceRival.z;
     float wave = sin(dot(point,vec2(0.75,1.13))-t*2.4+sin(point.y*0.65+t)*1.2)*0.55
         +sin(point.y*2.7+point.x*0.35+t*3.2)*0.18;
-    float front = firstEdge-secondEdge+wave+uMaterial._SurfaceClash.x;
+    float front = domainContactFront(point,uMaterial._SurfaceCircle.xyz,uMaterial._SurfaceRival.xyz)+wave+uMaterial._SurfaceClash.x;
     float overlap = 1.0-smoothstep(-0.3,0.15,max(firstEdge,secondEdge));
     float seam = exp(-front*front*7.0)*overlap;
     float sparks = pow(max(0.0,sin(point.x*5.3+point.y*7.4-t*12.0)),8.0);
@@ -32,10 +33,15 @@ void main()
     float rim = exp(-rimDistance*rimDistance*24.0);
     vec2 axis = uMaterial._SurfaceRival.xy-uMaterial._SurfaceCircle.xy;
     float axisLength = max(0.001,length(axis));
-    vec2 direction = axis/axisLength;
+    vec2 direction = length(axis) > 0.001 ? axis/axisLength : vec2(1.0,0.0);
     float along = (axisLength*axisLength+uMaterial._SurfaceCircle.z*uMaterial._SurfaceCircle.z
         -uMaterial._SurfaceRival.z*uMaterial._SurfaceRival.z)/(2.0*axisLength);
     vec2 contact = uMaterial._SurfaceCircle.xy+direction*along;
+    if (abs(uMaterial._SurfaceCircle.z-uMaterial._SurfaceRival.z) >= axisLength)
+    {
+        vec3 inner = uMaterial._SurfaceCircle.z < uMaterial._SurfaceRival.z ? uMaterial._SurfaceCircle.xyz : uMaterial._SurfaceRival.xyz;
+        contact = inner.xy+direction*inner.z*0.8;
+    }
     float age = uMaterial._SurfaceClash.y;
     float pulseDistance = length(point-contact)-age*9.0;
     float pulse = exp(-pulseDistance*pulseDistance*5.0)*(1.0-smoothstep(0.3,1.6,age));

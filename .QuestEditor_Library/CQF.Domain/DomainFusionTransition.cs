@@ -15,10 +15,10 @@ public sealed class DomainFusionTransition : DomainTransition
                 { name = "CQF_FusedDomainSource", filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
             if (!snapshot.Create()) throw new InvalidOperationException("[CQF] Could not allocate fused domain snapshot.");
             material = new Material(DefDatabase<ShaderDef>.GetNamed("CQF_DomainFusionTransition").Shader);
-            if (fusion.First.Definition.surface != null) firstSurface = new DomainSurfaceVisuals(fusion.First.Definition.surface);
+            if (fusion.FirstDefinition.surface != null) firstSurface = new DomainSurfaceVisuals(fusion.FirstDefinition.surface);
             if (fusion.Second.Definition.surface != null) secondSurface = new DomainSurfaceVisuals(fusion.Second.Definition.surface);
             material.SetFloat("_Mode", firstSurface == null || secondSurface == null ? 1f : 0f);
-            Vector3 first = camera.WorldToViewportPoint(fusion.First.Position.ToVector3Shifted());
+            Vector3 first = camera.WorldToViewportPoint(fusion.FirstPosition.ToVector3Shifted());
             Vector3 second = camera.WorldToViewportPoint(fusion.Second.Position.ToVector3Shifted());
             view = new Vector4(0f, 0f, 30f * camera.aspect, 30f);
             firstOrigin = new Vector2(first.x * view.z, (1f - first.y) * view.w);

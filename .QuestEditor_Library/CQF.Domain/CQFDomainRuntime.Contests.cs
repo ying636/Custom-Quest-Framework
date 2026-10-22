@@ -11,6 +11,7 @@ public sealed partial class CQFDomainRuntime
     {
         failedContestPairs.RemoveWhere(pair => pair.first == map || pair.second == map);
         contestCheckRequested = true;
+        fusionCheckRequested = true;
     }
 
     public MapComponent_Domain EnterOrContest(DomainDef definition, Pawn caster, IEnumerable<Pawn> targets)
@@ -124,7 +125,7 @@ public sealed partial class CQFDomainRuntime
                 MapComponent_Domain second = domainMaps[secondIndex].GetComponent<MapComponent_Domain>();
                 if (failedContestPairs.Contains((first.map, second.map))) continue;
                 if (!second.CanAcceptChallenger || second.Anchor?.Spawned != true || first.SourceMap != second.SourceMap) continue;
-                float radius = (first.Definition.visuals?.radius ?? 12f) + (second.Definition.visuals?.radius ?? 12f);
+                float radius = first.Definition.OpeningRadius + second.Definition.OpeningRadius;
                 if (first.Anchor.Position.DistanceToSquared(second.Anchor.Position) > radius * radius) continue;
                 try { MergeDomains(first, second); }
                 catch (Exception error)

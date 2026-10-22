@@ -58,6 +58,11 @@ public sealed partial class CQFDomainRuntime
                 }, "GeneratingMap", false, null);
                 return;
             }
+            if (opening is DomainOpening_Fusion)
+            {
+                opening.CompleteOpening();
+                return;
+            }
             bool counter = opening.Caster?.MapHeld?.GetComponent<MapComponent_Domain>().HasActiveDomain == true;
             if (counter ? HasTerrainTemplate(opening.Definition) : HasAvailable(opening.Definition)) opening.CompleteOpening();
             else LongEventHandler.QueueLongEvent(opening.CompleteOpening, "GeneratingMap", false, null);

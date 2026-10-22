@@ -15,7 +15,6 @@ internal static class Program
         {
             if (args.Contains("visuals")) { DomainVisualChecks.Run(); return; }
             if (args.Contains("contests")) { DomainContestChecks.Run(); return; }
-            if (args.Contains("invasions")) { DomainInvasionChecks.Run(); return; }
             if (args.Contains("territory")) { DomainTerritoryRulesChecks.Run(); return; }
             if (args.Contains("occupation")) { DomainOccupationChecks.Run(); return; }
             Run();
@@ -318,6 +317,21 @@ internal static class Program
             long allocated = GC.GetAllocatedBytesForCurrentThread() - before;
             Check(allocated == 0 && domain.Active && game.Maps.Count == 2,
                 "deferred return queue allocates zero bytes across 256 retries while preserving occupants (actual: " + allocated + ")");
+            MapComponent_Domain rival = new(domain.map, true);
+            rival.Configure(new DomainDef { defName = "CQF_Check_ContestReturnGate", workerClass = typeof(ReturnGateWorker) });
+            Set(rival, "active", true);
+            Set(rival, "closing", true);
+            Set(rival, "arrivalLocked", true);
+            Set(domain, "challenger", rival);
+            foreach (MapComponent_Domain side in new[] { domain, rival })
+            {
+                int attempts = side.GetWorker<ReturnGateWorker>()!.Attempts;
+                side.CompleteReturn();
+                Check(side.GetWorker<ReturnGateWorker>()!.Attempts == attempts + 1 && side.Active && !side.Trapped && side.ArrivalLocked,
+                    "contested withdrawal waits for its own full-screen cover from either instance");
+                Check(domain.Active && rival.Active && domain.map == rival.map && game.Maps.Count == 2,
+                    "pending contested withdrawal neither dissolves territory nor transfers the battlefield");
+            }
         }
         finally { Current.Game = previous; }
     }

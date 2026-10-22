@@ -59,7 +59,7 @@ public class DomainVisualDef : Def
     public override IEnumerable<string> ConfigErrors()
     {
         foreach (string error in base.ConfigErrors()) yield return error;
-        if (openingTicks <= 0) yield return "Domain visuals require positive openingTicks.";
+        if (openingTicks <= 0 || closingTicks <= 0) yield return "Domain visuals require positive openingTicks and closingTicks.";
         foreach (float value in new[] { radius, curtainHeight, textureScale, edgeWidth, entryDuration, returnDuration })
             if (value <= 0f || float.IsNaN(value) || float.IsInfinity(value))
                 yield return "Domain visual dimensions, scale, edge width and durations must be finite and positive.";
@@ -94,7 +94,8 @@ public class DomainVisualDef : Def
     public float edgeWidth = 0.12f;
     public float radius = 12f;
     public float curtainHeight = 4.5f;
-    public int openingTicks = 180;
+    public int openingTicks = 360;
+    public int closingTicks = 120;
     public float expansionEnd = 0.55f;
     public float curtainStart = 0.48f;
     public float curtainEnd = 0.72f;

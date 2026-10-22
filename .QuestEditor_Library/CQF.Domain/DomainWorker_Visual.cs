@@ -26,7 +26,7 @@ public class DomainWorker_Visual : DomainWorker
     public override void Update()
     {
         if (Find.CurrentMap != map || !WorldRendererUtility.DrawingMap) return;
-        if (CQFDomainRuntime.Instance.Transition is not { IsReturning: false }) return;
+        if (CQFDomainRuntime.Instance.Transition == null) return;
         CellRect view = Find.CameraDriver.CurrentViewRect;
         view.ClipInsideMap(map);
         if (view.IsEmpty) return;

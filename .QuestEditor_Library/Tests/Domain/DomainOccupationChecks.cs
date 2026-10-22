@@ -46,6 +46,7 @@ internal static class DomainOccupationChecks
             && !same.IsFirst(new IntVec3(29, 0, 30)) && !same.IsFirst(new IntVec3(30, 0, 30)),
             "simultaneous overlapping captures use distance and preserve equidistant ownership");
         Console.WriteLine("Domain occupation checks passed: " + checks);
+        DomainClaimErosionChecks.Run();
     }
 
     private static void CheckCapture(bool reverse, bool first)

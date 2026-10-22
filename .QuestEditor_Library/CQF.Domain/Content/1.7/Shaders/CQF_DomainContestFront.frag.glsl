@@ -1,5 +1,4 @@
 #version 450
-#include "CQF_DomainInvasionCommon.glsl"
 layout(location = 0) in vec4 vColor;
 layout(location = 1) in vec2 vUv;
 layout(location = 2) in vec2 vWorld;
@@ -18,20 +17,12 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     float _EffectTime;
     vec4 _FrontState;
     vec4 _FrontShape;
-    vec4 _FrontHole;
-    vec4 _FrontWarp;
 } uMaterial;
 void main()
 {
     float t = uMaterial._FrontState.y;
     float x = vWorld.x-uMaterial._FrontState.x;
     float z = vWorld.y;
-    if (uMaterial._FrontHole.z > 0.0 && uMaterial._FrontHole.w > 0.0)
-    {
-        vec2 local = (vWorld-uMaterial._FrontHole.xy)/uMaterial._FrontHole.zw;
-        x = -domainInvasionDistance(vWorld,uMaterial._FrontHole,uMaterial._FrontWarp.x);
-        z = atan(local.y,local.x)*sqrt(uMaterial._FrontHole.z*uMaterial._FrontHole.w);
-    }
     float recoil = uMaterial._FrontState.w;
     float wave = sin(z*1.1-t*1.7+sin(z*0.43+t)*2.4)*0.38+sin(z*3.9+t*2.3)*0.13
         +recoil*sin(z*0.8-t*8.0)*0.25;

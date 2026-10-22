@@ -131,7 +131,7 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 `DomainMapTemplate` 在原始地图生成后捕获地形及除外部载体之外的 Building。`DomainLayout` 在普通进入时接管原有模板建筑，反展开时从蓝图创建独立建筑；对抗只显示完整占地都归本方的建筑。退让时通过 `DomainStructure` 的 ThingOwner 托管原建筑，夺回时恢复原对象，保留本次使用中的组件状态、损伤及品质。目标占地被人物、物品或建筑占用时等待，之后定期重试，不强行覆盖。已摧毁建筑在本次使用中不重建；返回后清理布局，下次使用从原始蓝图恢复。
 
-1.7 的归属查询包含主分界线与三处随优势生长的侵蚀孔洞。孔洞是真实领地，地形切换、完整建筑占地判定、技能和持续效果均通过 DomainAt / OwnsCell 获取结果；不能仅比较 x 与 BoundaryX。FirstFraction 表示总面积份额，BoundaryX 已按孔洞面积补偿，不再直接等于份额乘地图宽度。新增领域无需实现类型配对或专用孔洞 Shader；公共曲线地形网格适用于普通地形和自定义地形材质。
+归属查询包含主分界线、主动占领和保护区域，自动腹地孔洞已取消。地形切换、完整建筑占地判定、技能和持续效果均通过 DomainAt / OwnsCell 获取结果，不能仅比较 x 与 BoundaryX。FirstFraction 表示总面积份额，BoundaryX 按固定归属格补偿，不一定等于份额乘地图宽度。主动占领格连续位于敌方主领地 600 tick 后失守，己方主线到达或保护生效会重置暴露计时。新增领域无需实现类型配对，普通地形与自定义材质共用领地几何。
 
 默认蓝图记录 Def、Stuff、坐标、旋转、血量、阵营、品质、颜色和风格，不克隆任意组件、库存或屋顶。需要额外初始数据的特殊建筑，覆盖 `DomainWorker.CaptureStructure(Building)`，返回独立的 `DomainStructureBlueprint` 子类，在 `Create` / `ExposeData` 中处理自身数据；不要加入领域类型配对判断。运行中的建筑收起保留整个原对象，与初始蓝图捕获范围不同。收起及返回清理前先释放建筑容器中的人物/尸体；原版生成中的 Casket 使用自身 EjectContents，其他持有容器使用原版 TryDrop，失败会报错并保留状态。
 
@@ -185,7 +185,7 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 外部载体只对 `harmsHealth` 的正伤害按 `maximumAnchorDamagePerHit` 扣共享血量，并吸收该次普通建筑伤害流程，避免重复扣血。载体被 Destroy / DeSpawn 会崩塌；正常退出必须使用 `RemoveNormally()` 先解除关联，再销毁。`Collapse` 只执行一次，血量归零，移除载体，调用玩法惩罚并请求退出；本次领域崩塌后 `RestoreHealth` 不能使其复活。
 
-对抗中另一方仍活动时，RequestReturn 与 Collapse 均进入 Trapped 状态：结束入场锁定、释放特殊载具与布局容器、调用 Dissolved、撤销本方保护/载体/布局及屏幕边缘，人物和尸体保持原地图、原位置。保留施术者、参与者及来源记录并深度保存；不播放返回转场，不执行 Returned。剩余方立即接管整张地图的真实地形和建筑，即使暂停也完成接管。最后一方退出时先验证双方返程地图，完整遮盖后分别按各自记录返回，再统一回收。Trapped 实例不能成为空闲地图，也不能接纳第三方。
+对抗中另一方仍活动时，RequestReturn 与 Collapse 均先经过 PrepareReturn。1.7 基础与血海复用自身退出转场，实际绘出全屏遮盖后才进入 Trapped：结束入场锁定、释放特殊载具与布局容器、调用 Dissolved、撤销本方保护/载体/布局及屏幕边缘，人物和尸体保持原地图、原位置。保留施术者、参与者及来源记录并深度保存，不执行表示实际返回的 Returned。剩余方在遮盖下立即接管整张地图的真实地形和建筑，暂停时也完成接管；框架将同一转场直接 BindReturn 到共同战场，等待接管后的地形实际绘出，再揭幕并解除临时锁定。最后一方退出时先验证双方返程地图，完整遮盖后分别按各自记录返回，再统一回收。不可见退出仍直接处理，不创建全屏等待。Trapped 实例不能成为空闲地图，也不能接纳第三方。
 
 ## 正常返回、失败与回收
 

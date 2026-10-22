@@ -7,6 +7,7 @@ namespace QuestEditor_Library;
 public class Building_Domain : Building
 {
     public MapComponent_Domain? Domain => domainMap?.GetComponent<MapComponent_Domain>().FindDomainFor(domainCaster);
+    public DomainOpening_Fusion? OpeningFusion { get => openingFusion; internal set => openingFusion = value; }
 
     public virtual void Initialize(Map realm)
     {
@@ -24,6 +25,7 @@ public class Building_Domain : Building
 
     public DomainFusionState DrawFusion()
     {
+        if (openingFusion?.Active == true) return openingFusion.DomeStateFor(this);
         MapComponent_Domain? domain = Domain;
         float blend = domain?.Contest?.DrawSource(domain, this) ?? 0f;
         return blend > 0f ? domain!.Contest!.DomeStateFor(domain, blend) : default;
@@ -86,8 +88,10 @@ public class Building_Domain : Building
         base.ExposeData();
         Scribe_References.Look(ref domainMap, "domainMap");
         Scribe_References.Look(ref domainCaster, "domainCaster", saveDestroyedThings: true);
+        Scribe_References.Look(ref openingFusion, "openingFusion");
     }
 
     private Map? domainMap;
     private Pawn? domainCaster;
+    private DomainOpening_Fusion? openingFusion;
 }

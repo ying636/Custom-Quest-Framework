@@ -41,14 +41,6 @@ public sealed class DomainContestOverlay : IDisposable
                 contactMesh ??= new Mesh { name = "CQF_ContestContact" };
                 float left = Math.Max(0f, boundary - 1.6f), right = Math.Min(width, boundary + 1.6f);
                 geometry.RebuildUnclaimed(contactMesh, new Rect(left, 0f, right - left, height), AltitudeLayer.FloorCoverings.AltitudeFor() + 0.001f);
-                if (partition.Invasion?.Strength > 0f)
-                    for (int index = 0; index < partition.Invasion.Shapes.Count; index++)
-                    {
-                        Vector4 shape = partition.Invasion.Shapes[index];
-                        holeContacts[index] ??= new Mesh { name = "CQF_ContestHoleContact" };
-                        geometry.RebuildUnclaimed(holeContacts[index]!, new Rect(shape.x - shape.z - 0.75f, shape.y - shape.w - 0.75f,
-                            shape.z * 2f + 1.5f, shape.w * 2f + 1.5f), AltitudeLayer.FloorCoverings.AltitudeFor() + 0.001f);
-                    }
             }
             meshRevision = partition.Revision;
         }
@@ -72,27 +64,11 @@ public sealed class DomainContestOverlay : IDisposable
         DrawSurface(from, to, height, secondSurface, circle, clash, contact);
         properties.SetVector("_FrontState", new Vector4(boundary, time, pressure, contest.Recoil));
         properties.SetVector("_FrontShape", new Vector4(halfWidth, direction, target, contest.RecoilAge));
-        properties.SetVector("_FrontHole", default);
         Vector3 center = new((from + to) * 0.5f, AltitudeLayer.FloorCoverings.AltitudeFor() + 0.001f, height * 0.5f);
         if (contact == null || contact.vertexCount > 0)
             GenDraw.DrawMeshNowOrLater(contact ?? MeshPool.plane10,
                 contact == null ? Matrix4x4.TRS(center, Quaternion.identity, new Vector3(to - from, 1f, height)) : Matrix4x4.identity,
                 boundaryMaterial!, false, properties);
-        if (partition.Invasion?.Strength > 0f)
-            for (int index = 0; index < partition.Invasion.Shapes.Count; index++)
-            {
-                Vector4 shape = partition.Invasion.Shapes[index];
-                if (shape.z <= 0.01f || shape.w <= 0.01f) continue;
-                properties.SetVector("_FrontHole", shape);
-                properties.SetVector("_FrontWarp", new Vector4(partition.Invasion.Phases[index], 0f, 0f, 0f));
-                properties.SetVector("_FrontShape", new Vector4(0.7f, partition.Invasion.First ? -1f : 1f, target, contest.RecoilAge));
-                Vector3 holeCenter = new(shape.x, center.y, shape.y);
-                Mesh? holeContact = partition.HasOverrides ? holeContacts[index] : null;
-                if (holeContact == null || holeContact.vertexCount > 0)
-                    GenDraw.DrawMeshNowOrLater(holeContact ?? MeshPool.plane10,
-                        holeContact == null ? Matrix4x4.TRS(holeCenter, Quaternion.identity, new Vector3(shape.z * 2f + 1.5f, 1f, shape.w * 2f + 1.5f)) : Matrix4x4.identity,
-                        boundaryMaterial!, false, properties);
-            }
     }
 
     public void Dispose()
@@ -103,7 +79,6 @@ public sealed class DomainContestOverlay : IDisposable
         if (firstMesh != null) UnityEngine.Object.Destroy(firstMesh);
         if (secondMesh != null) UnityEngine.Object.Destroy(secondMesh);
         if (contactMesh != null) UnityEngine.Object.Destroy(contactMesh);
-        foreach (Mesh? mesh in holeContacts) if (mesh != null) UnityEngine.Object.Destroy(mesh);
     }
 
     private void DrawSurface(float from, float to, float height, DomainSurfaceVisuals? surface, Vector4 circle, Vector4 clash, Mesh? contact)
@@ -126,5 +101,4 @@ public sealed class DomainContestOverlay : IDisposable
     private DomainTerritoryGeometry? geometry;
     private int meshRevision = -1;
     private Mesh? contactMesh;
-    private readonly Mesh?[] holeContacts = new Mesh?[3];
 }

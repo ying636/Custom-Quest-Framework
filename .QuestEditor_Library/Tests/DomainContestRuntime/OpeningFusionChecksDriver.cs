@@ -62,10 +62,12 @@ public sealed class OpeningFusionChecksDriver : MonoBehaviour
             else if (stage == 1)
             {
                 if (Find.CurrentMap == source) Find.CameraDriver.SetRootPosAndSize(sourceFocus.ToVector3Shifted(), 18f);
-                if (!secondQueued && runtime.Transition?.OpeningOwner != null)
+                DomainOpening? pending = source!.listerThings.AllThings.OfType<DomainOpening>().FirstOrDefault(opening => opening.Caster == firstPawn);
+                if (!secondQueued && pending is { IsClosing: false } && pending.Progress > 0.6f)
                 {
-                    lateOpening = runtime.Transition.OpeningOwner;
-                    Check(runtime.CanBeginOpening(secondPawn!), "second caster may join an entry transition before its map switch");
+                    lateOpening = pending;
+                    Check(secondPawn!.Spawned && secondPawn.stances.stunner.StunTicksLeft == 0 && runtime.CanBeginOpening(secondPawn),
+                        "a creature inside the growing domain remains able to counter-expand before closure");
                     secondPawn!.abilities.GetAbility(secondAbility!).QueueCastingJob(secondPawn, secondPawn);
                     secondQueued = true;
                 }
@@ -131,8 +133,8 @@ public sealed class OpeningFusionChecksDriver : MonoBehaviour
                 else if (CaseName == "Cancel")
                 {
                     if (runtime.Transition != null) return;
-                    Check(cancelledPair && first.Battlefield.Challenger == null && secondPawn!.Map == source,
-                        "cancelling one opening releases the survivor to complete alone");
+                    Check(cancelledPair && first.Battlefield.Challenger == null && secondPawn!.Map == first.map,
+                        "cancelling one opening lets the survivor capture all creatures remaining inside its radius");
                     battle = first.Battlefield;
                 }
                 else
@@ -221,7 +223,7 @@ public sealed class OpeningFusionChecksDriver : MonoBehaviour
 
     private void StartOpening(Pawn pawn, DomainDef definition, AbilityDef ability)
     {
-        if (definition.surface == null) DomainOpening_Basic.Start(definition, pawn, Array.Empty<Pawn>());
+        if (definition.surface == null) DomainOpening_Basic.Start(definition, pawn);
         else pawn.abilities.GetAbility(ability).QueueCastingJob(pawn, pawn);
     }
 

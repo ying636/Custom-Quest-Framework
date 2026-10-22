@@ -22,20 +22,7 @@ public sealed class DomainTerritoryGeometry
     public void Rebuild(Mesh mesh, bool first, int width, int height, float altitude)
     {
         vertices.Clear(); triangles.Clear(); colors.Clear();
-        xs.Clear(); zs.Clear();
-        xs.Add(0f); xs.Add(width); xs.Add(Partition.BoundaryX);
-        zs.Add(0f); zs.Add(height);
-        if (Partition.Invasion?.Strength > 0f)
-            foreach (Vector4 shape in Partition.Invasion.Shapes)
-            {
-                xs.Add(Mathf.Clamp(shape.x - shape.z, 0f, width)); xs.Add(Mathf.Clamp(shape.x + shape.z, 0f, width));
-                zs.Add(Mathf.Clamp(shape.y - shape.w, 0f, height)); zs.Add(Mathf.Clamp(shape.y + shape.w, 0f, height));
-            }
-        xs.Sort(); zs.Sort();
-        for (int z = 1; z < zs.Count; z++)
-        for (int x = 1; x < xs.Count; x++)
-            if (xs[x] > xs[x - 1] && zs[z] > zs[z - 1])
-                Append(new Rect(xs[x - 1], zs[z - 1], xs[x] - xs[x - 1], zs[z] - zs[z - 1]), first, altitude, vertices, triangles, colors);
+        Append(new Rect(0f, 0f, width, height), first, altitude, vertices, triangles, colors);
         FinalizeMesh(mesh);
     }
 
@@ -80,62 +67,12 @@ public sealed class DomainTerritoryGeometry
             }
             return;
         }
-        bool curved = Partition.Invasion?.IntersectsBoundary(rect) == true;
-        if (!curved)
-        {
-            bool a = Partition.BaseSignedDistance(rect.xMin, rect.yMin) > 0f;
-            bool b = Partition.BaseSignedDistance(rect.xMin, rect.yMax) > 0f;
-            bool c = Partition.BaseSignedDistance(rect.xMax, rect.yMax) > 0f;
-            bool d = Partition.BaseSignedDistance(rect.xMax, rect.yMin) > 0f;
-            if (a == b && b == c && c == d)
-            {
-                if (a == first)
-                {
-                    clipped[0] = new Vector2(rect.xMin, rect.yMin);
-                    clipped[1] = new Vector2(rect.xMin, rect.yMax);
-                    clipped[2] = new Vector2(rect.xMax, rect.yMax);
-                    clipped[3] = new Vector2(rect.xMax, rect.yMin);
-                    AppendPolygon(4, altitude, vertices, triangles, colors);
-                }
-                return;
-            }
-        }
-        int columns = curved ? Math.Max(1, Mathf.CeilToInt(rect.width * 4f)) : 1;
-        int rows = curved ? Math.Max(1, Mathf.CeilToInt(rect.height * 4f)) : 1;
-        for (int z = 0; z < rows; z++)
-        for (int x = 0; x < columns; x++)
-        {
-            float left = rect.xMin + rect.width * x / columns;
-            float right = rect.xMin + rect.width * (x + 1) / columns;
-            float bottom = rect.yMin + rect.height * z / rows;
-            float top = rect.yMin + rect.height * (z + 1) / rows;
-            Vector2 a = new(left, bottom), b = new(left, top), c = new(right, top), d = new(right, bottom);
-            AppendTriangle(a, b, c, first, curved, altitude, vertices, triangles, colors);
-            AppendTriangle(a, c, d, first, curved, altitude, vertices, triangles, colors);
-        }
-    }
-
-    private void AppendTriangle(Vector2 a, Vector2 b, Vector2 c, bool first, bool curved, float altitude,
-        List<Vector3> vertices, List<int> triangles, List<Color32> colors)
-    {
-        triangle[0] = a; triangle[1] = b; triangle[2] = c;
-        for (int index = 0; index < 3; index++)
-        {
-            Vector2 point = triangle[index];
-            float distance = curved ? Partition.BaseSignedDistance(point.x, point.y)
-                : Partition.Reversed ? point.x - Partition.BoundaryX : Partition.BoundaryX - point.x;
-            distances[index] = first ? distance : -distance;
-        }
-        int count = 0;
-        for (int index = 0; index < 3; index++)
-        {
-            int previous = (index + 2) % 3;
-            float before = distances[previous], after = distances[index];
-            if ((before >= 0f) != (after >= 0f))
-                clipped[count++] = Vector2.Lerp(triangle[previous], triangle[index], before / (before - after));
-            if (after >= 0f) clipped[count++] = triangle[index];
-        }
-        if (count >= 3) AppendPolygon(count, altitude, vertices, triangles, colors);
+        float left = first != Partition.Reversed ? rect.xMin : Math.Max(rect.xMin, Partition.BoundaryX);
+        float right = first != Partition.Reversed ? Math.Min(rect.xMax, Partition.BoundaryX) : rect.xMax;
+        if (left >= right) return;
+        clipped[0] = new Vector2(left, rect.yMin); clipped[1] = new Vector2(left, rect.yMax);
+        clipped[2] = new Vector2(right, rect.yMax); clipped[3] = new Vector2(right, rect.yMin);
+        AppendPolygon(4, altitude, vertices, triangles, colors);
     }
 
     private void AppendPolygon(int count, float altitude, List<Vector3> vertices, List<int> triangles, List<Color32> colors)
@@ -152,11 +89,7 @@ public sealed class DomainTerritoryGeometry
         }
     }
 
-    private readonly Vector2[] triangle = new Vector2[3];
     private readonly Vector2[] clipped = new Vector2[4];
-    private readonly float[] distances = new float[3];
-    private readonly List<float> xs = new(9);
-    private readonly List<float> zs = new(8);
     private readonly List<Vector3> vertices = new();
     private readonly List<int> triangles = new();
     private readonly List<Color32> colors = new();

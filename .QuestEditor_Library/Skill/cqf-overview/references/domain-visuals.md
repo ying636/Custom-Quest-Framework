@@ -2,13 +2,19 @@
 
 CQF 可选 Domain 模块提供基础地面扩散、幕墙升起/闭合、进入与返回转场，以及独立的领域通用平面。通用平面表示领域的基础视觉特征，不能据此替换领域原有展开动画。寂屋邪祭保留自己的血海展开，血海平面和地形共用材质算法；CQF 不依赖血海程序集。
 
+领域内反展开使用全屏转场替代再次升起罩子：保留 360 tick 准备时间，闭合开始即播放新领域自身的进入特效，遮盖完成后才交接对抗领地。基础领域复用 DomainMaterialTransition，血海复用 BloodSeaDomainTransition；没有修改这两种材质算法。双方入场锁由同一转场管理，等待地形帧就绪后揭幕。原地图的地面扩散、罩子、闭合与双方接触融合流程保持原入口。
+
+自定义 DomainOpening 派生类应使用 IsCounterOpening 区分领域内外演出，以 ReadyToTransfer 判断转场准备完成，完成转移后通过 BindEntryTransition 绑定对应领域实例。领域内跳过世界绘制、人物折叠载具和 SupportsFusion；CounterOpeningValid 在宿主不再接受挑战时使当前展开失效。框架保存此模式；默认不迁移旧展开存档。
+
 ## 通用领域平面
 
 `DomainDef.surface` 引用独立的 `DomainSurfaceDef`，与 `DomainDef.visuals` 分别配置。基础领域引用 `CQF_BasicDomainSurface`，使用灰白流淌；血海引用 `RSH_BloodSeaDomainSurface`，复用 `RSH_BloodMarshTerrain` 的算法。通用平面不能代替领域罩子；单独展开沿用原有动画和材质算法，融合只增加启用时生效的交叠侵蚀分支。
 
 surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质才能参加融合或对抗。公共绘制器只实例化已配置的平面；缺失一方平面时，屏幕转场增加中性遮盖以保证切图屏障，不会在领域地图创建整图颜色面。融合资格由展开器与 Worker 的能力决定。`contestColor` 只为公共接触带提供该领域颜色。
 
-`DomainSurfaceDef.screenBorderWidth` 默认 0，可选范围 [0,0.3]，按屏幕高度控制四周宽度；`screenBorderOpacity` 默认 0.75，范围 [0,1]。基础灰白平面启用宽度 0.13。MapComponent_Domain 绘制 DomainScreenBorder，复用特征材质算法但采用独立屏幕坐标流动，中央保持透明；对抗时按当前镜头映射的实际分区裁剪。取消或崩塌后本方边缘立即释放，读档后按需重建。原有展开与返回材质不变。
+`DomainSurfaceDef.screenBorderWidth` 默认 0，可选范围 [0,0.3]，按屏幕高度控制四周宽度；`screenBorderOpacity` 默认 0.75，范围 [0,1]。基础灰白平面启用宽度 0.13。MapComponent_Domain 绘制 DomainScreenBorder，复用特征材质算法但采用独立屏幕坐标流动，中央保持透明；对抗时按当前镜头映射的实际分区裁剪。本方边缘在退出全屏遮盖后的领域解散阶段释放，读档后按需重建。原有展开与返回材质不变。
+
+对抗中可见取消与崩塌复用本方原有返回转场：PrepareReturn 等待 ReturnCovered，随后在全屏遮盖下交接真实领地，直接将同一转场 BindReturn 到共同地图。人物保持原位，不调用表示跨图返回的 Returned。揭幕检测同时接受活动领域的 LastTerrainRenderedFrame 和原版地形提交；DomainWorker_Visual 在返回转场期间也上报特殊地形帧，避免基础或血海接管后因没有原版地形层而卡住遮盖。退出期间切换观察地图仍释放该转场，无特效 Worker 保持自身默认退出行为。
 
 屏幕 Shader 使用 `_SurfaceReveal.w=2` 表示边缘模式，x 为宽高比，y 为宽度；`_SurfaceCircle.x/y` 为争夺边界世界 x 与本方方向，方向 0 表示整张屏幕边缘。常规揭幕只处理 0.5 < Reveal.w < 1.5。自定义领域若要启用屏幕边缘，须在自己的屏幕入口实现这一模式；不启用时无需增加 Shader 工作。
 
@@ -18,21 +24,25 @@ surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质
 
 平面 Shader 使用 `_SurfaceState=(时间,屏幕模式,透明度,启用)`、`_SurfaceCircle=(中心x,中心z,半径,圆形裁切)`、`_SurfaceRival=(对手中心x,中心z,半径,叠加层)`、`_SurfaceView=(原点x,原点z,宽,高)` 和 `_SurfaceReveal=(中心x,中心z,揭幕半径,启用)`。叠加层大于 1.5 时，在重叠区应用动态侵蚀遮罩，底层保留完整材质，避免双方同时透明造成孔洞。
 
+血海展开底盘使用 RSH_BloodSeaDomainGround，复用原展开顶点和片元算法，仅启用深度检测并改用队列 2900；绘制高度位于倒地人物下方，展开与外部载体各自持有并释放材质。幕墙维持原材质与队列，使展开阶段自由行动的人物仍能显示。
+
 基础世界与屏幕入口共用 `CQF_DomainSurfaceCommon.glsl`；血海地形和屏幕入口共用 `RSH_BloodMarshSurfaceCommon.glsl`，材质算法不复制两套。普通血海地形未启用 SurfaceState 时保持原地形行为。
 
 1.7 的普通 GUI 材质管线提供颜色与 UV，不保证使用自定义世界顶点 Shader。屏幕片元入口必须由 UV 重建平面坐标，不能读取世界绘制的 `vWorld`。屏幕顶点入口另保留原生 GUI Frame 的 binding 1 和矩阵偏移，供原生阶段管线使用；世界入口维持自己的视图布局。
 
-同步展开后的 `DomainFusionTransition` 调用双方通用平面叠加、侵蚀，并共用全遮盖与揭幕屏障。对抗区域使用各自的领域平面；已经通过专有地形绘制该特征的 Worker 设置 `RendersSurfaceTerrain=true`，避免再叠加一次全图材质。血海已声明该标记。1.7 的真实侵蚀孔洞复用对应地形材质，公共曲线网格裁剪双方区域；非专用地形的 surface 使用同一归属场生成带孔区域网格，无 surface 时直接展示强势方的真实地形。
+同步展开后的 `DomainFusionTransition` 调用双方通用平面叠加、侵蚀，并共用全遮盖与揭幕屏障。对抗区域使用各自的领域平面；已经通过专有地形绘制该特征的 Worker 设置 `RendersSurfaceTerrain=true`，避免再叠加一次全图材质。血海已声明该标记。自动侵蚀孔洞已取消，公共网格沿主线和实际固定格裁剪双方区域，无 surface 时直接展示对应真实地形。
 
-对抗图的 DomainContestOverlay 使用 CQF_DomainContestFront。真实主分割线两侧各 1.6 格内，已配置的双方平面以互补波动遮罩侵蚀；有专用地形材质时也保留这段局部补绘。推进方向与目标差值形成压力，扣血产生衰减的反冲与波纹。`_FrontState=(边界,时间,压力,反冲)`、`_FrontShape=(半宽,首方方向,目标比例,冲击年龄)`；`_FrontHole=(中心x,中心z,半径x,半径z)` 非零时绘制孔洞的环形接触带。surface 使用 `_SurfaceClash.w=2` 与相同波形，原地图融合仍用模式 1。公共边缘保持半透明，实际建筑和人物继续按原深度显示；规则查询由同一主线与孔洞归属场决定。新增 surface 应实现模式 2 的局部遮罩；未提供 surface 时，地形网格和公共接触带仍能显示侵入方特征。
+对抗图的 DomainContestOverlay 使用 CQF_DomainContestFront。真实主分割线两侧各 1.6 格内，已配置的双方平面以互补波动遮罩侵蚀；有专用地形材质时也保留这段局部补绘。推进方向与目标差值形成压力，扣血产生衰减的反冲与波纹。`_FrontState=(边界,时间,压力,反冲)`、`_FrontShape=(半宽,首方方向,目标比例,冲击年龄)`。surface 使用 `_SurfaceClash.w=2` 与相同波形，原地图融合仍用模式 1。公共边缘保持半透明，实际建筑和人物继续按原深度显示；规则查询由同一主线、主动占领和保护归属决定。新增 surface 应实现模式 2 的局部遮罩；未提供 surface 时，地形网格和公共接触带仍能显示双方特征。
 
-基础屏幕边缘额外接收 `_TerritoryState=(主线x,本方方向,孔洞属于本方,启用)` 和 `_TerritoryHole0/1/2=(中心x,中心z,半径x,半径z)`，按镜头映射位置裁剪真实领地。DomainSurfaceVisuals.SetTerritory 只用于边缘实例；原有 DrawScreen 方法签名保持，未使用该协议的材质不接收这些参数。原展开、融合和切图遮盖不使用此领地模式。
+基础屏幕边缘额外接收 `_TerritoryState=(主线x,本方方向,预留,启用)`，按镜头映射位置裁剪真实领地。DomainSurfaceVisuals.SetTerritory 只用于边缘实例；原有 DrawScreen 方法签名保持，未使用该协议的材质不接收这些参数。原展开、融合和切图遮盖不使用此领地模式。
 
-侵蚀孔洞使用 CQF_DomainInvasionCommon.glsl 中的确定性不规则轮廓，48 段角度采样由三阶与七阶径向波形组成，与 C# 分区面积裁剪的顶点一致。_TerritoryWarp 保存三处轮廓相位，_FrontWarp.x 为当前接触带孔洞的相位，包围尺寸仍使用原 Hole 参数。不要只扭曲边缘 Shader 而保留椭圆规则。
-
-守区通过 _TerritoryProtectionState=(地图宽,地图高,本方是否首方,启用) 与点采样的 _TerritoryProtection 纹理传给基础屏幕边缘；纹理 r 为首方标记、g 为是否受保护。纹理按分区版本更新并随边缘实例释放，普通无守区不创建纹理。地形和 surface 网格在受保护的整格使用实际所有者，不用装饰边缘来代替归属。
+固定领地通过 _TerritoryProtectionState=(地图宽,地图高,本方是否首方,启用) 与点采样的 _TerritoryProtection 纹理传给基础屏幕边缘；纹理 r 为首方标记、g 为是否存在保护或占领覆盖。纹理按分区版本更新并随边缘实例释放，无固定格时不创建纹理。地形和 surface 网格在固定整格使用实际所有者，占领失守后同步恢复主线裁剪。
 
 主动占领同样使用此整格纹理协议，g 现在表示是否有固定归属，r 为固定格的首方标记；OverrideAt 已先合成保护优先级。无保护、仅有占领时仍生成对应遮罩。公共直线与孔洞接触带也按实际固定格裁剪，保持任何领域的自定义通用平面都不会覆盖已占领地形，无需给每个领域 Shader 添加占领分支。
+
+在已有领域外部建筑周围展开时，`DomainOpening_Fusion` 直接把该建筑与新展开配对；建筑保持完整半径，新罩子按原动画生长，接触后共用平面侵蚀和罩子裁切。接触至少一秒且展开完成后播放双方特征的全屏融合转场，在全遮盖下直接进入原有领域地图并开始对抗，读取新领域模板，不先创建第二张活动地图再合并。取消新展开会释放建筑配对；旧建筑先消失则解除配对，新展开恢复自己的流程。
+
+大小领域的外部罩子分别保留自己的真实半径。DomainDef.OpeningRadius 优先读取 visuals.radius，无 visuals 时读取 openingRadius（默认 12）；血海的预览、捕获、底盘、幕墙、选区、配对距离与外部载体统一使用该值，不再固定为 12。地面与幕墙仍使用原材质，人物和内部地图尺寸不随之缩放。完全包围时，domainContactFront 平滑改为围绕小领域的闭合接触环，保留小领域内部，避免半径差使小罩子整块消失；普通相交沿用原接触场。罩子、双方通用平面与接触带共用此算法，血海维护同算法的独立 Shader include，普通未融合展开保持原效果。
 
 原地图的接触动画由 `DomainFusionVisuals` 统一绘制两种平面及公共接缝，使用 `_SurfaceClash` 控制侵蚀、接触波纹和压力偏移。`DomainOpening_Fusion` 必须使用 RealtimeOnly，不能只播放屏幕转场。两侧罩子持续绘制，通过 `DomainFusionState` 提供同一世界坐标场的互补遮罩，只侵蚀交叠区域；未配对时参数为零，原展开效果保持。对抗后两个外部建筑调用同一 DomainContest 的绘制器，保留罩子并继续侵蚀。禁止通过淡出整个罩子替代融合。
 
@@ -56,10 +66,12 @@ surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质
 示例贴图路径和 MYMOD 前缀由子 Mod 提供，不是 CQF 已有资源。只用中性预设可直接在自己的 DomainDef 中设置 `<visuals>CQF_DomainVisuals</visuals>`。普通领域用 `<workerClass>QuestEditor_Library.DomainWorker_Visual</workerClass>`，具有玩法的 Worker 可继承它，并在覆盖 BeforeReturn / Returned / Draw 时调用基类，以保留通用转场。
 
 ```csharp
-DomainOpening_Basic.Start(definition, caster, targets);
+DomainOpening_Basic.Start(definition, caster);
 ```
 
-`Start` 不自动选择敌我或半径内人物；调用方传入目标列表，框架加入施术者，筛除重复、死亡和不在原地图的人物。展开时停止寻路并暂时眩晕，取消/完成后恢复原有剩余眩晕，不清除新增的更长眩晕；展开物件支持保存/加载。此入口复用统一展开队列、地图池、跨图转移和保护机制，不新增 GameComponent 或 Harmony 补丁。
+`Start` 分为展开与闭合两阶段：默认展开 360 tick（6 游戏秒），仅约束施术者，周围生物保持在图、可以移动与反展开；闭合 120 tick（2 游戏秒），才收集半径内所有存活 Pawn 并锁定，血海此时才创建卷入载具。闭合期间继续收集新进入范围的生物；闭合前已离开者不进入名单。Progress 在展开阶段映射到 [0, foldStart]，闭合阶段映射到 [foldStart, 1]，沿用原地面、幕墙及折叠材质。涉及当前地图殖民者且未暂停时，开始展开将游戏速度降至正常。
+
+双方展开配对后等待两侧就绪才共同闭合；检测同时识别尚在能力预热中的反展开，避免先完成的一侧提前锁人。闭合名册在释放血海载具后交给统一转移入口，交叠对象只登记一次；血海仅为敌对参与者创建进攻 Lord。锁定记录由 DomainOpening 统一保存与恢复，重叠锁使用原始眩晕结束 tick 并等待其他展开锁释放，不提前清掉更长外部眩晕；取消与完成均释放临时锁。Start 保留可选 targets 调用参数，但实际捕获统一以闭合时真实范围为准，不新增 GameComponent 或 Harmony 补丁。
 
 ## 外观和时间参数
 
@@ -69,8 +81,8 @@ DomainOpening_Basic.Start(definition, caster, targets);
 | `color` / `secondaryColor` / `edgeColor` | 主色、流动次色、边缘色；默认中性灰阶，不绑定血海风格 |
 | `flowSpeed` | `(0.1,-0.2)`，纹理流动速度 |
 | `textureScale` / `distortion` / `edgeWidth` | `1` / `0.15` / `0.12`，纹理缩放、扭曲、边缘宽度 |
-| `radius` / `curtainHeight` | `12` / `4.5`，展开半径和幕墙高度，不决定目标筛选范围 |
-| `openingTicks` | `180`，展开使用游戏 tick，随暂停和游戏速度变化 |
+| `radius` / `curtainHeight` | `12` / `4.5`，展开与捕获半径、幕墙高度 |
+| `openingTicks` / `closingTicks` | `360` / `120`，分别控制展开与闭合，随暂停和游戏速度变化 |
 | `expansionEnd` | `0.55`，地面扩散完成进度 |
 | `curtainStart` / `curtainEnd` | `0.48` / `0.72`，幕墙升起区间 |
 | `foldStart` / `foldEnd` | `0.7` / `0.94`，幕墙闭合区间 |
@@ -91,7 +103,7 @@ DomainOpening_Basic.Start(definition, caster, targets);
 
 Domain 模块内提供 `CQF_TestDomainExpansion`，中文名称使用用户给定的“展开基础领域”。开发者模式打开调试动作，进入 CQF 分类的 `CQF_TestDomainExpansion`，使用原版 `ToolMapForPawns` 在地图上点选人物授予 Ability，再由人物使用能力展开；未征召也会显示能力。授予入口不缓存人物菜单、不强制选择人物，避免调试菜单持有已销毁人物引用。
 
-1.7 在新游戏或读档后由 GameComponent_MapManager 驱动 CQFDomainRuntime，为每个 preload 领域提前保留两张地图并休眠，另缓存原始地形与建筑蓝图；基础地图为 60×60。施放时唤醒复用，再播放原地图展开、幕墙和转场；基础展开只转移施术者。使用独立 CQF_TestDomainBiome（无野生动植物、禁用天空光照与阴影）和 CQF_BasicDomainTerrain，引用 `CQF_DomainVisuals`；1.7 设置 `preload=true`，1.6 保留原 Soil / PavedTile 网格和 `preload=false`。进入后再点同一能力请求返回；1.7 基础视觉通过 `PrepareReturn` 在领域内开始转场，实际绘出全屏遮盖后才允许人物与镜头返回，目的地图地形提交并经过完整帧后才揭幕。原有 Worker 默认仍调用 `BeforeReturn` 并立即返回，不改血海专有视觉。退出后的地图走统一 `Recycle → Hibernate`，再次施放走 `Acquire → Activate`，复用同一个 Map；`preload=false` 只关闭首次预生成，不关闭退出休眠。测试期间保持正常速度且不要暂停，以便展开 tick 推进。
+1.7 在新游戏或读档后由 GameComponent_MapManager 驱动 CQFDomainRuntime，为每个 preload 领域提前保留两张地图并休眠，另缓存原始地形与建筑蓝图；基础地图为 60×60。施放时唤醒复用，再播放原地图展开、幕墙和转场；基础展开同时转移范围内所有存活生物，包括动物、机械体和倒地人物。使用独立 CQF_TestDomainBiome（无野生动植物、禁用天空光照与阴影）和 CQF_BasicDomainTerrain，引用 `CQF_DomainVisuals`；1.7 设置 `preload=true`，1.6 保留原 Soil / PavedTile 网格和 `preload=false`。进入后再点同一能力请求返回；1.7 基础视觉通过 `PrepareReturn` 在领域内开始转场，实际绘出全屏遮盖后才允许人物与镜头返回，目的地图地形提交并经过完整帧后才揭幕。原有 Worker 默认仍调用 `BeforeReturn` 并立即返回，不改血海专有视觉。退出后的地图走统一 `Recycle → Hibernate`，再次施放走 `Acquire → Activate`，复用同一个 Map；`preload=false` 只关闭首次预生成，不关闭退出休眠。测试期间保持正常速度且不要暂停，以便展开 tick 推进。
 
 定义位于 `Content/<版本>/Defs/CQF_TestDomain.xml`；授予入口为 `DebugActions_TestDomain`，施放组件为 `AbilityComp_TestDomainExpansion`，地形步骤为 `GenStep_TestDomain`。测试入口仍属于可选 Domain 模块，没有请求时不加载，测试能力不自动授予人物；寂屋邪祭维持自己的原实现。
 

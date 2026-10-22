@@ -4,7 +4,9 @@
 
 主库保留唯一的 `GameComponent_MapManager` 管理通用地图休眠，通过 `ICQFMapModule` 将生命周期转发给普通对象 `CQFDomainRuntime`。领域 API 使用 `CQFDomainRuntime.Instance`，不会创建额外 GComp。主库不包含领域 Def、MapComponent 或领域补丁。
 
-CQF 4.0 的 1.7 领域对抗按当前血量分配固定地图的总面积。优势超过 70% 后，弱势方腹地会逐渐形成三处真实侵蚀孔洞，洞内地形、建筑和技能归属同步切换；孔洞计入总面积并相应调整主分界线。优势恢复均衡时闭洞，一方取消或崩塌后人物仍滞留到最后一方结束。无 surface 的纯地形建筑领域也使用同一机制，见 [领域对抗](../Skill/cqf-overview/references/domain-contest.md)。本次 1.6 运行包保持原有功能；血海专有适配由独立的寂屋邪祭仓库提供。
+领域对抗按当前血量分配固定地图的总面积，通过主分界线推进争夺；已取消自动在腹地生成侵蚀孔洞。主动占领地持续暴露在敌方主领地内 10 游戏秒会失守，保护可阻止侵蚀。一方取消或崩塌后人物仍滞留到最后一方结束。无 surface 的纯地形建筑领域也使用同一机制，见 [领域对抗](../Skill/cqf-overview/references/domain-contest.md)。本次 1.6 运行包保持原有功能；血海专有适配由独立的寂屋邪祭仓库提供。
+
+1.7 领域内反展开保留准备阶段，闭合时播放新领域自己的全屏特效；完全遮盖后才建立对抗，确认双方地形绘制后揭幕，不在已有领域里再次升起地面罩子。原地图展开及外部载体周围的融合演出沿用原流程。实际对抗复用当前地图和预生成模板，人物保持原位。
 
 CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</li>`；子 Mod 使用 `<li RequiresCQFModule="Domain">1.7</li>` 声明需求。这两个属性由 CQF 处理，保留原版的版本和 IfModActive 条件。没有启用子 Mod 请求时不加载领域 DLL。
 
@@ -81,13 +83,13 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 技能可选择对抗中的任何合法格子。框架仅提供 OwnsCell / DomainAt，不统一修改技能强度。血海通过自身 DefModExtension_BloodSeaDomainRules.enemyTerritorySkillFactor 配置敌方领地强度，当前为 0.7：潮汐按命中位置削弱伤害及击退，触手按目标位置缩短控制时间并按每次伤害位置削弱伤害，穿行按目的地增加耗时。
 
-领域技能使用 Domain.ProtectTerritory(cells, durationTicks, source) 保护当前己方格子，返回可主动解除的编号；可绑定来源建筑。保护优先于主线和孔洞，计入己方面积，其他区域补偿；保护面积超过血量配额时成为本方最小面积。到期、来源被毁或本方领域结束时失效。它是真实格子保护，地形、建筑、归属与基础屏幕边缘使用相同结果。
+领域技能使用 Domain.ProtectTerritory(cells, durationTicks, source) 保护当前己方格子，返回可主动解除的编号；可绑定来源建筑。保护优先于主线和占领，计入己方面积，其他区域补偿；保护面积超过血量配额时成为本方最小面积。到期、来源被毁或本方领域结束时失效。它是真实格子保护，地形、建筑、归属与基础屏幕边缘使用相同结果。
 
 运行中生成的建筑可调用 Domain.RegisterStructure(building, parkOnTerritoryLoss) 登记，必须已生成在本方完整占地内。默认失地收起原对象，设为 false 可留在失地处；效果是否停用或允许夺取由建筑自身规则处理。两种建筑都随本次领域保存和清理。回血、特殊建筑和守区技能的具体消耗、冷却、名称与表现由子 Mod 提供，框架不自动授予新技能。
 
 对抗双方的领域主在敌方实际领地连续停留 180 游戏 tick（3 秒）后，以当前位置为中心夺取原版半径 2 格范围，并在确实夺到敌方格子时恢复 300 领域血量，上限仍为最大血量。在敌区移动不打断计时，回到己方领地、倒地、死亡、离图、入场锁定或对抗结束会清零；暂停及同 tick 的重复分区刷新不推进计时。转化后脚下成为己方领地，原地不重复回血。
 
-占领区保存到对方重新占领或本方领域结束，计入己方总面积并补偿主线；超过血量配额时形成最小据点面积。保护区优先，完全被保护的占领尝试不回血。双方同时占领的重叠格归距离更近的一方，等距保留原归属。计时和占领格均保存；地形、建筑、技能、主场减伤及屏幕边缘读取统一实际归属。公共接触带在占领格和保护格内裁掉，避免装饰材质覆盖已确定的领地。
+占领区计入己方总面积并补偿主线；超过血量配额时形成最小据点面积。每格持续位于敌方主分界一侧时累计暴露，默认 600 tick 后失守，由 DomainDef.contestClaimErosionTicks 配置；己方主线推进到该格或保护生效会重置计时。入场锁和规则暂停不累计暴露，失守本身不回血，暴露进度随占领格保存。保护区优先，完全被保护的占领尝试不回血。双方同时占领的重叠格归距离更近的一方，等距保留原归属。地形、建筑、技能、主场减伤及屏幕边缘读取统一实际归属。公共接触带在占领格和保护格内裁掉，避免装饰材质覆盖已确定的领地。
 
 `Hediff_DomainProtection` 为施术者安装共享伤害吸收组件，优先消耗领域血量，超出部分继续作用于施术者。它只保护关联领域的施术者，退出时由框架移除。外部载体直接消耗同一份领域血量，使用定义中的单次受伤上限，避免再经普通建筑受伤流程重复扣血。
 
@@ -105,7 +107,7 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 ## 基础展开与换皮
 
-`DomainDef.visuals` 可引用 `DomainVisualDef`，中性预设为 `CQF_DomainVisuals`。配置贴图、噪声、颜色、流动、扭曲、半径和时间即可换皮。普通领域使用 `DomainWorker_Visual`，通过 `DomainOpening_Basic.Start(definition, caster, targets)` 展开；目标筛选由调用方负责。基础 Shader 保证切图期间全遮盖，1.7 的通用 Worker 验证原版地形实际提交后揭幕。
+`DomainDef.visuals` 可引用 `DomainVisualDef`，中性预设为 `CQF_DomainVisuals`。配置贴图、噪声、颜色、流动、扭曲、半径和时间即可换皮。普通领域使用 `DomainWorker_Visual`，通过 `DomainOpening_Basic.Start(definition, caster)` 展开。展开阶段默认 6 游戏秒，周围生物可以移动和反展开；闭合阶段默认 2 游戏秒，此时锁定并捕获真实范围内的全部存活生物，持续补收闭合期间新进入者。openingTicks / closingTicks 分别配置两个阶段，原材质进度按 foldStart 分段映射。基础 Shader 保证切图期间全遮盖，1.7 的通用 Worker 验证原版地形实际提交后揭幕。
 
 `DomainOpeningVisuals` 和 `DomainMaterialTransition` 支持传入自定义 Material 模板，框架复制并释放自己的实例。通用资源在 `Content/1.6` 和 `Content/1.7`，构建时与模块 DLL 一起复制到输出；发布必须同时部署 Defs 和 Shaders/AssetBundles。无 Domain 请求时不加载这些资源，不新增补丁或 GComp。
 

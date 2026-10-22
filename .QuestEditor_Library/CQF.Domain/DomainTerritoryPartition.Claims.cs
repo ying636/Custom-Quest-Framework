@@ -25,12 +25,14 @@ public sealed partial class DomainTerritoryPartition
             bool previous = IsFirst(cell);
             if (owner)
             {
+                if (!firstClaims.Contains(cell)) claimExposure.Remove(cell);
                 changed |= secondClaims.Remove(cell);
                 changed |= firstClaims.Add(cell);
                 if (!previous) firstGained++;
             }
             else
             {
+                if (!secondClaims.Contains(cell)) claimExposure.Remove(cell);
                 changed |= firstClaims.Remove(cell);
                 changed |= secondClaims.Add(cell);
                 if (previous) secondGained++;
@@ -43,9 +45,46 @@ public sealed partial class DomainTerritoryPartition
     public void PruneClaims(bool firstActive, bool secondActive)
     {
         bool changed = false;
-        if (!firstActive && firstClaims.Count > 0) { firstClaims.Clear(); changed = true; }
-        if (!secondActive && secondClaims.Count > 0) { secondClaims.Clear(); changed = true; }
+        if (!firstActive && firstClaims.Count > 0)
+        {
+            foreach (IntVec3 cell in firstClaims) claimExposure.Remove(cell);
+            firstClaims.Clear(); changed = true;
+        }
+        if (!secondActive && secondClaims.Count > 0)
+        {
+            foreach (IntVec3 cell in secondClaims) claimExposure.Remove(cell);
+            secondClaims.Clear(); changed = true;
+        }
         if (changed) RebuildOverrides();
+    }
+
+    public void ErodeClaims(int tick, bool eligible, int firstDuration, int secondDuration)
+    {
+        if (firstDuration <= 0 || secondDuration <= 0) throw new ArgumentOutOfRangeException(nameof(firstDuration));
+        if (lastErosionTick == tick) return;
+        lastErosionTick = tick;
+        if (!eligible) return;
+        bool changed = ErodeClaims(firstClaims, true, firstDuration);
+        changed |= ErodeClaims(secondClaims, false, secondDuration);
+        if (changed) RebuildOverrides();
+    }
+
+    private bool ErodeClaims(HashSet<IntVec3> claims, bool first, int duration)
+    {
+        captureCells.Clear();
+        foreach (IntVec3 cell in claims)
+        {
+            if (ProtectionAt(cell.x, cell.z) != 0 || (BaseSignedDistance(cell.x + 0.5f, cell.z + 0.5f) > 0f) == first)
+            {
+                claimExposure.Remove(cell);
+                continue;
+            }
+            int exposure = claimExposure.TryGetValue(cell, out int elapsed) ? elapsed + 1 : 1;
+            if (exposure < duration) claimExposure[cell] = exposure;
+            else captureCells.Add(cell);
+        }
+        foreach (IntVec3 cell in captureCells) { claims.Remove(cell); claimExposure.Remove(cell); }
+        return captureCells.Count > 0;
     }
 
     private void AddCaptureCells(IntVec3? center)
@@ -71,5 +110,7 @@ public sealed partial class DomainTerritoryPartition
 
     private HashSet<IntVec3> firstClaims = new();
     private HashSet<IntVec3> secondClaims = new();
+    private Dictionary<IntVec3, int> claimExposure = new();
+    private int lastErosionTick = -1;
     private readonly List<IntVec3> captureCells = new(26);
 }

@@ -22,7 +22,7 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
         }
         MapComponent_Domain domain = pawn.Map.GetComponent<MapComponent_Domain>();
         MapComponent_Domain? ownDomain = domain.FindDomainFor(pawn);
-        if (!CQFDomainRuntime.Instance.CanBeginOpening(pawn) || domain.HasActiveDomain
+        if (!CQFDomainRuntime.Instance.CanBeginOpening(pawn, DefDatabase<DomainDef>.GetNamed("CQF_TestDomain").OpeningRadius) || domain.HasActiveDomain
             && (ownDomain?.Active == true ? ownDomain.Definition.defName != "CQF_TestDomain" || !ownDomain.Ready : !domain.CanAcceptChallenger)
             || pawn.Map.listerThings.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpening"))
                 .OfType<DomainOpening_Basic>().Any(opening => opening.Active && opening.Caster == pawn))
@@ -54,9 +54,9 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
         }
         DomainDef definition = DefDatabase<DomainDef>.GetNamed("CQF_TestDomain");
         CQFDomainRuntime runtime = CQFDomainRuntime.Instance;
-        if (runtime.HasAvailable(definition))
+        if (pawn.Map.GetComponent<MapComponent_Domain>().HasActiveDomain ? runtime.HasTerrainTemplate(definition) : runtime.HasAvailable(definition))
         {
-            DomainOpening_Basic.Start(definition, pawn, Array.Empty<Pawn>());
+            DomainOpening_Basic.Start(definition, pawn);
             return;
         }
         Game game = Current.Game;
@@ -65,7 +65,7 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
             if (Current.Game != game || !pawn.Spawned || pawn.Dead || pawn.Downed) return;
             Map realm = runtime.Acquire(definition, pawn);
             game.GetComponent<GameComponent_MapManager>().Hibernate(realm);
-            DomainOpening_Basic.Start(definition, pawn, Array.Empty<Pawn>());
+            DomainOpening_Basic.Start(definition, pawn);
         }, "GeneratingMap", false, null);
     }
 }

@@ -8,13 +8,21 @@ public sealed class DomainOpening_Fusion : DomainOpening
 {
     public DomainOpening First => first ?? throw new InvalidOperationException("[CQF] Fused opening is missing its first domain.");
     public DomainOpening Second => second ?? throw new InvalidOperationException("[CQF] Fused opening is missing its second domain.");
-    public override DomainDef Definition => First.Definition;
-    public override Pawn? Caster => first?.Caster;
-    public override bool Active => Spawned && first?.Active == true && second?.Active == true && first.Map == Map && second.Map == Map;
-    public override float Progress => Mathf.Min(First.Progress, Second.Progress);
+    public Building_Domain? ExistingAnchor => anchor;
+    public DomainDef FirstDefinition => anchor != null ? anchor.Domain!.Definition : First.Definition;
+    public IntVec3 FirstPosition => anchor != null ? anchor.Position : First.Position;
+    public float FirstRadius => anchor != null ? FirstDefinition.OpeningRadius : GrowingRadius(First);
+    public float SecondRadius => GrowingRadius(Second);
+    public override DomainDef Definition => FirstDefinition;
+    public override Pawn? Caster => anchor != null ? second?.Caster : first?.Caster;
+    public override bool Active => Spawned && second?.Active == true && second.Map == Map
+        && (anchor != null ? anchor.Spawned && anchor.Map == Map && anchor.Domain?.CanAcceptChallenger == true
+            : first?.Active == true && first.Map == Map);
+    public override float Progress => anchor != null ? Second.Progress : Mathf.Min(First.Progress, Second.Progress);
     public float ContactAge => contactTick < 0 ? 0f : Math.Max(0, GenTicks.TicksGame - contactTick) / 60f;
     public float VisualBlend => Active && !visualError ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(ContactAge / 0.4f)) : 0f;
-    public bool Prepared => CQFDomainRuntime.Instance.HasAvailable(First.Definition) && CQFDomainRuntime.Instance.HasTerrainTemplate(Second.Definition);
+    public bool Prepared => (anchor != null || CQFDomainRuntime.Instance.HasAvailable(FirstDefinition))
+        && CQFDomainRuntime.Instance.HasTerrainTemplate(Second.Definition);
 
     public static DomainOpening_Fusion Create(DomainOpening first, DomainOpening second)
     {
@@ -36,9 +44,32 @@ public sealed class DomainOpening_Fusion : DomainOpening
     public DomainFusionState DomeStateFor(DomainOpening opening)
     {
         if (!Active || VisualBlend <= 0f) return default;
-        DomainOpening rival = opening == First ? Second : First;
-        return new DomainFusionState(opening.Position.ToVector3Shifted(), GrowingRadius(opening), rival.Position.ToVector3Shifted(), GrowingRadius(rival),
+        bool isSecond = opening == Second;
+        return new DomainFusionState(opening.Position.ToVector3Shifted(), GrowingRadius(opening),
+            (isSecond ? FirstPosition : Second.Position).ToVector3Shifted(), isSecond ? FirstRadius : SecondRadius,
             opening == Second, GenTicks.TicksGame / 60f + 6f, VisualBlend, 0f);
+    }
+
+    public DomainFusionState DomeStateFor(Building_Domain existing)
+        => existing != anchor || !Active || VisualBlend <= 0f ? default
+            : new DomainFusionState(FirstPosition.ToVector3Shifted(), FirstRadius, Second.Position.ToVector3Shifted(), SecondRadius,
+                false, GenTicks.TicksGame / 60f + 6f, VisualBlend, 0f);
+
+    public static DomainOpening_Fusion Create(Building_Domain anchor, DomainOpening opening)
+    {
+        if (anchor.OpeningFusion != null || anchor.Domain?.CanAcceptChallenger != true)
+            throw new InvalidOperationException("[CQF] Existing domain is not available for an opening challenge.");
+        DomainOpening_Fusion fusion = (DomainOpening_Fusion)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpeningFusion"));
+        fusion.anchor = anchor;
+        fusion.second = opening;
+        anchor.OpeningFusion = opening.Fusion = fusion;
+        try { return (DomainOpening_Fusion)GenSpawn.Spawn(fusion, opening.Position, opening.Map); }
+        catch
+        {
+            anchor.OpeningFusion = opening.Fusion = null;
+            opening.ResumeAfterFusion();
+            throw;
+        }
     }
 
     public override void CompleteOpening()
@@ -87,14 +118,16 @@ public sealed class DomainOpening_Fusion : DomainOpening
         base.ExposeData();
         Scribe_References.Look(ref first, "first");
         Scribe_References.Look(ref second, "second");
+        Scribe_References.Look(ref anchor, "anchor");
         Scribe_Values.Look(ref contactTick, "contactTick", -1);
-        if (Scribe.mode == LoadSaveMode.PostLoadInit && (first == null || second == null || first == second))
+        if (Scribe.mode == LoadSaveMode.PostLoadInit && (first == null && anchor == null || second == null || first == second))
             throw new InvalidOperationException("[CQF] Invalid saved fused opening pair.");
     }
 
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
     {
         ReleaseVisuals();
+        if (anchor?.OpeningFusion == this) anchor.OpeningFusion = null;
         foreach (DomainOpening? opening in new[] { first, second })
             if (opening?.Fusion == this)
             {
@@ -116,8 +149,15 @@ public sealed class DomainOpening_Fusion : DomainOpening
     {
         base.Tick();
         if (!Active) { Destroy(); return; }
-        float radius = GrowingRadius(First) + GrowingRadius(Second);
-        if (contactTick < 0 && First.Position.DistanceToSquared(Second.Position) <= radius * radius) contactTick = GenTicks.TicksGame;
+        if (Second.ReadyToClose && (anchor != null || First.ReadyToClose)
+            && !CQFDomainRuntime.Instance.HasPendingCounter(Second)
+            && (anchor != null || !CQFDomainRuntime.Instance.HasPendingCounter(First)))
+        {
+            if (anchor == null) First.BeginClosing();
+            Second.BeginClosing();
+        }
+        float radius = FirstRadius + SecondRadius;
+        if (contactTick < 0 && FirstPosition.DistanceToSquared(Second.Position) <= radius * radius) contactTick = GenTicks.TicksGame;
         if (Progress < 1f || ContactAge < 1f || transferQueued) return;
         transferQueued = true;
         CQFDomainRuntime.Instance.QueueOpening(this);
@@ -129,8 +169,8 @@ public sealed class DomainOpening_Fusion : DomainOpening
         if (!Active || VisualBlend <= 0f || visualError) return;
         try
         {
-            visuals ??= new DomainFusionVisuals(First.Definition, Second.Definition);
-            visuals.Draw(First.Position.ToVector3Shifted(), GrowingRadius(First), Second.Position.ToVector3Shifted(), GrowingRadius(Second),
+            visuals ??= new DomainFusionVisuals(FirstDefinition, Second.Definition);
+            visuals.Draw(FirstPosition.ToVector3Shifted(), FirstRadius, Second.Position.ToVector3Shifted(), SecondRadius,
                 GenTicks.TicksGame / 60f, ContactAge, VisualBlend, 0.5f);
         }
         catch (Exception error)
@@ -148,6 +188,7 @@ public sealed class DomainOpening_Fusion : DomainOpening
 
     private DomainOpening? first;
     private DomainOpening? second;
+    private Building_Domain? anchor;
     private bool transferQueued;
     private int contactTick = -1;
 #if RIMWORLD_1_7

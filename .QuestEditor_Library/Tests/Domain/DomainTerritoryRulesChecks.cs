@@ -14,7 +14,6 @@ internal static class DomainTerritoryRulesChecks
         foreach (bool first in new[] { false, true })
         {
             DomainTerritoryPartition partition = new(60, 60, 0.5f, reversed);
-            partition.EnableInvasions(517);
             List<IntVec3> cells = new();
             for (int z = 10; z < 50; z++)
             for (int x = 20; x < 40; x++)
@@ -23,7 +22,7 @@ internal static class DomainTerritoryRulesChecks
             Check(partition.Protections.Single().Cells.Count == cells.Count, "duplicate cells are registered once");
             int secondId = partition.Protect(first, cells.Take(20), 900);
             partition.Advance(first ? 1000f : 9000f, first ? 9000f : 1000f, 60f);
-            Check(cells.All(cell => partition.IsFirst(cell) == first), "protected territory withstands the frontier and actual invasion holes");
+            Check(cells.All(cell => partition.IsFirst(cell) == first), "protected territory withstands the advancing frontier");
             Check(Math.Abs((first ? partition.FirstCells : partition.SecondCells) - cells.Count) <= 60,
                 "protected area forms a minimum allocation when larger than the health share");
             CheckGeometry(partition);
@@ -47,24 +46,14 @@ internal static class DomainTerritoryRulesChecks
         DomainTerritoryPartition invalid = new(60, 60, 0.5f, false);
         Throws(() => invalid.Protect(true, new[] { new IntVec3(40, 0, 20) }, 100), "opposing territory cannot be protected");
         Throws(() => invalid.Protect(true, Array.Empty<IntVec3>(), 100), "empty protection is rejected");
-        DomainTerritoryPartition islands = new(60, 60, 0.8f, false);
-        islands.EnableInvasions(72);
-        for (int tick = 0; tick < 180; tick++) islands.Advance(8000f, 2000f, 0.5f);
-        Vector4 shape = islands.Invasion!.Shapes[1];
-        List<float> radii = new();
-        for (int angle = 0; angle < 48; angle++)
+        foreach (bool reversed in new[] { false, true })
         {
-            float a = angle * Mathf.PI * 2f / 48f;
-            float low = 0f, high = 1.1f;
-            for (int pass = 0; pass < 18; pass++)
-            {
-                float radius = (low + high) * 0.5f;
-                if (islands.Invasion.SignedDistance(shape.x + Mathf.Cos(a) * radius * shape.z,
-                    shape.y + Mathf.Sin(a) * radius * shape.w) > 0f) low = radius; else high = radius;
-            }
-            radii.Add(low);
+            DomainTerritoryPartition partition = new(60, 60, 0.5f, reversed);
+            partition.Advance(9900f, 100f, 60f);
+            Check(!partition.HasOverrides && Enumerable.Range(0, 60).All(x =>
+                Enumerable.Range(0, 60).Select(z => partition.IsFirst(new IntVec3(x, 0, z))).Distinct().Count() == 1),
+                "extreme health differences move the main frontier without generating automatic holes");
         }
-        Check(radii.Max() - radii.Min() > 0.25f, "invasion contour has substantial irregular lobes rather than an ellipse");
         Console.WriteLine("Domain territory rule checks passed: " + checks);
     }
 
@@ -83,7 +72,7 @@ internal static class DomainTerritoryRulesChecks
             }
             vertices.Clear(); triangles.Clear(); colors.Clear();
         }
-        Check(Math.Abs(sum - 3600d) < 0.01d, "protected cells and irregular meshes cover the whole battlefield exactly once");
+        Check(Math.Abs(sum - 3600d) < 0.01d, "protected cells and frontier meshes cover the whole battlefield exactly once");
     }
 
     private static void CheckPersistence(DomainTerritoryPartition original, List<IntVec3> cells, bool first)

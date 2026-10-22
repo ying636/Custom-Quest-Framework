@@ -18,6 +18,9 @@ public sealed partial class DomainTerritoryPartition : IExposable
         this.reverse = reverse;
         this.firstFraction = firstFraction;
         boundary = width * (reverse ? 1f - firstFraction : firstFraction);
+        owners = new bool[CellCount];
+        RebuildOwners();
+        changedCells.Clear();
     }
 
     public int CellCount => width * height;
@@ -28,7 +31,6 @@ public sealed partial class DomainTerritoryPartition : IExposable
     public float FirstFraction => firstFraction;
     public float BoundaryX => boundary;
     public bool Reversed => reverse;
-    public DomainInvasion? Invasion => invasion;
     public int Revision => revision;
     public IReadOnlyList<IntVec3> ChangedCells => changedCells;
     public IReadOnlyList<Rect> DirtyBounds => dirtyBounds;
@@ -38,14 +40,6 @@ public sealed partial class DomainTerritoryPartition : IExposable
     public int Width => width;
     public int Height => height;
 
-    public void EnableInvasions(int seed)
-    {
-        invasion = new DomainInvasion(seed);
-        owners = new bool[CellCount];
-        RebuildOwners();
-        changedCells.Clear();
-    }
-
     public float SignedDistance(float x, float z)
     {
         int owner = OverrideAt(Mathf.FloorToInt(x), Mathf.FloorToInt(z));
@@ -53,21 +47,12 @@ public sealed partial class DomainTerritoryPartition : IExposable
     }
 
     public float BaseSignedDistance(float x, float z)
-    {
-        float result = reverse ? x - boundary : boundary - x;
-        if (invasion?.Strength > 0f)
-        {
-            float hole = invasion.SignedDistance(x, z);
-            result = invasion.First ? Math.Max(result, hole) : Math.Min(result, -hole);
-        }
-        return result;
-    }
+        => reverse ? x - boundary : boundary - x;
 
     public bool IsBoundaryCell(IntVec3 cell)
         => Math.Abs(cell.x - (int)Math.Floor(boundary)) <= 1
             || HasOverrides && (OverrideAt(cell.x, cell.z) != 0 || OverrideAt(cell.x - 1, cell.z) != 0
-                || OverrideAt(cell.x + 1, cell.z) != 0 || OverrideAt(cell.x, cell.z - 1) != 0 || OverrideAt(cell.x, cell.z + 1) != 0)
-            || invasion?.IntersectsBoundary(new Rect(cell.x, cell.z, 1f, 1f)) == true;
+                || OverrideAt(cell.x + 1, cell.z) != 0 || OverrideAt(cell.x, cell.z - 1) != 0 || OverrideAt(cell.x, cell.z + 1) != 0);
 
     public int ProtectionAt(int x, int z) => protectedOwners != null && x >= 0 && z >= 0 && x < width && z < height
         ? protectedOwners[z * width + x] : 0;
@@ -134,12 +119,6 @@ public sealed partial class DomainTerritoryPartition : IExposable
         dirtyBounds.Clear();
         bool changed = previous != firstFraction || protectionDirty;
         protectionDirty = false;
-        if (invasion != null)
-        {
-            AddInvasionBounds();
-            changed |= invasion.Advance(firstFraction, step, width, height, reverse, firstHealth == 0f || secondHealth == 0f);
-            AddInvasionBounds();
-        }
         if (!changed) { dirtyBounds.Clear(); return old; }
         boundary = SolveBoundary();
         if (owners != null) RebuildOwners();
@@ -154,25 +133,29 @@ public sealed partial class DomainTerritoryPartition : IExposable
         Scribe_Values.Look(ref height, "height");
         Scribe_Values.Look(ref firstFraction, "firstFraction", -1f);
         Scribe_Values.Look(ref reverse, "reverse");
-        Scribe_Deep.Look(ref invasion, "invasion");
         Scribe_Collections.Look(ref protections, "protections", LookMode.Deep);
         Scribe_Values.Look(ref nextProtectionId, "nextProtectionId");
         Scribe_Collections.Look(ref firstClaims, "firstClaims", LookMode.Value);
         Scribe_Collections.Look(ref secondClaims, "secondClaims", LookMode.Value);
+        Scribe_Collections.Look(ref claimExposure, "claimExposure", LookMode.Value, LookMode.Value);
+        Scribe_Values.Look(ref lastErosionTick, "lastErosionTick", -1);
         if (Scribe.mode == LoadSaveMode.PostLoadInit
             && (width <= 0 || height <= 0 || (long)width * height > int.MaxValue
                 || float.IsNaN(firstFraction) || float.IsInfinity(firstFraction) || firstFraction < 0f || firstFraction > 1f))
             throw new InvalidOperationException("[CQF] Invalid saved domain territory partition.");
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
-            invasion?.Rebuild(firstFraction, width, height, reverse);
             protections ??= new();
             firstClaims ??= new();
             secondClaims ??= new();
+            claimExposure ??= new();
             if (firstClaims.Overlaps(secondClaims)) throw new InvalidOperationException("[CQF] Saved territory claims overlap.");
+            if (lastErosionTick < -1 || claimExposure.Any(entry => entry.Value <= 0
+                || !firstClaims.Contains(entry.Key) && !secondClaims.Contains(entry.Key)))
+                throw new InvalidOperationException("[CQF] Invalid saved territory claim exposure.");
             RebuildProtections();
             boundary = SolveBoundary();
-            if (invasion != null || HasOverrides) { owners = new bool[CellCount]; RebuildOwners(); changedCells.Clear(); }
+            if (HasOverrides) { owners = new bool[CellCount]; RebuildOwners(); changedCells.Clear(); }
             protectionDirty = false;
             revision++;
         }
@@ -180,19 +163,18 @@ public sealed partial class DomainTerritoryPartition : IExposable
 
     private float SolveBoundary()
     {
-        if (invasion?.Strength > 0f || HasOverrides)
+        if (HasOverrides)
         {
             double desired = Math.Max(fixedFirstCells, Math.Min(CellCount - fixedSecondCells, firstFraction * (double)CellCount));
             float low = 0f, high = width;
             for (int pass = 0; pass < 23; pass++)
             {
                 float middle = (low + high) * 0.5f;
-                double area = (reverse ? width - middle : middle) * (double)height + (invasion?.AreaOutside(middle, !reverse) ?? 0d);
+                double area = (reverse ? width - middle : middle) * (double)height;
                 foreach (IntVec3 cell in fixedCells)
                 {
                     float left = Mathf.Clamp(middle - cell.x, 0f, 1f);
-                    double baseArea = (reverse ? 1f - left : left)
-                        + (invasion?.AreaOutside(middle, !reverse, new Rect(cell.x, cell.z, 1f, 1f)) ?? 0d);
+                    double baseArea = reverse ? 1f - left : left;
                     area += (OverrideAt(cell.x, cell.z) == 1 ? 1d : 0d) - baseArea;
                 }
                 if ((area < desired) != reverse) low = middle;
@@ -214,16 +196,6 @@ public sealed partial class DomainTerritoryPartition : IExposable
             int index = z * width + x;
             if (owner != owners![index]) { owners[index] = owner; changedCells.Add(cell); }
             if (owner) firstCells++;
-        }
-    }
-
-    private void AddInvasionBounds()
-    {
-        for (int index = 0; index < invasion!.Shapes.Count; index++)
-        {
-            Vector4 shape = invasion.Shapes[index];
-            if (shape.z > 0f && shape.w > 0f)
-                dirtyBounds.Add(new Rect(shape.x - shape.z - 1f, shape.y - shape.w - 1f, shape.z * 2f + 2f, shape.w * 2f + 2f));
         }
     }
 
@@ -273,7 +245,6 @@ public sealed partial class DomainTerritoryPartition : IExposable
     private float firstFraction;
     private bool reverse;
     private float boundary;
-    private DomainInvasion? invasion;
     private bool[]? owners;
     private int firstCells;
     private int revision;

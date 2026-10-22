@@ -12,7 +12,7 @@ public partial class MapComponent_Domain
     private Map? ResolveReturnMap() => sourceMap != null && !sourceMap.Disposed && Find.Maps.Contains(sourceMap) ? sourceMap
         : Find.Maps.FirstOrDefault(candidate => candidate != map && candidate.IsPlayerHome);
 
-    private void HoldInBattlefield()
+    private void HoldInBattlefield(bool visible)
     {
         DomainWorker endedWorker = worker ?? throw new InvalidOperationException("[CQF] Dissolving domain has no worker.");
         EndArrivalTransition();
@@ -35,6 +35,9 @@ public partial class MapComponent_Domain
         endedWorker.TerritoryChanged();
         MapComponent_Domain survivor = ReferenceEquals(this, Battlefield) ? Battlefield.Challenger! : Battlefield;
         survivor.Worker?.TerritoryChanged();
+        if (visible && CQFDomainRuntime.Instance.Transition is { IsReturning: true } transition
+            && (transition.ReturningDomain == null || ReferenceEquals(transition.ReturningDomain, this)) && !transition.Finished)
+            transition.BindReturn(map, caster?.PositionHeld.IsValid == true ? caster.PositionHeld : map.Center, map.mapPawns.AllPawnsSpawned);
         Log.Message("[CQF] Domain " + Definition.defName + " dissolved; occupants remain inside " + survivor.Definition.defName + ".");
     }
 

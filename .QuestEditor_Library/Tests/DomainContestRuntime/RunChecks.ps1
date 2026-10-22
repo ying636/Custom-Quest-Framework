@@ -1,8 +1,8 @@
-param([int]$TimeoutSeconds = 180, [switch]$LoadCheck, [switch]$BloodSea, [switch]$Fusion, [switch]$Layouts, [switch]$Startup, [switch]$SkipPreload, [switch]$Trapping, [switch]$UseDevMods, [switch]$DetailedStartup, [switch]$AssetCheck, [switch]$Invasion, [switch]$BattleRules, [switch]$Occupation, [switch]$ReviewFixes, [int]$ProcessorCount = 1, [string]$GameDirectory = 'D:\RimWorld-Dev', [string]$BuildOutputDirectory)
+param([int]$TimeoutSeconds = 180, [switch]$LoadCheck, [switch]$BloodSea, [switch]$Fusion, [switch]$Layouts, [switch]$Startup, [switch]$SkipPreload, [switch]$Trapping, [switch]$UseDevMods, [switch]$DetailedStartup, [switch]$AssetCheck, [switch]$BattleRules, [switch]$Occupation, [switch]$ReviewFixes, [switch]$Entry, [switch]$CounterOpening, [switch]$Muted, [int]$ProcessorCount = 1, [string]$GameDirectory = 'D:\RimWorld-Dev', [string]$BuildOutputDirectory)
 
 $ErrorActionPreference = 'Stop'
-if ($Invasion) { $BloodSea = $true; $Layouts = $true }
-if ($BattleRules -or $Occupation -or $ReviewFixes) { $BloodSea = $true }
+if ($Trapping) { $LoadCheck = $true }
+if ($BattleRules -or $Occupation -or $ReviewFixes -or $Entry -or $CounterOpening) { $BloodSea = $true }
 $gameDirectory = [IO.Path]::GetFullPath($GameDirectory)
 $modsDirectory = [IO.Path]::GetFullPath((Join-Path $gameDirectory 'Mods'))
 $testModDirectory = [IO.Path]::GetFullPath((Join-Path $modsDirectory 'CQF_ContestChecks'))
@@ -66,6 +66,19 @@ try {
         $prefs.Save($prefsPath)
     }
     Write-Output "Run directory: $runDirectory"
+    $prefsPath = Join-Path $runDirectory 'Config\Prefs.xml'
+    $prefs = if (Test-Path -LiteralPath $prefsPath) { [xml](Get-Content -LiteralPath $prefsPath -Encoding UTF8 -Raw) } else { [xml]'<PrefsData />' }
+    $background = $prefs.SelectSingleNode('/PrefsData/runInBackground')
+    if (!$background) { $background = $prefs.CreateElement('runInBackground'); [void]$prefs.DocumentElement.AppendChild($background) }
+    $background.InnerText = 'True'
+    if ($Muted) {
+        foreach ($setting in @('volumeGame', 'volumeMusic', 'volumeAmbient')) {
+            $node = $prefs.SelectSingleNode('/PrefsData/' + $setting)
+            if (!$node) { $node = $prefs.CreateElement($setting); [void]$prefs.DocumentElement.AppendChild($node) }
+            $node.InnerText = '0'
+        }
+    }
+    $prefs.Save($prefsPath)
     $arguments = @('-batchmode', '-quicktest', '-cqfcontestchecks', "-savedatafolder=`"$runDirectory`"")
     if ($LoadCheck) { $arguments += '-cqfcontestloadchecks' }
     if ($BloodSea) { $arguments += '-cqfcontestbloodsea' }
@@ -78,10 +91,11 @@ try {
     }
     if ($SkipPreload) { $arguments += '-cqfskippreload' }
     if ($Trapping) { $arguments += '-cqftrappingchecks' }
-    if ($Invasion) { $arguments += '-cqfinvasionchecks' }
     if ($BattleRules) { $arguments += '-cqfbattlerulechecks' }
     if ($Occupation) { $arguments += '-cqfoccupationchecks' }
     if ($ReviewFixes) { $arguments += '-cqfreviewfixchecks' }
+    if ($Entry) { $arguments += '-cqfentrychecks' }
+    if ($CounterOpening) { $arguments += '-cqfcounteropeningchecks' }
     $env:SteamAppId = '0'
     $env:SteamGameId = '0'
     $env:SteamOverlayGameId = '0'

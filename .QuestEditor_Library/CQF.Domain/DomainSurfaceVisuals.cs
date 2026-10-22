@@ -40,10 +40,7 @@ public sealed class DomainSurfaceVisuals : IDisposable
         if (screenMaterial.HasProperty("_TerritoryState"))
         {
             screenMaterial.SetVector("_TerritoryState", territory == null ? default : new Vector4(territory.BoundaryX,
-                territoryFirst != territory.Reversed ? -1f : 1f, territory.Invasion?.First == territoryFirst ? 1f : 0f, 1f));
-            for (int index = 0; index < 3; index++)
-                screenMaterial.SetVector(territoryNames[index], territory?.Invasion?.Shapes[index] ?? default);
-            screenMaterial.SetVector("_TerritoryWarp", territory?.Invasion?.Phases ?? default);
+                territoryFirst != territory.Reversed ? -1f : 1f, 0f, 1f));
             ConfigureProtection();
         }
 #endif
@@ -125,5 +122,4 @@ public sealed class DomainSurfaceVisuals : IDisposable
     private DomainTerritoryPartition? protectionPartition;
     private int protectionRevision = -1;
 #endif
-    private static readonly string[] territoryNames = { "_TerritoryHole0", "_TerritoryHole1", "_TerritoryHole2" };
 }

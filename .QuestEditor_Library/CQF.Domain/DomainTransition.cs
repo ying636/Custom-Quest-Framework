@@ -136,6 +136,11 @@ public abstract class DomainTransition : IDisposable
                 return;
             }
             if (returnPending || revealReady) return;
+            MapComponent_Domain destinationDomain = displayMap.GetComponent<MapComponent_Domain>();
+            if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap
+                && (destinationDomain.Active && destinationDomain.LastTerrainRenderedFrame > switchedFrame
+                    || destinationDomain.Challenger is { Active: true } side && side.LastTerrainRenderedFrame > switchedFrame))
+                terrainReadyFrame = Time.frameCount;
             if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap)
             {
                 CellRect view = Find.CameraDriver.CurrentViewRect;

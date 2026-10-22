@@ -35,9 +35,6 @@ public sealed partial class DomainContest : IExposable, IDisposable
         bool reverse = first.Caster!.Position.x > second.Caster!.Position.x;
         partition = new DomainTerritoryPartition(first.map.Size.x, first.map.Size.z,
             DomainTerritoryPartition.CalculateFraction(first.Health, second.Health), reverse);
-#if RIMWORLD_1_7
-        partition.EnableInvasions(unchecked(first.map.uniqueID * 397 ^ first.Caster.thingIDNumber ^ second.Caster.thingIDNumber));
-#endif
         foreach (IntVec3 cell in first.map.AllCells) ApplyCell(first, cell);
         RefreshLayouts(first);
         first.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Terrain);
@@ -63,6 +60,10 @@ public sealed partial class DomainContest : IExposable, IDisposable
         SettleHealth(first);
         Partition.PruneProtections(GenTicks.TicksGame, first.Ready, first.Challenger.Ready);
         Partition.PruneClaims(first.Ready, first.Challenger.Ready);
+        Partition.ErodeClaims(GenTicks.TicksGame, first.Ready && first.Challenger.Ready
+            && !first.ArrivalLocked && !first.Challenger.ArrivalLocked
+            && first.Worker?.SuspendLifecycle != true && first.Challenger.Worker?.SuspendLifecycle != true,
+            first.Definition.contestClaimErosionTicks, first.Challenger.Definition.contestClaimErosionTicks);
         TickOccupation(first);
         float firstHealth = first.Active ? first.Health : 0f;
         float secondHealth = first.Challenger.Active ? first.Challenger.Health : 0f;
@@ -72,7 +73,7 @@ public sealed partial class DomainContest : IExposable, IDisposable
         if (GenTicks.TicksGame % 60 == 0) RefreshLayouts(first);
         if (revision == Partition.Revision) return;
         dirtySections.Clear();
-        if (Partition.Invasion != null || Partition.HasOverrides || Partition.ChangedCells.Count > 0)
+        if (Partition.HasOverrides || Partition.ChangedCells.Count > 0)
         {
             foreach (IntVec3 cell in Partition.ChangedCells) ApplyCell(first, cell);
         }
@@ -128,8 +129,8 @@ public sealed partial class DomainContest : IExposable, IDisposable
         MapComponent_Domain? second = first.Challenger;
         if (sourceVisualError || !first.Active || second?.Active != true
             || first.Anchor?.Spawned != true || second.Anchor?.Spawned != true || first.Anchor.Map != second.Anchor.Map) return 0f;
-        float firstRadius = first.Definition.visuals?.radius ?? 12f;
-        float secondRadius = second.Definition.visuals?.radius ?? 12f;
+        float firstRadius = first.Definition.OpeningRadius;
+        float secondRadius = second.Definition.OpeningRadius;
         if (first.Anchor.Position.DistanceToSquared(second.Anchor.Position) >= (firstRadius + secondRadius) * (firstRadius + secondRadius)) return 0f;
         if (sourceVisualTick < 0) sourceVisualTick = GenTicks.TicksGame;
         float age = Math.Max(0, GenTicks.TicksGame - sourceVisualTick) / 60f;
@@ -157,8 +158,8 @@ public sealed partial class DomainContest : IExposable, IDisposable
     {
         MapComponent_Domain first = domain.Battlefield;
         MapComponent_Domain rival = ReferenceEquals(first, domain) ? first.Challenger! : first;
-        float radius = domain.Definition.visuals?.radius ?? 12f;
-        float rivalRadius = rival.Definition.visuals?.radius ?? 12f;
+        float radius = domain.Definition.OpeningRadius;
+        float rivalRadius = rival.Definition.OpeningRadius;
         float bias = (0.5f - DomainTerritoryPartition.CalculateFraction(first.Health, first.Challenger!.Health)) * Math.Min(radius, rivalRadius) * 3f;
         return new DomainFusionState(domain.Anchor!.Position.ToVector3Shifted(), radius, rival.Anchor!.Position.ToVector3Shifted(), rivalRadius,
             !ReferenceEquals(first, domain), GenTicks.TicksGame / 60f + 6f, blend, bias);

@@ -48,7 +48,12 @@ public sealed class ReviewFixesChecksDriver : MonoBehaviour
                 if (++frames < 15) return;
                 field!.RequestReturn("review checks dissolve primary");
                 field.CompleteReturn();
-                Check(field.Trapped && firstPawn!.Map == field.map && secondPawn!.Map == field.map,
+                stage = 7;
+            }
+            else if (stage == 7)
+            {
+                if (!field!.Trapped || runtime.Transition != null) return;
+                Check(firstPawn!.Map == field.map && secondPawn!.Map == field.map,
                     "primary dissolution traps both casters until the blood sea survivor exits");
                 Check(field.map.AllCells.All(cell => field.DomainAt(cell) == field.Challenger && field.Challenger!.DomainAt(cell) == field.Challenger),
                     "survivor ownership is identical through either instance");

@@ -31,7 +31,7 @@ public sealed class OccupationChecksDriver : MonoBehaviour
             Check(Partition.FirstClaimedCells == GenRadial.NumCellsInRadius(2f)
                 && Footprint().All(field.OwnsCell) && firstProbe.Thing!.Spawned && !secondProbe.Thing!.Spawned,
                 "complete game reload preserves captured territory, actual terrain layouts and original buildings");
-            stage = 5;
+            stage = phase == 1 ? 5 : 50;
         }
     }
 
@@ -129,6 +129,41 @@ public sealed class OccupationChecksDriver : MonoBehaviour
             }
             else if (stage == 5)
             {
+                Move(field!.Caster!, new IntVec3(10, 0, 10));
+                RunTicks(419);
+                Check(Partition.FirstClaimedCells == GenRadial.NumCellsInRadius(2f) && Footprint().All(field.OwnsCell),
+                    "enemy-surrounded occupation survives exactly 599 active ticks before erosion");
+                Save(2, 50);
+            }
+            else if (stage == 50)
+            {
+                float before = field!.Health;
+                RunTicks(1);
+                Check(Partition.FirstClaimedCells == 0 && Footprint().All(Second.OwnsCell),
+                    "the 600th native tick after save and reload releases the occupied footprint");
+                Check(Footprint().All(cell => cell.GetTerrain(field.map) == field.Contest!.TerrainAt(Second, cell))
+                    && secondProbe!.Thing!.Spawned && secondProbe.Thing.HitPoints == 137
+                    && !firstProbe!.Thing!.Spawned && firstProbe.Thing.HitPoints == 211,
+                    "erosion switches actual terrain and restores original enemy buildings with damage preserved");
+                float strength = (float)Second.Worker!.GetType().GetMethod("SkillStrengthAt")!.Invoke(Second.Worker, new object[] { center })!;
+                Check(Math.Abs(strength - 1f) < 0.001f && Math.Abs(field.Health - before + Loss(field, 1)) < 0.1f,
+                    "eroded land immediately restores enemy skill ownership without awarding occupation healing");
+                frames = 0;
+                stage = 51;
+            }
+            else if (stage == 51)
+            {
+                if (++frames < 45) return;
+                ScreenCapture.CaptureScreenshot(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainOccupation_Eroded.png"));
+                capturedAt = Time.realtimeSinceStartup;
+                stage = 52;
+            }
+            else if (stage == 52)
+            {
+                if (Time.realtimeSinceStartup - capturedAt < 0.3f
+                    || !File.Exists(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainOccupation_Eroded.png"))) return;
+                Move(field!.Caster!, center); RunTicks(180);
+                Check(Footprint().All(field.OwnsCell), "lost territory can be deliberately occupied again");
                 Move(Second.Caster!, center + new IntVec3(-1, 0, 0));
                 float health = Second.Health;
                 RunTicks(180);
@@ -137,7 +172,9 @@ public sealed class OccupationChecksDriver : MonoBehaviour
                     "the opposing caster can recapture a foothold after three seconds and receive the same 300 healing");
                 Check(secondProbe!.Thing!.Spawned && secondProbe.Thing.HitPoints == 137
                     && !firstProbe!.Thing!.Spawned && firstProbe.Thing.HitPoints == 211,
-                    "countercapture restores the original defender building with both damage states preserved");
+                    "countercapture restores the original defender building with both damage states preserved; defender spawned="
+                        + secondProbe.Thing.Spawned + ", hp=" + secondProbe.Thing.HitPoints + ", invader spawned="
+                        + firstProbe.Thing.Spawned + ", hp=" + firstProbe.Thing.HitPoints + ", cell owner=" + Second.OwnsCell(firstProbe.Position));
                 Move(field!.Caster!, new IntVec3(10, 0, 10)); Move(Second.Caster!, new IntVec3(50, 0, 45));
                 IntVec3 protectedCenter = new(45, 0, 25);
                 Second.ProtectTerritory(GenRadial.RadialCellsAround(protectedCenter, 2f, true), 10000);
@@ -211,7 +248,18 @@ public sealed class OccupationChecksDriver : MonoBehaviour
 
     private IEnumerable<IntVec3> Footprint() => GenRadial.RadialCellsAround(center, 2f, true);
     private static float Loss(MapComponent_Domain side, int ticks) => side.MaximumHealth * side.Definition.contestHealthLossPerSecond * ticks / 60f;
-    private static void RunTicks(int count) { for (int tick = 0; tick < count; tick++) Find.TickManager.DoSingleTick(); }
+    private void RunTicks(int count)
+    {
+        object worker = Second.Worker!;
+        var automaticTide = worker.GetType().GetField("automaticTideTicks", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        if (worker.GetType().Name == "DomainWorker_BloodSea" && automaticTide == null)
+            throw new InvalidOperationException("Blood sea automatic tide timer was not found for isolation of ownership checks.");
+        for (int tick = 0; tick < count; tick++)
+        {
+            automaticTide?.SetValue(worker, 0);
+            Find.TickManager.DoSingleTick();
+        }
+    }
     private static void Move(Pawn pawn, IntVec3 cell) { pawn.Position = cell; pawn.Notify_Teleported(); pawn.drafter.Drafted = true; }
     private static IntVec3 EnemyCell(MapComponent_Domain side) => side.map.AllCells.First(cell => !side.OwnsCell(cell)
         && cell.x > 8 && cell.z > 8 && cell.x < 51 && cell.z < 51 && cell.Standable(side.map)

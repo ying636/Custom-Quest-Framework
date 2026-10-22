@@ -13,6 +13,7 @@ public sealed class ContestChecksDriver : MonoBehaviour
 
     public void Resume(int first, int second)
     {
+        Find.TickManager.Pause();
         File.AppendAllText(ResultPath, "TRACE Resumed domains=" + CQFDomainRuntime.Instance.DomainMaps.Count
             + ", gameMaps=" + Current.Game.Maps.Count + "\n");
         foreach (Map map in Current.Game.Maps)
@@ -48,6 +49,7 @@ public sealed class ContestChecksDriver : MonoBehaviour
                 DomainDef preparedDefinition = DefDatabase<DomainDef>.GetNamed("CQF_TestDomain");
                 if (!runtime.HasAvailable(preparedDefinition) || !runtime.HasTerrainTemplate(preparedDefinition)
                     || !runtime.HasAvailable(ChallengerDefinition) || !runtime.HasTerrainTemplate(ChallengerDefinition)) return;
+                Find.TickManager.Pause();
                 int preparedMapCount = runtime.DomainMaps.Count;
                 source = Find.CurrentMap;
                 firstPawn = source.mapPawns.FreeColonistsSpawned.First();
@@ -99,7 +101,9 @@ public sealed class ContestChecksDriver : MonoBehaviour
                         "blood sea stays filled within its territory despite reduced health during a contest");
                 }
                 ScreenCapture.CaptureScreenshot(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestBoundary.png"));
-                Current.Game.GetComponent<GameComponent_ContestChecks>().Record(firstId, secondId);
+                GameComponent_ContestChecks saved = Current.Game.GetComponent<GameComponent_ContestChecks>();
+                saved.Record(firstId, secondId);
+                saved.RecordHealth(first.Health, first.Challenger!.Health);
                 GameDataSaveLoader.SaveGame("CQFContestChecks");
                 stage = 2;
                 if (GenCommandLine.CommandLineArgPassed("cqfcontestloadchecks"))
@@ -118,8 +122,10 @@ public sealed class ContestChecksDriver : MonoBehaviour
                 source = first.SourceMap;
                 Check(CQFDomainRuntime.Instance.HasTerrainTemplate(first.Definition) && CQFDomainRuntime.Instance.HasTerrainTemplate(ChallengerDefinition),
                     "terrain templates survive a full game save and load");
+                GameComponent_ContestChecks saved = Current.Game.GetComponent<GameComponent_ContestChecks>();
                 Check(firstPawn.thingIDNumber == firstId && secondPawn.thingIDNumber == secondId
-                    && first.Health == first.MaximumHealth * 0.5f && first.Challenger.Health == first.Challenger.MaximumHealth * 0.9f, "saved battlefield retains both casters and independent health");
+                    && first.Health == saved.SavedFirstHealth && first.Challenger.Health == saved.SavedSecondHealth,
+                    "saved battlefield retains both casters and the exact independent health snapshot");
                 Check(first.Challenger.Anchor?.Domain == first.Challenger
                     && secondPawn.health.hediffSet.hediffs.OfType<Hediff_DomainProtection>().Single().Domain == first.Challenger,
                     "challenger anchor and damage protection retain independent domain references");

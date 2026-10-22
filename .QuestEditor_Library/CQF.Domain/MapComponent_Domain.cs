@@ -179,13 +179,9 @@ public sealed partial class MapComponent_Domain : MapComponent
     public void ReturnToSource()
     {
         if (!active) return;
-        if (Battlefield.HasOtherActiveDomain(this))
-        {
-            HoldInBattlefield();
-            return;
-        }
-        Map? destination = ResolveReturnMap();
-        MapComponent_Domain? captive = CaptiveDomain;
+        bool contested = Battlefield.HasOtherActiveDomain(this);
+        Map? destination = contested ? map : ResolveReturnMap();
+        MapComponent_Domain? captive = contested ? null : CaptiveDomain;
         if (destination == null || captive != null && captive.ResolveReturnMap() == null)
         {
             closing = false;
@@ -199,7 +195,8 @@ public sealed partial class MapComponent_Domain : MapComponent
         bool visible = Find.CurrentMap == map || ((Find.CurrentMap == null || caster?.Dead == true)
             && Time.frameCount - LastRenderedFrame <= 2);
         if (!worker!.PrepareReturn(visible)) return;
-        FinishReturn(destination, visible, false);
+        if (contested) HoldInBattlefield(visible);
+        else FinishReturn(destination, visible, false);
     }
 
     public void CompleteReturn()

@@ -1,4 +1,4 @@
-#include "CQF_DomainInvasionCommon.glsl"
+#include "CQF_DomainContact.glsl"
 layout(set = 2, binding = 0) uniform MaterialUniforms
 {
     vec4 _Color;
@@ -12,24 +12,12 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     vec4 _SurfaceClash;
     float _EffectTime;
     vec4 _TerritoryState;
-    vec4 _TerritoryHole0;
-    vec4 _TerritoryHole1;
-    vec4 _TerritoryHole2;
-    vec4 _TerritoryWarp;
     vec4 _TerritoryProtectionState;
 } uMaterial;
 layout(set = 2, binding = 1) uniform sampler2D _TerritoryProtection;
 float domainTerritoryMask(vec2 point)
 {
     float distance = (point.x-uMaterial._TerritoryState.x)*uMaterial._TerritoryState.y;
-    vec4 holes[3] = vec4[3](uMaterial._TerritoryHole0,uMaterial._TerritoryHole1,uMaterial._TerritoryHole2);
-    for (int i=0;i<3;i++)
-    {
-        vec4 hole = holes[i];
-        if (hole.z <= 0.0 || hole.w <= 0.0) continue;
-        float invasion = domainInvasionDistance(point,hole,uMaterial._TerritoryWarp[i]);
-        distance = uMaterial._TerritoryState.z > 0.5 ? max(distance,invasion) : min(distance,-invasion);
-    }
     float mask = smoothstep(-0.2,0.2,distance);
     if (uMaterial._TerritoryProtectionState.w > 0.5
         && all(greaterThanEqual(point,vec2(0.0))) && all(lessThan(point,uMaterial._TerritoryProtectionState.xy)))
@@ -86,7 +74,7 @@ vec4 domainSurface(vec2 point)
             {
                 float wave = sin(dot(point,vec2(0.75,1.13))-uMaterial._SurfaceState.x*2.4+sin(point.y*0.65+uMaterial._SurfaceState.x)*1.2)*0.55
                     +sin(point.y*2.7+point.x*0.35+uMaterial._SurfaceState.x*3.2)*0.18;
-                invasion = (otherEdge-ownEdge+wave+uMaterial._SurfaceClash.x)*0.7;
+                invasion = (domainContactFront(point,uMaterial._SurfaceRival.xyz,uMaterial._SurfaceCircle.xyz)+wave+uMaterial._SurfaceClash.x)*0.7;
             }
             float mask = smoothstep(-0.12,0.12,invasion);
             alpha *= mix(1.0,mask,1.0-smoothstep(-0.25,0.75,otherEdge));

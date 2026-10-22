@@ -7,6 +7,8 @@ namespace QuestEditor_Library;
 
 public class DomainDef : Def
 {
+    public float OpeningRadius => visuals?.radius ?? openingRadius;
+
     public override void ResolveReferences()
     {
         base.ResolveReferences();
@@ -34,6 +36,8 @@ public class DomainDef : Def
         if (maximumAnchorDamagePerHit <= 0f || float.IsNaN(maximumAnchorDamagePerHit)) yield return "Domain anchor damage limit must be positive.";
         if (size.x <= 0 || size.z <= 0 || size.y != 1) yield return "Domain requires a positive map size with y=1.";
         if (contestBoundaryTicks <= 0) yield return "Domain contest boundary duration must be positive.";
+        if (contestClaimErosionTicks <= 0) yield return "Domain occupied territory erosion duration must be positive.";
+        if (openingRadius <= 0f || float.IsNaN(openingRadius) || float.IsInfinity(openingRadius)) yield return "Domain opening radius must be finite and positive.";
         if (float.IsNaN(contestHealthLossPerSecond) || float.IsInfinity(contestHealthLossPerSecond) || contestHealthLossPerSecond < 0f)
             yield return "Domain contest health loss must be finite and nonnegative.";
         foreach (float value in new[] { contestColor.r, contestColor.g, contestColor.b, contestColor.a })
@@ -50,12 +54,14 @@ public class DomainDef : Def
     public IntVec3 size = new(60, 1, 60);
     public float maximumHealth = 1000f;
     public int contestBoundaryTicks = 120;
+    public int contestClaimErosionTicks = 600;
     public float contestHealthLossPerSecond = 0.005f;
     public float maximumAnchorDamagePerHit = float.MaxValue;
     public ThingDef? anchor;
     public HediffDef? protection;
     public AbilityDef? openingAbility;
     public bool preload = true;
+    public float openingRadius = 12f;
     public DomainVisualDef? visuals;
     public DomainSurfaceDef? surface;
     public Color contestColor = new(0.72f, 0.76f, 0.80f, 1f);

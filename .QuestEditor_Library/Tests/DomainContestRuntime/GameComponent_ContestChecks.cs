@@ -9,10 +9,12 @@ public sealed class GameComponent_ContestChecks : GameComponent
 
     public int StructureId => structureId;
     public int StructureHitPoints => structureHitPoints;
+    public float SavedFirstHealth => savedFirstHealth;
+    public float SavedSecondHealth => savedSecondHealth;
     public int TrappingCase { get; set; }
-    public int InvasionCase { get; set; }
     public int BattleRulesPhase { get; set; }
     public int OccupationPhase { get; set; }
+    public int CounterOpeningCase { get; set; }
 
     public void RecordStructure(Thing thing)
     {
@@ -24,6 +26,12 @@ public sealed class GameComponent_ContestChecks : GameComponent
     {
         firstId = first;
         secondId = second;
+    }
+
+    public void RecordHealth(float first, float second)
+    {
+        savedFirstHealth = first;
+        savedSecondHealth = second;
     }
 
     public override void StartedNewGame()
@@ -42,9 +50,9 @@ public sealed class GameComponent_ContestChecks : GameComponent
             File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt"), "TRACE Resume callback\n");
             GameObject owner = new("CQF_ContestChecksResumed");
             UnityEngine.Object.DontDestroyOnLoad(owner);
-            if (GenCommandLine.CommandLineArgPassed("cqfoccupationchecks")) owner.AddComponent<OccupationChecksDriver>().Resume(firstId, secondId, OccupationPhase);
+            if (GenCommandLine.CommandLineArgPassed("cqfcounteropeningchecks")) owner.AddComponent<CounterOpeningChecksDriver>().Resume(firstId, secondId, CounterOpeningCase);
+            else if (GenCommandLine.CommandLineArgPassed("cqfoccupationchecks")) owner.AddComponent<OccupationChecksDriver>().Resume(firstId, secondId, OccupationPhase);
             else if (GenCommandLine.CommandLineArgPassed("cqfbattlerulechecks")) owner.AddComponent<BattleRulesChecksDriver>().Resume(firstId, secondId);
-            else if (GenCommandLine.CommandLineArgPassed("cqfinvasionchecks")) owner.AddComponent<InvasionChecksDriver>().Resume(firstId, secondId, InvasionCase);
             else if (GenCommandLine.CommandLineArgPassed("cqftrappingchecks")) owner.AddComponent<TrappingChecksDriver>().Resume(firstId, secondId, TrappingCase);
             else if (GenCommandLine.CommandLineArgPassed("cqflayoutchecks")) owner.AddComponent<LayoutChecksDriver>().Resume(firstId, secondId);
             else owner.AddComponent<ContestChecksDriver>().Resume(firstId, secondId);
@@ -55,26 +63,30 @@ public sealed class GameComponent_ContestChecks : GameComponent
     {
         Scribe_Values.Look(ref firstId, "firstId");
         Scribe_Values.Look(ref secondId, "secondId");
+        Scribe_Values.Look(ref savedFirstHealth, "savedFirstHealth");
+        Scribe_Values.Look(ref savedSecondHealth, "savedSecondHealth");
         Scribe_Values.Look(ref structureId, "structureId");
         Scribe_Values.Look(ref structureHitPoints, "structureHitPoints");
         int trappedCase = TrappingCase;
         Scribe_Values.Look(ref trappedCase, "trappingCase");
         TrappingCase = trappedCase;
-        int invasionCase = InvasionCase;
-        Scribe_Values.Look(ref invasionCase, "invasionCase");
-        InvasionCase = invasionCase;
         int battlePhase = BattleRulesPhase;
         Scribe_Values.Look(ref battlePhase, "battleRulesPhase");
         BattleRulesPhase = battlePhase;
         int occupationPhase = OccupationPhase;
         Scribe_Values.Look(ref occupationPhase, "occupationPhase");
         OccupationPhase = occupationPhase;
+        int counterCase = CounterOpeningCase;
+        Scribe_Values.Look(ref counterCase, "counterOpeningCase");
+        CounterOpeningCase = counterCase;
         if (GenCommandLine.CommandLineArgPassed("cqfcontestloadchecks"))
             File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt"), "TRACE Component " + Scribe.mode + " " + firstId + " " + secondId + "\n");
     }
 
     private int firstId;
     private int secondId;
+    private float savedFirstHealth;
+    private float savedSecondHealth;
     private int structureId;
     private int structureHitPoints;
 }
