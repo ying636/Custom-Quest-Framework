@@ -66,8 +66,7 @@ namespace QuestEditor_Library
                                this.defaultLabel = s.LabelAsStuff.Colorize(CQFUIStyle.Accent) + this.defaultLabel;
                                this.icon = x.GetUIIconForStuff(s);
                            },
-                           t => t.graphic?.Color ?? Color.white,
-                           (t, r) => Widgets.DefIcon(r, t, null)),
+                           t => t.graphic?.Color ?? Color.white),
                        "SelectStuff".Translate()));
                }
            }, null, null), "Select".Translate()));
