@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CQF.CinematicsRuntimeChecks</AssemblyName>
+  </PropertyGroup>
+  <Import Project="..\..\RimWorld.props" />
+  <ItemGroup>
+    <Reference Include="QuestEditor_Library"><HintPath>$(CQFCoreAssembly)</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+</Project>

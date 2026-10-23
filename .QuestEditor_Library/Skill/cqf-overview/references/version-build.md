@@ -4,6 +4,20 @@
 
 当前 CQF 发布版本为 `4.5`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
 
+## 调试设置 Settings 缺键修复（2026-10-23）
+
+`DebugActions_MapHibernation.MapHibernation` 原来直接返回已填充的 `DebugActionNode`，原版 `DebugTabMenu_Actions.GenerateCacheForMethod` 会在初始化全局菜单时立即调用它。主菜单尚无 `Current.Game`，读取地图管理器抛出异常；原版已经赋值的 `Dialog_Debug.rootNode` 阻止后续重试，而 `roots` 没有填满，点击设置最终在 `SwitchTab` 读取 `roots[Settings]` 时抛出 `KeyNotFoundException`。
+
+改为返回不访问游戏的菜单节点，用原生 `childGetter` 在实际打开地图子菜单时才取得当前管理器、活动地图与休眠地图。保留公开返回类型及已有文本、原回调和游戏状态限制，不给原版字典塞占位节点，不吞初始化错误，不改 VEF 或 Dev In Your Language 补丁，也不改存档结构。
+
+新增 `Tests/DebugMenuRuntime/RunChecks.ps1`，支持主菜单、游戏内及旧 DLL 故障复现模式。旧部署主库在无游戏状态下先触发 CQF 原始异常，再精确复现 `Settings` 缺键；3 项故障链断言通过。修复候选在 1.7.4982 与当前 Steam 的 1.7.4985 各通过主菜单 9 项、游戏内 12 项，共 42 项原生检查，覆盖全部 Actions/Settings/Output 标签、重复初始化、原版设置按钮入口、延迟地图列表与真实回调。按钮入口调用的是经 Rimsage 核实的私有原版方法，未将方法调用冒充鼠标点击，未使用 CU。测试均在 C 盘隔离副本与配置中运行，不操作用户存档。
+
+测试夹具首轮直接调用私有 `ToggleDebugSettingsMenu` 导致编译失败，按原版签名修正后零警告、零错误。1.7.4985 首轮功能检查通过，但继承的 `steam_appid.txt` 触发 Steam/Fossilize 缓存提示；测试脚本现将副本应用编号显式设为 0，保留首轮日志并补跑。主库/编辑器 1.7.4982 构建保留既有 1983/347 条警告，零错误；当前 1.7.4985 主库源码编译同样零错误。1.6 只做临时主库源码检查，1735 条既有警告、零错误，运行包保持原版本。
+
+验证根目录 `C:/Users/24904/AppData/Local/Temp/CQF_DebugSettingsFix_20261023`，包含原始日志备份、故障复现和最终运行清单。候选主库 SHA256 `0AFF6AFEFF7E43EE6D0C821F7522B5ED8EB952D6E16C1808B97DFC5DE6DE150F`，编辑器 `068A7A9990FD44AA887FA82C86915E3B107B369447E3FC3BEC64F96429EEB861`。部署包为 `C:/Users/24904/AppData/Local/CQF/DeploymentPackages/CQF-DebugSettingsFix-1.7-20261023`，保留原文件备份及回执；部署前须确认游戏退出，重启后清除先前进程中不完整的原版调试缓存。
+
+最终四轮运行的游戏 ERROR 为 0，stderr 为空，进程退出 0；最新版本的最终证据为 `Runs/CQF_Cinematics_bdfc9b525dca440f81d05fe90f375a4f` 与 `Runs/CQF_Cinematics_3a98c3a8f7614037b026aa3fed4b0513`。确认没有游戏进程后，已备份并部署 1.7 主库、编辑器四个 DLL/PDB，逐项哈希与验证候选一致；此前实体本审查的待部署包已被本包取代。当前源码包含同日 4.5 的陷阱选择器修复，未回退该改动，版本号保持 4.5。
+
 ## 4.5 发布：1.6 陷阱材质选择接口修复（2026-10-23）
 
 陷阱材质选择器移除自定义 `Widgets.DefIcon` 回调，复用 `TextureSelectDrawer` 已有的材质贴图与颜色绘制。当前源码同步保留此修复；1.6 编辑器基于原运行包对应的 `bc9f3c5` 源码仅应用这一处改动，引用现有 1.6 主库重新构建，未带入后续实体本与演出功能。
