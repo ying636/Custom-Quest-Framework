@@ -2,7 +2,13 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.5`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.6`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.6 发布：领域来源地图关联清理（2026-10-24）
+
+领域预生成完成及成功回收时清空 `MapParent_Domain.sourceMap`，再次获取领域时由现有 `Acquire` 流程重新绑定来源，避免休眠领域残留来源关联，使原版站点或太空地图的移除检查访问空子地图。拒绝回收仍有人物的领域时保留关联。发布包含修复源码、回归检查、领域系统参考及已部署的 1.7 领域 DLL/PDB，没有新增旧存档迁移。
+
+发布前重新运行 7 项地图归属检查及 60 项领域基础检查，全部通过；部署 DLL/PDB 与验证候选的 SHA256 一致，DLL 为 `1BD49F6A3CEA6BBAFCE22E5C1E96D108E89A6735F570317A04E1927E8F1603C9`。原缺陷已在修复前候选复现。构建、检查与部署记录位于 `C:/Users/24904/AppData/Local/Temp/CQF-DomainOwnership-20261024`；1.6 仅完成临时构建，1736 项警告、零错误，保留原运行包，未做实机验证。
 
 ## 调试设置 Settings 缺键修复（2026-10-23）
 

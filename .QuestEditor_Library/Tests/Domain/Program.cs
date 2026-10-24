@@ -17,6 +17,7 @@ internal static class Program
             if (args.Contains("contests")) { DomainContestChecks.Run(); return; }
             if (args.Contains("territory")) { DomainTerritoryRulesChecks.Run(); return; }
             if (args.Contains("occupation")) { DomainOccupationChecks.Run(); return; }
+            if (args.Contains("ownership")) { DomainMapOwnershipChecks.Run(); return; }
             Run();
             Console.WriteLine("Domain checks passed: " + checks);
         }

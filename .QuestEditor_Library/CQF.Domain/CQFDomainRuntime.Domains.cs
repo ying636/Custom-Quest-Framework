@@ -64,6 +64,7 @@ public sealed partial class CQFDomainRuntime
         foreach (Verse.AI.Group.Lord lord in realm.lordManager.lords.ToList()) realm.lordManager.RemoveLord(lord);
         domain.Battlefield.FinishContest(destination);
         GetTerrainTemplate(domain.Battlefield.Definition, destination).Restore(realm);
+        ((MapParent_Domain)realm.Parent).sourceMap = null;
         host.Hibernate(realm);
     }
 
@@ -148,6 +149,7 @@ public sealed partial class CQFDomainRuntime
         realm.mapDrawer.RegenerateEverythingNow();
         domainMaps.Add(realm);
         mapTemplates[definition] = new DomainMapTemplate(realm);
+        parent.sourceMap = null;
         Log.Message("[CQF] Prepared domain " + definition.defName + " map " + realm.uniqueID + ": generation=" + generationMs
             + " ms, rendering/template=" + (timer.ElapsedMilliseconds - generationMs) + " ms, total=" + timer.ElapsedMilliseconds + " ms.");
         pendingDomainPreloads.Remove(definition);
