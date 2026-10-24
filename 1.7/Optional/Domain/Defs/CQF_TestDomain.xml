@@ -41,7 +41,7 @@
     <surface>CQF_BasicDomainSurface</surface>
     <openingAbility>CQF_TestDomainExpansion</openingAbility>
     <size>(60,1,60)</size>
-    <preload>true</preload>
+    <preload>false</preload>
   </QuestEditor_Library.DomainDef>
   <HediffDef>
     <defName>CQF_TestDomainProtection</defName>

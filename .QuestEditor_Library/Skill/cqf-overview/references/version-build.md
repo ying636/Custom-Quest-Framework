@@ -2,7 +2,13 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.6`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.7`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.7 发布：关闭测试领域预生成（2026-10-24）
+
+1.7 内置测试领域 `CQF_TestDomain` 改为 `preload=false`，同步源码资源与运行 XML；1.6 原本已经关闭。首次实际获取时按需生成一张地图，后续继续休眠与复用，其他领域沿用各自的预加载配置。配套更新既有检查和领域视觉参考，本次发布无需替换 DLL。
+
+沿用本轮完成的 RimDevTools 9 项实机检查、90 项领域视觉与 XML 检查，以及 6 次独立启动、120 次新建和 120 次回收复用检查；详细证据及限制见 [基础领域视觉](domain-visuals.md)。原反馈的偶发空引用尚未定位，本次关闭预生成不作为其根因修复。
 
 ## 4.6 发布：领域来源地图关联清理（2026-10-24）
 

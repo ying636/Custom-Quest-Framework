@@ -103,9 +103,13 @@ DomainOpening_Basic.Start(definition, caster);
 
 Domain 模块内提供 `CQF_TestDomainExpansion`，中文名称使用用户给定的“展开基础领域”。开发者模式打开调试动作，进入 CQF 分类的 `CQF_TestDomainExpansion`，使用原版 `ToolMapForPawns` 在地图上点选人物授予 Ability，再由人物使用能力展开；未征召也会显示能力。授予入口不缓存人物菜单、不强制选择人物，避免调试菜单持有已销毁人物引用。
 
-1.7 在新游戏或读档后由 GameComponent_MapManager 驱动 CQFDomainRuntime，为每个 preload 领域提前保留两张地图并休眠，另缓存原始地形与建筑蓝图；基础地图为 60×60。施放时唤醒复用，再播放原地图展开、幕墙和转场；基础展开同时转移范围内所有存活生物，包括动物、机械体和倒地人物。使用独立 CQF_TestDomainBiome（无野生动植物、禁用天空光照与阴影）和 CQF_BasicDomainTerrain，引用 `CQF_DomainVisuals`；1.7 设置 `preload=true`，1.6 保留原 Soil / PavedTile 网格和 `preload=false`。进入后再点同一能力请求返回；1.7 基础视觉通过 `PrepareReturn` 在领域内开始转场，实际绘出全屏遮盖后才允许人物与镜头返回，目的地图地形提交并经过完整帧后才揭幕。原有 Worker 默认仍调用 `BeforeReturn` 并立即返回，不改血海专有视觉。退出后的地图走统一 `Recycle → Hibernate`，再次施放走 `Acquire → Activate`，复用同一个 Map；`preload=false` 只关闭首次预生成，不关闭退出休眠。测试期间保持正常速度且不要暂停，以便展开 tick 推进。
+1.7 在新游戏或读档后由 GameComponent_MapManager 驱动 CQFDomainRuntime，为每个 preload 领域提前保留两张地图并休眠，另缓存原始地形与建筑蓝图；基础地图为 60×60。基础测试领域 `CQF_TestDomain` 在 1.6 / 1.7 均设置 `preload=false`，开局不预生成，首次实际使用时由 Acquire 生成，后续施放唤醒复用，再播放原地图展开、幕墙和转场；基础展开同时转移范围内所有存活生物，包括动物、机械体和倒地人物。使用独立 CQF_TestDomainBiome（无野生动植物、禁用天空光照与阴影）和 CQF_BasicDomainTerrain，引用 `CQF_DomainVisuals`；1.6 保留原 Soil / PavedTile 网格。进入后再点同一能力请求返回；1.7 基础视觉通过 `PrepareReturn` 在领域内开始转场，实际绘出全屏遮盖后才允许人物与镜头返回，目的地图地形提交并经过完整帧后才揭幕。原有 Worker 默认仍调用 `BeforeReturn` 并立即返回，不改血海专有视觉。退出后的地图走统一 `Recycle → Hibernate`，再次施放走 `Acquire → Activate`，复用同一个 Map；`preload=false` 只关闭首次预生成，不关闭退出休眠。测试期间保持正常速度且不要暂停，以便展开 tick 推进。
 
 定义位于 `Content/<版本>/Defs/CQF_TestDomain.xml`；授予入口为 `DebugActions_TestDomain`，施放组件为 `AbilityComp_TestDomainExpansion`，地形步骤为 `GenStep_TestDomain`。测试入口仍属于可选 Domain 模块，没有请求时不加载，测试能力不自动授予人物；寂屋邪祭维持自己的原实现。
+
+2026-10-24 关闭基础测试领域预生成后的验证：RimDevTools 原生截图服务与框架运行接口在 1.7.4985 独立副本通过 9 项实机检查，开局测试领域地图与模板均为 0，首次 Acquire 只生成 1 张，后续获取复用且不补充预生成；其他启用预加载的领域仍保留 2 张地图。90 项既有领域视觉、Shader 与 XML 检查通过，1.6 / 1.7 的源码及运行 XML 均确认关闭预生成。证据位于 `C:/Users/24904/AppData/Local/Temp/CQF-Preload-c3d75ea4753a485ca066865a25ef2209/PreloadPolicyEvidence.json`，保留 2 张 RimDevTools 新截图；未使用 CU，没有进行 1.6 实机验证。
+
+针对偶发问题，同日补充 6 次独立随机世界启动，每次进行 20 轮按需新建、回收休眠、唤醒复用及原版地图销毁，共 120 次新建、120 次复用、726 项断言。132 次子地图生成返回观察均存在领域组件，六轮游戏 ERROR 为 0、stderr 为空，保留 12 张 RimDevTools 截图；汇总为同一证据目录的 `StressSummary.json`。这些检查保持测试领域 `preload=false`，没有重放旧配置的自动预加载条件；原反馈的空引用仍未复现，不能将关闭预生成或本轮通过表述为已查明并修复其根因。
 
 口袋地图通常没有有效的世界格子。测试地图不能直接使用 TemperateForest 等含可食用野生植物的生态：原版 Map.FinalizeInit → MapPlantGrowthRateCalculator.BuildFor 会模拟植物的日温度，直接索引世界格子温度缓存并越界。测试生态保留空 wildPlants / wildAnimals 和零密度，使用 Clear 天气；仅把 plantDensity 设为 0 不能阻止生长率计算，它依据 AllWildPlants 列表执行。不要用温度系统补丁掩盖测试配置问题。
 

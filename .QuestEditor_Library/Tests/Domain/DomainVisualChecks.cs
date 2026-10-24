@@ -107,7 +107,7 @@ internal static class DomainVisualChecks
                 && ability.comps.Single() is AbilityCompProperties_TestDomainExpansion, version + " native test ability XML and component");
             Check(ability.verbProperties.verbClass == typeof(Verb_CastAbility) && ability.verbProperties.targetParams.canTargetSelf
                 && ability.verbProperties.range == 0f, version + " test ability casts on its owner without a target");
-            Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/preload")!.InnerText == (version == "1.7" ? "true" : "false")
+            Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/preload")!.InnerText == "false"
                 && test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/visuals")!.InnerText == "CQF_DomainVisuals",
                 version + " test domain uses base visuals and the configured preload policy");
             if (version == "1.7")
