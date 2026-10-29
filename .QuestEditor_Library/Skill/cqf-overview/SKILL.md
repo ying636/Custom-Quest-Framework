@@ -30,6 +30,8 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 
 修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
 
+对话显示风格、Galgame 立绘、节点背景与话题图、风格专属编辑和预览见 [对话表现风格](references/dialog-presentation.md)。未配置风格的对话继续使用原滚动窗口和原有行为。
+
 实体本、地图放置、演出演员、撤销、草稿及测试入口见 [地图演出制作](references/cinematic-authoring.md)。
 
 ## 仓库与信息源

@@ -93,6 +93,7 @@ namespace QuestEditor_Library
                     node.extraText[i] = Widgets.TextArea(row, node.extraText[i]); y += 88f;
                 }
             }
+            if (CQFDialogPresentationEditor.DrawNodeSettings(this.editor.CurTree, node, ref y, 8f, width)) return;
             this.Fold("DialogImages", ref this.images, ref y, width);
             if (!this.images) return;
             this.Header("DialogImages", ref y, width, () => node.images.Add(new DialogImage()));

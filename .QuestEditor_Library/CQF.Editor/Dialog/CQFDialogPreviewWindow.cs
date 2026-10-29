@@ -18,7 +18,14 @@ namespace QuestEditor_Library
             this.closeOnCancel = false;
         }
 
-        public override Vector2 InitialSize => new Vector2(700f, 700f);
+        public override Vector2 InitialSize => this.tree.ActivePresentation == null ? new Vector2(700f, 700f)
+            : new Vector2(Mathf.Min(1280f, UI.screenWidth - 40f), Mathf.Min(900f, UI.screenHeight - 40f));
+
+        public override void PostClose()
+        {
+            this.presentationPreview.Dispose();
+            base.PostClose();
+        }
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -47,6 +54,12 @@ namespace QuestEditor_Library
                 return;
             }
             Rect view = new Rect(0f, 150f, inRect.width, inRect.height - 150f);
+            if (this.presentationPreview.Draw(view, this.tree, node, next =>
+            {
+                this.history.Push(this.index.Value);
+                this.index = next;
+                this.scroll = Vector2.zero;
+            })) return;
             string text = node.text.CanTranslate() ? node.text.Translate().ToString() : node.text;
             float textHeight = Mathf.Max(90f, Text.CalcHeight(text, view.width - 24f));
             float imageHeight = node.images.Count(image => !string.IsNullOrEmpty(image.imagePath)) * 130f;
@@ -87,5 +100,6 @@ namespace QuestEditor_Library
         private readonly Stack<int> history = new Stack<int>();
         private int? index;
         private Vector2 scroll;
+        private readonly CQFDialogPresentationPreview presentationPreview = new();
     }
 }
