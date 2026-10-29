@@ -10,4 +10,5 @@ public sealed class CustomMapGenerationContext
     }
 
     public Quest Quest { get; set; }
+    public string RegionScope { get; set; } = "";
 }

@@ -47,6 +47,8 @@ description: "Detailed skill for building CQF maps, submaps, zone layouts, inter
 
 1.7 的人物进出通知使用 `Map.events.ThingSpawned/ThingDespawned`，由 `MapComponent_CustomMapData` 管理订阅和清理；1.6 保留版本专用补丁。新增地图行为先查原版事件、组件回调和 CQF 调用入口，确认没有等价接口再加 Harmony 补丁。
 
+需要标记主城、保留入口、按 tag 抽取部件或在已有地图上追加布局时，先读 [区域标记与布局用法](references/region-layout-usage.md)。该参考记录已实现接口、配置示例和保护边界；最初方案见 [区域布局设计](references/region-layout-design.md)。
+
 ## 地图制作的五层模型
 
 CQF 地图不是“铺砖 + 放东西”。

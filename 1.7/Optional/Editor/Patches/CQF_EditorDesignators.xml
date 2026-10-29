@@ -30,6 +30,7 @@
 			<li>QuestEditor_Library.Designator_CQFSignalBook</li>
 			<li>QuestEditor_Library.Designator_CQFTargetKeyBook</li>
 			<li>QuestEditor_Library.Designator_CQFEntityBook</li>
+			<li>QuestEditor_Library.Designator_CQFMapRegions</li>
 		</value>
 	</Operation>
 

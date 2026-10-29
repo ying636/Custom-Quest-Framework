@@ -36,6 +36,8 @@ namespace QuestEditor_Library
             //从所有自定义地图定义中挑选是“部分”且满足条件，同时这个核心的方向为中心或者有可以生成的核心。
             if (!zoneDatas.Any() || (noGenerate))
             {
+                if (!zoneDatas.Any() && !noGenerate && CQFLayoutExecution.Current != null)
+                    throw new CQFLayoutException("CQF_Layout_NestedNoMatch: " + this.Position);
                 if (this.reserveThing != null)
                 {
                     Thing thing = GenSpawn.Spawn(ThingMaker.MakeThing(getStuff(this.reserveThing.def, false), getStuff(this.reserveThing.stuff, true)), this.Position, this.Map);
@@ -57,6 +59,7 @@ namespace QuestEditor_Library
             //}
             if (this.isCenter)
             {
+                CQFLayoutExecution.Current?.Validate(map, data, pos);
                 result.AddRange(data.GenerateByCore(pos, map, quest, false, false, this.destroyThings, true));
             }
             else
@@ -168,7 +171,8 @@ namespace QuestEditor_Library
                 return false;
             }
 
-            return !rect.Value.Cells.ToList().Exists(c => !c.InBounds(map) || (GenStep_CustomMap.disgenerate.Contains(c) && !rect.Value.IsOnEdge(c)));
+            return (CQFLayoutExecution.Current == null || CQFLayoutExecution.Current.Allows(map, rect.Value.Cells))
+                && !rect.Value.Cells.ToList().Exists(c => !c.InBounds(map) || (GenStep_CustomMap.disgenerate.Contains(c) && !rect.Value.IsOnEdge(c)));
         }
 
         //参数分别为生成的事物的坐标，被生成的地图的核心的坐标，要返回的实际坐标

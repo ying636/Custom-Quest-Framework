@@ -31,7 +31,9 @@ namespace QuestEditor_Library
             }
             catch (Exception e)
             {
+                if (e is CQFLayoutException) throw;
                 Log.Error($"Generate map part error:Mappart={this.defName},Center={center.ToString()},{e.Message}");
+                if (CQFLayoutExecution.Current != null) throw;
             }
 
             //if (Prefs.DevMode)
@@ -54,7 +56,9 @@ namespace QuestEditor_Library
             }
             catch (Exception e)
             {
+                if (e is CQFLayoutException) throw;
                 Log.Error($"Generate map part error:Mappart={this.defName},Center={center.ToString()},{e.Message}");
+                if (CQFLayoutExecution.Current != null) throw;
             }
 
             //if (Prefs.DevMode)
@@ -187,6 +191,7 @@ namespace QuestEditor_Library
 
             CustomMapDataDef result = this.Copy(rot.ToStringWord());
             RotationDirection direction = Rot4.GetRelativeRotation(result.rot, rot);
+            result.regions.ForEach(r => r.connections.ForEach(c => c.direction.Rotate(direction)));
             result.thingDatas.ForEach(d =>
             {
                 if (d.def.rotatable)
@@ -288,6 +293,9 @@ namespace QuestEditor_Library
             result.destroyAllThing = this.destroyAllThing;
             result.fogged = this.fogged;
             result.tags = this.tags.ListFullCopy();
+            result.regions = this.regions.Select(r => r.Copy()).ToList();
+            result.disgenerate = this.disgenerate.ListFullCopy();
+            result.disdestroy = this.disdestroy.ListFullCopy();
             result.rot = this.rot;
             result.customThings.Clear();
             result.faction = this.faction;
@@ -334,6 +342,7 @@ namespace QuestEditor_Library
 
             IntVec3 centre = IntVec3.Zero;
             this.size = map.Size;
+            this.regions = MapComponent_CustomMapData.GetComp(map).Regions.Capture(map.AllCells, centre);
             if (map.GetComponent<MapComponent_CustomMapData>()is MapComponent_CustomMapData component && component.route != null)
             {
                 foreach (KeyValuePair<string, Route> route in component.route)
@@ -365,6 +374,7 @@ namespace QuestEditor_Library
             });
             IntVec3 centre = new IntVec3(minX.Value, 0, minZ.Value);
             this.size = size;
+            this.regions = MapComponent_CustomMapData.GetComp(map).Regions.Capture(poss, centre);
             List<Thing> things = new List<Thing>();
             poss.ForEach(p =>
             {
@@ -570,6 +580,7 @@ namespace QuestEditor_Library
             {
                 result.Add(CQFSerialization.SaveList(this.disgenerate, "disgenerate"));
             }
+            if (this.regions.Any()) result.Add(CQFSerialization.SaveList_Saveable(this.regions, "regions"));
 
             if (this.disdestroy.Any())
             {
@@ -664,6 +675,8 @@ namespace QuestEditor_Library
 
         private void ChangePosition(IntVec3 variable, Func<IntVec3, IntVec3, IntVec3> ChangingAction)
         {
+            this.regions = this.regions.Select(r => r.Copy(c => ChangingAction(variable, c))).ToList();
+            this.disgenerate = this.disgenerate.Select(c => ChangingAction(variable, c)).ToList();
             this.thingDatas.ForEach(d =>
             {
                 d.position = ChangingAction(variable, d.position);
@@ -995,6 +1008,7 @@ namespace QuestEditor_Library
         public List<CustomMapStep> preCustomSteps = new List<CustomMapStep>();
         public List<CustomMapStep> customSteps = new List<CustomMapStep>();
         public List<string> tags = new List<string>();
+        public List<CQFMapRegion> regions = new List<CQFMapRegion>();
         public ThingData reserveThing = null;
         public List<IntVec3> disgenerate = new List<IntVec3>();
         public List<IntVec3> disdestroy = new List<IntVec3>();
