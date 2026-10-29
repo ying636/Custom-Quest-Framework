@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQFEcologySettings>生态底图设置</CQFEcologySettings>
+  <CQFEcologyTerrain>自定义地形权重</CQFEcologyTerrain>
+  <CQFEcologyPlant>自定义植物权重</CQFEcologyPlant>
+  <CQFPointOfInterestSettings>兴趣点选址条件</CQFPointOfInterestSettings>
+  <CQFLayoutPartRule>地图部件抽取规则</CQFLayoutPartRule>
+  <CQF_Ecology_AddPlant>添加自定义植物与权重</CQF_Ecology_AddPlant>
+  <CQF_Ecology_AddTerrain>添加自定义地形与权重</CQF_Ecology_AddTerrain>
+  <CQF_Ecology_AllowedTerrain>添加允许的地形（留空不限）</CQF_Ecology_AllowedTerrain>
+  <CQF_Ecology_Automatic>自动选择</CQF_Ecology_Automatic>
+  <CQF_Ecology_Biome>基础生态</CQF_Ecology_Biome>
+  <CQF_Ecology_CurrentBiome>沿用地图当前生态</CQF_Ecology_CurrentBiome>
+  <CQF_Ecology_FeatureDistance>距环境特征（格）</CQF_Ecology_FeatureDistance>
+  <CQF_Ecology_Habitat_Any>任意适合的陆地</CQF_Ecology_Habitat_Any>
+  <CQF_Ecology_Habitat_ForestClearing>林中空地</CQF_Ecology_Habitat_ForestClearing>
+  <CQF_Ecology_Habitat_Open>开阔地带</CQF_Ecology_Habitat_Open>
+  <CQF_Ecology_Habitat_RockEdge>山石边缘</CQF_Ecology_Habitat_RockEdge>
+  <CQF_Ecology_Habitat_Shore>水域岸边</CQF_Ecology_Habitat_Shore>
+  <CQF_Ecology_InvalidResource>生态资源或权重无效，请选择单格植物、天然岩石和有效地形</CQF_Ecology_InvalidResource>
+  <CQF_Ecology_InvalidSettings>生态参数无效，水域与山石比例之和不能超过 0.9</CQF_Ecology_InvalidSettings>
+  <CQF_Ecology_InvalidSite>兴趣点位置条件或距离范围无效</CQF_Ecology_InvalidSite>
+  <CQF_Ecology_MissingBiome>缺少基础生态，请选择一个生态</CQF_Ecology_MissingBiome>
+  <CQF_Ecology_MissingPlan>兴趣点布局缺少生态规划数据</CQF_Ecology_MissingPlan>
+  <CQF_Ecology_MissingRock>找不到可用的天然岩石，请指定岩石或将山石比例设为 0</CQF_Ecology_MissingRock>
+  <CQF_Ecology_MissingTerrain>生态缺少覆盖当前肥力范围的地形规则，请配置自定义地形</CQF_Ecology_MissingTerrain>
+  <CQF_Ecology_MissingWater>此生态没有可用水域地形，请指定水域地形或将水域比例设为 0</CQF_Ecology_MissingWater>
+  <CQF_Ecology_PatchSize>地形斑块尺度（格）</CQF_Ecology_PatchSize>
+  <CQF_Ecology_PlantDensity>植被密度（-1 为生态默认）</CQF_Ecology_PlantDensity>
+  <CQF_Ecology_PlantDensityTip>0 表示不生成植物，1 表示最高密度；-1 使用基础生态的密度。自定义植物列表留空时使用生态中的野生植物。</CQF_Ecology_PlantDensityTip>
+  <CQF_Ecology_Reachable>要求兴趣点入口可达</CQF_Ecology_Reachable>
+  <CQF_Ecology_Regenerate>重新生成生态底图</CQF_Ecology_Regenerate>
+  <CQF_Ecology_RockCoverage>山石比例</CQF_Ecology_RockCoverage>
+  <CQF_Ecology_RockType>天然岩石类型</CQF_Ecology_RockType>
+  <CQF_Ecology_SelectPlant>选择植物</CQF_Ecology_SelectPlant>
+  <CQF_Ecology_SelectTerrain>选择地形</CQF_Ecology_SelectTerrain>
+  <CQF_Ecology_Settings>生态底图设置</CQF_Ecology_Settings>
+  <CQF_Ecology_SiteConditions>生态布局：兴趣点位置条件</CQF_Ecology_SiteConditions>
+  <CQF_Ecology_WaterCoverage>水域比例</CQF_Ecology_WaterCoverage>
+  <CQF_Ecology_WaterTerrain>水域地形</CQF_Ecology_WaterTerrain>
+  <CQF_Layout_AllowedRegion>允许生成的区域</CQF_Layout_AllowedRegion>
+  <CQF_Layout_AnyTags>至少匹配一个标签</CQF_Layout_AnyTags>
+  <CQF_Layout_Anywhere>不限相对位置</CQF_Layout_Anywhere>
+  <CQF_Layout_Around>围绕区域</CQF_Layout_Around>
+  <CQF_Layout_BlockedConnection>连接点或外侧通道被阻挡</CQF_Layout_BlockedConnection>
+  <CQF_Layout_Clusters>群落中心数量</CQF_Layout_Clusters>
+  <CQF_Layout_ClusterSpace>没有足够空间放置指定数量的群落中心</CQF_Layout_ClusterSpace>
+  <CQF_Layout_ConnectRoads>连接道路</CQF_Layout_ConnectRoads>
+  <CQF_Layout_Directions>允许的方位（留空不限）</CQF_Layout_Directions>
+  <CQF_Layout_Distance>距区域边界（格）</CQF_Layout_Distance>
+  <CQF_Layout_DuplicatePart>候选列表中存在重复部件</CQF_Layout_DuplicatePart>
+  <CQF_Layout_EachReference>对每个匹配区域执行</CQF_Layout_EachReference>
+  <CQF_Layout_EdgeMargin>地图边缘留白（格）</CQF_Layout_EdgeMargin>
+  <CQF_Layout_ExcludedTags>排除的标签</CQF_Layout_ExcludedTags>
+  <CQF_Layout_FortifiedGap>据点外围未能完整闭合</CQF_Layout_FortifiedGap>
+  <CQF_Layout_FortifiedRole>围合据点需要各一条必需的 Wall、Corner 和 Gate 规则</CQF_Layout_FortifiedRole>
+  <CQF_Layout_Generate>按预览生成</CQF_Layout_Generate>
+  <CQF_Layout_GenerationFailed>布局生成失败</CQF_Layout_GenerationFailed>
+  <CQF_Layout_GridSize>街区或模块尺寸</CQF_Layout_GridSize>
+  <CQF_Layout_Inside>区域内部</CQF_Layout_Inside>
+  <CQF_Layout_InvalidCount>部件数量范围无效</CQF_Layout_InvalidCount>
+  <CQF_Layout_InvalidRelation>相对位置规则无效</CQF_Layout_InvalidRelation>
+  <CQF_Layout_InvalidScope>生成范围的嵌套顺序无效</CQF_Layout_InvalidScope>
+  <CQF_Layout_InvalidSettings>布局参数无效，请检查数量、距离和尺寸</CQF_Layout_InvalidSettings>
+  <CQF_Layout_InvalidWeight>候选部件或标签的权重必须为有效正数</CQF_Layout_InvalidWeight>
+  <CQF_Layout_InvalidWorker>布局算法配置无效</CQF_Layout_InvalidWorker>
+  <CQF_Layout_MapTooSmall>地图可用范围太小</CQF_Layout_MapTooSmall>
+  <CQF_Layout_MissingConnection>参考区域没有道路连接点</CQF_Layout_MissingConnection>
+  <CQF_Layout_MissingDefinition>请选择布局类型</CQF_Layout_MissingDefinition>
+  <CQF_Layout_MissingRoadTerrain>请选择道路地形</CQF_Layout_MissingRoadTerrain>
+  <CQF_Layout_NestedMap>嵌套布局不能切换到另一张地图</CQF_Layout_NestedMap>
+  <CQF_Layout_NestedNoMatch>区域核心没有找到符合条件且能放入范围的部件</CQF_Layout_NestedNoMatch>
+  <CQF_Layout_NoPlacement>无法按规则放置所需部件</CQF_Layout_NoPlacement>
+  <CQF_Layout_NoRules>请至少添加一条部件规则</CQF_Layout_NoRules>
+  <CQF_Layout_Optional>允许数量不足时跳过并报告</CQF_Layout_Optional>
+  <CQF_Layout_OutputKey>生成区域的标识前缀</CQF_Layout_OutputKey>
+  <CQF_Layout_OutputTags>生成区域的标签</CQF_Layout_OutputTags>
+  <CQF_Layout_Outside>区域外部</CQF_Layout_Outside>
+  <CQF_Layout_PostStepRequired>布局步骤应放在底图生成后的 customSteps 中</CQF_Layout_PostStepRequired>
+  <CQF_Layout_Preview>预览布局</CQF_Layout_Preview>
+  <CQF_Layout_PreviewChanged>地图或配置已改变，请重新预览后再生成</CQF_Layout_PreviewChanged>
+  <CQF_Layout_PreviewTip>查看部件占地、道路与保护范围。右键可生成或返回设置；生态布局另显示蓝色水域、灰色山石和绿色树木。</CQF_Layout_PreviewTip>
+  <CQF_Layout_ProtectedThing>生成会影响与保护区相交的物体</CQF_Layout_ProtectedThing>
+  <CQF_Layout_ProtectedWrite>生成内容超出允许范围或进入保护区</CQF_Layout_ProtectedWrite>
+  <CQF_Layout_ReferenceKey>参考区域标识</CQF_Layout_ReferenceKey>
+  <CQF_Layout_ReferenceTags>参考区域标签</CQF_Layout_ReferenceTags>
+  <CQF_Layout_RequiredTags>必须同时匹配的标签</CQF_Layout_RequiredTags>
+  <CQF_Layout_RoadBlocked>道路占地被物体阻挡</CQF_Layout_RoadBlocked>
+  <CQF_Layout_RoadUnreachable>无法连接部件入口</CQF_Layout_RoadUnreachable>
+  <CQF_Layout_RoadWidth>道路宽度（格）</CQF_Layout_RoadWidth>
+  <CQF_Layout_Role>部件角色标签</CQF_Layout_Role>
+  <CQF_Layout_Rotate>允许旋转部件</CQF_Layout_Rotate>
+  <CQF_Layout_Seed>随机种子</CQF_Layout_Seed>
+  <CQF_Layout_Settings>返回布局设置</CQF_Layout_Settings>
+  <CQF_Layout_Spacing>部件间距（格）</CQF_Layout_Spacing>
+  <CQF_Layout_UnsupportedStep>受保护的布局部件不能包含额外生成步骤或任意生成动作</CQF_Layout_UnsupportedStep>
+  <CQF_Layout_Vacancy>废墟空置比例</CQF_Layout_Vacancy>
+  <CQF_Region_AddConnection>添加边界连接点</CQF_Region_AddConnection>
+  <CQF_Region_Duplicate>区域标识重复或无效</CQF_Region_Duplicate>
+  <CQF_Region_Empty>区域没有包含任何格子</CQF_Region_Empty>
+  <CQF_Region_Erase>擦除区域格子</CQF_Region_Erase>
+  <CQF_Region_Invalid>区域缺少标识、为空或超出地图</CQF_Region_Invalid>
+  <CQF_Region_InvalidConnection>连接点必须位于区域边界并朝向外侧</CQF_Region_InvalidConnection>
+  <CQF_Region_InvalidRegistry>保存的区域记录存在重复或无效条目</CQF_Region_InvalidRegistry>
+  <CQF_Region_Key>区域标识（唯一）</CQF_Region_Key>
+  <CQF_Region_Name>显示名称</CQF_Region_Name>
+  <CQF_Region_Paint>涂抹区域</CQF_Region_Paint>
+  <CQF_Region_PartialExport>选区只包含部分标记区域，请扩大选区或调整区域后再导出</CQF_Region_PartialExport>
+  <CQF_Region_Protect>生成时保护此区域</CQF_Region_Protect>
+  <CQF_Region_Rectangle>框选扩展区域</CQF_Region_Rectangle>
+  <CQF_Region_Reference>未找到唯一匹配的参考区域</CQF_Region_Reference>
+  <CQF_Region_Tags>区域标签（逗号分隔）</CQF_Region_Tags>
+  <CQF_Region_Title>区域标记</CQF_Region_Title>
+  <CustomMapStep_Layout>布局生成</CustomMapStep_Layout>
+</LanguageData>

@@ -4,6 +4,7 @@ param(
     [string]$GameDirectory = 'D:/RimWorld-Dev',
     [string]$RunRoot = 'C:/Users/24904/AppData/Local/Temp/CQF-RegionLayouts/Runtime',
     [string]$Dotnet = 'C:/Users/24904/AppData/Local/HaiLuan/dotnet/dotnet.exe',
+    [ValidateSet('English', 'ChineseSimplified')][string]$Language = 'English',
     [int]$TimeoutSeconds = 360,
     [switch]$Launch
 )
@@ -18,6 +19,12 @@ $taskBuild = Join-Path $taskManifest.RunDirectory 'MapLayoutBuild'
 if ($LASTEXITCODE -ne 0) { throw "Map layout fixture compilation failed: $($taskManifest.RunDirectory)" }
 Copy-Item -LiteralPath (Join-Path $taskBuild 'CQF.CinematicsRuntimeChecks.dll') -Destination (Join-Path $taskManifest.GameSnapshot 'Mods/CQF_CinematicsChecks/Assemblies/CQF.CinematicsRuntimeChecks.dll') -Force
 [IO.File]::WriteAllText((Join-Path $taskManifest.GameSnapshot 'steam_appid.txt'), '0')
+$taskPrefsPath = Join-Path $taskManifest.SaveData 'Config/Prefs.xml'
+[xml]$taskPrefs = Get-Content -LiteralPath $taskPrefsPath -Raw -Encoding UTF8
+$taskLanguageNode = $taskPrefs.CreateElement('langFolderName')
+$taskLanguageNode.InnerText = $Language
+[void]$taskPrefs.DocumentElement.AppendChild($taskLanguageNode)
+$taskPrefs.Save($taskPrefsPath)
 $taskManifest | ConvertTo-Json -Compress
 if (-not $Launch) { return }
 $taskProcess = $null

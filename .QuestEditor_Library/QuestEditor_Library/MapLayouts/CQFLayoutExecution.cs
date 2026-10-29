@@ -38,6 +38,8 @@ public sealed class CQFLayoutExecution : IDisposable
 
     public static void ValidateTemplate(CustomMapDataDef definition)
     {
+        foreach (CQFMapRegion region in definition.regions) region.Validate();
+        if (definition.regions.GroupBy(r => r.key).Any(g => g.Count() > 1)) throw new CQFLayoutException("CQF_Region_Duplicate: " + definition.defName);
         if (definition.generationActions.Any(a => a.actions?.Count > 0) || definition.preCustomSteps.Count > 0 || definition.customSteps.Count > 0)
             throw new CQFLayoutException("CQF_Layout_UnsupportedStep: " + definition.defName);
     }

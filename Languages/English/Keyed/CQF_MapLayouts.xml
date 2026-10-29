@@ -1,77 +1,115 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQF_Layout_AllowedRegion>CQF_Layout_AllowedRegion</CQF_Layout_AllowedRegion>
-  <CQF_Layout_AnyTags>CQF_Layout_AnyTags</CQF_Layout_AnyTags>
-  <CQF_Layout_Anywhere>CQF_Layout_Anywhere</CQF_Layout_Anywhere>
-  <CQF_Layout_Around>CQF_Layout_Around</CQF_Layout_Around>
-  <CQF_Layout_BlockedConnection>CQF_Layout_BlockedConnection</CQF_Layout_BlockedConnection>
-  <CQF_Layout_Clusters>CQF_Layout_Clusters</CQF_Layout_Clusters>
-  <CQF_Layout_ConnectRoads>CQF_Layout_ConnectRoads</CQF_Layout_ConnectRoads>
-  <CQF_Layout_Directions>CQF_Layout_Directions</CQF_Layout_Directions>
-  <CQF_Layout_Distance>CQF_Layout_Distance</CQF_Layout_Distance>
-  <CQF_Layout_DuplicatePart>CQF_Layout_DuplicatePart</CQF_Layout_DuplicatePart>
-  <CQF_Layout_EachReference>CQF_Layout_EachReference</CQF_Layout_EachReference>
-  <CQF_Layout_EdgeMargin>CQF_Layout_EdgeMargin</CQF_Layout_EdgeMargin>
-  <CQF_Layout_ExcludedTags>CQF_Layout_ExcludedTags</CQF_Layout_ExcludedTags>
-  <CQF_Layout_FortifiedGap>CQF_Layout_FortifiedGap</CQF_Layout_FortifiedGap>
-  <CQF_Layout_FortifiedRole>CQF_Layout_FortifiedRole</CQF_Layout_FortifiedRole>
-  <CQF_Layout_Generate>CQF_Layout_Generate</CQF_Layout_Generate>
-  <CQF_Layout_GenerationFailed>CQF_Layout_GenerationFailed</CQF_Layout_GenerationFailed>
-  <CQF_Layout_GridSize>CQF_Layout_GridSize</CQF_Layout_GridSize>
-  <CQF_Layout_Inside>CQF_Layout_Inside</CQF_Layout_Inside>
-  <CQF_Layout_InvalidCount>CQF_Layout_InvalidCount</CQF_Layout_InvalidCount>
-  <CQF_Layout_InvalidRelation>CQF_Layout_InvalidRelation</CQF_Layout_InvalidRelation>
-  <CQF_Layout_InvalidScope>CQF_Layout_InvalidScope</CQF_Layout_InvalidScope>
-  <CQF_Layout_InvalidSettings>CQF_Layout_InvalidSettings</CQF_Layout_InvalidSettings>
-  <CQF_Layout_InvalidWeight>CQF_Layout_InvalidWeight</CQF_Layout_InvalidWeight>
-  <CQF_Layout_InvalidWorker>CQF_Layout_InvalidWorker</CQF_Layout_InvalidWorker>
-  <CQF_Layout_MapTooSmall>CQF_Layout_MapTooSmall</CQF_Layout_MapTooSmall>
-  <CQF_Layout_MissingConnection>CQF_Layout_MissingConnection</CQF_Layout_MissingConnection>
-  <CQF_Layout_MissingDefinition>CQF_Layout_MissingDefinition</CQF_Layout_MissingDefinition>
-  <CQF_Layout_MissingRoadTerrain>CQF_Layout_MissingRoadTerrain</CQF_Layout_MissingRoadTerrain>
-  <CQF_Layout_NestedMap>CQF_Layout_NestedMap</CQF_Layout_NestedMap>
-  <CQF_Layout_NoPlacement>CQF_Layout_NoPlacement</CQF_Layout_NoPlacement>
-  <CQF_Layout_NoRules>CQF_Layout_NoRules</CQF_Layout_NoRules>
-  <CQF_Layout_Optional>CQF_Layout_Optional</CQF_Layout_Optional>
-  <CQF_Layout_OutputKey>CQF_Layout_OutputKey</CQF_Layout_OutputKey>
-  <CQF_Layout_OutputTags>CQF_Layout_OutputTags</CQF_Layout_OutputTags>
-  <CQF_Layout_Outside>CQF_Layout_Outside</CQF_Layout_Outside>
-  <CQF_Layout_PostStepRequired>CQF_Layout_PostStepRequired</CQF_Layout_PostStepRequired>
-  <CQF_Layout_Preview>CQF_Layout_Preview</CQF_Layout_Preview>
-  <CQF_Layout_PreviewTip>CQF_Layout_PreviewTip</CQF_Layout_PreviewTip>
-  <CQF_Layout_ProtectedThing>CQF_Layout_ProtectedThing</CQF_Layout_ProtectedThing>
-  <CQF_Layout_ProtectedWrite>CQF_Layout_ProtectedWrite</CQF_Layout_ProtectedWrite>
-  <CQF_Layout_ReferenceKey>CQF_Layout_ReferenceKey</CQF_Layout_ReferenceKey>
-  <CQF_Layout_ReferenceTags>CQF_Layout_ReferenceTags</CQF_Layout_ReferenceTags>
-  <CQF_Layout_RequiredTags>CQF_Layout_RequiredTags</CQF_Layout_RequiredTags>
-  <CQF_Layout_RoadBlocked>CQF_Layout_RoadBlocked</CQF_Layout_RoadBlocked>
-  <CQF_Layout_RoadUnreachable>CQF_Layout_RoadUnreachable</CQF_Layout_RoadUnreachable>
-  <CQF_Layout_RoadWidth>CQF_Layout_RoadWidth</CQF_Layout_RoadWidth>
-  <CQF_Layout_Role>CQF_Layout_Role</CQF_Layout_Role>
-  <CQF_Layout_Rotate>CQF_Layout_Rotate</CQF_Layout_Rotate>
-  <CQF_Layout_Seed>CQF_Layout_Seed</CQF_Layout_Seed>
-  <CQF_Layout_Settings>CQF_Layout_Settings</CQF_Layout_Settings>
-  <CQF_Layout_Spacing>CQF_Layout_Spacing</CQF_Layout_Spacing>
-  <CQF_Layout_UnsupportedStep>CQF_Layout_UnsupportedStep</CQF_Layout_UnsupportedStep>
-  <CQF_Layout_Vacancy>CQF_Layout_Vacancy</CQF_Layout_Vacancy>
-  <CQF_Region_AddConnection>CQF_Region_AddConnection</CQF_Region_AddConnection>
-  <CQF_Region_Duplicate>CQF_Region_Duplicate</CQF_Region_Duplicate>
-  <CQF_Region_Empty>CQF_Region_Empty</CQF_Region_Empty>
-  <CQF_Region_Erase>CQF_Region_Erase</CQF_Region_Erase>
-  <CQF_Region_Invalid>CQF_Region_Invalid</CQF_Region_Invalid>
-  <CQF_Region_InvalidConnection>CQF_Region_InvalidConnection</CQF_Region_InvalidConnection>
-  <CQF_Region_InvalidRegistry>CQF_Region_InvalidRegistry</CQF_Region_InvalidRegistry>
-  <CQF_Region_Key>CQF_Region_Key</CQF_Region_Key>
-  <CQF_Region_Name>CQF_Region_Name</CQF_Region_Name>
-  <CQF_Region_Paint>CQF_Region_Paint</CQF_Region_Paint>
-  <CQF_Region_PartialExport>CQF_Region_PartialExport</CQF_Region_PartialExport>
-  <CQF_Region_Protect>CQF_Region_Protect</CQF_Region_Protect>
-  <CQF_Region_Rectangle>CQF_Region_Rectangle</CQF_Region_Rectangle>
-  <CQF_Region_Reference>CQF_Region_Reference</CQF_Region_Reference>
-  <CQF_Region_Tags>CQF_Region_Tags</CQF_Region_Tags>
-  <CQF_Region_Title>CQF_Region_Title</CQF_Region_Title>
-  <CustomMapStep_Layout>CustomMapStep_Layout</CustomMapStep_Layout>
-  <CQF_Layout_PreviewChanged>CQF_Layout_PreviewChanged</CQF_Layout_PreviewChanged>
-  <CQF_Layout_ClusterSpace>CQF_Layout_ClusterSpace</CQF_Layout_ClusterSpace>
-  <CQF_Layout_NestedNoMatch>CQF_Layout_NestedNoMatch</CQF_Layout_NestedNoMatch>
+  <CQFEcologySettings>Ecological base map settings</CQFEcologySettings>
+  <CQFEcologyTerrain>Custom terrain weight</CQFEcologyTerrain>
+  <CQFEcologyPlant>Custom plant weight</CQFEcologyPlant>
+  <CQFPointOfInterestSettings>Point of interest placement</CQFPointOfInterestSettings>
+  <CQFLayoutPartRule>Map part selection rule</CQFLayoutPartRule>
+  <CQF_Ecology_AddPlant>Add custom plant and weight</CQF_Ecology_AddPlant>
+  <CQF_Ecology_AddTerrain>Add custom terrain and weight</CQF_Ecology_AddTerrain>
+  <CQF_Ecology_AllowedTerrain>Add allowed terrain (empty: any)</CQF_Ecology_AllowedTerrain>
+  <CQF_Ecology_Automatic>Automatic</CQF_Ecology_Automatic>
+  <CQF_Ecology_Biome>Base biome</CQF_Ecology_Biome>
+  <CQF_Ecology_CurrentBiome>Use the current map biome</CQF_Ecology_CurrentBiome>
+  <CQF_Ecology_FeatureDistance>Distance to terrain feature</CQF_Ecology_FeatureDistance>
+  <CQF_Ecology_Habitat_Any>Any suitable land</CQF_Ecology_Habitat_Any>
+  <CQF_Ecology_Habitat_ForestClearing>Forest clearing</CQF_Ecology_Habitat_ForestClearing>
+  <CQF_Ecology_Habitat_Open>Open ground</CQF_Ecology_Habitat_Open>
+  <CQF_Ecology_Habitat_RockEdge>Near rocks</CQF_Ecology_Habitat_RockEdge>
+  <CQF_Ecology_Habitat_Shore>Near water</CQF_Ecology_Habitat_Shore>
+  <CQF_Ecology_InvalidResource>Invalid ecology resource or weight; choose single-cell plants, natural rocks and valid terrains</CQF_Ecology_InvalidResource>
+  <CQF_Ecology_InvalidSettings>Invalid ecology settings; water and rock fractions must total no more than 0.9</CQF_Ecology_InvalidSettings>
+  <CQF_Ecology_InvalidSite>The point-of-interest site conditions or distance range are invalid</CQF_Ecology_InvalidSite>
+  <CQF_Ecology_MissingBiome>No base biome is available; select one</CQF_Ecology_MissingBiome>
+  <CQF_Ecology_MissingPlan>The point-of-interest layout has no ecological plan</CQF_Ecology_MissingPlan>
+  <CQF_Ecology_MissingRock>No suitable natural rock was found; select one or set the rock fraction to 0</CQF_Ecology_MissingRock>
+  <CQF_Ecology_MissingTerrain>The biome has no terrain rule for this fertility range; configure custom terrains</CQF_Ecology_MissingTerrain>
+  <CQF_Ecology_MissingWater>This biome has no usable water terrain; select one or set the water fraction to 0</CQF_Ecology_MissingWater>
+  <CQF_Ecology_PatchSize>Terrain patch scale</CQF_Ecology_PatchSize>
+  <CQF_Ecology_PlantDensity>Plant density (-1: biome default)</CQF_Ecology_PlantDensity>
+  <CQF_Ecology_PlantDensityTip>0 generates no plants and 1 gives the highest density. Use -1 for the biome default. An empty custom plant list uses the biome's wild plants.</CQF_Ecology_PlantDensityTip>
+  <CQF_Ecology_Reachable>Require a reachable entrance</CQF_Ecology_Reachable>
+  <CQF_Ecology_Regenerate>Regenerate the ecological base map</CQF_Ecology_Regenerate>
+  <CQF_Ecology_RockCoverage>Rock fraction</CQF_Ecology_RockCoverage>
+  <CQF_Ecology_RockType>Natural rock type</CQF_Ecology_RockType>
+  <CQF_Ecology_SelectPlant>Select plant</CQF_Ecology_SelectPlant>
+  <CQF_Ecology_SelectTerrain>Select terrain</CQF_Ecology_SelectTerrain>
+  <CQF_Ecology_Settings>Ecological base map settings</CQF_Ecology_Settings>
+  <CQF_Ecology_SiteConditions>Ecology: point-of-interest site conditions</CQF_Ecology_SiteConditions>
+  <CQF_Ecology_WaterCoverage>Water fraction</CQF_Ecology_WaterCoverage>
+  <CQF_Ecology_WaterTerrain>Water terrain</CQF_Ecology_WaterTerrain>
+  <CQF_Layout_AllowedRegion>Allowed generation region</CQF_Layout_AllowedRegion>
+  <CQF_Layout_AnyTags>Match any of these tags</CQF_Layout_AnyTags>
+  <CQF_Layout_Anywhere>Anywhere</CQF_Layout_Anywhere>
+  <CQF_Layout_Around>Around region</CQF_Layout_Around>
+  <CQF_Layout_BlockedConnection>A connection or its outward approach is blocked</CQF_Layout_BlockedConnection>
+  <CQF_Layout_Clusters>Number of cluster centers</CQF_Layout_Clusters>
+  <CQF_Layout_ClusterSpace>There is not enough space for the requested cluster centers</CQF_Layout_ClusterSpace>
+  <CQF_Layout_ConnectRoads>Connect roads</CQF_Layout_ConnectRoads>
+  <CQF_Layout_Directions>Allowed directions (empty: any)</CQF_Layout_Directions>
+  <CQF_Layout_Distance>Distance from region edge</CQF_Layout_Distance>
+  <CQF_Layout_DuplicatePart>The candidate list contains a duplicate part</CQF_Layout_DuplicatePart>
+  <CQF_Layout_EachReference>Run for every matching region</CQF_Layout_EachReference>
+  <CQF_Layout_EdgeMargin>Map edge margin</CQF_Layout_EdgeMargin>
+  <CQF_Layout_ExcludedTags>Excluded tags</CQF_Layout_ExcludedTags>
+  <CQF_Layout_FortifiedGap>The compound perimeter could not be completed</CQF_Layout_FortifiedGap>
+  <CQF_Layout_FortifiedRole>A fortified compound requires one mandatory rule each for Wall, Corner and Gate</CQF_Layout_FortifiedRole>
+  <CQF_Layout_Generate>Generate from preview</CQF_Layout_Generate>
+  <CQF_Layout_GenerationFailed>Layout generation failed</CQF_Layout_GenerationFailed>
+  <CQF_Layout_GridSize>Block or module size</CQF_Layout_GridSize>
+  <CQF_Layout_Inside>Inside region</CQF_Layout_Inside>
+  <CQF_Layout_InvalidCount>The part count range is invalid</CQF_Layout_InvalidCount>
+  <CQF_Layout_InvalidRelation>The relative placement rule is invalid</CQF_Layout_InvalidRelation>
+  <CQF_Layout_InvalidScope>The generation scopes are nested incorrectly</CQF_Layout_InvalidScope>
+  <CQF_Layout_InvalidSettings>Invalid layout settings; check counts, distances and sizes</CQF_Layout_InvalidSettings>
+  <CQF_Layout_InvalidWeight>Candidate part and tag weights must be finite positive numbers</CQF_Layout_InvalidWeight>
+  <CQF_Layout_InvalidWorker>The layout algorithm is configured incorrectly</CQF_Layout_InvalidWorker>
+  <CQF_Layout_MapTooSmall>The available map area is too small</CQF_Layout_MapTooSmall>
+  <CQF_Layout_MissingConnection>The reference region has no road connection</CQF_Layout_MissingConnection>
+  <CQF_Layout_MissingDefinition>Select a layout type</CQF_Layout_MissingDefinition>
+  <CQF_Layout_MissingRoadTerrain>Select a road terrain</CQF_Layout_MissingRoadTerrain>
+  <CQF_Layout_NestedMap>A nested layout cannot switch to another map</CQF_Layout_NestedMap>
+  <CQF_Layout_NestedNoMatch>The zone core found no suitable part that fits its allowed area</CQF_Layout_NestedNoMatch>
+  <CQF_Layout_NoPlacement>The required parts cannot be placed under these rules</CQF_Layout_NoPlacement>
+  <CQF_Layout_NoRules>Add at least one part rule</CQF_Layout_NoRules>
+  <CQF_Layout_Optional>Allow shortages and report skipped parts</CQF_Layout_Optional>
+  <CQF_Layout_OutputKey>Generated region ID prefix</CQF_Layout_OutputKey>
+  <CQF_Layout_OutputTags>Generated region tags</CQF_Layout_OutputTags>
+  <CQF_Layout_Outside>Outside region</CQF_Layout_Outside>
+  <CQF_Layout_PostStepRequired>Place the layout step in customSteps, after the base map is generated</CQF_Layout_PostStepRequired>
+  <CQF_Layout_Preview>Preview layout</CQF_Layout_Preview>
+  <CQF_Layout_PreviewChanged>The map or settings have changed; preview again before generating</CQF_Layout_PreviewChanged>
+  <CQF_Layout_PreviewTip>Inspect part footprints, roads and protected areas. Right-click to generate or return to settings. Ecology previews also show water in blue, rocks in gray and trees in green.</CQF_Layout_PreviewTip>
+  <CQF_Layout_ProtectedThing>Generation would affect an object overlapping a protected area</CQF_Layout_ProtectedThing>
+  <CQF_Layout_ProtectedWrite>Generation would leave the allowed area or enter a protected area</CQF_Layout_ProtectedWrite>
+  <CQF_Layout_ReferenceKey>Reference region ID</CQF_Layout_ReferenceKey>
+  <CQF_Layout_ReferenceTags>Reference region tags</CQF_Layout_ReferenceTags>
+  <CQF_Layout_RequiredTags>Required tags (all)</CQF_Layout_RequiredTags>
+  <CQF_Layout_RoadBlocked>An object blocks the planned road</CQF_Layout_RoadBlocked>
+  <CQF_Layout_RoadUnreachable>A part entrance cannot be reached</CQF_Layout_RoadUnreachable>
+  <CQF_Layout_RoadWidth>Road width</CQF_Layout_RoadWidth>
+  <CQF_Layout_Role>Part role tag</CQF_Layout_Role>
+  <CQF_Layout_Rotate>Allow part rotation</CQF_Layout_Rotate>
+  <CQF_Layout_Seed>Random seed</CQF_Layout_Seed>
+  <CQF_Layout_Settings>Return to layout settings</CQF_Layout_Settings>
+  <CQF_Layout_Spacing>Part spacing</CQF_Layout_Spacing>
+  <CQF_Layout_UnsupportedStep>Protected layout parts cannot contain extra generation steps or arbitrary generation actions</CQF_Layout_UnsupportedStep>
+  <CQF_Layout_Vacancy>Vacant ruin block fraction</CQF_Layout_Vacancy>
+  <CQF_Region_AddConnection>Add boundary connection</CQF_Region_AddConnection>
+  <CQF_Region_Duplicate>The region ID is duplicated or invalid</CQF_Region_Duplicate>
+  <CQF_Region_Empty>The region contains no cells</CQF_Region_Empty>
+  <CQF_Region_Erase>Erase region cells</CQF_Region_Erase>
+  <CQF_Region_Invalid>The region has no ID, is empty or extends outside the map</CQF_Region_Invalid>
+  <CQF_Region_InvalidConnection>A connection must lie on the region boundary and face outward</CQF_Region_InvalidConnection>
+  <CQF_Region_InvalidRegistry>Saved region records contain duplicate or invalid entries</CQF_Region_InvalidRegistry>
+  <CQF_Region_Key>Region ID (unique)</CQF_Region_Key>
+  <CQF_Region_Name>Display name</CQF_Region_Name>
+  <CQF_Region_Paint>Paint region</CQF_Region_Paint>
+  <CQF_Region_PartialExport>The selection includes only part of a marked region; expand the selection or edit the region before exporting</CQF_Region_PartialExport>
+  <CQF_Region_Protect>Protect this region during generation</CQF_Region_Protect>
+  <CQF_Region_Rectangle>Extend region with a rectangle</CQF_Region_Rectangle>
+  <CQF_Region_Reference>No unique matching reference region was found</CQF_Region_Reference>
+  <CQF_Region_Tags>Region tags (comma-separated)</CQF_Region_Tags>
+  <CQF_Region_Title>Region markers</CQF_Region_Title>
+  <CustomMapStep_Layout>Layout generation</CustomMapStep_Layout>
 </LanguageData>

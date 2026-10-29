@@ -40,13 +40,16 @@ public sealed class CQFLayoutPartRule : ISaveable, IDrawable
         DrawTags("CQF_Layout_RequiredTags", ref requiredTags, ref y, rect, x);
         DrawTags("CQF_Layout_AnyTags", ref anyTags, ref y, rect, x);
         DrawTags("CQF_Layout_ExcludedTags", ref excludedTags, ref y, rect, x);
+        if (CQFUIStyle.ButtonText(new Rect(x, y, rect.width - x - 12f, 30f), "CQF_Ecology_SiteConditions".Translate()))
+            Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(pointOfInterest));
+        y += 38f;
         pool.Draw(ref y, rect, x);
     }
 
     public XElement SaveToXElement(string nodeName) => new XElement(nodeName,
         new XElement("role", role), new XElement("count", count), new XElement("optional", optional), new XElement("rotate", rotate),
         new XElement("maxPerDefinition", maxPerDefinition), pool.SaveToXElement("pool"),
-        CQFSerialization.SaveList(requiredTags, "requiredTags"), CQFSerialization.SaveList(anyTags, "anyTags"), CQFSerialization.SaveList(excludedTags, "excludedTags"));
+        CQFSerialization.SaveList(requiredTags, "requiredTags"), CQFSerialization.SaveList(anyTags, "anyTags"), CQFSerialization.SaveList(excludedTags, "excludedTags"), pointOfInterest.SaveToXElement("pointOfInterest"));
 
     private void DrawTags(string label, ref List<string> values, ref float y, Rect rect, float x)
     {
@@ -64,6 +67,7 @@ public sealed class CQFLayoutPartRule : ISaveable, IDrawable
     public List<string> requiredTags = new List<string>();
     public List<string> anyTags = new List<string>();
     public List<string> excludedTags = new List<string>();
+    public CQFPointOfInterestSettings pointOfInterest = new CQFPointOfInterestSettings();
     private string minBuffer = "";
     private string maxBuffer = "";
     private bool buffersInitialized;

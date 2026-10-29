@@ -7,21 +7,32 @@ namespace QuestEditor_Library;
 
 public sealed class CustomMapStep_Layout : CustomMapStep
 {
+    public bool IsEcology => layout?.workerClass != null && typeof(CQFLayoutWorker_Ecology).IsAssignableFrom(layout.workerClass);
+
     public CQFLayoutPlan Preview(Map map, string scope = "")
     {
         Validate();
         CQFMapRegionCollection regions = MapComponent_CustomMapData.GetComp(map).Regions;
         HashSet<IntVec3> occupied = new HashSet<IntVec3>();
         foreach (Thing thing in map.listerThings.AllThings)
-            if (!(thing is Plant) && !(thing is Filth) && !(thing is Mote) && !(thing is ZoneCore)) occupied.UnionWith(thing.OccupiedRect().Cells);
-        bool NaturalCell(IntVec3 cell) => cell.InBounds(map) && cell.GetTerrain(map).passability != Traversability.Impassable && !occupied.Contains(cell);
+            if (!(thing is Plant) && !(thing is Filth) && !(thing is Mote) && !(thing is ZoneCore)
+                && !(IsEcology && ecology.regenerate && thing.def.building?.isNaturalRock == true)) occupied.UnionWith(thing.OccupiedRect().Cells);
+        CQFEcologyPlan? environment = null;
+        bool NaturalCell(IntVec3 cell) => cell.InBounds(map) && !occupied.Contains(cell) && (environment == null
+            ? cell.GetTerrain(map).passability != Traversability.Impassable : environment.Terrains[cell].passability != Traversability.Impassable && !environment.Rocks.Contains(cell) && !environment.Water.Contains(cell));
         CQFLayoutPlanningContext context = new CQFLayoutPlanningContext(map.Size, this, DefDatabase<CustomMapDataDef>.AllDefsListForReading,
-            regions.All, NaturalCell, NaturalCell, c => c.Walkable(map));
+            regions.All, NaturalCell, NaturalCell, c => environment == null ? c.Walkable(map) : environment.CanWalk(c));
         context.Blocked.UnionWith(GenStep_CustomMap.disgenerate);
         foreach (Designation designation in map.designationManager.designationsByDef[QEDefOf.QE_Disgenerate]) context.Blocked.Add(designation.target.Cell);
         foreach (Designation designation in map.designationManager.designationsByDef[QEDefOf.QE_Disdestroy]) context.Plan.Protected.Add(designation.target.Cell);
         foreach (Thing thing in map.listerThings.AllThings)
             if (thing.OccupiedRect().Cells.Any(context.Plan.Protected.Contains)) context.Plan.Protected.UnionWith(thing.OccupiedRect().Cells);
+        if (IsEcology)
+        {
+            HashSet<IntVec3> exclusions = new HashSet<IntVec3>(context.Plan.Protected); exclusions.UnionWith(context.Blocked);
+            environment = new CQFEcologyGenerator().Preview(map, ecology, seed, exclusions, occupied);
+            context.Plan.Ecology = environment;
+        }
         foreach (var count in GenStep_CustomMap.generatedCount) context.Counts[count.Key.Origin] = count.Value;
         List<CQFMapRegion?> references = string.IsNullOrWhiteSpace(referenceKey) && referenceTags.Count == 0
             ? new List<CQFMapRegion?> { null }
@@ -45,6 +56,7 @@ public sealed class CustomMapStep_Layout : CustomMapStep
         Rand.PushState(seed);
         try
         {
+            plan.Ecology?.Apply(map);
             CQFMapRegionCollection registry = MapComponent_CustomMapData.GetComp(map).Regions;
             string scope = registry.NextScope(outputKey);
             int index = 0;
@@ -57,7 +69,7 @@ public sealed class CustomMapStep_Layout : CustomMapStep
                 }
                 registry.Add(new CQFMapRegion
                 {
-                    key = "Part_" + ++index, name = placement.Source.LabelCap, tags = new List<string>(outputTags),
+                    key = "Part_" + ++index, name = placement.Source.LabelCap, tags = outputTags.Concat(IsEcology && !string.IsNullOrWhiteSpace(placement.Role) ? new[] { placement.Role } : Array.Empty<string>()).Distinct().ToList(),
                     cells = placement.Bounds.Cells.ToList(), connections = placement.Entrances().Where(c => placement.Bounds.Contains(c.cell)
                         && !placement.Bounds.Contains(c.cell + c.direction.FacingCell)).Select(c => c.Copy()).ToList()
                 }, scope, map);
@@ -76,6 +88,7 @@ public sealed class CustomMapStep_Layout : CustomMapStep
             }
             batch.Complete();
             if (connectRoads) new CQFLayoutRoadPlanner().Validate(map, plan, registry.All);
+            if (IsEcology) CQFLayoutWorker_Ecology.ValidateGenerated(map, plan, registry.All);
             foreach (string notice in plan.Notices) Log.Warning(new CQFLayoutException(notice).Message);
             if (Current.ProgramState == ProgramState.Playing) map.mapDrawer.RegenerateEverythingNow();
         }
@@ -91,6 +104,7 @@ public sealed class CustomMapStep_Layout : CustomMapStep
             || vacancy < 0f || vacancy >= 1f || string.IsNullOrWhiteSpace(outputKey)) throw new CQFLayoutException("CQF_Layout_InvalidSettings");
         if (relation != "Around" && relation != "Inside" && relation != "Outside" && relation != "Anywhere") throw new CQFLayoutException("CQF_Layout_InvalidRelation");
         if (connectRoads && roadTerrain == null) throw new CQFLayoutException("CQF_Layout_MissingRoadTerrain");
+        if (IsEcology) ecology.Validate();
     }
 
     public override void Draw(ref float y, Rect rect, float x)
@@ -105,6 +119,11 @@ public sealed class CustomMapStep_Layout : CustomMapStep
         if (CQFUIStyle.ButtonText(new Rect(x, y, width, 30f), layout?.LabelCap ?? "CQF_Layout_MissingDefinition".Translate()))
             CQFEditorTools.DrawFloatMenu(DefDatabase<CQFMapLayoutDef>.AllDefsListForReading, d => layout = d, d => d.LabelCap);
         y += 38f;
+        if (IsEcology)
+        {
+            if (CQFUIStyle.ButtonText(new Rect(x, y, width, 30f), "CQF_Ecology_Settings".Translate())) Find.WindowStack.Add(CQFEditorBridge.Editor.CreateDrawableWindow(ecology));
+            y += 38f;
+        }
         TextField("CQF_Layout_ReferenceKey", ref referenceKey, ref y, rect, x);
         TagsField("CQF_Layout_ReferenceTags", ref referenceTags, ref y, rect, x);
         Widgets.CheckboxLabeled(new Rect(x, y, width, 28f), "CQF_Layout_EachReference".Translate(), ref eachReference); y += 34f;
@@ -152,7 +171,7 @@ public sealed class CustomMapStep_Layout : CustomMapStep
             new XElement("relation", relation), new XElement("allowedRegion", allowedRegion), CQFSerialization.SaveList(directions, "directions"), new XElement("distance", distance), new XElement("seed", seed),
             new XElement("spacing", spacing), new XElement("gridSize", gridSize), new XElement("edgeMargin", edgeMargin), new XElement("roadWidth", roadWidth),
             new XElement("connectRoads", connectRoads), new XElement("clusterCount", clusterCount), new XElement("vacancy", vacancy), new XElement("maxAttempts", maxAttempts),
-            new XElement("outputKey", outputKey), CQFSerialization.SaveList(outputTags, "outputTags"), CQFSerialization.SaveList_Saveable(parts, "parts"));
+            new XElement("outputKey", outputKey), CQFSerialization.SaveList(outputTags, "outputTags"), CQFSerialization.SaveList_Saveable(parts, "parts"), ecology.SaveToXElement("ecology"));
         return result;
     }
 
@@ -179,6 +198,7 @@ public sealed class CustomMapStep_Layout : CustomMapStep
 
     public CQFMapLayoutDef? layout;
     public List<CQFLayoutPartRule> parts = new List<CQFLayoutPartRule>();
+    public CQFEcologySettings ecology = new CQFEcologySettings();
     public string referenceKey = "";
     public List<string> referenceTags = new List<string>();
     public bool eachReference;

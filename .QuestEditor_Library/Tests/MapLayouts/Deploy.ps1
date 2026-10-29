@@ -20,7 +20,7 @@ $cqfCore = Join-Path $cqfBuild 'QuestEditor_Library.dll'
 $cqfEditor = Join-Path $cqfBuild 'CQF.Editor.dll'
 & $Dotnet run --project (Join-Path $cqfRoot '.QuestEditor_Library/Tests/MapLayouts/Checks.csproj') -c Release "-p:RimWorldDir=$GameDirectory" "-p:HarmonyPath=$cqfHarmony" "-p:CQFCoreAssembly=$cqfCore" *> (Join-Path $cqfPackage 'Rules.log')
 if ($LASTEXITCODE -ne 0) { throw "CQF_Deployment_RulesFailed: $cqfPackage" }
-& (Join-Path $cqfRoot '.QuestEditor_Library/Tests/MapLayoutsRuntime/RunChecks.ps1') -CoreAssembly $cqfCore -EditorAssembly $cqfEditor -GameDirectory $GameDirectory -Dotnet $Dotnet -RunRoot (Join-Path $cqfPackage 'Runtime') -Launch *> (Join-Path $cqfPackage 'Runtime.log')
+& (Join-Path $cqfRoot '.QuestEditor_Library/Tests/MapLayoutsRuntime/RunChecks.ps1') -CoreAssembly $cqfCore -EditorAssembly $cqfEditor -GameDirectory $GameDirectory -Dotnet $Dotnet -Language ChineseSimplified -RunRoot (Join-Path $cqfPackage 'Runtime') -Launch *> (Join-Path $cqfPackage 'Runtime.log')
 if (Get-Process -Name RimWorld -ErrorAction SilentlyContinue) { throw 'CQF_Deployment_GameRunning' }
  $cqfCurrentSources = @(Get-ChildItem -LiteralPath (Join-Path $cqfRoot '.QuestEditor_Library') -Recurse -File |
     Where-Object { $_.Extension -in @('.cs', '.csproj', '.props') -and $_.FullName -notmatch '[\\/](bin|obj)[\\/]' } | Select-Object -ExpandProperty FullName)

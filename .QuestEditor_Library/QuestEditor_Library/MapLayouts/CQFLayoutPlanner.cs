@@ -38,7 +38,7 @@ public sealed class CQFLayoutPlanner
                         CQFLayoutPlacement? found = null;
                         foreach (Rot4 rotation in rotations.Skip(offset).Concat(rotations.Take(offset)))
                         {
-                            CQFLayoutPlacement part = new CQFLayoutPlacement(data, rotation) { Role = rule.role, ReferenceId = reference?.id ?? "" };
+                            CQFLayoutPlacement part = new CQFLayoutPlacement(data, rotation) { Role = rule.role, ReferenceId = reference?.id ?? "", Rule = rule };
                             foreach (IntVec3 location in locations)
                             {
                                 part.MoveCenter(location);

@@ -33,6 +33,12 @@ public sealed class Designator_CQFLayoutPreview : Designator
 
     public override void SelectedUpdate()
     {
+        if (plan.Ecology != null)
+        {
+            GenDraw.DrawFieldEdges(plan.Ecology.Water.ToList(), new UnityEngine.Color(0.25f, 0.65f, 1f));
+            GenDraw.DrawFieldEdges(plan.Ecology.Rocks.ToList(), new UnityEngine.Color(0.65f, 0.65f, 0.65f));
+            GenDraw.DrawFieldEdges(plan.Ecology.Trees.ToList(), new UnityEngine.Color(0.35f, 0.75f, 0.25f));
+        }
         foreach (CQFLayoutPlacement part in plan.Parts) GenDraw.DrawFieldEdges(part.Bounds.Cells.ToList(), CQFUIStyle.Accent);
         GenDraw.DrawFieldEdges(plan.Roads.ToList(), CQFUIStyle.Link);
         GenDraw.DrawFieldEdges(plan.Protected.ToList(), CQFUIStyle.Muted);

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_Layout_City.label>城市街区</CQF_Layout_City.label>
+  <CQF_Layout_Clusters.label>荒野群落</CQF_Layout_Clusters.label>
+  <CQF_Layout_Ecology.label>生态底图与兴趣点</CQF_Layout_Ecology.label>
+  <CQF_Layout_Fortified.label>围合据点</CQF_Layout_Fortified.label>
+  <CQF_Layout_Ruins.label>废墟城区</CQF_Layout_Ruins.label>
+  <CQF_Layout_Scatter.label>荒野散布</CQF_Layout_Scatter.label>
+  <CQF_Layout_Village.label>村落与卫星聚落</CQF_Layout_Village.label>
+</LanguageData>

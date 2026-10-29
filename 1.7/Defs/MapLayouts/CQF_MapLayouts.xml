@@ -1,33 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Defs>
   <QuestEditor_Library.CQFMapLayoutDef>
     <defName>CQF_Layout_City</defName>
-    <label>CQF_Layout_City</label>
+    <label>city blocks</label>
     <workerClass>QuestEditor_Library.CQFLayoutWorker_City</workerClass>
   </QuestEditor_Library.CQFMapLayoutDef>
   <QuestEditor_Library.CQFMapLayoutDef>
     <defName>CQF_Layout_Village</defName>
-    <label>CQF_Layout_Village</label>
+    <label>villages and satellite settlements</label>
     <workerClass>QuestEditor_Library.CQFLayoutWorker_Village</workerClass>
   </QuestEditor_Library.CQFMapLayoutDef>
   <QuestEditor_Library.CQFMapLayoutDef>
     <defName>CQF_Layout_Scatter</defName>
-    <label>CQF_Layout_Scatter</label>
+    <label>wilderness scatter</label>
     <workerClass>QuestEditor_Library.CQFLayoutWorker_Scatter</workerClass>
   </QuestEditor_Library.CQFMapLayoutDef>
   <QuestEditor_Library.CQFMapLayoutDef>
     <defName>CQF_Layout_Clusters</defName>
-    <label>CQF_Layout_Clusters</label>
+    <label>wilderness clusters</label>
     <workerClass>QuestEditor_Library.CQFLayoutWorker_Clusters</workerClass>
   </QuestEditor_Library.CQFMapLayoutDef>
   <QuestEditor_Library.CQFMapLayoutDef>
     <defName>CQF_Layout_Ruins</defName>
-    <label>CQF_Layout_Ruins</label>
+    <label>ruined city</label>
     <workerClass>QuestEditor_Library.CQFLayoutWorker_Ruins</workerClass>
   </QuestEditor_Library.CQFMapLayoutDef>
   <QuestEditor_Library.CQFMapLayoutDef>
     <defName>CQF_Layout_Fortified</defName>
-    <label>CQF_Layout_Fortified</label>
+    <label>fortified compound</label>
     <workerClass>QuestEditor_Library.CQFLayoutWorker_Fortified</workerClass>
+  </QuestEditor_Library.CQFMapLayoutDef>
+  <QuestEditor_Library.CQFMapLayoutDef>
+    <defName>CQF_Layout_Ecology</defName>
+    <label>ecology and points of interest</label>
+    <workerClass>QuestEditor_Library.CQFLayoutWorker_Ecology</workerClass>
   </QuestEditor_Library.CQFMapLayoutDef>
 </Defs>

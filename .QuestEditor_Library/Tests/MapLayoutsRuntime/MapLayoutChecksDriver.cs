@@ -107,7 +107,7 @@ public sealed class MapLayoutChecksDriver : MonoBehaviour
                 Check(loaded.protect && loaded.cells.Count == 400 && loaded.connections.Count == 1, "native load restores city geometry protection and connection");
                 Check(registry.Select("", new[] { "Settlement" }, requireSingle: false).Count == 3, "native load restores generated region identities and tags");
                 Check(registry.NextScope("CQF_Runtime_Output") != "CQF_Runtime_Output/1", "native load preserves unique instance sequence");
-                Find.WindowStack.Add(new Dialog_CQFMapRegions(map, loaded)); Go(10);
+                regionWindow = new Dialog_CQFMapRegions(map, loaded); Find.WindowStack.Add(regionWindow); Go(10);
             }
             else if (stage == 10)
             {
@@ -116,6 +116,7 @@ public sealed class MapLayoutChecksDriver : MonoBehaviour
             else if (stage == 11)
             {
                 Check(Directory.GetFiles(Path.Combine(Root, "Screenshots"), "*.png").Length == 5, "five fresh UI and map screenshots captured");
+                regionWindow!.Close();
                 source = map;
                 QuestEditor_CustomQuestMap.GenerateMap(new IntVec3(120, 1, 120)); Go(12);
             }
@@ -150,6 +151,41 @@ public sealed class MapLayoutChecksDriver : MonoBehaviour
                 catch (CQFLayoutException) { rejected = true; }
                 Check(rejected && !GameTools.isGeneratingMap && GenStep_CustomMap.generatedCount.Count == 0 && GenStep_CustomMap.requests.Count == 0,
                     "failed parent layout propagates its error and clears generation lifecycle");
+                ecologyChecks = new EcologyRuntimeChecks(map, house!, Check);
+                ecologyChecks.Setup();
+                ecologyWindow = CQFEditorBridge.Editor.CreateDrawableWindow(ecologyChecks.Settings.ecology);
+                Find.WindowStack.Add(ecologyWindow); Go(13);
+            }
+            else if (stage == 13)
+            {
+                ScreenCapture.CaptureScreenshot(Path.Combine(Root, "Screenshots", "06-EcologySettings.png")); Go(14);
+            }
+            else if (stage == 14)
+            {
+                ecologyWindow!.Close(); ecologyChecks!.Preview(); Go(15);
+            }
+            else if (stage == 15)
+            {
+                ScreenCapture.CaptureScreenshot(Path.Combine(Root, "Screenshots", "07-EcologyPreview.png")); Go(16);
+            }
+            else if (stage == 16)
+            {
+                Find.DesignatorManager.Deselect(); ecologyChecks!.Generate(); Go(17);
+            }
+            else if (stage == 17)
+            {
+                ScreenCapture.CaptureScreenshot(Path.Combine(Root, "Screenshots", "08-EcologyGenerated.png"));
+                GameDataSaveLoader.SaveGame("CQF_EcologyRuntime"); Go(18);
+            }
+            else if (stage == 18)
+            {
+                previousGame = Current.Game; GameDataSaveLoader.LoadGame("CQF_EcologyRuntime"); Go(19);
+            }
+            else if (stage == 19)
+            {
+                if (ReferenceEquals(previousGame, Current.Game)) return;
+                ecologyChecks!.CheckLoaded(Find.CurrentMap);
+                Check(Directory.GetFiles(Path.Combine(Root, "Screenshots"), "*.png").Length == 8, "eight fresh region and ecology UI screenshots captured");
                 File.AppendAllText(Results, "COMPLETE\n"); finished = true; Application.Quit(0);
             }
         }
@@ -233,4 +269,6 @@ public sealed class MapLayoutChecksDriver : MonoBehaviour
     private Dialog_CQFMapRegions? regionWindow;
     private Dialog_CQFLayout? layoutWindow;
     private Game? previousGame;
+    private EcologyRuntimeChecks? ecologyChecks;
+    private Window? ecologyWindow;
 }

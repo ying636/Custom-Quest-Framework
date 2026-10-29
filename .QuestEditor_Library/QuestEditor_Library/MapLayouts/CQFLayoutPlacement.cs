@@ -46,6 +46,7 @@ public sealed class CQFLayoutPlacement
     public IntVec3 Center => Bounds.CenterCell;
     public HashSet<IntVec3> ObjectCells { get; } = new HashSet<IntVec3>();
     public HashSet<IntVec3> ImpassableCells { get; } = new HashSet<IntVec3>();
+    public CQFLayoutPartRule? Rule { get; set; }
 
     public void MoveCenter(IntVec3 center)
     {

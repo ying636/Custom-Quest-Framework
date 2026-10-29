@@ -13,6 +13,7 @@ internal static class Program
             FieldInfo prefs = typeof(Prefs).GetField("data", BindingFlags.Static | BindingFlags.NonPublic)!;
             prefs.SetValue(null, RuntimeHelpers.GetUninitializedObject(prefs.FieldType));
             Regions(); Selection(); Placement(); Roads(); Algorithms();
+            EcologyChecks.Run(Check, Reject);
             Console.WriteLine("COMPLETE " + passed); return 0;
         }
         catch (Exception exception) { Console.WriteLine(exception); return 1; }
