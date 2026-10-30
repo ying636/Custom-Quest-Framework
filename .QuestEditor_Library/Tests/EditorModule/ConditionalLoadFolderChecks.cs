@@ -34,6 +34,24 @@ internal static class ConditionalLoadFolderChecks
                 Check(ModContentPack.GetAllFilesForMod(content, category).Count == 1, "enabled conditional folder exposes " + category + " to native discovery");
             enabled.Exclude("enableEditor");
             Check(content.foldersToLoadDescendingOrder.SequenceEqual(new[] { root }), "failed module exclusion preserves ordinary folders");
+            byte[] prefix = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- ");
+            byte[] suffix = Encoding.UTF8.GetBytes(" -->\n" + config);
+            File.WriteAllBytes(loadFile, prefix.Concat(new byte[] { 0xd6, 0xd0 }).Concat(suffix).ToArray());
+            content = CreateContent(root, config);
+            CQFConditionalLoadFolders encoded = new CQFConditionalLoadFolders(content, new CustomQuestFramework_ModSetting { enableEditor = true });
+            Check(encoded.GetFolders("enableEditor").SequenceEqual(new[] { editor }), "settings loader accepts native-compatible comment encoding");
+            File.WriteAllText(loadFile, config.Replace("</loadFolders>", ""), new UTF8Encoding(false));
+            content = CreateContent(root, config);
+            try
+            {
+                new CQFConditionalLoadFolders(content, new CustomQuestFramework_ModSetting());
+                throw new Exception("Malformed settings XML was silently accepted.");
+            }
+            catch (InvalidDataException error)
+            {
+                Check(error.Message.Contains("cqf.check.conditional") && error.Message.Contains(loadFile), "malformed settings XML identifies the mod and file");
+                Check(error.InnerException is XmlException, "malformed settings XML preserves the parsing exception");
+            }
             string invalid = config.Replace("enableEditor", "CQF_Check_Unknown");
             File.WriteAllText(loadFile, invalid, new UTF8Encoding(false));
             content = CreateContent(root, invalid);
@@ -68,6 +86,7 @@ internal static class ConditionalLoadFolderChecks
     {
         ModContentPack content = (ModContentPack)RuntimeHelpers.GetUninitializedObject(typeof(ModContentPack));
         typeof(ModContentPack).GetField("rootDirInt", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(content, new DirectoryInfo(root));
+        typeof(ModContentPack).GetField("packageIdInt", BindingFlags.Instance | BindingFlags.NonPublic)!.SetValue(content, "cqf.check.conditional");
         XmlDocument xml = new XmlDocument();
         xml.LoadXml(config);
         ModLoadFolders native = DirectXmlToObject.ObjectFromXml<ModLoadFolders>(xml.DocumentElement!, false);

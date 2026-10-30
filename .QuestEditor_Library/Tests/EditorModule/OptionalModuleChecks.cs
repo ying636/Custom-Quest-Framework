@@ -22,7 +22,8 @@ internal static class OptionalModuleChecks
         owner.assemblies.loadedAssemblies.Add(framework);
         List<ModContentPack> active = new() { owner };
         string? fixture = null;
-        if (mode is "modules-enabled" or "modules-adapter" or "modules-multiple")
+        bool enabled = mode is "modules-enabled" or "modules-adapter" or "modules-multiple" or "modules-encoding" or "modules-unrelated";
+        if (enabled)
         {
             List<string> ids = new() { "hailuan.customquestframework", "hailuan.ritesofthesilenthouse" };
             if (mode == "modules-adapter")
@@ -55,24 +56,47 @@ internal static class OptionalModuleChecks
             }
             active.Add(CreateContent(fixture, "cqf.check.module", Array.Empty<string>()));
         }
+        if (mode is "modules-encoding" or "modules-unrelated" or "modules-malformed")
+        {
+            fixture = Path.Combine(Path.GetTempPath(), "CQF_ModuleFixture_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(Path.Combine(fixture, "Domain"));
+            string file = Path.Combine(fixture, "LoadFolders.xml");
+            string declaration = mode == "modules-unrelated" ? "" : "<li RequiresCQFModule=\"Domain\">Domain</li>";
+            string contents = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<loadFolders>\n<!-- CQF_Check_Encoding -->\n<v1.7><li>/</li>" + declaration + "</v1.7></loadFolders>";
+            File.WriteAllText(file, contents);
+            active.Add(CreateContent(fixture, "cqf.check.module", Array.Empty<string>()));
+            if (mode == "modules-encoding")
+            {
+                byte[] prefix = System.Text.Encoding.UTF8.GetBytes(contents.Substring(0, contents.IndexOf("CQF_Check_Encoding", StringComparison.Ordinal)));
+                byte[] suffix = System.Text.Encoding.UTF8.GetBytes(contents.Substring(contents.IndexOf(" -->", StringComparison.Ordinal)));
+                File.WriteAllBytes(file, prefix.Concat(new byte[] { 0xd6, 0xd0 }).Concat(suffix).ToArray());
+            }
+            else File.WriteAllText(file, contents.Replace("</loadFolders>", ""));
+        }
         LoadedModManager.RunningModsListForReading.AddRange(active);
         GenTypes.ClearCache();
         foreach (ModContentPack content in active)
             Check(!ModContentPack.GetAllFilesForMod(content, "Assemblies", extension => extension == ".dll").Values
                 .Any(file => file.Name is "CQF.Domain.dll" or "RSH.dll" or "RSH.PlayerAbilityFramework.dll"),
                 "native initial scan defers module DLLs for " + content.PackageId);
-        if (mode is "modules-invalid" or "modules-layout")
+        if (mode is "modules-invalid" or "modules-layout" or "modules-malformed")
         {
             try { CQFModuleLoader.Load(owner, active); throw new InvalidOperationException("Invalid declaration was accepted."); }
             catch (InvalidDataException error)
             {
                 Check(error.ToString().Contains("cqf.check.module"), "invalid module packaging identifies the requesting submod");
                 Check(ChecksLogHandler.ErrorCount > 0, "invalid module packaging is logged");
+                if (mode == "modules-malformed")
+                {
+                    Check(error.Message.Contains(Path.Combine(fixture!, "LoadFolders.xml")), "malformed module XML identifies the file");
+                    Check(error.InnerException is XmlException, "malformed module XML preserves the parsing exception");
+                }
             }
             return;
         }
         CQFModuleLoader.Load(owner, active);
-        bool enabled = mode is "modules-enabled" or "modules-adapter" or "modules-multiple";
+        if (mode is "modules-encoding" or "modules-unrelated")
+            Check(ChecksLogHandler.ErrorCount == 0, "unrelated XML and native-compatible comment encoding do not interrupt module loading");
         Check(CQFModuleLoader.DomainLoaded == enabled, "only selected child requests enable domain");
         Check(AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.GetName().Name == "CQF.Domain") == enabled,
             "domain DLL loading follows the request");

@@ -79,8 +79,19 @@ public static class CQFModuleLoader
         string file = Path.Combine(content.RootDir, "LoadFolders.xml");
         if (!File.Exists(file)) yield break;
         XmlDocument xml = new() { XmlResolver = null };
-        using (XmlReader reader = XmlReader.Create(file, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null }))
+        try
+        {
+            string contents = File.ReadAllText(file);
+            if (contents.IndexOf("IfCQFModule", StringComparison.Ordinal) < 0 && contents.IndexOf("RequiresCQFModule", StringComparison.Ordinal) < 0)
+                yield break;
+            using StringReader source = new(contents);
+            using XmlReader reader = XmlReader.Create(source, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
             xml.Load(reader);
+        }
+        catch (Exception error)
+        {
+            throw new InvalidDataException("[CQF] Could not read module declarations for " + content.PackageId + ": " + file, error);
+        }
         string root = Path.GetFullPath(content.RootDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         HashSet<string> selected = new(content.foldersToLoadDescendingOrder.Select(Path.GetFullPath), StringComparer.OrdinalIgnoreCase);
         HashSet<string> declared = new(StringComparer.OrdinalIgnoreCase);

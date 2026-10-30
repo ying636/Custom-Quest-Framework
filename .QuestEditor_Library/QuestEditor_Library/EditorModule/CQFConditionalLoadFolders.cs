@@ -16,8 +16,16 @@ namespace QuestEditor_Library
             string file = Path.Combine(content.RootDir, "LoadFolders.xml");
             if (!File.Exists(file)) return;
             XmlDocument xml = new XmlDocument { XmlResolver = null };
-            using (XmlReader reader = XmlReader.Create(file, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null }))
+            try
+            {
+                using StringReader source = new StringReader(File.ReadAllText(file));
+                using XmlReader reader = XmlReader.Create(source, new XmlReaderSettings { DtdProcessing = DtdProcessing.Prohibit, XmlResolver = null });
                 xml.Load(reader);
+            }
+            catch (Exception error)
+            {
+                throw new InvalidDataException("[CQF] Could not read setting declarations for " + content.PackageId + ": " + file, error);
+            }
             string root = Path.GetFullPath(content.RootDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             Dictionary<string, string> conditions = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (XmlNode entry in xml.SelectNodes("/loadFolders/*/li[@IfCQFSetting]"))
