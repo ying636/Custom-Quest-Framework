@@ -1,3 +1,4 @@
+#if !RIMWORLD_1_7
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
@@ -50,3 +51,4 @@ namespace QuestEditor_Library
         }
     }
 }
+#endif

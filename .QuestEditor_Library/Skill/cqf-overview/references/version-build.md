@@ -2,7 +2,13 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.7`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.11`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.11 原版接口替换（2026-11-03）
+
+1.7 远行队命令由 `WorldObjectComp_CaravanActions.GetGizmos()` 提供；`PatchMain` 启动时仅给远行队及其派生类型的 WorldObjectDef 添加组件，并避免重复注册。条件、图标、动作目标和原有全局冷却存储继续复用。子地图通过 `GameTools.GenerateSubMap` 以原版口袋地图创建，原版已禁用边缘退出，因此 1.7 不再注册 `Patch_AddCaravanAction` 和 `Patch_MapExit`。1.6 的这两个旧补丁仍保留在版本条件内。
+
+针对性检查入口为 `Tests/EditorModule/Checks.csproj -- caravan-native`，覆盖原生组件初始化、按钮条件与回调、冷却、排序、口袋地图退出网格和 17 个主库补丁目标。
 
 ## 4.7 发布：关闭测试领域预生成（2026-10-24）
 
@@ -284,7 +290,7 @@ dotnet build .QuestEditor_Library/CQF.Domain/CQF.Domain.csproj -c Release
 - CQF 及编辑器导出入口使用 `CQFSerialization.XElementFromObject`，递归处理 ISaveable、IntVec3、集合、Def 引用、Class、Unsaved 和 DefaultValue；不再修改全局 DirectXmlSaver。
 - 领域保护使用 AbilityComp / ThingComp，详见 [领域系统开发参考](domain-system.md)。没有全局 Pawn.PreApplyDamage 补丁；准备和读档恢复均复用同一施术者组件。
 - 建筑受伤、人物受伤和建筑销毁三个补丁本轮保留：ThingComp 的受伤回调位于原方法内部，不能覆盖建筑提前免疫返回后的现有通知；PostDestroy 又晚于离图和 Lord 清理。替换前须单独核对触发次数、伤害来源、地图和 Lord 引用。
-- 1.7 主库有 18 个补丁目标，其中休眠为 3；领域为 0，编辑器为 1，模拟经营适配为 2。1.6 比 1.7 多保留两个 Pawn 事件区进出目标，不保留 Thing 休眠唤醒补丁。
+- 1.7 主库有 17 个常驻补丁目标，其中休眠为 3；领域为 0，编辑器为 1，模拟经营适配为 2。演出测试期间另有 2 个临时保护补丁，结束后移除。1.6 还保留旧远行队按钮、边缘退出和两个 Pawn 事件区进出补丁，不保留 Thing 休眠唤醒补丁。
 - 休眠地图移出 Game.Maps 并由统一组件托管，Thing 原版状态为 Spawned=false、Map=null。没有对象/区域属性、Thing.DoTick、WorldObject.DoTick、地图更新、Tick 登记、自动移除、GameEnder、保存或 AddMap 补丁；只保留选图、取图、退出清理。
 - CQF_ownedHibernatingMaps 使用独立字段深度保存组件托管地图，不复用旧字段；CQF_pendingHibernation 引用保存排队地图。3.7 只读取当前格式，已删除 3.6 的旧字段迁移。缺失或冲突身份仍在改动地图列表前明确报错。单图保存时临时提供区域索引，Thing 仍未生成，finally 撤回。读档长事件结束时完成原版地图初始化及其延迟动作，再移出；普通唤醒不重复初始化。操作/销毁前显式激活，不通过原生物件生成/离图入口自动唤醒。
 

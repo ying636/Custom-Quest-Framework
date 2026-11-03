@@ -1,3 +1,4 @@
+#if !RIMWORLD_1_7
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,3 +21,4 @@ namespace QuestEditor_Library
         }
     }
 }
+#endif
