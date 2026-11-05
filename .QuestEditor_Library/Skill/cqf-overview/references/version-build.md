@@ -2,7 +2,17 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.11`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.12`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.12 退出清理与职责初始化修复（2026-11-05）
+
+地图休眠调试菜单在无游戏、初始化和退出状态下不访问缺失的运行组件；只显示当前游戏的命令，缓存回调不能操作已退出或已替换的游戏。`GameComponent_MapManager.DisposeMaps` 只清理一次，已释放的管理器不再由 `Instance` 返回。单张休眠地图释放失败会记录完整异常并继续其余地图；`Game.Dispose` 的 CQF 前缀记录清理错误后继续原版退出。
+
+领域读档在 PostLoadInit 阶段恢复 `domainMaps` 和 `mapTemplates` 的空集合；读档中断时允许空集合清理。领域视觉、Worker 和对抗资源分别释放，失败会汇总为 AggregateException 交由退出边界记录，仍清空归属并防止重复释放。上一轮 PawnSpawnData 修复同步发布：构造不读取 DutyDefOf，编辑、导出和生成经 Duty 属性解析默认 Defend。
+
+检查入口：`Tests/EditorModule/Checks.csproj -- map-lifetime`、`-- pawn-default-duty` 和 `Tests/Domain/Checks.csproj -- disposal`。实机夹具 `Tests/MapLifetimeRuntime` 使用临时 RequiresCQFModule=Domain 测试 Mod，DLL 放需求目录根部；RimDevTools 独立离线 manual 模式运行，证据为 SaveData/MapLifetimeEvidence.json。1.7.4998 rev1299 完成 13 项检查，两次真实返回主菜单，覆盖休眠领域清理、原生中断读档空列表、旧回调和 Settings 菜单。本轮未使用反馈者的完整 Mod 列表或存档。
+
+发布更新 1.7 主库与领域 DLL/PDB；1.6 主库与领域仅临时编译验证，1736 条已有警告、0 错误，保留原运行包。回归包括框架 60、休眠调度与持久化 56、职责默认值 11、补丁与适配 27、地图生命周期 11、领域基础 60、领域释放 8、地图归属 7 项，均通过。测试日志仍有本机 Epic Vulkan Overlay 路径、已有 Mod 元数据及进程关闭时的未释放分配警告；未释放分配尚未在本轮归因。
 
 ## 4.11 原版接口替换（2026-11-03）
 

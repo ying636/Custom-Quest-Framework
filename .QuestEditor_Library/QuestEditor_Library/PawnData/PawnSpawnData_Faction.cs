@@ -75,13 +75,13 @@ namespace QuestEditor_Library
                         if (lord != null)
                         {
                             lord.AddPawn(p);
-                            PawnDuty duty = new PawnDuty(this.duty);
+                            PawnDuty duty = new PawnDuty(this.Duty);
                             duty.overrideFacing = this.rotation;
                             duty.focus = new LocalTargetInfo(position);
                             p.mindState.duty = duty;
                             if (lord.LordJob is LordJob_Custom job)
                             {
-                                job.pawnDutyDatas.Add(p, this.duty);
+                                job.pawnDutyDatas.Add(p, this.Duty);
                             }
 
                             if (lord.LordJob is LordJob_ComplexCustom complexJob)

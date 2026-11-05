@@ -16,10 +16,10 @@ public sealed partial class GameComponent_MapManager : GameComponent
         get
         {
             Game currentGame = Current.Game;
-            if (currentGame == null) return null;
-            if (instance == null || !ReferenceEquals(instance.game, currentGame))
+            if (currentGame?.components == null) return null;
+            if (instance == null || instance.disposed || !ReferenceEquals(instance.game, currentGame))
                 instance = currentGame.GetComponent<GameComponent_MapManager>();
-            return instance;
+            return instance != null && !instance.disposed ? instance : null;
         }
     }
 
@@ -28,7 +28,7 @@ public sealed partial class GameComponent_MapManager : GameComponent
 
     public override void GameComponentUpdate()
     {
-        if (Scribe.mode != LoadSaveMode.Inactive) return;
+        if (disposed || Scribe.mode != LoadSaveMode.Inactive) return;
         try
         {
             Module?.Update();
@@ -61,14 +61,20 @@ public sealed partial class GameComponent_MapManager : GameComponent
 
     public void DisposeMaps()
     {
+        if (disposed) return;
+        disposed = true;
         try { Module?.Dispose(); }
         finally
         {
-            DisposeHibernatingMaps();
-            if (ReferenceEquals(instance, this)) instance = null;
+            try { DisposeHibernatingMaps(); }
+            finally
+            {
+                if (ReferenceEquals(instance, this)) instance = null;
+            }
         }
     }
 
     private readonly Game game;
+    private bool disposed;
     private static GameComponent_MapManager? instance;
 }

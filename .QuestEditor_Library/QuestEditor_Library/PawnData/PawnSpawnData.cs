@@ -15,6 +15,8 @@ namespace QuestEditor_Library
 {
     public class PawnSpawnData : IExposable, ISaveable, IDrawable
     {
+        public DutyDef Duty => this.duty ?? DutyDefOf.Defend;
+
         public string EntityBookSourceId
         {
             get
@@ -74,18 +76,18 @@ namespace QuestEditor_Library
             if (this.enableLord)
             {
                 Rect duty = DrawField(ref y, x, "DutyType".Translate(string.Empty));
-                if (CQFUIStyle.ButtonText(duty, CQFEditorTools.DutyLabel(this.duty) ?? "Select".Translate().ToString()))
+                if (CQFUIStyle.ButtonText(duty, CQFEditorTools.DutyLabel(this.Duty) ?? "Select".Translate().ToString()))
                     CQFEditorTools.OpenDutySelect(value => this.duty = value);
-                if (this.duty != null && !this.duty.description.NullOrEmpty())
-                    TooltipHandler.TipRegion(duty, this.duty.description);
-                if (this.duty == QEDefOf.QE_Duty_Guard)
+                if (this.Duty != null && !this.Duty.description.NullOrEmpty())
+                    TooltipHandler.TipRegion(duty, this.Duty.description);
+                if (this.Duty == QEDefOf.QE_Duty_Guard)
                 {
                     Rect route = DrawField(ref y, x, "CurRoute".Translate(string.Empty));
                     if (CQFUIStyle.ButtonText(route, this.routeName ?? "Select".Translate().ToString()) && Find.CurrentMap != null)
                         CQFEditorTools.DrawFloatMenu(Find.CurrentMap.GetComponent<MapComponent_CustomMapData>().route.Keys.ToList(), value => this.routeName = value, value => value);
                 }
 
-                if (this.duty == QEDefOf.QE_Duty_Waiter)
+                if (this.Duty == QEDefOf.QE_Duty_Waiter)
                 {
                     Rect rotation = DrawField(ref y, x, "PawnRotation".Translate(string.Empty));
                     if (CQFUIStyle.ButtonText(rotation, this.rotation.ToStringHuman()))
@@ -232,7 +234,7 @@ namespace QuestEditor_Library
 
             if (this.enableLord)
             {
-                result.Add(new XElement("duty", this.duty?.defName));
+                result.Add(new XElement("duty", this.Duty?.defName));
             }
 
             result.Add(new XElement("spawnType", this.spawnType));
@@ -351,19 +353,19 @@ namespace QuestEditor_Library
                         this.ActionAfterGeneration(pawn, quest, i, questTag);
                         if (lord != null)
                         {
-                            if (this.duty == DutyDefOf.Defend && this.routeName.NullOrEmpty() && lord.LordJob is LordJob_Custom lordJob)
+                            if (this.Duty == DutyDefOf.Defend && this.routeName.NullOrEmpty() && lord.LordJob is LordJob_Custom lordJob)
                             {
                                 lordJob.defendDatas.SetOrAdd(pawn, position);
                             }
 
                             lord.AddPawn(pawn);
-                            PawnDuty duty = new PawnDuty(this.duty);
+                            PawnDuty duty = new PawnDuty(this.Duty);
                             duty.overrideFacing = this.rotation;
                             duty.focus = new LocalTargetInfo(position);
                             pawn.mindState.duty = duty;
                             if (lord.LordJob is LordJob_Custom job)
                             {
-                                job.pawnDutyDatas.Add(pawn, this.duty);
+                                job.pawnDutyDatas.Add(pawn, this.Duty);
                             }
 
                             if (lord.LordJob is LordJob_ComplexCustom complexJob)
@@ -550,7 +552,7 @@ namespace QuestEditor_Library
         public SpawnType spawnType = SpawnType.MapGeneration;
         public string faction = null;
         public ArrivingWay way = new ArrivingWay();
-        public DutyDef duty = DutyDefOf.Defend;
+        public DutyDef? duty;
         public PawnKindDef kind = null;
         public List<PawnKindDef> extraKinds = new List<PawnKindDef>();
         public DialogManagerDef dialogManager = null;

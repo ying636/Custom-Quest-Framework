@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CQF.MapLifetimeChecks</AssemblyName>
+    <RimWorldDir>$(MSBuildThisFileDirectory)..\..\..\..\..</RimWorldDir>
+  </PropertyGroup>
+  <Import Project="..\..\RimWorld.props" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+    <ProjectReference Include="..\..\CQF.Domain\CQF.Domain.csproj" Private="false" />
+  </ItemGroup>
+</Project>

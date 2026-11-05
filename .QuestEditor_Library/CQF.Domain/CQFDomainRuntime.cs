@@ -57,38 +57,63 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
     {
         Scribe_Collections.Look(ref domainMaps, "domainMaps", LookMode.Reference);
         Scribe_Collections.Look(ref mapTemplates, "mapTemplates", LookMode.Def, LookMode.Deep);
-        if (Scribe.mode == LoadSaveMode.PostLoadInit) domainMaps ??= new();
+        if (Scribe.mode == LoadSaveMode.PostLoadInit)
+        {
+            domainMaps ??= new();
+            mapTemplates ??= new();
+        }
     }
 
     public void Dispose()
     {
-        SetTransition(null);
-        foreach (Map realm in domainMaps)
+        if (disposed) return;
+        disposed = true;
+        List<Exception> errors = new();
+        try
         {
-            MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
-            domain.ReleaseScreenBorder();
-            domain.Challenger?.ReleaseScreenBorder();
-            domain.Worker?.Dispose();
-            domain.Challenger?.Worker?.Dispose();
-            domain.Contest?.Dispose();
+            List<Action> releases = new() { () => SetTransition(null) };
+            if (domainMaps != null)
+                foreach (Map? realm in domainMaps.ToArray())
+                {
+                    MapComponent_Domain? domain = realm?.GetComponent<MapComponent_Domain>();
+                    if (domain == null) continue;
+                    releases.Add(domain.ReleaseScreenBorder);
+                    if (domain.Challenger is { } challenger) releases.Add(challenger.ReleaseScreenBorder);
+                    if (domain.Worker is { } worker) releases.Add(worker.Dispose);
+                    if (domain.Challenger?.Worker is { } challengerWorker) releases.Add(challengerWorker.Dispose);
+                    if (domain.Contest is { } contest) releases.Add(contest.Dispose);
+                }
+            foreach (DomainOpeningVisuals visuals in openingVisuals.ToArray()) releases.Add(visuals.Dispose);
+            foreach (DomainOpening_Fusion fusion in activeOpenings.OfType<DomainOpening_Fusion>()) releases.Add(fusion.ReleaseVisuals);
+            foreach (DomainSurfaceVisuals surface in surfaces.ToArray()) releases.Add(surface.Dispose);
+            foreach (Action release in releases)
+            {
+                try { release(); }
+                catch (Exception error) { errors.Add(error); }
+            }
         }
-        foreach (DomainOpeningVisuals visuals in openingVisuals.ToArray()) visuals.Dispose();
-        foreach (DomainOpening_Fusion fusion in activeOpenings.OfType<DomainOpening_Fusion>()) fusion.ReleaseVisuals();
-        foreach (DomainSurfaceVisuals surface in surfaces.ToArray()) surface.Dispose();
-        mapTemplates.Clear();
-        domainMaps.Clear();
-        openings.Clear();
-        activeOpenings.Clear();
-        returns.Clear();
-        processingReturns.Clear();
-        pendingDomainPreloads.Clear();
-        preparing.Clear();
-        failedPreparation.Clear();
-        updatingDomains.Clear();
-        failedContestPairs.Clear();
+        finally
+        {
+            transition = null;
+            openingVisuals.Clear();
+            surfaces.Clear();
+            mapTemplates?.Clear();
+            domainMaps?.Clear();
+            openings.Clear();
+            activeOpenings.Clear();
+            returns.Clear();
+            processingReturns.Clear();
+            pendingDomainPreloads.Clear();
+            preparing.Clear();
+            failedPreparation.Clear();
+            updatingDomains.Clear();
+            failedContestPairs.Clear();
+        }
+        if (errors.Count > 0) throw new AggregateException("[CQF] Domain resource disposal failed.", errors);
     }
 
     private readonly GameComponent_MapManager host;
     private readonly HashSet<DomainOpeningVisuals> openingVisuals = new();
     private readonly HashSet<DomainSurfaceVisuals> surfaces = new();
+    private bool disposed;
 }

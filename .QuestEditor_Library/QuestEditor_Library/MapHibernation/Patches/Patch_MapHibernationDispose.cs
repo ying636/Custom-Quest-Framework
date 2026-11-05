@@ -8,7 +8,8 @@ namespace QuestEditor_Library
     {
         public static void Prefix(Game __instance)
         {
-            __instance.GetComponent<GameComponent_MapManager>()?.DisposeMaps();
+            try { __instance.GetComponent<GameComponent_MapManager>()?.DisposeMaps(); }
+            catch (Exception error) { Log.Error("[CQF] Map cleanup failed while disposing the game: " + error); }
         }
     }
 }

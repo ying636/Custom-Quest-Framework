@@ -28,6 +28,8 @@ internal static class Program
             else if (args.Contains("hibernation")) HibernationSchedulingChecks.Run();
             else if (args.Contains("patches")) Version17Checks.Run(game);
             else if (args.Contains("caravan-native")) CaravanActionsNativeChecks.Run();
+            else if (args.Contains("pawn-default-duty")) PawnSpawnDefaultDutyChecks.Run();
+            else if (args.Contains("map-lifetime")) MapManagerLifetimeChecks.Run();
             else Run(game, args.Contains("enabled"));
         }
         catch (Exception error) { Console.WriteLine(error); Environment.Exit(1); }

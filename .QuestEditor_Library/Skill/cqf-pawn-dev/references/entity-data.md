@@ -231,6 +231,8 @@ Quests/Pawn/<defName>.xml
 - `actions`
 - inventory thing/category 数据
 
+XML 的 `duty` 字段保留显式配置；未填写时保持 null，不在构造或字段初始化期间读取 `DutyDefOf`。编辑器、导出和生成阶段通过 `PawnSpawnData.Duty` 获取最终职责，缺省使用原版 `Defend`；派生生成数据和地图生成步骤同样使用该属性。
+
 普通生成流程：
 
 1. 检查概率和位置。

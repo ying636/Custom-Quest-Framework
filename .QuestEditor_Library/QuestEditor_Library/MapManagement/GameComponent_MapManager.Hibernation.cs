@@ -132,7 +132,11 @@ public sealed partial class GameComponent_MapManager
         pendingHibernation.Clear();
         savedMaps?.Clear();
         savedRequests?.Clear();
-        foreach (Map map in maps) map.Dispose();
+        foreach (Map map in maps)
+        {
+            try { map.Dispose(); }
+            catch (Exception error) { Log.Error("[CQF] Hibernating map disposal failed for " + map.GetUniqueLoadID() + ": " + error); }
+        }
     }
 
     private void ValidateMap(Map map)

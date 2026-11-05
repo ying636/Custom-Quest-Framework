@@ -338,7 +338,7 @@ namespace QuestEditor_Library
 
                     if (pawnData != null && lord != null && lord.LordJob is LordJob_Custom lordJob)
                     {
-                        if (pawnData.duty == QEDefOf.QE_Duty_Guard)
+                        if (pawnData.Duty == QEDefOf.QE_Duty_Guard)
                         {
                             if (def.routes.TryGetValue(pawnData.routeName, out List<IntVec3> route))
                             {
@@ -354,7 +354,7 @@ namespace QuestEditor_Library
                                 Log.Error("null route");
                             }
                         }
-                        if (pawnData.duty == QEDefOf.QE_Duty_Waiter || pawnData.duty == DutyDefOf.Defend) 
+                        if (pawnData.Duty == QEDefOf.QE_Duty_Waiter || pawnData.Duty == DutyDefOf.Defend)
                         {
                             pawns.ForEach((x) =>
                             {
@@ -363,7 +363,7 @@ namespace QuestEditor_Library
                         }
                         pawns.ForEach((x) =>
                         {
-                            lordJob.pawnDutyDatas.SetOrAdd(x, pawnData.duty);
+                            lordJob.pawnDutyDatas.SetOrAdd(x, pawnData.Duty);
                         });
                     }
                 }
