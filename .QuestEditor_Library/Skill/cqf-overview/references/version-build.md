@@ -2,7 +2,13 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.14`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.15`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.15 提高对称轴常态可见度（2026-11-06）
+
+对称轴在未悬停时持续绘制 3 UI 像素灰蓝实线和 5 UI 像素深色底线，悬停／拖拽时改为 4／7 像素并提亮，避免轴线随地面颜色消失。把手增加完整亮色边框。可见轴线延伸到地图在屏幕内的边缘，拖拽命中区域继续使用原有安全区域，绘制粗细固定为屏幕 UI 单位。
+
+1.6／1.7 构建零错误，项目已有空值等警告保留；编辑器启用回归通过。1.7.5000 rev1275 独立离线实机 472 项检查通过，并在同一画面用混凝土和泥土地面检查常态显示。证据位于 `C:/Users/HaiLu/AppData/Local/Temp/CQF415AxisVisibilityValidation/SaveData`，包括 `SymmetryEvidence.json` 和 `Symmetry-MapHandles.png`。测试程序集及专用配置在结束后清理／恢复。
 
 ## 4.14 在地图上拖动对称轴（2026-11-06）
 

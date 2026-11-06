@@ -94,6 +94,8 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
             {
                 this.dialog!.Close(false);
                 Find.DesignatorManager.Deselect();
+                foreach (IntVec3 cell in CellRect.WholeMap(Find.CurrentMap))
+                    Find.CurrentMap.terrainGrid.SetTerrain(cell, cell.x < Find.CurrentMap.Size.x / 2 ? TerrainDefOf.Concrete : TerrainDefOf.Soil);
                 Find.CameraDriver.SetRootPosAndSize(new Vector3(40.5f, 0f, 40.5f), 45f);
                 this.stage = 10;
                 this.wait = Time.realtimeSinceStartup;

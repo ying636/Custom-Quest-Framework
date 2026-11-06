@@ -6,7 +6,7 @@
 
 夹具自动建立 81×81 编辑地图，覆盖格子中心／格缝轴与 1–4 格尺寸、四种朝向的 384 组往返；检查直接放置、屋顶和地形、相对属性刷去重、移动旋转、阻挡与缺失目标、复杂交互和文本、独立列表和目标注册，以及设置的 Scribe 读写。最后使用原生 SaveGame／LoadGame 重新加载完整游戏并检查地图设置。
 
-拖轴检查在真实游戏的 OnGUI 回调中注入 Unity 鼠标事件，然后交给原生 DesignatorManager，覆盖把手、轴线、交点、半格吸附、边界、取消、GUI 捕获释放、窗口和 Targeter 优先级，以及放置工具不误生成物件。拍摄时暂时关闭边缘滚屏，结束时恢复。
+拖轴检查在真实游戏的 OnGUI 回调中注入 Unity 鼠标事件，然后交给原生 DesignatorManager，覆盖把手、轴线、交点、半格吸附、边界、取消、GUI 捕获释放、窗口和 Targeter 优先级，以及放置工具不误生成物件。拍摄时暂时关闭边缘滚屏，结束时恢复。地图把手截图使用混凝土和泥土分区，检查未悬停时的轴线对比度。
 
 界面检查输出 Symmetry-English.png、Symmetry-Chinese.png 和 Symmetry-MapHandles.png。SymmetryEvidence.json 的 success 必须为 true，同时核对本次进程加载的 DLL 路径、版本及时间，不能只把 RimDevTools manual 模式正常退出当作功能通过。
 

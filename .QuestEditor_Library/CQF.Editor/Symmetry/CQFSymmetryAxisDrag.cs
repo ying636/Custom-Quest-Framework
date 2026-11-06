@@ -84,17 +84,17 @@ namespace QuestEditor_Library
             this.DrawAxis(2);
         }
 
-        private Rect LineRect(int axis)
+        private Rect LineRect(int axis, bool forInput = true)
         {
             if ((this.settings.Axes & axis) == 0) return Rect.zero;
             float height = AltitudeLayer.MetaOverlays.AltitudeFor();
             Vector2 topLeft = new Vector3(0f, height, this.settings.map.Size.z).MapToUIPosition();
             Vector2 bottomRight = new Vector3(this.settings.map.Size.x, height, 0f).MapToUIPosition();
-            float left = Mathf.Max(32f, topLeft.x);
-            float right = Mathf.Min(UI.screenWidth - 240f, bottomRight.x);
-            float top = Mathf.Max(100f, topLeft.y);
-            float bottom = Mathf.Min(UI.screenHeight - 190f, bottomRight.y);
-            if (right - left < 44f || bottom - top < 44f) return Rect.zero;
+            float left = Mathf.Max(forInput ? 32f : 0f, topLeft.x);
+            float right = Mathf.Min(forInput ? UI.screenWidth - 240f : UI.screenWidth, bottomRight.x);
+            float top = Mathf.Max(forInput ? 100f : 0f, topLeft.y);
+            float bottom = Mathf.Min(forInput ? UI.screenHeight - 190f : UI.screenHeight, bottomRight.y);
+            if (right - left < (forInput ? 44f : 1f) || bottom - top < (forInput ? 44f : 1f)) return Rect.zero;
             Vector2 center = new Vector3((this.settings.AxisX + 1) * 0.5f, height, (this.settings.AxisZ + 1) * 0.5f).MapToUIPosition();
             if (axis == 1) return center.x >= left && center.x <= right ? new Rect(center.x - 6f, top, 12f, bottom - top) : Rect.zero;
             return center.y >= top && center.y <= bottom ? new Rect(left, center.y - 6f, right - left, 12f) : Rect.zero;
@@ -114,18 +114,24 @@ namespace QuestEditor_Library
 
         private void DrawAxis(int axis)
         {
-            Rect handle = this.HandleRect(axis);
-            if (handle.width <= 0f) return;
+            Rect line = this.LineRect(axis, false);
+            if (line.width <= 0f || line.height <= 0f) return;
             bool highlighted = ((this.HoveredAxes | this.draggedAxes) & axis) != 0;
             Color color = highlighted ? CQFUIStyle.TextColor : CQFUIStyle.Accent;
-            if (highlighted)
-            {
-                Rect line = this.LineRect(axis);
-                if (axis == 1) Widgets.DrawBoxSolid(new Rect(line.center.x - 1f, line.y, 2f, line.height), color);
-                else Widgets.DrawBoxSolid(new Rect(line.x, line.center.y - 1f, line.width, 2f), color);
-            }
-            Widgets.DrawBoxSolid(handle, highlighted ? CQFUIStyle.Hover : CQFUIStyle.Button);
-            Widgets.DrawBoxSolid(new Rect(handle.x, handle.y, handle.width, 1f), CQFUIStyle.Border);
+            float outlineWidth = highlighted ? 7f : 5f;
+            float lineWidth = highlighted ? 4f : 3f;
+            Rect outline = axis == 1
+                ? new Rect(line.center.x - outlineWidth * 0.5f, line.y, outlineWidth, line.height)
+                : new Rect(line.x, line.center.y - outlineWidth * 0.5f, line.width, outlineWidth);
+            Rect stroke = axis == 1
+                ? new Rect(line.center.x - lineWidth * 0.5f, line.y, lineWidth, line.height)
+                : new Rect(line.x, line.center.y - lineWidth * 0.5f, line.width, lineWidth);
+            Widgets.DrawBoxSolid(outline, CQFUIStyle.Canvas);
+            Widgets.DrawBoxSolid(stroke, color);
+            Rect handle = this.HandleRect(axis);
+            if (handle.width <= 0f) return;
+            Widgets.DrawBoxSolid(handle, color);
+            Widgets.DrawBoxSolid(handle.ContractedBy(1.5f), highlighted ? CQFUIStyle.Hover : CQFUIStyle.Button);
             Vector2 direction = axis == 1 ? Vector2.right : Vector2.up;
             Vector2 normal = new Vector2(-direction.y, direction.x);
             Vector2 start = handle.center - direction * 11f;
