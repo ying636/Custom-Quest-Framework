@@ -27,6 +27,11 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.axisZ, "CQF_symmetryAxisZ", -1);
         }
 
+        public override void MapComponentOnGUI()
+        {
+            CQFEditorBridge.SymmetryOnGUI?.Invoke(this.map);
+        }
+
         public bool enabled;
         public bool mirrorX = true;
         public bool mirrorZ;

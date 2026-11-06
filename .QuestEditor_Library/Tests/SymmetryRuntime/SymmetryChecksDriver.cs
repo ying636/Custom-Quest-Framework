@@ -34,6 +34,8 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
                 this.Check(CQFEditorBridge.IsLoaded, "editor module is enabled in the isolated game");
                 this.Check(!Verse.Steam.SteamManager.Initialized, "runtime is isolated from Steam initialization");
                 Prefs.DevMode = true;
+                this.oldEdgeScroll = Prefs.EdgeScreenScroll;
+                Prefs.EdgeScreenScroll = false;
                 DebugSettings.godMode = true;
                 QuestEditor_CustomQuestMap.GenerateMap(new IntVec3(81, 1, 81));
                 this.stage = 2;
@@ -45,6 +47,15 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
                 if (map.Size.x != 81) return;
                 new SymmetryFunctionalChecks(map, this.Check).Run();
                 Find.CameraDriver.SetRootPosAndSize(new Vector3(40.5f, 0f, 40.5f), 45f);
+                foreach (Window window in Find.WindowStack.Windows.Where(window => window.absorbInputAroundWindow).ToArray()) window.Close(false);
+                this.dragChecks = new SymmetryAxisDragChecks(map, this.Check);
+                this.symmetryGui = CQFEditorBridge.SymmetryOnGUI;
+                CQFEditorBridge.SymmetryOnGUI = this.CheckAxisInput;
+                this.stage = 9;
+                return;
+            }
+            if (this.stage == 9 && this.dragChecks!.Complete)
+            {
                 this.SetLanguage("English");
                 new Designator_CQFSymmetry().ProcessInput(new Event { type = EventType.MouseDown, button = 0 });
                 this.dialog = Find.WindowStack.WindowOfType<Dialog_CQFSymmetry>();
@@ -83,6 +94,20 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
             {
                 this.dialog!.Close(false);
                 Find.DesignatorManager.Deselect();
+                Find.CameraDriver.SetRootPosAndSize(new Vector3(40.5f, 0f, 40.5f), 45f);
+                this.stage = 10;
+                this.wait = Time.realtimeSinceStartup;
+                return;
+            }
+            if (this.stage == 10 && Time.realtimeSinceStartup - this.wait > 1f)
+            {
+                ScreenCapture.CaptureScreenshot(Path.Combine(GenFilePaths.SaveDataFolderPath, "Symmetry-MapHandles.png"));
+                this.stage = 11;
+                this.wait = Time.realtimeSinceStartup;
+                return;
+            }
+            if (this.stage == 11 && Time.realtimeSinceStartup - this.wait > 1f)
+            {
                 this.profiler = new SymmetryProfilerChecks(Find.CurrentMap, this.Check);
                 this.stage = 7;
             }
@@ -122,6 +147,23 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
         }
     }
 
+    private void CheckAxisInput(Map map)
+    {
+        if (this.finished || this.stage != 9 || Event.current.type != EventType.Repaint)
+        {
+            this.symmetryGui?.Invoke(map);
+            return;
+        }
+        CQFEditorBridge.SymmetryOnGUI = this.symmetryGui;
+        try { this.dragChecks!.RunOnGUI(); }
+        catch (Exception error)
+        {
+            File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "SymmetryChecks.txt"), "FAIL " + error + "\n", Encoding.UTF8);
+            Log.Error("[CQF symmetry drag checks] " + error);
+            this.Finish(false);
+        }
+    }
+
     private void SetLanguage(string folder)
     {
         LoadedLanguage language = LanguageDatabase.AllLoadedLanguages.First(value => value.folderName == folder);
@@ -147,6 +189,8 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
     {
         this.finished = true;
         this.profiler?.Restore();
+        if (this.symmetryGui != null) CQFEditorBridge.SymmetryOnGUI = this.symmetryGui;
+        if (this.oldEdgeScroll.HasValue) Prefs.EdgeScreenScroll = this.oldEdgeScroll.Value;
         File.WriteAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "SymmetryEvidence.json"), JsonSerializer.Serialize(new
         {
             success, this.checks, gameVersion = VersionControl.CurrentVersionString,
@@ -161,6 +205,9 @@ public sealed class SymmetryChecksDriver : MonoBehaviour
     private bool finished;
     private float wait;
     private Dialog_CQFSymmetry? dialog;
+    private SymmetryAxisDragChecks? dragChecks;
     private SymmetryProfilerChecks? profiler;
     private string? savedMap;
+    private bool? oldEdgeScroll;
+    private Action<Map>? symmetryGui;
 }

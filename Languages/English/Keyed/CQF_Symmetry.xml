@@ -8,7 +8,6 @@
   <CQF_SymmetryShowAxes>Show symmetry axes</CQF_SymmetryShowAxes>
   <CQF_SymmetryAxisX>Left / right axis (X)</CQF_SymmetryAxisX>
   <CQF_SymmetryAxisZ>Top / bottom axis (Z)</CQF_SymmetryAxisZ>
-  <CQF_SymmetryAxisTip>Coordinates start at 0. Whole numbers place the axis through cell centers; half numbers place it between cells. Values snap to steps of 0.5. Each map saves its own settings.</CQF_SymmetryAxisTip>
   <CQF_SymmetryCenter>Center axes on map</CQF_SymmetryCenter>
   <CQF_SymmetryFailed>Symmetry operation could not be completed: {0}</CQF_SymmetryFailed>
   <CQF_SymmetryNoTarget>No corresponding object exists at the mirrored position.</CQF_SymmetryNoTarget>
@@ -16,4 +15,6 @@
   <CQF_SymmetryOverlap>Mirrored objects would overlap. Adjust the symmetry axis or placement.</CQF_SymmetryOverlap>
   <CQF_SymmetryAxisMove>An object on the symmetry axis cannot be moved away from it while symmetry is enabled.</CQF_SymmetryAxisMove>
   <CQF_SymmetryConfigurationFailed>The object configuration could not be synchronized. See the error log for details.</CQF_SymmetryConfigurationFailed>
+  <CQF_SymmetryDragAxes>Drag axes on map</CQF_SymmetryDragAxes>
+  <CQF_SymmetryDragTip>Drag an arrow handle to move its axis. With no editing tool selected, you can also drag the line or the intersection. Positions snap to cell centers or edges. Right-click or press Esc to cancel a drag.</CQF_SymmetryDragTip>
 </LanguageData>

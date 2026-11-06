@@ -14,6 +14,12 @@ namespace QuestEditor_Library
             new Harmony("CQF_Editor").PatchAll(typeof(CQFEditorModule).Assembly);
             CQFEntityBookCatalog.Register();
             CQFEditorBridge.SymmetryUpdate = map => CQFEditorSymmetry.For(map).Update();
+            CQFEditorBridge.SymmetryOnGUI = map =>
+            {
+                CQFSymmetryAxisDrag.ValidateActiveDrag(map);
+                MapComponent_CQFSymmetrySettings settings = map.GetComponent<MapComponent_CQFSymmetrySettings>();
+                if (settings.Active && settings.showAxes) CQFEditorSymmetry.For(map).AxisDrag.OnGUI();
+            };
             CQFEditorBridge.InspectorDrawn = (thing, tab) =>
             {
                 if (thing.Spawned)

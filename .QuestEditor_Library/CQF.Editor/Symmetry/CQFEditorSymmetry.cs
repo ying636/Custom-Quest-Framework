@@ -23,6 +23,7 @@ namespace QuestEditor_Library
         public bool showAxes { get => this.settings.showAxes; set => this.settings.showAxes = value; }
         public int axisX { get => this.settings.axisX; set => this.settings.axisX = value; }
         public int axisZ { get => this.settings.axisZ; set => this.settings.axisZ = value; }
+        public CQFSymmetryAxisDrag AxisDrag => this.axisDrag ??= new CQFSymmetryAxisDrag(this.settings);
 
         public static CQFEditorSymmetry For(Map map) => sessions.GetValue(map, value => new CQFEditorSymmetry(value));
 
@@ -186,6 +187,7 @@ namespace QuestEditor_Library
         private readonly MapComponent_CQFSymmetrySettings settings;
         private static readonly ConditionalWeakTable<Map, CQFEditorSymmetry> sessions = new ConditionalWeakTable<Map, CQFEditorSymmetry>();
         private int depth;
+        private CQFSymmetryAxisDrag? axisDrag;
         private string? failure;
         private CQFSymmetryEditSession? inspectorSession;
         private Thing? inspectorOwner;

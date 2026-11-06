@@ -8,7 +8,6 @@
   <CQF_SymmetryShowAxes>显示对称轴</CQF_SymmetryShowAxes>
   <CQF_SymmetryAxisX>左右对称轴（X）</CQF_SymmetryAxisX>
   <CQF_SymmetryAxisZ>上下对称轴（Z）</CQF_SymmetryAxisZ>
-  <CQF_SymmetryAxisTip>坐标从 0 开始。整数表示穿过格子中心，半整数表示位于格子之间，数值自动按 0.5 对齐。每张地图独立保存设置。</CQF_SymmetryAxisTip>
   <CQF_SymmetryCenter>对称轴回到地图中心</CQF_SymmetryCenter>
   <CQF_SymmetryFailed>对称操作未能完成：{0}</CQF_SymmetryFailed>
   <CQF_SymmetryNoTarget>镜像位置没有对应的物件。</CQF_SymmetryNoTarget>
@@ -16,4 +15,6 @@
   <CQF_SymmetryOverlap>镜像物件会互相重叠，请调整对称轴或放置位置。</CQF_SymmetryOverlap>
   <CQF_SymmetryAxisMove>启用对称模式时，无法将轴线上的单个物件移离轴线。</CQF_SymmetryAxisMove>
   <CQF_SymmetryConfigurationFailed>物件配置未能同步，详细原因已记录到错误日志。</CQF_SymmetryConfigurationFailed>
+  <CQF_SymmetryDragAxes>在地图上拖动对称轴</CQF_SymmetryDragAxes>
+  <CQF_SymmetryDragTip>拖动箭头把手调整对称轴。未选中编辑工具时，也可直接拖动轴线或交点。位置自动吸附到格子中心或格缝；右键或 Esc 取消本次拖动。</CQF_SymmetryDragTip>
 </LanguageData>

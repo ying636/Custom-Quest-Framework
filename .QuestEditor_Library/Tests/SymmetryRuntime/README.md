@@ -6,7 +6,9 @@
 
 夹具自动建立 81×81 编辑地图，覆盖格子中心／格缝轴与 1–4 格尺寸、四种朝向的 384 组往返；检查直接放置、屋顶和地形、相对属性刷去重、移动旋转、阻挡与缺失目标、复杂交互和文本、独立列表和目标注册，以及设置的 Scribe 读写。最后使用原生 SaveGame／LoadGame 重新加载完整游戏并检查地图设置。
 
-界面检查输出 Symmetry-English.png 和 Symmetry-Chinese.png。SymmetryEvidence.json 的 success 必须为 true，同时核对本次进程加载的 DLL 路径、版本及时间，不能只把 RimDevTools manual 模式正常退出当作功能通过。
+拖轴检查在真实游戏的 OnGUI 回调中注入 Unity 鼠标事件，然后交给原生 DesignatorManager，覆盖把手、轴线、交点、半格吸附、边界、取消、GUI 捕获释放、窗口和 Targeter 优先级，以及放置工具不误生成物件。拍摄时暂时关闭边缘滚屏，结束时恢复。
+
+界面检查输出 Symmetry-English.png、Symmetry-Chinese.png 和 Symmetry-MapHandles.png。SymmetryEvidence.json 的 success 必须为 true，同时核对本次进程加载的 DLL 路径、版本及时间，不能只把 RimDevTools manual 模式正常退出当作功能通过。
 
 性能检查采用原生 FrameProfiler 的外层 scope，暂时把正常对称更新回调移到夹具内，每帧恰好执行一次，结束时恢复。每组预热 10 帧后收集 120 个完成帧，分别为关闭空闲、显示双轴、隐藏轴线、普通刷 100 格、双轴刷 100 格和普通刷相同的 400 个实际格子。输出包含原始帧号、路径、精确累计调用数、每帧均值、分配及丢弃统计。游戏处于暂停编辑状态，不能将这些结果换算为活动存档的 FPS／TPS。
 

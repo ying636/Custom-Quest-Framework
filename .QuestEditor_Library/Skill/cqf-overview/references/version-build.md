@@ -2,7 +2,15 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.13`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.14`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.14 在地图上拖动对称轴（2026-11-06）
+
+对称模式移除坐标输入框，设置窗口改用“在地图上拖动对称轴”按钮，点击后开启轴线并回到地图。垂直轴上方及水平轴右侧显示箭头把手，支持按住左键拖动、实时半格吸附和地图边界限制。未选择编辑工具时可直接拖轴线或交点，交点同时移动两条轴；选择放置或画笔工具时只由把手捕获拖动，轴线上的普通编辑点击继续交给原工具。右键／Esc 取消并恢复拖动前的位置，原工具保持选中。
+
+输入接入原生 MapComponentOnGUI，经主库桥接进入编辑器，不增加 Harmony 补丁。GUI 鼠标捕获阻止误放置与框选；弹窗遮挡和 Targeter 优先，隐藏轴、退出上帝模式、切换地图或丢失输入时撤销拖动并释放捕获。临时拖拽引用使用 System.WeakReference，不把地图留在静态强引用中；持久坐标仍由主库组件保存。新增中英文拖拽提示，现有开关和回到中心保留。
+
+1.6／1.7 构建零错误，已有空值等警告仍保留；框架关闭／编辑器开启／补丁注册回归通过。1.7.5000 rev1275 离线实机 GUI 事件检查和完整回归共 472 项通过，包含原有镜像、配置和存读档场景，以及左右轴、交点、取消、边界、窗口遮挡、目标选择及不误放置等 25 项新增检查。中英文窗口及关闭窗口后的地图把手已按实际截图检查；测试截图关闭边缘滚屏并在结束后恢复。证据：`C:/Users/HaiLu/AppData/Local/Temp/CQF414AxisDragValidation/SaveData/SymmetryEvidence.json`、`Symmetry-English.png`、`Symmetry-Chinese.png` 和 `Symmetry-MapHandles.png`。临时夹具不随发布程序集交付。
 
 ## 4.13 地图编辑对称模式（2026-11-06）
 
