@@ -23,6 +23,8 @@ namespace QuestEditor_Library
 
         protected override void FillTab()
         {
+            if (this.SelThing is Thing symmetryOwner)
+                CQFEditorBridge.InspectorDrawn?.Invoke(symmetryOwner, this.GetType());
             Rect viewport = new Rect(8f, 8f, this.CQFSize.x - 16f, this.CQFSize.y - 16f);
             Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, this.height));
             using CQFUIScope scope = new CQFUIScope(content.width, viewport.height);

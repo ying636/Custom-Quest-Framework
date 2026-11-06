@@ -13,6 +13,7 @@ namespace QuestEditor_Library
         public Dialog_EditIDrawTabable(IDrawTabable iDrawable)
         {
             this.iDrawable = iDrawable;
+            this.symmetrySession = new CQFSymmetryEditSession(iDrawable as Thing);
             this.forcePause = true;
             this.closeOnClickedOutside = false;
             this.doCloseX = true;
@@ -20,6 +21,12 @@ namespace QuestEditor_Library
 
         public override Vector2 InitialSize => new Vector2(580f, 650f);
         public CQFAIEditorContext? AIContext => this.iDrawable is Thing thing ? CQFAIThingContext.Create(thing, this) : null;
+
+        public override void PostClose()
+        {
+            base.PostClose();
+            this.symmetrySession.Complete();
+        }
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -31,5 +38,6 @@ namespace QuestEditor_Library
         }
 
         private readonly IDrawTabable iDrawable;
+        private readonly CQFSymmetryEditSession symmetrySession;
     }
 }

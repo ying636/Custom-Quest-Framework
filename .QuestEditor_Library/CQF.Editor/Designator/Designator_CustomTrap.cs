@@ -87,7 +87,11 @@ namespace QuestEditor_Library
             {
                 if (Designator_CustomTrap.thing is ThingDef def)
                 {
-                    GenSpawn.Spawn(ThingMaker.MakeThing(def,stuff),loc,Find.CurrentMap);
+                    CQFEditorSymmetry symmetry = CQFEditorSymmetry.For(this.Map);
+                    if (symmetry.Active)
+                        symmetry.Place(loc, Rot4.North, def, (position, rotation) => GenSpawn.Spawn(ThingMaker.MakeThing(def, stuff), position, this.Map, rotation), stuff);
+                    else
+                        GenSpawn.Spawn(ThingMaker.MakeThing(def,stuff),loc,Find.CurrentMap);
                 }
                 else if (loc.GetFirstThing<CustomTrap>(Find.CurrentMap) is CustomTrap trap)
                 {

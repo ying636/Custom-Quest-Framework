@@ -5,7 +5,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_SetStyle : Designator_Cells
+    public class Designator_SetStyle : Designator_CQFCells
     {
         public Designator_SetStyle()
         {
@@ -54,7 +54,7 @@ namespace QuestEditor_Library
                 yield break;
             }
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             AcceptanceReport report = this.CanDesignateCell(loc);
             if (!report.Accepted)
@@ -64,7 +64,7 @@ namespace QuestEditor_Library
             }
             foreach (Thing thing in loc.GetThingList(Find.CurrentMap))
             {
-                if (!this.CanApplyStyle(thing)) continue;
+                if (!this.CanApplyStyle(thing) || !this.Visit(thing)) continue;
                 thing.SetStyleDef(clearStyle ? null : this.Style!.GetStyleForThingDef(thing.def));
                 thing.Notify_ColorChanged();
             }

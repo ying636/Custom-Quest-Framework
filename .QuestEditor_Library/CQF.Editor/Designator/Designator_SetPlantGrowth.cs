@@ -5,7 +5,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_SetPlantGrowth : Designator_Cells
+    public class Designator_SetPlantGrowth : Designator_CQFCells
     {
         public Designator_SetPlantGrowth()
         {
@@ -30,14 +30,14 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (!loc.InBounds(Find.CurrentMap))
             {
                 return;
             }
             Plant plant = loc.GetPlant(Find.CurrentMap);
-            if (plant == null || plant.Destroyed)
+            if (plant == null || plant.Destroyed || !this.Visit(plant))
             {
                 return;
             }

@@ -7,7 +7,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_SetFaction : Designator_Cells
+    public class Designator_SetFaction : Designator_CQFCells
     {
         public Designator_SetFaction()
         {
@@ -59,13 +59,13 @@ namespace QuestEditor_Library
                 yield break;
             }
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (loc.InBounds(Find.CurrentMap))
             {
                 loc.GetThingList(Find.CurrentMap).ForEach(t => 
                 {
-                    if (t.def.CanHaveFaction)
+                    if (t.def.CanHaveFaction && this.Visit(t))
                     {
                         t.SetFaction(this.Faction);
                     }

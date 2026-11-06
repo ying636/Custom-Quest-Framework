@@ -6,7 +6,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_Terrain : Designator_Cells
+    public class Designator_Terrain : Designator_CQFCells
     {
         public Designator_Terrain()
         {
@@ -59,7 +59,7 @@ namespace QuestEditor_Library
             this.RecordRecentSelection(def);
             Find.DesignatorManager.Select(this);
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (loc.InBounds(Find.CurrentMap))
             {

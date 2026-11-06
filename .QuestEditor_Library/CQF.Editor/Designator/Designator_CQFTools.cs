@@ -133,17 +133,17 @@ namespace QuestEditor_Library
             Find.DesignatorManager.Select(this);
         }
 
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void PlaceAt(IntVec3 loc, Rot4 rotation)
         {
             if (loc.InBounds(Find.CurrentMap))
             {
                 ThingDef def = Designator_CQFTools.thing;
-                if (loc.GetFirstThing(Find.CurrentMap, def) is Thing thing && thing.stackCount < thing.def.stackLimit)
+                if (loc.GetThingList(Find.CurrentMap).Find(target => target.def == def && target.Stuff == (def.MadeFromStuff ? this.StuffDef : null)) is Thing thing && thing.stackCount < thing.def.stackLimit)
                 {
                     thing.stackCount++;
                     return;
                 }
-                Thing newThing = GenSpawn.Spawn(ThingMaker.MakeThing(def,def.MadeFromStuff ? this.StuffDef : null), loc, Find.CurrentMap, this.placingRot);
+                Thing newThing = GenSpawn.Spawn(ThingMaker.MakeThing(def,def.MadeFromStuff ? this.StuffDef : null), loc, Find.CurrentMap, rotation);
             }
         }
         public override void RenderHighlight(List<IntVec3> dragCells)

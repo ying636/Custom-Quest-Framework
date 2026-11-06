@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_SymmetryTitle>Symmetry mode</CQF_SymmetryTitle>
+  <CQF_SymmetryDescription>Mirror CQF map editing across the selected axes. Placement, deletion, terrain, roofs, property brushes, movement and rotation are synchronized. Object configurations are synchronized when their editor closes.</CQF_SymmetryDescription>
+  <CQF_SymmetryEnabled>Enable symmetry</CQF_SymmetryEnabled>
+  <CQF_SymmetryMirrorX>Left / right symmetry</CQF_SymmetryMirrorX>
+  <CQF_SymmetryMirrorZ>Top / bottom symmetry</CQF_SymmetryMirrorZ>
+  <CQF_SymmetryShowAxes>Show symmetry axes</CQF_SymmetryShowAxes>
+  <CQF_SymmetryAxisX>Left / right axis (X)</CQF_SymmetryAxisX>
+  <CQF_SymmetryAxisZ>Top / bottom axis (Z)</CQF_SymmetryAxisZ>
+  <CQF_SymmetryAxisTip>Coordinates start at 0. Whole numbers place the axis through cell centers; half numbers place it between cells. Values snap to steps of 0.5. Each map saves its own settings.</CQF_SymmetryAxisTip>
+  <CQF_SymmetryCenter>Center axes on map</CQF_SymmetryCenter>
+  <CQF_SymmetryFailed>Symmetry operation could not be completed: {0}</CQF_SymmetryFailed>
+  <CQF_SymmetryNoTarget>No corresponding object exists at the mirrored position.</CQF_SymmetryNoTarget>
+  <CQF_SymmetryAmbiguous>More than one corresponding object exists at the mirrored position.</CQF_SymmetryAmbiguous>
+  <CQF_SymmetryOverlap>Mirrored objects would overlap. Adjust the symmetry axis or placement.</CQF_SymmetryOverlap>
+  <CQF_SymmetryAxisMove>An object on the symmetry axis cannot be moved away from it while symmetry is enabled.</CQF_SymmetryAxisMove>
+  <CQF_SymmetryConfigurationFailed>The object configuration could not be synchronized. See the error log for details.</CQF_SymmetryConfigurationFailed>
+</LanguageData>

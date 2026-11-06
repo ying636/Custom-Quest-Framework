@@ -13,6 +13,7 @@ namespace QuestEditor_Library
         {
             this.operation = operation;
             this.owner = owner ?? CQFEditorContext.SourceThing;
+            this.symmetrySession = new CQFSymmetryEditSession(this.owner);
             this.windowRect = new Rect((UI.screenWidth - 760f) / 2f, (UI.screenHeight - 680f) / 2f, 760f, 680f);
             this.forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
             this.closeOnAccept = false;
@@ -35,6 +36,12 @@ namespace QuestEditor_Library
             base.WindowUpdate();
             this.windowRect.width = Mathf.Clamp(this.windowRect.width, Mathf.Min(380f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             this.windowRect.height = Mathf.Clamp(this.windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+        }
+
+        public override void PostClose()
+        {
+            base.PostClose();
+            this.symmetrySession.Complete();
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -64,5 +71,6 @@ namespace QuestEditor_Library
         public InteractionOperation operation;
         public Vector2 pos = Vector2.zero;
         private readonly Thing owner;
+        private readonly CQFSymmetryEditSession symmetrySession;
     }
 }

@@ -41,6 +41,8 @@ namespace QuestEditor_Library
 
         protected override void FillTab()
         {
+            if (this.Thing as Thing is Thing symmetryOwner)
+                CQFEditorBridge.InspectorDrawn?.Invoke(symmetryOwner, this.GetType());
             using CQFUIScope scope = new CQFUIScope(this.CQFSize.x, this.CQFSize.y);
             using (new CQFEditorContext(this.Thing as Thing))
             {

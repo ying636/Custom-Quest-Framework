@@ -13,6 +13,12 @@ namespace QuestEditor_Library
         {
             new Harmony("CQF_Editor").PatchAll(typeof(CQFEditorModule).Assembly);
             CQFEntityBookCatalog.Register();
+            CQFEditorBridge.SymmetryUpdate = map => CQFEditorSymmetry.For(map).Update();
+            CQFEditorBridge.InspectorDrawn = (thing, tab) =>
+            {
+                if (thing.Spawned)
+                    CQFEditorSymmetry.For(thing.Map).TrackInspector(thing, tab);
+            };
             RegisterAI();
         }
 

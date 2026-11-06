@@ -9,7 +9,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_Disgenerate : Designator_Cells
+    public class Designator_Disgenerate : Designator_CQFCells
     {
         public Designator_Disgenerate()
         {
@@ -43,7 +43,7 @@ namespace QuestEditor_Library
             }
             return true;
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (!loc.InBounds(this.Map))
             {

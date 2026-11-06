@@ -5,7 +5,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_SetHitPoints : Designator_Cells
+    public class Designator_SetHitPoints : Designator_CQFCells
     {
         public Designator_SetHitPoints()
         {
@@ -38,7 +38,7 @@ namespace QuestEditor_Library
             ? this.percentage.ToString() + "%"
             : this.adjustment.ToString("+0;-0;0");
 
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (!loc.InBounds(Find.CurrentMap))
             {
@@ -46,7 +46,7 @@ namespace QuestEditor_Library
             }
             foreach (Thing thing in loc.GetThingList(Find.CurrentMap))
             {
-                if (!thing.def.useHitPoints || thing.Destroyed)
+                if (!thing.def.useHitPoints || thing.Destroyed || !this.Visit(thing))
                 {
                     continue;
                 }

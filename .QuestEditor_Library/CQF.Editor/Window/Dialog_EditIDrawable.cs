@@ -14,6 +14,7 @@ namespace QuestEditor_Library
         {
             this.iDrawable = iDrawable;
             this.owner = CQFEditorContext.SourceThing;
+            this.symmetrySession = new CQFSymmetryEditSession(this.owner);
             this.questBook = questBook;
             this.forcePause = true;
             this.closeOnClickedOutside = false;
@@ -34,6 +35,12 @@ namespace QuestEditor_Library
             base.WindowUpdate();
             windowRect.width = Mathf.Clamp(windowRect.width, Mathf.Min(420f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             windowRect.height = Mathf.Clamp(windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+        }
+
+        public override void PostClose()
+        {
+            base.PostClose();
+            this.symmetrySession.Complete();
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -78,5 +85,6 @@ namespace QuestEditor_Library
         private IDrawable iDrawable;
         private readonly QuestBookDef? questBook;
         private readonly Thing owner;
+        private readonly CQFSymmetryEditSession symmetrySession;
     }
 }

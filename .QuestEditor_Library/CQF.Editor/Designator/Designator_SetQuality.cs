@@ -5,7 +5,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_SetQuality : Designator_Cells
+    public class Designator_SetQuality : Designator_CQFCells
     {
         public Designator_SetQuality()
         {
@@ -66,7 +66,7 @@ namespace QuestEditor_Library
             }
         }
 
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (!loc.InBounds(Find.CurrentMap))
             {
@@ -74,7 +74,7 @@ namespace QuestEditor_Library
             }
             foreach (Thing thing in loc.GetThingList(Find.CurrentMap))
             {
-                if (thing.Destroyed || !thing.TryGetComp<CompQuality>(out CompQuality compQuality))
+                if (thing.Destroyed || !thing.TryGetComp<CompQuality>(out CompQuality compQuality) || !this.Visit(thing))
                 {
                     continue;
                 }

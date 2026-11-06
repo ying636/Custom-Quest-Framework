@@ -7,7 +7,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_DestroyThing : Designator_Cells
+    public class Designator_DestroyThing : Designator_CQFCells
     {
         public Designator_DestroyThing() 
         {
@@ -47,21 +47,15 @@ namespace QuestEditor_Library
                 yield break;
             }
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (loc.InBounds(Find.CurrentMap))
             {
-                List<Thing> things = loc.GetThingList(Find.CurrentMap);
-                while (things.Count != 0)
+                foreach (Thing thing in loc.GetThingList(Find.CurrentMap).ToList())
                 {
-                    Thing thing = things[0];
-                    if (thing.def.destroyable)
+                    if (thing.def.destroyable && !thing.Destroyed && this.Visit(thing))
                     {
                         thing.Destroy();
-                    }
-                    if (things.Contains(thing))
-                    {
-                        things.Remove(thing);
                     }
                 }
             }

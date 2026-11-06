@@ -44,6 +44,10 @@ internal static class ThingTransformChecks
             map.cellIndices = new CellIndices(map);
             map.thingGrid = new ThingGrid(map);
             map.edificeGrid = new EdificeGrid(map);
+            map.components = new List<MapComponent>
+            {
+                new QuestEditor_Library.MapComponent_CQFSymmetrySettings(map)
+            };
             typeof(Game).GetField("maps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(game, new List<Map> { map });
             game.currentMapIndex = 0;
             Current.Game = game;

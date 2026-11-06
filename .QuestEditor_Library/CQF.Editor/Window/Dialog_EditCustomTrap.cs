@@ -13,8 +13,15 @@ namespace QuestEditor_Library
         public Dialog_EditCustomTrap(CustomTrap trap)
         {
             this.trap = trap;
+            this.symmetrySession = new CQFSymmetryEditSession(trap);
             this.doCloseX = true;
         }
+        public override void PostClose()
+        {
+            base.PostClose();
+            this.symmetrySession.Complete();
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
@@ -34,5 +41,6 @@ namespace QuestEditor_Library
         public float height;
         public CustomTrap trap;
         public Vector2 pos = Vector2.zero;
+        private readonly CQFSymmetryEditSession symmetrySession;
     }
 }

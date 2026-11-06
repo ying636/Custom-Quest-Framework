@@ -142,17 +142,17 @@ namespace QuestEditor_Library
                 base.DrawGhost(ghostCol);
             }
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void PlaceAt(IntVec3 loc, Rot4 rotation)
         {
             if (loc.InBounds(Find.CurrentMap))
             {
                 ThingDef def = Designator_SpawnThing.thing;
-                if (loc.GetFirstThing(Find.CurrentMap, def) is Thing thing && thing.stackCount < thing.def.stackLimit)
+                if (loc.GetThingList(Find.CurrentMap).Find(target => target.def == def && target.Stuff == (def.MadeFromStuff ? this.StuffDef : null)) is Thing thing && thing.stackCount < thing.def.stackLimit)
                 {
                     thing.stackCount++;
                     return;
                 }
-                Thing newThing = GenSpawn.Spawn(ThingMaker.MakeThing(def,def.MadeFromStuff ? this.StuffDef : null), loc,Find.CurrentMap,this.placingRot,WipeMode.VanishOrMoveAside);
+                Thing newThing = GenSpawn.Spawn(ThingMaker.MakeThing(def,def.MadeFromStuff ? this.StuffDef : null), loc,Find.CurrentMap,rotation,WipeMode.VanishOrMoveAside);
             }
         }
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)

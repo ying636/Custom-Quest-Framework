@@ -7,7 +7,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_Paste : Designator_Cells
+    public class Designator_Paste : Designator_CQFCells
     {
         public Designator_Paste()
         {
@@ -50,47 +50,28 @@ namespace QuestEditor_Library
                 yield break;
             }
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (loc.InBounds(Find.CurrentMap))
             {
                 if (!this.pasteActionComp)
                 {
                     if (loc.GetThingList(Find.CurrentMap).Find(t =>this.type.IsAssignableFrom(t.GetType()))
-                        is IPastableData box)
+                        is Thing target && this.Visit(target) && target is IPastableData box)
                     {
                         box.PasteData();
                     }
                 }
                 else 
                 {
-                    if (loc.GetThingList(Find.CurrentMap).Find(t => t.TryGetComp<CompActionWorker>() != null)?.TryGetComp<CompActionWorker>() is CompActionWorker comp)
+                    if (loc.GetThingList(Find.CurrentMap).Find(t => t.TryGetComp<CompActionWorker>() != null) is Thing target
+                        && this.Visit(target) && target.TryGetComp<CompActionWorker>() is CompActionWorker comp)
                     {
                         comp.PasteSingleComp();
                     }
                 }
             }
         }
-        public override void DesignateMultiCell(IEnumerable<IntVec3> cells)
-        {
-            List<Thing> targets = cells.Where(c => c.InBounds(Find.CurrentMap))
-                .Select(c => c.GetThingList(Find.CurrentMap).Find(t => this.pasteActionComp
-                    ? t.TryGetComp<CompActionWorker>() != null : this.type.IsAssignableFrom(t.GetType())))
-                .Where(t => t != null).Distinct().ToList();
-            foreach (Thing target in targets)
-            {
-                if (this.pasteActionComp)
-                {
-                    target.TryGetComp<CompActionWorker>().PasteSingleComp();
-                }
-                else if (target is IPastableData pastable)
-                {
-                    pastable.PasteData();
-                }
-            }
-            this.Finalize(targets.Any());
-        }
-
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
             return loc.InBounds(Find.CurrentMap) &&

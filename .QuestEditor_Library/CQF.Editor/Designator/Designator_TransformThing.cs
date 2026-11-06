@@ -64,6 +64,65 @@ namespace QuestEditor_Library
 
         protected AcceptanceReport GetPlacementReport(Thing thing, IntVec3 position, Rot4 rotation)
         {
+            return this.GetGroupPlacementReport(thing, position, rotation, null);
+        }
+
+        protected bool TransformThing(Thing thing, IntVec3 position, Rot4 rotation)
+        {
+            CQFEditorSymmetry symmetry = CQFEditorSymmetry.For(this.Map);
+            if (!symmetry.Active) return this.TransformSingleThing(thing, position, rotation);
+            using CQFSymmetryScope scope = new CQFSymmetryScope(symmetry);
+            List<(Thing thing, IntVec3 position, Rot4 rotation, IntVec3 oldPosition, Rot4 oldRotation)> targets = new();
+            foreach (CQFSymmetryTransform transform in symmetry.Transforms())
+            {
+                Thing? target = transform.Axes == 0 ? thing : symmetry.Counterpart(thing, transform);
+                if (target == null) return false;
+                IntVec3 targetPosition = transform.Position(position, rotation, thing.def);
+                Rot4 targetRotation = transform.Rotation(rotation);
+                int existing = targets.FindIndex(value => value.thing == target);
+                if (existing >= 0)
+                {
+                    if (!GenAdj.OccupiedRect(targets[existing].position, targets[existing].rotation, thing.def.size)
+                        .Equals(GenAdj.OccupiedRect(targetPosition, targetRotation, thing.def.size)))
+                    {
+                        symmetry.Reject("CQF_SymmetryAxisMove".Translate());
+                        return false;
+                    }
+                    continue;
+                }
+                targets.Add((target, targetPosition, targetRotation, target.Position, target.Rotation));
+            }
+            List<Thing> moving = targets.Select(value => value.thing).ToList();
+            for (int index = 0; index < targets.Count; index++)
+            {
+                var target = targets[index];
+                AcceptanceReport report = this.GetGroupPlacementReport(target.thing, target.position, target.rotation, moving);
+                if (!report.Accepted)
+                {
+                    symmetry.Reject(report.Reason);
+                    return false;
+                }
+                CellRect rect = GenAdj.OccupiedRect(target.position, target.rotation, target.thing.def.size);
+                if (targets.Take(index).Any(other => rect.Overlaps(GenAdj.OccupiedRect(other.position, other.rotation, other.thing.def.size))))
+                {
+                    symmetry.Reject("CQF_SymmetryOverlap".Translate());
+                    return false;
+                }
+            }
+            for (int index = 0; index < targets.Count; index++)
+            {
+                var target = targets[index];
+                if (this.TransformSingleThing(target.thing, target.position, target.rotation, moving)) continue;
+                foreach (var previous in targets.Take(index).Reverse())
+                    if (!this.TransformSingleThing(previous.thing, previous.oldPosition, previous.oldRotation, moving))
+                        Log.Error("[CQF] Symmetry could not restore " + previous.thing.ThingID);
+                return false;
+            }
+            return true;
+        }
+
+        private AcceptanceReport GetGroupPlacementReport(Thing thing, IntVec3 position, Rot4 rotation, ICollection<Thing>? moving)
+        {
             Map map = this.Map;
             if (!DebugSettings.godMode || map == null || !thing.Spawned || thing.Destroyed || thing.Map != map)
             {
@@ -82,7 +141,7 @@ namespace QuestEditor_Library
             {
                 foreach (Thing other in cell.GetThingList(map))
                 {
-                    if (other == thing)
+                    if (other == thing || moving?.Contains(other) == true)
                     {
                         continue;
                     }
@@ -95,7 +154,8 @@ namespace QuestEditor_Library
                     }
                 }
                 if (thing.def.category == ThingCategory.Item
-                    && cell.GetItemCount(map) - (thing.OccupiedRect().Contains(cell) ? 1 : 0) >= cell.GetMaxItemsAllowedInCell(map))
+                    && cell.GetItemCount(map) - (moving == null ? (thing.OccupiedRect().Contains(cell) ? 1 : 0)
+                        : moving.Count(other => other.def.category == ThingCategory.Item && other.OccupiedRect().Contains(cell))) >= cell.GetMaxItemsAllowedInCell(map))
                 {
                     return "SpaceAlreadyOccupied".Translate();
                 }
@@ -103,9 +163,9 @@ namespace QuestEditor_Library
             return true;
         }
 
-        protected bool TransformThing(Thing thing, IntVec3 position, Rot4 rotation)
+        private bool TransformSingleThing(Thing thing, IntVec3 position, Rot4 rotation, ICollection<Thing>? moving = null)
         {
-            AcceptanceReport report = this.GetPlacementReport(thing, position, rotation);
+            AcceptanceReport report = this.GetGroupPlacementReport(thing, position, rotation, moving);
             if (!report.Accepted)
             {
                 Messages.Message(report.Reason, MessageTypeDefOf.RejectInput, false);

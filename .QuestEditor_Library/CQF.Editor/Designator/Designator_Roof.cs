@@ -7,7 +7,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public class Designator_Roof : Designator_Cells
+    public class Designator_Roof : Designator_CQFCells
     {
         public Designator_Roof()
         {
@@ -50,7 +50,7 @@ namespace QuestEditor_Library
                 yield break;
             }
         }
-        public override void DesignateSingleCell(IntVec3 loc)
+        protected override void ApplyCell(IntVec3 loc)
         {
             if (loc.InBounds(Find.CurrentMap))
             {

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_SymmetryTitle>对称模式</CQF_SymmetryTitle>
+  <CQF_SymmetryDescription>沿选定对称轴同步 CQF 地图编辑操作：放置、删除、地形、屋顶、属性刷、移动和旋转。物件配置会在编辑窗口关闭时同步。</CQF_SymmetryDescription>
+  <CQF_SymmetryEnabled>启用对称模式</CQF_SymmetryEnabled>
+  <CQF_SymmetryMirrorX>左右对称</CQF_SymmetryMirrorX>
+  <CQF_SymmetryMirrorZ>上下对称</CQF_SymmetryMirrorZ>
+  <CQF_SymmetryShowAxes>显示对称轴</CQF_SymmetryShowAxes>
+  <CQF_SymmetryAxisX>左右对称轴（X）</CQF_SymmetryAxisX>
+  <CQF_SymmetryAxisZ>上下对称轴（Z）</CQF_SymmetryAxisZ>
+  <CQF_SymmetryAxisTip>坐标从 0 开始。整数表示穿过格子中心，半整数表示位于格子之间，数值自动按 0.5 对齐。每张地图独立保存设置。</CQF_SymmetryAxisTip>
+  <CQF_SymmetryCenter>对称轴回到地图中心</CQF_SymmetryCenter>
+  <CQF_SymmetryFailed>对称操作未能完成：{0}</CQF_SymmetryFailed>
+  <CQF_SymmetryNoTarget>镜像位置没有对应的物件。</CQF_SymmetryNoTarget>
+  <CQF_SymmetryAmbiguous>镜像位置存在多个对应物件，无法确定目标。</CQF_SymmetryAmbiguous>
+  <CQF_SymmetryOverlap>镜像物件会互相重叠，请调整对称轴或放置位置。</CQF_SymmetryOverlap>
+  <CQF_SymmetryAxisMove>启用对称模式时，无法将轴线上的单个物件移离轴线。</CQF_SymmetryAxisMove>
+  <CQF_SymmetryConfigurationFailed>物件配置未能同步，详细原因已记录到错误日志。</CQF_SymmetryConfigurationFailed>
+</LanguageData>

@@ -14,9 +14,16 @@ namespace QuestEditor_Library
         {
             this.comp = comp;
             this.owner = owner ?? CQFEditorContext.SourceThing;
+            this.symmetrySession = new CQFSymmetryEditSession(this.owner);
             this.doCloseX = true;
             this.forcePause = true;
         }
+        public override void PostClose()
+        {
+            base.PostClose();
+            this.symmetrySession.Complete();
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
@@ -38,5 +45,6 @@ namespace QuestEditor_Library
         public Vector2 scrollPos = Vector2.zero;
         public ActionComp comp;
         private readonly Thing owner;
+        private readonly CQFSymmetryEditSession symmetrySession;
     }
 }

@@ -8,6 +8,8 @@ namespace QuestEditor_Library
         public static bool IsLoaded => module != null;
         public static ICQFEditorModule? Module => module;
         public static ICQFEditorModule Editor => module ?? throw new InvalidOperationException("CQF_Editor_NotLoaded".Translate());
+        public static Action<Thing, Type>? InspectorDrawn { get; set; }
+        public static Action<Map>? SymmetryUpdate { get; set; }
 
         public static void Attach(ICQFEditorModule value)
         {
