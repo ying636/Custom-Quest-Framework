@@ -34,7 +34,7 @@ namespace QuestEditor_Library
                 GUI.color *= GUI.enabled ? textColor : Muted;
                 Rect text = rect.ContractedBy(Mathf.Min(6f, rect.width / 4f), 0f);
                 Widgets.Label(text, Text.WordWrap ? label : (label ?? string.Empty).Truncate(text.width));
-                return Widgets.ButtonInvisible(rect, doMouseoverSound);
+                return GUI.enabled && Widgets.ButtonInvisible(rect, doMouseoverSound);
             }
             finally
             {

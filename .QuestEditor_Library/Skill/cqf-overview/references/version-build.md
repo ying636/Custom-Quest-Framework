@@ -2,7 +2,13 @@
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `4.15`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `4.16`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+
+## 4.16 修复禁用对话选项仍可选择（2026-11-08）
+
+共用文字按钮禁用时跳过点击检测，对话选项执行动作前再次检查禁用标记。技能不足、物品不足及殖民者选择中的禁用选项不再执行动作、跳转节点或关闭对话，满足条件的选项继续正常选择。
+
+1.6／1.7 主库与编辑器 DLL/PDB 已同步更新，双版本编译零错误，项目已有空值等警告保留。1.7.5000 rev1275 独立离线实机先用旧 DLL 复现，再以相同用例验证修复版本，35 项检查全部通过。证据位于 `C:/Users/HaiLu/AppData/Local/Temp/CQFDialogDisabledValidation/SaveData/DialogEvidence.json`；临时测试模组已移出游戏目录。本轮未使用反馈者的完整模组列表，1.6 仅完成编译验证。
 
 ## 4.15 提高对称轴常态可见度（2026-11-06）
 

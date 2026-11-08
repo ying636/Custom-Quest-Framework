@@ -19,7 +19,7 @@ public class DialogElement_Option(string text, Action action) : IDialogElement
         float height = Mathf.Max(42f, Text.CalcHeight(label, inRect.width - 16f) + 12f);
         if (CQFUIStyle.ButtonText(new Rect(inRect.x, y, inRect.width, height), label, true,
                 !this.disabled, this.disabled ? CQFUIStyle.Muted : CQFUIStyle.TextColor,
-                !this.disabled, TextAnchor.MiddleLeft))
+                !this.disabled, TextAnchor.MiddleLeft) && !this.disabled)
         {
             this.action?.Invoke();
         }
