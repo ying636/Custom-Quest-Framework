@@ -27,6 +27,9 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
         preparedMaps = CQFDomainRuntime.Instance.DomainMaps.ToArray();
         hostCell = host!.Position; casterCell = caster.Position;
         reloaded = true;
+        preparationEarly = true;
+        preparationRadius = 0f;
+        preparationSurface = null;
         startedAt = Time.realtimeSinceStartup;
         Check(opening.IsCounterOpening && !opening.IsClosing && !opening.SupportsFusion,
             "complete reload preserves the fullscreen counter-opening mode and unfinished preparation");
@@ -73,11 +76,22 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             }
             else if (stage == 2)
             {
+                if (!preparationEarly && opening!.Progress >= 0.1f)
+                {
+                    Check(!opening.IsClosing && runtime.Transition == null && field!.Challenger == null
+                        && CounterPreparationSurfaceChecks.TryGetDraw(opening, out preparationRadius),
+                        "a real field surface is drawn early during preparation, before closure or any fullscreen transition");
+                    Shot("PreparationEarly"); preparationEarly = true;
+                }
                 if (opening!.Progress < 0.3f) return;
                 Check(!opening.IsClosing && field!.Challenger == null && runtime.Transition == null
                     && observer!.Spawned && observer.stances.stunner.StunTicksLeft == 0,
                     "preparation retains its duration while other creatures remain free and territory stays unchanged");
                 CheckWorldVisuals();
+                Check(CounterPreparationSurfaceChecks.TryGetDraw(opening, out float radius) && radius > preparationRadius,
+                    "the field invasion radius grows while the opening is still preparing");
+                preparationRadius = radius;
+                preparationSurface = CounterPreparationSurfaceChecks.SurfaceFor(opening);
                 if (caseIndex >= 4)
                 {
                     if (caseIndex == 4) opening.Destroy();
@@ -107,7 +121,15 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             }
             else if (stage == 3)
             {
+                if (!preparationLate && !opening!.IsClosing && opening.Progress >= 0.55f)
+                {
+                    Check(runtime.Transition == null && field!.Challenger == null
+                        && CounterPreparationSurfaceChecks.TryGetDraw(opening, out float radius) && radius > preparationRadius,
+                        "late preparation expands the ground invasion without creating a challenger or a fullscreen transition");
+                    Shot("PreparationLate"); preparationLate = true;
+                }
                 if (runtime.Transition == null) return;
+                Check(preparationEarly && preparationLate, "early and late field effects are both visible before the closing phase");
                 transition = runtime.Transition;
                 Check(transition.OpeningOwner == opening && field!.Challenger == null && opening!.IsClosing,
                     "the fullscreen transition starts at closure before the challenger exists");
@@ -161,10 +183,14 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                     Check(!field.map.listerThings.AllThings.OfType<DomainOpening>().Any(item => !item.Destroyed)
                         && caster!.Map == source && observer!.Map == source,
                         "host withdrawal cancels preparation and leaves no pending opening on the hibernated map");
+                    Check(CounterPreparationSurfaceChecks.Released(opening!, preparationSurface),
+                        "host withdrawal releases the preparation field material");
                     NextCase();
                     return;
                 }
                 if (!opening!.Destroyed) return;
+                Check(CounterPreparationSurfaceChecks.Released(opening, preparationSurface),
+                    "cancelled or downed preparation releases its field material");
                 Find.TickManager.Pause();
                 Check(field!.Challenger == null && runtime.Transition == null && host!.Spawned && observer!.Spawned
                     && observer.stances.stunner.StunTicksLeft == 0
@@ -205,7 +231,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
         string[] resources = opening is DomainOpening_Basic ? new[] { "visuals" } : new[] { "frontCurtain", "backCurtain", "groundMaterial" };
         Check(resources.All(name => type.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(opening) == null)
             && !field!.map.listerThings.AllThings.Any(thing => thing.GetType().Name == "PawnFlyer_BloodSeaOpening"),
-            "counter opening allocates no dome, ground overlay or folded pawn holders");
+            "counter opening allocates no dome or folded pawn holders");
     }
 
     private static Pawn MakePawn(Map map, IntVec3 near)
@@ -229,6 +255,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
         }
         opening = null; field = null; host = caster = observer = null; transition = null;
         startShot = coverShot = lateShot = false; reloaded = false; expectedCasterStunEnd = 0; stage = 0;
+        preparationEarly = preparationLate = false; preparationRadius = 0f; preparationSurface = null;
     }
 
     private void Check(bool condition, string message)
@@ -258,4 +285,8 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
     private bool startShot;
     private bool lateShot;
     private bool finished;
+    private bool preparationEarly;
+    private bool preparationLate;
+    private float preparationRadius;
+    private DomainSurfaceVisuals? preparationSurface;
 }

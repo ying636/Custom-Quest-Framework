@@ -290,6 +290,10 @@ public sealed partial class MapComponent_Domain : MapComponent
         if (!active || Find.CurrentMap != map) return;
         LastRenderedFrame = Time.frameCount;
         worker?.Draw();
+#if RIMWORLD_1_7
+        if (!independentInstance)
+            foreach (DomainOpening opening in openings) opening.DrawCounterOpening();
+#endif
     }
 
     public override void MapComponentOnGUI()

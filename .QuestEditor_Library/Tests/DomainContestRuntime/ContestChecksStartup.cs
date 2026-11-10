@@ -11,6 +11,7 @@ public static class ContestChecksStartup
     {
         if (!GenCommandLine.CommandLineArgPassed("cqfcontestchecks")) return;
         if (GenCommandLine.CommandLineArgPassed("cqfcounterrepair")) CounterTransitionTimingChecks.Install();
+        if (GenCommandLine.CommandLineArgPassed("cqfcounterrepair")) CounterPreparationSurfaceChecks.Install();
         if (GenCommandLine.CommandLineArgPassed("cqfstartupchecks"))
         {
             File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt"),

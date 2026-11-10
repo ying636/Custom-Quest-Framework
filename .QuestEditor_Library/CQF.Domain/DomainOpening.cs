@@ -35,6 +35,10 @@ public abstract class DomainOpening : Thing
     public override void DeSpawn(DestroyMode mode = DestroyMode.Vanish)
     {
         ReleaseOpeningLocks();
+#if RIMWORLD_1_7
+        counterSurface?.Dispose();
+        counterSurface = null;
+#endif
         if (startTick >= 0 && Caster is Pawn caster && Definition.openingAbility != null && caster.CurJob?.ability?.def == Definition.openingAbility)
             caster.jobs.EndCurrentJob(Verse.AI.JobCondition.InterruptForced);
         Map.GetComponent<MapComponent_Domain>().UnregisterOpening(this);
@@ -74,6 +78,37 @@ public abstract class DomainOpening : Thing
         entrantSet.Clear();
         CaptureClosingPawns();
     }
+
+#if RIMWORLD_1_7
+    internal void DrawCounterOpening()
+    {
+        if (!IsCounterOpening || !Active || counterSurfaceError || Definition.surface == null) return;
+        try
+        {
+            counterSurface ??= new DomainSurfaceVisuals(Definition.surface);
+            float progress = Mathf.Clamp01((GenTicks.TicksGame - startTick) / (float)OpeningTicks);
+            float radius = Radius * Mathf.SmoothStep(0f, 1f, progress);
+            float extent = Radius + 4f;
+            Vector3 origin = Position.ToVector3Shifted();
+            float left = Mathf.Max(0f, origin.x - extent);
+            float right = Mathf.Min(Map.Size.x, origin.x + extent);
+            float bottom = Mathf.Max(0f, origin.z - extent);
+            float top = Mathf.Min(Map.Size.z, origin.z + extent);
+            Vector3 center = new((left + right) * 0.5f, AltitudeLayer.LayingPawn.AltitudeFor() - 0.01f, (bottom + top) * 0.5f);
+            counterSurface.Draw(MeshPool.plane10,
+                Matrix4x4.TRS(center, Quaternion.identity, new Vector3(right - left, 1f, top - bottom)),
+                GenTicks.TicksGame / 60f + 6f, new Vector4(origin.x, origin.z, radius, 0f),
+                opacity: Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(progress / 0.1f)), clash: new Vector4(0f, 0f, 0f, 3f));
+        }
+        catch (Exception error)
+        {
+            counterSurfaceError = true;
+            counterSurface?.Dispose();
+            counterSurface = null;
+            Log.Error("[CQF] Counter domain preparation surface failed: " + error);
+        }
+    }
+#endif
 
     internal int? OriginalStunEnd(Pawn pawn)
     {
@@ -178,4 +213,8 @@ public abstract class DomainOpening : Thing
     private List<int> originalStunEnds = new();
     private List<int> appliedStunEnds = new();
     private readonly HashSet<Pawn> entrantSet = new();
+#if RIMWORLD_1_7
+    private DomainSurfaceVisuals? counterSurface;
+    private bool counterSurfaceError;
+#endif
 }

@@ -11,6 +11,7 @@ public sealed class DomainCounterTransition : DomainTransition
         incoming = opening.Definition;
         defending = opening.Map.GetComponent<MapComponent_Domain>().Definition;
         origin = opening.Position;
+        initialRadius = opening.Radius;
     }
 
     public override float Duration => 4f;
@@ -23,8 +24,8 @@ public sealed class DomainCounterTransition : DomainTransition
         Vector3 low = UI.UIToMapPosition(0f, 0f);
         Vector3 high = UI.UIToMapPosition(UI.screenWidth, UI.screenHeight);
         view = new Vector4(low.x, low.z, high.x - low.x, high.z - low.z);
-        maximumRadius = new Vector2(Mathf.Max(Mathf.Abs(low.x - origin.x), Mathf.Abs(high.x - origin.x)),
-            Mathf.Max(Mathf.Abs(low.z - origin.z), Mathf.Abs(high.z - origin.z))).magnitude + 4f;
+        maximumRadius = Mathf.Max(initialRadius, new Vector2(Mathf.Max(Mathf.Abs(low.x - origin.x), Mathf.Abs(high.x - origin.x)),
+            Mathf.Max(Mathf.Abs(low.z - origin.z), Mathf.Abs(high.z - origin.z))).magnitude) + 4f;
         snapshot = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32)
             { name = "CQF_CounterDomainSource", filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
         if (!snapshot.Create()) throw new InvalidOperationException("[CQF] Could not allocate counter domain snapshot.");
@@ -60,7 +61,7 @@ public sealed class DomainCounterTransition : DomainTransition
             : Mathf.Lerp(0.46f, 1f, revealProgress));
         Rect rect = new(0f, 0f, UI.screenWidth, UI.screenHeight);
         GenUI.DrawTextureWithMaterial(rect, snapshot!, material);
-        float radius = Mathf.Lerp(-4f, maximumRadius, Mathf.SmoothStep(0f, 1f, cover));
+        float radius = Mathf.Lerp(initialRadius, maximumRadius, Mathf.SmoothStep(0f, 1f, cover));
         float aperture = Mathf.Lerp(-4f, new Vector2(view.z, view.w).magnitude + 4f,
             Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(revealProgress / 0.9f)));
         Vector4 reveal = new(view.x + view.z * 0.5f, view.y + view.w * 0.5f, aperture, 1f);
@@ -90,6 +91,7 @@ public sealed class DomainCounterTransition : DomainTransition
     private readonly DomainDef incoming;
     private readonly DomainDef defending;
     private readonly IntVec3 origin;
+    private readonly float initialRadius;
     private RenderTexture? snapshot;
     private Material? material;
     private DomainSurfaceVisuals? defendingSurface;
