@@ -65,8 +65,38 @@ public sealed partial class CQFDomainRuntime
                 return;
             }
             bool counter = opening.Caster?.MapHeld?.GetComponent<MapComponent_Domain>().HasActiveDomain == true;
-            if (counter ? HasTerrainTemplate(opening.Definition) : HasAvailable(opening.Definition)) opening.CompleteOpening();
-            else LongEventHandler.QueueLongEvent(opening.CompleteOpening, "GeneratingMap", false, null);
+            if (counter ? HasTerrainTemplate(opening.Definition) : HasAvailable(opening.Definition))
+            {
+#if RIMWORLD_1_7
+                if (counter && Find.CurrentMap == opening.Map && RimWorld.Planet.WorldRendererUtility.DrawingMap
+                    && UnityEngine.Screen.width > 0 && UnityEngine.Screen.height > 0)
+                {
+                    DomainCounterTransition counterTransition = new(opening);
+                    SetTransition(counterTransition);
+                    counterTransition.BindOpening(opening);
+                }
+                else
+#endif
+                    opening.CompleteOpening();
+            }
+            else LongEventHandler.QueueLongEvent(() =>
+            {
+                try
+                {
+                    if (Current.Game != game || opening.Destroyed || !opening.Active) return;
+                    if (counter) GetMapTemplate(opening.Definition, opening.Map);
+                    else if (!HasAvailable(opening.Definition)) host.Hibernate(GenerateDomain(opening.Definition, opening.Map));
+                    LongEventHandler.ExecuteWhenFinished(() =>
+                    {
+                        if (Current.Game == game && !opening.Destroyed && opening.Active) QueueOpening(opening);
+                    });
+                }
+                catch (Exception error)
+                {
+                    Log.Error("[CQF] Domain opening preparation failed: " + error);
+                    if (!opening.Destroyed) opening.Destroy();
+                }
+            }, "GeneratingMap", false, null);
             return;
         }
     }

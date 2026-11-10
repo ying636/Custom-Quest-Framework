@@ -54,7 +54,16 @@ vec4 domainSurface(vec2 point)
     if (uMaterial._SurfaceState.w > 0.5)
     {
         float ownEdge = length(point-uMaterial._SurfaceCircle.xy)-uMaterial._SurfaceCircle.z;
-        if (uMaterial._SurfaceClash.w > 1.5)
+        if (uMaterial._SurfaceClash.w > 2.5)
+        {
+            float time = uMaterial._SurfaceState.x;
+            vec2 flow = point*0.28+vec2(time*0.16,-time*0.11);
+            vec2 warp = vec2(field(flow+7.4),field(flow-9.2));
+            float erosion = (field(flow*1.7+warp*3.0)-0.5)*4.0
+                +sin(point.x*0.7+point.y*1.1-time*2.2)*0.45;
+            alpha *= 1.0-smoothstep(-0.3,0.3,ownEdge+erosion);
+        }
+        else if (uMaterial._SurfaceClash.w > 1.5)
         {
             float time = uMaterial._SurfaceState.x;
             float wave = sin(point.y*1.1-time*1.7+sin(point.y*0.43+time)*2.4)*0.38

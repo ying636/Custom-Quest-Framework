@@ -237,7 +237,7 @@ public abstract class DomainTransition : IDisposable
 
     public void Draw()
     {
-        if (displayMap == null || Finished || Event.current.type != EventType.Repaint || !TryStartPresentation()
+        if (displayMap == null || Finished || Event.current.type != EventType.Repaint || !TryStartPresentation(true)
 #if RIMWORLD_1_7
             || Find.CurrentMap != (!IsReturning && !entered ? sourceMap : displayMap)
 #else
@@ -300,7 +300,7 @@ public abstract class DomainTransition : IDisposable
 
     protected abstract void ReleaseVisuals();
 
-    private bool TryStartPresentation()
+    private bool TryStartPresentation(bool drawing = false)
     {
         if (disposed || displayMap == null) return false;
         if (Current.Game != game || Current.ProgramState != ProgramState.Playing)
@@ -308,6 +308,8 @@ public abstract class DomainTransition : IDisposable
             Dispose();
             return false;
         }
+        if (!presentationStarted && (!drawing || LongEventHandler.AnyEventNowOrWaiting
+            || !WorldRendererUtility.DrawingMap)) return false;
         if (!presentation.TryAcquire(this)) return false;
         if (!presentationStarted)
         {

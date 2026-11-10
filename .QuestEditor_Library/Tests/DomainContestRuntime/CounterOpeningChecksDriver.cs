@@ -8,7 +8,8 @@ namespace CQF.DomainContestRuntimeChecks;
 
 public sealed class CounterOpeningChecksDriver : MonoBehaviour
 {
-    private string ResultPath => Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt");
+    private string EvidenceDirectory => Environment.GetEnvironmentVariable("CQF_COUNTER_EVIDENCE") ?? GenFilePaths.SaveDataFolderPath;
+    private string ResultPath => Path.Combine(EvidenceDirectory, "DomainContestChecks.txt");
     private DomainDef Existing => DefDatabase<DomainDef>.GetNamed(caseIndex % 4 < 2 ? "CQF_TestDomain" : "RSH_BloodSeaDomain");
     private DomainDef Incoming => DefDatabase<DomainDef>.GetNamed(caseIndex % 2 == 0 ? "CQF_TestDomain" : "RSH_BloodSeaDomain");
 
@@ -110,8 +111,8 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 transition = runtime.Transition;
                 Check(transition.OpeningOwner == opening && field!.Challenger == null && opening!.IsClosing,
                     "the fullscreen transition starts at closure before the challenger exists");
-                Check(transition.GetType().Name == (Incoming.defName == "CQF_TestDomain" ? "DomainMaterialTransition" : "BloodSeaDomainTransition"),
-                    "counter expansion uses the incoming domain's own fullscreen effect");
+                Check(transition is DomainCounterTransition,
+                    "counter expansion uses both domains' field surfaces in a dedicated erosion transition");
                 CheckWorldVisuals();
                 Find.TickManager.Pause();
                 frozenTick = GenTicks.TicksGame;
@@ -119,9 +120,17 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             }
             else if (stage == 4)
             {
+                if (!startShot && transition!.Progress > 0.18f && field!.Challenger == null)
+                {
+                    Shot("IncursionStart"); startShot = true;
+                }
                 if (!coverShot && transition!.Progress > 0.33f && field!.Challenger == null)
                 {
                     Shot("Cover"); coverShot = true;
+                }
+                if (!lateShot && transition!.Progress > 0.5f && field!.Challenger == null)
+                {
+                    Shot("IncursionLate"); lateShot = true;
                 }
                 if (field!.Challenger == null) return;
                 int coveredFrame = (int)typeof(DomainTransition).GetField("coveredFrame", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(transition)!;
@@ -207,7 +216,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
         return pawn;
     }
 
-    private string ShotPath(string label) => Path.Combine(GenFilePaths.SaveDataFolderPath, "Counter_" + caseIndex + "_" + label + ".png");
+    private string ShotPath(string label) => Path.Combine(EvidenceDirectory, "Counter_" + caseIndex + "_" + label + ".png");
     private void Shot(string label) => ScreenCapture.CaptureScreenshot(ShotPath(label));
 
     private void NextCase()
@@ -219,7 +228,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             finished = true; File.AppendAllText(ResultPath, "COMPLETE\n"); Application.Quit(0); return;
         }
         opening = null; field = null; host = caster = observer = null; transition = null;
-        coverShot = false; reloaded = false; expectedCasterStunEnd = 0; stage = 0;
+        startShot = coverShot = lateShot = false; reloaded = false; expectedCasterStunEnd = 0; stage = 0;
     }
 
     private void Check(bool condition, string message)
@@ -246,5 +255,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
     private float shotAt;
     private bool reloaded;
     private bool coverShot;
+    private bool startShot;
+    private bool lateShot;
     private bool finished;
 }

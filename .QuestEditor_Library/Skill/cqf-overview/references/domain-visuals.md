@@ -2,7 +2,9 @@
 
 CQF 可选 Domain 模块提供基础地面扩散、幕墙升起/闭合、进入与返回转场，以及独立的领域通用平面。通用平面表示领域的基础视觉特征，不能据此替换领域原有展开动画。寂屋邪祭保留自己的血海展开，血海平面和地形共用材质算法；CQF 不依赖血海程序集。
 
-领域内反展开使用全屏转场替代再次升起罩子：保留 360 tick 准备时间，闭合开始即播放新领域自身的进入特效，遮盖完成后才交接对抗领地。基础领域复用 DomainMaterialTransition，血海复用 BloodSeaDomainTransition；没有修改这两种材质算法。双方入场锁由同一转场管理，等待地形帧就绪后揭幕。原地图的地面扩散、罩子、闭合与双方接触融合流程保持原入口。
+领域内反展开使用专用 `DomainCounterTransition` 场地侵蚀过场替代再次升起罩子：保留 360 tick 准备时间，闭合后用双方 `DomainDef.surface` 展示敌方场地与本方侵入。新领域的真实特征材质从施术者脚下沿带流动噪声的连续前沿扩张，完整遮盖后才交接对抗领地，地形帧就绪后揭幕。过场约 4 秒，其中侵蚀扩张约 2.6 秒；同类领域使用不同流动相位，避免材质完全重合而看不出前沿。未提供 surface 的领域继续使用中性遮盖后备。此入口不替换普通地图上的独立展开、血海自身原展开／返回材质或外部融合动画。
+
+转场首次获取演出许可、准备画面及启动实时时钟只发生在 `Draw` 的有效地图重绘入口；`BindOpening`、`Bind`、`BeginReturn` 和 `Update` 不能提前启动时钟。1.7 的 `Event.current` 可能在 Update 中仍保留上一帧 Repaint，仅判断事件类型不能证明当前正在绘制。缺少地图或模板时，加载事件只负责准备与休眠，结束后重新排队展开，再在普通更新中创建转场，避免加载等待消耗入场动画。模板命中仍直接复用，领域自己的 Shader 算法保持不变。延迟首帧及模板缺失的原生回归见 `Tests/DomainContestRuntime/CounterTransitionTimingChecks.cs`。
 
 自定义 DomainOpening 派生类应使用 IsCounterOpening 区分领域内外演出，以 ReadyToTransfer 判断转场准备完成，完成转移后通过 BindEntryTransition 绑定对应领域实例。领域内跳过世界绘制、人物折叠载具和 SupportsFusion；CounterOpeningValid 在宿主不再接受挑战时使当前展开失效。框架保存此模式；默认不迁移旧展开存档。
 
@@ -21,6 +23,8 @@ surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质
 `DomainSurfaceDef.CreateMaterial(bool screen)` 创建调用方拥有的材质；`shader` 提供世界材质，`screenShader` 可指定同算法的屏幕入口。`Configure(MaterialPropertyBlock, time)` 和 `Configure(Material, time)` 分别提供世界与屏幕参数扩展，血海在自己的 Def 子类中设置活动、填充和时间参数。
 
 `DomainSurfaceVisuals.Draw(mesh, matrix, time, circle, rival, opacity, clash)` 绘制任意网格；`DrawScreen(rect, view, circle, rival, reveal, time, opacity)` 用于屏幕展示。每个绘制器拥有自己的实例，禁止修改原版缓存材质。屏幕材质首次绘制时才创建；Dispose 与游戏结束清理都释放已创建资源。
+
+`DrawScreen` 保留原七参数签名，并增加八参数重载传递 `clash`，不要求现有子 Mod 重编译。`_SurfaceClash.w=3` 表示领域内反展开的径向侵蚀前沿，`_SurfaceCircle.xy/z` 为地图坐标中心与扩张半径，w 为 0，不叠加普通圆形硬裁切；材质以流动噪声和波纹偏移连续边缘。基础与血海只在该模式启用新增遮罩，原有场地颜色、流动算法及其他模式保持。新增自有 surface Shader 若需参加此演出，应实现此模式；无需为不同对手编写配对特例。地图坐标按实际镜头视野映射，完整遮盖半径包含屏幕四角和边缘扰动余量。
 
 平面 Shader 使用 `_SurfaceState=(时间,屏幕模式,透明度,启用)`、`_SurfaceCircle=(中心x,中心z,半径,圆形裁切)`、`_SurfaceRival=(对手中心x,中心z,半径,叠加层)`、`_SurfaceView=(原点x,原点z,宽,高)` 和 `_SurfaceReveal=(中心x,中心z,揭幕半径,启用)`。叠加层大于 1.5 时，在重叠区应用动态侵蚀遮罩，底层保留完整材质，避免双方同时透明造成孔洞。
 

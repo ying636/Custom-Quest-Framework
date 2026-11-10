@@ -27,6 +27,9 @@ public sealed class DomainSurfaceVisuals : IDisposable
     }
 
     public void DrawScreen(Rect rect, Vector4 view, Vector4 circle, Vector4 rival, Vector4 reveal, float time, float opacity = 1f)
+        => DrawScreen(rect, view, circle, rival, reveal, time, opacity, default);
+
+    public void DrawScreen(Rect rect, Vector4 view, Vector4 circle, Vector4 rival, Vector4 reveal, float time, float opacity, Vector4 clash)
     {
         if (material == null) throw new ObjectDisposedException(nameof(DomainSurfaceVisuals));
         screenMaterial ??= definition.CreateMaterial(true);
@@ -36,6 +39,7 @@ public sealed class DomainSurfaceVisuals : IDisposable
         screenMaterial.SetVector("_SurfaceRival", rival);
         screenMaterial.SetVector("_SurfaceView", view);
         screenMaterial.SetVector("_SurfaceReveal", reveal);
+        screenMaterial.SetVector("_SurfaceClash", clash);
 #if RIMWORLD_1_7
         if (screenMaterial.HasProperty("_TerritoryState"))
         {

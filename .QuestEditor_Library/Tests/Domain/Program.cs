@@ -19,6 +19,7 @@ internal static class Program
             if (args.Contains("occupation")) { DomainOccupationChecks.Run(); return; }
             if (args.Contains("ownership")) { DomainMapOwnershipChecks.Run(); return; }
             if (args.Contains("disposal")) { DomainRuntimeDisposalChecks.Run(); return; }
+            if (args.Contains("opening-fusions")) { DomainOpeningFusionChecks.Run(); return; }
             Run();
             Console.WriteLine("Domain checks passed: " + checks);
         }

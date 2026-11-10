@@ -120,7 +120,9 @@ public sealed partial class CQFDomainRuntime
 #if RIMWORLD_1_7
         if (transition != null && transition.OpeningOwner?.SupportsFusion != true) return;
         fusionCheckRequested = false;
-        DomainOpening[] candidates = activeOpenings.Where(opening => opening.SupportsFusion && opening.Active && opening.Fusion == null
+        RemoveMissingDomainMaps();
+        DomainOpening[] candidates = activeOpenings.Where(opening => opening != null && opening.Spawned && opening.Map != null
+            && opening.SupportsFusion && opening.Active && opening.Fusion == null
             && !opening.Map.GetComponent<MapComponent_Domain>().HasActiveDomain).ToArray();
         for (int firstIndex = 0; firstIndex < candidates.Length; firstIndex++)
             for (int secondIndex = firstIndex + 1; secondIndex < candidates.Length; secondIndex++)
@@ -142,9 +144,15 @@ public sealed partial class CQFDomainRuntime
                 return;
             }
         foreach (DomainOpening opening in candidates)
-            foreach (Map realm in domainMaps)
+            foreach (Map realm in game.Maps)
             {
-                MapComponent_Domain existing = realm.GetComponent<MapComponent_Domain>();
+                if (realm.Disposed || !domainMaps.Contains(realm)) continue;
+                MapComponent_Domain? existing = realm.GetComponent<MapComponent_Domain>();
+                if (existing == null)
+                {
+                    Log.Error("[CQF] " + nameof(ProcessOpeningFusions) + ": " + nameof(MapComponent_Domain) + "=null, map=" + realm.uniqueID);
+                    continue;
+                }
                 Building_Domain? anchor = existing.Anchor;
                 if (!existing.CanAcceptChallenger || anchor?.Spawned != true || anchor.Map != opening.Map || anchor.OpeningFusion != null) continue;
                 float radius = opening.Radius + existing.Definition.OpeningRadius;

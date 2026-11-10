@@ -59,7 +59,7 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
         Scribe_Collections.Look(ref mapTemplates, "mapTemplates", LookMode.Def, LookMode.Deep);
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
-            domainMaps ??= new();
+            RemoveMissingDomainMaps();
             mapTemplates ??= new();
         }
     }
@@ -110,6 +110,19 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
             failedContestPairs.Clear();
         }
         if (errors.Count > 0) throw new AggregateException("[CQF] Domain resource disposal failed.", errors);
+    }
+
+    private void RemoveMissingDomainMaps()
+    {
+        if (domainMaps == null)
+        {
+            domainMaps = new();
+            Log.Error("[CQF] " + nameof(CQFDomainRuntime) + "." + nameof(domainMaps) + "=null");
+            return;
+        }
+        int missing = domainMaps.RemoveAll(map => map == null);
+        if (missing > 0)
+            Log.Error("[CQF] " + nameof(CQFDomainRuntime) + "." + nameof(domainMaps) + ": null=" + missing);
     }
 
     private readonly GameComponent_MapManager host;

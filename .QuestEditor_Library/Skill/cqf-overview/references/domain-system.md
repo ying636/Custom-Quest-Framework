@@ -218,7 +218,7 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 
 1.7 的入场流程由管理器逐帧 `Update()` 推进：遮盖绘制完成一帧后切换地图，再等待 `LastTerrainRenderedFrame` 晚于切图帧，随后推进揭幕。**自定义地形绘制实现必须在确认实际有地形内容绘出后写入该帧号**；框架不会自动写入，遗漏会让入场一直等待地形就绪。`LastRenderedFrame` 是另一项可见性记录，不能代替地形就绪标记。
 
-需要“原地图展开 → 遮盖 → 转移”的物件继承 `DomainOpening`，实现 `Definition`、`Caster`、`Active`、`CompleteOpening()`、`CompleteTransfer()`，展开完成后 `QueueOpening(this)`。基类在 SpawnSetup/DeSpawn 登记和移除展开物件，覆盖时须调用基类。管理器在有空闲领域时直接完成展开，否则排入生成地图的长事件。1.7 可先 `BindOpening(this)`，由转场在遮盖完成后调用 `CompleteTransfer()`，其中获取领域、进入并 `Bind(realm)`。
+需要“原地图展开 → 遮盖 → 转移”的物件继承 `DomainOpening`，实现 `Definition`、`Caster`、`Active`、`CompleteOpening()`、`CompleteTransfer()`，展开完成后 `QueueOpening(this)`。基类在 SpawnSetup/DeSpawn 登记和移除展开物件，覆盖时须调用基类。缺少模板或可用地图时，管理器先通过加载事件准备资源，结束后重新排队展开，不在加载事件内创建转场。1.7 可先 `BindOpening(this)`，由转场在遮盖完成后调用 `CompleteTransfer()`，其中获取领域、进入并 `BindEntryTransition(domain)`；该绑定方法会区分普通进入和对抗双方。领域内反展开由管理器创建通用 DomainCounterTransition，使用双方 surface 显示从施术者脚下逐渐侵蚀的场地过场，遮盖后直接调用 CompleteTransfer，子类不必为不同对手实现配对特效。
 
 `DomainDef.ResolveReferences()` 为 `openingAbility` 自动加入一份 `AbilityCompProperties_DomainProtection`。能力初始化及 PostLoadInit 通过 `AbilityComp_DomainProtection` 为施术者准备唯一的 `Comp_DomainProtection`；该 ThingComp 在原版 `PostPreApplyDamage` 中检查当前施法、活动展开物件、同步进入和入场锁定，免伤时不消耗领域血量。死亡、倒地人物和其他参与者不获得这层免伤。检查不遍历 DomainDef，也不增加逐帧轮询。
 
