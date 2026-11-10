@@ -16,6 +16,10 @@ public sealed class DomainScreenBorder : IDisposable
     {
         if (!domain.Active || Find.CurrentMap != domain.map || !WorldRendererUtility.DrawingMap
             || Event.current.type != EventType.Repaint || Find.UIRoot.screenshotMode.FiltersCurrentEvent) return;
+#if RIMWORLD_1_7
+        if (Current.ProgramState != ProgramState.Playing || GameComponent_MapManager.Instance?.Module is not CQFDomainRuntime runtime
+            || runtime.Transition is DomainCounterTransition) return;
+#endif
         Vector3 low = UI.UIToMapPosition(0f, 0f);
         Vector3 high = UI.UIToMapPosition(UI.screenWidth, UI.screenHeight);
         Vector4 view = new(low.x, low.z, high.x - low.x, high.z - low.z);

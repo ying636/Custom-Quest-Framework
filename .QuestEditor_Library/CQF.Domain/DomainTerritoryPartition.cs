@@ -47,10 +47,10 @@ public sealed partial class DomainTerritoryPartition : IExposable
     }
 
     public float BaseSignedDistance(float x, float z)
-        => reverse ? x - boundary : boundary - x;
+        => curvedFront ? CurvedDistance(x, z) : reverse ? x - boundary : boundary - x;
 
     public bool IsBoundaryCell(IntVec3 cell)
-        => Math.Abs(cell.x - (int)Math.Floor(boundary)) <= 1
+        => (curvedFront ? NearFront(cell.x, cell.z, 0f) : Math.Abs(cell.x - (int)Math.Floor(boundary)) <= 1)
             || HasOverrides && (OverrideAt(cell.x, cell.z) != 0 || OverrideAt(cell.x - 1, cell.z) != 0
                 || OverrideAt(cell.x + 1, cell.z) != 0 || OverrideAt(cell.x, cell.z - 1) != 0 || OverrideAt(cell.x, cell.z + 1) != 0);
 
@@ -133,6 +133,9 @@ public sealed partial class DomainTerritoryPartition : IExposable
         Scribe_Values.Look(ref height, "height");
         Scribe_Values.Look(ref firstFraction, "firstFraction", -1f);
         Scribe_Values.Look(ref reverse, "reverse");
+        Scribe_Values.Look(ref curvedFront, "curvedFront");
+        Scribe_Values.Look(ref firstCenter, "firstCenter");
+        Scribe_Values.Look(ref secondCenter, "secondCenter");
         Scribe_Collections.Look(ref protections, "protections", LookMode.Deep);
         Scribe_Values.Look(ref nextProtectionId, "nextProtectionId");
         Scribe_Collections.Look(ref firstClaims, "firstClaims", LookMode.Value);
@@ -155,7 +158,7 @@ public sealed partial class DomainTerritoryPartition : IExposable
                 throw new InvalidOperationException("[CQF] Invalid saved territory claim exposure.");
             RebuildProtections();
             boundary = SolveBoundary();
-            if (HasOverrides) { owners = new bool[CellCount]; RebuildOwners(); changedCells.Clear(); }
+            if (HasOverrides || curvedFront) { owners = new bool[CellCount]; RebuildOwners(); changedCells.Clear(); dirtyBounds.Clear(); }
             protectionDirty = false;
             revision++;
         }
@@ -163,6 +166,7 @@ public sealed partial class DomainTerritoryPartition : IExposable
 
     private float SolveBoundary()
     {
+        if (curvedFront) return SolveFront();
         if (HasOverrides)
         {
             double desired = Math.Max(fixedFirstCells, Math.Min(CellCount - fixedSecondCells, firstFraction * (double)CellCount));
@@ -187,6 +191,7 @@ public sealed partial class DomainTerritoryPartition : IExposable
 
     private void RebuildOwners()
     {
+        if (curvedFront) frontCells ??= new bool[CellCount];
         firstCells = 0;
         for (int z = 0; z < height; z++)
         for (int x = 0; x < width; x++)
@@ -195,6 +200,12 @@ public sealed partial class DomainTerritoryPartition : IExposable
             bool owner = IsFirst(cell);
             int index = z * width + x;
             if (owner != owners![index]) { owners[index] = owner; changedCells.Add(cell); }
+            if (curvedFront)
+            {
+                bool front = IsBoundaryCell(cell);
+                if (front || frontCells![index]) dirtyBounds.Add(new Rect(x, z, 1f, 1f));
+                frontCells![index] = front;
+            }
             if (owner) firstCells++;
         }
     }
@@ -236,7 +247,7 @@ public sealed partial class DomainTerritoryPartition : IExposable
             fixedCells.Add(new IntVec3(x, 0, z));
             if (owner == 1) fixedFirstCells++; else fixedSecondCells++;
         }
-        if (owners == null) { owners = new bool[CellCount]; RebuildOwners(); changedCells.Clear(); }
+        if (owners == null && !curvedFront) { owners = new bool[CellCount]; RebuildOwners(); changedCells.Clear(); }
         protectionDirty = true;
     }
 

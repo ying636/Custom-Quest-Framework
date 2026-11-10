@@ -70,8 +70,9 @@ public sealed partial class CQFDomainRuntime
     internal void PrepareFusion(DomainOpening_Fusion fusion)
     {
         if (!fusion.Active) return;
-        if (fusion.ExistingAnchor == null && !HasAvailable(fusion.FirstDefinition)) host.Hibernate(GenerateDomain(fusion.FirstDefinition, fusion.Map));
+        GetTerrainTemplate(fusion.FirstDefinition, fusion.Map);
         GetTerrainTemplate(fusion.Second.Definition, fusion.Map);
+        PrepareBattlefield(fusion.FirstDefinition, fusion.Second.Definition, fusion.Map);
     }
 
     internal void EnterFusion(DomainOpening_Fusion fusion)
@@ -82,9 +83,8 @@ public sealed partial class CQFDomainRuntime
             opening.ReleaseForFusion();
             MapComponent_Domain existing = fusion.ExistingAnchor.Domain
                 ?? throw new InvalidOperationException("[CQF] The challenged domain no longer exists.");
-            MapComponent_Domain side = existing.EnterChallenger(opening.Definition, opening.Caster!, opening.CaptureEntrants(),
-                GetMapTemplate(opening.Definition, fusion.Map), true);
-            transition?.BindContest(existing, side);
+            MapComponent_Domain side = EnterBattlefield(existing, opening.Definition, opening.Caster!, opening.CaptureEntrants(), true);
+            transition?.BindContest(side.Battlefield, side);
             return;
         }
         DomainOpening first = fusion.First;
@@ -102,7 +102,8 @@ public sealed partial class CQFDomainRuntime
         MapComponent_Domain? primary = null;
         try
         {
-            primary = Acquire(first.Definition, first.Caster).GetComponent<MapComponent_Domain>();
+            primary = AcquireBattlefield(first.Definition, second.Definition, source).GetComponent<MapComponent_Domain>();
+            GetTerrainTemplate(first.Definition, source).Restore(primary.map);
             primary.Enter(first.Caster, firstTargets);
             MapComponent_Domain challenger = primary.EnterChallenger(second.Definition, second.Caster, secondTargets, template, true);
             transition?.BindContest(primary, challenger);

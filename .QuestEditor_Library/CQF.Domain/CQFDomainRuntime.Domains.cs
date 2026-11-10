@@ -8,9 +8,13 @@ public sealed partial class CQFDomainRuntime
 {
     public IReadOnlyList<Map> DomainMaps => domainMaps;
 
-    public IEnumerable<Map> GetMaps(DomainDef definition) => domainMaps.Where(map => !map.Disposed
-        && !map.Parent.Destroyed && (map.GetComponent<MapComponent_Domain>().Definition == definition
-            || map.GetComponent<MapComponent_Domain>().Challenger?.Definition == definition));
+    public IEnumerable<Map> GetMaps(DomainDef definition)
+    {
+        if (definition == null) throw new ArgumentNullException(nameof(definition));
+        return domainMaps.Where(map => !map.Disposed && !map.Parent.Destroyed
+            && (map.GetComponent<MapComponent_Domain>().Definition == definition
+                || map.GetComponent<MapComponent_Domain>().Challenger?.Definition == definition));
+    }
 
     public IEnumerable<MapComponent_Domain> GetInstances(DomainDef definition)
     {
@@ -23,7 +27,7 @@ public sealed partial class CQFDomainRuntime
     }
 
     public bool HasAvailable(DomainDef definition) => GetMaps(definition)
-        .Any(map => map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
+        .Any(map => !map.GetComponent<MapComponent_Domain>().IsBattlefield && map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
 
     public bool HasTerrainTemplate(DomainDef definition) => mapTemplates.ContainsKey(definition);
 
@@ -34,6 +38,7 @@ public sealed partial class CQFDomainRuntime
     {
         if (mapTemplates.TryGetValue(definition, out DomainMapTemplate? template)) return template;
         Map? prepared = domainMaps.FirstOrDefault(map => !map.Disposed && !map.Parent.Destroyed
+            && !map.GetComponent<MapComponent_Domain>().IsBattlefield
             && map.GetComponent<MapComponent_Domain>().Definition == definition && map.GetComponent<MapComponent_Domain>().Available);
         if (prepared != null) return mapTemplates[definition] = new DomainMapTemplate(prepared);
         host.Hibernate(GenerateDomain(definition, source));
@@ -42,7 +47,8 @@ public sealed partial class CQFDomainRuntime
 
     public Map Acquire(DomainDef definition, Pawn pawn)
     {
-        Map? realm = GetMaps(definition).FirstOrDefault(map => map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
+        Map? realm = GetMaps(definition).FirstOrDefault(map => !map.GetComponent<MapComponent_Domain>().IsBattlefield
+            && map.mapPawns.AllPawns.Count == 0 && map.GetComponent<MapComponent_Domain>().Available);
         if (realm == null) realm = GenerateDomain(definition, pawn.Map);
         else
         {
@@ -63,7 +69,7 @@ public sealed partial class CQFDomainRuntime
         foreach (Thing thing in realm.listerThings.AllThings.ToList()) thing.Destroy();
         foreach (Verse.AI.Group.Lord lord in realm.lordManager.lords.ToList()) realm.lordManager.RemoveLord(lord);
         domain.Battlefield.FinishContest(destination);
-        GetTerrainTemplate(domain.Battlefield.Definition, destination).Restore(realm);
+        if (!domain.IsBattlefield) GetTerrainTemplate(domain.Battlefield.Definition, destination).Restore(realm);
         ((MapParent_Domain)realm.Parent).sourceMap = null;
         host.Hibernate(realm);
     }
@@ -77,6 +83,7 @@ public sealed partial class CQFDomainRuntime
     {
         FinishTransitionFor(map);
         if (!domainMaps.Remove(map)) return;
+        if (map.GetComponent<MapComponent_Domain>().IsBattlefield) return;
         DomainDef definition = map.GetComponent<MapComponent_Domain>().Definition;
         if (definition.preload && PreparedMapCount(definition) < 2 && !failedPreparation.Contains(definition))
         {
@@ -127,6 +134,7 @@ public sealed partial class CQFDomainRuntime
                 }
                 while (PreparedMapCount(definition) < 2) host.Hibernate(GenerateDomain(definition, source));
                 GetTerrainTemplate(definition, source);
+                PrepareBattlefield(definition, definition, source);
             }
             catch (Exception exception)
             {
@@ -149,6 +157,7 @@ public sealed partial class CQFDomainRuntime
         realm.mapDrawer.RegenerateEverythingNow();
         domainMaps.Add(realm);
         mapTemplates[definition] = new DomainMapTemplate(realm);
+        PrepareBattlefield(definition, definition, source);
         parent.sourceMap = null;
         Log.Message("[CQF] Prepared domain " + definition.defName + " map " + realm.uniqueID + ": generation=" + generationMs
             + " ms, rendering/template=" + (timer.ElapsedMilliseconds - generationMs) + " ms, total=" + timer.ElapsedMilliseconds + " ms.");
@@ -157,7 +166,8 @@ public sealed partial class CQFDomainRuntime
     }
 
     private int PreparedMapCount(DomainDef definition)
-        => domainMaps.Count(map => !map.Disposed && !map.Parent.Destroyed && map.GetComponent<MapComponent_Domain>().Definition == definition);
+        => domainMaps.Count(map => !map.Disposed && !map.Parent.Destroyed && !map.GetComponent<MapComponent_Domain>().IsBattlefield
+            && map.GetComponent<MapComponent_Domain>().Definition == definition);
 
     private void UpdateDomains()
     {

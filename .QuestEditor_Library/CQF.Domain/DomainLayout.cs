@@ -59,8 +59,11 @@ public sealed class DomainLayout : IExposable
     }
 
     public void MoveTo(MapComponent_Domain destination, IntVec3 originalSize)
+        => MoveTo(destination, originalSize, default);
+
+    public void MoveTo(MapComponent_Domain destination, IntVec3 originalSize, IntVec3 offset)
     {
-        foreach (DomainStructure structure in structures) structure.MoveTo(destination.map, originalSize);
+        foreach (DomainStructure structure in structures) structure.MoveTo(destination.map, originalSize, offset);
         domain = destination;
     }
 

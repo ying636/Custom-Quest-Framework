@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <WorldObjectDef>
+    <defName>CQF_DomainBattlefield</defName>
+    <label>Domain battlefield</label>
+    <worldObjectClass>QuestEditor_Library.MapParent_Domain</worldObjectClass>
+    <mapGenerator>CQF_DomainBattlefieldGenerator</mapGenerator>
+    <canBePlayerHome>false</canBePlayerHome>
+    <selectable>false</selectable>
+    <expandingIcon>false</expandingIcon>
+  </WorldObjectDef>
+  <MapGeneratorDef>
+    <defName>CQF_DomainBattlefieldGenerator</defName>
+    <ignoreAreaRevealedLetter>true</ignoreAreaRevealedLetter>
+    <pocketMapProperties>
+      <biome>CQF_TestDomainBiome</biome>
+      <temperature>21</temperature>
+      <destroyOnParentMapAbandoned>false</destroyOnParentMapAbandoned>
+      <canLaunchGravship>false</canLaunchGravship>
+      <canBeCleaned>false</canBeCleaned>
+    </pocketMapProperties>
+    <genSteps>
+      <li>CQF_TestDomainTerrain</li>
+    </genSteps>
+  </MapGeneratorDef>
+</Defs>

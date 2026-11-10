@@ -14,10 +14,12 @@ public sealed class DomainTerrainSnapshot : IExposable
             for (int x = 0; x < width; x++) terrains.Add(source.terrainGrid.TerrainAt(new IntVec3(x, 0, z)));
     }
 
+    public DomainTerrainSnapshot(Map source, IntVec3 offset) : this(source) { projectionOffset = offset; }
+
     public TerrainDef At(IntVec3 cell, IntVec3 destinationSize)
     {
-        int x = Math.Min(width - 1, (int)((long)cell.x * width / destinationSize.x));
-        int z = Math.Min(height - 1, (int)((long)cell.z * height / destinationSize.z));
+        int x = Math.Max(0, Math.Min(width - 1, cell.x - destinationSize.x / 2 + width / 2 - projectionOffset.x));
+        int z = Math.Max(0, Math.Min(height - 1, cell.z - destinationSize.z / 2 + height / 2 - projectionOffset.z));
         return terrains[z * width + x];
     }
 
@@ -34,6 +36,7 @@ public sealed class DomainTerrainSnapshot : IExposable
     {
         Scribe_Values.Look(ref width, "width");
         Scribe_Values.Look(ref height, "height");
+        Scribe_Values.Look(ref projectionOffset, "projectionOffset");
         Scribe_Collections.Look(ref terrains, "terrains", LookMode.Def);
         if (Scribe.mode == LoadSaveMode.PostLoadInit
             && (width <= 0 || height <= 0 || terrains == null || terrains.Count != (long)width * height || terrains.Any(terrain => terrain == null)))
@@ -42,5 +45,6 @@ public sealed class DomainTerrainSnapshot : IExposable
 
     private int width;
     private int height;
+    private IntVec3 projectionOffset;
     private List<TerrainDef> terrains = new();
 }

@@ -57,14 +57,19 @@ public sealed class DomainSurfaceVisuals : IDisposable
     {
         territory = partition;
         territoryFirst = first;
+        if (territoryField?.Partition != partition)
+        {
+            territoryField?.Dispose();
+            territoryField = partition == null ? null : new DomainTerritoryField(partition);
+        }
     }
 
     public void Dispose()
     {
         if (material != null) UnityEngine.Object.Destroy(material);
         if (screenMaterial != null) UnityEngine.Object.Destroy(screenMaterial);
-        if (protectionTexture != null) UnityEngine.Object.Destroy(protectionTexture);
-        protectionTexture = null;
+        territoryField?.Dispose();
+        territoryField = null;
         material = null;
         screenMaterial = null;
         runtime?.UnregisterSurface(this);
@@ -78,40 +83,20 @@ public sealed class DomainSurfaceVisuals : IDisposable
         properties.SetVector("_SurfaceState", new Vector4(time, 0f, Mathf.Clamp01(opacity), 1f));
         properties.SetVector("_SurfaceCircle", circle);
         properties.SetVector("_SurfaceRival", rival);
+#if RIMWORLD_1_7
+        if (material.HasProperty("_TerritoryProtectionState"))
+        {
+            if (territoryField != null) territoryField.Configure(properties, territoryFirst);
+            else properties.SetVector("_TerritoryProtectionState", default);
+        }
+#endif
     }
 
 #if RIMWORLD_1_7
     private void ConfigureProtection()
     {
-        if (territory?.HasOverrides != true)
-        {
-            screenMaterial!.SetVector("_TerritoryProtectionState", default);
-            screenMaterial.SetTexture("_TerritoryProtection", Texture2D.whiteTexture);
-            return;
-        }
-        if (protectionTexture == null || protectionTexture.width != territory.Width || protectionTexture.height != territory.Height)
-        {
-            if (protectionTexture != null) UnityEngine.Object.Destroy(protectionTexture);
-            protectionTexture = new Texture2D(territory.Width, territory.Height, TextureFormat.RGBA32, false, true)
-            { name = "CQF_DomainProtection", filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
-            protectionPixels = new Color[territory.CellCount];
-            protectionRevision = -1;
-        }
-        if (protectionPartition != territory || protectionRevision != territory.Revision)
-        {
-            for (int z = 0; z < territory.Height; z++)
-            for (int x = 0; x < territory.Width; x++)
-            {
-                int owner = territory.OverrideAt(x, z);
-                protectionPixels![z * territory.Width + x] = new Color(owner == 1 ? 1f : 0f, owner != 0 ? 1f : 0f, 0f, 1f);
-            }
-            protectionTexture.SetPixels(protectionPixels);
-            protectionTexture.Apply(false);
-            protectionPartition = territory;
-            protectionRevision = territory.Revision;
-        }
-        screenMaterial!.SetVector("_TerritoryProtectionState", new Vector4(territory.Width, territory.Height, territoryFirst ? 1f : 0f, 1f));
-        screenMaterial.SetTexture("_TerritoryProtection", protectionTexture);
+        if (territoryField != null) territoryField.Configure(screenMaterial!, territoryFirst);
+        else screenMaterial!.SetVector("_TerritoryProtectionState", default);
     }
 #endif
 
@@ -122,10 +107,5 @@ public sealed class DomainSurfaceVisuals : IDisposable
     private MaterialPropertyBlock? properties;
     private DomainTerritoryPartition? territory;
     private bool territoryFirst;
-    private Texture2D? protectionTexture;
-#if RIMWORLD_1_7
-    private Color[]? protectionPixels;
-    private DomainTerritoryPartition? protectionPartition;
-    private int protectionRevision = -1;
-#endif
+    private DomainTerritoryField? territoryField;
 }

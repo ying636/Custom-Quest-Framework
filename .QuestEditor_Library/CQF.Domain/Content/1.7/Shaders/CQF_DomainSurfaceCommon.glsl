@@ -17,13 +17,21 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
 layout(set = 2, binding = 1) uniform sampler2D _TerritoryProtection;
 float domainTerritoryMask(vec2 point)
 {
+    if (uMaterial._TerritoryProtectionState.w > 0.5
+        && (any(lessThan(point,vec2(0.0))) || any(greaterThanEqual(point,uMaterial._TerritoryProtectionState.xy)))) return 0.0;
     float distance = (point.x-uMaterial._TerritoryState.x)*uMaterial._TerritoryState.y;
     float mask = smoothstep(-0.2,0.2,distance);
     if (uMaterial._TerritoryProtectionState.w > 0.5
         && all(greaterThanEqual(point,vec2(0.0))) && all(lessThan(point,uMaterial._TerritoryProtectionState.xy)))
     {
-        vec4 protection = texture(_TerritoryProtection,point/uMaterial._TerritoryProtectionState.xy);
+        ivec2 cell = clamp(ivec2(floor(point)),ivec2(0),ivec2(uMaterial._TerritoryProtectionState.xy)-1);
+        vec4 protection = texelFetch(_TerritoryProtection,cell,0);
         if (protection.g > 0.5) mask = 1.0-abs(protection.r-uMaterial._TerritoryProtectionState.z);
+        else if (protection.a > 0.5)
+        {
+            float front = texture(_TerritoryProtection,point/uMaterial._TerritoryProtectionState.xy).b*16.0-8.0;
+            mask = smoothstep(-0.2,0.2,front*(uMaterial._TerritoryProtectionState.z > 0.5 ? 1.0 : -1.0));
+        }
     }
     return mask;
 }
@@ -51,10 +59,22 @@ vec4 domainSurface(vec2 point)
     vec3 color = mix(uMaterial._Color.rgb,uMaterial._SecondaryColor.rgb,smoothstep(0.2,0.8,liquid));
     color += uMaterial._SecondaryColor.rgb*(streams*0.16+sheen*0.2);
     float alpha = uMaterial._Color.a;
+    if (uMaterial._SurfaceState.y > 0.5 && uMaterial._SurfaceClash.w > 2.5 && uMaterial._SurfaceClash.w < 3.5) alpha = 1.0;
     if (uMaterial._SurfaceState.w > 0.5)
     {
         float ownEdge = length(point-uMaterial._SurfaceCircle.xy)-uMaterial._SurfaceCircle.z;
-        if (uMaterial._SurfaceClash.w > 3.5)
+        if (uMaterial._SurfaceClash.w > 4.5)
+        {
+            float time = uMaterial._SurfaceState.x;
+            float distance = texture(_TerritoryProtection,point/uMaterial._TerritoryProtectionState.xy).b*16.0-8.0;
+            float wave = sin(point.y*1.1-time*1.7+sin(point.y*0.43+time)*2.4)*0.38
+                +sin(point.y*3.9+time*2.3)*0.13+uMaterial._SurfaceClash.y*sin(point.y*0.8-time*8.0)*0.25;
+            float direction = uMaterial._TerritoryProtectionState.z > 0.5 ? 1.0 : -1.0;
+            float front = (distance+wave)*direction;
+            float envelope = 1.0-smoothstep(uMaterial._SurfaceCircle.z*0.55,uMaterial._SurfaceCircle.z,abs(distance));
+            alpha *= smoothstep(-0.18,0.18,front)*envelope;
+        }
+        else if (uMaterial._SurfaceClash.w > 3.5)
         {
             float time = uMaterial._SurfaceState.x;
             vec2 flow = point*0.28+vec2(time*0.16,-time*0.11);

@@ -54,7 +54,11 @@ public partial class MapComponent_Domain
         Worker!.PreparingContest();
         MapComponent_Domain side = new(map, true);
         side.Configure(definition);
-        if (side.Worker?.SupportsContests != true) throw new InvalidOperationException("[CQF] Challenging domain worker does not support contests.");
+        if (side.Worker?.SupportsContests != true)
+        {
+            side.Worker?.Dispose();
+            throw new InvalidOperationException("[CQF] Challenging domain worker does not support contests.");
+        }
         List<Pawn> entrants = new() { pawn };
         entrants.AddRange(targets.Where(target => target != pawn && target != caster && target.Spawned && !target.Dead && target.Map == arrivalMap).Distinct());
         DomainContest battle = new(this, template.Terrain);
@@ -106,48 +110,6 @@ public partial class MapComponent_Domain
             side.RequestReturn("counter-expansion failed");
             throw;
         }
-    }
-
-    internal MapComponent_Domain AdoptDomain(MapComponent_Domain donor)
-    {
-        if (!CanAcceptChallenger || !donor.CanAcceptChallenger || donor == this || donor.map == map)
-            throw new InvalidOperationException("[CQF] Domain maps cannot be merged in their current state.");
-        DomainWorker replacement = Activator.CreateInstance(donor.Definition.workerClass) as DomainWorker
-            ?? throw new InvalidOperationException("[CQF] Could not reset merged domain worker.");
-        DomainContest battle = new(this, new DomainTerrainSnapshot(donor.map));
-        MapComponent_Domain side = new(map, true)
-        {
-            definition = donor.definition,
-            worker = donor.worker,
-            active = donor.active,
-            closing = donor.closing,
-            collapsed = donor.collapsed,
-            health = donor.health,
-            caster = donor.caster,
-            sourceMap = donor.sourceMap,
-            sourceOrigin = donor.sourceOrigin,
-            anchor = donor.anchor,
-            participants = donor.participants,
-            layout = donor.layout
-        };
-        challenger = side;
-        contest = battle;
-        side.worker!.Domain = side;
-        side.layout?.MoveTo(side, donor.map.Size);
-        side.anchor?.BindDomain(side);
-        side.InstallProtection();
-        donor.worker = replacement;
-        donor.worker.Domain = donor;
-        donor.active = false;
-        donor.closing = false;
-        donor.caster = null;
-        donor.sourceMap = null;
-        donor.sourceOrigin = IntVec3.Invalid;
-        donor.anchor = null;
-        donor.participants = new();
-        donor.layout = null;
-        donor.health = 0f;
-        return side;
     }
 
     internal void FinishContest(Map destination)

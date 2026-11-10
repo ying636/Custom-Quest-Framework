@@ -139,12 +139,12 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 Check(preparationEarly && preparationLate, "early and late field effects are both visible before the closing phase");
                 transition = runtime.Transition;
                 Check(transition.OpeningOwner == opening && field!.Challenger == null && opening!.IsClosing,
-                    "ground-front settling starts at closure before the challenger exists");
+                    "fullscreen transfer starts at closure before the challenger exists");
                 Check(transition is DomainCounterTransition,
-                    "counter expansion settles the two world-space field surfaces");
+                    "counter expansion continues its own field into fullscreen cover");
                 Check(!transition.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
                     .Any(field => typeof(RenderTexture).IsAssignableFrom(field.FieldType)),
-                    "counter expansion allocates no fullscreen snapshot or rectangular screen layer");
+                    "counter expansion allocates no rectangular source snapshot");
                 CheckWorldVisuals();
                 Find.TickManager.Pause();
                 frozenTick = GenTicks.TicksGame;
@@ -164,15 +164,22 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 {
                     Shot("IncursionLate"); lateShot = true;
                 }
-                if (field!.Challenger == null) return;
+                if (caster!.Map == field!.map) return;
+                Map previousMap = field.map;
+                field = caster.Map.GetComponent<MapComponent_Domain>();
                 int coveredFrame = (int)typeof(DomainTransition).GetField("coveredFrame", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(transition)!;
-                Check(coveredFrame >= 0 && Time.frameCount > coveredFrame,
-                    "the ground-field presentation is drawn before contest ownership changes");
-                Check(field.ArrivalLocked && field.Challenger.ArrivalLocked && opening!.Destroyed
-                    && host!.Position == hostCell && caster!.Position == casterCell,
-                    "both sides are locked under cover without teleporting either caster");
+                Check(coveredFrame >= 0 && Time.frameCount > coveredFrame && transition!.Progress >= 0.58f,
+                    "a fullscreen-covered frame is presented before either caster transfers");
+                Check(field.IsBattlefield && field.Challenger != null && field.map.Size == runtime.BattlefieldSize(Existing, Incoming)
+                    && !previousMap.GetComponent<MapComponent_Domain>().HasActiveDomain,
+                    "counter expansion transfers both instances into a separate dynamically sized battlefield");
+                IntVec3 offset = field.map.Center - previousMap.Center;
+                Check(field.ArrivalLocked && field.Challenger!.ArrivalLocked && opening!.Destroyed
+                    && host!.Position == hostCell + offset && caster.Position == casterCell + offset,
+                    "cross-map transfer preserves relative positions and protects both sides under fullscreen cover");
                 Check(preparedMaps!.ToHashSet().SetEquals(runtime.DomainMaps) && Find.CurrentMap == field.map,
-                    "counter expansion reuses the current battlefield and preloaded templates");
+                    "counter expansion reuses the prewarmed battlefield and domain templates");
+                Shot("FullCover");
                 stage = 5;
             }
             else if (stage == 5)
@@ -186,7 +193,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 if (runtime.Transition != null) return;
                 Check(GenTicks.TicksGame == frozenTick && !field!.ArrivalLocked && !field.Challenger!.ArrivalLocked
                     && field.LastTerrainRenderedFrame > 0 && field.Challenger.LastTerrainRenderedFrame > 0,
-                    "paused ground-front settling finishes after both territories render and release both locks");
+                    "paused fullscreen reveal finishes after both territories render and release both locks");
                 CheckBloodSeaButton(observer!, true, "RSH_BloodSeaContestFull");
                 Shot("Battle");
                 shotAt = Time.realtimeSinceStartup;

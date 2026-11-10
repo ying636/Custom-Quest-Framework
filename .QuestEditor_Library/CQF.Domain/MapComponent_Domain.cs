@@ -286,11 +286,7 @@ public sealed partial class MapComponent_Domain : MapComponent
     public override void MapComponentDraw()
     {
         challenger?.MapComponentDraw();
-        if (Find.CurrentMap == map
-#if RIMWORLD_1_7
-            && CQFDomainRuntime.Instance.Transition is not DomainCounterTransition
-#endif
-            ) contest?.Draw(this);
+        if (Find.CurrentMap == map) contest?.Draw(this);
         if (!active || Find.CurrentMap != map) return;
         LastRenderedFrame = Time.frameCount;
         worker?.Draw();
@@ -298,7 +294,6 @@ public sealed partial class MapComponent_Domain : MapComponent
         if (!independentInstance)
         {
             foreach (DomainOpening opening in openings) opening.DrawCounterOpening();
-            (CQFDomainRuntime.Instance.Transition as DomainCounterTransition)?.DrawField(map);
         }
 #endif
     }
@@ -329,6 +324,7 @@ public sealed partial class MapComponent_Domain : MapComponent
         Scribe_Values.Look(ref closing, "closing");
         Scribe_Values.Look(ref collapsed, "collapsed");
         Scribe_Values.Look(ref trapped, "trapped");
+        Scribe_Values.Look(ref battlefieldMap, "battlefieldMap");
         Scribe_Values.Look(ref health, "domainHealth");
         Scribe_Values.Look(ref arrivalLocked, "arrivalLocked");
         Scribe_Values.Look(ref sourceOrigin, "sourceOrigin");

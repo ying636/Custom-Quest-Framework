@@ -17,11 +17,15 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     float _EffectTime;
     vec4 _FrontState;
     vec4 _FrontShape;
+    vec4 _TerritoryProtectionState;
 } uMaterial;
+layout(set = 2, binding = 1) uniform sampler2D _TerritoryProtection;
 void main()
 {
     float t = uMaterial._FrontState.y;
-    float x = vWorld.x-uMaterial._FrontState.x;
+    float x = uMaterial._TerritoryProtectionState.w > 0.5
+        ? (texture(_TerritoryProtection,vWorld/uMaterial._TerritoryProtectionState.xy).b*16.0-8.0)*uMaterial._FrontShape.y
+        : vWorld.x-uMaterial._FrontState.x;
     float z = vWorld.y;
     float recoil = uMaterial._FrontState.w;
     float wave = sin(z*1.1-t*1.7+sin(z*0.43+t)*2.4)*0.38+sin(z*3.9+t*2.3)*0.13

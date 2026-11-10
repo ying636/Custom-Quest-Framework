@@ -21,8 +21,9 @@ public sealed class DomainOpening_Fusion : DomainOpening
     public override float Progress => anchor != null ? Second.Progress : Mathf.Min(First.Progress, Second.Progress);
     public float ContactAge => contactTick < 0 ? 0f : Math.Max(0, GenTicks.TicksGame - contactTick) / 60f;
     public float VisualBlend => Active && !visualError ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(ContactAge / 0.4f)) : 0f;
-    public bool Prepared => (anchor != null || CQFDomainRuntime.Instance.HasAvailable(FirstDefinition))
-        && CQFDomainRuntime.Instance.HasTerrainTemplate(Second.Definition);
+    public bool Prepared => CQFDomainRuntime.Instance.HasTerrainTemplate(FirstDefinition)
+        && CQFDomainRuntime.Instance.HasTerrainTemplate(Second.Definition)
+        && CQFDomainRuntime.Instance.HasAvailableBattlefield(FirstDefinition, Second.Definition);
 
     public static DomainOpening_Fusion Create(DomainOpening first, DomainOpening second)
     {

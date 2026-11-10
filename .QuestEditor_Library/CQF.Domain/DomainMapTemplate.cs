@@ -20,8 +20,7 @@ public sealed class DomainMapTemplate : IExposable
     public IReadOnlyList<DomainStructureBlueprint> Structures => structures;
 
     public IntVec3 PositionFor(IntVec3 position, IntVec3 destinationSize)
-        => new(Math.Min(destinationSize.x - 1, (int)((long)position.x * destinationSize.x / size.x)), 0,
-            Math.Min(destinationSize.z - 1, (int)((long)position.z * destinationSize.z / size.z)));
+        => position + new IntVec3(destinationSize.x / 2 - size.x / 2, 0, destinationSize.z / 2 - size.z / 2);
 
     public void ExposeData()
     {

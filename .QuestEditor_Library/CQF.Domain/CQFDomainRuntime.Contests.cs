@@ -20,8 +20,7 @@ public sealed partial class CQFDomainRuntime
         if (current.HasActiveDomain)
         {
             if (!current.CanAcceptChallenger) throw new InvalidOperationException("[CQF] This domain cannot accept another challenger.");
-            DomainMapTemplate template = GetMapTemplate(definition, caster.Map);
-            return current.EnterChallenger(definition, caster, targets, template);
+            return EnterBattlefield(current, definition, caster, targets, false);
         }
         Map realm = Acquire(definition, caster);
         MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
@@ -36,79 +35,8 @@ public sealed partial class CQFDomainRuntime
             throw new InvalidOperationException("[CQF] Only two registered, ready, contest-capable domains can merge.");
         FinishTransitionFor(first.map);
         FinishTransitionFor(second.map);
-        first.Worker!.PreparingContest();
-        second.Worker!.PreparingContest();
-        bool viewingSecond = Find.CurrentMap == second.map;
-        List<(Thing thing, IntVec3 origin, Rot4 rotation)> moved = new();
-        try
-        {
-            first.Layout?.ParkAll();
-            second.Layout?.ParkAll();
-            foreach (Thing thing in second.map.listerThings.AllThings.ToList())
-            {
-                IntVec3 origin = thing.Position;
-                Rot4 rotation = thing.Rotation;
-                IntVec3 target = new(Math.Min(first.map.Size.x - 1, origin.x * first.map.Size.x / second.map.Size.x), 0,
-                    Math.Min(first.map.Size.z - 1, origin.z * first.map.Size.z / second.map.Size.z));
-                IntVec3 cell = first.FindFreeCell(first.map, target, thing is Pawn);
-                if (thing is Building || thing.def.category == ThingCategory.Plant)
-                {
-                    IntVec3? safeCell = null;
-                    foreach (IntVec3 candidate in GenRadial.RadialCellsAround(target, 12f, true).Concat(first.map.AllCells))
-                    {
-                        CellRect occupied = GenAdj.OccupiedRect(candidate, rotation, thing.def.size);
-                        if (occupied.Any(part => !part.InBounds(first.map) || !part.Standable(first.map)
-                            || part.GetThingList(first.map).Count > 0)) continue;
-                        safeCell = candidate;
-                        break;
-                    }
-                    cell = safeCell ?? throw new InvalidOperationException("[CQF] No non-destructive landing footprint exists for " + thing.ThingID);
-                }
-                moved.Add((thing, origin, rotation));
-                if (thing is Pawn pawn) pawn.GetLord()?.RemovePawn(pawn);
-                thing.DeSpawn();
-                GenSpawn.Spawn(thing, cell, first.map, rotation);
-                if (!thing.Spawned || thing.Map != first.map)
-                    throw new InvalidOperationException("[CQF] Domain merge could not spawn transferred thing: " + thing.ThingID);
-            }
-            MapComponent_Domain side = first.AdoptDomain(second);
-            first.Contest!.Initialize(first);
-            first.Worker!.ContestStarted();
-            side.Worker!.ContestStarted();
-            if (viewingSecond)
-            {
-                Current.Game.CurrentMap = first.map;
-                Find.Selector.ClearSelection();
-                if (side.Caster?.Spawned == true)
-                {
-                    Find.CameraDriver.JumpToCurrentMapLoc(side.Caster.Position);
-                    Find.Selector.Select(side.Caster);
-                }
-            }
-            foreach (Thing thing in second.map.listerThings.AllThings.ToList()) thing.Destroy();
-            foreach (Verse.AI.Group.Lord lord in second.map.lordManager.lords.ToList()) second.map.lordManager.RemoveLord(lord);
-            host.Hibernate(second.map);
-            return side;
-        }
-        catch (Exception error)
-        {
-            Log.Error("[CQF] Domain merge failed: " + error);
-            if (second.Active)
-            {
-                foreach ((Thing thing, IntVec3 origin, Rot4 rotation) in moved)
-                {
-                    if (thing.Destroyed) continue;
-                    if (thing.Spawned) thing.DeSpawn();
-                    GenSpawn.Spawn(thing, origin, second.map, rotation);
-                    if (!thing.Spawned || thing.Map != second.map)
-                        throw new InvalidOperationException("[CQF] Domain merge could not restore transferred thing: " + thing.ThingID);
-                }
-                first.Layout?.RevealOwned();
-                second.Layout?.RevealOwned();
-            }
-            else if (second.map.mapPawns.AllPawns.Count == 0) host.Hibernate(second.map);
-            throw;
-        }
+        return TransferBattlefield(first, second, second.Definition,
+            _ => throw new InvalidOperationException("[CQF] A transferred domain pair requires both instances."));
     }
 
     private void ProcessDomainContests()

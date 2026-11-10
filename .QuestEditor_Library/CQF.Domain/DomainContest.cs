@@ -34,7 +34,7 @@ public sealed partial class DomainContest : IExposable, IDisposable
         MapComponent_Domain second = first.Challenger ?? throw new InvalidOperationException("[CQF] Contest has no challenger.");
         bool reverse = first.Caster!.Position.x > second.Caster!.Position.x;
         partition = new DomainTerritoryPartition(first.map.Size.x, first.map.Size.z,
-            DomainTerritoryPartition.CalculateFraction(first.Health, second.Health), reverse);
+            DomainTerritoryPartition.CalculateFraction(first.Health, second.Health), reverse, first.Caster.Position, second.Caster.Position);
         foreach (IntVec3 cell in first.map.AllCells) ApplyCell(first, cell);
         RefreshLayouts(first);
         first.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Terrain);

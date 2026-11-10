@@ -77,7 +77,7 @@ internal static class DomainVisualChecks
                 string fragment = File.ReadAllText(fragmentPath);
                 Check(!ShaderSourceLoader.HasStageInterfaceErrors(vertexPath, fragmentPath), kind + " native shader stage interface");
                 MaterialLayout layout = ShaderSourceLoader.CreateMaterialLayout(fragmentPath);
-                Check(!layout.HasErrors && layout.UniformSize > 0 && layout.TextureSlots.Length == (kind == "BloodSeaTransition" || kind.StartsWith("Surface") ? 1 : blood || kind is "FusionBoundary" or "ContestFront" ? 0 : 3), kind + " native material layout");
+                Check(!layout.HasErrors && layout.UniformSize > 0 && layout.TextureSlots.Length == (kind is "BloodSeaTransition" or "BloodSeaTerrain" or "BloodSeaSurfaceScreen" or "ContestFront" || kind.StartsWith("Surface") ? 1 : blood || kind == "FusionBoundary" ? 0 : 3), kind + " native material layout");
                 if (kind.Contains("Transition") || kind.EndsWith("Screen"))
                     Check(vertex.Contains("binding = 1) uniform FrameUniforms") && vertex.Contains("mat4 WorldToCamera; mat4 ViewProj;"),
                         kind + " uses the native GUI frame binding and matrix offsets");

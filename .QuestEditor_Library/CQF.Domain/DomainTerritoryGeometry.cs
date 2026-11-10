@@ -10,7 +10,7 @@ public sealed class DomainTerritoryGeometry
 
     public void Append(Rect rect, bool first, float altitude, List<Vector3> vertices, List<int> triangles, List<Color32> colors)
     {
-        if (!Partition.HasOverrides) { AppendCell(rect, first, altitude, vertices, triangles, colors); return; }
+        if (!Partition.HasOverrides && !Partition.UsesCurvedFront) { AppendCell(rect, first, altitude, vertices, triangles, colors); return; }
         for (int z = Mathf.FloorToInt(rect.yMin); z < Mathf.CeilToInt(rect.yMax); z++)
         for (int x = Mathf.FloorToInt(rect.xMin); x < Mathf.CeilToInt(rect.xMax); x++)
         {
@@ -33,6 +33,7 @@ public sealed class DomainTerritoryGeometry
         for (int x = Math.Max(0, Mathf.FloorToInt(bounds.xMin)); x < Math.Min(Partition.Width, Mathf.CeilToInt(bounds.xMax)); x++)
         {
             if (Partition.OverrideAt(x, z) != 0) continue;
+            if (Partition.UsesCurvedFront && !Partition.NearFront(x, z, 2.5f)) continue;
             float left = Math.Max(x, bounds.xMin), right = Math.Min(x + 1, bounds.xMax);
             float bottom = Math.Max(z, bounds.yMin), top = Math.Min(z + 1, bounds.yMax);
             clipped[0] = new Vector2(left, bottom); clipped[1] = new Vector2(left, top);
@@ -67,6 +68,14 @@ public sealed class DomainTerritoryGeometry
             }
             return;
         }
+        if (Partition.UsesCurvedFront)
+        {
+            Vector2 a = new(rect.xMin, rect.yMin), b = new(rect.xMin, rect.yMax);
+            Vector2 c = new(rect.xMax, rect.yMax), d = new(rect.xMax, rect.yMin);
+            AppendTriangle(a, b, c, first, altitude, vertices, triangles, colors);
+            AppendTriangle(a, c, d, first, altitude, vertices, triangles, colors);
+            return;
+        }
         float left = first != Partition.Reversed ? rect.xMin : Math.Max(rect.xMin, Partition.BoundaryX);
         float right = first != Partition.Reversed ? Math.Min(rect.xMax, Partition.BoundaryX) : rect.xMax;
         if (left >= right) return;
@@ -89,7 +98,28 @@ public sealed class DomainTerritoryGeometry
         }
     }
 
-    private readonly Vector2[] clipped = new Vector2[4];
+    private void AppendTriangle(Vector2 a, Vector2 b, Vector2 c, bool first, float altitude,
+        List<Vector3> vertices, List<int> triangles, List<Color32> colors)
+    {
+        input[0] = a; input[1] = b; input[2] = c;
+        int count = 0;
+        Vector2 previous = c;
+        float previousDistance = Partition.BaseSignedDistance(c.x, c.y) * (first ? 1f : -1f);
+        for (int index = 0; index < 3; index++)
+        {
+            Vector2 current = input[index];
+            float distance = Partition.BaseSignedDistance(current.x, current.y) * (first ? 1f : -1f);
+            if ((distance > 0f) != (previousDistance > 0f))
+                clipped[count++] = Vector2.Lerp(previous, current, previousDistance / (previousDistance - distance));
+            if (distance > 0f) clipped[count++] = current;
+            previous = current;
+            previousDistance = distance;
+        }
+        if (count >= 3) AppendPolygon(count, altitude, vertices, triangles, colors);
+    }
+
+    private readonly Vector2[] input = new Vector2[3];
+    private readonly Vector2[] clipped = new Vector2[6];
     private readonly List<Vector3> vertices = new();
     private readonly List<int> triangles = new();
     private readonly List<Color32> colors = new();

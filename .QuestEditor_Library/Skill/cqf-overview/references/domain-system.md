@@ -6,7 +6,7 @@
 
 ## 源码入口与职责
 
-当前领地玩法的公共接口见 [领域对抗](domain-contest.md)：RestoreHealth 供技能回血；ProtectTerritory / RemoveTerritoryProtection 管理计时或来源绑定的真实守区；RegisterStructure 将技能建筑登记到本次领域布局。自然对抗消耗与主场 30% 减伤由框架处理，敌区技能倍率由子 Mod 自己处理。三个机制均复用同一个领域血量与实际 OwnsCell 查询，不新增 GComp、地图或领域配对分支。
+当前领地玩法的公共接口见 [领域对抗](domain-contest.md)：RestoreHealth 供技能回血；ProtectTerritory / RemoveTerritoryProtection 管理计时或来源绑定的真实守区；RegisterStructure 将技能建筑登记到本次领域布局。自然对抗消耗与主场 30% 减伤由框架处理，敌区技能倍率由子 Mod 自己处理。三个机制均复用同一个领域血量与实际 OwnsCell 查询，不新增 GComp 或领域配对分支。对抗自 5.0 使用尺寸为双方尺寸之和乘 0.75 的独立战场，由原 GComp 休眠管理，详见领域对抗参考。
 
 领域模块源码目录：`D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library\CQF.Domain`，类型均位于 `QuestEditor_Library` 命名空间。
 
@@ -21,6 +21,8 @@
 | `Hediff_DomainProtection.cs` / `Comp_DomainProtection.cs` | 施术者伤害吸收、死亡通知和存读档后的保护组件恢复 |
 | `DomainOpening.cs` | 子 Mod 展开物件的调度接口 |
 | `DomainMapTemplate.cs` / `DomainStructureBlueprint.cs` | 预生成地形与初始建筑布局，提供特殊建筑初始化扩展 |
+| `CQFDomainRuntime.Battlefields.cs` / `MapComponent_Domain.Battlefields.cs` | 专用战场按尺寸复用、实例与原对象迁移、异常回滚 |
+| `DomainTerritoryPartition.Front.cs` / `DomainTerritoryField.cs` | 面积补偿、包围孤岛及共享的表现距离场 |
 | `DomainLayout.cs` / `DomainStructure.cs` | 实例建筑的领地显隐、原对象托管、合并与深度保存 |
 | `AbilityCompProperties_DomainProtection.cs` / `AbilityComp_DomainProtection.cs` | 领域能力初始化与读档后的原生伤害组件准备 |
 | `DomainTransition.cs` | 镜头切换、入场/返回锁定和转场资源释放 |

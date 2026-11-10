@@ -31,15 +31,24 @@ public sealed class DomainContestOverlay : IDisposable
         float width = battlefield.map.Size.x;
         float height = battlefield.map.Size.z;
         float boundary = partition.BoundaryX;
-        if (geometry?.Partition != partition) { geometry = new DomainTerritoryGeometry(partition); meshRevision = -1; }
+        if (geometry?.Partition != partition)
+        {
+            geometry = new DomainTerritoryGeometry(partition);
+            territoryField?.Dispose();
+            territoryField = partition.UsesCurvedFront ? new DomainTerritoryField(partition) : null;
+            firstSurface?.SetTerritory(partition, true);
+            secondSurface?.SetTerritory(partition, false);
+            meshRevision = -1;
+        }
         if (meshRevision != partition.Revision)
         {
             if (firstMesh != null) geometry.Rebuild(firstMesh, true, battlefield.map.Size.x, battlefield.map.Size.z, AltitudeLayer.FloorCoverings.AltitudeFor());
             if (secondMesh != null) geometry.Rebuild(secondMesh, false, battlefield.map.Size.x, battlefield.map.Size.z, AltitudeLayer.FloorCoverings.AltitudeFor());
-            if (partition.HasOverrides)
+            if (partition.HasOverrides || partition.UsesCurvedFront)
             {
                 contactMesh ??= new Mesh { name = "CQF_ContestContact" };
-                float left = Math.Max(0f, boundary - 1.6f), right = Math.Min(width, boundary + 1.6f);
+                float left = partition.UsesCurvedFront ? 0f : Math.Max(0f, boundary - 1.6f);
+                float right = partition.UsesCurvedFront ? width : Math.Min(width, boundary + 1.6f);
                 geometry.RebuildUnclaimed(contactMesh, new Rect(left, 0f, right - left, height), AltitudeLayer.FloorCoverings.AltitudeFor() + 0.001f);
             }
             meshRevision = partition.Revision;
@@ -56,14 +65,15 @@ public sealed class DomainContestOverlay : IDisposable
         float pressure = Mathf.Clamp((targetBoundary - boundary) * 0.35f, -1f, 1f);
         float time = GenTicks.TicksGame / 60f;
         DomainContest contest = battlefield.Contest!;
-        Vector4 clash = new(pressure, contest.Recoil, 0f, 2f);
+        Vector4 clash = new(pressure, contest.Recoil, 0f, partition.UsesCurvedFront ? 5f : 2f);
         Vector4 circle = new(boundary, direction, halfWidth, 0f);
-        Mesh? contact = partition.HasOverrides ? contactMesh : null;
+        Mesh? contact = partition.HasOverrides || partition.UsesCurvedFront ? contactMesh : null;
         DrawSurface(from, to, height, firstSurface, circle, clash, contact);
         circle.y = -direction;
         DrawSurface(from, to, height, secondSurface, circle, clash, contact);
         properties.SetVector("_FrontState", new Vector4(boundary, time, pressure, contest.Recoil));
         properties.SetVector("_FrontShape", new Vector4(halfWidth, direction, target, contest.RecoilAge));
+        territoryField?.Configure(properties, true);
         Vector3 center = new((from + to) * 0.5f, AltitudeLayer.FloorCoverings.AltitudeFor() + 0.001f, height * 0.5f);
         if (contact == null || contact.vertexCount > 0)
             GenDraw.DrawMeshNowOrLater(contact ?? MeshPool.plane10,
@@ -79,6 +89,7 @@ public sealed class DomainContestOverlay : IDisposable
         if (firstMesh != null) UnityEngine.Object.Destroy(firstMesh);
         if (secondMesh != null) UnityEngine.Object.Destroy(secondMesh);
         if (contactMesh != null) UnityEngine.Object.Destroy(contactMesh);
+        territoryField?.Dispose();
     }
 
     private void DrawSurface(float from, float to, float height, DomainSurfaceVisuals? surface, Vector4 circle, Vector4 clash, Mesh? contact)
@@ -101,4 +112,5 @@ public sealed class DomainContestOverlay : IDisposable
     private DomainTerritoryGeometry? geometry;
     private int meshRevision = -1;
     private Mesh? contactMesh;
+    private DomainTerritoryField? territoryField;
 }

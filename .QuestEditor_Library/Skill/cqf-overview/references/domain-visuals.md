@@ -2,21 +2,23 @@
 
 CQF 可选 Domain 模块提供基础地面扩散、幕墙升起/闭合、进入与返回转场，以及独立的领域通用平面。通用平面表示领域的基础视觉特征，不能据此替换领域原有展开动画。寂屋邪祭保留自己的血海展开，血海平面和地形共用材质算法；CQF 不依赖血海程序集。
 
-领域内反展开从准备阶段就显示场地侵蚀。MapComponent_Domain.MapComponentDraw 调用当前展开物件的 DrawCounterOpening，使用本方 surface 在人物下方绘制沿不规则前沿增长的地面；进度与流动时间取游戏 tick，暂停冻结，读档后按保存的展开进度重建，取消／倒地／宿主退出时释放。准备阶段不创建挑战者、不改变实际领地，也不启用全屏转场。闭合后的 DomainCounterTransition 直接接续准备末尾半径，将同一侵蚀前沿逐渐收敛为真实对抗分界，不重新扩散、不铺矩形屏幕材质。
+领域内反展开保留原准备阶段的地面蔓延。MapComponent_Domain.MapComponentDraw 调用 DrawCounterOpening，以本方 surface 在人物下方绘制不规则前沿；半径、流动取游戏 tick，暂停冻结，读档重建，取消／倒地／宿主退出释放。准备阶段不建立挑战者、不改变真实领地。
 
-领域内反展开使用专用 `DomainCounterTransition` 场地侵蚀过场替代再次升起罩子：保留 360 tick 准备时间，闭合后约 1.4 秒完成地面前沿的稳定交接。MapComponent_Domain 的世界绘制入口先铺宿主特征，再按侵蚀遮罩叠加挑战方；实际绘制过一帧后才建立挑战者，确认真实地形已提交后继续收敛，末段淡出到正常对抗接缝。演出期间临时抑制普通对抗补绘，避免旧分界提前穿出。此路径不创建 RenderTexture、不抓屏、不使用 DrawScreen；同图交接保留镜头和选择对象。缺少 surface 的一方由真实地形展示，不新增整图颜色遮盖。普通地图上的独立展开、血海自身原展开／返回材质及外部融合动画保持原入口。
+闭合后 DomainCounterTransition 直接接续已扩张半径，把同一特征材质投影到屏幕并继续覆盖四角；约 2.4 秒完成覆盖、交接和揭幕。完全遮盖帧先绘出，再迁入专用对抗地图，真实地形提交后才揭幕。只使用新展开领域自己的屏幕特征，不额外铺宿主矩形截图，不把半径收回重播，也不再次升起罩子。场地材质没有 screenShader 时使用 contestColor 的简洁遮盖；无 surface 同样可正常参加。屏幕模式 3 强制覆盖不透明，防止半透明特征泄露切图；普通地面透明度不变。原地图独立展开、血海原进入／返回及外部融合继续使用各自原演出。
+
+反展开转场期间屏幕边缘暂不补绘，避免旧领域的边缘颜色盖在全屏特效上。读档期间只有领域运行对象已初始化才允许补绘。地图外没有真实领地，争夺中的边缘不能用旧直线归属延伸到地图外。
 
 转场首次获取演出许可、准备画面及启动实时时钟只发生在 `Draw` 的有效地图重绘入口；`BindOpening`、`Bind`、`BeginReturn` 和 `Update` 不能提前启动时钟。1.7 的 `Event.current` 可能在 Update 中仍保留上一帧 Repaint，仅判断事件类型不能证明当前正在绘制。缺少地图或模板时，加载事件只负责准备与休眠，结束后重新排队展开，再在普通更新中创建转场，避免加载等待消耗入场动画。模板命中仍直接复用，领域自己的 Shader 算法保持不变。延迟首帧及模板缺失的原生回归见 `Tests/DomainContestRuntime/CounterTransitionTimingChecks.cs`。
 
 普通基础领域的 DomainMaterialTransition 在准备首帧将已闭合的世界半径投影到屏幕 `_Radius/_Height`，进入 Shader 将该椭圆覆盖作为原有圆形扩张的下限，避免展开物件收回后短暂露出原地形；只对进入路径启用，返回仍使用原遮盖过程。`-cqfclosingcarrychecks` 的实机夹具检查最初六帧、目的地地形就绪、锁释放及返回休眠，原生截图供逐帧查看。
 
-自定义 DomainOpening 派生类应使用 IsCounterOpening 区分领域内外演出，以 ReadyToTransfer 判断转场准备完成，完成转移后通过 BindEntryTransition 绑定对应领域实例。领域内跳过世界绘制、人物折叠载具和 SupportsFusion；CounterOpeningValid 在宿主不再接受挑战时使当前展开失效。框架保存此模式；默认不迁移旧展开存档。
+自定义 DomainOpening 派生类应使用 IsCounterOpening 区分领域内外演出，以 ReadyToTransfer 判断转场准备完成，完成转移后通过 BindEntryTransition 绑定对应领域实例。领域内跳过世界罩子、人物折叠载具和 SupportsFusion，准备期间仍绘制本方地面蔓延；CounterOpeningValid 在宿主不再接受挑战时使当前展开失效。框架保存此模式；默认不迁移旧展开存档。
 
 ## 通用领域平面
 
 `DomainDef.surface` 引用独立的 `DomainSurfaceDef`，与 `DomainDef.visuals` 分别配置。基础领域引用 `CQF_BasicDomainSurface`，使用灰白流淌；血海引用 `RSH_BloodSeaDomainSurface`，复用 `RSH_BloodMarshTerrain` 的算法。通用平面不能代替领域罩子；单独展开沿用原有动画和材质算法，融合只增加启用时生效的交叠侵蚀分支。
 
-surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质才能参加融合或对抗。公共绘制器只实例化已配置的平面；跨图融合的屏幕转场在缺失一方平面时增加中性遮盖以保证切图屏障，领域内同图反展开不使用这层屏幕遮盖。融合资格由展开器与 Worker 的能力决定。`contestColor` 只为公共接触带提供该领域颜色。
+surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质才能参加融合或对抗。公共绘制器只实例化已配置的平面；跨图融合的屏幕转场在缺失一方平面时增加中性遮盖以保证切图屏障，领域内反展开也必须在完整遮盖后迁移至独立战场；缺少 screenShader 时使用 contestColor 渐变遮盖。融合资格由展开器与 Worker 的能力决定。`contestColor` 为公共接触带及无屏幕材质时的转场后备提供该领域颜色。
 
 `DomainSurfaceDef.screenBorderWidth` 默认 0，可选范围 [0,0.3]，按屏幕高度控制四周宽度；`screenBorderOpacity` 默认 0.75，范围 [0,1]。基础灰白平面启用宽度 0.13。MapComponent_Domain 绘制 DomainScreenBorder，复用特征材质算法但采用独立屏幕坐标流动，中央保持透明；对抗时按当前镜头映射的实际分区裁剪。本方边缘在退出全屏遮盖后的领域解散阶段释放，读档后按需重建。原有展开与返回材质不变。
 
@@ -28,7 +30,9 @@ surface 可以完全省略，纯地形与建筑领域不需要虚构一份材质
 
 `DomainSurfaceVisuals.Draw(mesh, matrix, time, circle, rival, opacity, clash)` 绘制任意网格；`DrawScreen(rect, view, circle, rival, reveal, time, opacity)` 用于屏幕展示。每个绘制器拥有自己的实例，禁止修改原版缓存材质。屏幕材质首次绘制时才创建；Dispose 与游戏结束清理都释放已创建资源。
 
-`DrawScreen` 保留原七参数签名，并增加八参数重载传递 `clash`。世界 `Draw` 同样保留原签名，增加显式队列重载，反展开宿主层使用 2901、挑战层使用 2902，均位于人物下方。`_SurfaceClash.w=3` 仍是准备阶段的径向侵蚀；`_SurfaceCircle.xy/z` 为地图坐标中心与扩张半径，w 为 0，流动噪声和波纹偏移算法保持。闭合阶段模式 4 沿用同一径向前沿，`clash.x` 将其有符号距离插值到 `_SurfaceRival.xy` 指定的主分界与方向；末尾逐渐归零临时材质透明度，让真实场地接管。基础与血海共用此协议，新增自有 surface Shader 若需参加前沿收敛应实现模式 3、4，无需按对手编写特例。
+`DrawScreen` 保留原七参数签名，八参数重载传递 clash；世界 Draw 的原签名和显式队列重载均保留。模式 3 为准备阶段及反展开屏幕覆盖的径向侵蚀，_SurfaceCircle.xy/z 为世界中心与半径，世界与屏幕共用颜色、流动及噪声算法。屏幕从实际镜头映射世界范围，半径覆盖四角与扰动余量。
+
+模式 5 为实际争夺轮廓的局部侵蚀，读取 DomainTerritoryField；双方使用互补方向，接缝围绕曲线与孤岛，不再假定是竖直线。字段纹理 _TerritoryProtection：r 为真实首方归属，g 为固定覆盖，b 为编码的基础有符号距离（b*16-8），a 表示曲线模式；_TerritoryProtectionState=(宽,高,本方是否首方,启用)。固定格使用 texelFetch 保留整格归属，连续接触使用距离通道。公共接触带、通用特征材质和基础屏幕边缘共用这个场；纹理按分区 Revision 更新，随拥有者释放，释放后访问报错而不重新分配。新领域没有 surface 时只需真实地形和建筑，公共边缘仍能显示争夺；自定义 surface 若要显示材质互侵，应实现此协议，不按对手制作特例。
 
 平面 Shader 使用 `_SurfaceState=(时间,屏幕模式,透明度,启用)`、`_SurfaceCircle=(中心x,中心z,半径,圆形裁切)`、`_SurfaceRival=(对手中心x,中心z,半径,叠加层)`、`_SurfaceView=(原点x,原点z,宽,高)` 和 `_SurfaceReveal=(中心x,中心z,揭幕半径,启用)`。叠加层大于 1.5 时，在重叠区应用动态侵蚀遮罩，底层保留完整材质，避免双方同时透明造成孔洞。
 

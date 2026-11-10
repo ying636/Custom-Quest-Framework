@@ -7,7 +7,8 @@ namespace CQF.DomainContestRuntimeChecks;
 
 public sealed class OpeningFusionChecksDriver : MonoBehaviour
 {
-    private string ResultPath => Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt");
+    private string DirectoryPath => Environment.GetEnvironmentVariable("CQF_COUNTER_EVIDENCE") ?? GenFilePaths.SaveDataFolderPath;
+    private string ResultPath => Path.Combine(DirectoryPath, "DomainContestChecks.txt");
     private string CaseName => CaseNames[caseIndex];
 
     private void Update()
@@ -28,8 +29,8 @@ public sealed class OpeningFusionChecksDriver : MonoBehaviour
                 if (GenCommandLine.CommandLineArgPassed("cqflayoutchecks") && !runtime.HasAvailable(DefDatabase<DomainDef>.GetNamed("CQF_CheckPlainDomain"))) return;
                 preparedMaps = runtime.DomainMaps.ToArray();
                 source ??= Find.CurrentMap;
-                firstPawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
-                secondPawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+                firstPawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer, mustBeCapableOfViolence: true));
+                secondPawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer, mustBeCapableOfViolence: true));
                 IntVec3 origin = source.mapPawns.FreeColonistsSpawned.First().Position;
                 GenSpawn.Spawn(firstPawn, source.GetComponent<MapComponent_Domain>().FindFreeCell(source, origin, true), source);
                 GenSpawn.Spawn(secondPawn, source.GetComponent<MapComponent_Domain>().FindFreeCell(source,
@@ -231,7 +232,7 @@ public sealed class OpeningFusionChecksDriver : MonoBehaviour
     {
         File.AppendAllText(ResultPath, "SHOT " + CaseName + ": " + phase + ", focus=" + sourceFocus + ", camera=" + Find.Camera.transform.position
             + ", view=" + Find.CameraDriver.CurrentViewRect + ", first=" + firstPawn!.PositionHeld + ", second=" + secondPawn!.PositionHeld + "\n");
-        ScreenCapture.CaptureScreenshot(Path.Combine(GenFilePaths.SaveDataFolderPath, CaseName + "_" + phase + ".png"));
+        ScreenCapture.CaptureScreenshot(Path.Combine(DirectoryPath, CaseName + "_" + phase + ".png"));
     }
 
     private void Finish(bool success)

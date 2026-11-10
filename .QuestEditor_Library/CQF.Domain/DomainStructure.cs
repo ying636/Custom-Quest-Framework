@@ -74,10 +74,12 @@ public sealed class DomainStructure : IExposable, IThingHolder
     }
 
     public void MoveTo(Map destination, IntVec3 originalSize)
+        => MoveTo(destination, originalSize, default);
+
+    public void MoveTo(Map destination, IntVec3 originalSize, IntVec3 offset)
     {
         if (spawned?.Spawned == true) position = spawned.Position;
-        else position = new IntVec3(Math.Min(destination.Size.x - 1, position.x * destination.Size.x / originalSize.x), 0,
-            Math.Min(destination.Size.z - 1, position.z * destination.Size.z / originalSize.z));
+        else position += new IntVec3(destination.Size.x / 2 - originalSize.x / 2, 0, destination.Size.z / 2 - originalSize.z / 2) + offset;
     }
 
     public ThingOwner GetDirectlyHeldThings() => held;
