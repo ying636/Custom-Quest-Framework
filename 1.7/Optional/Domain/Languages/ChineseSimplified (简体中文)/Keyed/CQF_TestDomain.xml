@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <CQF_TestDomainExpansion>展开基础领域</CQF_TestDomainExpansion>
-  <CQF_TestDomainCasterUnavailable>CQF_TestDomainCasterUnavailable</CQF_TestDomainCasterUnavailable>
-  <CQF_TestDomainBusy>CQF_TestDomainBusy</CQF_TestDomainBusy>
+  <CQF_TestDomainCasterUnavailable>施术者必须存活、未倒地且位于地图上。</CQF_TestDomainCasterUnavailable>
+  <CQF_TestDomainBusy>当前无法展开基础领域：你已维持其他领域，或战场名额已满、正在展开或转场。</CQF_TestDomainBusy>
+  <CQF_DomainLoading>正在载入游戏，请稍候再使用领域能力。</CQF_DomainLoading>
 </LanguageData>

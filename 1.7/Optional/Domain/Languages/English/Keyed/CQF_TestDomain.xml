@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQF_TestDomainExpansion>CQF_TestDomainExpansion</CQF_TestDomainExpansion>
-  <CQF_TestDomainCasterUnavailable>CQF_TestDomainCasterUnavailable</CQF_TestDomainCasterUnavailable>
-  <CQF_TestDomainBusy>CQF_TestDomainBusy</CQF_TestDomainBusy>
+  <CQF_TestDomainExpansion>Expand basic domain</CQF_TestDomainExpansion>
+  <CQF_TestDomainCasterUnavailable>The caster must be alive, standing, and present on the map.</CQF_TestDomainCasterUnavailable>
+  <CQF_TestDomainBusy>Cannot expand a basic domain while maintaining another domain, while both domain slots are used, or during a domain opening or transition.</CQF_TestDomainBusy>
+  <CQF_DomainLoading>The game is loading. Wait before using domain abilities.</CQF_DomainLoading>
 </LanguageData>

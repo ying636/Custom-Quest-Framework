@@ -14,6 +14,11 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
 
     public override bool GizmoDisabled(out string reason)
     {
+        if (Current.ProgramState != ProgramState.Playing || GameComponent_MapManager.Instance?.Module is not CQFDomainRuntime runtime)
+        {
+            reason = "CQF_DomainLoading".Translate();
+            return true;
+        }
         Pawn pawn = parent.pawn;
         if (!pawn.Spawned || pawn.Dead || pawn.Downed)
         {
@@ -22,7 +27,7 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
         }
         MapComponent_Domain domain = pawn.Map.GetComponent<MapComponent_Domain>();
         MapComponent_Domain? ownDomain = domain.FindDomainFor(pawn);
-        if (!CQFDomainRuntime.Instance.CanBeginOpening(pawn, DefDatabase<DomainDef>.GetNamed("CQF_TestDomain").OpeningRadius) || domain.HasActiveDomain
+        if (!runtime.CanBeginOpening(pawn, DefDatabase<DomainDef>.GetNamed("CQF_TestDomain").OpeningRadius) || domain.HasActiveDomain
             && (ownDomain?.Active == true ? ownDomain.Definition.defName != "CQF_TestDomain" || !ownDomain.Ready : !domain.CanAcceptChallenger)
             || pawn.Map.listerThings.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpening"))
                 .OfType<DomainOpening_Basic>().Any(opening => opening.Active && opening.Caster == pawn))

@@ -5,7 +5,7 @@
 ## 展开与合并入口
 
 - `CQFDomainRuntime.EnterOrContest(definition, caster, targets)`：普通地图上获取领域并进入；已有领域内由另一施术者展开时创建第二实例，转移参与者记录，保留当前人物位置和原返回位置。挑战者直接读取预生成模板，不唤醒第二张地图。
-- 领域内实际 Ability 反展开使用独立演出模式：DomainOpening.InitializeOpening 保存 IsCounterOpening，保留 OpeningTicks 准备时间；准备期间只锁施术者，其他生物可行动。闭合后由 CQFDomainRuntime 创建 DomainCounterTransition，双方通用场地材质展示本方从施术者脚下逐渐侵蚀敌方的场地；不重新绘制罩子、不生成卷起人物的血海载具，也不参与世界融合。完整遮盖帧出现后才调用 CompleteTransfer → EnterOrContest / EnterChallenger 改变真实领地，复用当前地图及模板。BindEntryTransition 将双方同时绑定入场锁，确认地形绘制后揭幕；暂停时仍完成转场。原地图独立展开与载体周边融合仍保留原演出。没有观察该地图时继续原有无可见演出的完成入口。
+- 领域内实际 Ability 反展开使用独立演出模式：DomainOpening.InitializeOpening 保存 IsCounterOpening，保留 OpeningTicks 准备时间；准备期间只锁施术者，其他生物可行动。闭合后由 CQFDomainRuntime 创建 DomainCounterTransition，在人物下方接续已有侵蚀前沿，约 1.4 秒逐渐稳定到真实主分界；不再追加矩形屏幕铺图或第二轮径向扩散，不重新绘制罩子、不生成卷起人物的血海载具，也不参与世界融合。第一帧地面演出提交后才调用 CompleteTransfer → EnterOrContest / EnterChallenger 改变真实领地，复用当前地图及模板，保留同图镜头和选择。BindEntryTransition 将双方同时绑定入场锁，确认地形绘制后继续收敛并释放锁；暂停时仍完成转场。原地图独立展开与载体周边融合仍保留原演出。没有观察该地图时继续原有无可见演出的完成入口。
 - 在已有领域外部载体周围展开时，将新展开与原载体直接配对，先显示增长、接触和相互侵蚀，再播放双方特征的全屏遮盖。遮盖完成后直接调用原领域的 EnterChallenger，从新领域预生成模板取得地形和建筑，人物一次进入共同地图；保留旧领域的血量、人物与原载体。新展开取消会释放配对；旧领域先结束时，新展开恢复独立流程。
 - 同一来源地图的两个活动载体，在距离不超过双方半径之和时自动合并战场。人物、物品、建筑和植物迁入共同地图；建筑/植物按原朝向寻找不会覆盖现有物件的完整占地，实际生成使用同一朝向，无法安全落地则报错并尝试恢复已移动物件的位置及朝向。每次生成后确认目标地图与生成状态。空出的地图休眠；接管实例后的异常仍不具备完整事务回滚。
 - 1.7 同图展开范围重叠时，由 `DomainOpening_Fusion` 配对两个活动展开物件。原地图共用 DomainFusionVisuals 的平面侵蚀、接触波纹和接缝，两个原罩子保留，在交叠区域应用同一侵蚀场；单独展开保持。双方展开完成且接触至少一秒后共用一次 DomainFusionTransition，完整遮盖后直接进入一张对抗地图。外部建筑继续共享融合绘制，不能停留为两个闭合罩子独立叠放。基础/基础、基础/血海、血海/基础、血海/血海均接入。
@@ -14,7 +14,7 @@
 - 融合检测只检查当前 `Game.Maps` 内已登记且未销毁的领域地图，离图展开与休眠地图不参与载体配对。读档结束和融合检查入口清理 `domainMaps` 的空引用并记录明确错误，保留有效地图；活动领域地图缺失 `MapComponent_Domain` 时报告地图 ID 并继续检查其他地图，不用空引用中断整个融合更新。回归入口为 `Tests/Domain/Checks.csproj -- opening-fusions`。
 - 首版每场最多两个实例。败方退出后胜方继续维持，全部结束并回收地图后开始下一场；本场不再加入第三个实例。
 
-反展开的准备阶段已在共同地图上预览新领域的场地侵蚀：原版地图绘制回调统一调用 DomainOpening 的通用地面绘制，不依赖子 Mod 的 DrawAt 是否跳过反展开。使用现有 surface 径向侵蚀模式，图层与深度检测保持人物在上方；展开半径随游戏 tick 增长。此时仍由宿主管理规则，挑战者和真实分区只在闭合遮盖后建立；准备阶段的场地特效不能用闭合后的全屏截图代替验证。
+反展开的准备阶段已在共同地图上预览新领域的场地侵蚀：原版地图绘制回调统一调用 DomainOpening 的通用地面绘制，不依赖子 Mod 的 DrawAt 是否跳过反展开。使用现有 surface 径向侵蚀模式，图层与深度检测保持人物在上方；展开半径随游戏 tick 增长。此时仍由宿主管理规则，挑战者和真实分区只在闭合且地面交接已绘制后建立；准备阶段的场地特效不能用完成后的对抗截图代替验证。
 
 preload=true 的领域在准备阶段保留两张原类型地图，缓存原始 DomainMapTemplate（地形与建筑蓝图）并深度保存。反展开直接读取缓存，不再 Acquire / Activate 一张临时模板地图；同步展开只唤醒宿主战场，第二方也读取缓存。同类领域不再因唯一模板被自己占用而现场生成地图。缓存缺失或池容量耗尽的回退仍会生成地图，不能宣称无限次并发都不加载；正常两方对抗由预生成与缓存覆盖。
 
@@ -91,7 +91,7 @@ MapComponent_Domain 已密封。不要新增继承它的具体 DomainInstance �
 
 ## 检查入口与边界
 
-- `RunChecks.ps1 -CounterOpening -LoadCheck`：七场景 63 项实机检查通过，真实 Ability 覆盖基础/血海四种领域内反展开组合，确认准备期、无世界罩子资源与人物载具、领域专属全屏转场、遮盖帧后建立对抗、原地保留人物、两方入场锁、暂停揭幕、复用地图和模板、返回休眠。完整重载验证准备模式保存；取消、原版麻醉倒地和宿主退出验证中断清理。截图 Counter_0..3_Preparation / Cover / Battle。`CQF_COUNTER_START_CASE` 可从指定场景开始局部检查，默认完整七场景。
+- 当前反展开实机入口为 RimDevTools 隔离离线会话加载临时测试程序集，参数 `-cqfcontestchecks -cqfcounteropeningchecks -cqfcounterrepair -cqfcontestloadchecks -cqfcounterrepairdelay`。覆盖基础/血海四种组合、准备期完整重载、取消、原版麻醉倒地及宿主退出；检查真实 Ability 按钮、前沿逐渐增长、世界交接先于实际归属改变、不分配全屏快照、暂停收敛、独立锁释放、模板复用和休眠清理。截图为 PreparationEarly / PreparationLate / FrontStart / FrontMiddle / FrontEnd / Battle；不能再用旧 Cover 截图验收本路径。`CQF_COUNTER_START_CASE` 可从指定场景开始局部检查，默认完整七场景。测试生成的血海施术者必须具备暴力能力，避免原版按钮拦截干扰领域检查。
 
 - `Checks.csproj -- occupation`：42 项占领检查及 25 项侵蚀检查，覆盖 179/180 tick 占领、599/600 tick 失守、同 tick 去重、主线救援重置、保护重置与局部阻挡、暂停不累计、失守变更格、四种左右/领域组合、重新占领清除旧暴露进度及原生保存。
 - `RunChecks.ps1 -Occupation -LoadCheck`：24 项实机检查，包含三次完整保存重载，分别验证第 179 tick 的占领计时、已占领区域和第 599 tick 的暴露进度；检查第 600 tick 真实失守、地形与原建筑对象及损伤、技能归属、失守不回血、再次占领、对方夺回、保护阻挡、双方同时占领和退出休眠。已查看 DomainOccupation.png / DomainOccupation_Eroded.png，确认灰白据点失守后恢复血海且无材质残留。测试副本保存后台运行设置并在读档后暂停，精确验证 tick；本项测试重置血海自动潮汐计时以隔离正常建筑伤害，真实潮汐伤害仍由 BattleRules 检查。

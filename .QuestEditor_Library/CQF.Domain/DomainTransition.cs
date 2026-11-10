@@ -35,6 +35,8 @@ public abstract class DomainTransition : IDisposable
 
     protected abstract float RevealProgress { get; }
 
+    protected virtual bool ReadyToCommit => true;
+
     public float Progress
     {
         get
@@ -207,8 +209,8 @@ public abstract class DomainTransition : IDisposable
                 }
             }
             Current.Game.CurrentMap = displayMap;
-            Find.Selector.ClearSelection();
-            if (domain?.Caster is Pawn pawn && pawn.Spawned && pawn.Map == displayMap)
+            if (sourceMap != displayMap) Find.Selector.ClearSelection();
+            if (sourceMap != displayMap && domain?.Caster is Pawn pawn && pawn.Spawned && pawn.Map == displayMap)
             {
                 Find.CameraDriver.JumpToCurrentMapLoc(pawn.Position);
                 Find.Selector.Select(pawn);
@@ -247,7 +249,7 @@ public abstract class DomainTransition : IDisposable
         float progress = Progress;
         DrawEffect(progress);
 #if RIMWORLD_1_7
-        if ((!IsReturning && !entered || stagedReturn && returnPending) && progress >= CoverProgress && coveredFrame < 0)
+        if ((!IsReturning && !entered || stagedReturn && returnPending) && progress >= CoverProgress && coveredFrame < 0 && ReadyToCommit)
             coveredFrame = Time.frameCount;
 #endif
     }

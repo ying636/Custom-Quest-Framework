@@ -10,7 +10,8 @@ public static class CounterPreparationSurfaceChecks
     public static void Install()
     {
         new Harmony("CQF.CounterPreparationSurfaceChecks").Patch(
-            AccessTools.Method(typeof(DomainSurfaceVisuals), nameof(DomainSurfaceVisuals.Draw)),
+            AccessTools.Method(typeof(DomainSurfaceVisuals), nameof(DomainSurfaceVisuals.Draw),
+                new[] { typeof(Mesh), typeof(Matrix4x4), typeof(float), typeof(Vector4), typeof(Vector4), typeof(float), typeof(Vector4) }),
             postfix: new HarmonyMethod(typeof(CounterPreparationSurfaceChecks), nameof(AfterDraw)));
     }
 

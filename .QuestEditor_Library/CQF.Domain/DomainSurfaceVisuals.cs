@@ -18,11 +18,13 @@ public sealed class DomainSurfaceVisuals : IDisposable
     }
 
     public void Draw(Mesh mesh, Matrix4x4 matrix, float time, Vector4 circle = default, Vector4 rival = default, float opacity = 1f, Vector4 clash = default)
+        => Draw(mesh, matrix, time, clash.w > 1.5f ? 2902 : rival.w > 1.5f ? 2900 : 2899, circle, rival, opacity, clash);
+
+    public void Draw(Mesh mesh, Matrix4x4 matrix, float time, int renderQueue, Vector4 circle = default, Vector4 rival = default, float opacity = 1f, Vector4 clash = default)
     {
         Configure(time, circle, rival, opacity);
         properties!.SetVector("_SurfaceClash", clash);
-        int queue = clash.w > 1.5f ? 2902 : rival.w > 1.5f ? 2900 : 2899;
-        if (material!.renderQueue != queue) material.renderQueue = queue;
+        if (material!.renderQueue != renderQueue) material.renderQueue = renderQueue;
         GenDraw.DrawMeshNowOrLater(mesh, matrix, material, false, properties);
     }
 

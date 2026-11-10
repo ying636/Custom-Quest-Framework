@@ -61,6 +61,9 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 Find.CameraDriver.SetRootPosAndSize(caster.Position.ToVector3Shifted(), 15f);
                 caster.abilities ??= new Pawn_AbilityTracker(caster);
                 caster.abilities.GainAbility(Incoming.openingAbility);
+                Check(!caster.abilities.GetAbility(Incoming.openingAbility).GizmoDisabled(out string disabledReason),
+                    "the actual ability button allows a different caster to counter-expand: " + disabledReason);
+                if (Existing.defName == "CQF_TestDomain") CheckBloodSeaButton(host, true, "RSH_BloodSeaAnotherDomainActive");
                 caster.abilities.GetAbility(Incoming.openingAbility).QueueCastingJob(caster, caster);
                 startedAt = Time.realtimeSinceStartup;
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
@@ -101,7 +104,11 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                         expectedCasterStunEnd = GenTicks.TicksGame + caster!.stances.stunner.StunTicksLeft;
                         Check(caster.Downed && !caster.Dead, "cancellation fixture is downed by the native anesthetic health effect");
                     }
-                    else field!.RequestReturn("counter check host withdrawal");
+                    else
+                    {
+                        field!.RequestReturn("counter check host withdrawal");
+                        CheckBloodSeaButton(observer!, true, "RSH_BloodSeaDomainOccupied");
+                    }
                     Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
                     stage = 6;
                     return;
@@ -132,9 +139,12 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 Check(preparationEarly && preparationLate, "early and late field effects are both visible before the closing phase");
                 transition = runtime.Transition;
                 Check(transition.OpeningOwner == opening && field!.Challenger == null && opening!.IsClosing,
-                    "the fullscreen transition starts at closure before the challenger exists");
+                    "ground-front settling starts at closure before the challenger exists");
                 Check(transition is DomainCounterTransition,
-                    "counter expansion uses both domains' field surfaces in a dedicated erosion transition");
+                    "counter expansion settles the two world-space field surfaces");
+                Check(!transition.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                    .Any(field => typeof(RenderTexture).IsAssignableFrom(field.FieldType)),
+                    "counter expansion allocates no fullscreen snapshot or rectangular screen layer");
                 CheckWorldVisuals();
                 Find.TickManager.Pause();
                 frozenTick = GenTicks.TicksGame;
@@ -157,7 +167,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 if (field!.Challenger == null) return;
                 int coveredFrame = (int)typeof(DomainTransition).GetField("coveredFrame", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(transition)!;
                 Check(coveredFrame >= 0 && Time.frameCount > coveredFrame,
-                    "a fully covered frame is presented before contest ownership changes");
+                    "the ground-field presentation is drawn before contest ownership changes");
                 Check(field.ArrivalLocked && field.Challenger.ArrivalLocked && opening!.Destroyed
                     && host!.Position == hostCell && caster!.Position == casterCell,
                     "both sides are locked under cover without teleporting either caster");
@@ -167,10 +177,17 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             }
             else if (stage == 5)
             {
+                if (runtime.Transition != null)
+                {
+                    if (!startShot && transition!.Progress > 0.25f) { Shot("FrontStart"); startShot = true; }
+                    else if (!coverShot && transition!.Progress > 0.5f) { Shot("FrontMiddle"); coverShot = true; }
+                    else if (!lateShot && transition!.Progress > 0.78f) { Shot("FrontEnd"); lateShot = true; }
+                }
                 if (runtime.Transition != null) return;
                 Check(GenTicks.TicksGame == frozenTick && !field!.ArrivalLocked && !field.Challenger!.ArrivalLocked
                     && field.LastTerrainRenderedFrame > 0 && field.Challenger.LastTerrainRenderedFrame > 0,
-                    "paused fullscreen cover and reveal finish only after both territories render and release both locks");
+                    "paused ground-front settling finishes after both territories render and release both locks");
+                CheckBloodSeaButton(observer!, true, "RSH_BloodSeaContestFull");
                 Shot("Battle");
                 shotAt = Time.realtimeSinceStartup;
                 stage = 7;
@@ -234,9 +251,20 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             "counter opening allocates no dome or folded pawn holders");
     }
 
+    private void CheckBloodSeaButton(Pawn pawn, bool disabled, string key)
+    {
+        pawn.abilities ??= new Pawn_AbilityTracker(pawn);
+        AbilityDef definition = DefDatabase<AbilityDef>.GetNamed("RSH_BoundlessBloodSea");
+        pawn.abilities.GainAbility(definition);
+        bool actual = pawn.abilities.GetAbility(definition).GizmoDisabled(out string reason);
+        Check(actual == disabled && (!disabled || reason == key.Translate().ToString()),
+            "blood sea button reports the actual domain state: " + key + ", reason=" + reason);
+    }
+
     private static Pawn MakePawn(Map map, IntVec3 near)
     {
-        Pawn pawn = PawnGenerator.GeneratePawn(PawnKindDefOf.Colonist, Faction.OfPlayer);
+        Pawn pawn = PawnGenerator.GeneratePawn(new PawnGenerationRequest(PawnKindDefOf.Colonist, Faction.OfPlayer,
+            mustBeCapableOfViolence: true));
         GenSpawn.Spawn(pawn, map.GetComponent<MapComponent_Domain>().FindFreeCell(map, near, true), map);
         pawn.drafter.Drafted = true; pawn.drafter.FireAtWill = false;
         return pawn;

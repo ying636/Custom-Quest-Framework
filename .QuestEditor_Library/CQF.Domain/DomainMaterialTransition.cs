@@ -29,11 +29,15 @@ public sealed class DomainMaterialTransition : DomainTransition
     {
         Camera camera = Find.Camera;
         Vector3 center = camera.WorldToViewportPoint(origin.ToVector3Shifted());
+        Vector3 east = camera.WorldToViewportPoint(origin.ToVector3Shifted() + Vector3.right * definition.radius);
+        Vector3 north = camera.WorldToViewportPoint(origin.ToVector3Shifted() + Vector3.forward * definition.radius);
         snapshot = new RenderTexture(Screen.width, Screen.height, 24, RenderTextureFormat.ARGB32)
             { name = "CQF_DomainSourceMap", filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
         if (!snapshot.Create()) throw new InvalidOperationException("[CQF] Could not allocate domain transition snapshot.");
         material!.SetVector("_Origin", new Vector4(Mathf.Clamp01(center.x), Mathf.Clamp01(1f - center.y), camera.aspect, 0f));
         material.SetFloat("_Returning", IsReturning ? 1f : 0f);
+        material.SetFloat("_Radius", Mathf.Abs(east.x - center.x) * camera.aspect);
+        material.SetFloat("_Height", Mathf.Abs(north.y - center.y));
 #if RIMWORLD_1_7
         material.SetVector("_SourceUV", new Vector4(0f, 1f, 1f, -1f));
         material.SetFloat("_SourceSaturation", Find.CameraColor.saturation);

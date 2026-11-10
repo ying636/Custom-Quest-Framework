@@ -54,6 +54,9 @@ float n = field(flow) + texture(_NoiseTex,flow).r - 0.5;
 float edgeWidth = max(0.005,uMaterial._EdgeWidth * 0.2);
 float front = (extent + uMaterial._Flow.w + edgeWidth * 2.0) * smoothstep(0.0,uMaterial._CoverProgress,progress);
 float cover = (1.0 - smoothstep(front - edgeWidth,front + edgeWidth,distance + (n - 0.5) * uMaterial._Flow.w)) * smoothstep(0.0,0.02,progress);
+float inherited = uMaterial._Returning < 0.5 && uMaterial._Radius > 0.0 && uMaterial._Height > 0.0
+    ? 1.0-smoothstep(0.98,1.02,length(offset/vec2(uMaterial._Radius,uMaterial._Height))) : 0.0;
+cover = max(cover,inherited);
 vec2 centerOffset = (screen - vec2(0.5,0.5)) * vec2(aspect,1.0);
 float revealExtent = length(vec2(aspect * 0.5,0.5)) + uMaterial._Flow.w + edgeWidth * 3.0;
 float aperture = mix(-uMaterial._Flow.w - edgeWidth * 3.0,revealExtent,smoothstep(uMaterial._RevealProgress,uMaterial._RevealEnd,progress));
@@ -66,7 +69,7 @@ source = clamp(mix(vec3(dot(source,vec3(0.22,0.707,0.071))),source,uMaterial._So
 vec3 surface = texture(_SurfaceTex,flow + vec2(n,n) * uMaterial._Flow.w).rgb * mix(uMaterial._Color.rgb,uMaterial._SecondaryColor.rgb,clamp(n,0.0,1.0));
 float rim = exp(-abs(distance - front) / edgeWidth) + exp(-abs(length(centerOffset) - aperture) / edgeWidth);
 surface += rim * uMaterial._EdgeColor.rgb * uMaterial._EdgeColor.a;
-vec3 color = mix(source,surface,smoothstep(0.0,uMaterial._CoverProgress * 0.8,progress));
+vec3 color = mix(source,surface,max(inherited,smoothstep(0.0,uMaterial._CoverProgress * 0.8,progress)));
 return vec4(color,cover * reveal);
 }
 void main() { outColor = effect(); }
