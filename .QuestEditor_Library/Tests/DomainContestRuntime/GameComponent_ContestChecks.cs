@@ -15,6 +15,8 @@ public sealed class GameComponent_ContestChecks : GameComponent
     public int BattleRulesPhase { get; set; }
     public int OccupationPhase { get; set; }
     public int CounterOpeningCase { get; set; }
+    public int MultiplePhase { get; set; }
+    public int ExtraPawnId { get; set; }
 
     public void RecordStructure(Thing thing)
     {
@@ -50,7 +52,8 @@ public sealed class GameComponent_ContestChecks : GameComponent
             File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt"), "TRACE Resume callback\n");
             GameObject owner = new("CQF_ContestChecksResumed");
             UnityEngine.Object.DontDestroyOnLoad(owner);
-            if (GenCommandLine.CommandLineArgPassed("cqfbattlefieldchecks")) owner.AddComponent<BattlefieldChecksDriver>().Resume(firstId, secondId, CounterOpeningCase);
+            if (GenCommandLine.CommandLineArgPassed("cqfmultiplechecks")) owner.AddComponent<MultipleDomainChecksDriver>().Resume(firstId, secondId, MultiplePhase);
+            else if (GenCommandLine.CommandLineArgPassed("cqfbattlefieldchecks")) owner.AddComponent<BattlefieldChecksDriver>().Resume(firstId, secondId, CounterOpeningCase);
             else if (GenCommandLine.CommandLineArgPassed("cqfcounteropeningchecks")) owner.AddComponent<CounterOpeningChecksDriver>().Resume(firstId, secondId, CounterOpeningCase);
             else if (GenCommandLine.CommandLineArgPassed("cqfoccupationchecks")) owner.AddComponent<OccupationChecksDriver>().Resume(firstId, secondId, OccupationPhase);
             else if (GenCommandLine.CommandLineArgPassed("cqfbattlerulechecks")) owner.AddComponent<BattleRulesChecksDriver>().Resume(firstId, secondId);
@@ -80,6 +83,10 @@ public sealed class GameComponent_ContestChecks : GameComponent
         int counterCase = CounterOpeningCase;
         Scribe_Values.Look(ref counterCase, "counterOpeningCase");
         CounterOpeningCase = counterCase;
+        int multiplePhase = MultiplePhase, extraPawnId = ExtraPawnId;
+        Scribe_Values.Look(ref multiplePhase, "multiplePhase");
+        Scribe_Values.Look(ref extraPawnId, "extraPawnId");
+        MultiplePhase = multiplePhase; ExtraPawnId = extraPawnId;
         if (GenCommandLine.CommandLineArgPassed("cqfcontestloadchecks"))
             File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt"), "TRACE Component " + Scribe.mode + " " + firstId + " " + secondId + "\n");
     }

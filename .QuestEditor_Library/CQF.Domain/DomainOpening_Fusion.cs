@@ -16,14 +16,16 @@ public sealed class DomainOpening_Fusion : DomainOpening
     public override DomainDef Definition => FirstDefinition;
     public override Pawn? Caster => anchor != null ? second?.Caster : first?.Caster;
     public override bool Active => Spawned && second?.Active == true && second.Map == Map
-        && (anchor != null ? anchor.Spawned && anchor.Map == Map && anchor.Domain?.CanAcceptChallenger == true
+        && (anchor != null ? anchor.Spawned && anchor.Map == Map && anchor.Domain?.Battlefield.CanAcceptChallenger == true
             : first?.Active == true && first.Map == Map);
     public override float Progress => anchor != null ? Second.Progress : Mathf.Min(First.Progress, Second.Progress);
     public float ContactAge => contactTick < 0 ? 0f : Math.Max(0, GenTicks.TicksGame - contactTick) / 60f;
     public float VisualBlend => Active && !visualError ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(ContactAge / 0.4f)) : 0f;
     public bool Prepared => CQFDomainRuntime.Instance.HasTerrainTemplate(FirstDefinition)
         && CQFDomainRuntime.Instance.HasTerrainTemplate(Second.Definition)
-        && CQFDomainRuntime.Instance.HasAvailableBattlefield(FirstDefinition, Second.Definition);
+        && (anchor?.Domain is { } existing
+            ? CQFDomainRuntime.Instance.HasAvailableBattlefield(existing.Battlefield, Second.Definition, Second.Caster!)
+            : CQFDomainRuntime.Instance.HasAvailableBattlefield(FirstDefinition, Second.Definition));
 
     public static DomainOpening_Fusion Create(DomainOpening first, DomainOpening second)
     {
@@ -58,7 +60,7 @@ public sealed class DomainOpening_Fusion : DomainOpening
 
     public static DomainOpening_Fusion Create(Building_Domain anchor, DomainOpening opening)
     {
-        if (anchor.OpeningFusion != null || anchor.Domain?.CanAcceptChallenger != true)
+        if (anchor.OpeningFusion != null || anchor.Domain?.Battlefield.CanAcceptChallenger != true)
             throw new InvalidOperationException("[CQF] Existing domain is not available for an opening challenge.");
         DomainOpening_Fusion fusion = (DomainOpening_Fusion)ThingMaker.MakeThing(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpeningFusion"));
         fusion.anchor = anchor;

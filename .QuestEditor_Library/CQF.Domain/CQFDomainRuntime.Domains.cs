@@ -12,8 +12,7 @@ public sealed partial class CQFDomainRuntime
     {
         if (definition == null) throw new ArgumentNullException(nameof(definition));
         return domainMaps.Where(map => !map.Disposed && !map.Parent.Destroyed
-            && (map.GetComponent<MapComponent_Domain>().Definition == definition
-                || map.GetComponent<MapComponent_Domain>().Challenger?.Definition == definition));
+            && map.GetComponent<MapComponent_Domain>().Instances.Any(side => side.Definition == definition));
     }
 
     public IEnumerable<MapComponent_Domain> GetInstances(DomainDef definition)
@@ -21,8 +20,8 @@ public sealed partial class CQFDomainRuntime
         foreach (Map realm in GetMaps(definition))
         {
             MapComponent_Domain domain = realm.GetComponent<MapComponent_Domain>();
-            if (domain.Definition == definition) yield return domain;
-            if (domain.Challenger?.Definition == definition) yield return domain.Challenger;
+            foreach (MapComponent_Domain side in domain.Instances)
+                if (side.Definition == definition) yield return side;
         }
     }
 
@@ -182,8 +181,7 @@ public sealed partial class CQFDomainRuntime
                 else if (!host.IsHibernating(realm))
                 {
                     MapComponent_Domain battlefield = realm.GetComponent<MapComponent_Domain>();
-                    battlefield.Worker?.ManagedUpdate();
-                    battlefield.Challenger?.Worker?.ManagedUpdate();
+                    foreach (MapComponent_Domain side in battlefield.Instances) side.Worker?.ManagedUpdate();
                 }
             }
         }

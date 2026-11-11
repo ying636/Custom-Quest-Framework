@@ -17,7 +17,7 @@ public sealed partial class DomainTerritoryPartition
         dirtyBounds.Clear();
     }
 
-    public bool UsesCurvedFront => curvedFront;
+    public bool UsesCurvedFront => multi != null || curvedFront;
     public float Encirclement => curvedFront ? Mathf.SmoothStep(0f, 1f,
         Mathf.InverseLerp(0.3f, 0.2f, Mathf.Min(firstFraction, 1f - firstFraction))) : 0f;
     public IntVec3 FirstCenter => firstCenter;
@@ -25,6 +25,7 @@ public sealed partial class DomainTerritoryPartition
 
     public bool NearFront(int x, int z, float distance = 2f)
     {
+        if (multi != null) return multi.NearBoundary(x, z, distance);
         float a = BaseSignedDistance(x, z), b = BaseSignedDistance(x + 1f, z);
         float c = BaseSignedDistance(x, z + 1f), d = BaseSignedDistance(x + 1f, z + 1f);
         return Mathf.Min(Mathf.Min(a, b), Mathf.Min(c, d)) <= distance

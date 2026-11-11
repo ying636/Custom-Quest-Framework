@@ -20,19 +20,46 @@ public sealed class AbilityComp_TestDomainExpansion : CompAbilityEffect
             return true;
         }
         Pawn pawn = parent.pawn;
-        if (!pawn.Spawned || pawn.Dead || pawn.Downed)
+        if (pawn.Dead || pawn.Downed || !pawn.Spawned)
         {
-            reason = "CQF_TestDomainCasterUnavailable".Translate();
+            reason = (pawn.Dead ? "CQF_DomainCasterDead" : pawn.Downed ? "CQF_DomainCasterDowned" : "CQF_DomainCasterNotSpawned").Translate();
             return true;
         }
         MapComponent_Domain domain = pawn.Map.GetComponent<MapComponent_Domain>();
         MapComponent_Domain? ownDomain = domain.FindDomainFor(pawn);
-        if (!runtime.CanBeginOpening(pawn, DefDatabase<DomainDef>.GetNamed("CQF_TestDomain").OpeningRadius) || domain.HasActiveDomain
-            && (ownDomain?.Active == true ? ownDomain.Definition.defName != "CQF_TestDomain" || !ownDomain.Ready : !domain.CanAcceptChallenger)
-            || pawn.Map.listerThings.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpening"))
-                .OfType<DomainOpening_Basic>().Any(opening => opening.Active && opening.Caster == pawn))
+        if (ownDomain?.Active == true && ownDomain.Definition.defName != "CQF_TestDomain")
         {
-            reason = "CQF_TestDomainBusy".Translate();
+            reason = "CQF_DomainAnotherActive".Translate(ownDomain.DisplayLabel);
+            return true;
+        }
+        if (ownDomain?.Active == true && !ownDomain.Ready)
+        {
+            reason = "CQF_DomainEnding".Translate(ownDomain.DisplayLabel);
+            return true;
+        }
+        if (pawn.Map.listerThings.ThingsOfDef(DefDatabase<ThingDef>.GetNamed("CQF_DomainOpening"))
+            .OfType<DomainOpening_Basic>().Any(opening => opening.Active && opening.Caster == pawn))
+        {
+            reason = "CQF_DomainAlreadyOpening".Translate();
+            return true;
+        }
+        if (domain.HasActiveDomain && ownDomain?.Active != true && !domain.CanAcceptChallenger)
+        {
+            if (domain.InstanceCount >= MapComponent_Domain.MaximumDomains) reason = "CQF_DomainContestFull".Translate();
+            else
+            {
+                MapComponent_Domain blocked = domain.Instances.First(side => side.Active && (!side.Ready || side.ArrivalLocked || side.Worker?.SupportsContests != true));
+                reason = (!blocked.Ready ? "CQF_DomainEnding" : blocked.ArrivalLocked ? "CQF_DomainArrivalLocked" : "CQF_DomainContestsUnsupported").Translate(blocked.DisplayLabel);
+            }
+            return true;
+        }
+        if (!runtime.CanBeginOpening(pawn, DefDatabase<DomainDef>.GetNamed("CQF_TestDomain").OpeningRadius, out string reasonKey))
+        {
+            DomainTransition? current = runtime.Transition;
+            if (reasonKey == "CQF_DomainOpeningOutOfRange" && current?.OpeningOwner is { } opening)
+                reason = reasonKey.Translate(current.PresentationLabel, Math.Sqrt(opening.Position.DistanceToSquared(pawn.Position)).ToString("0.0"),
+                    (opening.Radius + DefDatabase<DomainDef>.GetNamed("CQF_TestDomain").OpeningRadius).ToString("0.0"));
+            else reason = reasonKey.Translate(current?.PresentationLabel ?? string.Empty);
             return true;
         }
         reason = string.Empty;

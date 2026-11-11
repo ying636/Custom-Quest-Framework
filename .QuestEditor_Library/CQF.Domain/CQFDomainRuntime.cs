@@ -36,8 +36,7 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
             if (Current.Game != game) return;
             foreach (Map realm in domainMaps)
             {
-                realm.GetComponent<MapComponent_Domain>().EndArrivalTransition();
-                realm.GetComponent<MapComponent_Domain>().Challenger?.EndArrivalTransition();
+                foreach (MapComponent_Domain side in realm.GetComponent<MapComponent_Domain>().Instances) side.EndArrivalTransition();
             }
             foreach (Map loaded in game.Maps) loaded.GetComponent<MapComponent_DomainTransitionLock>().End();
         });
@@ -77,10 +76,11 @@ public sealed partial class CQFDomainRuntime : ICQFMapModule
                 {
                     MapComponent_Domain? domain = realm?.GetComponent<MapComponent_Domain>();
                     if (domain == null) continue;
-                    releases.Add(domain.ReleaseScreenBorder);
-                    if (domain.Challenger is { } challenger) releases.Add(challenger.ReleaseScreenBorder);
-                    if (domain.Worker is { } worker) releases.Add(worker.Dispose);
-                    if (domain.Challenger?.Worker is { } challengerWorker) releases.Add(challengerWorker.Dispose);
+                    foreach (MapComponent_Domain side in domain.Instances)
+                    {
+                        releases.Add(side.ReleaseScreenBorder);
+                        if (side.Worker is { } worker) releases.Add(worker.Dispose);
+                    }
                     if (domain.Contest is { } contest) releases.Add(contest.Dispose);
                 }
             foreach (DomainOpeningVisuals visuals in openingVisuals.ToArray()) releases.Add(visuals.Dispose);

@@ -25,7 +25,10 @@ public static class ContestChecksStartup
             Application.runInBackground = true;
             GameObject owner = new("CQF_DomainContestChecks");
             UnityEngine.Object.DontDestroyOnLoad(owner);
-            if (GenCommandLine.CommandLineArgPassed("cqfbattlefieldchecks")) owner.AddComponent<BattlefieldChecksDriver>();
+            if (GenCommandLine.CommandLineArgPassed("cqfgroupchecks")) owner.AddComponent<DomainGroupChecksDriver>();
+            else if (GenCommandLine.CommandLineArgPassed("cqfmultiplechecks")) owner.AddComponent<MultipleDomainChecksDriver>();
+            else if (GenCommandLine.CommandLineArgPassed("cqfreasonchecks")) owner.AddComponent<DomainReasonChecksDriver>();
+            else if (GenCommandLine.CommandLineArgPassed("cqfbattlefieldchecks")) owner.AddComponent<BattlefieldChecksDriver>();
             else if (GenCommandLine.CommandLineArgPassed("cqfclosingcarrychecks")) owner.AddComponent<ClosingCarryChecksDriver>();
             else if (GenCommandLine.CommandLineArgPassed("cqfstartupchecks")) owner.AddComponent<StartupChecksDriver>();
             else if (GenCommandLine.CommandLineArgPassed("cqfreviewfixchecks")) owner.AddComponent<ReviewFixesChecksDriver>();

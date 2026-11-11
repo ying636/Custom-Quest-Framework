@@ -6,8 +6,7 @@ public partial class MapComponent_Domain
 {
     public bool Trapped => trapped;
 
-    private MapComponent_Domain? CaptiveDomain => Battlefield.trapped ? Battlefield
-        : Battlefield.Challenger?.trapped == true ? Battlefield.Challenger : null;
+    private MapComponent_Domain? CaptiveDomain => Instances.FirstOrDefault(side => side.trapped);
 
     private Map? ResolveReturnMap() => sourceMap != null && !sourceMap.Disposed && Find.Maps.Contains(sourceMap) ? sourceMap
         : Find.Maps.FirstOrDefault(candidate => candidate != map && candidate.IsPlayerHome);
@@ -33,8 +32,8 @@ public partial class MapComponent_Domain
         health = 0f;
         Contest!.ResolveSurvivor(Battlefield);
         endedWorker.TerritoryChanged();
-        MapComponent_Domain survivor = ReferenceEquals(this, Battlefield) ? Battlefield.Challenger! : Battlefield;
-        survivor.Worker?.TerritoryChanged();
+        MapComponent_Domain survivor = Instances.First(side => side.Active);
+        foreach (MapComponent_Domain side in Instances.Where(side => side.Active)) side.Worker?.TerritoryChanged();
         if (visible && CQFDomainRuntime.Instance.Transition is { IsReturning: true } transition
             && (transition.ReturningDomain == null || ReferenceEquals(transition.ReturningDomain, this)) && !transition.Finished)
             transition.BindReturn(map, caster?.PositionHeld.IsValid == true ? caster.PositionHeld : map.Center, map.mapPawns.AllPawnsSpawned);

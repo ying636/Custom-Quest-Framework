@@ -54,9 +54,13 @@ public sealed class DomainSurfaceVisuals : IDisposable
     }
 
     public void SetTerritory(DomainTerritoryPartition? partition, bool first)
+        => SetTerritory(partition, first ? 0 : 1);
+
+    public void SetTerritory(DomainTerritoryPartition? partition, int owner)
     {
         territory = partition;
-        territoryFirst = first;
+        territorySide = owner;
+        territoryFirst = owner == 0;
         if (territoryField?.Partition != partition)
         {
             territoryField?.Dispose();
@@ -86,7 +90,7 @@ public sealed class DomainSurfaceVisuals : IDisposable
 #if RIMWORLD_1_7
         if (material.HasProperty("_TerritoryProtectionState"))
         {
-            if (territoryField != null) territoryField.Configure(properties, territoryFirst);
+            if (territoryField != null) territoryField.Configure(properties, territorySide);
             else properties.SetVector("_TerritoryProtectionState", default);
         }
 #endif
@@ -95,7 +99,7 @@ public sealed class DomainSurfaceVisuals : IDisposable
 #if RIMWORLD_1_7
     private void ConfigureProtection()
     {
-        if (territoryField != null) territoryField.Configure(screenMaterial!, territoryFirst);
+        if (territoryField != null) territoryField.Configure(screenMaterial!, territorySide);
         else screenMaterial!.SetVector("_TerritoryProtectionState", default);
     }
 #endif
@@ -107,5 +111,6 @@ public sealed class DomainSurfaceVisuals : IDisposable
     private MaterialPropertyBlock? properties;
     private DomainTerritoryPartition? territory;
     private bool territoryFirst;
+    private int territorySide;
     private DomainTerritoryField? territoryField;
 }

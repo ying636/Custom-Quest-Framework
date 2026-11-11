@@ -15,10 +15,11 @@ public sealed partial class MapComponent_Domain : MapComponent
     }
 
     public DomainDef Definition => definition ?? throw new InvalidOperationException("[CQF] Map has no domain definition.");
+    public string DisplayLabel => Caster == null ? Definition.LabelCap : Definition.LabelCap + " · " + Caster.LabelShortCap;
     public DomainWorker? Worker => worker;
     public bool Active => active;
     public bool Ready => active && !closing;
-    public bool Available => !active && !closing && !trapped && participants.Count == 0 && (challenger == null || challenger.Available);
+    public bool Available => !active && !closing && !trapped && participants.Count == 0 && (challenger == null || challenger.Available) && (additionalDomains?.All(side => side.Available) ?? true);
     public bool ArrivalLocked => arrivalLocked;
     public Pawn? Caster => caster;
     public Map? SourceMap => sourceMap;
@@ -39,6 +40,8 @@ public sealed partial class MapComponent_Domain : MapComponent
         if (pawn.Dead || pawn.Downed) return false;
         if (active && (entering || arrivalLocked) && caster == pawn) return true;
         if (challenger?.ProtectsFromOpening(pawn) == true) return true;
+        for (int index = 0; index < additionalDomains.Count; index++)
+            if (additionalDomains[index].ProtectsFromOpening(pawn)) return true;
         foreach (DomainOpening opening in openings)
             if (!opening.Destroyed && opening.Active && opening.Caster == pawn) return true;
         return false;
@@ -181,8 +184,14 @@ public sealed partial class MapComponent_Domain : MapComponent
         if (!active) return;
         bool contested = Battlefield.HasOtherActiveDomain(this);
         Map? destination = contested ? map : ResolveReturnMap();
-        MapComponent_Domain? captive = contested ? null : CaptiveDomain;
-        if (destination == null || captive != null && captive.ResolveReturnMap() == null)
+        bool missingReturn = false;
+        if (!contested)
+            for (int index = 0; index < InstanceCount; index++)
+            {
+                MapComponent_Domain side = InstanceAt(index);
+                missingReturn |= side.trapped && side.ResolveReturnMap() == null;
+            }
+        if (destination == null || missingReturn)
         {
             closing = false;
             if (!returnErrorReported)
@@ -255,6 +264,7 @@ public sealed partial class MapComponent_Domain : MapComponent
     public override void MapComponentTick()
     {
         challenger?.MapComponentTick();
+        foreach (MapComponent_Domain side in additionalDomains) side.MapComponentTick();
         contest?.Tick(this);
         if (active && Contest == null && GenTicks.TicksGame % 60 == 0) layout?.RevealOwned();
         if (!active || closing || worker!.SuspendLifecycle) return;
@@ -277,6 +287,7 @@ public sealed partial class MapComponent_Domain : MapComponent
     public override void MapComponentUpdate()
     {
         challenger?.MapComponentUpdate();
+        foreach (MapComponent_Domain side in additionalDomains) side.MapComponentUpdate();
         worker?.Update();
         if (!active || !closing || returnQueued) return;
         returnQueued = true;
@@ -286,6 +297,7 @@ public sealed partial class MapComponent_Domain : MapComponent
     public override void MapComponentDraw()
     {
         challenger?.MapComponentDraw();
+        foreach (MapComponent_Domain side in additionalDomains) side.MapComponentDraw();
         if (Find.CurrentMap == map) contest?.Draw(this);
         if (!active || Find.CurrentMap != map) return;
         LastRenderedFrame = Time.frameCount;
@@ -302,12 +314,14 @@ public sealed partial class MapComponent_Domain : MapComponent
     {
         worker?.OnGUI();
         challenger?.MapComponentOnGUI();
+        foreach (MapComponent_Domain side in additionalDomains) side.MapComponentOnGUI();
         DrawScreenBorder();
     }
 
     public override void FinalizeInit()
     {
         challenger?.FinalizeInit();
+        foreach (MapComponent_Domain side in additionalDomains) side.FinalizeInit();
         if (active && caster != null)
         {
             Comp_DomainProtection.Ensure(caster);
@@ -325,6 +339,7 @@ public sealed partial class MapComponent_Domain : MapComponent
         Scribe_Values.Look(ref collapsed, "collapsed");
         Scribe_Values.Look(ref trapped, "trapped");
         Scribe_Values.Look(ref battlefieldMap, "battlefieldMap");
+        Scribe_Values.Look(ref battlefieldOrigin, "battlefieldOrigin", IntVec3.Invalid);
         Scribe_Values.Look(ref health, "domainHealth");
         Scribe_Values.Look(ref arrivalLocked, "arrivalLocked");
         Scribe_Values.Look(ref sourceOrigin, "sourceOrigin");
@@ -336,6 +351,7 @@ public sealed partial class MapComponent_Domain : MapComponent
         if (!independentInstance)
         {
             Scribe_Deep.Look(ref challenger, "challenger", map, true);
+            Scribe_Collections.Look(ref additionalDomains, "additionalDomains", LookMode.Deep, map, true);
             Scribe_Deep.Look(ref contest, "contest");
         }
         if (Scribe.mode == LoadSaveMode.LoadingVars && definition != null)
@@ -352,11 +368,15 @@ public sealed partial class MapComponent_Domain : MapComponent
         if (Scribe.mode == LoadSaveMode.PostLoadInit)
         {
             participants ??= new();
+            additionalDomains ??= new();
             layout?.Bind(this);
             if (trapped && (active || caster == null))
                 throw new InvalidOperationException("[CQF] Saved captive domain has inconsistent activity or caster identity.");
             if (!independentInstance && ((challenger == null) != (contest == null)
-                || trapped && challenger?.Active != true || challenger?.trapped == true && !active
+                || trapped && !Instances.Any(side => side != this && side.Active)
+                || Instances.Any(side => side.trapped) && !Instances.Any(side => side.Active)
+                || InstanceCount > MaximumDomains
+                || Instances.Where(side => side.Active).GroupBy(side => side.Caster).Any(group => group.Count() > 1)
                 || contest != null && contest.Partition.CellCount != map.Size.x * map.Size.z
                 || challenger != null && active && challenger.Active && caster == challenger.Caster))
                 throw new InvalidOperationException("[CQF] Saved domain contest has inconsistent participants or territory.");
@@ -369,8 +389,8 @@ public sealed partial class MapComponent_Domain : MapComponent
             if (opening is DomainOpening_Basic basic) basic.ReleaseVisuals();
         openings.Clear();
         ReleaseScreenBorder();
-        challenger?.ReleaseScreenBorder();
-        challenger?.Worker?.Dispose();
+        foreach (MapComponent_Domain side in Instances.Where(side => side != this))
+        { side.ReleaseScreenBorder(); side.Worker?.Dispose(); }
         contest?.Dispose();
         (Current.Game?.GetComponent<GameComponent_MapManager>()?.Module as CQFDomainRuntime)?.UnregisterDomainMap(map);
         worker?.Dispose();
@@ -381,11 +401,11 @@ public sealed partial class MapComponent_Domain : MapComponent
     {
         DomainWorker returnWorker = worker ?? throw new InvalidOperationException("[CQF] Returning domain has no worker.");
         EndArrivalTransition();
-        Battlefield.Layout?.ReleaseOccupants();
-        Battlefield.Challenger?.Layout?.ReleaseOccupants();
-        if (!sharedBattlefield && CaptiveDomain is { } captive)
-            captive.FinishReturn(captive.ResolveReturnMap()
-                ?? throw new InvalidOperationException("[CQF] Captive domain has no return map."), false, true);
+        foreach (MapComponent_Domain side in Instances) side.Layout?.ReleaseOccupants();
+        if (!sharedBattlefield)
+            foreach (MapComponent_Domain captive in Instances.Where(side => side != this && side.trapped).ToList())
+                captive.FinishReturn(captive.ResolveReturnMap()
+                    ?? throw new InvalidOperationException("[CQF] Captive domain has no return map."), false, true);
         if (!trapped) returnWorker.Dissolved();
         ReleaseScreenBorder();
         if (caster != null)

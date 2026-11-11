@@ -36,6 +36,17 @@ public abstract class DomainTransition : IDisposable
     protected abstract float RevealProgress { get; }
 
     protected virtual bool ReadyToCommit => true;
+    internal bool CommittingTransfer { get; private set; }
+    public string PresentationLabel
+    {
+        get
+        {
+#if RIMWORLD_1_7
+            if (opening != null) return opening.Definition.LabelCap + (opening.Caster == null ? string.Empty : " · " + opening.Caster.LabelShortCap);
+#endif
+            return domain?.Instances.FirstOrDefault(side => side.Active)?.DisplayLabel ?? domain?.DisplayLabel ?? string.Empty;
+        }
+    }
 
     public float Progress
     {
@@ -53,9 +64,9 @@ public abstract class DomainTransition : IDisposable
     public bool Finished => disposed || displayMap != null
         && (displayMap.Disposed || (!IsReturning &&
 #if RIMWORLD_1_7
-            (opening != null ? !opening.Active : domain?.Active != true)
+            (opening != null ? !opening.Active : domain?.HasActiveDomain != true)
 #else
-            domain?.Active != true
+            domain?.HasActiveDomain != true
 #endif
             ) || Progress >= 1f);
 
@@ -70,7 +81,7 @@ public abstract class DomainTransition : IDisposable
         displayMap = owner.map;
         stagedReturn = true;
         returnPending = true;
-        owner.BeginArrivalTransition();
+        foreach (MapComponent_Domain side in owner.Instances) side.BeginArrivalTransition();
         startedAt = Time.realtimeSinceStartup;
         TryStartPresentation();
     }
@@ -98,6 +109,15 @@ public abstract class DomainTransition : IDisposable
     public void Bind(Map realm)
         => Bind(realm.GetComponent<MapComponent_Domain>());
 
+    internal void BindTransfer(MapComponent_Domain first, MapComponent_Domain second, Map visible, Action transfer)
+    {
+        if (disposed) throw new ObjectDisposedException(GetType().Name);
+        domain = first; secondaryDomain = second; displayMap = visible; pendingTransfer = transfer;
+        foreach (MapComponent_Domain side in first.Instances.Concat(second.Instances)) side.BeginArrivalTransition();
+        startedAt = Time.realtimeSinceStartup;
+        TryStartPresentation();
+    }
+
     public void Bind(MapComponent_Domain owner)
     {
         if (disposed) throw new ObjectDisposedException(GetType().Name);
@@ -106,7 +126,7 @@ public abstract class DomainTransition : IDisposable
 #endif
         domain = owner;
         displayMap = owner.map;
-        domain.BeginArrivalTransition();
+        foreach (MapComponent_Domain side in domain.Instances) side.BeginArrivalTransition();
         pendingShake = 0.18f;
         TryStartPresentation();
 #if !RIMWORLD_1_7
@@ -151,8 +171,7 @@ public abstract class DomainTransition : IDisposable
             if (returnPending || revealReady) return;
             MapComponent_Domain destinationDomain = displayMap.GetComponent<MapComponent_Domain>();
             if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap
-                && (destinationDomain.Active && destinationDomain.LastTerrainRenderedFrame > switchedFrame
-                    || destinationDomain.Challenger is { Active: true } side && side.LastTerrainRenderedFrame > switchedFrame))
+                && destinationDomain.Instances.Any(side => side.Active && side.LastTerrainRenderedFrame > switchedFrame))
                 terrainReadyFrame = Time.frameCount;
             if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap)
             {
@@ -197,6 +216,19 @@ public abstract class DomainTransition : IDisposable
         }
         if (!entered && coveredFrame >= 0 && Time.frameCount > coveredFrame)
         {
+            if (pendingTransfer != null)
+            {
+                Action transfer = pendingTransfer;
+                pendingTransfer = null;
+                CommittingTransfer = true;
+                try
+                {
+                    foreach (MapComponent_Domain side in domain!.Instances.Concat(secondaryDomain!.Instances)) side.EndArrivalTransition();
+                    transfer();
+                }
+                finally { CommittingTransfer = false; }
+                if (Finished) { Dispose(); return; }
+            }
             if (opening != null)
             {
                 DomainOpening owner = opening;
@@ -221,7 +253,7 @@ public abstract class DomainTransition : IDisposable
         }
         else if (entered && !revealReady)
         {
-            if (terrainReadyFrame < 0 && domain!.LastTerrainRenderedFrame > switchedFrame)
+            if (terrainReadyFrame < 0 && domain!.Instances.Any(side => side.Active && side.LastTerrainRenderedFrame > switchedFrame))
                 terrainReadyFrame = Time.frameCount;
             if (terrainReadyFrame >= 0 && Time.frameCount > terrainReadyFrame)
             {
@@ -266,8 +298,8 @@ public abstract class DomainTransition : IDisposable
                 if (opening != null && !opening.Destroyed) opening.Destroy();
                 opening = null;
 #endif
-                domain?.EndArrivalTransition();
-                secondaryDomain?.EndArrivalTransition();
+                if (domain != null) foreach (MapComponent_Domain side in domain.Instances) side.EndArrivalTransition();
+                if (secondaryDomain != null) foreach (MapComponent_Domain side in secondaryDomain.Instances) side.EndArrivalTransition();
                 returnLock?.End();
             }
         }
@@ -281,6 +313,7 @@ public abstract class DomainTransition : IDisposable
                 secondaryDomain = null;
                 returnLock = null;
                 displayMap = null;
+                pendingTransfer = null;
                 lifetime?.Release();
                 lifetime = null;
             }
@@ -365,6 +398,7 @@ public abstract class DomainTransition : IDisposable
 #endif
     private float startedAt;
     private float pendingShake;
+    private Action? pendingTransfer;
     private bool presentationStarted;
     private bool disposed;
     private DomainTransitionLifetime? lifetime;

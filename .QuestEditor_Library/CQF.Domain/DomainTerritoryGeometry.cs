@@ -26,6 +26,37 @@ public sealed class DomainTerritoryGeometry
         FinalizeMesh(mesh);
     }
 
+    public void Append(Rect rect, int side, float altitude, List<Vector3> vertices, List<int> triangles, List<Color32> colors)
+    {
+        if (!Partition.IsMultilateral) { Append(rect, side == 0, altitude, vertices, triangles, colors); return; }
+        for (int z = Mathf.FloorToInt(rect.yMin); z < Mathf.CeilToInt(rect.yMax); z++)
+        for (int x = Mathf.FloorToInt(rect.xMin); x < Mathf.CeilToInt(rect.xMax); x++)
+        {
+            Rect tile = Rect.MinMaxRect(Math.Max(x, rect.xMin), Math.Max(z, rect.yMin), Math.Min(x + 1, rect.xMax), Math.Min(z + 1, rect.yMax));
+            int fixedOwner = Partition.OverrideAt(x, z);
+            if (fixedOwner != 0 || !Partition.IsBoundaryCell(new Verse.IntVec3(x, 0, z)))
+            {
+                int owner = fixedOwner == 0 ? Partition.OwnerIndex(new Verse.IntVec3(x, 0, z)) : fixedOwner - 1;
+                if (owner != side) continue;
+                clipped[0] = new(tile.xMin, tile.yMin); clipped[1] = new(tile.xMin, tile.yMax);
+                clipped[2] = new(tile.xMax, tile.yMax); clipped[3] = new(tile.xMax, tile.yMin);
+                AppendPolygon(4, altitude, vertices, triangles, colors);
+                continue;
+            }
+            Vector2 a = new(tile.xMin, tile.yMin), b = new(tile.xMin, tile.yMax);
+            Vector2 c = new(tile.xMax, tile.yMax), d = new(tile.xMax, tile.yMin);
+            AppendMultiTriangle(a, b, c, side, altitude, vertices, triangles, colors);
+            AppendMultiTriangle(a, c, d, side, altitude, vertices, triangles, colors);
+        }
+    }
+
+    public void Rebuild(Mesh mesh, int side, int width, int height, float altitude)
+    {
+        vertices.Clear(); triangles.Clear(); colors.Clear();
+        Append(new Rect(0f, 0f, width, height), side, altitude, vertices, triangles, colors);
+        FinalizeMesh(mesh);
+    }
+
     internal void RebuildUnclaimed(Mesh mesh, Rect bounds, float altitude)
     {
         vertices.Clear(); triangles.Clear(); colors.Clear();
@@ -118,8 +149,39 @@ public sealed class DomainTerritoryGeometry
         if (count >= 3) AppendPolygon(count, altitude, vertices, triangles, colors);
     }
 
+    private void AppendMultiTriangle(Vector2 a, Vector2 b, Vector2 c, int side, float altitude,
+        List<Vector3> vertices, List<int> triangles, List<Color32> colors)
+    {
+        if (Partition.FractionFor(side) <= 0f) return;
+        multiInput[0] = a; multiInput[1] = b; multiInput[2] = c;
+        int count = 3;
+        for (int rival = 0; rival < Partition.DomainCount && count >= 3; rival++)
+        {
+            if (rival == side || Partition.FractionFor(rival) <= 0f) continue;
+            int output = 0;
+            Vector2 previous = multiInput[count - 1];
+            float previousDistance = Partition.ScoreFor(side, previous.x, previous.y) - Partition.ScoreFor(rival, previous.x, previous.y);
+            for (int index = 0; index < count; index++)
+            {
+                Vector2 current = multiInput[index];
+                float distance = Partition.ScoreFor(side, current.x, current.y) - Partition.ScoreFor(rival, current.x, current.y);
+                if ((distance >= 0f) != (previousDistance >= 0f))
+                    multiOutput[output++] = Vector2.Lerp(previous, current, previousDistance / (previousDistance - distance));
+                if (distance >= 0f) multiOutput[output++] = current;
+                previous = current; previousDistance = distance;
+            }
+            count = output;
+            Array.Copy(multiOutput, multiInput, count);
+        }
+        if (count < 3) return;
+        Array.Copy(multiInput, clipped, count);
+        AppendPolygon(count, altitude, vertices, triangles, colors);
+    }
+
     private readonly Vector2[] input = new Vector2[3];
-    private readonly Vector2[] clipped = new Vector2[6];
+    private readonly Vector2[] clipped = new Vector2[16];
+    private readonly Vector2[] multiInput = new Vector2[16];
+    private readonly Vector2[] multiOutput = new Vector2[16];
     private readonly List<Vector3> vertices = new();
     private readonly List<int> triangles = new();
     private readonly List<Color32> colors = new();

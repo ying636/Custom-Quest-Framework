@@ -16,6 +16,12 @@ public sealed class DomainTerrainSnapshot : IExposable
 
     public DomainTerrainSnapshot(Map source, IntVec3 offset) : this(source) { projectionOffset = offset; }
 
+    public DomainTerrainSnapshot(Map source, Func<IntVec3, TerrainDef> terrainAt, IntVec3 offset)
+    {
+        width = source.Size.x; height = source.Size.z; projectionOffset = offset;
+        foreach (IntVec3 cell in source.AllCells) terrains.Add(terrainAt(cell));
+    }
+
     public TerrainDef At(IntVec3 cell, IntVec3 destinationSize)
     {
         int x = Math.Max(0, Math.Min(width - 1, cell.x - destinationSize.x / 2 + width / 2 - projectionOffset.x));

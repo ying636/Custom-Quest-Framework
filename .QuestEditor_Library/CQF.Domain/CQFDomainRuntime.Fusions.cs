@@ -8,13 +8,24 @@ public sealed partial class CQFDomainRuntime
     public bool CanBeginOpening(Pawn pawn) => CanBeginOpening(pawn, 12f);
 
     public bool CanBeginOpening(Pawn pawn, float openingRadius)
+        => CanBeginOpening(pawn, openingRadius, out _);
+
+    public bool CanBeginOpening(Pawn pawn, float openingRadius, out string reasonKey)
     {
+        reasonKey = string.Empty;
         if (transition == null) return true;
         DomainOpening? owner = transition.OpeningOwner;
-        if (owner?.SupportsFusion != true || owner.Fusion != null || !owner.Active || owner.Map != pawn.Map || owner.Caster == pawn) return false;
-        float radius = owner.Radius + openingRadius;
-        return !pawn.Map.GetComponent<MapComponent_Domain>().HasActiveDomain
-            && owner.Position.DistanceToSquared(pawn.Position) <= radius * radius;
+        if (owner is DomainOpening_Fusion || owner?.Fusion != null) reasonKey = "CQF_DomainTransitionInProgress";
+        else if (transition.IsReturning) reasonKey = "CQF_DomainReturnInProgress";
+        else if (owner?.SupportsFusion != true || !owner.Active) reasonKey = "CQF_DomainTransitionInProgress";
+        else if (owner.Caster == pawn) reasonKey = "CQF_DomainAlreadyOpening";
+        else if (owner.Map != pawn.Map) reasonKey = "CQF_DomainTransitionOtherMap";
+        else if (pawn.Map.GetComponent<MapComponent_Domain>().HasActiveDomain) reasonKey = "CQF_DomainTransitionInProgress";
+        if (reasonKey.Length != 0) return false;
+        float radius = owner!.Radius + openingRadius;
+        if (owner.Position.DistanceToSquared(pawn.Position) <= radius * radius) return true;
+        reasonKey = "CQF_DomainOpeningOutOfRange";
+        return false;
     }
 
     public bool IsOpeningCaster(Pawn pawn)
@@ -72,7 +83,9 @@ public sealed partial class CQFDomainRuntime
         if (!fusion.Active) return;
         GetTerrainTemplate(fusion.FirstDefinition, fusion.Map);
         GetTerrainTemplate(fusion.Second.Definition, fusion.Map);
-        PrepareBattlefield(fusion.FirstDefinition, fusion.Second.Definition, fusion.Map);
+        if (fusion.ExistingAnchor?.Domain is { } existing)
+            PrepareBattlefield(existing.Battlefield, fusion.Second.Definition, fusion.Second.Caster!);
+        else PrepareBattlefield(fusion.FirstDefinition, fusion.Second.Definition, fusion.Map);
     }
 
     internal void EnterFusion(DomainOpening_Fusion fusion)
@@ -154,10 +167,12 @@ public sealed partial class CQFDomainRuntime
                     Log.Error("[CQF] " + nameof(ProcessOpeningFusions) + ": " + nameof(MapComponent_Domain) + "=null, map=" + realm.uniqueID);
                     continue;
                 }
-                Building_Domain? anchor = existing.Anchor;
-                if (!existing.CanAcceptChallenger || anchor?.Spawned != true || anchor.Map != opening.Map || anchor.OpeningFusion != null) continue;
-                float radius = opening.Radius + existing.Definition.OpeningRadius;
-                if (anchor.Position.DistanceToSquared(opening.Position) > radius * radius) continue;
+                if (!existing.CanAcceptChallenger) continue;
+                Building_Domain? anchor = existing.Instances.Where(side => side.Active).Select(side => side.Anchor)
+                    .FirstOrDefault(candidate => candidate?.Spawned == true && candidate.Map == opening.Map && candidate.OpeningFusion == null
+                        && candidate.Position.DistanceToSquared(opening.Position) <= (opening.Radius + candidate.Domain!.Definition.OpeningRadius)
+                            * (opening.Radius + candidate.Domain.Definition.OpeningRadius));
+                if (anchor == null) continue;
                 if (transition != null)
                 {
                     if (transition.OpeningOwner != opening) continue;

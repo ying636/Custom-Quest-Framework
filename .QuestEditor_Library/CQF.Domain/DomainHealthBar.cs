@@ -22,7 +22,7 @@ public static class DomainHealthBar
         if (!domain.Active || domain.Caster == null || Find.CurrentMap != domain.map || !WorldRendererUtility.DrawingMap
             || Find.UIRoot.screenshotMode.FiltersCurrentEvent) return;
         MapComponent_Domain battlefield = domain.Battlefield;
-        int row = !ReferenceEquals(domain, battlefield) && battlefield.Active ? 1 : 0;
+        int row = battlefield.Instances.TakeWhile(side => side != domain).Count(side => side.Active);
         Rect rect = GetRect(Find.ColonistBar, row);
         using CQFUIScope scope = new(rect.width, rect.height);
         GUI.color = Color.white;

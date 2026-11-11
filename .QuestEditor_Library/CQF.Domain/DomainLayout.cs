@@ -28,8 +28,7 @@ public sealed class DomainLayout : IExposable
         if (domain?.Ready != true || building.Destroyed || !building.Spawned || building.Map != domain.map
             || !building.OccupiedRect().All(domain.OwnsCell))
             throw new InvalidOperationException("[CQF] Domain structures must be spawned inside their active owner's territory.");
-        if (domain.Battlefield.Layout?.Structures.Any(item => item.Thing == building) == true
-            || domain.Battlefield.Challenger?.Layout?.Structures.Any(item => item.Thing == building) == true)
+        if (domain.Instances.Any(side => side.Layout?.Structures.Any(item => item.Thing == building) == true))
             throw new InvalidOperationException("[CQF] Domain structure is already registered.");
         DomainStructure structure = new(building, building.Position, building.Rotation, parkOnTerritoryLoss);
         structures.Add(structure);

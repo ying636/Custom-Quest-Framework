@@ -30,7 +30,7 @@
   </AbilityDef>
   <QuestEditor_Library.DomainDef>
     <defName>CQF_TestDomain</defName>
-    <label>CQF_TestDomain</label>
+    <label>basic domain</label>
     <worldObject>CQF_TestDomain</worldObject>
     <mapGenerator>CQF_TestDomainGenerator</mapGenerator>
     <workerClass>QuestEditor_Library.DomainWorker_Basic</workerClass>

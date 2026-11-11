@@ -1,7 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <LanguageData>
   <CQF_TestDomainExpansion>展开基础领域</CQF_TestDomainExpansion>
   <CQF_TestDomainCasterUnavailable>施术者必须存活、未倒地且位于地图上。</CQF_TestDomainCasterUnavailable>
   <CQF_TestDomainBusy>当前无法展开基础领域：你已维持其他领域，或战场名额已满、正在展开或转场。</CQF_TestDomainBusy>
   <CQF_DomainLoading>正在载入游戏，请稍候再使用领域能力。</CQF_DomainLoading>
+  <CQF_DomainCasterDead>施术者已经死亡，无法使用领域能力。</CQF_DomainCasterDead>
+  <CQF_DomainCasterDowned>施术者已经倒地，无法使用领域能力。</CQF_DomainCasterDowned>
+  <CQF_DomainCasterNotSpawned>施术者当前不在地图上，无法使用领域能力。</CQF_DomainCasterNotSpawned>
+  <CQF_DomainAnotherActive>你正在维持“{0}”，请先解除该领域。</CQF_DomainAnotherActive>
+  <CQF_DomainEnding>“{0}”正在结束，请等待该领域结束。</CQF_DomainEnding>
+  <CQF_DomainAlreadyOpening>你已经在展开领域，无法重复展开。</CQF_DomainAlreadyOpening>
+  <CQF_DomainContestFull>本场战斗的8个领域名额已用完，无法再展开新的领域。</CQF_DomainContestFull>
+  <CQF_DomainArrivalLocked>“{0}”的入场转场尚未完成，请等待转场结束。</CQF_DomainArrivalLocked>
+  <CQF_DomainContestsUnsupported>“{0}”不支持领域对抗，无法在其内部展开新的领域。</CQF_DomainContestsUnsupported>
+  <CQF_DomainOpeningFusionFull>已有两个领域正在融合，无法加入第三个领域。</CQF_DomainOpeningFusionFull>
+  <CQF_DomainReturnInProgress>“{0}”正在退出，请等待退出演出结束。</CQF_DomainReturnInProgress>
+  <CQF_DomainTransitionInProgress>“{0}”正在转场，请等待该转场结束。</CQF_DomainTransitionInProgress>
+  <CQF_DomainTransitionOtherMap>“{0}”正在另一张地图上转场，请等待该转场结束。</CQF_DomainTransitionOtherMap>
+  <CQF_DomainOpeningOutOfRange>你距离“{0}”{1}格，超出可融合距离（{2}格）；请等待该领域转场结束。</CQF_DomainOpeningOutOfRange>
 </LanguageData>

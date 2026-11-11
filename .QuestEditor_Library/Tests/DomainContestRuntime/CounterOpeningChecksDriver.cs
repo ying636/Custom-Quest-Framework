@@ -63,7 +63,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 caster.abilities.GainAbility(Incoming.openingAbility);
                 Check(!caster.abilities.GetAbility(Incoming.openingAbility).GizmoDisabled(out string disabledReason),
                     "the actual ability button allows a different caster to counter-expand: " + disabledReason);
-                if (Existing.defName == "CQF_TestDomain") CheckBloodSeaButton(host, true, "RSH_BloodSeaAnotherDomainActive");
+                if (Existing.defName == "CQF_TestDomain") CheckBloodSeaButton(host, true, "CQF_DomainAnotherActive", field.DisplayLabel);
                 caster.abilities.GetAbility(Incoming.openingAbility).QueueCastingJob(caster, caster);
                 startedAt = Time.realtimeSinceStartup;
                 Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
@@ -107,7 +107,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                     else
                     {
                         field!.RequestReturn("counter check host withdrawal");
-                        CheckBloodSeaButton(observer!, true, "RSH_BloodSeaDomainOccupied");
+                        CheckBloodSeaButton(observer!, true, "CQF_DomainEnding", field!.DisplayLabel);
                     }
                     Find.TickManager.CurTimeSpeed = TimeSpeed.Normal;
                     stage = 6;
@@ -173,7 +173,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 Check(field.IsBattlefield && field.Challenger != null && field.map.Size == runtime.BattlefieldSize(Existing, Incoming)
                     && !previousMap.GetComponent<MapComponent_Domain>().HasActiveDomain,
                     "counter expansion transfers both instances into a separate dynamically sized battlefield");
-                IntVec3 offset = field.map.Center - previousMap.Center;
+                IntVec3 offset = host!.Position - hostCell;
                 Check(field.ArrivalLocked && field.Challenger!.ArrivalLocked && opening!.Destroyed
                     && host!.Position == hostCell + offset && caster.Position == casterCell + offset,
                     "cross-map transfer preserves relative positions and protects both sides under fullscreen cover");
@@ -194,7 +194,7 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
                 Check(GenTicks.TicksGame == frozenTick && !field!.ArrivalLocked && !field.Challenger!.ArrivalLocked
                     && field.LastTerrainRenderedFrame > 0 && field.Challenger.LastTerrainRenderedFrame > 0,
                     "paused fullscreen reveal finishes after both territories render and release both locks");
-                CheckBloodSeaButton(observer!, true, "RSH_BloodSeaContestFull");
+                CheckBloodSeaButton(observer!, false, string.Empty);
                 Shot("Battle");
                 shotAt = Time.realtimeSinceStartup;
                 stage = 7;
@@ -258,13 +258,13 @@ public sealed class CounterOpeningChecksDriver : MonoBehaviour
             "counter opening allocates no dome or folded pawn holders");
     }
 
-    private void CheckBloodSeaButton(Pawn pawn, bool disabled, string key)
+    private void CheckBloodSeaButton(Pawn pawn, bool disabled, string key, params object[] arguments)
     {
         pawn.abilities ??= new Pawn_AbilityTracker(pawn);
         AbilityDef definition = DefDatabase<AbilityDef>.GetNamed("RSH_BoundlessBloodSea");
         pawn.abilities.GainAbility(definition);
         bool actual = pawn.abilities.GetAbility(definition).GizmoDisabled(out string reason);
-        Check(actual == disabled && (!disabled || reason == key.Translate().ToString()),
+        Check(actual == disabled && (!disabled || reason == (arguments.Length == 0 ? key.Translate().ToString() : key.Translate(arguments).ToString())),
             "blood sea button reports the actual domain state: " + key + ", reason=" + reason);
     }
 

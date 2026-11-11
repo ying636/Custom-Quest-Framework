@@ -26,13 +26,13 @@ public sealed class DomainScreenBorder : IDisposable
         Vector4 boundary = default;
         DomainTerritoryPartition? territory = null;
         MapComponent_Domain battlefield = domain.Battlefield;
-        if (battlefield.Active && battlefield.Challenger?.Active == true && domain.Contest is { } contest)
+        if (battlefield.ActiveDomainCount > 1 && domain.Contest is { } contest)
         {
             territory = contest.Partition;
             boundary = new Vector4(contest.Partition.BoundaryX,
                 ReferenceEquals(domain, battlefield) == !contest.Partition.Reversed ? -1f : 1f, 0f, 0f);
         }
-        visuals.SetTerritory(territory, ReferenceEquals(domain, battlefield));
+        visuals.SetTerritory(territory, domain.InstanceIndex);
         Color previous = GUI.color;
         try
         {

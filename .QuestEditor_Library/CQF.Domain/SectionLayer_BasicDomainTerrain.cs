@@ -14,7 +14,7 @@ public sealed class SectionLayer_BasicDomainTerrain : SectionLayer
     }
 
     public override bool Visible => DebugViewSettings.drawTerrain
-        && (domain.Worker is DomainWorker_Basic || domain.Challenger?.Worker is DomainWorker_Basic);
+        && domain.Instances.Any(side => side.Active && side.Worker is DomainWorker_Basic);
 
     public override void Regenerate()
     {

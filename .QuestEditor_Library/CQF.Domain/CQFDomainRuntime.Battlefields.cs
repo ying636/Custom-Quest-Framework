@@ -8,13 +8,19 @@ namespace QuestEditor_Library;
 public sealed partial class CQFDomainRuntime
 {
     public IntVec3 BattlefieldSize(DomainDef first, DomainDef second)
+        => BattlefieldSize(new[] { first, second });
+
+    public IntVec3 BattlefieldSize(IReadOnlyList<DomainDef> definitions, IntVec3 minimum = default)
     {
-        long width = ((long)first.size.x + second.size.x) * 3L + 3L;
-        long height = ((long)first.size.z + second.size.z) * 3L + 3L;
-        if (first.size.x <= 0 || first.size.z <= 0 || second.size.x <= 0 || second.size.z <= 0
-            || (double)(width / 4) * (height / 4) > int.MaxValue)
+        if (definitions.Count < 2 || definitions.Count > MapComponent_Domain.MaximumDomains
+            || definitions.Any(definition => definition == null || definition.size.x <= 0 || definition.size.z <= 0))
+            throw new ArgumentException("[CQF] A battlefield requires between two and eight valid domain definitions.");
+        double scale = 0.75d * Math.Sqrt(2d / definitions.Count);
+        double width = Math.Max(Math.Ceiling(definitions.Sum(definition => (long)definition.size.x) * scale), minimum.x > 0 ? minimum.x + 1d : 0d);
+        double height = Math.Max(Math.Ceiling(definitions.Sum(definition => (long)definition.size.z) * scale), minimum.z > 0 ? minimum.z + 1d : 0d);
+        if (width > int.MaxValue || height > int.MaxValue || width * height > int.MaxValue)
             throw new InvalidOperationException("[CQF] Contest battlefield dimensions are invalid or exceed the map cell limit.");
-        return new IntVec3(checked((int)(width / 4)), 1, checked((int)(height / 4)));
+        return new IntVec3(checked((int)width), 1, checked((int)height));
     }
 
     public bool HasAvailableBattlefield(DomainDef first, DomainDef second)
@@ -60,97 +66,10 @@ public sealed partial class CQFDomainRuntime
         IEnumerable<Pawn> targets, bool fromSource)
     {
         DomainMapTemplate template = GetMapTemplate(definition, pawn.Map);
-        return TransferBattlefield(first, null, definition, field => field.EnterChallenger(definition, pawn, targets, template, fromSource));
-    }
-
-    private MapComponent_Domain TransferBattlefield(MapComponent_Domain first, MapComponent_Domain? second,
-        DomainDef secondDefinition, Func<MapComponent_Domain, MapComponent_Domain> enter)
-    {
-        Map destination = AcquireBattlefield(first.Definition, secondDefinition, first.SourceMap ?? first.map);
-        MapComponent_Domain primary = destination.GetComponent<MapComponent_Domain>();
-        IntVec3 firstOffset = default, secondOffset = default;
-        if (second != null && first.SourceMap != null && first.SourceMap == second.SourceMap)
-        {
-            IntVec3 center = new(first.SourceOrigin.x + (second.SourceOrigin.x - first.SourceOrigin.x) / 2, 0,
-                first.SourceOrigin.z + (second.SourceOrigin.z - first.SourceOrigin.z) / 2);
-            firstOffset = first.SourceOrigin - center;
-            secondOffset = second.SourceOrigin - center;
-        }
-        DomainTerrainSnapshot firstTerrain = new(first.map, firstOffset);
-        bool viewing = Find.CurrentMap == first.map || second != null && Find.CurrentMap == second.map;
-        List<(Thing thing, Map source, IntVec3 cell, Rot4 rotation, Lord? lord)> moved = new();
-        MapComponent_Domain? side = null;
-        bool copiedFirst = false;
-        bool copiedSecond = false;
-        try
-        {
-            first.Worker!.PreparingContest();
-            second?.Worker?.PreparingContest();
-            first.Layout?.ParkAll();
-            second?.Layout?.ParkAll();
-            firstTerrain.Restore(destination);
-            copiedFirst = true;
-            first.CopyToBattlefield(primary, firstOffset);
-            MoveBattlefieldThings(first, destination, firstOffset, moved);
-            if (second != null)
-            {
-                side = new MapComponent_Domain(destination, true);
-                copiedSecond = true;
-                second.CopyToBattlefield(side, secondOffset);
-                MoveBattlefieldThings(second, destination, secondOffset, moved);
-                primary.AttachTransferredContest(side, new DomainTerrainSnapshot(second.map, secondOffset));
-            }
-            else side = enter(primary);
-            first.CommitBattlefieldTransfer();
-            second?.CommitBattlefieldTransfer();
-        }
-        catch (Exception error)
-        {
-            Log.Error("[CQF] Contest battlefield transfer failed; restoring source domains: " + error);
-            List<Exception> rollbackErrors = new();
-            try { primary.AbortBattlefieldContest(second != null); }
-            catch (Exception rollback) { rollbackErrors.Add(rollback); }
-            foreach (var item in moved.AsEnumerable().Reverse())
-            {
-                try
-                {
-                    if (item.thing.Destroyed) throw new InvalidOperationException("[CQF] Transferred thing was destroyed: " + item.thing.ThingID);
-                    if (item.thing.Spawned) item.thing.DeSpawn();
-                    GenSpawn.Spawn(item.thing, item.cell, item.source, item.rotation);
-                    if (item.thing is Pawn restored && item.lord != null) item.lord.AddPawn(restored);
-                }
-                catch (Exception rollback) { rollbackErrors.Add(rollback); }
-            }
-            if (copiedSecond && side != null)
-                try { second!.RestoreBattlefieldTransfer(side); } catch (Exception rollback) { rollbackErrors.Add(rollback); }
-            if (copiedFirst)
-                try { first.RestoreBattlefieldTransfer(primary); } catch (Exception rollback) { rollbackErrors.Add(rollback); }
-            first.Layout?.RevealOwned();
-            second?.Layout?.RevealOwned();
-            if (rollbackErrors.Count > 0) throw new AggregateException("[CQF] Contest battlefield rollback was incomplete.", new[] { error }.Concat(rollbackErrors));
-            host.Hibernate(destination);
-            throw;
-        }
-        foreach (Map source in second == null ? new[] { first.map } : new[] { first.map, second.map })
-        {
-            try
-            {
-                foreach (Lord lord in source.lordManager.lords.ToList()) source.lordManager.RemoveLord(lord);
-                host.Hibernate(source);
-            }
-            catch (Exception error) { Log.Error("[CQF] Battlefield transfer committed, but its empty source map could not be retired: " + error); }
-        }
-        if (viewing && transition == null)
-        {
-            Current.Game.CurrentMap = destination;
-            Find.Selector.ClearSelection();
-            if (side!.Caster is { Spawned: true, Destroyed: false } caster && caster.Map == destination)
-            {
-                Find.CameraDriver.JumpToCurrentMapLoc(caster.Position);
-                Find.Selector.Select(caster);
-            }
-        }
-        return side!;
+        List<Pawn> captured = targets.ToList();
+        List<Pawn> entrants = new[] { pawn }.Concat(captured).Where(entrant => entrant.Spawned && !entrant.Dead && entrant.Map == pawn.Map).Distinct().ToList();
+        return TransferDomainGroups(first.Battlefield, null, definition,
+            field => field.EnterChallenger(definition, pawn, captured, template, fromSource), pawn, entrants);
     }
 
     private void MoveBattlefieldThings(MapComponent_Domain domain, Map destination, IntVec3 offset,
@@ -174,8 +93,7 @@ public sealed partial class CQFDomainRuntime
             Lord? lord = thing is Pawn pawn ? pawn.GetLord() : null;
             moved.Add((thing, domain.map, origin, rotation, lord));
             if (thing is Pawn moving) lord?.RemovePawn(moving);
-            thing.DeSpawn();
-            GenSpawn.Spawn(thing, cell, destination, rotation);
+            RelocateBattlefieldThing(thing, destination, cell, rotation);
             if (!thing.Spawned || thing.Map != destination)
                 throw new InvalidOperationException("[CQF] Battlefield transfer could not spawn " + thing.ThingID);
         }

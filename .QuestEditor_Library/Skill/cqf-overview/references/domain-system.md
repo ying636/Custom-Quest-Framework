@@ -1,6 +1,6 @@
 # CQF 领域系统开发参考
 
-双领域对抗扩展见 [领域对抗](domain-contest.md)。下文的单领域流程仍适用于普通展开；共同战场中的第二实例必须通过 FindDomainFor / GetInstances 获取，不能假设单图 GetWorker 就是当前人物的领域。
+多方领域对抗扩展见 [领域对抗](domain-contest.md)。下文的单领域流程仍适用于普通展开；共同战场中的各实例必须通过 FindDomainFor / Instances 获取，不能假设单图 GetWorker 就是当前人物的领域。
 
 用于领域展开、领域内战斗、共享血量、外部载体、人员往返、地图池和转场扩展。以下接口依据当前本地源码核对；领域框架有 RimWorld 1.6 / 1.7 分支，具体构建环境见 [版本与构建](version-build.md)。
 

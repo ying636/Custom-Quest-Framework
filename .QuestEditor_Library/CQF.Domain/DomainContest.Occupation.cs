@@ -5,7 +5,7 @@ namespace QuestEditor_Library;
 public sealed partial class DomainContest
 {
     public int OccupationTicks(MapComponent_Domain side)
-        => (ReferenceEquals(side, side.Battlefield) ? firstOccupation : secondOccupation)!.Ticks;
+        => OccupationFor(side.InstanceIndex).Ticks;
 
     private void TickOccupation(MapComponent_Domain first)
     {

@@ -1,7 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <LanguageData>
   <CQF_TestDomainExpansion>Expand basic domain</CQF_TestDomainExpansion>
   <CQF_TestDomainCasterUnavailable>The caster must be alive, standing, and present on the map.</CQF_TestDomainCasterUnavailable>
   <CQF_TestDomainBusy>Cannot expand a basic domain while maintaining another domain, while both domain slots are used, or during a domain opening or transition.</CQF_TestDomainBusy>
   <CQF_DomainLoading>The game is loading. Wait before using domain abilities.</CQF_DomainLoading>
+  <CQF_DomainCasterDead>The caster is dead and cannot use domain abilities.</CQF_DomainCasterDead>
+  <CQF_DomainCasterDowned>The caster is downed and cannot use domain abilities.</CQF_DomainCasterDowned>
+  <CQF_DomainCasterNotSpawned>The caster is not on a map and cannot use domain abilities.</CQF_DomainCasterNotSpawned>
+  <CQF_DomainAnotherActive>You are maintaining {0}. Dismiss that domain first.</CQF_DomainAnotherActive>
+  <CQF_DomainEnding>{0} is ending. Wait until that domain has ended.</CQF_DomainEnding>
+  <CQF_DomainAlreadyOpening>You are already expanding a domain and cannot start another expansion.</CQF_DomainAlreadyOpening>
+  <CQF_DomainContestFull>All eight domain slots in this battle have been used. Another domain cannot join.</CQF_DomainContestFull>
+  <CQF_DomainArrivalLocked>{0} has not finished its entry transition. Wait until the transition ends.</CQF_DomainArrivalLocked>
+  <CQF_DomainContestsUnsupported>{0} does not support domain contests. Another domain cannot be expanded inside it.</CQF_DomainContestsUnsupported>
+  <CQF_DomainOpeningFusionFull>Two domains are already merging. A third domain cannot join.</CQF_DomainOpeningFusionFull>
+  <CQF_DomainReturnInProgress>{0} is being dismissed. Wait until its dismissal transition ends.</CQF_DomainReturnInProgress>
+  <CQF_DomainTransitionInProgress>{0} is transitioning. Wait until that transition ends.</CQF_DomainTransitionInProgress>
+  <CQF_DomainTransitionOtherMap>{0} is transitioning on another map. Wait until that transition ends.</CQF_DomainTransitionOtherMap>
+  <CQF_DomainOpeningOutOfRange>You are {1} tiles from {0}, beyond the {2}-tile merging range. Wait until its transition ends.</CQF_DomainOpeningOutOfRange>
 </LanguageData>

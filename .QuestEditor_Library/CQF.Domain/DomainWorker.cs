@@ -35,6 +35,7 @@ public class DomainWorker : IExposable, IDisposable
     public virtual void Entering() { }
     public virtual void ContestStarted() { }
     public virtual void PreparingContest() { }
+    public virtual void MapTransferred(Map previous, IntVec3 offset) { }
     public virtual void TerritoryChanged() { }
     public virtual void Entered(IReadOnlyList<Pawn> entrants) { }
     public virtual void BeforeReturn(bool visible) { }

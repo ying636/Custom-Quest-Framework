@@ -26,38 +26,43 @@ public sealed partial class DomainTerritoryPartition : IExposable
     public int CellCount => width * height;
     public int FirstColumns => Math.Max(0, Math.Min(width,
         (int)Math.Ceiling((reverse ? width - (double)BoundaryX : BoundaryX) - 0.5d)));
-    public int FirstCells => owners == null ? FirstColumns * height : firstCells;
-    public int SecondCells => CellCount - FirstCells;
-    public float FirstFraction => firstFraction;
+    public int FirstCells => multi?.CellsFor(0) ?? (owners == null ? FirstColumns * height : firstCells);
+    public int SecondCells => multi?.CellsFor(1) ?? CellCount - FirstCells;
+    public float FirstFraction => multi?.Fractions[0] ?? firstFraction;
     public float BoundaryX => boundary;
     public bool Reversed => reverse;
-    public int Revision => revision;
-    public IReadOnlyList<IntVec3> ChangedCells => changedCells;
-    public IReadOnlyList<Rect> DirtyBounds => dirtyBounds;
-    public IReadOnlyList<DomainTerritoryProtection> Protections => protections;
-    public bool HasProtections => protections.Count > 0;
-    public bool HasOverrides => fixedCells.Count > 0;
+    public int Revision => multi?.Revision ?? revision;
+    public IReadOnlyList<IntVec3> ChangedCells => multi?.ChangedCells ?? changedCells;
+    public IReadOnlyList<Rect> DirtyBounds => multi?.DirtyBounds ?? dirtyBounds;
+    public IReadOnlyList<DomainTerritoryProtection> Protections => multi?.Protections ?? protections;
+    public bool HasProtections => Protections.Count > 0;
+    public bool HasOverrides => multi?.HasOverrides ?? fixedCells.Count > 0;
     public int Width => width;
     public int Height => height;
 
     public float SignedDistance(float x, float z)
     {
+        if (multi != null)
+        {
+            int fixedOwner = multi.OverrideAt(Mathf.FloorToInt(x), Mathf.FloorToInt(z));
+            return fixedOwner == 0 ? multi.Distance(0, x, z) : fixedOwner == 1 ? 1f : -1f;
+        }
         int owner = OverrideAt(Mathf.FloorToInt(x), Mathf.FloorToInt(z));
         return owner == 0 ? BaseSignedDistance(x, z) : owner == 1 ? 1f : -1f;
     }
 
     public float BaseSignedDistance(float x, float z)
-        => curvedFront ? CurvedDistance(x, z) : reverse ? x - boundary : boundary - x;
+        => multi != null ? multi.Distance(0, x, z) : curvedFront ? CurvedDistance(x, z) : reverse ? x - boundary : boundary - x;
 
     public bool IsBoundaryCell(IntVec3 cell)
-        => (curvedFront ? NearFront(cell.x, cell.z, 0f) : Math.Abs(cell.x - (int)Math.Floor(boundary)) <= 1)
+        => multi != null ? multi.IsBoundary(cell) : (curvedFront ? NearFront(cell.x, cell.z, 0f) : Math.Abs(cell.x - (int)Math.Floor(boundary)) <= 1)
             || HasOverrides && (OverrideAt(cell.x, cell.z) != 0 || OverrideAt(cell.x - 1, cell.z) != 0
                 || OverrideAt(cell.x + 1, cell.z) != 0 || OverrideAt(cell.x, cell.z - 1) != 0 || OverrideAt(cell.x, cell.z + 1) != 0);
 
-    public int ProtectionAt(int x, int z) => protectedOwners != null && x >= 0 && z >= 0 && x < width && z < height
+    public int ProtectionAt(int x, int z) => multi != null ? multi.ProtectionAt(x, z) : protectedOwners != null && x >= 0 && z >= 0 && x < width && z < height
         ? protectedOwners[z * width + x] : 0;
 
-    public int OverrideAt(int x, int z) => overrideOwners != null && x >= 0 && z >= 0 && x < width && z < height
+    public int OverrideAt(int x, int z) => multi != null ? multi.OverrideAt(x, z) : overrideOwners != null && x >= 0 && z >= 0 && x < width && z < height
         ? overrideOwners[z * width + x] : 0;
 
     public int Protect(bool first, IEnumerable<IntVec3> cells, int expiresTick, Thing? source = null)
@@ -102,7 +107,7 @@ public sealed partial class DomainTerritoryPartition : IExposable
     {
         if (cell.x < 0 || cell.z < 0 || cell.x >= width || cell.z >= height)
             throw new ArgumentOutOfRangeException(nameof(cell));
-        return SignedDistance(cell.x + 0.5f, cell.z + 0.5f) > 0f;
+        return multi != null ? multi.OwnerAt(cell) == 0 : SignedDistance(cell.x + 0.5f, cell.z + 0.5f) > 0f;
     }
 
     public float Advance(float firstHealth, float secondHealth, float maximumDistance)
@@ -129,6 +134,8 @@ public sealed partial class DomainTerritoryPartition : IExposable
 
     public void ExposeData()
     {
+        Scribe_Deep.Look(ref multi, "multi");
+        if (multi != null) { width = multi.Width; height = multi.Height; return; }
         Scribe_Values.Look(ref width, "width");
         Scribe_Values.Look(ref height, "height");
         Scribe_Values.Look(ref firstFraction, "firstFraction", -1f);

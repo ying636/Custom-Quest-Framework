@@ -81,7 +81,7 @@ internal static class DomainContestChecks
         Set(first, "health", 3000f); Set(second, "health", 1000f);
         Set(first, "challenger", second);
         CheckInstanceQueries(first, second);
-        Check(first.HasActiveDomain && !first.Available && !first.CanAcceptChallenger, "shared battlefield remains busy and refuses a third domain");
+        Check(first.HasActiveDomain && !first.Available && first.CanAcceptChallenger, "shared battlefield remains busy and accepts another domain below the eight-domain limit");
         Check(first.FindDomainFor(firstCaster) == first && first.FindDomainFor(secondCaster) == second,
             "caster lookup resolves two independent domain instances on one map");
         Check(first.Worker != second.Worker && second.Worker!.Domain == second && second.map == first.map,

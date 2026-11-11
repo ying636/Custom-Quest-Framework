@@ -66,7 +66,7 @@ public sealed partial class CQFDomainRuntime
             }
             bool counter = opening.Caster?.MapHeld?.GetComponent<MapComponent_Domain>().HasActiveDomain == true;
             if (counter ? HasTerrainTemplate(opening.Definition)
-                && HasAvailableBattlefield(opening.Map.GetComponent<MapComponent_Domain>().Definition, opening.Definition) : HasAvailable(opening.Definition))
+                && HasAvailableBattlefield(opening.Map.GetComponent<MapComponent_Domain>(), opening.Definition, opening.Caster!) : HasAvailable(opening.Definition))
             {
 #if RIMWORLD_1_7
                 if (counter && Find.CurrentMap == opening.Map && RimWorld.Planet.WorldRendererUtility.DrawingMap
@@ -88,7 +88,7 @@ public sealed partial class CQFDomainRuntime
                     if (counter)
                     {
                         GetMapTemplate(opening.Definition, opening.Map);
-                        PrepareBattlefield(opening.Map.GetComponent<MapComponent_Domain>().Definition, opening.Definition, opening.Map);
+                        PrepareBattlefield(opening.Map.GetComponent<MapComponent_Domain>(), opening.Definition, opening.Caster!);
                     }
                     else if (!HasAvailable(opening.Definition)) host.Hibernate(GenerateDomain(opening.Definition, opening.Map));
                     LongEventHandler.ExecuteWhenFinished(() =>

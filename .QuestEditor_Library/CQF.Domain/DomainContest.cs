@@ -42,22 +42,30 @@ public sealed partial class DomainContest : IExposable, IDisposable
 
     public MapComponent_Domain? OwnerAt(MapComponent_Domain first, IntVec3 cell)
     {
-        MapComponent_Domain? second = first.Challenger;
-        if (!first.Active) return second?.Active == true ? second : null;
-        if (second?.Active != true) return first;
-        return Partition.IsFirst(cell) ? first : second;
+        if (first.ActiveDomainCount == 1)
+            for (int index = 0; index < first.InstanceCount; index++)
+            {
+                MapComponent_Domain survivor = first.InstanceAt(index);
+                if (survivor.Active) return survivor;
+            }
+        int owner = Partition.OwnerIndex(cell);
+        if (owner < 0 || owner >= first.InstanceCount) return null;
+        MapComponent_Domain side = first.InstanceAt(owner);
+        return side.Active ? side : null;
     }
 
     public bool CoversBoundaryCell(IntVec3 cell)
         => Partition.IsBoundaryCell(cell);
 
     public TerrainDef TerrainAt(MapComponent_Domain side, IntVec3 cell)
-        => (ReferenceEquals(side, side.Battlefield) ? firstTerrain! : secondTerrain!).At(cell, side.map.Size);
+        => (allTerrains != null ? allTerrains[side.InstanceIndex]
+            : ReferenceEquals(side, side.Battlefield) ? firstTerrain! : secondTerrain!).At(cell, side.map.Size);
 
     public void Tick(MapComponent_Domain first)
     {
         if (partition == null || first.Challenger == null) return;
         SettleHealth(first);
+        if (Partition.IsMultilateral) { TickMultiple(first); return; }
         Partition.PruneProtections(GenTicks.TicksGame, first.Ready, first.Challenger.Ready);
         Partition.PruneClaims(first.Ready, first.Challenger.Ready);
         Partition.ErodeClaims(GenTicks.TicksGame, first.Ready && first.Challenger.Ready
@@ -97,14 +105,23 @@ public sealed partial class DomainContest : IExposable, IDisposable
 
     public void RefreshLayouts(MapComponent_Domain first)
     {
-        first.Layout?.ParkOutside();
-        first.Challenger?.Layout?.ParkOutside();
-        first.Layout?.RevealOwned();
-        first.Challenger?.Layout?.RevealOwned();
+        foreach (MapComponent_Domain side in first.Instances) side.Layout?.ParkOutside();
+        foreach (MapComponent_Domain side in first.Instances) side.Layout?.RevealOwned();
     }
 
     public void ResolveSurvivor(MapComponent_Domain first)
     {
+        if (Partition.IsMultilateral)
+        {
+            foreach (DomainOccupation timer in occupations!) timer.Advance(GenTicks.TicksGame, false);
+            List<MapComponent_Domain> sides = first.Instances.ToList();
+            Partition.Prune(GenTicks.TicksGame, sides.Select(side => side.Active).ToList());
+            Partition.Advance(sides.Select(side => side.Active ? side.Health : 0f).ToList(), 1f, true);
+            foreach (IntVec3 cell in first.map.AllCells) ApplyCell(first, cell);
+            RefreshLayouts(first);
+            first.map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Terrain);
+            return;
+        }
         firstOccupation?.Advance(GenTicks.TicksGame, false);
         secondOccupation?.Advance(GenTicks.TicksGame, false);
         Partition.PruneProtections(GenTicks.TicksGame, first.Active, first.Challenger?.Active == true);
@@ -118,6 +135,12 @@ public sealed partial class DomainContest : IExposable, IDisposable
     public void Draw(MapComponent_Domain first)
     {
         if (partition == null || !first.HasActiveDomain) return;
+        if (Partition.IsMultilateral)
+        {
+            multiOverlay ??= new DomainMultiContestOverlay(first);
+            multiOverlay.Draw(first, Partition);
+            return;
+        }
         overlay ??= new DomainContestOverlay(first);
         overlay.Draw(first, Partition);
     }
@@ -125,6 +148,7 @@ public sealed partial class DomainContest : IExposable, IDisposable
     public float DrawSource(MapComponent_Domain domain, Building_Domain anchor)
     {
 #if RIMWORLD_1_7
+        if (domain.InstanceCount > 2) return DrawSourceGroup(domain, anchor);
         MapComponent_Domain first = domain.Battlefield;
         MapComponent_Domain? second = first.Challenger;
         if (sourceVisualError || !first.Active || second?.Active != true
@@ -157,20 +181,38 @@ public sealed partial class DomainContest : IExposable, IDisposable
     public DomainFusionState DomeStateFor(MapComponent_Domain domain, float blend)
     {
         MapComponent_Domain first = domain.Battlefield;
-        MapComponent_Domain rival = ReferenceEquals(first, domain) ? first.Challenger! : first;
+        MapComponent_Domain? rival = first.InstanceCount > 2 ? first.Instances.Where(side => side.Active && side != domain
+            && side.Anchor?.Spawned == true && side.Anchor.Map == domain.Anchor?.Map)
+            .OrderBy(side => side.Anchor!.Position.DistanceToSquared(domain.Anchor!.Position)).FirstOrDefault()
+            : ReferenceEquals(first, domain) ? first.Challenger : first;
+        if (rival == null) return default;
         float radius = domain.Definition.OpeningRadius;
         float rivalRadius = rival.Definition.OpeningRadius;
-        float bias = (0.5f - DomainTerritoryPartition.CalculateFraction(first.Health, first.Challenger!.Health)) * Math.Min(radius, rivalRadius) * 3f;
+        bool second = domain.InstanceIndex > rival.InstanceIndex;
+        float bias = (0.5f - DomainTerritoryPartition.CalculateFraction(second ? rival.Health : domain.Health,
+            second ? domain.Health : rival.Health)) * Math.Min(radius, rivalRadius) * 3f;
         return new DomainFusionState(domain.Anchor!.Position.ToVector3Shifted(), radius, rival.Anchor!.Position.ToVector3Shifted(), rivalRadius,
-            !ReferenceEquals(first, domain), GenTicks.TicksGame / 60f + 6f, blend, bias);
+            second, GenTicks.TicksGame / 60f + 6f, blend, bias);
     }
 
     public void Restore(MapComponent_Domain first) => firstTerrain?.Restore(first.map);
 
     public void ExposeData()
     {
-        Scribe_Deep.Look(ref firstTerrain, "firstTerrain");
-        Scribe_Deep.Look(ref secondTerrain, "secondTerrain");
+        Scribe_Collections.Look(ref allTerrains, "allTerrains", LookMode.Deep);
+        Scribe_Collections.Look(ref occupations, "occupations", LookMode.Deep);
+        if (allTerrains == null)
+        {
+            Scribe_Deep.Look(ref firstTerrain, "firstTerrain");
+            Scribe_Deep.Look(ref secondTerrain, "secondTerrain");
+        }
+        else if (Scribe.mode == LoadSaveMode.PostLoadInit)
+        {
+            if (allTerrains.Count < 3 || allTerrains.Count > MapComponent_Domain.MaximumDomains
+                || occupations?.Count != allTerrains.Count)
+                throw new InvalidOperationException("[CQF] Invalid saved multiple-domain terrain or occupation state.");
+            firstTerrain = allTerrains[0]; secondTerrain = allTerrains[1];
+        }
         Scribe_Deep.Look(ref partition, "partition");
         Scribe_Values.Look(ref damageTick, "damageTick", -1);
         Scribe_Values.Look(ref recoil, "recoil");
@@ -191,15 +233,20 @@ public sealed partial class DomainContest : IExposable, IDisposable
 #if RIMWORLD_1_7
         sourceVisuals?.Dispose();
         sourceVisuals = null;
+        foreach (DomainFusionVisuals visuals in sourcePairs.Values) visuals.Dispose();
+        sourcePairs.Clear();
 #endif
         overlay?.Dispose();
         overlay = null;
+        multiOverlay?.Dispose();
+        multiOverlay = null;
     }
 
     private void ApplyCell(MapComponent_Domain first, IntVec3 cell)
     {
-        DomainTerrainSnapshot source = OwnerAt(first, cell) == first ? firstTerrain! : secondTerrain!;
-        TerrainDef terrain = source.At(cell, first.map.Size);
+        MapComponent_Domain? side = OwnerAt(first, cell);
+        if (side == null) return;
+        TerrainDef terrain = TerrainAt(side, cell);
         if (first.map.terrainGrid.TerrainAt(cell) != terrain) first.map.terrainGrid.SetTerrain(cell, terrain);
     }
 
@@ -208,13 +255,11 @@ public sealed partial class DomainContest : IExposable, IDisposable
         int tick = GenTicks.TicksGame;
         if (settlementTick == tick) return;
         settlementTick = tick;
-        MapComponent_Domain second = first.Challenger!;
-        if (!first.Ready || !second.Ready || first.ArrivalLocked || second.ArrivalLocked
-            || first.Worker?.SuspendLifecycle == true || second.Worker?.SuspendLifecycle == true) return;
-        float firstLoss = first.MaximumHealth * first.Definition.contestHealthLossPerSecond / 60f;
-        float secondLoss = second.MaximumHealth * second.Definition.contestHealthLossPerSecond / 60f;
-        first.SpendHealth(firstLoss, false);
-        second.SpendHealth(secondLoss, false);
+        List<MapComponent_Domain> sides = first.Instances.Where(side => side.Active).ToList();
+        if (sides.Count < 2 || sides.Any(side => !side.Ready || side.ArrivalLocked || side.Worker?.SuspendLifecycle == true)) return;
+        float multiplier = HealthLossMultiplier(sides.Count);
+        foreach (MapComponent_Domain side in sides)
+            side.SpendHealth(side.MaximumHealth * side.Definition.contestHealthLossPerSecond * multiplier / 60f, false);
     }
 
     private void MarkBounds(MapComponent_Domain first, Rect bounds)

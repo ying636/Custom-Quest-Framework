@@ -22,13 +22,12 @@ public sealed class SectionLayer_DomainContest : SectionLayer
         foreach (IntVec3 cell in section.CellRect)
         {
             if (!contest.CoversBoundaryCell(cell)) continue;
-            DrawCell(domain, contest, cell, true);
-            DrawCell(domain.Challenger!, contest, cell, false);
+            foreach (MapComponent_Domain side in domain.Instances.Where(side => side.Active)) DrawCell(side, contest, cell, side.InstanceIndex);
         }
         FinalizeMesh(MeshParts.All);
     }
 
-    private void DrawCell(MapComponent_Domain side, DomainContest contest, IntVec3 cell, bool first)
+    private void DrawCell(MapComponent_Domain side, DomainContest contest, IntVec3 cell, int owner)
     {
         TerrainDef terrain = contest.TerrainAt(side, cell);
         if (!DebugViewSettings.drawTerrainWater && terrain.HasTag("Water")) return;
@@ -37,7 +36,7 @@ public sealed class SectionLayer_DomainContest : SectionLayer
         LayerSubMesh mesh = GetSubMesh(material);
         float y = AltitudeLayer.Terrain.AltitudeFor() + 0.002f;
         if (geometry?.Partition != contest.Partition) geometry = new DomainTerritoryGeometry(contest.Partition);
-        geometry.Append(new Rect(cell.x, cell.z, 1f, 1f), first, y, mesh.verts, mesh.tris, mesh.colors);
+        geometry.Append(new Rect(cell.x, cell.z, 1f, 1f), owner, y, mesh.verts, mesh.tris, mesh.colors);
     }
 
     private readonly MapComponent_Domain domain;

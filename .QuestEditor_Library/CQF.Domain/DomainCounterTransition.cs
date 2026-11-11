@@ -6,11 +6,13 @@ namespace QuestEditor_Library;
 #if RIMWORLD_1_7
 public sealed class DomainCounterTransition : DomainTransition
 {
-    public DomainCounterTransition(DomainOpening opening) : base(false)
+    public DomainCounterTransition(DomainOpening opening) : this(opening.Definition, opening.Position, opening.Radius) { }
+
+    public DomainCounterTransition(DomainDef incoming, IntVec3 origin, float initialRadius = 0f) : base(false)
     {
-        incoming = opening.Definition;
-        origin = opening.Position;
-        initialRadius = opening.Radius;
+        this.incoming = incoming;
+        this.origin = origin;
+        this.initialRadius = initialRadius;
     }
 
     public override float Duration => 2.4f;

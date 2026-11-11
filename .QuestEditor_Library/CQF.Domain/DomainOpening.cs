@@ -20,7 +20,7 @@ public abstract class DomainOpening : Thing
     public bool IsCounterOpening => counterOpening;
     public bool ReadyToClose => startTick >= 0 && GenTicks.TicksGame - startTick >= OpeningTicks;
     protected bool ReadyToTransfer => IsCounterOpening ? IsClosing : Progress >= 1f;
-    protected bool CounterOpeningValid => !IsCounterOpening || Map.GetComponent<MapComponent_Domain>().CanAcceptChallenger;
+    protected bool CounterOpeningValid => !IsCounterOpening || Map.GetComponent<MapComponent_Domain>().CanContinueCounterOpening(Caster);
     protected virtual float ClosingStart => Definition.visuals?.foldStart ?? 0.7f;
     public DomainOpening_Fusion? Fusion { get => fusion; internal set => fusion = value; }
 
@@ -65,6 +65,24 @@ public abstract class DomainOpening : Thing
 
     public virtual void ReleaseForFusion() => ReleaseOpeningLocks();
     public virtual void ResumeAfterFusion() { }
+
+    internal void MoveWithBattlefield(Map destination, IntVec3 cell)
+    {
+        List<Pawn> previousPawns = lockedPawns.ToList();
+        List<int> previousStuns = originalStunEnds.ToList();
+        ReleaseForFusion();
+        DeSpawn();
+        GenSpawn.Spawn(this, cell, destination);
+        ResumeAfterFusion();
+        lockedPawns.Clear(); originalStunEnds.Clear(); appliedStunEnds.Clear();
+        locksReleased = false;
+        for (int index = 0; index < previousPawns.Count; index++)
+        {
+            Pawn pawn = previousPawns[index];
+            if (!pawn.Spawned || pawn.Map != destination || pawn.Dead) continue;
+            lockedPawns.Add(pawn); originalStunEnds.Add(previousStuns[index]); appliedStunEnds.Add(GenTicks.TicksGame + 2);
+        }
+    }
 
     public List<Pawn> CaptureEntrants()
         => (IsClosing ? Entrants : Map.mapPawns.AllPawnsSpawned.Where(pawn => pawn.Position.DistanceToSquared(Position) <= Radius * Radius))
