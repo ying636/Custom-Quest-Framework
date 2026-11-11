@@ -1,5 +1,11 @@
 # CQF 版本与构建
 
+## 5.3 补齐 1.6 领域战场资源（2026-11-12）
+
+CQF 5.2 → 5.3。补齐 1.6/Optional/Domain 中遗漏的 CQF_DomainBattlefield.xml 及其中文翻译，直接复用 CQF.Domain/Content/1.6 中已有资源。修复找不到 CQF_DomainBattlefield 导致领域预加载失败及后续空引用的问题；同一文件同时提供 CQF_DomainBattlefieldGenerator。
+
+本次发布仅包含上述两份资源、版本号与更新记录。8 份领域模块 XML 解析通过，4 项战场及依赖定义齐全且无重复，加载路径与引用核对通过，全部 9 份源码资源与运行目录内容一致。本次未修改或重新编译 DLL，未进行实机复测；重启游戏后重新加载定义。
+
 ## 5.2 多方主领地连通修复（2026-11-12）
 
 CQF 5.1 → 5.2。修复三至八方因展开位置集中和每方独立方向扰动而产生长条、多块飞地的问题。分散固定领地中心，使用共用坐标形变的加权距离场；容量求解同时约束连通性、紧凑性和血量面积比例，像素边角微调权重，包围造成割裂时约束包围程度。保留弱方内岛、主动占领、保护区、真实地形/建筑归属与现有 Shader 协议。日常血量变化不搬动人物，二方算法和原领域展开动画不改。
@@ -36,7 +42,7 @@ RimDevTools 1.0.4.0 管理独立离线 `D:/RimWorld-Dev/RimWorld.exe`（1.7.4982
 
 源码位于 `D:\Game\Steam\steamapps\common\RimWorld\Mods\CQF\.QuestEditor_Library`，与 Mod 包共用 Git 仓库。技能维护源放在其中的 `Skill`；更新时同时维护 `C:\Users\HaiLu\.codex\skills` 下对应安装副本，保留两处已有的不同内容。
 
-当前 CQF 发布版本为 `5.2`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
+当前 CQF 发布版本为 `5.3`，版本字段为 `About/About.xml` 的 `modVersion`。领域自 3.4 起拆为按需加载的独立模块，继续共用地图休眠系统的唯一 GComp。
 
 ## 4.17 反展开前沿收敛与闭合闪回修复（2026-11-10）
 
