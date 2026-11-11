@@ -87,6 +87,7 @@ public sealed class MultipleDomainChecksDriver : MonoBehaviour
                     "growth preserves the same damaged building, layout and protection; destroyed=" + bed.Destroyed + "; HP=" + bed.HitPoints + "/" + bed.MaxHitPoints + "; registered=" + field.Instances.First().Layout!.Structures.Any(item => item.Thing == bed) + "; protections=" + field.Contest!.Partition.Protections.Count + "; matching=" + field.Contest.Partition.Protections.Count(item => item.Source == bed));
                 foreach (MapComponent_Domain side in field.Instances) side.RestoreHealth(side.MaximumHealth);
                 field.Contest!.ResolveSurvivor(field);
+                DomainContiguousRuntimeChecks.Validate(field, Check);
                 Check(field.Instances.Where(side => side.Active).All(side => Math.Abs(field.Contest.Partition.CellsFor(side.InstanceIndex) - field.map.cellIndices.NumGridCells / (double)joining) < field.map.cellIndices.NumGridCells * 0.02d), "equal health yields proportional territory even with clustered casters");
                 if (joining == 3) CreateProtectedBed();
                 Current.Game.CurrentMap = field.map;
@@ -130,6 +131,7 @@ public sealed class MultipleDomainChecksDriver : MonoBehaviour
             else if (stage == 4)
             {
                 CheckRate(8);
+                DomainContiguousRuntimeChecks.Validate(field!, Check);
                 field!.RequestReturn("multiple checks primary withdrawal");
                 stage = 5; stageStarted = Time.realtimeSinceStartup;
             }
@@ -145,6 +147,7 @@ public sealed class MultipleDomainChecksDriver : MonoBehaviour
             else if (stage == 6)
             {
                 CheckRate(7);
+                DomainContiguousRuntimeChecks.Validate(field!, Check);
                 Check(field!.map.Size == previousSize || previousSize == IntVec3.Zero, "withdrawal does not shrink the physical battlefield");
                 foreach (MapComponent_Domain side in field.Instances.Where(side => side.Active)) side.RestoreHealth(side.MaximumHealth);
                 MapComponent_Domain weak = field.Instances.ElementAt(1);

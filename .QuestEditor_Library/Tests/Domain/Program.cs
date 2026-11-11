@@ -23,6 +23,7 @@ internal static class Program
             if (args.Contains("opening-fusions")) { DomainOpeningFusionChecks.Run(); return; }
             if (args.Contains("opening-reasons")) { DomainOpeningReasonChecks.Run(); return; }
             if (args.Contains("multiple")) { DomainMultiChecks.Run(); return; }
+            if (args.Contains("contiguous")) { DomainContiguousChecks.Run(); return; }
             Run();
             Console.WriteLine("Domain checks passed: " + checks);
         }

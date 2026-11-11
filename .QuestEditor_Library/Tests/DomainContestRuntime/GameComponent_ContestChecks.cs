@@ -52,7 +52,8 @@ public sealed class GameComponent_ContestChecks : GameComponent
             File.AppendAllText(Path.Combine(GenFilePaths.SaveDataFolderPath, "DomainContestChecks.txt"), "TRACE Resume callback\n");
             GameObject owner = new("CQF_ContestChecksResumed");
             UnityEngine.Object.DontDestroyOnLoad(owner);
-            if (GenCommandLine.CommandLineArgPassed("cqfmultiplechecks")) owner.AddComponent<MultipleDomainChecksDriver>().Resume(firstId, secondId, MultiplePhase);
+            if (GenCommandLine.CommandLineArgPassed("cqfcontiguouslabchecks")) owner.AddComponent<ContiguousDomainChecksDriver>().Resume(firstId);
+            else if (GenCommandLine.CommandLineArgPassed("cqfmultiplechecks")) owner.AddComponent<MultipleDomainChecksDriver>().Resume(firstId, secondId, MultiplePhase);
             else if (GenCommandLine.CommandLineArgPassed("cqfbattlefieldchecks")) owner.AddComponent<BattlefieldChecksDriver>().Resume(firstId, secondId, CounterOpeningCase);
             else if (GenCommandLine.CommandLineArgPassed("cqfcounteropeningchecks")) owner.AddComponent<CounterOpeningChecksDriver>().Resume(firstId, secondId, CounterOpeningCase);
             else if (GenCommandLine.CommandLineArgPassed("cqfoccupationchecks")) owner.AddComponent<OccupationChecksDriver>().Resume(firstId, secondId, OccupationPhase);

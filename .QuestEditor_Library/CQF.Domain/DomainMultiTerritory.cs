@@ -3,7 +3,7 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public sealed class DomainMultiTerritory : IExposable
+public sealed partial class DomainMultiTerritory : IExposable
 {
     public DomainMultiTerritory() { }
 
@@ -246,6 +246,7 @@ public sealed class DomainMultiTerritory : IExposable
         Scribe_Collections.Look(ref centers, "centers", LookMode.Value);
         Scribe_Collections.Look(ref fractions, "fractions", LookMode.Value);
         Scribe_Collections.Look(ref biases, "biases", LookMode.Value);
+        Scribe_Values.Look(ref confinementScale, "confinementScale", 1f);
         Scribe_Collections.Look(ref protections, "protections", LookMode.Deep);
         Scribe_Collections.Look(ref claims, "claims", LookMode.Value, LookMode.Value);
         Scribe_Collections.Look(ref exposure, "exposure", LookMode.Value, LookMode.Value);
@@ -275,45 +276,28 @@ public sealed class DomainMultiTerritory : IExposable
 
     private bool InBounds(IntVec3 cell) => cell.x >= 0 && cell.z >= 0 && cell.x < width && cell.z < height;
 
-    private void BuildSamples()
-    {
-        ValidateHealth(fractions);
-        samples = new float[Count][];
-        centerSamples = new float[Count][];
-        distanceSamples = new float[Count][];
-        centerDistances = new float[Count][];
-        owners = new int[width * height];
-        baseOwners = new int[owners.Length];
-        oldBoundary = new bool[owners.Length];
-        protectedOwners = new int[owners.Length]; overrides = new int[owners.Length];
-        for (int side = 0; side < Count; side++)
-        {
-            samples[side] = new float[(width + 1) * (height + 1)];
-            centerSamples[side] = new float[owners.Length];
-            distanceSamples[side] = new float[samples[side].Length];
-            centerDistances[side] = new float[owners.Length];
-            for (int z = 0; z <= height; z++)
-            for (int x = 0; x <= width; x++)
-            {
-                double dx = (x - centers[side].x - 0.5d) / width;
-                double dz = (z - centers[side].z - 0.5d) / height;
-                double angle = Math.Atan2(dz, dx);
-                double warp = 1d + 0.065d * Math.Sin(angle * 3d + side * 1.7d) + 0.04d * Math.Sin(angle * 5d - side * 0.9d);
-                samples[side][z * (width + 1) + x] = (float)-Math.Log((dx * dx + dz * dz) * warp * warp + 0.00002d);
-                distanceSamples[side][z * (width + 1) + x] = (float)(dx * dx + dz * dz);
-            }
-            for (int z = 0; z < height; z++)
-            for (int x = 0; x < width; x++)
-            {
-                int corner = z * (width + 1) + x;
-                centerSamples[side][z * width + x] = (samples[side][corner] + samples[side][corner + width + 2]) * 0.5f;
-                centerDistances[side][z * width + x] = (distanceSamples[side][corner] + distanceSamples[side][corner + width + 2]) * 0.5f;
-            }
-        }
-    }
-
     private void Solve(int passes)
     {
+        confinementScale = 1f;
+        for (int attempt = 0; attempt < 9; attempt++)
+        {
+            SolveWeights(passes);
+            MainTerritoriesConnected();
+            if (!QuotasAccurate()) SolveWeights(Math.Max(96, passes * 2));
+            if (MainTerritoriesConnected() && QuotasAccurate()) return;
+            if (PolishConnectivity()) return;
+            confinementScale *= 0.5f;
+        }
+        confinementScale = 0f;
+        SolveWeights(Math.Max(96, passes * 2));
+        if (MainTerritoriesConnected() && QuotasAccurate() || PolishConnectivity()) return;
+        throw new InvalidOperationException("[CQF] Could not construct connected domain territories: " + topologyError
+            + "; fractions=" + string.Join(",", fractions) + "; cells=" + string.Join(",", Enumerable.Range(0, Count).Select(side => topologyOwners!.Count(owner => owner == side))));
+    }
+
+    private void SolveWeights(int passes)
+    {
+        RefreshConfinement();
         double[] desired = fractions.Select(value => (double)value * width * height).ToArray();
         int[] fixedCounts = new int[Count];
         foreach (int owner in overrides!) if (owner > 0) fixedCounts[owner - 1]++;
@@ -326,6 +310,7 @@ public sealed class DomainMultiTerritory : IExposable
         }
         double total = desired.Sum();
         if (total > 0) for (int side = 0; side < Count; side++) desired[side] *= free / total;
+        quotaTargets = desired.Select((value, side) => value + fixedCounts[side]).ToArray();
         if (free == 0) return;
         float[] thresholds = new float[free];
         float[] confinement = Enumerable.Range(0, Count).Select(Confinement).ToArray();
@@ -368,7 +353,7 @@ public sealed class DomainMultiTerritory : IExposable
         }
     }
 
-    private float Confinement(int side) => Mathf.Clamp01((0.3f - fractions[side]) / 0.3f) * 16f;
+    private float Confinement(int side) => confinement![side];
 
     private static float SelectThreshold(float[] values, int target)
     {
