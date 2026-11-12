@@ -1,0 +1,9 @@
+{
+  "IsSupported": true,
+  "IsEnabled": true,
+  "MatchedMethodCount": 2,
+  "InstrumentedMethodCount": 2,
+  "AllocationTrackingSupported": true,
+  "AllocationTracking": true,
+  "ScopeOverheadNanoseconds": 53.43407
+}

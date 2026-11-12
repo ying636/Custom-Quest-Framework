@@ -1,0 +1,1444 @@
+PASS Poolcore temporary lighting layer removed from loaded assembly
+PASS Star native scene generated
+PASS Pool native scene generated
+PASS Concrete native scene generated
+PASS Normal_Dawn_Inside actual camera reached requested position and zoom
+PASS Normal_Dawn_Inside no supplemental submissions
+PASS native screenshot Normal_Dawn_Inside_Before
+PASS native screenshot Normal_Dawn_Inside_After
+PASS Normal_Dawn_Left actual camera reached requested position and zoom
+PASS Normal_Dawn_Left no supplemental submissions
+PASS native screenshot Normal_Dawn_Left_Before
+PASS native screenshot Normal_Dawn_Left_After
+PASS Normal_Dawn_Right actual camera reached requested position and zoom
+PASS Normal_Dawn_Right no supplemental submissions
+PASS native screenshot Normal_Dawn_Right_Before
+PASS native screenshot Normal_Dawn_Right_After
+PASS Normal_Dawn_Bottom actual camera reached requested position and zoom
+PASS Normal_Dawn_Bottom no supplemental submissions
+PASS native screenshot Normal_Dawn_Bottom_Before
+PASS native screenshot Normal_Dawn_Bottom_After
+PASS Normal_Dawn_Top actual camera reached requested position and zoom
+PASS Normal_Dawn_Top no supplemental submissions
+PASS native screenshot Normal_Dawn_Top_Before
+PASS native screenshot Normal_Dawn_Top_After
+PASS Normal_Dawn_BottomLeft actual camera reached requested position and zoom
+PASS Normal_Dawn_BottomLeft no supplemental submissions
+PASS native screenshot Normal_Dawn_BottomLeft_Before
+PASS native screenshot Normal_Dawn_BottomLeft_After
+PASS Normal_Dawn_BottomRight actual camera reached requested position and zoom
+PASS Normal_Dawn_BottomRight no supplemental submissions
+PASS native screenshot Normal_Dawn_BottomRight_Before
+PASS native screenshot Normal_Dawn_BottomRight_After
+PASS Normal_Dawn_TopLeft actual camera reached requested position and zoom
+PASS Normal_Dawn_TopLeft no supplemental submissions
+PASS native screenshot Normal_Dawn_TopLeft_Before
+PASS native screenshot Normal_Dawn_TopLeft_After
+PASS Normal_Dawn_TopRight actual camera reached requested position and zoom
+PASS Normal_Dawn_TopRight no supplemental submissions
+PASS native screenshot Normal_Dawn_TopRight_Before
+PASS native screenshot Normal_Dawn_TopRight_After
+PASS Normal_Dawn_Wide actual camera reached requested position and zoom
+PASS Normal_Dawn_Wide no supplemental submissions
+PASS native screenshot Normal_Dawn_Wide_Before
+PASS native screenshot Normal_Dawn_Wide_After
+PASS Normal_Noon_Inside actual camera reached requested position and zoom
+PASS Normal_Noon_Inside no supplemental submissions
+PASS Normal_Noon_Left actual camera reached requested position and zoom
+PASS Normal_Noon_Left no supplemental submissions
+PASS Normal_Noon_Right actual camera reached requested position and zoom
+PASS Normal_Noon_Right no supplemental submissions
+PASS Normal_Noon_Bottom actual camera reached requested position and zoom
+PASS Normal_Noon_Bottom no supplemental submissions
+PASS Normal_Noon_Top actual camera reached requested position and zoom
+PASS Normal_Noon_Top no supplemental submissions
+PASS Normal_Noon_BottomLeft actual camera reached requested position and zoom
+PASS Normal_Noon_BottomLeft no supplemental submissions
+PASS Normal_Noon_BottomRight actual camera reached requested position and zoom
+PASS Normal_Noon_BottomRight no supplemental submissions
+PASS Normal_Noon_TopLeft actual camera reached requested position and zoom
+PASS Normal_Noon_TopLeft no supplemental submissions
+PASS Normal_Noon_TopRight actual camera reached requested position and zoom
+PASS Normal_Noon_TopRight no supplemental submissions
+PASS Normal_Noon_Wide actual camera reached requested position and zoom
+PASS Normal_Noon_Wide no supplemental submissions
+PASS native screenshot Normal_Noon_Wide_Before
+PASS native screenshot Normal_Noon_Wide_After
+PASS Normal_Dusk_Inside actual camera reached requested position and zoom
+PASS Normal_Dusk_Inside no supplemental submissions
+PASS Normal_Dusk_Left actual camera reached requested position and zoom
+PASS Normal_Dusk_Left no supplemental submissions
+PASS Normal_Dusk_Right actual camera reached requested position and zoom
+PASS Normal_Dusk_Right no supplemental submissions
+PASS Normal_Dusk_Bottom actual camera reached requested position and zoom
+PASS Normal_Dusk_Bottom no supplemental submissions
+PASS Normal_Dusk_Top actual camera reached requested position and zoom
+PASS Normal_Dusk_Top no supplemental submissions
+PASS Normal_Dusk_BottomLeft actual camera reached requested position and zoom
+PASS Normal_Dusk_BottomLeft no supplemental submissions
+PASS Normal_Dusk_BottomRight actual camera reached requested position and zoom
+PASS Normal_Dusk_BottomRight no supplemental submissions
+PASS Normal_Dusk_TopLeft actual camera reached requested position and zoom
+PASS Normal_Dusk_TopLeft no supplemental submissions
+PASS Normal_Dusk_TopRight actual camera reached requested position and zoom
+PASS Normal_Dusk_TopRight no supplemental submissions
+PASS Normal_Dusk_Wide actual camera reached requested position and zoom
+PASS Normal_Dusk_Wide no supplemental submissions
+PASS native screenshot Normal_Dusk_Wide_Before
+PASS native screenshot Normal_Dusk_Wide_After
+PASS Normal_Night_Inside actual camera reached requested position and zoom
+PASS Normal_Night_Inside no supplemental submissions
+PASS Normal_Night_Left actual camera reached requested position and zoom
+PASS Normal_Night_Left no supplemental submissions
+PASS Normal_Night_Right actual camera reached requested position and zoom
+PASS Normal_Night_Right no supplemental submissions
+PASS Normal_Night_Bottom actual camera reached requested position and zoom
+PASS Normal_Night_Bottom no supplemental submissions
+PASS Normal_Night_Top actual camera reached requested position and zoom
+PASS Normal_Night_Top no supplemental submissions
+PASS Normal_Night_BottomLeft actual camera reached requested position and zoom
+PASS Normal_Night_BottomLeft no supplemental submissions
+PASS Normal_Night_BottomRight actual camera reached requested position and zoom
+PASS Normal_Night_BottomRight no supplemental submissions
+PASS Normal_Night_TopLeft actual camera reached requested position and zoom
+PASS Normal_Night_TopLeft no supplemental submissions
+PASS Normal_Night_TopRight actual camera reached requested position and zoom
+PASS Normal_Night_TopRight no supplemental submissions
+PASS Normal_Night_Wide actual camera reached requested position and zoom
+PASS Normal_Night_Wide no supplemental submissions
+PASS native screenshot Normal_Night_Wide_Before
+PASS native screenshot Normal_Night_Wide_After
+PASS Normal native exterior geometry unchanged
+PASS Star CameraVisible enabled
+PASS Star_Dawn_Inside actual camera reached requested position and zoom
+PASS Star_Dawn_Inside two native material submissions per nonempty region
+PASS Star_Dawn_Inside exact viewport minus native rectangle coverage
+PASS Star_Dawn_Inside native altitude and render layer
+PASS native screenshot Star_Dawn_Inside_Before
+PASS native screenshot Star_Dawn_Inside_After
+PASS Star_Dawn_Left actual camera reached requested position and zoom
+PASS Star_Dawn_Left two native material submissions per nonempty region
+PASS Star_Dawn_Left exact viewport minus native rectangle coverage
+PASS Star_Dawn_Left no native-region overlap 0
+PASS Star_Dawn_Left native altitude and render layer
+PASS native screenshot Star_Dawn_Left_Before
+PASS native screenshot Star_Dawn_Left_After
+PASS Star_Dawn_Right actual camera reached requested position and zoom
+PASS Star_Dawn_Right two native material submissions per nonempty region
+PASS Star_Dawn_Right exact viewport minus native rectangle coverage
+PASS Star_Dawn_Right no native-region overlap 0
+PASS Star_Dawn_Right native altitude and render layer
+PASS native screenshot Star_Dawn_Right_Before
+PASS native screenshot Star_Dawn_Right_After
+PASS Star_Dawn_Bottom actual camera reached requested position and zoom
+PASS Star_Dawn_Bottom two native material submissions per nonempty region
+PASS Star_Dawn_Bottom exact viewport minus native rectangle coverage
+PASS Star_Dawn_Bottom no native-region overlap 0
+PASS Star_Dawn_Bottom native altitude and render layer
+PASS native screenshot Star_Dawn_Bottom_Before
+PASS native screenshot Star_Dawn_Bottom_After
+PASS Star_Dawn_Top actual camera reached requested position and zoom
+PASS Star_Dawn_Top two native material submissions per nonempty region
+PASS Star_Dawn_Top exact viewport minus native rectangle coverage
+PASS Star_Dawn_Top no native-region overlap 0
+PASS Star_Dawn_Top native altitude and render layer
+PASS native screenshot Star_Dawn_Top_Before
+PASS native screenshot Star_Dawn_Top_After
+PASS Star_Dawn_BottomLeft actual camera reached requested position and zoom
+PASS Star_Dawn_BottomLeft two native material submissions per nonempty region
+PASS Star_Dawn_BottomLeft exact viewport minus native rectangle coverage
+PASS Star_Dawn_BottomLeft no native-region overlap 0
+PASS Star_Dawn_BottomLeft disjoint regions 0/1
+PASS Star_Dawn_BottomLeft no native-region overlap 1
+PASS Star_Dawn_BottomLeft native altitude and render layer
+PASS native screenshot Star_Dawn_BottomLeft_Before
+PASS native screenshot Star_Dawn_BottomLeft_After
+PASS Star_Dawn_BottomRight actual camera reached requested position and zoom
+PASS Star_Dawn_BottomRight two native material submissions per nonempty region
+PASS Star_Dawn_BottomRight exact viewport minus native rectangle coverage
+PASS Star_Dawn_BottomRight no native-region overlap 0
+PASS Star_Dawn_BottomRight disjoint regions 0/1
+PASS Star_Dawn_BottomRight no native-region overlap 1
+PASS Star_Dawn_BottomRight native altitude and render layer
+PASS native screenshot Star_Dawn_BottomRight_Before
+PASS native screenshot Star_Dawn_BottomRight_After
+PASS Star_Dawn_TopLeft actual camera reached requested position and zoom
+PASS Star_Dawn_TopLeft two native material submissions per nonempty region
+PASS Star_Dawn_TopLeft exact viewport minus native rectangle coverage
+PASS Star_Dawn_TopLeft no native-region overlap 0
+PASS Star_Dawn_TopLeft disjoint regions 0/1
+PASS Star_Dawn_TopLeft no native-region overlap 1
+PASS Star_Dawn_TopLeft native altitude and render layer
+PASS native screenshot Star_Dawn_TopLeft_Before
+PASS native screenshot Star_Dawn_TopLeft_After
+PASS Star_Dawn_TopRight actual camera reached requested position and zoom
+PASS Star_Dawn_TopRight two native material submissions per nonempty region
+PASS Star_Dawn_TopRight exact viewport minus native rectangle coverage
+PASS Star_Dawn_TopRight no native-region overlap 0
+PASS Star_Dawn_TopRight disjoint regions 0/1
+PASS Star_Dawn_TopRight no native-region overlap 1
+PASS Star_Dawn_TopRight native altitude and render layer
+PASS native screenshot Star_Dawn_TopRight_Before
+PASS native screenshot Star_Dawn_TopRight_After
+PASS Star_Dawn_Wide actual camera reached requested position and zoom
+PASS Star_Dawn_Wide two native material submissions per nonempty region
+PASS Star_Dawn_Wide exact viewport minus native rectangle coverage
+PASS Star_Dawn_Wide no native-region overlap 0
+PASS Star_Dawn_Wide disjoint regions 0/1
+PASS Star_Dawn_Wide disjoint regions 0/2
+PASS Star_Dawn_Wide disjoint regions 0/3
+PASS Star_Dawn_Wide no native-region overlap 1
+PASS Star_Dawn_Wide disjoint regions 1/2
+PASS Star_Dawn_Wide disjoint regions 1/3
+PASS Star_Dawn_Wide no native-region overlap 2
+PASS Star_Dawn_Wide disjoint regions 2/3
+PASS Star_Dawn_Wide no native-region overlap 3
+PASS Star_Dawn_Wide native altitude and render layer
+PASS native screenshot Star_Dawn_Wide_Before
+PASS native screenshot Star_Dawn_Wide_After
+PASS Star_Noon_Inside actual camera reached requested position and zoom
+PASS Star_Noon_Inside two native material submissions per nonempty region
+PASS Star_Noon_Inside exact viewport minus native rectangle coverage
+PASS Star_Noon_Inside native altitude and render layer
+PASS Star_Noon_Left actual camera reached requested position and zoom
+PASS Star_Noon_Left two native material submissions per nonempty region
+PASS Star_Noon_Left exact viewport minus native rectangle coverage
+PASS Star_Noon_Left no native-region overlap 0
+PASS Star_Noon_Left native altitude and render layer
+PASS Star_Noon_Right actual camera reached requested position and zoom
+PASS Star_Noon_Right two native material submissions per nonempty region
+PASS Star_Noon_Right exact viewport minus native rectangle coverage
+PASS Star_Noon_Right no native-region overlap 0
+PASS Star_Noon_Right native altitude and render layer
+PASS Star_Noon_Bottom actual camera reached requested position and zoom
+PASS Star_Noon_Bottom two native material submissions per nonempty region
+PASS Star_Noon_Bottom exact viewport minus native rectangle coverage
+PASS Star_Noon_Bottom no native-region overlap 0
+PASS Star_Noon_Bottom native altitude and render layer
+PASS Star_Noon_Top actual camera reached requested position and zoom
+PASS Star_Noon_Top two native material submissions per nonempty region
+PASS Star_Noon_Top exact viewport minus native rectangle coverage
+PASS Star_Noon_Top no native-region overlap 0
+PASS Star_Noon_Top native altitude and render layer
+PASS Star_Noon_BottomLeft actual camera reached requested position and zoom
+PASS Star_Noon_BottomLeft two native material submissions per nonempty region
+PASS Star_Noon_BottomLeft exact viewport minus native rectangle coverage
+PASS Star_Noon_BottomLeft no native-region overlap 0
+PASS Star_Noon_BottomLeft disjoint regions 0/1
+PASS Star_Noon_BottomLeft no native-region overlap 1
+PASS Star_Noon_BottomLeft native altitude and render layer
+PASS Star_Noon_BottomRight actual camera reached requested position and zoom
+PASS Star_Noon_BottomRight two native material submissions per nonempty region
+PASS Star_Noon_BottomRight exact viewport minus native rectangle coverage
+PASS Star_Noon_BottomRight no native-region overlap 0
+PASS Star_Noon_BottomRight disjoint regions 0/1
+PASS Star_Noon_BottomRight no native-region overlap 1
+PASS Star_Noon_BottomRight native altitude and render layer
+PASS Star_Noon_TopLeft actual camera reached requested position and zoom
+PASS Star_Noon_TopLeft two native material submissions per nonempty region
+PASS Star_Noon_TopLeft exact viewport minus native rectangle coverage
+PASS Star_Noon_TopLeft no native-region overlap 0
+PASS Star_Noon_TopLeft disjoint regions 0/1
+PASS Star_Noon_TopLeft no native-region overlap 1
+PASS Star_Noon_TopLeft native altitude and render layer
+PASS Star_Noon_TopRight actual camera reached requested position and zoom
+PASS Star_Noon_TopRight two native material submissions per nonempty region
+PASS Star_Noon_TopRight exact viewport minus native rectangle coverage
+PASS Star_Noon_TopRight no native-region overlap 0
+PASS Star_Noon_TopRight disjoint regions 0/1
+PASS Star_Noon_TopRight no native-region overlap 1
+PASS Star_Noon_TopRight native altitude and render layer
+PASS Star_Noon_Wide actual camera reached requested position and zoom
+PASS Star_Noon_Wide two native material submissions per nonempty region
+PASS Star_Noon_Wide exact viewport minus native rectangle coverage
+PASS Star_Noon_Wide no native-region overlap 0
+PASS Star_Noon_Wide disjoint regions 0/1
+PASS Star_Noon_Wide disjoint regions 0/2
+PASS Star_Noon_Wide disjoint regions 0/3
+PASS Star_Noon_Wide no native-region overlap 1
+PASS Star_Noon_Wide disjoint regions 1/2
+PASS Star_Noon_Wide disjoint regions 1/3
+PASS Star_Noon_Wide no native-region overlap 2
+PASS Star_Noon_Wide disjoint regions 2/3
+PASS Star_Noon_Wide no native-region overlap 3
+PASS Star_Noon_Wide native altitude and render layer
+PASS native screenshot Star_Noon_Wide_Before
+PASS native screenshot Star_Noon_Wide_After
+PASS Star_Dusk_Inside actual camera reached requested position and zoom
+PASS Star_Dusk_Inside two native material submissions per nonempty region
+PASS Star_Dusk_Inside exact viewport minus native rectangle coverage
+PASS Star_Dusk_Inside native altitude and render layer
+PASS Star_Dusk_Left actual camera reached requested position and zoom
+PASS Star_Dusk_Left two native material submissions per nonempty region
+PASS Star_Dusk_Left exact viewport minus native rectangle coverage
+PASS Star_Dusk_Left no native-region overlap 0
+PASS Star_Dusk_Left native altitude and render layer
+PASS Star_Dusk_Right actual camera reached requested position and zoom
+PASS Star_Dusk_Right two native material submissions per nonempty region
+PASS Star_Dusk_Right exact viewport minus native rectangle coverage
+PASS Star_Dusk_Right no native-region overlap 0
+PASS Star_Dusk_Right native altitude and render layer
+PASS Star_Dusk_Bottom actual camera reached requested position and zoom
+PASS Star_Dusk_Bottom two native material submissions per nonempty region
+PASS Star_Dusk_Bottom exact viewport minus native rectangle coverage
+PASS Star_Dusk_Bottom no native-region overlap 0
+PASS Star_Dusk_Bottom native altitude and render layer
+PASS Star_Dusk_Top actual camera reached requested position and zoom
+PASS Star_Dusk_Top two native material submissions per nonempty region
+PASS Star_Dusk_Top exact viewport minus native rectangle coverage
+PASS Star_Dusk_Top no native-region overlap 0
+PASS Star_Dusk_Top native altitude and render layer
+PASS Star_Dusk_BottomLeft actual camera reached requested position and zoom
+PASS Star_Dusk_BottomLeft two native material submissions per nonempty region
+PASS Star_Dusk_BottomLeft exact viewport minus native rectangle coverage
+PASS Star_Dusk_BottomLeft no native-region overlap 0
+PASS Star_Dusk_BottomLeft disjoint regions 0/1
+PASS Star_Dusk_BottomLeft no native-region overlap 1
+PASS Star_Dusk_BottomLeft native altitude and render layer
+PASS Star_Dusk_BottomRight actual camera reached requested position and zoom
+PASS Star_Dusk_BottomRight two native material submissions per nonempty region
+PASS Star_Dusk_BottomRight exact viewport minus native rectangle coverage
+PASS Star_Dusk_BottomRight no native-region overlap 0
+PASS Star_Dusk_BottomRight disjoint regions 0/1
+PASS Star_Dusk_BottomRight no native-region overlap 1
+PASS Star_Dusk_BottomRight native altitude and render layer
+PASS Star_Dusk_TopLeft actual camera reached requested position and zoom
+PASS Star_Dusk_TopLeft two native material submissions per nonempty region
+PASS Star_Dusk_TopLeft exact viewport minus native rectangle coverage
+PASS Star_Dusk_TopLeft no native-region overlap 0
+PASS Star_Dusk_TopLeft disjoint regions 0/1
+PASS Star_Dusk_TopLeft no native-region overlap 1
+PASS Star_Dusk_TopLeft native altitude and render layer
+PASS Star_Dusk_TopRight actual camera reached requested position and zoom
+PASS Star_Dusk_TopRight two native material submissions per nonempty region
+PASS Star_Dusk_TopRight exact viewport minus native rectangle coverage
+PASS Star_Dusk_TopRight no native-region overlap 0
+PASS Star_Dusk_TopRight disjoint regions 0/1
+PASS Star_Dusk_TopRight no native-region overlap 1
+PASS Star_Dusk_TopRight native altitude and render layer
+PASS Star_Dusk_Wide actual camera reached requested position and zoom
+PASS Star_Dusk_Wide two native material submissions per nonempty region
+PASS Star_Dusk_Wide exact viewport minus native rectangle coverage
+PASS Star_Dusk_Wide no native-region overlap 0
+PASS Star_Dusk_Wide disjoint regions 0/1
+PASS Star_Dusk_Wide disjoint regions 0/2
+PASS Star_Dusk_Wide disjoint regions 0/3
+PASS Star_Dusk_Wide no native-region overlap 1
+PASS Star_Dusk_Wide disjoint regions 1/2
+PASS Star_Dusk_Wide disjoint regions 1/3
+PASS Star_Dusk_Wide no native-region overlap 2
+PASS Star_Dusk_Wide disjoint regions 2/3
+PASS Star_Dusk_Wide no native-region overlap 3
+PASS Star_Dusk_Wide native altitude and render layer
+PASS native screenshot Star_Dusk_Wide_Before
+PASS native screenshot Star_Dusk_Wide_After
+PASS Star_Night_Inside actual camera reached requested position and zoom
+PASS Star_Night_Inside two native material submissions per nonempty region
+PASS Star_Night_Inside exact viewport minus native rectangle coverage
+PASS Star_Night_Inside native altitude and render layer
+PASS Star_Night_Left actual camera reached requested position and zoom
+PASS Star_Night_Left two native material submissions per nonempty region
+PASS Star_Night_Left exact viewport minus native rectangle coverage
+PASS Star_Night_Left no native-region overlap 0
+PASS Star_Night_Left native altitude and render layer
+PASS Star_Night_Right actual camera reached requested position and zoom
+PASS Star_Night_Right two native material submissions per nonempty region
+PASS Star_Night_Right exact viewport minus native rectangle coverage
+PASS Star_Night_Right no native-region overlap 0
+PASS Star_Night_Right native altitude and render layer
+PASS Star_Night_Bottom actual camera reached requested position and zoom
+PASS Star_Night_Bottom two native material submissions per nonempty region
+PASS Star_Night_Bottom exact viewport minus native rectangle coverage
+PASS Star_Night_Bottom no native-region overlap 0
+PASS Star_Night_Bottom native altitude and render layer
+PASS Star_Night_Top actual camera reached requested position and zoom
+PASS Star_Night_Top two native material submissions per nonempty region
+PASS Star_Night_Top exact viewport minus native rectangle coverage
+PASS Star_Night_Top no native-region overlap 0
+PASS Star_Night_Top native altitude and render layer
+PASS Star_Night_BottomLeft actual camera reached requested position and zoom
+PASS Star_Night_BottomLeft two native material submissions per nonempty region
+PASS Star_Night_BottomLeft exact viewport minus native rectangle coverage
+PASS Star_Night_BottomLeft no native-region overlap 0
+PASS Star_Night_BottomLeft disjoint regions 0/1
+PASS Star_Night_BottomLeft no native-region overlap 1
+PASS Star_Night_BottomLeft native altitude and render layer
+PASS Star_Night_BottomRight actual camera reached requested position and zoom
+PASS Star_Night_BottomRight two native material submissions per nonempty region
+PASS Star_Night_BottomRight exact viewport minus native rectangle coverage
+PASS Star_Night_BottomRight no native-region overlap 0
+PASS Star_Night_BottomRight disjoint regions 0/1
+PASS Star_Night_BottomRight no native-region overlap 1
+PASS Star_Night_BottomRight native altitude and render layer
+PASS Star_Night_TopLeft actual camera reached requested position and zoom
+PASS Star_Night_TopLeft two native material submissions per nonempty region
+PASS Star_Night_TopLeft exact viewport minus native rectangle coverage
+PASS Star_Night_TopLeft no native-region overlap 0
+PASS Star_Night_TopLeft disjoint regions 0/1
+PASS Star_Night_TopLeft no native-region overlap 1
+PASS Star_Night_TopLeft native altitude and render layer
+PASS Star_Night_TopRight actual camera reached requested position and zoom
+PASS Star_Night_TopRight two native material submissions per nonempty region
+PASS Star_Night_TopRight exact viewport minus native rectangle coverage
+PASS Star_Night_TopRight no native-region overlap 0
+PASS Star_Night_TopRight disjoint regions 0/1
+PASS Star_Night_TopRight no native-region overlap 1
+PASS Star_Night_TopRight native altitude and render layer
+PASS Star_Night_Wide actual camera reached requested position and zoom
+PASS Star_Night_Wide two native material submissions per nonempty region
+PASS Star_Night_Wide exact viewport minus native rectangle coverage
+PASS Star_Night_Wide no native-region overlap 0
+PASS Star_Night_Wide disjoint regions 0/1
+PASS Star_Night_Wide disjoint regions 0/2
+PASS Star_Night_Wide disjoint regions 0/3
+PASS Star_Night_Wide no native-region overlap 1
+PASS Star_Night_Wide disjoint regions 1/2
+PASS Star_Night_Wide disjoint regions 1/3
+PASS Star_Night_Wide no native-region overlap 2
+PASS Star_Night_Wide disjoint regions 2/3
+PASS Star_Night_Wide no native-region overlap 3
+PASS Star_Night_Wide native altitude and render layer
+PASS native screenshot Star_Night_Wide_Before
+PASS native screenshot Star_Night_Wide_After
+PASS Star native exterior geometry unchanged
+PASS Star mesh instances reused across views and regeneration
+PASS Star mode Map
+PASS Star_Mode_Map actual camera reached requested position and zoom
+PASS Star_Mode_Map no supplemental submissions
+PASS Star mode CameraVisible
+PASS Star_Mode_CameraVisible actual camera reached requested position and zoom
+PASS Star_Mode_CameraVisible two native material submissions per nonempty region
+PASS Star_Mode_CameraVisible exact viewport minus native rectangle coverage
+PASS Star_Mode_CameraVisible no native-region overlap 0
+PASS Star_Mode_CameraVisible disjoint regions 0/1
+PASS Star_Mode_CameraVisible disjoint regions 0/2
+PASS Star_Mode_CameraVisible disjoint regions 0/3
+PASS Star_Mode_CameraVisible no native-region overlap 1
+PASS Star_Mode_CameraVisible disjoint regions 1/2
+PASS Star_Mode_CameraVisible disjoint regions 1/3
+PASS Star_Mode_CameraVisible no native-region overlap 2
+PASS Star_Mode_CameraVisible disjoint regions 2/3
+PASS Star_Mode_CameraVisible no native-region overlap 3
+PASS Star_Mode_CameraVisible native altitude and render layer
+PASS Star mode Disabled
+PASS Star_Mode_Disabled actual camera reached requested position and zoom
+PASS Star_Mode_Disabled no supplemental submissions
+PASS Star mode UI_Null
+PASS Star_Mode_UI_Null actual camera reached requested position and zoom
+PASS Star_Mode_UI_Null two native material submissions per nonempty region
+PASS Star_Mode_UI_Null exact viewport minus native rectangle coverage
+PASS Star_Mode_UI_Null no native-region overlap 0
+PASS Star_Mode_UI_Null disjoint regions 0/1
+PASS Star_Mode_UI_Null disjoint regions 0/2
+PASS Star_Mode_UI_Null disjoint regions 0/3
+PASS Star_Mode_UI_Null no native-region overlap 1
+PASS Star_Mode_UI_Null disjoint regions 1/2
+PASS Star_Mode_UI_Null disjoint regions 1/3
+PASS Star_Mode_UI_Null no native-region overlap 2
+PASS Star_Mode_UI_Null disjoint regions 2/3
+PASS Star_Mode_UI_Null no native-region overlap 3
+PASS Star_Mode_UI_Null native altitude and render layer
+PASS Star mode LightingOff
+PASS Star_Mode_LightingOff actual camera reached requested position and zoom
+PASS Star_Mode_LightingOff no supplemental submissions
+PASS Star mode LightingOn
+PASS Star_Mode_LightingOn actual camera reached requested position and zoom
+PASS Star_Mode_LightingOn two native material submissions per nonempty region
+PASS Star_Mode_LightingOn exact viewport minus native rectangle coverage
+PASS Star_Mode_LightingOn no native-region overlap 0
+PASS Star_Mode_LightingOn disjoint regions 0/1
+PASS Star_Mode_LightingOn disjoint regions 0/2
+PASS Star_Mode_LightingOn disjoint regions 0/3
+PASS Star_Mode_LightingOn no native-region overlap 1
+PASS Star_Mode_LightingOn disjoint regions 1/2
+PASS Star_Mode_LightingOn disjoint regions 1/3
+PASS Star_Mode_LightingOn no native-region overlap 2
+PASS Star_Mode_LightingOn disjoint regions 2/3
+PASS Star_Mode_LightingOn no native-region overlap 3
+PASS Star_Mode_LightingOn native altitude and render layer
+PASS Star copy and XML keep panorama mode
+PASS Pool CameraVisible enabled
+PASS Pool other layers supply UI/Null panorama
+PASS Pool_Dawn_Inside actual camera reached requested position and zoom
+PASS Pool_Dawn_Inside two native material submissions per nonempty region
+PASS Pool_Dawn_Inside exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Inside native altitude and render layer
+PASS native screenshot Pool_Dawn_Inside_Before
+PASS native screenshot Pool_Dawn_Inside_After
+PASS Pool_Dawn_Inside_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_Inside_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_Inside_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Inside_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_Inside_NoHaze_Before
+PASS native screenshot Pool_Dawn_Inside_NoHaze_After
+PASS Pool_Dawn_Left actual camera reached requested position and zoom
+PASS Pool_Dawn_Left two native material submissions per nonempty region
+PASS Pool_Dawn_Left exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Left no native-region overlap 0
+PASS Pool_Dawn_Left native altitude and render layer
+PASS native screenshot Pool_Dawn_Left_Before
+PASS native screenshot Pool_Dawn_Left_After
+PASS Pool_Dawn_Left_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_Left_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_Left_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Left_NoHaze no native-region overlap 0
+PASS Pool_Dawn_Left_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_Left_NoHaze_Before
+PASS native screenshot Pool_Dawn_Left_NoHaze_After
+PASS Pool_Dawn_Right actual camera reached requested position and zoom
+PASS Pool_Dawn_Right two native material submissions per nonempty region
+PASS Pool_Dawn_Right exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Right no native-region overlap 0
+PASS Pool_Dawn_Right native altitude and render layer
+PASS native screenshot Pool_Dawn_Right_Before
+PASS native screenshot Pool_Dawn_Right_After
+PASS Pool_Dawn_Right_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_Right_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_Right_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Right_NoHaze no native-region overlap 0
+PASS Pool_Dawn_Right_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_Right_NoHaze_Before
+PASS native screenshot Pool_Dawn_Right_NoHaze_After
+PASS Pool_Dawn_Bottom actual camera reached requested position and zoom
+PASS Pool_Dawn_Bottom two native material submissions per nonempty region
+PASS Pool_Dawn_Bottom exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Bottom no native-region overlap 0
+PASS Pool_Dawn_Bottom native altitude and render layer
+PASS native screenshot Pool_Dawn_Bottom_Before
+PASS native screenshot Pool_Dawn_Bottom_After
+PASS Pool_Dawn_Bottom_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_Bottom_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_Bottom_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Bottom_NoHaze no native-region overlap 0
+PASS Pool_Dawn_Bottom_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_Bottom_NoHaze_Before
+PASS native screenshot Pool_Dawn_Bottom_NoHaze_After
+PASS Pool_Dawn_Top actual camera reached requested position and zoom
+PASS Pool_Dawn_Top two native material submissions per nonempty region
+PASS Pool_Dawn_Top exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Top no native-region overlap 0
+PASS Pool_Dawn_Top native altitude and render layer
+PASS native screenshot Pool_Dawn_Top_Before
+PASS native screenshot Pool_Dawn_Top_After
+PASS Pool_Dawn_Top_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_Top_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_Top_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Top_NoHaze no native-region overlap 0
+PASS Pool_Dawn_Top_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_Top_NoHaze_Before
+PASS native screenshot Pool_Dawn_Top_NoHaze_After
+PASS Pool_Dawn_BottomLeft actual camera reached requested position and zoom
+PASS Pool_Dawn_BottomLeft two native material submissions per nonempty region
+PASS Pool_Dawn_BottomLeft exact viewport minus native rectangle coverage
+PASS Pool_Dawn_BottomLeft no native-region overlap 0
+PASS Pool_Dawn_BottomLeft disjoint regions 0/1
+PASS Pool_Dawn_BottomLeft no native-region overlap 1
+PASS Pool_Dawn_BottomLeft native altitude and render layer
+PASS native screenshot Pool_Dawn_BottomLeft_Before
+PASS native screenshot Pool_Dawn_BottomLeft_After
+PASS Pool_Dawn_BottomLeft_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_BottomLeft_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_BottomLeft_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_BottomLeft_NoHaze no native-region overlap 0
+PASS Pool_Dawn_BottomLeft_NoHaze disjoint regions 0/1
+PASS Pool_Dawn_BottomLeft_NoHaze no native-region overlap 1
+PASS Pool_Dawn_BottomLeft_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_BottomLeft_NoHaze_Before
+PASS native screenshot Pool_Dawn_BottomLeft_NoHaze_After
+PASS Pool_Dawn_BottomRight actual camera reached requested position and zoom
+PASS Pool_Dawn_BottomRight two native material submissions per nonempty region
+PASS Pool_Dawn_BottomRight exact viewport minus native rectangle coverage
+PASS Pool_Dawn_BottomRight no native-region overlap 0
+PASS Pool_Dawn_BottomRight disjoint regions 0/1
+PASS Pool_Dawn_BottomRight no native-region overlap 1
+PASS Pool_Dawn_BottomRight native altitude and render layer
+PASS native screenshot Pool_Dawn_BottomRight_Before
+PASS native screenshot Pool_Dawn_BottomRight_After
+PASS Pool_Dawn_BottomRight_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_BottomRight_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_BottomRight_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_BottomRight_NoHaze no native-region overlap 0
+PASS Pool_Dawn_BottomRight_NoHaze disjoint regions 0/1
+PASS Pool_Dawn_BottomRight_NoHaze no native-region overlap 1
+PASS Pool_Dawn_BottomRight_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_BottomRight_NoHaze_Before
+PASS native screenshot Pool_Dawn_BottomRight_NoHaze_After
+PASS Pool_Dawn_TopLeft actual camera reached requested position and zoom
+PASS Pool_Dawn_TopLeft two native material submissions per nonempty region
+PASS Pool_Dawn_TopLeft exact viewport minus native rectangle coverage
+PASS Pool_Dawn_TopLeft no native-region overlap 0
+PASS Pool_Dawn_TopLeft disjoint regions 0/1
+PASS Pool_Dawn_TopLeft no native-region overlap 1
+PASS Pool_Dawn_TopLeft native altitude and render layer
+PASS native screenshot Pool_Dawn_TopLeft_Before
+PASS native screenshot Pool_Dawn_TopLeft_After
+PASS Pool_Dawn_TopLeft_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_TopLeft_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_TopLeft_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_TopLeft_NoHaze no native-region overlap 0
+PASS Pool_Dawn_TopLeft_NoHaze disjoint regions 0/1
+PASS Pool_Dawn_TopLeft_NoHaze no native-region overlap 1
+PASS Pool_Dawn_TopLeft_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_TopLeft_NoHaze_Before
+PASS native screenshot Pool_Dawn_TopLeft_NoHaze_After
+PASS Pool_Dawn_TopRight actual camera reached requested position and zoom
+PASS Pool_Dawn_TopRight two native material submissions per nonempty region
+PASS Pool_Dawn_TopRight exact viewport minus native rectangle coverage
+PASS Pool_Dawn_TopRight no native-region overlap 0
+PASS Pool_Dawn_TopRight disjoint regions 0/1
+PASS Pool_Dawn_TopRight no native-region overlap 1
+PASS Pool_Dawn_TopRight native altitude and render layer
+PASS native screenshot Pool_Dawn_TopRight_Before
+PASS native screenshot Pool_Dawn_TopRight_After
+PASS Pool_Dawn_TopRight_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_TopRight_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_TopRight_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_TopRight_NoHaze no native-region overlap 0
+PASS Pool_Dawn_TopRight_NoHaze disjoint regions 0/1
+PASS Pool_Dawn_TopRight_NoHaze no native-region overlap 1
+PASS Pool_Dawn_TopRight_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_TopRight_NoHaze_Before
+PASS native screenshot Pool_Dawn_TopRight_NoHaze_After
+PASS Pool_Dawn_Wide actual camera reached requested position and zoom
+PASS Pool_Dawn_Wide two native material submissions per nonempty region
+PASS Pool_Dawn_Wide exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Wide no native-region overlap 0
+PASS Pool_Dawn_Wide disjoint regions 0/1
+PASS Pool_Dawn_Wide disjoint regions 0/2
+PASS Pool_Dawn_Wide disjoint regions 0/3
+PASS Pool_Dawn_Wide no native-region overlap 1
+PASS Pool_Dawn_Wide disjoint regions 1/2
+PASS Pool_Dawn_Wide disjoint regions 1/3
+PASS Pool_Dawn_Wide no native-region overlap 2
+PASS Pool_Dawn_Wide disjoint regions 2/3
+PASS Pool_Dawn_Wide no native-region overlap 3
+PASS Pool_Dawn_Wide native altitude and render layer
+PASS native screenshot Pool_Dawn_Wide_Before
+PASS native screenshot Pool_Dawn_Wide_After
+PASS Pool_Dawn_Wide_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dawn_Wide_NoHaze two native material submissions per nonempty region
+PASS Pool_Dawn_Wide_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dawn_Wide_NoHaze no native-region overlap 0
+PASS Pool_Dawn_Wide_NoHaze disjoint regions 0/1
+PASS Pool_Dawn_Wide_NoHaze disjoint regions 0/2
+PASS Pool_Dawn_Wide_NoHaze disjoint regions 0/3
+PASS Pool_Dawn_Wide_NoHaze no native-region overlap 1
+PASS Pool_Dawn_Wide_NoHaze disjoint regions 1/2
+PASS Pool_Dawn_Wide_NoHaze disjoint regions 1/3
+PASS Pool_Dawn_Wide_NoHaze no native-region overlap 2
+PASS Pool_Dawn_Wide_NoHaze disjoint regions 2/3
+PASS Pool_Dawn_Wide_NoHaze no native-region overlap 3
+PASS Pool_Dawn_Wide_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dawn_Wide_NoHaze_Before
+PASS native screenshot Pool_Dawn_Wide_NoHaze_After
+PASS Pool_Noon_Inside actual camera reached requested position and zoom
+PASS Pool_Noon_Inside two native material submissions per nonempty region
+PASS Pool_Noon_Inside exact viewport minus native rectangle coverage
+PASS Pool_Noon_Inside native altitude and render layer
+PASS Pool_Noon_Left actual camera reached requested position and zoom
+PASS Pool_Noon_Left two native material submissions per nonempty region
+PASS Pool_Noon_Left exact viewport minus native rectangle coverage
+PASS Pool_Noon_Left no native-region overlap 0
+PASS Pool_Noon_Left native altitude and render layer
+PASS Pool_Noon_Right actual camera reached requested position and zoom
+PASS Pool_Noon_Right two native material submissions per nonempty region
+PASS Pool_Noon_Right exact viewport minus native rectangle coverage
+PASS Pool_Noon_Right no native-region overlap 0
+PASS Pool_Noon_Right native altitude and render layer
+PASS Pool_Noon_Bottom actual camera reached requested position and zoom
+PASS Pool_Noon_Bottom two native material submissions per nonempty region
+PASS Pool_Noon_Bottom exact viewport minus native rectangle coverage
+PASS Pool_Noon_Bottom no native-region overlap 0
+PASS Pool_Noon_Bottom native altitude and render layer
+PASS Pool_Noon_Top actual camera reached requested position and zoom
+PASS Pool_Noon_Top two native material submissions per nonempty region
+PASS Pool_Noon_Top exact viewport minus native rectangle coverage
+PASS Pool_Noon_Top no native-region overlap 0
+PASS Pool_Noon_Top native altitude and render layer
+PASS Pool_Noon_BottomLeft actual camera reached requested position and zoom
+PASS Pool_Noon_BottomLeft two native material submissions per nonempty region
+PASS Pool_Noon_BottomLeft exact viewport minus native rectangle coverage
+PASS Pool_Noon_BottomLeft no native-region overlap 0
+PASS Pool_Noon_BottomLeft disjoint regions 0/1
+PASS Pool_Noon_BottomLeft no native-region overlap 1
+PASS Pool_Noon_BottomLeft native altitude and render layer
+PASS Pool_Noon_BottomRight actual camera reached requested position and zoom
+PASS Pool_Noon_BottomRight two native material submissions per nonempty region
+PASS Pool_Noon_BottomRight exact viewport minus native rectangle coverage
+PASS Pool_Noon_BottomRight no native-region overlap 0
+PASS Pool_Noon_BottomRight disjoint regions 0/1
+PASS Pool_Noon_BottomRight no native-region overlap 1
+PASS Pool_Noon_BottomRight native altitude and render layer
+PASS Pool_Noon_TopLeft actual camera reached requested position and zoom
+PASS Pool_Noon_TopLeft two native material submissions per nonempty region
+PASS Pool_Noon_TopLeft exact viewport minus native rectangle coverage
+PASS Pool_Noon_TopLeft no native-region overlap 0
+PASS Pool_Noon_TopLeft disjoint regions 0/1
+PASS Pool_Noon_TopLeft no native-region overlap 1
+PASS Pool_Noon_TopLeft native altitude and render layer
+PASS Pool_Noon_TopRight actual camera reached requested position and zoom
+PASS Pool_Noon_TopRight two native material submissions per nonempty region
+PASS Pool_Noon_TopRight exact viewport minus native rectangle coverage
+PASS Pool_Noon_TopRight no native-region overlap 0
+PASS Pool_Noon_TopRight disjoint regions 0/1
+PASS Pool_Noon_TopRight no native-region overlap 1
+PASS Pool_Noon_TopRight native altitude and render layer
+PASS Pool_Noon_Wide actual camera reached requested position and zoom
+PASS Pool_Noon_Wide two native material submissions per nonempty region
+PASS Pool_Noon_Wide exact viewport minus native rectangle coverage
+PASS Pool_Noon_Wide no native-region overlap 0
+PASS Pool_Noon_Wide disjoint regions 0/1
+PASS Pool_Noon_Wide disjoint regions 0/2
+PASS Pool_Noon_Wide disjoint regions 0/3
+PASS Pool_Noon_Wide no native-region overlap 1
+PASS Pool_Noon_Wide disjoint regions 1/2
+PASS Pool_Noon_Wide disjoint regions 1/3
+PASS Pool_Noon_Wide no native-region overlap 2
+PASS Pool_Noon_Wide disjoint regions 2/3
+PASS Pool_Noon_Wide no native-region overlap 3
+PASS Pool_Noon_Wide native altitude and render layer
+PASS native screenshot Pool_Noon_Wide_Before
+PASS native screenshot Pool_Noon_Wide_After
+PASS Pool_Noon_Wide_NoHaze actual camera reached requested position and zoom
+PASS Pool_Noon_Wide_NoHaze two native material submissions per nonempty region
+PASS Pool_Noon_Wide_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Noon_Wide_NoHaze no native-region overlap 0
+PASS Pool_Noon_Wide_NoHaze disjoint regions 0/1
+PASS Pool_Noon_Wide_NoHaze disjoint regions 0/2
+PASS Pool_Noon_Wide_NoHaze disjoint regions 0/3
+PASS Pool_Noon_Wide_NoHaze no native-region overlap 1
+PASS Pool_Noon_Wide_NoHaze disjoint regions 1/2
+PASS Pool_Noon_Wide_NoHaze disjoint regions 1/3
+PASS Pool_Noon_Wide_NoHaze no native-region overlap 2
+PASS Pool_Noon_Wide_NoHaze disjoint regions 2/3
+PASS Pool_Noon_Wide_NoHaze no native-region overlap 3
+PASS Pool_Noon_Wide_NoHaze native altitude and render layer
+PASS native screenshot Pool_Noon_Wide_NoHaze_Before
+PASS native screenshot Pool_Noon_Wide_NoHaze_After
+PASS Pool_Dusk_Inside actual camera reached requested position and zoom
+PASS Pool_Dusk_Inside two native material submissions per nonempty region
+PASS Pool_Dusk_Inside exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Inside native altitude and render layer
+PASS Pool_Dusk_Left actual camera reached requested position and zoom
+PASS Pool_Dusk_Left two native material submissions per nonempty region
+PASS Pool_Dusk_Left exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Left no native-region overlap 0
+PASS Pool_Dusk_Left native altitude and render layer
+PASS Pool_Dusk_Right actual camera reached requested position and zoom
+PASS Pool_Dusk_Right two native material submissions per nonempty region
+PASS Pool_Dusk_Right exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Right no native-region overlap 0
+PASS Pool_Dusk_Right native altitude and render layer
+PASS Pool_Dusk_Bottom actual camera reached requested position and zoom
+PASS Pool_Dusk_Bottom two native material submissions per nonempty region
+PASS Pool_Dusk_Bottom exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Bottom no native-region overlap 0
+PASS Pool_Dusk_Bottom native altitude and render layer
+PASS Pool_Dusk_Top actual camera reached requested position and zoom
+PASS Pool_Dusk_Top two native material submissions per nonempty region
+PASS Pool_Dusk_Top exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Top no native-region overlap 0
+PASS Pool_Dusk_Top native altitude and render layer
+PASS Pool_Dusk_BottomLeft actual camera reached requested position and zoom
+PASS Pool_Dusk_BottomLeft two native material submissions per nonempty region
+PASS Pool_Dusk_BottomLeft exact viewport minus native rectangle coverage
+PASS Pool_Dusk_BottomLeft no native-region overlap 0
+PASS Pool_Dusk_BottomLeft disjoint regions 0/1
+PASS Pool_Dusk_BottomLeft no native-region overlap 1
+PASS Pool_Dusk_BottomLeft native altitude and render layer
+PASS Pool_Dusk_BottomRight actual camera reached requested position and zoom
+PASS Pool_Dusk_BottomRight two native material submissions per nonempty region
+PASS Pool_Dusk_BottomRight exact viewport minus native rectangle coverage
+PASS Pool_Dusk_BottomRight no native-region overlap 0
+PASS Pool_Dusk_BottomRight disjoint regions 0/1
+PASS Pool_Dusk_BottomRight no native-region overlap 1
+PASS Pool_Dusk_BottomRight native altitude and render layer
+PASS Pool_Dusk_TopLeft actual camera reached requested position and zoom
+PASS Pool_Dusk_TopLeft two native material submissions per nonempty region
+PASS Pool_Dusk_TopLeft exact viewport minus native rectangle coverage
+PASS Pool_Dusk_TopLeft no native-region overlap 0
+PASS Pool_Dusk_TopLeft disjoint regions 0/1
+PASS Pool_Dusk_TopLeft no native-region overlap 1
+PASS Pool_Dusk_TopLeft native altitude and render layer
+PASS Pool_Dusk_TopRight actual camera reached requested position and zoom
+PASS Pool_Dusk_TopRight two native material submissions per nonempty region
+PASS Pool_Dusk_TopRight exact viewport minus native rectangle coverage
+PASS Pool_Dusk_TopRight no native-region overlap 0
+PASS Pool_Dusk_TopRight disjoint regions 0/1
+PASS Pool_Dusk_TopRight no native-region overlap 1
+PASS Pool_Dusk_TopRight native altitude and render layer
+PASS Pool_Dusk_Wide actual camera reached requested position and zoom
+PASS Pool_Dusk_Wide two native material submissions per nonempty region
+PASS Pool_Dusk_Wide exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Wide no native-region overlap 0
+PASS Pool_Dusk_Wide disjoint regions 0/1
+PASS Pool_Dusk_Wide disjoint regions 0/2
+PASS Pool_Dusk_Wide disjoint regions 0/3
+PASS Pool_Dusk_Wide no native-region overlap 1
+PASS Pool_Dusk_Wide disjoint regions 1/2
+PASS Pool_Dusk_Wide disjoint regions 1/3
+PASS Pool_Dusk_Wide no native-region overlap 2
+PASS Pool_Dusk_Wide disjoint regions 2/3
+PASS Pool_Dusk_Wide no native-region overlap 3
+PASS Pool_Dusk_Wide native altitude and render layer
+PASS native screenshot Pool_Dusk_Wide_Before
+PASS native screenshot Pool_Dusk_Wide_After
+PASS Pool_Dusk_Wide_NoHaze actual camera reached requested position and zoom
+PASS Pool_Dusk_Wide_NoHaze two native material submissions per nonempty region
+PASS Pool_Dusk_Wide_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Dusk_Wide_NoHaze no native-region overlap 0
+PASS Pool_Dusk_Wide_NoHaze disjoint regions 0/1
+PASS Pool_Dusk_Wide_NoHaze disjoint regions 0/2
+PASS Pool_Dusk_Wide_NoHaze disjoint regions 0/3
+PASS Pool_Dusk_Wide_NoHaze no native-region overlap 1
+PASS Pool_Dusk_Wide_NoHaze disjoint regions 1/2
+PASS Pool_Dusk_Wide_NoHaze disjoint regions 1/3
+PASS Pool_Dusk_Wide_NoHaze no native-region overlap 2
+PASS Pool_Dusk_Wide_NoHaze disjoint regions 2/3
+PASS Pool_Dusk_Wide_NoHaze no native-region overlap 3
+PASS Pool_Dusk_Wide_NoHaze native altitude and render layer
+PASS native screenshot Pool_Dusk_Wide_NoHaze_Before
+PASS native screenshot Pool_Dusk_Wide_NoHaze_After
+PASS Pool_Night_Inside actual camera reached requested position and zoom
+PASS Pool_Night_Inside two native material submissions per nonempty region
+PASS Pool_Night_Inside exact viewport minus native rectangle coverage
+PASS Pool_Night_Inside native altitude and render layer
+PASS Pool_Night_Left actual camera reached requested position and zoom
+PASS Pool_Night_Left two native material submissions per nonempty region
+PASS Pool_Night_Left exact viewport minus native rectangle coverage
+PASS Pool_Night_Left no native-region overlap 0
+PASS Pool_Night_Left native altitude and render layer
+PASS Pool_Night_Right actual camera reached requested position and zoom
+PASS Pool_Night_Right two native material submissions per nonempty region
+PASS Pool_Night_Right exact viewport minus native rectangle coverage
+PASS Pool_Night_Right no native-region overlap 0
+PASS Pool_Night_Right native altitude and render layer
+PASS Pool_Night_Bottom actual camera reached requested position and zoom
+PASS Pool_Night_Bottom two native material submissions per nonempty region
+PASS Pool_Night_Bottom exact viewport minus native rectangle coverage
+PASS Pool_Night_Bottom no native-region overlap 0
+PASS Pool_Night_Bottom native altitude and render layer
+PASS Pool_Night_Top actual camera reached requested position and zoom
+PASS Pool_Night_Top two native material submissions per nonempty region
+PASS Pool_Night_Top exact viewport minus native rectangle coverage
+PASS Pool_Night_Top no native-region overlap 0
+PASS Pool_Night_Top native altitude and render layer
+PASS Pool_Night_BottomLeft actual camera reached requested position and zoom
+PASS Pool_Night_BottomLeft two native material submissions per nonempty region
+PASS Pool_Night_BottomLeft exact viewport minus native rectangle coverage
+PASS Pool_Night_BottomLeft no native-region overlap 0
+PASS Pool_Night_BottomLeft disjoint regions 0/1
+PASS Pool_Night_BottomLeft no native-region overlap 1
+PASS Pool_Night_BottomLeft native altitude and render layer
+PASS Pool_Night_BottomRight actual camera reached requested position and zoom
+PASS Pool_Night_BottomRight two native material submissions per nonempty region
+PASS Pool_Night_BottomRight exact viewport minus native rectangle coverage
+PASS Pool_Night_BottomRight no native-region overlap 0
+PASS Pool_Night_BottomRight disjoint regions 0/1
+PASS Pool_Night_BottomRight no native-region overlap 1
+PASS Pool_Night_BottomRight native altitude and render layer
+PASS Pool_Night_TopLeft actual camera reached requested position and zoom
+PASS Pool_Night_TopLeft two native material submissions per nonempty region
+PASS Pool_Night_TopLeft exact viewport minus native rectangle coverage
+PASS Pool_Night_TopLeft no native-region overlap 0
+PASS Pool_Night_TopLeft disjoint regions 0/1
+PASS Pool_Night_TopLeft no native-region overlap 1
+PASS Pool_Night_TopLeft native altitude and render layer
+PASS Pool_Night_TopRight actual camera reached requested position and zoom
+PASS Pool_Night_TopRight two native material submissions per nonempty region
+PASS Pool_Night_TopRight exact viewport minus native rectangle coverage
+PASS Pool_Night_TopRight no native-region overlap 0
+PASS Pool_Night_TopRight disjoint regions 0/1
+PASS Pool_Night_TopRight no native-region overlap 1
+PASS Pool_Night_TopRight native altitude and render layer
+PASS Pool_Night_Wide actual camera reached requested position and zoom
+PASS Pool_Night_Wide two native material submissions per nonempty region
+PASS Pool_Night_Wide exact viewport minus native rectangle coverage
+PASS Pool_Night_Wide no native-region overlap 0
+PASS Pool_Night_Wide disjoint regions 0/1
+PASS Pool_Night_Wide disjoint regions 0/2
+PASS Pool_Night_Wide disjoint regions 0/3
+PASS Pool_Night_Wide no native-region overlap 1
+PASS Pool_Night_Wide disjoint regions 1/2
+PASS Pool_Night_Wide disjoint regions 1/3
+PASS Pool_Night_Wide no native-region overlap 2
+PASS Pool_Night_Wide disjoint regions 2/3
+PASS Pool_Night_Wide no native-region overlap 3
+PASS Pool_Night_Wide native altitude and render layer
+PASS native screenshot Pool_Night_Wide_Before
+PASS native screenshot Pool_Night_Wide_After
+PASS Pool_Night_Wide_NoHaze actual camera reached requested position and zoom
+PASS Pool_Night_Wide_NoHaze two native material submissions per nonempty region
+PASS Pool_Night_Wide_NoHaze exact viewport minus native rectangle coverage
+PASS Pool_Night_Wide_NoHaze no native-region overlap 0
+PASS Pool_Night_Wide_NoHaze disjoint regions 0/1
+PASS Pool_Night_Wide_NoHaze disjoint regions 0/2
+PASS Pool_Night_Wide_NoHaze disjoint regions 0/3
+PASS Pool_Night_Wide_NoHaze no native-region overlap 1
+PASS Pool_Night_Wide_NoHaze disjoint regions 1/2
+PASS Pool_Night_Wide_NoHaze disjoint regions 1/3
+PASS Pool_Night_Wide_NoHaze no native-region overlap 2
+PASS Pool_Night_Wide_NoHaze disjoint regions 2/3
+PASS Pool_Night_Wide_NoHaze no native-region overlap 3
+PASS Pool_Night_Wide_NoHaze native altitude and render layer
+PASS native screenshot Pool_Night_Wide_NoHaze_Before
+PASS native screenshot Pool_Night_Wide_NoHaze_After
+PASS Pool native exterior geometry unchanged
+PASS Pool mesh instances reused across views and regeneration
+PASS Pool mode Map
+PASS Pool_Mode_Map actual camera reached requested position and zoom
+PASS Pool_Mode_Map no supplemental submissions
+PASS Pool mode CameraVisible
+PASS Pool_Mode_CameraVisible actual camera reached requested position and zoom
+PASS Pool_Mode_CameraVisible two native material submissions per nonempty region
+PASS Pool_Mode_CameraVisible exact viewport minus native rectangle coverage
+PASS Pool_Mode_CameraVisible no native-region overlap 0
+PASS Pool_Mode_CameraVisible disjoint regions 0/1
+PASS Pool_Mode_CameraVisible disjoint regions 0/2
+PASS Pool_Mode_CameraVisible disjoint regions 0/3
+PASS Pool_Mode_CameraVisible no native-region overlap 1
+PASS Pool_Mode_CameraVisible disjoint regions 1/2
+PASS Pool_Mode_CameraVisible disjoint regions 1/3
+PASS Pool_Mode_CameraVisible no native-region overlap 2
+PASS Pool_Mode_CameraVisible disjoint regions 2/3
+PASS Pool_Mode_CameraVisible no native-region overlap 3
+PASS Pool_Mode_CameraVisible native altitude and render layer
+PASS Pool mode Disabled
+PASS Pool_Mode_Disabled actual camera reached requested position and zoom
+PASS Pool_Mode_Disabled no supplemental submissions
+PASS Pool mode UI_Null
+PASS Pool_Mode_UI_Null actual camera reached requested position and zoom
+PASS Pool_Mode_UI_Null two native material submissions per nonempty region
+PASS Pool_Mode_UI_Null exact viewport minus native rectangle coverage
+PASS Pool_Mode_UI_Null no native-region overlap 0
+PASS Pool_Mode_UI_Null disjoint regions 0/1
+PASS Pool_Mode_UI_Null disjoint regions 0/2
+PASS Pool_Mode_UI_Null disjoint regions 0/3
+PASS Pool_Mode_UI_Null no native-region overlap 1
+PASS Pool_Mode_UI_Null disjoint regions 1/2
+PASS Pool_Mode_UI_Null disjoint regions 1/3
+PASS Pool_Mode_UI_Null no native-region overlap 2
+PASS Pool_Mode_UI_Null disjoint regions 2/3
+PASS Pool_Mode_UI_Null no native-region overlap 3
+PASS Pool_Mode_UI_Null native altitude and render layer
+PASS Pool mode LightingOff
+PASS Pool_Mode_LightingOff actual camera reached requested position and zoom
+PASS Pool_Mode_LightingOff no supplemental submissions
+PASS Pool mode LightingOn
+PASS Pool_Mode_LightingOn actual camera reached requested position and zoom
+PASS Pool_Mode_LightingOn two native material submissions per nonempty region
+PASS Pool_Mode_LightingOn exact viewport minus native rectangle coverage
+PASS Pool_Mode_LightingOn no native-region overlap 0
+PASS Pool_Mode_LightingOn disjoint regions 0/1
+PASS Pool_Mode_LightingOn disjoint regions 0/2
+PASS Pool_Mode_LightingOn disjoint regions 0/3
+PASS Pool_Mode_LightingOn no native-region overlap 1
+PASS Pool_Mode_LightingOn disjoint regions 1/2
+PASS Pool_Mode_LightingOn disjoint regions 1/3
+PASS Pool_Mode_LightingOn no native-region overlap 2
+PASS Pool_Mode_LightingOn disjoint regions 2/3
+PASS Pool_Mode_LightingOn no native-region overlap 3
+PASS Pool_Mode_LightingOn native altitude and render layer
+PASS Pool copy and XML keep panorama mode
+PASS Concrete CameraVisible enabled
+PASS Concrete other layers supply UI/Null panorama
+PASS Concrete_Dawn_Inside actual camera reached requested position and zoom
+PASS Concrete_Dawn_Inside two native material submissions per nonempty region
+PASS Concrete_Dawn_Inside exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_Inside native altitude and render layer
+PASS native screenshot Concrete_Dawn_Inside_Before
+PASS native screenshot Concrete_Dawn_Inside_After
+PASS Concrete_Dawn_Left actual camera reached requested position and zoom
+PASS Concrete_Dawn_Left two native material submissions per nonempty region
+PASS Concrete_Dawn_Left exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_Left no native-region overlap 0
+PASS Concrete_Dawn_Left native altitude and render layer
+PASS native screenshot Concrete_Dawn_Left_Before
+PASS native screenshot Concrete_Dawn_Left_After
+PASS Concrete_Dawn_Right actual camera reached requested position and zoom
+PASS Concrete_Dawn_Right two native material submissions per nonempty region
+PASS Concrete_Dawn_Right exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_Right no native-region overlap 0
+PASS Concrete_Dawn_Right native altitude and render layer
+PASS native screenshot Concrete_Dawn_Right_Before
+PASS native screenshot Concrete_Dawn_Right_After
+PASS Concrete_Dawn_Bottom actual camera reached requested position and zoom
+PASS Concrete_Dawn_Bottom two native material submissions per nonempty region
+PASS Concrete_Dawn_Bottom exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_Bottom no native-region overlap 0
+PASS Concrete_Dawn_Bottom native altitude and render layer
+PASS native screenshot Concrete_Dawn_Bottom_Before
+PASS native screenshot Concrete_Dawn_Bottom_After
+PASS Concrete_Dawn_Top actual camera reached requested position and zoom
+PASS Concrete_Dawn_Top two native material submissions per nonempty region
+PASS Concrete_Dawn_Top exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_Top no native-region overlap 0
+PASS Concrete_Dawn_Top native altitude and render layer
+PASS native screenshot Concrete_Dawn_Top_Before
+PASS native screenshot Concrete_Dawn_Top_After
+PASS Concrete_Dawn_BottomLeft actual camera reached requested position and zoom
+PASS Concrete_Dawn_BottomLeft two native material submissions per nonempty region
+PASS Concrete_Dawn_BottomLeft exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_BottomLeft no native-region overlap 0
+PASS Concrete_Dawn_BottomLeft disjoint regions 0/1
+PASS Concrete_Dawn_BottomLeft no native-region overlap 1
+PASS Concrete_Dawn_BottomLeft native altitude and render layer
+PASS native screenshot Concrete_Dawn_BottomLeft_Before
+PASS native screenshot Concrete_Dawn_BottomLeft_After
+PASS Concrete_Dawn_BottomRight actual camera reached requested position and zoom
+PASS Concrete_Dawn_BottomRight two native material submissions per nonempty region
+PASS Concrete_Dawn_BottomRight exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_BottomRight no native-region overlap 0
+PASS Concrete_Dawn_BottomRight disjoint regions 0/1
+PASS Concrete_Dawn_BottomRight no native-region overlap 1
+PASS Concrete_Dawn_BottomRight native altitude and render layer
+PASS native screenshot Concrete_Dawn_BottomRight_Before
+PASS native screenshot Concrete_Dawn_BottomRight_After
+PASS Concrete_Dawn_TopLeft actual camera reached requested position and zoom
+PASS Concrete_Dawn_TopLeft two native material submissions per nonempty region
+PASS Concrete_Dawn_TopLeft exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_TopLeft no native-region overlap 0
+PASS Concrete_Dawn_TopLeft disjoint regions 0/1
+PASS Concrete_Dawn_TopLeft no native-region overlap 1
+PASS Concrete_Dawn_TopLeft native altitude and render layer
+PASS native screenshot Concrete_Dawn_TopLeft_Before
+PASS native screenshot Concrete_Dawn_TopLeft_After
+PASS Concrete_Dawn_TopRight actual camera reached requested position and zoom
+PASS Concrete_Dawn_TopRight two native material submissions per nonempty region
+PASS Concrete_Dawn_TopRight exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_TopRight no native-region overlap 0
+PASS Concrete_Dawn_TopRight disjoint regions 0/1
+PASS Concrete_Dawn_TopRight no native-region overlap 1
+PASS Concrete_Dawn_TopRight native altitude and render layer
+PASS native screenshot Concrete_Dawn_TopRight_Before
+PASS native screenshot Concrete_Dawn_TopRight_After
+PASS Concrete_Dawn_Wide actual camera reached requested position and zoom
+PASS Concrete_Dawn_Wide two native material submissions per nonempty region
+PASS Concrete_Dawn_Wide exact viewport minus native rectangle coverage
+PASS Concrete_Dawn_Wide no native-region overlap 0
+PASS Concrete_Dawn_Wide disjoint regions 0/1
+PASS Concrete_Dawn_Wide disjoint regions 0/2
+PASS Concrete_Dawn_Wide disjoint regions 0/3
+PASS Concrete_Dawn_Wide no native-region overlap 1
+PASS Concrete_Dawn_Wide disjoint regions 1/2
+PASS Concrete_Dawn_Wide disjoint regions 1/3
+PASS Concrete_Dawn_Wide no native-region overlap 2
+PASS Concrete_Dawn_Wide disjoint regions 2/3
+PASS Concrete_Dawn_Wide no native-region overlap 3
+PASS Concrete_Dawn_Wide native altitude and render layer
+PASS native screenshot Concrete_Dawn_Wide_Before
+PASS native screenshot Concrete_Dawn_Wide_After
+PASS Concrete_Noon_Inside actual camera reached requested position and zoom
+PASS Concrete_Noon_Inside two native material submissions per nonempty region
+PASS Concrete_Noon_Inside exact viewport minus native rectangle coverage
+PASS Concrete_Noon_Inside native altitude and render layer
+PASS Concrete_Noon_Left actual camera reached requested position and zoom
+PASS Concrete_Noon_Left two native material submissions per nonempty region
+PASS Concrete_Noon_Left exact viewport minus native rectangle coverage
+PASS Concrete_Noon_Left no native-region overlap 0
+PASS Concrete_Noon_Left native altitude and render layer
+PASS Concrete_Noon_Right actual camera reached requested position and zoom
+PASS Concrete_Noon_Right two native material submissions per nonempty region
+PASS Concrete_Noon_Right exact viewport minus native rectangle coverage
+PASS Concrete_Noon_Right no native-region overlap 0
+PASS Concrete_Noon_Right native altitude and render layer
+PASS Concrete_Noon_Bottom actual camera reached requested position and zoom
+PASS Concrete_Noon_Bottom two native material submissions per nonempty region
+PASS Concrete_Noon_Bottom exact viewport minus native rectangle coverage
+PASS Concrete_Noon_Bottom no native-region overlap 0
+PASS Concrete_Noon_Bottom native altitude and render layer
+PASS Concrete_Noon_Top actual camera reached requested position and zoom
+PASS Concrete_Noon_Top two native material submissions per nonempty region
+PASS Concrete_Noon_Top exact viewport minus native rectangle coverage
+PASS Concrete_Noon_Top no native-region overlap 0
+PASS Concrete_Noon_Top native altitude and render layer
+PASS Concrete_Noon_BottomLeft actual camera reached requested position and zoom
+PASS Concrete_Noon_BottomLeft two native material submissions per nonempty region
+PASS Concrete_Noon_BottomLeft exact viewport minus native rectangle coverage
+PASS Concrete_Noon_BottomLeft no native-region overlap 0
+PASS Concrete_Noon_BottomLeft disjoint regions 0/1
+PASS Concrete_Noon_BottomLeft no native-region overlap 1
+PASS Concrete_Noon_BottomLeft native altitude and render layer
+PASS Concrete_Noon_BottomRight actual camera reached requested position and zoom
+PASS Concrete_Noon_BottomRight two native material submissions per nonempty region
+PASS Concrete_Noon_BottomRight exact viewport minus native rectangle coverage
+PASS Concrete_Noon_BottomRight no native-region overlap 0
+PASS Concrete_Noon_BottomRight disjoint regions 0/1
+PASS Concrete_Noon_BottomRight no native-region overlap 1
+PASS Concrete_Noon_BottomRight native altitude and render layer
+PASS Concrete_Noon_TopLeft actual camera reached requested position and zoom
+PASS Concrete_Noon_TopLeft two native material submissions per nonempty region
+PASS Concrete_Noon_TopLeft exact viewport minus native rectangle coverage
+PASS Concrete_Noon_TopLeft no native-region overlap 0
+PASS Concrete_Noon_TopLeft disjoint regions 0/1
+PASS Concrete_Noon_TopLeft no native-region overlap 1
+PASS Concrete_Noon_TopLeft native altitude and render layer
+PASS Concrete_Noon_TopRight actual camera reached requested position and zoom
+PASS Concrete_Noon_TopRight two native material submissions per nonempty region
+PASS Concrete_Noon_TopRight exact viewport minus native rectangle coverage
+PASS Concrete_Noon_TopRight no native-region overlap 0
+PASS Concrete_Noon_TopRight disjoint regions 0/1
+PASS Concrete_Noon_TopRight no native-region overlap 1
+PASS Concrete_Noon_TopRight native altitude and render layer
+PASS Concrete_Noon_Wide actual camera reached requested position and zoom
+PASS Concrete_Noon_Wide two native material submissions per nonempty region
+PASS Concrete_Noon_Wide exact viewport minus native rectangle coverage
+PASS Concrete_Noon_Wide no native-region overlap 0
+PASS Concrete_Noon_Wide disjoint regions 0/1
+PASS Concrete_Noon_Wide disjoint regions 0/2
+PASS Concrete_Noon_Wide disjoint regions 0/3
+PASS Concrete_Noon_Wide no native-region overlap 1
+PASS Concrete_Noon_Wide disjoint regions 1/2
+PASS Concrete_Noon_Wide disjoint regions 1/3
+PASS Concrete_Noon_Wide no native-region overlap 2
+PASS Concrete_Noon_Wide disjoint regions 2/3
+PASS Concrete_Noon_Wide no native-region overlap 3
+PASS Concrete_Noon_Wide native altitude and render layer
+PASS native screenshot Concrete_Noon_Wide_Before
+PASS native screenshot Concrete_Noon_Wide_After
+PASS Concrete_Dusk_Inside actual camera reached requested position and zoom
+PASS Concrete_Dusk_Inside two native material submissions per nonempty region
+PASS Concrete_Dusk_Inside exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_Inside native altitude and render layer
+PASS Concrete_Dusk_Left actual camera reached requested position and zoom
+PASS Concrete_Dusk_Left two native material submissions per nonempty region
+PASS Concrete_Dusk_Left exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_Left no native-region overlap 0
+PASS Concrete_Dusk_Left native altitude and render layer
+PASS Concrete_Dusk_Right actual camera reached requested position and zoom
+PASS Concrete_Dusk_Right two native material submissions per nonempty region
+PASS Concrete_Dusk_Right exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_Right no native-region overlap 0
+PASS Concrete_Dusk_Right native altitude and render layer
+PASS Concrete_Dusk_Bottom actual camera reached requested position and zoom
+PASS Concrete_Dusk_Bottom two native material submissions per nonempty region
+PASS Concrete_Dusk_Bottom exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_Bottom no native-region overlap 0
+PASS Concrete_Dusk_Bottom native altitude and render layer
+PASS Concrete_Dusk_Top actual camera reached requested position and zoom
+PASS Concrete_Dusk_Top two native material submissions per nonempty region
+PASS Concrete_Dusk_Top exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_Top no native-region overlap 0
+PASS Concrete_Dusk_Top native altitude and render layer
+PASS Concrete_Dusk_BottomLeft actual camera reached requested position and zoom
+PASS Concrete_Dusk_BottomLeft two native material submissions per nonempty region
+PASS Concrete_Dusk_BottomLeft exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_BottomLeft no native-region overlap 0
+PASS Concrete_Dusk_BottomLeft disjoint regions 0/1
+PASS Concrete_Dusk_BottomLeft no native-region overlap 1
+PASS Concrete_Dusk_BottomLeft native altitude and render layer
+PASS Concrete_Dusk_BottomRight actual camera reached requested position and zoom
+PASS Concrete_Dusk_BottomRight two native material submissions per nonempty region
+PASS Concrete_Dusk_BottomRight exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_BottomRight no native-region overlap 0
+PASS Concrete_Dusk_BottomRight disjoint regions 0/1
+PASS Concrete_Dusk_BottomRight no native-region overlap 1
+PASS Concrete_Dusk_BottomRight native altitude and render layer
+PASS Concrete_Dusk_TopLeft actual camera reached requested position and zoom
+PASS Concrete_Dusk_TopLeft two native material submissions per nonempty region
+PASS Concrete_Dusk_TopLeft exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_TopLeft no native-region overlap 0
+PASS Concrete_Dusk_TopLeft disjoint regions 0/1
+PASS Concrete_Dusk_TopLeft no native-region overlap 1
+PASS Concrete_Dusk_TopLeft native altitude and render layer
+PASS Concrete_Dusk_TopRight actual camera reached requested position and zoom
+PASS Concrete_Dusk_TopRight two native material submissions per nonempty region
+PASS Concrete_Dusk_TopRight exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_TopRight no native-region overlap 0
+PASS Concrete_Dusk_TopRight disjoint regions 0/1
+PASS Concrete_Dusk_TopRight no native-region overlap 1
+PASS Concrete_Dusk_TopRight native altitude and render layer
+PASS Concrete_Dusk_Wide actual camera reached requested position and zoom
+PASS Concrete_Dusk_Wide two native material submissions per nonempty region
+PASS Concrete_Dusk_Wide exact viewport minus native rectangle coverage
+PASS Concrete_Dusk_Wide no native-region overlap 0
+PASS Concrete_Dusk_Wide disjoint regions 0/1
+PASS Concrete_Dusk_Wide disjoint regions 0/2
+PASS Concrete_Dusk_Wide disjoint regions 0/3
+PASS Concrete_Dusk_Wide no native-region overlap 1
+PASS Concrete_Dusk_Wide disjoint regions 1/2
+PASS Concrete_Dusk_Wide disjoint regions 1/3
+PASS Concrete_Dusk_Wide no native-region overlap 2
+PASS Concrete_Dusk_Wide disjoint regions 2/3
+PASS Concrete_Dusk_Wide no native-region overlap 3
+PASS Concrete_Dusk_Wide native altitude and render layer
+PASS native screenshot Concrete_Dusk_Wide_Before
+PASS native screenshot Concrete_Dusk_Wide_After
+PASS Concrete_Night_Inside actual camera reached requested position and zoom
+PASS Concrete_Night_Inside two native material submissions per nonempty region
+PASS Concrete_Night_Inside exact viewport minus native rectangle coverage
+PASS Concrete_Night_Inside native altitude and render layer
+PASS Concrete_Night_Left actual camera reached requested position and zoom
+PASS Concrete_Night_Left two native material submissions per nonempty region
+PASS Concrete_Night_Left exact viewport minus native rectangle coverage
+PASS Concrete_Night_Left no native-region overlap 0
+PASS Concrete_Night_Left native altitude and render layer
+PASS Concrete_Night_Right actual camera reached requested position and zoom
+PASS Concrete_Night_Right two native material submissions per nonempty region
+PASS Concrete_Night_Right exact viewport minus native rectangle coverage
+PASS Concrete_Night_Right no native-region overlap 0
+PASS Concrete_Night_Right native altitude and render layer
+PASS Concrete_Night_Bottom actual camera reached requested position and zoom
+PASS Concrete_Night_Bottom two native material submissions per nonempty region
+PASS Concrete_Night_Bottom exact viewport minus native rectangle coverage
+PASS Concrete_Night_Bottom no native-region overlap 0
+PASS Concrete_Night_Bottom native altitude and render layer
+PASS Concrete_Night_Top actual camera reached requested position and zoom
+PASS Concrete_Night_Top two native material submissions per nonempty region
+PASS Concrete_Night_Top exact viewport minus native rectangle coverage
+PASS Concrete_Night_Top no native-region overlap 0
+PASS Concrete_Night_Top native altitude and render layer
+PASS Concrete_Night_BottomLeft actual camera reached requested position and zoom
+PASS Concrete_Night_BottomLeft two native material submissions per nonempty region
+PASS Concrete_Night_BottomLeft exact viewport minus native rectangle coverage
+PASS Concrete_Night_BottomLeft no native-region overlap 0
+PASS Concrete_Night_BottomLeft disjoint regions 0/1
+PASS Concrete_Night_BottomLeft no native-region overlap 1
+PASS Concrete_Night_BottomLeft native altitude and render layer
+PASS Concrete_Night_BottomRight actual camera reached requested position and zoom
+PASS Concrete_Night_BottomRight two native material submissions per nonempty region
+PASS Concrete_Night_BottomRight exact viewport minus native rectangle coverage
+PASS Concrete_Night_BottomRight no native-region overlap 0
+PASS Concrete_Night_BottomRight disjoint regions 0/1
+PASS Concrete_Night_BottomRight no native-region overlap 1
+PASS Concrete_Night_BottomRight native altitude and render layer
+PASS Concrete_Night_TopLeft actual camera reached requested position and zoom
+PASS Concrete_Night_TopLeft two native material submissions per nonempty region
+PASS Concrete_Night_TopLeft exact viewport minus native rectangle coverage
+PASS Concrete_Night_TopLeft no native-region overlap 0
+PASS Concrete_Night_TopLeft disjoint regions 0/1
+PASS Concrete_Night_TopLeft no native-region overlap 1
+PASS Concrete_Night_TopLeft native altitude and render layer
+PASS Concrete_Night_TopRight actual camera reached requested position and zoom
+PASS Concrete_Night_TopRight two native material submissions per nonempty region
+PASS Concrete_Night_TopRight exact viewport minus native rectangle coverage
+PASS Concrete_Night_TopRight no native-region overlap 0
+PASS Concrete_Night_TopRight disjoint regions 0/1
+PASS Concrete_Night_TopRight no native-region overlap 1
+PASS Concrete_Night_TopRight native altitude and render layer
+PASS Concrete_Night_Wide actual camera reached requested position and zoom
+PASS Concrete_Night_Wide two native material submissions per nonempty region
+PASS Concrete_Night_Wide exact viewport minus native rectangle coverage
+PASS Concrete_Night_Wide no native-region overlap 0
+PASS Concrete_Night_Wide disjoint regions 0/1
+PASS Concrete_Night_Wide disjoint regions 0/2
+PASS Concrete_Night_Wide disjoint regions 0/3
+PASS Concrete_Night_Wide no native-region overlap 1
+PASS Concrete_Night_Wide disjoint regions 1/2
+PASS Concrete_Night_Wide disjoint regions 1/3
+PASS Concrete_Night_Wide no native-region overlap 2
+PASS Concrete_Night_Wide disjoint regions 2/3
+PASS Concrete_Night_Wide no native-region overlap 3
+PASS Concrete_Night_Wide native altitude and render layer
+PASS native screenshot Concrete_Night_Wide_Before
+PASS native screenshot Concrete_Night_Wide_After
+PASS Concrete native exterior geometry unchanged
+PASS Concrete mesh instances reused across views and regeneration
+PASS Concrete mode Map
+PASS Concrete_Mode_Map actual camera reached requested position and zoom
+PASS Concrete_Mode_Map no supplemental submissions
+PASS Concrete mode CameraVisible
+PASS Concrete_Mode_CameraVisible actual camera reached requested position and zoom
+PASS Concrete_Mode_CameraVisible two native material submissions per nonempty region
+PASS Concrete_Mode_CameraVisible exact viewport minus native rectangle coverage
+PASS Concrete_Mode_CameraVisible no native-region overlap 0
+PASS Concrete_Mode_CameraVisible disjoint regions 0/1
+PASS Concrete_Mode_CameraVisible disjoint regions 0/2
+PASS Concrete_Mode_CameraVisible disjoint regions 0/3
+PASS Concrete_Mode_CameraVisible no native-region overlap 1
+PASS Concrete_Mode_CameraVisible disjoint regions 1/2
+PASS Concrete_Mode_CameraVisible disjoint regions 1/3
+PASS Concrete_Mode_CameraVisible no native-region overlap 2
+PASS Concrete_Mode_CameraVisible disjoint regions 2/3
+PASS Concrete_Mode_CameraVisible no native-region overlap 3
+PASS Concrete_Mode_CameraVisible native altitude and render layer
+PASS Concrete mode Disabled
+PASS Concrete_Mode_Disabled actual camera reached requested position and zoom
+PASS Concrete_Mode_Disabled no supplemental submissions
+PASS Concrete mode UI_Null
+PASS Concrete_Mode_UI_Null actual camera reached requested position and zoom
+PASS Concrete_Mode_UI_Null two native material submissions per nonempty region
+PASS Concrete_Mode_UI_Null exact viewport minus native rectangle coverage
+PASS Concrete_Mode_UI_Null no native-region overlap 0
+PASS Concrete_Mode_UI_Null disjoint regions 0/1
+PASS Concrete_Mode_UI_Null disjoint regions 0/2
+PASS Concrete_Mode_UI_Null disjoint regions 0/3
+PASS Concrete_Mode_UI_Null no native-region overlap 1
+PASS Concrete_Mode_UI_Null disjoint regions 1/2
+PASS Concrete_Mode_UI_Null disjoint regions 1/3
+PASS Concrete_Mode_UI_Null no native-region overlap 2
+PASS Concrete_Mode_UI_Null disjoint regions 2/3
+PASS Concrete_Mode_UI_Null no native-region overlap 3
+PASS Concrete_Mode_UI_Null native altitude and render layer
+PASS Concrete mode LightingOff
+PASS Concrete_Mode_LightingOff actual camera reached requested position and zoom
+PASS Concrete_Mode_LightingOff no supplemental submissions
+PASS Concrete mode LightingOn
+PASS Concrete_Mode_LightingOn actual camera reached requested position and zoom
+PASS Concrete_Mode_LightingOn two native material submissions per nonempty region
+PASS Concrete_Mode_LightingOn exact viewport minus native rectangle coverage
+PASS Concrete_Mode_LightingOn no native-region overlap 0
+PASS Concrete_Mode_LightingOn disjoint regions 0/1
+PASS Concrete_Mode_LightingOn disjoint regions 0/2
+PASS Concrete_Mode_LightingOn disjoint regions 0/3
+PASS Concrete_Mode_LightingOn no native-region overlap 1
+PASS Concrete_Mode_LightingOn disjoint regions 1/2
+PASS Concrete_Mode_LightingOn disjoint regions 1/3
+PASS Concrete_Mode_LightingOn no native-region overlap 2
+PASS Concrete_Mode_LightingOn disjoint regions 2/3
+PASS Concrete_Mode_LightingOn no native-region overlap 3
+PASS Concrete_Mode_LightingOn native altitude and render layer
+PASS Concrete copy and XML keep panorama mode
+PASS Normal_AfterLoad actual camera reached requested position and zoom
+PASS Normal_AfterLoad no supplemental submissions
+PASS native screenshot Normal_AfterLoad_Before
+PASS native screenshot Normal_AfterLoad_After
+PASS Star real game save/load preserves background
+PASS Star_AfterLoad actual camera reached requested position and zoom
+PASS Star_AfterLoad two native material submissions per nonempty region
+PASS Star_AfterLoad exact viewport minus native rectangle coverage
+PASS Star_AfterLoad no native-region overlap 0
+PASS Star_AfterLoad disjoint regions 0/1
+PASS Star_AfterLoad disjoint regions 0/2
+PASS Star_AfterLoad disjoint regions 0/3
+PASS Star_AfterLoad no native-region overlap 1
+PASS Star_AfterLoad disjoint regions 1/2
+PASS Star_AfterLoad disjoint regions 1/3
+PASS Star_AfterLoad no native-region overlap 2
+PASS Star_AfterLoad disjoint regions 2/3
+PASS Star_AfterLoad no native-region overlap 3
+PASS Star_AfterLoad native altitude and render layer
+PASS native screenshot Star_AfterLoad_Before
+PASS native screenshot Star_AfterLoad_After
+PASS Pool real game save/load preserves background
+PASS Pool_AfterLoad actual camera reached requested position and zoom
+PASS Pool_AfterLoad two native material submissions per nonempty region
+PASS Pool_AfterLoad exact viewport minus native rectangle coverage
+PASS Pool_AfterLoad no native-region overlap 0
+PASS Pool_AfterLoad disjoint regions 0/1
+PASS Pool_AfterLoad disjoint regions 0/2
+PASS Pool_AfterLoad disjoint regions 0/3
+PASS Pool_AfterLoad no native-region overlap 1
+PASS Pool_AfterLoad disjoint regions 1/2
+PASS Pool_AfterLoad disjoint regions 1/3
+PASS Pool_AfterLoad no native-region overlap 2
+PASS Pool_AfterLoad disjoint regions 2/3
+PASS Pool_AfterLoad no native-region overlap 3
+PASS Pool_AfterLoad native altitude and render layer
+PASS native screenshot Pool_AfterLoad_Before
+PASS native screenshot Pool_AfterLoad_After
+PASS Concrete real game save/load preserves background
+PASS Concrete_AfterLoad actual camera reached requested position and zoom
+PASS Concrete_AfterLoad two native material submissions per nonempty region
+PASS Concrete_AfterLoad exact viewport minus native rectangle coverage
+PASS Concrete_AfterLoad no native-region overlap 0
+PASS Concrete_AfterLoad disjoint regions 0/1
+PASS Concrete_AfterLoad disjoint regions 0/2
+PASS Concrete_AfterLoad disjoint regions 0/3
+PASS Concrete_AfterLoad no native-region overlap 1
+PASS Concrete_AfterLoad disjoint regions 1/2
+PASS Concrete_AfterLoad disjoint regions 1/3
+PASS Concrete_AfterLoad no native-region overlap 2
+PASS Concrete_AfterLoad disjoint regions 2/3
+PASS Concrete_AfterLoad no native-region overlap 3
+PASS Concrete_AfterLoad native altitude and render layer
+PASS native screenshot Concrete_AfterLoad_Before
+PASS native screenshot Concrete_AfterLoad_After
+PASS native frame profiler instrumentation enabled
+PASS Inside native profiler 180 frames False repeat 0
+PASS Inside no lost profiler events False repeat 0
+PASS Inside measured actual map render entry
+PASS Inside independently counted supplemental render invocations
+PASS Inside native profiler 180 frames True repeat 0
+PASS Inside no lost profiler events True repeat 0
+PASS Inside measured actual map render entry
+PASS Inside independently counted supplemental render invocations
+PASS Inside native profiler 180 frames True repeat 1
+PASS Inside no lost profiler events True repeat 1
+PASS Inside measured actual map render entry
+PASS Inside independently counted supplemental render invocations
+PASS Inside native profiler 180 frames False repeat 1
+PASS Inside no lost profiler events False repeat 1
+PASS Inside measured actual map render entry
+PASS Inside independently counted supplemental render invocations
+PASS Inside native profiler 180 frames False repeat 2
+PASS Inside no lost profiler events False repeat 2
+PASS Inside measured actual map render entry
+PASS Inside independently counted supplemental render invocations
+PASS Inside native profiler 180 frames True repeat 2
+PASS Inside no lost profiler events True repeat 2
+PASS Inside measured actual map render entry
+PASS Inside independently counted supplemental render invocations
+PASS OneEdge native profiler 180 frames False repeat 0
+PASS OneEdge no lost profiler events False repeat 0
+PASS OneEdge measured actual map render entry
+PASS OneEdge independently counted supplemental render invocations
+PASS OneEdge native profiler 180 frames True repeat 0
+PASS OneEdge no lost profiler events True repeat 0
+PASS OneEdge measured actual map render entry
+PASS OneEdge independently counted supplemental render invocations
+PASS OneEdge native profiler 180 frames True repeat 1
+PASS OneEdge no lost profiler events True repeat 1
+PASS OneEdge measured actual map render entry
+PASS OneEdge independently counted supplemental render invocations
+PASS OneEdge native profiler 180 frames False repeat 1
+PASS OneEdge no lost profiler events False repeat 1
+PASS OneEdge measured actual map render entry
+PASS OneEdge independently counted supplemental render invocations
+PASS OneEdge native profiler 180 frames False repeat 2
+PASS OneEdge no lost profiler events False repeat 2
+PASS OneEdge measured actual map render entry
+PASS OneEdge independently counted supplemental render invocations
+PASS OneEdge native profiler 180 frames True repeat 2
+PASS OneEdge no lost profiler events True repeat 2
+PASS OneEdge measured actual map render entry
+PASS OneEdge independently counted supplemental render invocations
+PASS Corner native profiler 180 frames False repeat 0
+PASS Corner no lost profiler events False repeat 0
+PASS Corner measured actual map render entry
+PASS Corner independently counted supplemental render invocations
+PASS Corner native profiler 180 frames True repeat 0
+PASS Corner no lost profiler events True repeat 0
+PASS Corner measured actual map render entry
+PASS Corner independently counted supplemental render invocations
+PASS Corner native profiler 180 frames True repeat 1
+PASS Corner no lost profiler events True repeat 1
+PASS Corner measured actual map render entry
+PASS Corner independently counted supplemental render invocations
+PASS Corner native profiler 180 frames False repeat 1
+PASS Corner no lost profiler events False repeat 1
+PASS Corner measured actual map render entry
+PASS Corner independently counted supplemental render invocations
+PASS Corner native profiler 180 frames False repeat 2
+PASS Corner no lost profiler events False repeat 2
+PASS Corner measured actual map render entry
+PASS Corner independently counted supplemental render invocations
+PASS Corner native profiler 180 frames True repeat 2
+PASS Corner no lost profiler events True repeat 2
+PASS Corner measured actual map render entry
+PASS Corner independently counted supplemental render invocations
+PASS Wide native profiler 180 frames False repeat 0
+PASS Wide no lost profiler events False repeat 0
+PASS Wide measured actual map render entry
+PASS Wide independently counted supplemental render invocations
+PASS Wide native profiler 180 frames True repeat 0
+PASS Wide no lost profiler events True repeat 0
+PASS Wide measured actual map render entry
+PASS Wide independently counted supplemental render invocations
+PASS Wide native profiler 180 frames True repeat 1
+PASS Wide no lost profiler events True repeat 1
+PASS Wide measured actual map render entry
+PASS Wide independently counted supplemental render invocations
+PASS Wide native profiler 180 frames False repeat 1
+PASS Wide no lost profiler events False repeat 1
+PASS Wide measured actual map render entry
+PASS Wide independently counted supplemental render invocations
+PASS Wide native profiler 180 frames False repeat 2
+PASS Wide no lost profiler events False repeat 2
+PASS Wide measured actual map render entry
+PASS Wide independently counted supplemental render invocations
+PASS Wide native profiler 180 frames True repeat 2
+PASS Wide no lost profiler events True repeat 2
+PASS Wide measured actual map render entry
+PASS Wide independently counted supplemental render invocations
+COMPLETE

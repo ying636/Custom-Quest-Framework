@@ -238,6 +238,7 @@ CQF 1.7 的自定义地图背景由 `MapComponent_CustomMapData.background` 管�
 - 避免把一张纹理极端拉伸成大静态平面。`CameraVisible` 背景应支持 `fitMode`：`Tile` 平铺、`Stretch` 单张拉伸、`Cover` 单张等比覆盖并裁切边缘。`Tile` 是平铺模式的默认值；整张星图类背景用 `Cover`。
 - `Tile` 模式用 `texture.wrapMode=Repeat`，按可视宽高 / tileSize 设置 `material.mainTextureScale`，并按相机世界坐标设置 `mainTextureOffset`，这样移动相机时背景连续平铺。`Stretch/Cover` 用 `Clamp`；`Cover` 根据贴图宽高比与相机宽高比计算 UV scale/offset，保证不变形。
 - Quest 星图背景示例：`<drawScope>CameraVisible</drawScope>` + `<fitMode>Cover</fitMode>`。
+- `MapDrawLayer_CQFPanoramaLighting` 统一续绘 CameraVisible 全景外围的原版光照，仅处理 `Enabled && DrawOnCameraVisibleArea`，包括 `texPath=UI/Null`、实际画面来自其他绘制层的背景。原版覆盖边界是 `x=-200..map.Size.x+200`、`z=-200..map.Size.z+200`；只补当前可见范围减去此矩形的部分，不重复覆盖。子 Mod 不再另加外围补光层。材质、分区、性能及实机验证见 [全景背景外围光照](references/map-background-lighting.md)。
 内置背景特效：
 - `CQF_BackgroundEffect_BlinkStars`：闪烁星辰。
 - `CQF_BackgroundEffect_Meteors`：流星。

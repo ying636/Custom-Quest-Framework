@@ -1,0 +1,1658 @@
+[
+  {
+    "Name": "Concrete_AfterLoad",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_Bottom",
+    "OriginalPixels": 1146600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1265400.0,
+    "OutsideChangedAboveOne": 1260000.0,
+    "OriginalRectPixels": [
+      -2680,
+      -6411,
+      5226,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_BottomLeft",
+    "OriginalPixels": 367549.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2044451.0,
+    "OutsideChangedAboveOne": 2040800.0,
+    "OriginalRectPixels": [
+      1283,
+      -6411,
+      9189,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_BottomRight",
+    "OriginalPixels": 775229.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1636771.0,
+    "OutsideChangedAboveOne": 1631200.0,
+    "OriginalRectPixels": [
+      -6629,
+      -6411,
+      1277,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_Inside",
+    "OriginalPixels": 2412000.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 0.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -9617,
+      -9097,
+      12137,
+      10737
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_Left",
+    "OriginalPixels": 773180.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1638820.0,
+    "OutsideChangedAboveOne": 1634800.0,
+    "OriginalRectPixels": [
+      1283,
+      -2797,
+      9189,
+      4411
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_Right",
+    "OriginalPixels": 1630780.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 781220.0,
+    "OutsideChangedAboveOne": 777200.0,
+    "OriginalRectPixels": [
+      -6629,
+      -2797,
+      1277,
+      4411
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_Top",
+    "OriginalPixels": 1254600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1157400.0,
+    "OutsideChangedAboveOne": 1152000.0,
+    "OriginalRectPixels": [
+      -2680,
+      803,
+      5226,
+      8011
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_TopLeft",
+    "OriginalPixels": 402169.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2009831.0,
+    "OutsideChangedAboveOne": 2006000.0,
+    "OriginalRectPixels": [
+      1283,
+      803,
+      9189,
+      8011
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_TopRight",
+    "OriginalPixels": 848249.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1563751.0,
+    "OutsideChangedAboveOne": 1558000.0,
+    "OriginalRectPixels": [
+      -6629,
+      803,
+      1277,
+      8011
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dawn_Wide",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Dusk_Wide",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Night_Wide",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Concrete_Noon_Wide",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 3.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_AfterLoad",
+    "OriginalPixels": 326041.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2085959.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      994,
+      515,
+      1565,
+      1086
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_Bottom",
+    "OriginalPixels": 1146600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1265400.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -3451,
+      -8651,
+      5997,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_BottomLeft",
+    "OriginalPixels": 367549.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2044451.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      1283,
+      -8651,
+      10731,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_BottomRight",
+    "OriginalPixels": 775229.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1636771.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -8171,
+      -8651,
+      1277,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_Inside",
+    "OriginalPixels": 2412000.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 0.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -11737,
+      -12177,
+      14257,
+      13816
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_Left",
+    "OriginalPixels": 773180.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1638820.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      1283,
+      -3917,
+      10731,
+      5531
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_Right",
+    "OriginalPixels": 1630780.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 781220.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -8171,
+      -3917,
+      1277,
+      5531
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_Top",
+    "OriginalPixels": 1254600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1157400.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -3451,
+      803,
+      5997,
+      10251
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_TopLeft",
+    "OriginalPixels": 402169.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2009831.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      1283,
+      803,
+      10731,
+      10251
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_TopRight",
+    "OriginalPixels": 848249.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1563751.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -8171,
+      803,
+      1277,
+      10251
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dawn_Wide",
+    "OriginalPixels": 326041.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2085959.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      994,
+      515,
+      1565,
+      1086
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Dusk_Wide",
+    "OriginalPixels": 326041.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2085959.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      994,
+      515,
+      1565,
+      1086
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Night_Wide",
+    "OriginalPixels": 326041.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2085959.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      994,
+      515,
+      1565,
+      1086
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Normal_Noon_Wide",
+    "OriginalPixels": 326041.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2085959.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      994,
+      515,
+      1565,
+      1086
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_AfterLoad",
+    "OriginalPixels": 184008.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2227992.0,
+    "OutsideChangedAboveOne": 2205267.0,
+    "OriginalRectPixels": [
+      1054,
+      596,
+      1505,
+      1004
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Bottom",
+    "OriginalPixels": 1123200.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1288800.0,
+    "OutsideChangedAboveOne": 1276034.0,
+    "OriginalRectPixels": [
+      -2667,
+      -6398,
+      5213,
+      784
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Bottom_NoHaze",
+    "OriginalPixels": 1146600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1265400.0,
+    "OutsideChangedAboveOne": 1260000.0,
+    "OriginalRectPixels": [
+      -2680,
+      -6411,
+      5226,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_BottomLeft",
+    "OriginalPixels": 351936.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2060064.0,
+    "OutsideChangedAboveOne": 2044451.0,
+    "OriginalRectPixels": [
+      1296,
+      -6398,
+      9176,
+      784
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_BottomLeft_NoHaze",
+    "OriginalPixels": 367549.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2044451.0,
+    "OutsideChangedAboveOne": 2040800.0,
+    "OriginalRectPixels": [
+      1283,
+      -6411,
+      9189,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_BottomRight",
+    "OriginalPixels": 751296.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1660704.0,
+    "OutsideChangedAboveOne": 1636771.0,
+    "OriginalRectPixels": [
+      -6616,
+      -6398,
+      1264,
+      784
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_BottomRight_NoHaze",
+    "OriginalPixels": 775229.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1636771.0,
+    "OutsideChangedAboveOne": 1631200.0,
+    "OriginalRectPixels": [
+      -6629,
+      -6411,
+      1277,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Inside",
+    "OriginalPixels": 2412000.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 0.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -9604,
+      -9084,
+      12124,
+      10724
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Inside_NoHaze",
+    "OriginalPixels": 2412000.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 0.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -9617,
+      -9097,
+      12137,
+      10737
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Left",
+    "OriginalPixels": 755760.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1656240.0,
+    "OutsideChangedAboveOne": 1639686.0,
+    "OriginalRectPixels": [
+      1296,
+      -2784,
+      9176,
+      4398
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Left_NoHaze",
+    "OriginalPixels": 773180.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1638820.0,
+    "OutsideChangedAboveOne": 1634800.0,
+    "OriginalRectPixels": [
+      1283,
+      -2797,
+      9189,
+      4411
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Right",
+    "OriginalPixels": 1613360.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 798640.0,
+    "OutsideChangedAboveOne": 781319.0,
+    "OriginalRectPixels": [
+      -6616,
+      -2784,
+      1264,
+      4398
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Right_NoHaze",
+    "OriginalPixels": 1630780.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 781220.0,
+    "OutsideChangedAboveOne": 777200.0,
+    "OriginalRectPixels": [
+      -6629,
+      -2797,
+      1277,
+      4411
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Top",
+    "OriginalPixels": 1231200.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1180800.0,
+    "OutsideChangedAboveOne": 1157400.0,
+    "OriginalRectPixels": [
+      -2667,
+      816,
+      5213,
+      7998
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Top_NoHaze",
+    "OriginalPixels": 1254600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1157400.0,
+    "OutsideChangedAboveOne": 1152000.0,
+    "OriginalRectPixels": [
+      -2680,
+      803,
+      5226,
+      8011
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_TopLeft",
+    "OriginalPixels": 385776.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2026224.0,
+    "OutsideChangedAboveOne": 2009837.0,
+    "OriginalRectPixels": [
+      1296,
+      816,
+      9176,
+      7998
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_TopLeft_NoHaze",
+    "OriginalPixels": 402169.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2009831.0,
+    "OutsideChangedAboveOne": 2006000.0,
+    "OriginalRectPixels": [
+      1283,
+      803,
+      9189,
+      8011
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_TopRight",
+    "OriginalPixels": 823536.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1588464.0,
+    "OutsideChangedAboveOne": 1563751.0,
+    "OriginalRectPixels": [
+      -6616,
+      816,
+      1264,
+      7998
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_TopRight_NoHaze",
+    "OriginalPixels": 848249.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1563751.0,
+    "OutsideChangedAboveOne": 1558000.0,
+    "OriginalRectPixels": [
+      -6629,
+      803,
+      1277,
+      8011
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Wide",
+    "OriginalPixels": 184008.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2227992.0,
+    "OutsideChangedAboveOne": 2205396.0,
+    "OriginalRectPixels": [
+      1054,
+      596,
+      1505,
+      1004
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dawn_Wide_NoHaze",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dusk_Wide",
+    "OriginalPixels": 184008.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2227992.0,
+    "OutsideChangedAboveOne": 2205396.0,
+    "OriginalRectPixels": [
+      1054,
+      596,
+      1505,
+      1004
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Dusk_Wide_NoHaze",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Night_Wide",
+    "OriginalPixels": 184008.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2227992.0,
+    "OutsideChangedAboveOne": 2205267.0,
+    "OriginalRectPixels": [
+      1054,
+      596,
+      1505,
+      1004
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Night_Wide_NoHaze",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 2198997.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Noon_Wide",
+    "OriginalPixels": 184008.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2227992.0,
+    "OutsideChangedAboveOne": 314148.0,
+    "OriginalRectPixels": [
+      1054,
+      596,
+      1505,
+      1004
+    ],
+    "FilterInsetPixels": 16,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Pool_Noon_Wide_NoHaze",
+    "OriginalPixels": 207018.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2204982.0,
+    "OutsideChangedAboveOne": 182765.0,
+    "OriginalRectPixels": [
+      1041,
+      583,
+      1518,
+      1017
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_AfterLoad",
+    "OriginalPixels": 154449.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2257551.0,
+    "OutsideChangedAboveOne": 2252000.0,
+    "OriginalRectPixels": [
+      1083,
+      604,
+      1476,
+      997
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_Bottom",
+    "OriginalPixels": 1146600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1265400.0,
+    "OutsideChangedAboveOne": 1260000.0,
+    "OriginalRectPixels": [
+      -1997,
+      -5742,
+      4542,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_BottomLeft",
+    "OriginalPixels": 367549.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2044451.0,
+    "OutsideChangedAboveOne": 2040800.0,
+    "OriginalRectPixels": [
+      1283,
+      -5742,
+      7822,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_BottomRight",
+    "OriginalPixels": 775229.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1636771.0,
+    "OutsideChangedAboveOne": 1631200.0,
+    "OriginalRectPixels": [
+      -5262,
+      -5742,
+      1277,
+      797
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_Inside",
+    "OriginalPixels": 2412000.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 0.0,
+    "OutsideChangedAboveOne": 0.0,
+    "OriginalRectPixels": [
+      -7737,
+      -8177,
+      10257,
+      9817
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_Left",
+    "OriginalPixels": 773180.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1638820.0,
+    "OutsideChangedAboveOne": 1634800.0,
+    "OriginalRectPixels": [
+      1283,
+      -2462,
+      7822,
+      4076
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_Right",
+    "OriginalPixels": 1630780.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 781220.0,
+    "OutsideChangedAboveOne": 777200.0,
+    "OriginalRectPixels": [
+      -5262,
+      -2462,
+      1277,
+      4076
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_Top",
+    "OriginalPixels": 1254600.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1157400.0,
+    "OutsideChangedAboveOne": 1152000.0,
+    "OriginalRectPixels": [
+      -1997,
+      803,
+      4542,
+      7342
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_TopLeft",
+    "OriginalPixels": 402169.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2009831.0,
+    "OutsideChangedAboveOne": 2006000.0,
+    "OriginalRectPixels": [
+      1283,
+      803,
+      7822,
+      7342
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_TopRight",
+    "OriginalPixels": 848249.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 1563751.0,
+    "OutsideChangedAboveOne": 1558000.0,
+    "OriginalRectPixels": [
+      -5262,
+      803,
+      1277,
+      7342
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dawn_Wide",
+    "OriginalPixels": 154449.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2257551.0,
+    "OutsideChangedAboveOne": 2252000.0,
+    "OriginalRectPixels": [
+      1083,
+      604,
+      1476,
+      997
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Dusk_Wide",
+    "OriginalPixels": 154449.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2257551.0,
+    "OutsideChangedAboveOne": 2252000.0,
+    "OriginalRectPixels": [
+      1083,
+      604,
+      1476,
+      997
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Night_Wide",
+    "OriginalPixels": 154449.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2257551.0,
+    "OutsideChangedAboveOne": 2252000.0,
+    "OriginalRectPixels": [
+      1083,
+      604,
+      1476,
+      997
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  },
+  {
+    "Name": "Star_Noon_Wide",
+    "OriginalPixels": 154449.0,
+    "ChangedPixels": 0.0,
+    "AboveOne": 0.0,
+    "AboveThree": 0.0,
+    "MaximumChannelDifference": 0.0,
+    "MeanChannelDifference": 0.0,
+    "OutsidePixels": 2257551.0,
+    "OutsideChangedAboveOne": 109.0,
+    "OriginalRectPixels": [
+      1083,
+      604,
+      1476,
+      997
+    ],
+    "FilterInsetPixels": 3,
+    "DifferenceBounds": [
+      2560.0,
+      1600.0,
+      -1.0,
+      -1.0
+    ]
+  }
+]

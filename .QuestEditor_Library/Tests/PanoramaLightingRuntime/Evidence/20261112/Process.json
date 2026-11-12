@@ -1,0 +1,18 @@
+{
+  "PID": 28916,
+  "ExecutablePath": "D:\\RimWorld-Dev\\RimWorld.exe",
+  "CommandLine": [
+    "D:\\RimWorld-Dev\\RimWorld.dll",
+    "-popupwindow",
+    "-savedatafolder=D:/RimWorld-Dev/SaveData",
+    "-NoFileLog",
+    "-quicktest",
+    "-cqfpanoramachecks",
+    "-cqfpanoramaoutput=D:\\RimWorld-Dev\\TestArtifacts\\CQF-PanoramaLighting-20261112-91aefd8b\\Release\\Evidence"
+  ],
+  "SaveData": "D:/RimWorld-Dev/SaveData",
+  "SteamAppId": "0",
+  "SteamGameId": "0",
+  "SteamOverlayGameId": "0",
+  "Version": "1.7.4982 rev1280"
+}
