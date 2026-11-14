@@ -169,33 +169,8 @@ public abstract class DomainTransition : IDisposable
                 return;
             }
             if (returnPending || revealReady) return;
-            MapComponent_Domain destinationDomain = displayMap.GetComponent<MapComponent_Domain>();
-            if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap
-                && destinationDomain.Instances.Any(side => side.Active && side.LastTerrainRenderedFrame > switchedFrame))
+            if (terrainReadyFrame < 0 && HasRenderedTerrain())
                 terrainReadyFrame = Time.frameCount;
-            if (terrainReadyFrame < 0 && Time.frameCount > switchedFrame && WorldRendererUtility.DrawingMap)
-            {
-                CellRect view = Find.CameraDriver.CurrentViewRect;
-                view.ClipInsideMap(displayMap);
-                SectionLayer? terrain = view.IsEmpty ? null
-                    : displayMap.mapDrawer.SectionAt(view.CenterCell).GetLayer(typeof(SectionLayer_Terrain));
-                if (terrain?.Visible == true)
-                {
-                    returnTerrainCommands.Clear();
-                    try
-                    {
-                        Waylith.Rendering.MeshDrawSubmission.CopyPendingCommands(returnTerrainCommands, Find.Camera.cullingMask);
-                        foreach (LayerSubMesh subMesh in terrain.subMeshes)
-                            if (subMesh.finalized && !subMesh.disabled && subMesh.mesh.vertexCount > 0
-                                && returnTerrainCommands.Any(command => ReferenceEquals(command.Mesh, subMesh.mesh.EngineMesh)))
-                            {
-                                terrainReadyFrame = Time.frameCount;
-                                break;
-                            }
-                    }
-                    finally { returnTerrainCommands.Clear(); }
-                }
-            }
             if (terrainReadyFrame >= 0 && Time.frameCount > terrainReadyFrame)
             {
                 revealReady = true;
@@ -253,7 +228,7 @@ public abstract class DomainTransition : IDisposable
         }
         else if (entered && !revealReady)
         {
-            if (terrainReadyFrame < 0 && domain!.Instances.Any(side => side.Active && side.LastTerrainRenderedFrame > switchedFrame))
+            if (terrainReadyFrame < 0 && HasRenderedTerrain())
                 terrainReadyFrame = Time.frameCount;
             if (terrainReadyFrame >= 0 && Time.frameCount > terrainReadyFrame)
             {
@@ -295,7 +270,11 @@ public abstract class DomainTransition : IDisposable
             if (Current.Game == game && Current.ProgramState == ProgramState.Playing)
             {
 #if RIMWORLD_1_7
-                if (opening != null && !opening.Destroyed) opening.Destroy();
+                if (opening != null && !opening.Destroyed)
+                {
+                    if (opening.Caster?.Dead == true) opening.CancelOpening();
+                    if (!opening.IsDissolving) opening.Destroy();
+                }
                 opening = null;
 #endif
                 if (domain != null) foreach (MapComponent_Domain side in domain.Instances) side.EndArrivalTransition();
@@ -334,6 +313,35 @@ public abstract class DomainTransition : IDisposable
     protected virtual void PreparePresentation() { }
 
     protected abstract void ReleaseVisuals();
+
+#if RIMWORLD_1_7
+    private bool HasRenderedTerrain()
+    {
+        if (Time.frameCount <= switchedFrame || !WorldRendererUtility.DrawingMap) return false;
+        MapComponent_Domain destination = displayMap!.GetComponent<MapComponent_Domain>();
+        if (destination.Instances.Any(side => side.Active && side.LastTerrainRenderedFrame > switchedFrame)) return true;
+        CellRect view = Find.CameraDriver.CurrentViewRect.ExpandedBy(1);
+        view.ClipInsideMap(displayMap);
+        if (view.IsEmpty) return false;
+        terrainCommands.Clear();
+        try
+        {
+            Waylith.Rendering.MeshDrawSubmission.CopyPendingCommands(terrainCommands, Find.Camera.cullingMask);
+            for (int x = view.minX / Section.Size * Section.Size; x <= view.maxX; x += Section.Size)
+                for (int z = view.minZ / Section.Size * Section.Size; z <= view.maxZ; z += Section.Size)
+                {
+                    SectionLayer? terrain = displayMap.mapDrawer.SectionAt(new IntVec3(x, 0, z)).GetLayer(typeof(SectionLayer_Terrain));
+                    if (terrain?.Visible != true) continue;
+                    foreach (LayerSubMesh subMesh in terrain.subMeshes)
+                        if (subMesh.finalized && !subMesh.disabled && subMesh.mesh.vertexCount > 0)
+                            foreach (Waylith.Rendering.MeshDrawCommand command in terrainCommands)
+                                if (ReferenceEquals(command.Mesh, subMesh.mesh.EngineMesh)) return true;
+                }
+        }
+        finally { terrainCommands.Clear(); }
+        return false;
+    }
+#endif
 
     private bool TryStartPresentation(bool drawing = false)
     {
@@ -394,7 +402,7 @@ public abstract class DomainTransition : IDisposable
     private float terrainWaitStartedAt;
     private bool stagedReturn;
     private bool returnPending;
-    private readonly List<Waylith.Rendering.MeshDrawCommand> returnTerrainCommands = new();
+    private readonly List<Waylith.Rendering.MeshDrawCommand> terrainCommands = new();
 #endif
     private float startedAt;
     private float pendingShake;

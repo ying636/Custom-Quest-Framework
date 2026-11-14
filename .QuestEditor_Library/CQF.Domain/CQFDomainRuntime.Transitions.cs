@@ -41,7 +41,7 @@ public sealed partial class CQFDomainRuntime
         {
             DomainOpening opening = openings[0];
             openings.RemoveAt(0);
-            if (opening.Destroyed || !opening.Spawned) continue;
+            if (opening.Destroyed || !opening.Spawned || !opening.Active) continue;
             if (opening is DomainOpening_Fusion fusion && !fusion.Prepared)
             {
                 LongEventHandler.QueueLongEvent(() =>

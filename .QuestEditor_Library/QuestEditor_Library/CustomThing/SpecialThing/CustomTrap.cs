@@ -94,13 +94,14 @@ namespace QuestEditor_Library
                     }
                 }
 
-                this.TrapComps.ForEach(c =>
+                foreach (TrapComp c in this.TrapComps)
                 {
                     if (c.mode == ActionTriggerMode.Tick && c.tick != 0 && this.IsHashIntervalTick(c.tick))
                     {
-                        c.actions.ForEach(a => a.Work(this.GetTargetThis(), GameTools.GetQuestFromThing(this)));
+                        foreach (CQFAction action in c.actions)
+                            action.Work(this.GetTargetThis(), GameTools.GetQuestFromThing(this));
                     }
-                });
+                }
             }
         }
 

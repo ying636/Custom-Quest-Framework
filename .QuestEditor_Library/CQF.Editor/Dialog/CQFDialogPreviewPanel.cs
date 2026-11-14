@@ -13,6 +13,8 @@ namespace QuestEditor_Library
 
         public void Start(int index) { this.CurrentIndex = index; this.history.Clear(); this.scroll = Vector2.zero; }
 
+        public void DisposePresentation() => this.presentationPreview.Dispose();
+
         public void Draw(Rect rect)
         {
             Text.Font = GameFont.Small;
@@ -30,6 +32,12 @@ namespace QuestEditor_Library
             if (!this.editor.CurTree.nodeMoulds.TryGetValue(this.CurrentIndex.Value, out DialogNode node))
             { Widgets.Label(new Rect(8f, 94f, rect.width - 16f, 40f), "CQF_DialogAI_MissingNode".Translate()); return; }
             Rect view = new Rect(0f, 90f, rect.width, rect.height - 90f);
+            if (this.presentationPreview.Draw(view, this.editor.CurTree, node, next =>
+            {
+                this.history.Push(this.CurrentIndex.Value);
+                this.CurrentIndex = next;
+                this.scroll = Vector2.zero;
+            })) return;
             Rect content = new Rect(0f, 0f, view.width - 20f, Mathf.Max(view.height, this.height));
             Widgets.BeginScrollView(view, ref this.scroll, content);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(content.width);
@@ -68,5 +76,6 @@ namespace QuestEditor_Library
         private readonly Stack<int> history = new Stack<int>();
         private Vector2 scroll;
         private float height = 500f;
+        private readonly CQFDialogPresentationPreview presentationPreview = new();
     }
 }

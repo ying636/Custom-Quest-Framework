@@ -15,6 +15,7 @@ public sealed partial class GameComponent_MapManager
     public void Hibernate(Map map)
     {
         ValidateMap(map);
+        if (CQFModuleLoader.KeepsMapActive(game, map)) return;
         if (!IsHibernating(map)) pendingHibernation.Add(map);
     }
 

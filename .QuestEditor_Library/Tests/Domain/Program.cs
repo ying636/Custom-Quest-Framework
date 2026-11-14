@@ -103,7 +103,7 @@ internal static class Program
         Set(domain, "caster", caster);
         Set(domain, "active", true);
         Set(domain, "health", 1000f);
-        Check(!domain.ProtectsFromOpening(caster), "running domain has no permanent invulnerability");
+        Check(!domain.ProtectsFromOpening(caster), "running domain has no permanent opening damage reduction");
         ProbeOpening opening = new() { caster = caster, active = true };
         domain.RegisterOpening(opening);
         domain.RegisterOpening(opening);
@@ -114,14 +114,14 @@ internal static class Program
             .SetValue(other.health, PawnHealthState.Mobile);
         Check(!domain.ProtectsFromOpening(other), "opening does not protect unrelated participants");
         opening.active = false;
-        Check(!domain.ProtectsFromOpening(caster), "inactive opening releases invulnerability");
+        Check(!domain.ProtectsFromOpening(caster), "inactive opening releases opening damage reduction");
         opening.active = true;
         domain.UnregisterOpening(opening);
         Check(!domain.ProtectsFromOpening(caster), "one unregister removes a repeatedly registered opening");
         Set(domain, "arrivalLocked", true);
         Check(domain.ProtectsFromOpening(caster) && !domain.ProtectsFromOpening(other), "arrival lock protects only the domain caster");
         Set(domain, "arrivalLocked", false);
-        Check(!domain.ProtectsFromOpening(caster), "arrival unlock releases invulnerability");
+        Check(!domain.ProtectsFromOpening(caster), "arrival unlock releases opening damage reduction");
         Set(domain, "entering", true);
         Check(domain.ProtectsFromOpening(caster), "synchronous domain transfer also protects its caster");
         Set(domain, "entering", false);
@@ -142,7 +142,7 @@ internal static class Program
         Check(ReferenceEquals(protection, Comp_DomainProtection.Ensure(caster)), "ability and domain reuse one damage component per caster");
         caster.jobs = (Pawn_JobTracker)RuntimeHelpers.GetUninitializedObject(typeof(Pawn_JobTracker));
         caster.jobs.curJob = new Job { ability = ability };
-        Check(protection.IsInvulnerable(), "configured domain ability protects its caster before the opening spawns");
+        Check(protection.HasOpeningProtection(), "configured domain ability protects its caster before the opening spawns");
         caster.health.hediffSet = new HediffSet(caster);
         DamageInfo hit = new(new DamageDef { harmsHealth = true }, 999f);
         DynamicMethod nativeDamage = new("CQF_Check_NativeCompDamage", typeof(void),
@@ -157,21 +157,21 @@ internal static class Program
         nativeDamage.Invoke(null, arguments);
         hit = (DamageInfo)arguments[1];
         bool absorbed = (bool)arguments[2];
-        Check(absorbed && hit.Amount == 0f && domain.Health == 1000f,
+        Check(!absorbed && hit.Amount == 499.5f && domain.Health == 1000f,
             "native ThingWithComps damage pipeline invokes the caster component without Harmony");
         typeof(ThingWithComps).GetField("comps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(caster, new List<ThingComp>());
         abilityComp.Initialize(openingAbility.comps.Single());
         protection = caster.AllComps.OfType<Comp_DomainProtection>().Single();
-        Check(protection.IsInvulnerable(), "ability initialization restores protection after native components are recreated");
+        Check(protection.HasOpeningProtection(), "ability initialization restores protection after native components are recreated");
         typeof(Pawn_HealthTracker).GetField("healthState", BindingFlags.NonPublic | BindingFlags.Instance)!
             .SetValue(caster.health, PawnHealthState.Down);
-        Check(!protection.IsInvulnerable(), "downed pawn cannot keep casting invulnerability");
+        Check(!protection.HasOpeningProtection(), "downed pawn cannot keep casting opening damage reduction");
         typeof(Pawn_HealthTracker).GetField("healthState", BindingFlags.NonPublic | BindingFlags.Instance)!
             .SetValue(caster.health, PawnHealthState.Mobile);
         ability.def = new AbilityDef { defName = "CQF_Check_UnrelatedAbility" };
-        Check(!protection.IsInvulnerable(), "ordinary ability does not grant domain invulnerability");
+        Check(!protection.HasOpeningProtection(), "ordinary ability does not grant domain opening damage reduction");
         caster.jobs.curJob = null;
-        Check(!protection.IsInvulnerable(), "ending the casting job releases invulnerability");
+        Check(!protection.HasOpeningProtection(), "ending the casting job releases opening damage reduction");
         DamageInfo ordinary = new(new DamageDef { harmsHealth = true }, 30f);
         protection.PostPreApplyDamage(ref ordinary, out bool blocked);
         Check(!blocked && ordinary.Amount == 30f, "inactive protection lets normal damage continue");
@@ -189,7 +189,7 @@ internal static class Program
         Check(protection.Protection == null && caster.AllComps.Contains(protection), "removing domain hediff releases shared health while preserving ability protection");
         ability.def = openingAbility;
         caster.jobs.curJob = new Job { ability = ability };
-        Check(protection.IsInvulnerable(), "caster can start another protected domain after recall");
+        Check(protection.HasOpeningProtection(), "caster can start another protected domain after recall");
         caster.jobs.curJob = null;
     }
 
@@ -212,18 +212,18 @@ internal static class Program
             domain.RegisterOpening(opening);
             DamageInfo damage = new(new DamageDef { harmsHealth = true }, 75f);
             component.PostPreApplyDamage(ref damage, out bool absorbed);
-            Check(absorbed && damage.Amount == 0f && domain.Health == 1000f, "opening component blocks damage without consuming shared health");
+            Check(!absorbed && damage.Amount == 37.5f && domain.Health == 1000f, "opening component halves damage without consuming shared health");
             domain.UnregisterOpening(opening);
-            Check(!component.IsInvulnerable(), "opening removal immediately releases component invulnerability");
+            Check(!component.HasOpeningProtection(), "opening removal immediately releases component opening damage reduction");
             Set(domain, "entering", true);
-            Check(component.IsInvulnerable(), "caster component covers synchronous transfer");
+            Check(component.HasOpeningProtection(), "caster component covers synchronous transfer");
             Set(domain, "entering", false);
             Set(domain, "arrivalLocked", true);
             damage = new DamageInfo(new DamageDef { harmsHealth = true }, 75f);
             component.PostPreApplyDamage(ref damage, out absorbed);
-            Check(absorbed && damage.Amount == 0f && domain.Health == 1000f, "arrival component blocks damage without consuming shared health");
+            Check(!absorbed && damage.Amount == 37.5f && domain.Health == 1000f, "arrival component halves damage without consuming shared health");
             Set(domain, "arrivalLocked", false);
-            Check(!component.IsInvulnerable(), "arrival completion releases component invulnerability");
+            Check(!component.HasOpeningProtection(), "arrival completion releases component opening damage reduction");
             typeof(ThingWithComps).GetField("comps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(caster, new List<ThingComp>());
             domain.FinalizeInit();
             Check(caster.AllComps.OfType<Comp_DomainProtection>().Count() == 1, "domain finalization restores caster protection without an ability or hediff");
@@ -237,9 +237,9 @@ internal static class Program
             Scribe.mode = previousMode;
             component = caster.AllComps.OfType<Comp_DomainProtection>().Single();
             Check(component.parent == caster, "ability post-load callback restores exactly one caster component");
-            for (int i = 0; i < 16; i++) component.IsInvulnerable();
+            for (int i = 0; i < 16; i++) component.HasOpeningProtection();
             long allocated = GC.GetAllocatedBytesForCurrentThread();
-            for (int i = 0; i < 256; i++) component.IsInvulnerable();
+            for (int i = 0; i < 256; i++) component.HasOpeningProtection();
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
             Check(allocated == 0, "inactive protection check allocates zero bytes across 256 hits (actual: " + allocated + ")");
         }

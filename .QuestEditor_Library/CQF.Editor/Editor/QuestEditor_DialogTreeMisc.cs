@@ -35,6 +35,7 @@ namespace QuestEditor_Library
                 this.Field(ref this.def.defName, "TreeDefName", ref y, width);
                 this.Field(ref this.def.title, "DialogTitle", ref y, width);
                 this.Field(ref this.def.dialogReportKey, "DialogReportKey", ref y, width, "DialogReportKeyTip");
+                CQFDialogPresentationEditor.DrawTreeSettings(this.def, ref y, 12f, width);
                 Rect checkbox = new Rect(12f, y, width, 32f);
                 CQFUIStyle.DrawBackground(checkbox);
                 Widgets.CheckboxLabeled(checkbox.ContractedBy(8f, 3f), "RequireNonHostile".Translate(), ref this.def.requireNonHostile);

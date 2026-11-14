@@ -1,0 +1,8 @@
+"Key","用途","中文文本","英文文本","中文来源","英文来源","审核状态","建议中文","建议英文","审核意见"
+"CQF_SpawnCategory_Buildings","生成命令与游离窗口类别筛选","建筑","Buildings","生成占位","生成占位","待审核","","",""
+"CQF_SpawnCategory_Items","生成命令与游离窗口类别筛选","物品","Items","生成占位","生成占位","待审核","","",""
+"CQF_SpawnCategory_Plants","生成命令与游离窗口类别筛选","植物","Plants","生成占位","生成占位","待审核","","",""
+"CQF_SpawnCategory_Filth","生成命令与游离窗口类别筛选","污物","Filth","生成占位","生成占位","待审核","","",""
+"CQF_SpawnCategory_Other","生成命令与游离窗口类别筛选","其他","Other","生成占位","生成占位","待审核","","",""
+"CQF_SpawnCategory_BuildMenu","生成命令与游离窗口类别筛选","建造分类 / {0}","Build menu / {0}","生成占位","生成占位","待审核","","",""
+"CQF_SpawnCategory_ThingCategory","生成命令与游离窗口类别筛选","物品分类 / {0}","Thing category / {0}","生成占位","生成占位","待审核","","",""

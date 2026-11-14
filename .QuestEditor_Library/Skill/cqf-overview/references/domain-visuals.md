@@ -111,7 +111,11 @@ DomainOpening_Basic.Start(definition, caster);
 
 转场的 `_MainTex` 保留给原地图截图，换皮表面使用 `_SurfaceTex`；`_NoiseTex` 为噪声。转场还提供 `_SourceUV`、`_SourceSaturation`、`_Origin`、`_Destination`、`_Returning`、`_CoverProgress`、`_RevealProgress`、`_RevealEnd`。自定义转场 Shader 必须在 coverProgress 到 revealProgress 之间完全不透明；基础 Shader 会强制保证该区间的遮盖，不让表面透明度造成切图漏帧。
 
-1.7 的 `DomainWorker_Visual.Update` 在转场期间检查视野中心原版 SectionLayer_Terrain 的已提交网格，确认实际绘制后记录 LastTerrainRenderedFrame；不每帧扫描所有地图或全部地形。原版 MapComponentDraw 在本帧 MapUpdate 提交地形前调用，不能在该回调检查待提交命令；MapComponentUpdate 位于地图绘制提交之后。切图后等待地形就绪超过 5 秒会记录错误并释放转场及入场锁，避免永久遮屏。特殊地形若完全替代原版地形层，需要自己的 Update / SectionLayer 提供实际地形帧标记，覆盖 Update 时须保留基类就绪通知。
+1.7 的 `DomainWorker_Visual.Update` 在转场期间检查镜头内可见分块的实际地形提交，确认绘制后记录 LastTerrainRenderedFrame，避免中心分块没有该领域地形时漏判。入场和返回共用相同屏障，优先接受领域的实际绘制帧，再检查可见的原版地形已提交网格；没有提交时继续遮盖，确认后再等待完整帧揭幕，不扫描其他地图。原版 MapComponentDraw 在本帧 MapUpdate 提交地形前调用，不能在该回调检查待提交命令；MapComponentUpdate 位于地图绘制提交之后。超过 5 秒仍未就绪会记录错误并释放锁。完全替代原版地形的自定义层仍须提供 LastTerrainRenderedFrame。
+
+展开保护为 50% 减伤，覆盖能力预热、准备、闭合与入场期间，不消耗领域共享血量，也不再吸收全部伤害。施术者被杀死时立即取消待执行展开，释放捕获载具和临时锁；基础及血海展开物件保留冻结的展开进度，进入 60 tick 的消散阶段，期间不再传送人员。血海闭合只将其他参与者收进演出载具，施术者留在地图上保持可攻击。
+
+1.7 通过 `_Dissolve` 推进噪声阈值，形成扩大的不规则缺口、发亮蚀边和最终消失的残片，不采用整体透明度淡出。基础及血海的地面、幕墙和反展开准备平面均已接入；罩子按世界坐标采样以免顶部拉伸。DomainOpeningVisuals 保留已有 Draw 重载，新增带 opacity 的入口传递消散进度；DomainSurfaceVisuals 保留旧 Draw 签名，新增最后一个 dissolve 参数的显式队列重载。自定义材质未声明 `_Dissolve` 时仍可退回透明度消散。1.6 未更新 AssetBundle，本轮运行文件只部署 1.7。
 
 ## 游戏内测试能力
 

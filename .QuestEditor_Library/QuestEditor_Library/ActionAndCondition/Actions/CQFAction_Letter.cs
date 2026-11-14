@@ -17,6 +17,8 @@ namespace QuestEditor_Library
 
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
+        public LetterDef LetterDef => this.letterDef ?? LetterDefOf.NeutralEvent;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             using CQFUIScope scope = new CQFUIScope(inRect.width);
@@ -40,7 +42,7 @@ namespace QuestEditor_Library
                 this.text = editedText;
             }
             y += 118f;
-            if (CQFUIStyle.ButtonText(new Rect(x, y, width, 28f), "CQF_LetterType".Translate(GetTypeLabel(this.letterDef))))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, width, 28f), "CQF_LetterType".Translate(GetTypeLabel(this.LetterDef))))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<LetterDef>.AllDefsListForReading.Where(def => def.letterClass == typeof(StandardLetter)).ToList(),
                     def => this.letterDef = def, GetTypeLabel);
@@ -51,7 +53,7 @@ namespace QuestEditor_Library
         public override XElement SaveToXElement(string nodeName)
         {
             XElement result = base.SaveToXElement(nodeName);
-            result.Add(new XElement("label", this.label), new XElement("text", this.text), new XElement("letterDef", this.letterDef?.defName));
+            result.Add(new XElement("label", this.label), new XElement("text", this.text), new XElement("letterDef", this.LetterDef?.defName));
             return result;
         }
 
@@ -67,9 +69,10 @@ namespace QuestEditor_Library
 
         public ChoiceLetter CreateLetter(Dictionary<string, TargetInfo> targets, Quest quest)
         {
-            if (this.letterDef == null || this.letterDef.letterClass != typeof(StandardLetter))
+            LetterDef definition = this.LetterDef;
+            if (definition == null || definition.letterClass != typeof(StandardLetter))
             {
-                throw new InvalidOperationException("CQF_LetterInvalidType".Translate(this.letterDef?.defName ?? string.Empty));
+                throw new InvalidOperationException("CQF_LetterInvalidType".Translate(definition?.defName ?? string.Empty));
             }
             if (this.label.NullOrEmpty() || this.text.NullOrEmpty() || string.IsNullOrWhiteSpace(this.label) || string.IsNullOrWhiteSpace(this.text))
             {
@@ -97,7 +100,7 @@ namespace QuestEditor_Library
             {
                 context[entry.Key] = entry.Value;
             }
-            return LetterMaker.MakeLetter(this.ResolveText(this.label, context), this.ResolveText(this.text, context), this.letterDef,
+            return LetterMaker.MakeLetter(this.ResolveText(this.label, context), this.ResolveText(this.text, context), definition,
                 new LookTargets(selected.Values.Distinct()), quest: quest);
         }
 
@@ -146,6 +149,6 @@ namespace QuestEditor_Library
         public string label = nameof(CQFAction_Letter);
         [CQFLocalizableText]
         public string text = nameof(CQFAction_Letter);
-        public LetterDef letterDef = LetterDefOf.NeutralEvent;
+        public LetterDef? letterDef;
     }
 }

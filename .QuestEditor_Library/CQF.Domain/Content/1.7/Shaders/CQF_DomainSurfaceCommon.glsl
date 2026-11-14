@@ -13,6 +13,7 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     float _EffectTime;
     vec4 _TerritoryState;
     vec4 _TerritoryProtectionState;
+    float _Dissolve;
 } uMaterial;
 layout(set = 2, binding = 1) uniform sampler2D _TerritoryProtection;
 float domainTerritoryMask(vec2 point)
@@ -124,6 +125,15 @@ vec4 domainSurface(vec2 point)
         if (uMaterial._SurfaceReveal.w > 0.5 && uMaterial._SurfaceReveal.w < 1.5)
             alpha *= smoothstep(-0.2,0.2,length(point-uMaterial._SurfaceReveal.xy)-uMaterial._SurfaceReveal.z);
         alpha *= uMaterial._SurfaceState.z;
+    }
+    if (uMaterial._Dissolve > 0.0)
+    {
+        float erosion = field(point*0.72+vec2(13.2,7.1))*0.78+noise(point*3.1)*0.22;
+        float remaining = erosion-mix(-0.08,1.08,uMaterial._Dissolve);
+        float mask = smoothstep(0.0,0.035,remaining);
+        if (mask <= 0.001) discard;
+        color += uMaterial._SecondaryColor.rgb*(1.0-smoothstep(0.02,0.11,remaining))*mask*1.8;
+        alpha *= mask;
     }
     return vec4(color,alpha);
 }

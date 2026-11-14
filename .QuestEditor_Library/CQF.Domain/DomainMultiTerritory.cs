@@ -77,12 +77,22 @@ public sealed partial class DomainMultiTerritory : IExposable
         if (fractions[side] <= 0f) return -8f;
         int rival = -1;
         float best = float.NegativeInfinity;
-        for (int index = 0; index < Count; index++)
+        int cellX = Mathf.FloorToInt(x), cellZ = Mathf.FloorToInt(z);
+        if (rivalOwners != null && cellX >= 0 && cellZ >= 0 && cellX < width && cellZ < height
+            && x == cellX + 0.5f && z == cellZ + 0.5f)
         {
-            if (index == side || fractions[index] <= 0f) continue;
-            float score = Score(index, x, z);
-            if (score > best) { best = score; rival = index; }
+            int cell = cellZ * width + cellX;
+            bool owner = baseOwners![cell] == side;
+            rival = owner ? rivalOwners[cell] : baseOwners[cell];
+            best = owner ? rivalScores![cell] : ownerScores![cell];
         }
+        else
+            for (int index = 0; index < Count; index++)
+            {
+                if (index == side || fractions[index] <= 0f) continue;
+                float score = Score(index, x, z);
+                if (score > best) { best = score; rival = index; }
+            }
         if (rival < 0) return 8f;
         float value = Score(side, x, z) - best;
         float gx = Score(side, x + 0.25f, z) - Score(rival, x + 0.25f, z)
@@ -108,9 +118,19 @@ public sealed partial class DomainMultiTerritory : IExposable
 
     public bool IsBoundary(IntVec3 cell)
     {
-        int owner = BaseOwner(cell.x, cell.z);
-        if (BaseOwner(cell.x + 1, cell.z) != owner || BaseOwner(cell.x, cell.z + 1) != owner
-            || BaseOwner(cell.x + 1, cell.z + 1) != owner) return true;
+        if (cornerOwners != null && InBounds(cell))
+        {
+            int corner = cell.z * (width + 1) + cell.x;
+            int owner = cornerOwners[corner];
+            if (cornerOwners[corner + 1] != owner || cornerOwners[corner + width + 1] != owner
+                || cornerOwners[corner + width + 2] != owner) return true;
+        }
+        else
+        {
+            int owner = BaseOwner(cell.x, cell.z);
+            if (BaseOwner(cell.x + 1, cell.z) != owner || BaseOwner(cell.x, cell.z + 1) != owner
+                || BaseOwner(cell.x + 1, cell.z + 1) != owner) return true;
+        }
         int fixedOwner = OverrideAt(cell.x, cell.z);
         return fixedOwner != 0 || ProtectionAt(cell.x - 1, cell.z) != 0 || ProtectionAt(cell.x + 1, cell.z) != 0
             || ProtectionAt(cell.x, cell.z - 1) != 0 || ProtectionAt(cell.x, cell.z + 1) != 0;
@@ -378,12 +398,35 @@ public sealed partial class DomainMultiTerritory : IExposable
     }
     private void RefreshOwners()
     {
+        cornerOwners ??= new int[(width + 1) * (height + 1)];
+        rivalOwners ??= new int[width * height];
+        ownerScores ??= new float[width * height];
+        rivalScores ??= new float[width * height];
+        for (int z = 0; z <= height; z++)
+        for (int x = 0; x <= width; x++)
+            cornerOwners[z * (width + 1) + x] = BaseOwner(x, z);
         for (int z = 0; z < height; z++)
         for (int x = 0; x < width; x++)
         {
             IntVec3 cell = new(x, 0, z);
             int index = z * width + x;
-            baseOwners![index] = BaseOwner(x + 0.5f, z + 0.5f);
+            int bestOwner = -1, rival = -1;
+            float best = float.NegativeInfinity, second = float.NegativeInfinity;
+            for (int side = 0; side < Count; side++)
+            {
+                if (fractions[side] <= 0f) continue;
+                float score = Score(side, x + 0.5f, z + 0.5f);
+                if (score > best)
+                {
+                    second = best; rival = bestOwner;
+                    best = score; bestOwner = side;
+                }
+                else if (score > second) { second = score; rival = side; }
+            }
+            baseOwners![index] = bestOwner;
+            rivalOwners[index] = rival;
+            ownerScores[index] = best;
+            rivalScores[index] = second;
             int owner = overrides![index] > 0 ? overrides[index] - 1 : baseOwners[index];
             if (owners![index] != owner) { owners[index] = owner; changedCells.Add(cell); }
             bool boundary = IsBoundary(cell);
@@ -435,6 +478,10 @@ public sealed partial class DomainMultiTerritory : IExposable
     private float[][]? centerDistances;
     private int[]? owners;
     private int[]? baseOwners;
+    private int[]? cornerOwners;
+    private int[]? rivalOwners;
+    private float[]? ownerScores;
+    private float[]? rivalScores;
     private bool[]? oldBoundary;
     private int[]? protectedOwners;
     private int[]? overrides;

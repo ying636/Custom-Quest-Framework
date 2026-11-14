@@ -39,8 +39,10 @@ namespace QuestEditor_Library
             try
             {
                 List<Thing> result = new List<Thing>();
+                if (CQFLayoutExecution.Current != null) CQFLayoutExecution.ValidateTemplate(def);
                 if (!map.GetComponent<MapComponent_CQFTargets>().CanRegisterDefinition(def))
                 {
+                    if (CQFLayoutExecution.Current != null) throw new CQFLayoutException("CQF_TargetKeyConflict: " + def.defName);
                     return result;
                 }
                 if (!isGenerateByCore)
@@ -65,6 +67,13 @@ namespace QuestEditor_Library
                 if (replaceMap || isSubMap || (load && !debug))
                 {
                     center = centerP == null ? IntVec3.Zero : centerP.Value;
+                }
+                CQFLayoutExecution.Current?.Validate(map, def, center);
+                if (def.regions.Count > 0)
+                {
+                    CQFMapRegionCollection regions = MapComponent_CustomMapData.GetComp(map).Regions;
+                    context.RegionScope = isGenerateByCore ? regions.NextScope(def.Origin.defName) : "";
+                    foreach (CQFMapRegion region in def.regions) regions.Add(region.Copy(c => c + center), context.RegionScope, map);
                 }
                 if (def != null && !def.disgenerate.NullOrEmpty())
                 {
@@ -164,7 +173,16 @@ namespace QuestEditor_Library
             }
             catch(Exception e) 
             {
+                if (!isGenerateByCore && def != null && (def.regions.Count > 0 || def.customSteps.OfType<CustomMapStep_Layout>().Any() || def.preCustomSteps.OfType<CustomMapStep_Layout>().Any()))
+                {
+                    GameTools.ClearTemporaryTargets(); GameTools.isGeneratingMap = false;
+                    faction = null!; replaceData?.Clear(); replaceData = null!;
+                    disgenerate.Clear(); generatedCount.Clear(); generatedCount_Key.Clear(); generatedLimit_Key.Clear();
+                    lordsWithName.Clear(); lordsWithData.Clear(); lordsWithTarget.Clear(); requests.Clear();
+                }
+                if (e is CQFLayoutException) throw;
                 Log.Error("Generate Custom map error:" + def?.defName + "," + e);
+                if (CQFLayoutExecution.Current != null) throw;
             }
 
             return null;

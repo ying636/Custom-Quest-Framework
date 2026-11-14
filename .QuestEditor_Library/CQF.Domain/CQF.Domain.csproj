@@ -10,7 +10,8 @@
     <OutputPath>$(MSBuildThisFileDirectory)..\..\$(RimWorldVersion)\Optional\Domain\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" />
+    <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" Condition="'$(CoreAssembly)' == ''" />
+    <Reference Include="QuestEditor_Library" HintPath="$(CoreAssembly)" Private="false" Condition="'$(CoreAssembly)' != ''" />
     <Content Include="Content\$(RimWorldVersion)\**\*">
       <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

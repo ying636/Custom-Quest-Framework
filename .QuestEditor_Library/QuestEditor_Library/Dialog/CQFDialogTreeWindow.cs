@@ -26,17 +26,39 @@ public class CQFDialogTreeWindow : Window
         this.quest = quest;
         this.tree = tree;
         this.tree.ResolveOptions();
+        if (this.tree.ActivePresentation is CQFDialogPresentation presentation)
+        {
+            string[] errors = this.tree.PresentationErrors().ToArray();
+            if (errors.Length > 0) throw new InvalidOperationException(string.Join("\n", errors));
+            this.presentationRenderer = presentation.CreateRenderer();
+            this.doWindowBackground = this.presentationRenderer.DrawWindowBackground;
+            this.preventCameraMotion = true;
+        }
         this.GoToNode(startIndex);
     }
 
-    protected override float Margin => 15f;
-    public override Vector2 InitialSize => new Vector2(620 + Margin, 620 + Margin);
+    protected override float Margin => this.presentationRenderer?.Margin ?? 15f;
+    public override Vector2 InitialSize => this.presentationRenderer?.GetInitialSize(new Vector2(UI.screenWidth, UI.screenHeight)) ?? new Vector2(620 + Margin, 620 + Margin);
     public float CharacterWidth => 0f;
     public int CurrentNodeIndex { get; private set; } = -1;
     public bool IsClosed { get; private set; }
+    public IReadOnlyList<IDialogElement> CurrentElements => this.currentElements;
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+        if (this.presentationRenderer != null)
+        {
+            if (this.presentationOptionsPending)
+            {
+                this.options.Clear();
+                this.options.AddRange(this.nextOptions);
+                this.nextOptions.Clear();
+                this.presentationOptionsPending = false;
+            }
+            this.presentationRenderer.Draw(inRect, new CQFDialogFrame(this.tree, this.curNode, this.title,
+                this.currentElements, this.options, this.interviewer, this.interviewee, () => this.Close()));
+            return;
+        }
         if (this.title != null)
         {
             Text.Font = GameFont.Medium;
@@ -105,7 +127,9 @@ public class CQFDialogTreeWindow : Window
             this.CurrentNodeIndex = index;
             this.curNode = node;
             this.nextOptions.Clear();
-            this.elements.AddRange(this.curNode.Get(interviewer,interviewee,tree,this.quest));
+            this.currentElements = this.curNode.Get(interviewer,interviewee,tree,this.quest);
+            this.elements.AddRange(this.currentElements);
+            this.presentationOptionsPending = true;
             foreach (var curNodeOption in this.curNode.options)
             {
                 foreach (var op in curNodeOption.GetDEOptions(interviewer,interviewee,tree,this.quest))
@@ -142,7 +166,8 @@ public class CQFDialogTreeWindow : Window
         if (!this.IsClosed)
         {
             this.IsClosed = true;
-            this.Closed?.Invoke();
+            try { this.Closed?.Invoke(); }
+            finally { this.presentationRenderer?.Dispose(); }
         }
     }
 
@@ -160,6 +185,9 @@ public class CQFDialogTreeWindow : Window
 
     private Quest quest;
     private string title;
+    private readonly CQFDialogRenderer? presentationRenderer;
+    private List<IDialogElement> currentElements = new();
+    private bool presentationOptionsPending;
 
 
     private static readonly Rect DefaultTexCoords = new Rect(0f, 0f, 1f, 1f);

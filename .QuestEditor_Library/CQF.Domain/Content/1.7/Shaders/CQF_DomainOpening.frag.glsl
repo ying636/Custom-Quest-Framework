@@ -29,6 +29,7 @@ layout(set = 2, binding = 0) uniform MaterialUniforms
     float _RevealEnd;
     float _Returning;
     float _SourceSaturation;
+    float _Dissolve;
 } uMaterial;
 layout(set = 2, binding = 1) uniform sampler2D _MainTex;
 layout(set = 2, binding = 2) uniform sampler2D _NoiseTex;
@@ -76,4 +77,18 @@ color += rim * uMaterial._EdgeColor.rgb * uMaterial._EdgeColor.a;
 return vec4(color,alpha * surface.a * uMaterial._Color.a);
 }
 #include "CQF_DomainDomeFusion.glsl"
-void main() { outColor = fusedDome(effect(),vWorld); }
+void main()
+{
+    outColor = fusedDome(effect(),vWorld);
+    if (uMaterial._Dissolve > 0.0)
+    {
+        vec2 point = vWorld;
+        float erosion = field(point*0.72+vec2(13.2,7.1))*0.78+noise(point*3.1)*0.22;
+        float remaining = erosion-mix(-0.08,1.08,uMaterial._Dissolve);
+        float mask = smoothstep(0.0,0.035,remaining);
+        if (mask <= 0.001) discard;
+        float rim = (1.0-smoothstep(0.02,0.11,remaining))*mask;
+        outColor.rgb += uMaterial._EdgeColor.rgb*rim*1.8;
+        outColor.a *= mask;
+    }
+}

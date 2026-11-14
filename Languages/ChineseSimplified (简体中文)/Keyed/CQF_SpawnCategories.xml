@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_SpawnCategory_Buildings>建筑</CQF_SpawnCategory_Buildings>
+  <CQF_SpawnCategory_Items>物品</CQF_SpawnCategory_Items>
+  <CQF_SpawnCategory_Plants>植物</CQF_SpawnCategory_Plants>
+  <CQF_SpawnCategory_Filth>污物</CQF_SpawnCategory_Filth>
+  <CQF_SpawnCategory_Other>其他</CQF_SpawnCategory_Other>
+  <CQF_SpawnCategory_BuildMenu>建造分类 / {0}</CQF_SpawnCategory_BuildMenu>
+  <CQF_SpawnCategory_ThingCategory>物品分类 / {0}</CQF_SpawnCategory_ThingCategory>
+</LanguageData>

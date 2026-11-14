@@ -518,6 +518,8 @@ namespace QuestEditor_Library
     {
         public override CQFActionCategory ActionCategory => CQFActionCategory.DialogEvent;
 
+        public MessageTypeDef MessageType => this.type ?? MessageTypeDefOf.PositiveEvent;
+
         public override void Draw(ref float y, Rect inRect, float x)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
@@ -528,7 +530,7 @@ namespace QuestEditor_Library
             if (edited_message != source_message)
                 this.message = edited_message;
             y += 30f;
-            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFMessageType".Translate(this.type?.defName.Translate().ToString()), false))
+            if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(40f, inRect.width - x - 12f), 25f), "CQFMessageType".Translate(this.MessageType?.defName.Translate().ToString()), false))
             {
                 CQFEditorTools.DrawFloatMenu(DefDatabase<MessageTypeDef>.AllDefsListForReading, (d) => this.type = d, (d) => d.defName.Translate());
             }
@@ -540,7 +542,7 @@ namespace QuestEditor_Library
         {
             XElement result = base.SaveToXElement(nodeName);
             result.Add(new XElement("message", this.message));
-            result.Add(new XElement("type", this.type?.defName));
+            result.Add(new XElement("type", this.MessageType?.defName));
             return result;
         }
 
@@ -552,7 +554,7 @@ namespace QuestEditor_Library
             }
 
             var message = ResolveMessage(targets);
-            Messages.Message(message, new LookTargets(targets.Values), this.type);
+            Messages.Message(message, new LookTargets(targets.Values), this.MessageType);
         }
 
         public string ResolveMessage(Dictionary<string, TargetInfo> targets)
@@ -585,7 +587,7 @@ namespace QuestEditor_Library
 
         [CQFLocalizableText]
         public string message;
-        public MessageTypeDef type = MessageTypeDefOf.PositiveEvent;
+        public MessageTypeDef? type;
     }
 
     public class CQFAction_Quest : CQFAction

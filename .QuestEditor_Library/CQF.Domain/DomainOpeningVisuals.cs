@@ -32,9 +32,16 @@ public sealed class DomainOpeningVisuals : IDisposable
     public void Draw(Vector3 center, float progress, float elapsedSeconds) => Draw(center, progress, elapsedSeconds, default);
 
     public void Draw(Vector3 center, float progress, float elapsedSeconds, DomainFusionState fusion)
+        => Draw(center, progress, elapsedSeconds, fusion, 1f);
+
+    public void Draw(Vector3 center, float progress, float elapsedSeconds, DomainFusionState fusion, float opacity)
     {
         if (ground == null) throw new ObjectDisposedException(nameof(DomainOpeningVisuals));
         properties ??= new MaterialPropertyBlock();
+        Color color = ground.color;
+        if (!ground.HasProperty("_Dissolve")) color.a *= Mathf.Clamp01(opacity);
+        properties.SetColor("_Color", color);
+        properties.SetFloat("_Dissolve", 1f - Mathf.Clamp01(opacity));
         properties.SetFloat("_Progress", Mathf.Clamp01(progress));
         properties.SetFloat("_EffectTime", elapsedSeconds);
         properties.SetFloat("_Radius", definition.radius);

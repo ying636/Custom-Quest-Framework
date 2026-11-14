@@ -118,6 +118,7 @@ namespace QuestEditor_Library
         public override void PostClose()
         {
             this.CloseEditors();
+            this.preview.DisposePresentation();
             base.PostClose();
         }
 

@@ -72,6 +72,8 @@ CQF 自己提供可选目录：
 
 `IfCQFModule` / `RequiresCQFModule` 是 CQF 的自定义属性，不是原版功能。提供方限于 CQF，子 Mod 使用需求属性。未知模块、缺少模块 DLL、错误目录和类型加载失败会记录包含子 Mod packageId 与路径的错误并抛出。没有任何请求时领域 DLL 不加载、领域 MapComponent 不注册、领域状态不创建。领域模块本身不安装 Harmony 补丁。1.6 将上述路径中的版本改为 1.6，并构建匹配的 DLL。
 
+1.7 的同一加载器也支持独立模块 `MapProjections`，详见 [地图投影模块](../../cqf-map-dev/references/map-projections.md)。同一目录同时依赖两者时使用 `RequiresCQFModule="Domain,MapProjections"`，或分别声明不同需求目录；所有被请求的框架模块先初始化，再加载依赖它们的子 Mod DLL。列表使用英文逗号、名称区分大小写、同名不重复，提供方每个目录只提供一个模块。只请求 MapProjections 不会恢复 Domain 资源或创建领域运行对象，只请求 Domain 也不会加载投影组件和补丁。主库通用地图保活与退出释放由 `ICQFMapLifetimeModule` 提供扩展接口，投影使用该接口，领域继续使用原有 `ICQFMapModule` 生命周期。MapProjections 只支持 1.7，不能直接把组合声明复制到 1.6。
+
 寂屋邪祭已将主 DLL 合入版本目录，使用 `1.7/RSH.dll` 和 `1.7/PlayerAbilityFramework/RSH.PlayerAbilityFramework.dll`；版本目录自身声明 RequiresCQFModule，后者保留玩家能力框架的 IfModActive 条件。1.6 使用对应版本目录。不能残留旧 Domain 或 Assemblies 中的重复文件。
 
 先读相关 CQF / 子 Mod 源码；原版类型和 API 用 Rimsage 核对。Rimsage 不索引 Mod 源码。
@@ -186,6 +188,8 @@ realm.GetComponent<MapComponent_Domain>().Enter(caster, targets);
 真实血量只有 `MapComponent_Domain.Health` 一份，配合 `MaximumHealth` / `HealthFraction`。通过 `DrainHealth` / `RestoreHealth` 更新，不在 Worker 或载体另存第二套血量。外部载体 `HitPoints` 是向上取整且至少为 1 的显示投影，不能反过来作为浮点血量来源。
 
 保护 Hediff 为施术者安装 `Comp_DomainProtection`，`AbsorbDamage` 先消耗领域血量，超出部分继续作用于施术者；无关 Pawn 不受保护。退出时框架移除与本领域绑定的保护 Hediff，读档后恢复动态保护组件。
+
+展开期间的临时保护另按 50% 减伤处理，剩余伤害直接继续人物受伤流程，不扣共享血量。`Comp_DomainProtection.Notify_Killed` 通知原地图取消对应展开；`DomainOpening.CancelOpening` 冻结进度、释放捕获和临时锁，再保留 60 tick 的视觉消融。取消状态与冻结进度正常保存，队列跳过失效展开。基础与血海均已接入，血海闭合时不将施术者收进不可攻击的演出载具。已完成展开后的共享血量机制保持原行为。
 
 外部载体只对 `harmsHealth` 的正伤害按 `maximumAnchorDamagePerHit` 扣共享血量，并吸收该次普通建筑伤害流程，避免重复扣血。载体被 Destroy / DeSpawn 会崩塌；正常退出必须使用 `RemoveNormally()` 先解除关联，再销毁。`Collapse` 只执行一次，血量归零，移除载体，调用玩法惩罚并请求退出；本次领域崩塌后 `RestoreHealth` 不能使其复活。
 

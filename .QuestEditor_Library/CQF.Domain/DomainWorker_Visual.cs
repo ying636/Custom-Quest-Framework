@@ -27,23 +27,27 @@ public class DomainWorker_Visual : DomainWorker
     {
         if (Find.CurrentMap != map || !WorldRendererUtility.DrawingMap) return;
         if (CQFDomainRuntime.Instance.Transition == null) return;
-        CellRect view = Find.CameraDriver.CurrentViewRect;
+        CellRect view = Find.CameraDriver.CurrentViewRect.ExpandedBy(1);
         view.ClipInsideMap(map);
         if (view.IsEmpty) return;
-        SectionLayer? terrain = map.mapDrawer.SectionAt(view.CenterCell).GetLayer(TerrainLayerType);
-        if (terrain?.Visible != true) return;
         terrainCommands.Clear();
         try
         {
             Waylith.Rendering.MeshDrawSubmission.CopyPendingCommands(terrainCommands, Find.Camera.cullingMask);
-            foreach (LayerSubMesh subMesh in terrain.subMeshes)
-                if (subMesh.finalized && !subMesh.disabled && subMesh.mesh.vertexCount > 0)
-                    foreach (Waylith.Rendering.MeshDrawCommand command in terrainCommands)
-                        if (ReferenceEquals(command.Mesh, subMesh.mesh.EngineMesh))
-                        {
-                            LastTerrainRenderedFrame = Time.frameCount;
-                            return;
-                        }
+            for (int x = view.minX / Section.Size * Section.Size; x <= view.maxX; x += Section.Size)
+                for (int z = view.minZ / Section.Size * Section.Size; z <= view.maxZ; z += Section.Size)
+                {
+                    SectionLayer? terrain = map.mapDrawer.SectionAt(new IntVec3(x, 0, z)).GetLayer(TerrainLayerType);
+                    if (terrain?.Visible != true) continue;
+                    foreach (LayerSubMesh subMesh in terrain.subMeshes)
+                        if (subMesh.finalized && !subMesh.disabled && subMesh.mesh.vertexCount > 0)
+                            foreach (Waylith.Rendering.MeshDrawCommand command in terrainCommands)
+                                if (ReferenceEquals(command.Mesh, subMesh.mesh.EngineMesh))
+                                {
+                                    LastTerrainRenderedFrame = Time.frameCount;
+                                    return;
+                                }
+                }
         }
         finally { terrainCommands.Clear(); }
     }

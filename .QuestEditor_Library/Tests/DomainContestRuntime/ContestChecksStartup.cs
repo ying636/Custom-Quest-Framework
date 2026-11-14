@@ -10,6 +10,11 @@ public static class ContestChecksStartup
     static ContestChecksStartup()
     {
         if (!GenCommandLine.CommandLineArgPassed("cqfcontestchecks")) return;
+        if (GenCommandLine.CommandLineArgPassed("cqfdomainchanges"))
+        {
+            foreach (DomainDef domain in DefDatabase<DomainDef>.AllDefsListForReading) domain.preload = false;
+            DefDatabase<DomainDef>.GetNamed("CQF_CheckPlainDomain").workerClass = typeof(DomainWorker_TerrainProbe);
+        }
         if (GenCommandLine.CommandLineArgPassed("cqfcontiguouslabchecks"))
             foreach (DomainDef domain in DefDatabase<DomainDef>.AllDefsListForReading)
                 domain.preload = ContiguousDomainChecksDriver.DomainNames.Contains(domain.defName) || domain.defName is "CQF_TestDomain" or "RSH_BloodSeaDomain" or "CQF_CheckPlainDomain";
@@ -28,7 +33,8 @@ public static class ContestChecksStartup
             Application.runInBackground = true;
             GameObject owner = new("CQF_DomainContestChecks");
             UnityEngine.Object.DontDestroyOnLoad(owner);
-            if (GenCommandLine.CommandLineArgPassed("cqfcontiguouslabchecks")) owner.AddComponent<ContiguousDomainChecksDriver>();
+            if (GenCommandLine.CommandLineArgPassed("cqfdomainchanges")) owner.AddComponent<DomainChangesChecksDriver>();
+            else if (GenCommandLine.CommandLineArgPassed("cqfcontiguouslabchecks")) owner.AddComponent<ContiguousDomainChecksDriver>();
             else if (GenCommandLine.CommandLineArgPassed("cqfgroupchecks")) owner.AddComponent<DomainGroupChecksDriver>();
             else if (GenCommandLine.CommandLineArgPassed("cqfmultiplechecks")) owner.AddComponent<MultipleDomainChecksDriver>();
             else if (GenCommandLine.CommandLineArgPassed("cqfreasonchecks")) owner.AddComponent<DomainReasonChecksDriver>();

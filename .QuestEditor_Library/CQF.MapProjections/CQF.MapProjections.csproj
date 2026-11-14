@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>12</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <Import Project="..\RimWorld.props" />
+  <PropertyGroup>
+    <OutputPath>$(MSBuildThisFileDirectory)..\..\$(RimWorldVersion)\Optional\MapProjections\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QuestEditor_Library\QuestEditor_Library.csproj" Private="false" Condition="'$(CoreAssembly)' == ''" />
+    <Reference Include="QuestEditor_Library" HintPath="$(CoreAssembly)" Private="false" Condition="'$(CoreAssembly)' != ''" />
+    <Content Include="Content\$(RimWorldVersion)\**\*">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Target Name="ValidateProjectionVersion" BeforeTargets="PrepareForBuild" Condition="'$(RimWorldVersion)' != '1.7'">
+    <Error Text="CQF.MapProjections requires RimWorld 1.7." />
+  </Target>
+</Project>

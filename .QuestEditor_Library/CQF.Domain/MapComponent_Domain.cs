@@ -55,6 +55,12 @@ public sealed partial class MapComponent_Domain : MapComponent
 
     public void UnregisterOpening(DomainOpening opening) => openings.Remove(opening);
 
+    public void CancelOpeningsFor(Pawn pawn)
+    {
+        foreach (DomainOpening opening in openings.ToArray())
+            if (!opening.Destroyed && opening.Caster == pawn && opening is not DomainOpening_Fusion) opening.CancelOpening();
+    }
+
     public void Configure(DomainDef def)
     {
         if (definition == def && worker != null) return;

@@ -4,16 +4,16 @@ namespace QuestEditor_Library;
 
 internal sealed class CQFModuleFolder
 {
-    public CQFModuleFolder(ModContentPack content, string path, string module, bool provider)
+    public CQFModuleFolder(ModContentPack content, string path, IReadOnlyList<string> modules, bool provider)
     {
         Content = content;
         Path = path;
-        Module = module;
+        Modules = modules;
         Provider = provider;
     }
 
     public ModContentPack Content { get; }
     public string Path { get; }
-    public string Module { get; }
+    public IReadOnlyList<string> Modules { get; }
     public bool Provider { get; }
 }

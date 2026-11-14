@@ -24,7 +24,7 @@ public class Comp_DomainProtection : ThingComp
         return component;
     }
 
-    public bool IsInvulnerable()
+    public bool HasOpeningProtection()
     {
         Pawn pawn = (Pawn)parent;
         if (pawn.Dead || pawn.Downed) return false;
@@ -38,15 +38,21 @@ public class Comp_DomainProtection : ThingComp
 
     public override void PostPreApplyDamage(ref DamageInfo dinfo, out bool absorbed)
     {
-        if (IsInvulnerable())
+        if (HasOpeningProtection())
         {
-            dinfo.SetAmount(0f);
-            absorbed = true;
+            dinfo.SetAmount(dinfo.Amount * 0.5f);
+            absorbed = false;
             return;
         }
         Pawn pawn = (Pawn)parent;
         MapComponent_Domain? domain = Protection?.Domain ?? pawn.MapHeld?.GetComponent<MapComponent_Domain>()?.FindDomainFor(pawn);
         absorbed = domain?.AbsorbDamage(pawn, ref dinfo) == true;
+    }
+
+    public override void Notify_Killed(Map prevMap, DamageInfo? dinfo = null)
+    {
+        base.Notify_Killed(prevMap, dinfo);
+        prevMap?.GetComponent<MapComponent_Domain>().CancelOpeningsFor((Pawn)parent);
     }
 
     private static readonly FieldInfo CompsField = typeof(ThingWithComps).GetField("comps", BindingFlags.Instance | BindingFlags.NonPublic)

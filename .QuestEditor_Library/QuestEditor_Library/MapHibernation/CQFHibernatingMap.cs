@@ -49,8 +49,15 @@ internal sealed class CQFHibernatingMap : IExposable
     private static void SetRegionIndex(Map map, sbyte index)
     {
         if (map.regionGrid == null) return;
-        foreach (District district in map.regionGrid.allDistricts) district.mapIndex = index;
-        foreach (Region region in map.regionGrid.AllRegions_NoRebuild_InvalidAllowed) region.mapIndex = index;
+        HashSet<District> districts = new(map.regionGrid.allDistricts);
+        foreach (Room room in map.regionGrid.AllRooms)
+            foreach (District district in room.Districts) districts.Add(district);
+        foreach (Region region in map.regionGrid.AllRegions_NoRebuild_InvalidAllowed)
+        {
+            region.mapIndex = index;
+            if (region.District != null) districts.Add(region.District);
+        }
+        foreach (District district in districts) district.mapIndex = index;
     }
 
     private Map? map;

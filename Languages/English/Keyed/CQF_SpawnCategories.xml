@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_SpawnCategory_Buildings>Buildings</CQF_SpawnCategory_Buildings>
+  <CQF_SpawnCategory_Items>Items</CQF_SpawnCategory_Items>
+  <CQF_SpawnCategory_Plants>Plants</CQF_SpawnCategory_Plants>
+  <CQF_SpawnCategory_Filth>Filth</CQF_SpawnCategory_Filth>
+  <CQF_SpawnCategory_Other>Other</CQF_SpawnCategory_Other>
+  <CQF_SpawnCategory_BuildMenu>Build menu / {0}</CQF_SpawnCategory_BuildMenu>
+  <CQF_SpawnCategory_ThingCategory>Thing category / {0}</CQF_SpawnCategory_ThingCategory>
+</LanguageData>

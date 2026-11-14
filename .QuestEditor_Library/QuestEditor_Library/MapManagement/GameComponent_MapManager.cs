@@ -62,16 +62,22 @@ public sealed partial class GameComponent_MapManager : GameComponent
     public void DisposeMaps()
     {
         if (disposed) return;
+        List<Exception>? errors = null;
+        try { CQFModuleLoader.BeforeMapsDisposed(game); }
+        catch (Exception error) { (errors ??= new()).Add(error); }
         disposed = true;
         try { Module?.Dispose(); }
+        catch (Exception error) { (errors ??= new()).Add(error); }
         finally
         {
             try { DisposeHibernatingMaps(); }
+            catch (Exception error) { (errors ??= new()).Add(error); }
             finally
             {
                 if (ReferenceEquals(instance, this)) instance = null;
             }
         }
+        if (errors != null) throw new AggregateException("[CQF] Map manager disposal failed.", errors);
     }
 
     private readonly Game game;

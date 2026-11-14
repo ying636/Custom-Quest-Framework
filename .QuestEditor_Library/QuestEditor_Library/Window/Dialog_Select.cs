@@ -30,6 +30,8 @@ namespace QuestEditor_Library
             string selectedType = this.selectedType?.type;
             this.drawer.UpdateTypes(this.MatchesSearch);
             this.selectedType = selectedType == null ? null : this.drawer.types.FirstOrDefault(type => type.type == selectedType);
+            this.pos = Vector2.zero;
+            this.height = 0f;
         }
 
         public override void DoWindowContents(Rect inRect)

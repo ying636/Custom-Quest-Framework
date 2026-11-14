@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_MP_Title>Map projections</CQF_MP_Title>
+  <CQF_MP_Add>Add projection</CQF_MP_Add>
+  <CQF_MP_Source>Source map</CQF_MP_Source>
+  <CQF_MP_Enabled>Enable projection</CQF_MP_Enabled>
+  <CQF_MP_Control>Interactive</CQF_MP_Control>
+  <CQF_MP_Display>Display only</CQF_MP_Display>
+  <CQF_MP_Background>Draw beneath terrain</CQF_MP_Background>
+  <CQF_MP_Whole>Show the entire source map</CQF_MP_Whole>
+  <CQF_MP_SourceRect>Source map area</CQF_MP_SourceRect>
+  <CQF_MP_Destination>Display area on this map</CQF_MP_Destination>
+  <CQF_MP_Resolution>Render resolution (pixels)</CQF_MP_Resolution>
+  <CQF_MP_Refresh>Refresh interval (frames)</CQF_MP_Refresh>
+  <CQF_MP_Apply>Apply settings</CQF_MP_Apply>
+  <CQF_MP_Remove>Remove projection</CQF_MP_Remove>
+  <CQF_MP_Invalid>Could not apply these projection settings. Enter whole numbers, keep both areas within their maps, use a resolution of 128–4096 pixels and a refresh interval of 1–60 frames. See the log for details.</CQF_MP_Invalid>
+  <CQF_MP_X>Starting X coordinate</CQF_MP_X>
+  <CQF_MP_Z>Starting Z coordinate</CQF_MP_Z>
+  <CQF_MP_Width>Width (cells)</CQF_MP_Width>
+  <CQF_MP_Height>Height (cells)</CQF_MP_Height>
+  <CQF_MP_ID>Projection ID</CQF_MP_ID>
+  <CQF_MP_Host>Host map</CQF_MP_Host>
+  <CQFAction_SetMapProjection>Create or update map projection</CQFAction_SetMapProjection>
+  <CQFAction_RemoveMapProjection>Remove map projection</CQFAction_RemoveMapProjection>
+  <CQF_MP_AutoName>{0} projection</CQF_MP_AutoName>
+  <CQF_MP_NoSource>Source map unavailable</CQF_MP_NoSource>
+  <CQF_MP_Manage>Map projections</CQF_MP_Manage>
+  <CQF_MP_Controlling>Controlling: {0}</CQF_MP_Controlling>
+  <CQF_MP_ReturnHost>Return to host map</CQF_MP_ReturnHost>
+  <CQF_MP_NewName>Map projection {0}</CQF_MP_NewName>
+  <CQF_MP_AreaSize>{0} × {1} cells</CQF_MP_AreaSize>
+  <CQF_MP_Edit>Edit projection</CQF_MP_Edit>
+  <CQF_MP_Name>Projection name</CQF_MP_Name>
+  <CQF_MP_Change>Change</CQF_MP_Change>
+  <CQF_MP_PreviewTip>Shows the entire source map. Choose Select area, then drag a rectangle on the preview to crop it.</CQF_MP_PreviewTip>
+  <CQF_MP_CropTip>Drag with the left mouse button to select the area to display. Right-click or press Esc to cancel the current selection.</CQF_MP_CropTip>
+  <CQF_MP_FullMap>Full map</CQF_MP_FullMap>
+  <CQF_MP_SelectArea>Select area</CQF_MP_SelectArea>
+  <CQF_MP_Mode>Mode</CQF_MP_Mode>
+  <CQF_MP_ModeTip>Display only is for observation. Play mode supports selecting units, buildings and items, using native commands, and zooming and panning inside the viewport. All objects remain on the source map.</CQF_MP_ModeTip>
+  <CQF_MP_Layer>Layer</CQF_MP_Layer>
+  <CQF_MP_Above>Above terrain</CQF_MP_Above>
+  <CQF_MP_Below>Beneath terrain</CQF_MP_Below>
+  <CQF_MP_LayerTip>Above terrain draws the projection over the host map. Beneath terrain lets you view it through open space or terrain gaps; opaque terrain hides it.</CQF_MP_LayerTip>
+  <CQF_MP_KeepAspect>Keep source aspect ratio</CQF_MP_KeepAspect>
+  <CQF_MP_Placing>Drag to place on map</CQF_MP_Placing>
+  <CQF_MP_PlaceAgain>Place again</CQF_MP_PlaceAgain>
+  <CQF_MP_PlacementTip>Drag on the host map to place the projection. Drag inside it to move it, or drag a corner to resize it. Right-click or press Esc to cancel the current drag.</CQF_MP_PlacementTip>
+  <CQF_MP_Advanced>Advanced settings</CQF_MP_Advanced>
+  <CQF_MP_HideAdvanced>Hide advanced settings</CQF_MP_HideAdvanced>
+  <CQF_MP_Finish>Finish</CQF_MP_Finish>
+  <CQF_MP_ApplyCoordinates>Apply coordinates</CQF_MP_ApplyCoordinates>
+  <CQF_MP_Empty>No projections on this map</CQF_MP_Empty>
+  <CQF_MP_Rename>Rename</CQF_MP_Rename>
+  <CQF_MP_RowInfo>{0} · {1} × {2} cells</CQF_MP_RowInfo>
+  <CQF_MP_On>Enabled</CQF_MP_On>
+  <CQF_MP_Off>Disabled</CQF_MP_Off>
+  <CQF_MP_Locate>Locate</CQF_MP_Locate>
+  <CQF_MP_Delete>Delete</CQF_MP_Delete>
+  <CQF_MP_ChooseSource>Choose a source map</CQF_MP_ChooseSource>
+  <CQF_MP_Search>Search maps</CQF_MP_Search>
+  <CQF_MP_NoMaps>No matching source maps</CQF_MP_NoMaps>
+  <CQF_MP_MapName>Map {0}</CQF_MP_MapName>
+  <CQF_MP_Play>Play mode</CQF_MP_Play>
+  <CQF_MP_Layout>Adjust window</CQF_MP_Layout>
+  <CQF_MP_Playing>Playing: {0}</CQF_MP_Playing>
+  <CQF_MP_ResetView>Reset view</CQF_MP_ResetView>
+  <CQF_MP_NavigateTip>Left-click to select objects, drag to select a group, and right-click to issue orders. Use the wheel to zoom this viewport and drag with the middle mouse button to pan. Map movement and zoom keys also work while the pointer is inside. Click the host map or Return to host map to switch back.</CQF_MP_NavigateTip>
+  <CQF_MP_LayoutTip>Use this mode to adjust the source area, window position and size. Choose Finish and play to select and interact with objects inside the viewport.</CQF_MP_LayoutTip>
+  <CQF_MP_FinishAndPlay>Finish and play</CQF_MP_FinishAndPlay>
+  <CQF_MP_AllowZoom>Allow zoom</CQF_MP_AllowZoom>
+  <CQF_MP_AllowZoomTip>Allow the mouse wheel and map zoom keys to change this viewport's zoom. Disable this to keep the current zoom level.</CQF_MP_AllowZoomTip>
+  <CQF_MP_MatchCellSize>Match map cells 1:1</CQF_MP_MatchCellSize>
+  <CQF_MP_MatchCellSizeTip>Each source cell occupies one host cell. The source area determines the window size. This setting locks zoom and prevents stretching.</CQF_MP_MatchCellSizeTip>
+  <CQF_MP_NavigateLockedTip>Left-click to select objects, drag to select a group, and right-click to issue orders. Zoom is locked by this viewport's configuration. Drag with the middle mouse button to pan within the available source area. Click the host map or Return to host map to switch back.</CQF_MP_NavigateLockedTip>
+  <CQF_MP_CellSizeTooLarge>The source area is too large to fit in the host map at 1:1 cell size. Select a smaller source area.</CQF_MP_CellSizeTooLarge>
+</LanguageData>

@@ -12,7 +12,7 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        string game = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", "..", ".."));
+        string game = Environment.GetEnvironmentVariable("CQF_CHECKS_GAME") ?? Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", "..", ".."));
         AppDomain.CurrentDomain.AssemblyResolve += (_, request) =>
         {
             string file = Path.Combine(game, new AssemblyName(request.Name).Name + ".dll");
@@ -22,13 +22,15 @@ internal static class Program
         };
         try
         {
-            if (args.Any(arg => arg.StartsWith("modules-", StringComparison.Ordinal))) OptionalModuleChecks.Run(game, args.Single());
+            if (args.Any(arg => arg.StartsWith("projections-", StringComparison.Ordinal))) ProjectionModuleChecks.Run(game, args.Single());
+            else if (args.Any(arg => arg.StartsWith("modules-", StringComparison.Ordinal))) OptionalModuleChecks.Run(game, args.Single());
             else if (args.Contains("callbacks")) NativeCallbackChecks.Run();
             else if (args.Contains("serialization")) SerializationChecks.Run();
             else if (args.Contains("hibernation")) HibernationSchedulingChecks.Run();
             else if (args.Contains("patches")) Version17Checks.Run(game);
             else if (args.Contains("caravan-native")) CaravanActionsNativeChecks.Run();
             else if (args.Contains("pawn-default-duty")) PawnSpawnDefaultDutyChecks.Run();
+            else if (args.Contains("notification-defaults")) NotificationDefaultDefChecks.Run();
             else if (args.Contains("map-lifetime")) MapManagerLifetimeChecks.Run();
             else Run(game, args.Contains("enabled"));
         }

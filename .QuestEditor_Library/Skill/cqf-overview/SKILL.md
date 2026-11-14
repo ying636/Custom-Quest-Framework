@@ -26,9 +26,15 @@ description: "Explains CQF systems, responsibilities, extension entry points, an
 
 如果任务明确是“做 CQF 地图 / 子地图 / 区域拼装 / 地图入口出口 / 地图流程设计”，优先继续调用 `cqf-map-dev`。
 
+1.7 的地图投影由按需加载的 `CQF.MapProjections.dll` 提供，子 Mod 使用 `RequiresCQFModule="MapProjections"` 启用；支持整图/局部、纯显示/可控制和背景/覆盖绘制。没有请求时不加载投影程序集、组件、开发者入口或补丁。打包、组合模块、动作、休眠和存读档约定见 [地图投影](../cqf-map-dev/references/map-projections.md)。
+
 涉及领域系统、`DomainDef`、`DomainWorker`、共享血量、外部载体或领域转场时，读取 [领域系统开发参考](references/domain-system.md)。制作换皮领域、通用平面或展开/转场时，读取 [领域视觉](references/domain-visuals.md)。`DomainDef.surface` 是可复用的领域特征材质，与 `visuals` 展开动画分开；寂屋邪祭保留原有展开表现，血海通用平面复用血海地形算法。通用地图休眠由 `GameComponent_MapManager` 管理，领域模块通过普通运行对象接入同一个 GComp；一般自定义地图的内容制作仍使用 `cqf-map-dev`。
 
 修改 CQF 编辑器、辅助窗口或运行时 UI 时，先读取 [统一 UI 风格](references/ui-style.md)。样式限于 CQF 自有绘制；保留原版嵌入控件，不通过全局补丁改变游戏其他界面。
+
+排查运行耗时、托管分配或多方领域网格与纹理开销时，读取 [运行性能](references/runtime-performance.md)，其中记录实测热点、固定存档对照、缓存边界与复测入口。
+
+对话显示风格、Galgame 立绘、节点背景与话题图、风格专属编辑和预览见 [对话表现风格](references/dialog-presentation.md)。未配置风格的对话继续使用原滚动窗口和原有行为。
 
 实体本、地图放置、演出演员、撤销、草稿及测试入口见 [地图演出制作](references/cinematic-authoring.md)。
 

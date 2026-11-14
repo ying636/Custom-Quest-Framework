@@ -15,6 +15,8 @@ namespace QuestEditor_Library
             if (map.events != null) SubscribeMapEvents();
 #endif
         }
+        public CQFMapRegionCollection Regions => this.regions ??= new CQFMapRegionCollection();
+
         public List<MapParent_Custom> Submaps 
         {
             get 
@@ -141,26 +143,29 @@ namespace QuestEditor_Library
                 });
                 this.RebuildEventAreaPawnCache();
             }
-            this.pawnSpawnDatas_Tick?.ForEach(data =>
+            if (this.pawnSpawnDatas_Tick != null)
             {
-                data.time++;
-                if (data.time > data.data.timeToSpawn)
+                foreach (PawnDataWithPosAndTime data in this.pawnSpawnDatas_Tick)
                 {
-                    data.time = 0;
-                    int count = data.data.count.RandomInRange;
-                    for (int i = 0; i < count; i++)
+                    data.time++;
+                    if (data.time > data.data.timeToSpawn)
                     {
-                        if (this.TryGetLord(data.data.lordDataName, out Lord lord))
+                        data.time = 0;
+                        int count = data.data.count.RandomInRange;
+                        for (int i = 0; i < count; i++)
                         {
-                            data.data.Spawn(data.position, this.map, QuestTag, Find.QuestManager.QuestsListForReading.Find(q => "Quest" + q.id == this.QuestTag), lord);
-                        }
-                        else
-                        {
-                            data.data.Spawn(data.position, this.map, QuestTag, Find.QuestManager.QuestsListForReading.Find(q => "Quest" + q.id == this.QuestTag),null,false);
+                            if (this.TryGetLord(data.data.lordDataName, out Lord lord))
+                            {
+                                data.data.Spawn(data.position, this.map, QuestTag, Find.QuestManager.QuestsListForReading.Find(q => "Quest" + q.id == this.QuestTag), lord);
+                            }
+                            else
+                            {
+                                data.data.Spawn(data.position, this.map, QuestTag, Find.QuestManager.QuestsListForReading.Find(q => "Quest" + q.id == this.QuestTag),null,false);
+                            }
                         }
                     }
                 }
-            });
+            }
             if (Find.TickManager.TicksGame % 60 == 0)
             {
                 this.CheckEventAreas();
@@ -281,6 +286,7 @@ namespace QuestEditor_Library
             Scribe_Collections.Look(ref this.eventAreas, "eventAreas", LookMode.Deep);
             Scribe_Collections.Look(ref this.startCells, "startCells", LookMode.Value,LookMode.Value);
             Scribe_Deep.Look(ref this.background, "background");
+            Scribe_Deep.Look(ref this.regions, "CQF_MapRegions");
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 this.EventAreas.RemoveAll(a => a == null || a.key.NullOrEmpty());
@@ -375,6 +381,8 @@ namespace QuestEditor_Library
         public string questTag = "";
 
         public CustomMapBackgroundData background;
+
+        private CQFMapRegionCollection regions = new CQFMapRegionCollection();
 
 
 

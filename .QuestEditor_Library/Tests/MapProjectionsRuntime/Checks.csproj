@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>CQF.MapProjectionChecks</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RimWorldDir Condition="'$(RimWorldDir)' == ''">D:/RimWorld-Dev</RimWorldDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="QuestEditor_Library" HintPath="$(CoreAssembly)" Private="false" />
+    <Reference Include="CQF.MapProjections" HintPath="$(ProjectionAssembly)" Private="false" />
+    <Reference Include="Assembly-CSharp" HintPath="$(RimWorldDir)/Assembly-CSharp.dll" Private="false" />
+    <Reference Include="UnityStubs" HintPath="$(RimWorldDir)/UnityStubs.dll" Private="false" />
+    <Reference Include="Waylith" HintPath="$(RimWorldDir)/Waylith.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(RimWorldDir)/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" Private="false" />
+  </ItemGroup>
+</Project>

@@ -8,7 +8,7 @@ public class DomainOpening_Basic : DomainOpening
 {
     public override DomainDef Definition => definition ?? throw new InvalidOperationException("[CQF] Basic domain opening has no definition.");
     public override Pawn? Caster => caster;
-    public override bool Active => Spawned && caster != null && !caster.Dead && !caster.Downed && caster.MapHeld == Map && CounterOpeningValid;
+    public override bool Active => Spawned && !IsDissolving && caster != null && !caster.Dead && !caster.Downed && caster.MapHeld == Map && CounterOpeningValid;
 #if RIMWORLD_1_7
     public override bool SupportsFusion => !IsCounterOpening;
 #endif
@@ -40,7 +40,7 @@ public class DomainOpening_Basic : DomainOpening
 
     public override void CompleteOpening()
     {
-        if (!Active) { if (!Destroyed) Destroy(); return; }
+        if (!Active) { CancelOpening(); return; }
         CQFDomainRuntime manager = CQFDomainRuntime.Instance;
         manager.SetTransition(null);
         if (Find.CurrentMap == Map && WorldRendererUtility.DrawingMap && Screen.width > 0 && Screen.height > 0)
@@ -66,6 +66,7 @@ public class DomainOpening_Basic : DomainOpening
     public override void CompleteTransfer()
     {
         if (Destroyed || !Spawned) return;
+        if (!Active) { CancelOpening(); return; }
         try
         {
             if (!Active) return;
@@ -108,7 +109,8 @@ public class DomainOpening_Basic : DomainOpening
     protected override void Tick()
     {
         base.Tick();
-        if (!Active) { if (!Destroyed) Destroy(); return; }
+        if (Destroyed || IsDissolving) return;
+        if (!Active) { CancelOpening(); return; }
         if (!ReadyToTransfer || transferQueued || Fusion?.Active == true) return;
         transferQueued = true;
         CQFDomainRuntime.Instance.QueueOpening(this);
@@ -116,11 +118,11 @@ public class DomainOpening_Basic : DomainOpening
 
     protected override void DrawAt(Vector3 drawLoc, bool flip = false)
     {
-        if (!Active || IsCounterOpening || visualError) return;
+        if (!Active && !IsDissolving || IsCounterOpening || visualError) return;
         try
         {
             visuals ??= new DomainOpeningVisuals(Visuals);
-            visuals.Draw(drawLoc, Progress, GenTicks.TicksGame / 60f, fusion: Fusion?.DomeStateFor(this) ?? default);
+            visuals.Draw(drawLoc, Progress, GenTicks.TicksGame / 60f, Fusion?.DomeStateFor(this) ?? default, Opacity);
         }
         catch (Exception error)
         {

@@ -49,7 +49,7 @@ public sealed class DomainTerritoryField : IDisposable
         {
             texture = new Texture2D(Partition.Width, Partition.Height, TextureFormat.RGBA32, false, true)
             { name = "CQF_DomainTerritory", filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
-            pixels = new Color[Partition.CellCount];
+            pixels = new Color32[Partition.CellCount];
             revision = -1;
         }
         if (revision == Partition.Revision && encodedSide == side) return;
@@ -62,14 +62,14 @@ public sealed class DomainTerritoryField : IDisposable
                 Mathf.Clamp01(0.5f + (Partition.IsMultilateral ? Partition.DistanceFor(side, x + 0.5f, z + 0.5f)
                     : Partition.BaseSignedDistance(x + 0.5f, z + 0.5f)) / 16f), Partition.UsesCurvedFront ? 1f : 0f);
         }
-        texture.SetPixels(pixels);
+        texture.SetPixels32(pixels);
         texture.Apply(false);
         revision = Partition.Revision;
         encodedSide = side;
     }
 
     private Texture2D? texture;
-    private Color[]? pixels;
+    private Color32[]? pixels;
     private int revision = -1;
     private int side;
     private int encodedSide = -1;

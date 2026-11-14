@@ -45,56 +45,60 @@ namespace QuestEditor_Library
             float y = 8f;
             float width = inRect.width - 36f;
             float contentHeight = 370f + (112f * this.node.images.Count) + (40f * this.node.options.Count);
+            if (this.parent.CurTree.ActivePresentation != null) contentHeight = Mathf.Max(this.contentHeight, contentHeight);
             Rect viewRect = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(inRect.height, contentHeight));
             Widgets.BeginScrollView(inRect, ref this.scrollPosition, viewRect);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
             this.DrawTextHeader(ref y, x, width);
             this.node.text = Widgets.TextArea(new Rect(x + 6f, y, width - 12f, 150f), this.node.text);
             y += 166f;
-            this.DrawSectionHeader(ref y, x, width, "DialogImages".Translate(), "DialogImages_Tip".Translate(),
-                () =>
-                {
-                    this.node.images.Add(new DialogImage());
-                    this.parent.InitCurTree();
-                },
-                () => CQFEditorTools.DrawFloatMenu(this.node.images, image =>
-                {
-                    this.node.images.Remove(image);
-                    this.parent.CurTree.Update();
-                }, image => image.imagePath.NullOrEmpty() ? "DialogImage_NotSelected".Translate().ToString() : image.imagePath),
-                () => this.node.images.Any());
-            for (int i = 0; i < this.node.images.Count; i++)
+            if (!CQFDialogPresentationEditor.DrawNodeSettings(this.parent.CurTree, this.node, ref y, x + 6f, width - 12f))
             {
-                DialogImage image = this.node.images[i];
-                Texture2D texture = image.imagePath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(image.imagePath, false);
-                Rect itemRect = new Rect(x + 6f, y, width - 12f, 96f);
-                Widgets.DrawHighlightIfMouseover(itemRect);
-                Rect imageRect = new Rect(x + 12f, y + 8f, 112f, 74f);
-                if (texture != null)
+                this.DrawSectionHeader(ref y, x, width, "DialogImages".Translate(), "DialogImages_Tip".Translate(),
+                    () =>
+                    {
+                        this.node.images.Add(new DialogImage());
+                        this.parent.InitCurTree();
+                    },
+                    () => CQFEditorTools.DrawFloatMenu(this.node.images, image =>
+                    {
+                        this.node.images.Remove(image);
+                        this.parent.CurTree.Update();
+                    }, image => image.imagePath.NullOrEmpty() ? "DialogImage_NotSelected".Translate().ToString() : image.imagePath),
+                    () => this.node.images.Any());
+                for (int i = 0; i < this.node.images.Count; i++)
                 {
-                    Widgets.DrawTextureFitted(imageRect, texture, 1f);
+                    DialogImage image = this.node.images[i];
+                    Texture2D texture = image.imagePath.NullOrEmpty() ? null : ContentFinder<Texture2D>.Get(image.imagePath, false);
+                    Rect itemRect = new Rect(x + 6f, y, width - 12f, 96f);
+                    Widgets.DrawHighlightIfMouseover(itemRect);
+                    Rect imageRect = new Rect(x + 12f, y + 8f, 112f, 74f);
+                    if (texture != null)
+                    {
+                        Widgets.DrawTextureFitted(imageRect, texture, 1f);
+                    }
+                    else
+                    {
+                        Widgets.DrawBoxSolid(imageRect, Color.black);
+                    }
+                    if (Widgets.ButtonInvisible(imageRect))
+                    {
+                        Find.WindowStack.Add(new Dialog_SelectDialogImage(path => image.imagePath = path, image.imagePath));
+                    }
+                    TooltipHandler.TipRegion(imageRect, "DialogImage_SelectTip".Translate());
+                    Widgets.Label(new Rect(x + 142f, y + 12f, 100f, 25f), "DialogImage_Scale".Translate());
+                    Widgets.TextFieldNumeric(new Rect(x + 242f, y + 8f, 80f, 28f), ref image.scale, ref image.buffer_scale);
+                    Widgets.Label(new Rect(x + 142f, y + 48f, width - 170f, 25f),
+                        (image.imagePath.NullOrEmpty() ? "DialogImage_NotSelected".Translate().ToString() : image.imagePath).Colorize(CQFUIStyle.Muted));
+                    Widgets.DrawLine(new Vector2(itemRect.x + 6f, itemRect.yMax), new Vector2(itemRect.xMax - 6f, itemRect.yMax), CQFUIStyle.Accent, 1f);
+                    y += 104f;
                 }
-                else
+                if (!this.node.images.Any())
                 {
-                    Widgets.DrawBoxSolid(imageRect, Color.black);
+                    this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_NoDialogImages".Translate());
                 }
-                if (Widgets.ButtonInvisible(imageRect))
-                {
-                    Find.WindowStack.Add(new Dialog_SelectDialogImage(path => image.imagePath = path, image.imagePath));
-                }
-                TooltipHandler.TipRegion(imageRect, "DialogImage_SelectTip".Translate());
-                Widgets.Label(new Rect(x + 142f, y + 12f, 100f, 25f), "DialogImage_Scale".Translate());
-                Widgets.TextFieldNumeric(new Rect(x + 242f, y + 8f, 80f, 28f), ref image.scale, ref image.buffer_scale);
-                Widgets.Label(new Rect(x + 142f, y + 48f, width - 170f, 25f),
-                    (image.imagePath.NullOrEmpty() ? "DialogImage_NotSelected".Translate().ToString() : image.imagePath).Colorize(CQFUIStyle.Muted));
-                Widgets.DrawLine(new Vector2(itemRect.x + 6f, itemRect.yMax), new Vector2(itemRect.xMax - 6f, itemRect.yMax), CQFUIStyle.Accent, 1f);
-                y += 104f;
+                y += 10f;
             }
-            if (!this.node.images.Any())
-            {
-                this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_NoDialogImages".Translate());
-            }
-            y += 10f;
             this.DrawSectionHeader(ref y, x, width, "DialogOptions".Translate(), null,
                 () => Find.WindowStack.Add(new FloatMenu(new List<FloatMenuOption>
                 {
@@ -131,6 +135,7 @@ namespace QuestEditor_Library
             {
                 this.DrawEmptyState(ref y, x + 8f, width - 16f, "CQF_NoDialogOptions".Translate());
             }
+            this.contentHeight = y + 16f;
             Widgets.EndScrollView();
         }
 
@@ -183,6 +188,7 @@ namespace QuestEditor_Library
         public DialogNode node;
         public QuestEditor_Dialog parent;
         private Vector2 scrollPosition;
+        private float contentHeight;
         public static readonly Vector2 initSize = new Vector2(560f, 560f);
     }
 }

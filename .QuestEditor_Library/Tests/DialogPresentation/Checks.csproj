@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <LangVersion>12</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <Import Project="..\..\RimWorld.props" />
+  <ItemGroup>
+    <Reference Include="QuestEditor_Library"><HintPath>$(CQFCoreAssembly)</HintPath></Reference>
+    <Reference Include="CQF.Editor"><HintPath>$(CQFEditorAssembly)</HintPath></Reference>
+    <Reference Update="Assembly-CSharp;UnityStubs;Waylith;0Harmony"><Private>true</Private></Reference>
+  </ItemGroup>
+</Project>

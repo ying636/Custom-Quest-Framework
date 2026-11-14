@@ -1,5 +1,119 @@
 # CQF 版本与构建
 
+## 5.4 地图投影与运行性能（2026-11-15）
+
+CQF 5.3 → 5.4。按用户确认，本次发布全部已完成的本地 CQF 改动，包括地图投影、性能优化、地图布局、对话表现和领域修复。1.7 地图投影独立为 `CQF.MapProjections.dll`，子 Mod 用 `RequiresCQFModule="MapProjections"` 按需启用，支持与 Domain 组合。没有请求时不加载投影组件、资源、开发者入口或补丁。提供纯显示、完整游玩视口、局部/整图、独立视角、缩放权限、格子 1:1、CQF 动作和双语配置；管理入口仅在开发者菜单。包括 Camera+ 缓存、悬停信息和延后物品菜单上下文修复，接口与打包见地图投影参考。新程序集和资源须成套安装，C# 子 Mod 增加投影程序集引用。
+
+本轮优先处理多方领域实测大开销：缓存求解后的角点归属与中心前两名评分，领地纹理使用 Color32 / SetPixels32，避免重复评分和浮点上传拷贝；不改领地分配、连通性、梯度或存档规则。八方 180×180 固定工作量中，完整网格重建约 57.98 → 5.48 ms，全部纹理刷新约 31.59 → 18.08 ms，后者分配约 4,157,428 → 9,816 B。四方亦改善，二方 CPU 无明显收益。归属、边界、网格哈希与纹理字节保持一致；这些数据不代表整局帧率提升。详细方法、内存取舍和证据见 [运行性能](runtime-performance.md)。同时包含上一轮地图定时生成与陷阱 Tick 分配优化，无新增性能补丁。
+
+发布从远端 main 的独立检出同步用户确认的全部已完成本地改动并重建配套程序集；包含区域标记、布局拼装及地图生态配置、对话表现风格与编辑预览、默认通知和编辑器整理，以及领域地形就绪、展开减伤、死亡取消与消融修复。验证记录与各功能边界见对应参考。1.6 / 1.7 主库和领域模块编译通过，投影只提供 1.7；1.6 仅编译验证，未宣称完整实机验证。默认不添加拆分前投影存档迁移。下文保留各开发阶段当时的发布状态；5.4 的范围以本节为准。
+
+完整发布候选通过 235 项 1.7 原生检查：地图布局与生态 51 项、对话表现 28 项、八方领域生命周期 27 项、中文 Camera+ / 领域 / 投影 / 编辑器组合 120 项、未请求可选模块 9 项。各轮均 COMPLETE，完整游戏日志无 ERROR，配置和链接恢复；共保留 30 张原生截图。组合场景确认物品菜单实际装备、进食与使用成功，25 次重绘中悬停信息位置稳定；未请求投影时 DLL、组件、补丁、翻译和开发者入口均不加载。
+
+验证目录为 `D:/RimWorld-Dev/TestWorkspaces/CQF54Performance` 下的 `Full-MapLayouts`、`Full-Dialog`、`Full-DomainGameplay`、`Full-FinalBoth`、`Full-None`；`FullReleaseVerification.json` 记录证据、独立离线进程、恢复回执及配套运行文件 SHA256。发布的 1.7 主库、领域、投影和编辑器与对应成功实机候选一致。1.6 主库、领域、编辑器以及 1.7 全部项目编译零错误；既有警告保留。地图布局定义恢复已完成分支的七种布局及英文标签，中文标签沿用现有审核 CSV，迁入完整 Def 类型目录；现有 Excel 与 CSV 已核对一致，不重写审核记录。230 份 XML、75 对投影 Key 和七个布局标签对齐检查通过。
+
+## 主库常驻 Tick 分配优化（2026-11-15）
+
+地图定时生成与陷阱 Tick 改用具体 List 的 foreach，消除轮询中的捕获委托。生成阈值、数量、重置和任务归属查询保持；陷阱哈希间隔、模式、动作顺序及逐动作独立目标字典保持。回调修改正在遍历的列表仍明确报错。没有新增 Patch、轮询缓存、游戏文案或存档字段。原版字典 RemoveAll 已使用对象池，核对后保留。
+
+通过 RimDevTools 管理 D:/RimWorld-Dev/RimWorld.exe（1.7.4982 rev1280）、D:/RimWorld-Dev/SaveData、离线 AppId 0 和隔离桌面。旧版与优化版完整加载同一份 250×250 存档，五种固定工作量分别预热 30 帧、采集 120 帧，每组每版调用被测入口 120000 次。地图轮询和闲置陷阱的逐次分配由 64 B 降为 0 B；未到期陷阱两版均额外观察到总计 96 B；单动作陷阱由 416 B 降为 288 B。原版 Frame profiler 的外层 scope 耗时也下降，但本轮只有一组顺序对照，不能换算为整体 FPS/TPS 或全 Mod 优化比例。完整数据、方法及边界见 [运行性能](runtime-performance.md)。
+
+基线和优化版各通过 28 项检查，中文 Camera+、领域与投影组合环境通过 120 项回归，共 176 项实机检查，完整日志无游戏 ERROR；原版分析器与组合场景分别保存 1、1、10 张原生截图，人工核对分析器画面。生成阈值、计时器实际递增、动作实际次数、目标隔离、列表修改报错及原有装备/使用物品、休眠和完整存读档均通过。另有原生回调、生成默认职责、休眠调度、地图释放四组逻辑检查通过。1.7 主库编译零错误、保留 1983 条既有警告，1.6 临时编译零错误、保留 1735 条既有警告；夹具最终零警告零错误。
+
+证据根目录 `D:/RimWorld-Dev/TestWorkspaces/CQFCorePerformance`，对照为 `PerformanceComparison.json`，组合回归为 `Regression-Both/Evidence-06a051537e0e43a3b251f80afe4966ca`。保留夹具编译失败和漏传陷阱材质的失败轮次，修正后重跑；等待同一开发副本中的 Poolcore 测试结束后再运行，没有停止其他任务进程。测试后配置与链接恢复，本轮存档归档。确认无 RimWorld 进程后备份并同步已验证的 1.7 主库及配套重建的投影模块 DLL/PDB；投影模块源码未改。主库 SHA256 为 `B26919FBE8021FC5E65F591A5781FDC363D27D79AB46F0C58CB3B710B462B615`，投影 SHA256 为 `61FA690532C9249A41700304B8DAA191A039DE54ACB563CEB734ACC37351797D`；备份与回执为 `RuntimeBefore` 和 `PerformanceDeployment.json`。领域、编辑器、1.6 运行程序集、LoadFolders、版本号和文本审核表保持；未提交或推送 Git。
+
+## 地图投影按需模块（2026-11-15）
+
+按用户确认，将地图投影的实现、动作、开发者入口、组件与补丁从主库移入 `.QuestEditor_Library/CQF.MapProjections`，输出 `1.7/Optional/MapProjections/CQF.MapProjections.dll`。中英文 75 条 Keyed 文本随模块打包，正文及审核表保持。子 Mod 用 `RequiresCQFModule="MapProjections"` 请求，仅 XML 内容也须声明；依赖模块的 DLL 放在请求目录根部。没有请求时不加载投影 DLL、组件、资源、开发者入口或 Patch。命名空间和公开投影配置保持，C# 子 Mod 需增加新程序集引用；默认不做拆分前旧档迁移。
+
+共用加载器支持 Domain、MapProjections 独立启用，也支持 `RequiresCQFModule="Domain,MapProjections"` 组合；先初始化所有请求模块，再按原顺序加载子 Mod DLL，未请求的提供目录不恢复。主库无可选程序集依赖，通过 `ICQFMapLifetimeModule` 转发保活与退出释放，领域仍使用原有 `ICQFMapModule`。退出继续其他清理步骤并汇总异常。投影 Harmony owner 为 `CQF.MapProjections`，启用时仍为无 Camera+ 16 个目标、带 Camera+ 17 个目标，未启用时为零；按需加载不改变活动投影的绘制成本。
+
+RimDevTools 管理独立 D:/RimWorld-Dev/RimWorld.exe（1.7.4982 rev1280）、D:/RimWorld-Dev/SaveData、离线 AppId 0 与隔离桌面。四种实机状态共通过 250 项：不启用模块 9 项、仅领域 9 项、仅投影的中文 Camera+ 环境 120 项、组合模块的英文环境 112 项；均有 COMPLETE，完整日志无游戏 ERROR，保留既有环境 WARN。前两种各 1 张原生截图，后两种各 10 张，均为 2560×1600。原版点选、框选、命令、实际装备/食用/使用物品、缩放权限、格子 1:1、休眠保活、释放及完整存读档回归通过。人工核对中文高级设置及英文游玩视口。未重新测量性能，历史采样在地图投影参考中标明为拆分前结果。
+
+证据根目录为 `D:/RimWorld-Dev/TestWorkspaces/CQFProjectionModule`：None 为 `Native-None/Evidence-1cd42429ef334201977a0a1880ef2e45`，Domain 为 `Native-Domain/Evidence-ae78c8f8bd324d81b855367281814ea5`，投影为 `Native-Projection/Evidence-38a9f03fd4174b00b5a666bc88a46703`，组合为 `Native-Both/Evidence-80409035fe4047299bdef66252d93c12`。独立进程补充验证无请求、条件排除、分别及组合请求、未知模块、重复名称、过早 Assemblies 布局，既有模块过滤、资源释放与休眠检查通过。保留初轮夹具缺少 RimWorld 命名空间导致的编译失败证据，修正后重跑。框架概览、地图开发、领域加载参考及投影接入文档同步更新，两个 Skill 的 quick_validate 通过；校验器所缺 PyYAML 仅安装到临时测试目录。
+
+1.7 主库编译零错误、保留 1983 条既有警告，投影模块零警告零错误；1.6 主库临时编译零错误、保留 1735 条既有警告。确认无 RimWorld 进程后，备份并同步已验证的 1.7 主库 DLL/PDB、投影 DLL/PDB、模块翻译和 LoadFolders 声明；主库 SHA256 为 `3A23D69C1769B01E4563FDFA0B8A8E2525517EF6224F853EF4ABB6A59FAFEF4B`，投影 SHA256 为 `8B5AF031052BE7D9550A89327C5EAC2543ABFC208ADDB705E1B58F66E8720219`。备份与部署回执为证据根目录的 `RuntimeBefore` 和 `ModuleDeployment.json`；配置、Mod 链接恢复，本轮测试存档归档。1.6 运行文件、领域和编辑器程序集、版本号保持，未提交或推送 Git。
+
+## 子 Mod 投影配置、补丁精简与性能采样（2026-11-15）
+
+按用户确认增加 allowZoom 与 matchCellSize，C#、CQF 动作 XML、复制、投影存档和编辑界面使用同一配置。关闭 allowZoom 后禁用滚轮、缩放快捷键和 ZoomView，保留平移；matchCellSize 优先，来源 20×10 格占宿主 20×10 格，锁定视角缩放和窗口拉伸。DestinationBounds 为实际宿主占地，渲染、坐标换算、点击、定位和边界验证共用此属性。1:1 时来源选区改变会同步占地，无法放入宿主时明确拒绝，动作更新失败保留原对象。锁定缩放后的普通重置按钮仅重新居中。
+
+移除常驻投影管理与调整窗口入口，配置统一从开发者菜单 CQF → 地图投影进入，游玩保留重置和返回宿主。删除 UI.UIToMapPosition 的重复转换补丁，由原版通过虚拟相机完成转换；两个鼠标读取入口分别保留边界与拖拽裁切。最终无 Camera+ 为 16 个目标，启用 Camera+ 为 17 个，实机核对实际注册数。原计划把两个鼠标保护收进公共转换入口，但原版 IntVec3(Vector3) 将 y 置为 0，使 IntVec3.Invalid 丢失 IsValid=false，因此恢复格子保护；该失败回归保留。相机、地图、GUI 作用域、延后窗口、选择跳转、覆盖层与保存补丁目前没有等价组件回调，继续保留。子 Mod 的公开配置、实际占地、坐标、绘制上下文和异步适配说明见地图投影参考。
+
+RimDevTools 管理独立 D:/RimWorld-Dev/RimWorld.exe（1.7.4982 rev1280）、D:/RimWorld-Dev/SaveData、离线 AppId 0 与隔离桌面。中文带 Camera+ 完成 138 项，英文无 Camera+ 完成 109 项，完整日志均无游戏 ERROR；原生截图分别 14 和 13 张，均 2560×1600。覆盖缩放权限、1:1 选人和逐格映射、配置复制与 XML、占地移动和禁止拉伸、变更来源选区、完整存读档、实际补丁计数及原有物品装备/使用回归。人工核对配置界面、双语审核表新增行和原版分析器画面。复选框使用原版控件，编辑状态通过公共配置入口验证；同帧重复绘制的点按夹具无法维持原版控件输入状态，未将其计为点击通过，失败记录保留。新增六项自然双语文案，审核表合计 75 条，保留原有状态与意见，新增仍待审核。
+
+原版 Frame profiler 在 80×60 来源图、5/53 生物、1024×768 离屏分辨率下采集十组暂停绘制场景，每组预热 35 帧、导出 120 帧，无丢弃标记。有效 Render scope 每次均值换算后，单实时投影约 0.70–0.90 ms/帧，四个同来源投影约 2.22–2.94 ms/帧，纯显示每 6 帧刷新约 0.16–0.18 ms/帧。有效 scope 与独立计数存在一帧边界差异，原始数据保留；未把这些 CPU 采样换算为整局 FPS/TPS 或优化比例。首轮同时插桩渲染方法与 Hook 计数没有得到一致的有效记录，最终改为测试夹具用原版 scope 包围实际 Render，仅对地图绘制和 UI 做方法插桩；生产 DLL 无测试插桩。Profiler.xml 按原状态恢复，临时生成配置归档后移除。
+
+中文证据：D:/RimWorld-Dev/TestWorkspaces/CQFProjectionAuthoring/Evidence-8d60c8e912564510ba6fbe03efc7c368；英文证据：D:/RimWorld-Dev/TestWorkspaces/CQFProjectionAuthoring/Evidence-6aab31c8983c443dbb47d8d0698f649b。1.7 编译零错误、保留 1983 条既有警告；1.6 临时编译零错误、保留 1735 条既有警告，仅验证不部署。无 RimWorld 进程时备份并同步 1.7 主库 DLL/PDB，DLL SHA256 为 E3CFABDF24CD1408E14369F9A371435BECED4FB4639082F464D85BE94BA6CEB8，备份与部署记录见中文证据的 RuntimeBefore、Verification.json、AuthoringDeployment.json。配置、链接与分析器配置恢复，本轮存档归档。本轮未更新其他运行程序集或版本号，未提交或推送 Git。
+
+## 投影悬停文字与物品菜单执行修复（2026-11-15）
+
+修复来源小人右键菜单有装备或使用选项但点击不执行的问题。1.7 的 GUI.Window 内容会延后到 UIRootOnGUI 返回后执行，原有 GUI 根作用域已经释放，FloatMenuMap.PreOptionChosen 因此按宿主地图重验目标。Window.InnerWindowOnGUI 现在在实际执行窗口内容时补齐来源上下文，结束或异常时释放，复用原版选择、菜单校验和任务执行。
+
+修复左下角地形、亮度与物品悬停信息不断挪动的问题。Camera+ 的来源地图边缘人物标记在离屏绘制期间也登记了整屏 EdgeUIInsets，错误影响宿主 UI 避让。可选补丁跳过投影捕获期间的 ObserveMarker 登记，宿主正常标记继续参与避让。地图投影原有 16 个补丁目标增加为无 Camera+ 时 17 个、启用 Camera+ 时 18 个；完整清单见地图投影参考。本轮仅增加两个补丁类，未新增游戏文案。
+
+旧 DLL 独立对照复现菜单点击后选项从 enabled 变为 disabled，来源人物没有接到装备任务；边缘布局对照复现 hostEdgeMarkers=1、afterProjection=2。修复后该计数保持 1，并确认宿主自身仍可正常新增登记。最终中文带 Camera+ 通过 100 项，英文无 Camera+ 通过 92 项，各有 12 张原生 2560×1600 截图，完整日志无游戏 ERROR。覆盖菜单点击后实际装备武器、食用食物、使用启灵神经并生效、延后窗口释放来源上下文、固定指针连续 25 次重绘位置稳定，以及既有选择、移动、建造、划区、独立视角与存读档回归。人工核对两张间隔截取的中文悬停信息画面。
+
+测试由 RimDevTools 管理 D:/RimWorld-Dev/RimWorld.exe（1.7.4982 rev1280）、D:/RimWorld-Dev/SaveData、离线 AppId 0 和隔离桌面。中文证据：D:/RimWorld-Dev/TestWorkspaces/CQFProjectionInteractionFix/Final/Evidence-6b818b2a562d40bcaf3638305ffeb333；英文证据：D:/RimWorld-Dev/TestWorkspaces/CQFProjectionInteractionFix/Final/Evidence-6c875ff754054a54beeb1f7f196b7cda。旧菜单复现保存在 WindowRepro/Evidence-6099ddb0ef4942649e09332a7ada2b57，旧边缘布局复现保存在 EdgeRepro/Evidence-80b72c84054c4d8da5221ac61a86a1fa，均位于同一 CQFProjectionInteractionFix 根目录。保留夹具失败轮次；修正不存在的 JobDefOf.UseItem 引用，改读物品的 useJob，食物测试设置饥饿，物品逐项即时生成以避免其他人物提前搬走，并避免重复点选引发原版轮选。
+
+1.7 构建零错误；1.6 临时编译零错误、保留 1735 条既有警告，两个补丁不编入 1.6。确认无 RimWorld 进程后备份并同步已验证的 1.7 主库 DLL/PDB，DLL SHA256 为 04192F83735D3EADB1345E9E0EA2160A76EDF72B1097523336939871EB581F6B；备份、验证与部署记录位于中文证据的 RuntimeBefore、Verification.json 和 InteractionDeployment.json。配置与 Mod 链接恢复，测试存档归档。本轮未更新其他运行程序集、版本号或文本审核表，未提交或推送 Git。
+
+## 地图投影完整游玩视口与 Camera+ 修复（2026-11-15）
+
+按用户确认将可控制投影改为完整游玩视口。新建默认游玩模式，“调整窗口”编辑来源、位置和尺寸，“完成并游玩”提交后释放输入框焦点并进入来源操作。窗口内接入原版选择器、检查面板、Gizmo、建造、划区和目标选择，支持人物、动物、建筑与物品。滚轮围绕指针缩放，中键拖动和地图快捷键移动独立视角；视角受来源选区约束并随投影保存。原版跳转与选择来源物体保留宿主地图，宿主相机的滚轮、拖动、惯性和边缘滚屏在窗口操作期间隔离。
+
+用户反馈宿主生物变成远距小图标，根因是 Camera+ 3.4.9.0 的 FastUI 与 MarkerDecisionCache 共享同帧缓存。投影的每格大小和显示决策污染了宿主恢复后的查询。旧 DLL 对照复现每格大小 host=9.380219、projection=0.4691162、restored=0.4691162；进入、离开和改变投影视角时使相应缓存失效，修复后宿主值恢复，并验证人物实体与嵌套作用域。原版 CurrentViewRect 改用前置返回来源范围，避免覆盖宿主同帧视区缓存。未启用 Camera+ 时无硬依赖，已启用但接口不匹配时明确记录错误。
+
+RimDevTools 管理 D:/RimWorld-Dev/RimWorld.exe（1.7.4982 rev1280）、D:/RimWorld-Dev/SaveData、离线 AppId 0 与隔离桌面。最终中文无 Camera+ 运行通过 78 项，英文带 Camera+ 运行通过 84 项，各有 10 张原生 2560×1600 截图，完整日志均无游戏 ERROR。新增检查覆盖原生对象选择、征召按钮、建造蓝图、拖拽仓储区、独立平移缩放、宿主相机隔离、跳转选择、视区缓存及完整存读档；保留原有右键真实移动和技能式目标选择回归。1.5 倍 UI 下人工核对游玩画面、调整窗口与双语布局。未量化 FPS，未验证所有第三方 Mod 的自定义命令。
+
+中文证据：D:/RimWorld-Dev/TestWorkspaces/CQFPlayableViewport/Evidence-e2c8e98cf3e640b29ba92877cee62d6e；英文证据：D:/RimWorld-Dev/TestWorkspaces/CQFPlayableViewport/Evidence-636b6bc45f9e4cb99f05eb5e3484399d。旧 DLL 复现证据：D:/RimWorld-Dev/TestWorkspaces/CQFProjectionCameraPlusBug/Evidence-31fc485fac0a48a7a99a8ff9d697a3cd。保留失败轮次；初次 Camera+ 测试由手工链接与 RimDevTools 自动依赖同步重复安装同一包，已移除手工链接后重跑通过。测试配置与 Mod 目录链接恢复，本轮测试存档归档。
+
+中英文 Key 与审核表扩展到 69 条，新增游玩和调整入口、视角操作提示，保留原有审核状态和意见。用户已授权自然文案，生成条目仍待审核。1.7 构建零错误、保留 1983 条既有警告；1.6 仅临时编译，零错误、保留 1735 条既有警告，投影代码不编入 1.6。无 RimWorld 进程时备份并同步已验证的 1.7 主库 DLL/PDB，DLL SHA256 为 60CA832FF7E91E053D50BCB095A9EC5AED6E643AC22D419C104A50B1EA3AF577，备份与部署记录位于中文证据的 RuntimeBefore 和 ViewportDeployment.json。本轮未更新 1.6 运行文件、编辑器或领域程序集，未修改版本号，未提交或推送 Git。
+
+## 地图投影交互改造（2026-11-14）
+
+按用户确认的方案，把地图投影改为名称与缩略图管理、可搜索来源卡片、缩略图框选、宿主地图拖放、内部移动和四角缩放。地图右上角直接打开管理面板，开发者入口保留。编辑使用独立草稿，完成时验证并原位替换，取消保留原对象和配置；模式和图层使用清晰的选中边框，精确坐标、分辨率及刷新间隔收进高级设置。输入框加高，避免中文字体的数字裁切。控制状态和返回宿主按钮与编辑状态分开。
+
+来源缩略图按需唤醒地图并持有独立引用，结束预览后恢复原休眠状态。窗口关闭后拒绝延迟绘制，避免原生 GUI 延迟回调重新创建预览。标准保存入口在序列化开始前关闭草稿和预览，使地图管理器能保存恢复休眠的请求；原版完整重载确认地图和人物引用完整，草稿不进入存档。英文中没有名称的既有地图使用本地化默认名称，避免对空标签调用 ToString。
+
+RimDevTools 管理 D:/RimWorld-Dev/RimWorld.exe、D:/RimWorld-Dev/SaveData、离线 AppId 0 与隔离桌面。最终中文和英文各 64 项检查、9 张原生 2560×1600 截图全部完成，完整控制台无游戏 ERROR。覆盖原版卡片按钮、1.5 倍 UI 缩放的框选与地图拖动、移动取消、四角缩放与地图边界、草稿提交和取消、精确坐标应用、预览释放和休眠恢复、两次完整存读档，以及原有选择、框选、右键移动、技能式目标选择与后台投影。保留失败轮次，修正了模拟鼠标的原生 GUI 坐标、无英文标签、窗口延迟回调和序列化期间禁止休眠等问题。未量化 FPS，也未验证所有第三方 Mod 的自定义绘制或命令。
+
+中文证据：D:/RimWorld-Dev/TestWorkspaces/CQFMapProjectionUX/Evidence-e3f40c227c294516afe28090f1f04655；英文证据：D:/RimWorld-Dev/TestWorkspaces/CQFMapProjectionUX/Evidence-b273c72bf54247afb4017a8b4dd158dd。配置与目录链接均已恢复，测试存档归档。中英文和审核表扩展到 62 条 Key，保持单表、筛选、原有状态和建议意见；新增生成文案仍待审核。
+
+1.7 构建零错误，保留 1983 条既有警告，地图投影源码无新增警告；1.6 临时编译零错误，保留 1735 条既有警告，投影代码不编入 1.6。在没有 RimWorld 进程运行时备份并同步已验证的 1.7 主库 DLL/PDB，DLL SHA256 为 1AB0D8F72E421C4D4BE8EF2BF1ADEB94461C56651DD52AB295289B5597A1EDFC，备份与部署记录位于中文证据的 RuntimeBefore 和 UXDeployment.json。本轮未更新 1.6 运行文件、编辑器或领域程序集，未修改版本号，未提交或推送 Git。
+
+## 地图投影自然中英文（2026-11-14）
+
+用户明确授权生成文案并停止使用占位。地图投影现有 23 条 Key 全部提供自然中英文，覆盖窗口、按钮、模式、参数、坐标提示、动作名称和无效配置提示；“纯显示”“可以控制”保留用户原文。`TextReview/MapProjections.csv/xlsx` 按 Key 合并正文、来源和待审核状态，保留建议与意见，保持原单表和筛选结构。较长的错误提示仅对对应审核表行启用换行与加高。生成文案可以使用，仍未代替用户内容审核。
+
+原版不会自动翻译 DebugActionAttribute.name，因此入口改为返回带翻译标签的原生 DebugActionNode，实际菜单显示 `CQF → 地图投影` / `Map projections`；不修改其他调试入口。仅此入口需要更新 1.7 主库 DLL/PDB，地图绘制和输入逻辑保持。
+
+RimDevTools 管理 `D:/RimWorld-Dev/RimWorld.exe`、独立存档 `D:/RimWorld-Dev/SaveData`、离线 AppId 0 和隔离桌面。中文运行 `83b43d76ebec47939489f2e138d80c0f`、英文运行 `941fd6998c504b2da97f0bc361a31d9b` 各完成 41 项检查及 5 张原生截图；人工核对两种语言的配置窗口、完整文字与布局，最终完整日志均无 ERROR，保留既有环境与翻译 WARN。最初中文夹具使用简写 ChineseSimplified，只加载原版中文而遗漏本 Mod 的旧式目录，人工看图发现英文伪本地化回退；夹具改为实际的 ChineseSimplified (简体中文)，并加强为原生语言包直接查找检查后重跑。失败与纠正前回执保留，不计入中文显示通过。
+
+XML、中英 Key、非空自然文本、参数标记及 23 项审核正文一致性检查通过；审核表经导入、保留结构、渲染及导出检查。中文最终证据为 `D:/RimWorld-Dev/TestWorkspaces/CQFMapProjections/Evidence-62fa37aad6844beda421d250fdb8a574`，英文为 `Evidence-4ca774df03d84d16b161299681dda529`。配置和目录链接恢复，临时测试入口移除，测试存档归档。只部署已验证的 1.7 主库 DLL/PDB，备份与哈希见中文证据的 `NaturalTextDeployment.json`；未更改版本号、1.6 运行包、编辑器或领域程序集，未提交或推送 Git。
+
+## 本机地图投影与跨图控制（2026-11-14）
+
+1.7 主库新增地图投影：整图或矩形区域、纯显示或可控制、背景或覆盖绘制、分辨率及刷新间隔、开启与关闭、完整存读档。配置入口为开发者菜单 `CQF → CQF_MP_Title`，不要求启用编辑器模块。`CQFAction_SetMapProjection` 创建或更新，`CQFAction_RemoveMapProjection` 删除，来源和宿主通过已有目标 Key 解析。接口与 XML 见 `cqf-map-dev/references/map-projections.md`。
+
+独立捕获绘制提交并保持同队列原顺序；输入作用域提供来源地图与虚拟相机，统一名称、框选、右键菜单和原生目标选择。拖出裁剪区域不会选到不可见人物；GUI 内关闭投影立即撤回上下文，避免继续引用已销毁相机。活动投影通过既有地图管理器唤醒并阻止来源休眠，删除后可再次休眠。未增加 Def、贴图、生成文案或旧档迁移。23 项中英文 Key 使用同名占位，两个模式中文复用用户原文，审核表为 `TextReview/MapProjections.csv/xlsx`。
+
+RimDevTools 1.0.4.0 在 `D:/RimWorld-Dev/RimWorld.exe`、`D:/RimWorld-Dev/SaveData`、离线 AppId 0 与隔离桌面执行。最终运行 `3aa78df9cbae4c4195921d3d61f4e96e` 完成 40 项检查及 5 张原生 2560×1600 截图，包含实际选人、框选、越界、原生右键命令及真实移动、目标选点、缩放整图控制、来源休眠唤醒、实时地形更新、关闭与重建、完整重载、动作 XML 复制和失败替换保留。人工检查人物名称、控制选择覆盖层及透明背景，最终完整控制台无 ERROR，保留既有离线 Steam、翻译、静态资源和退出分配等 WARN。未验证所有第三方 Mod 的自定义绘制与命令，未量化 FPS。
+
+保留失败轮次：修正图像方向和人物名称坐标、框选越界保护、矩形 XML 被 XElement 按可枚举对象展开的问题；测试夹具补齐原始鼠标事件、不可销毁物清场与异步截图等待。背景测试改用真正透明的 `QE_EtherealVoid`，现有 `QE_Null` 贴图 alpha 为 175–255，不能当作纯透明地形。并发 Poolcore/贴图预览曾占用同一开发副本，目录恢复在确认对方退出后按记录完成，最终脚本增加占用检查和恢复等待，没有停止其他测试进程。
+
+1.7 构建零错误，保留 1983 条既有警告，新地图投影源码无编译警告；1.6 编译零错误，保留 1735 条既有警告，功能代码和补丁不编入 1.6。只部署最终验证过的 1.7 主库 DLL/PDB，未替换编辑器、领域或 1.6 运行包，版本仍为 5.3，未提交或推送 Git。配置与目录链接恢复且哈希核对，临时测试入口移除。证据、运行前 DLL 备份及部署哈希：`D:/RimWorld-Dev/TestWorkspaces/CQFMapProjections/Evidence-2cde1b10c63b4366a7ce0b0b1e446c34`。
+
+## 本机领域地形等待与展开取消（2026-11-13）
+
+入场和返回共用地形提交检查，可见范围内任一实际地形网格提交即可建立就绪帧，保留完整帧屏障与 5 秒报错解锁；领域 Worker 同时从中心单块改为当前可见分块检测。旧实现对照运行复现原来的入场与返回超时报错，新实现没有相应错误。
+
+按用户要求取消展开期间无敌，改为 50% 减伤；死亡立即取消展开、释放卷入人员及临时眩晕，冻结展开进度并在 60 tick 内消融。血海闭合时施术者保持在地图上可攻击。1.7 基础、血海及反展开准备材质使用不规则噪声缺口与发亮蚀边；罩子改用世界坐标避免顶部条纹拉伸。没有新增游戏文案或旧档迁移。
+
+RimDevTools 管理 D:/RimWorld-Dev/RimWorld.exe，使用 D:/RimWorld-Dev/SaveData、离线 AppId 0、隔离桌面及完整控制台日志；核对实际进程路径和参数。最终 59 项实机检查通过，覆盖无地形提交时继续等待、中心无网格且无 Worker 通知的入场与可见返回，以及基础/血海的准备、闭合、反展开和转场中致死取消。检查消融中期的原生截图，最终日志无游戏 ERROR，保留既有环境警告。60 项领域、91 项对抗、11 项展开融合、释放回归及 90 项视觉/原生 Shader 检查通过；CQF 与 RSH 的 1.6/1.7 编译零错误，CQF 保留已有警告。1.6 仅编译，运行 DLL 和 AssetBundle 保持。
+
+测试和发布候选保存在 D:/RimWorld-Dev/TestWorkspaces/CQFTerrainFrame_58a8e41edcc347d7a24eb7e620311ee7；最终实机证据为 Native-9defc762902d464a8a96d4efbaa14194，日志对应 6b11ef0dabb049adbb4c7500dcd9fd11。测试后开发 Mod 链接和 Prefs 已恢复。只更新本机 1.7 CQF.Domain、RSH 的 DLL/PDB 及本轮消融 Shader，部署回执见同目录 deployed-files.json；主库和编辑器运行 DLL、版本号及 GitHub 不变。RSH 同期另有噪声函数调整，本轮保留现状，不作为本轮功能修改。
+
 ## 5.3 补齐 1.6 领域战场资源（2026-11-12）
 
 CQF 5.2 → 5.3。补齐 1.6/Optional/Domain 中遗漏的 CQF_DomainBattlefield.xml 及其中文翻译，直接复用 CQF.Domain/Content/1.6 中已有资源。修复找不到 CQF_DomainBattlefield 导致领域预加载失败及后续空引用的问题；同一文件同时提供 CQF_DomainBattlefieldGenerator。

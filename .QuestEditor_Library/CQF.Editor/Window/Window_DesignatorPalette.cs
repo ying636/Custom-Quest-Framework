@@ -13,6 +13,13 @@ namespace QuestEditor_Library
         public Window_DesignatorPalette(Designator designator, IEnumerable<T> allItems, IReadOnlyList<T> recentItems,
             Func<T, string> getLabel, Action<T, Rect> drawIcon, Action<T> selectItem, Func<T, bool> isSelected,
             Func<T, string>? getTip = null)
+            : this(designator, allItems, recentItems, getLabel, drawIcon, selectItem, isSelected, getTip, null)
+        {
+        }
+
+        public Window_DesignatorPalette(Designator designator, IEnumerable<T> allItems, IReadOnlyList<T> recentItems,
+            Func<T, string> getLabel, Action<T, Rect> drawIcon, Action<T> selectItem, Func<T, bool> isSelected,
+            Func<T, string>? getTip, Dictionary<string, Func<T, bool>>? categoryFilters)
         {
             this.designator = designator;
             this.allItems = allItems.ToList();
@@ -22,6 +29,7 @@ namespace QuestEditor_Library
             this.selectItem = selectItem;
             this.isSelected = isSelected;
             this.getTip = getTip;
+            this.categoryFilters = categoryFilters;
             this.layer = WindowLayer.GameUI;
             this.onlyOneOfTypeAllowed = false;
             this.closeOnAccept = false;
@@ -136,6 +144,36 @@ namespace QuestEditor_Library
             }
             y += SearchHeight + SectionGap;
 
+            if (this.categoryFilters != null && this.categoryFilters.Count > 0)
+            {
+                using CQFUIScope categoryScope = new CQFUIScope(contentWidth);
+                Rect categoryRect = new Rect(0f, y, contentWidth, CategoryHeight);
+                string categoryLabel = "CQF_DialogSelectType".Translate(
+                    this.selectedCategory ?? "CQF_DialogSelectAllTypes".Translate().ToString());
+                if (CQFUIStyle.ButtonText(categoryRect, categoryLabel.Truncate(categoryRect.width - 12f)))
+                {
+                    List<FloatMenuOption> options = new List<FloatMenuOption>
+                    {
+                        new FloatMenuOption("CQF_DialogSelectAllTypes".Translate(), () =>
+                        {
+                            this.selectedCategory = null;
+                            this.RefreshFilteredItems();
+                        })
+                    };
+                    foreach (string category in this.categoryFilters.Keys)
+                    {
+                        options.Add(new FloatMenuOption(category, () =>
+                        {
+                            this.selectedCategory = category;
+                            this.RefreshFilteredItems();
+                        }));
+                    }
+                    Find.WindowStack.Add(new FloatMenu(options));
+                }
+                TooltipHandler.TipRegion(categoryRect, categoryLabel);
+                y += CategoryHeight + SectionGap;
+            }
+
             Rect selectionRect = new Rect(0f, y, contentWidth, inRect.height - y - SectionGap);
             CQFUIStyle.DrawMenuSection(selectionRect);
             this.DrawAllItems(selectionRect.ContractedBy(SectionPadding));
@@ -222,6 +260,11 @@ namespace QuestEditor_Library
         private void RefreshFilteredItems()
         {
             IEnumerable<T> items = this.allItems;
+            if (this.selectedCategory != null && this.categoryFilters != null
+                && this.categoryFilters.TryGetValue(this.selectedCategory, out Func<T, bool>? filter))
+            {
+                items = items.Where(filter);
+            }
             if (!this.searchTerms.NullOrEmpty())
             {
                 items = items.Where(item => this.GetCachedLabel(item).IndexOf(this.searchTerms, StringComparison.OrdinalIgnoreCase) >= 0);
@@ -250,6 +293,7 @@ namespace QuestEditor_Library
             return tip;
         }
 
+        private const float CategoryHeight = 24f;
         private const float ToolbarButtonSize = 18f;
         private const float IconPadding = 2f;
         private const float IconSize = 28f;
@@ -281,6 +325,8 @@ namespace QuestEditor_Library
         private readonly Action<T> selectItem;
         private readonly Func<T, bool> isSelected;
         private readonly Func<T, string>? getTip;
+        private readonly Dictionary<string, Func<T, bool>>? categoryFilters;
+        private string? selectedCategory;
         private List<T> filteredItems = new List<T>();
         private readonly Dictionary<T, string> labelCache = new Dictionary<T, string>();
         private readonly Dictionary<T, string> tipCache = new Dictionary<T, string>();

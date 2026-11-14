@@ -343,6 +343,9 @@ namespace QuestEditor_Library
             result.Add(new XElement("dialogReportKey", this.dialogReportKey));
             result.Add(new XElement("curIndex", this.curIndex));
             result.Add(new XElement("curOptionIndex", this.curOptionIndex));
+            if (!string.IsNullOrEmpty(this.dialogStyle)) result.Add(new XElement("dialogStyle", this.dialogStyle));
+            if (this.presentations.Count > 0)
+                result.Add(CQFSerialization.XElementFromObject(this.presentations, typeof(List<CQFDialogPresentation>), "presentations"));
             XElement optionPool = new XElement("optionMoulds");
             foreach (var option in this.optionMoulds)
                 optionPool.Add(new XElement("li", new XElement("key", option.Key), option.Value.SaveToXElement("value")));
@@ -433,6 +436,8 @@ namespace QuestEditor_Library
             XElement result = new XElement(nodeName);
             result.Add(new XElement("text", this.text));
             result.Add(new XElement("index", this.index));
+            if (this.presentations.Count > 0)
+                result.Add(CQFSerialization.XElementFromObject(this.presentations, typeof(List<CQFDialogNodePresentation>), "presentations"));
             if (this.editorPositionSet)
             {
                 result.Add(new XElement("editorX", this.editorX));
@@ -469,6 +474,7 @@ namespace QuestEditor_Library
         }
 
         public string text = "Default";
+        public List<CQFDialogNodePresentation> presentations = new();
         public List<string> extraText = new List<string>();
         public int? index = null;
         public int? parentIndex = null;

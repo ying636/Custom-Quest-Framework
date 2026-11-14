@@ -50,23 +50,13 @@ namespace QuestEditor_Library
         {
             get
             {
-                if (Designator_SpawnThing.bespawnable.NullOrEmpty())
-                {
-                    List<ThingCategory> disable = new List<ThingCategory>() { ThingCategory.Gas, ThingCategory.Mote, ThingCategory.Projectile, ThingCategory.Pawn, ThingCategory.Attachment, ThingCategory.Ethereal };
-                    foreach (ThingDef def in DefDatabase<ThingDef>.AllDefsListForReading)
-                    {
-                        if (!disable.Contains(def.category) && !def.IsCorpse && !Designator_CQFTools.IsCQFTool(def))
-                        {
-                            Designator_SpawnThing.bespawnable.Add(def);
-                        }
-                    }
-                }
                 yield return new FloatMenuOption("Select".Translate(), () =>
                  {
-                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Designator_SpawnThing.bespawnable, x => x.uiIcon, x => x.label, x =>
+                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Bespawnable, x => x.uiIcon, x => x.label, x =>
             {
                 this.SelectThing(x);
-            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)), "Select".Translate()));
+            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null),
+                getRawText: t => t.defName, typeFilters: GetCategoryFilters()), "Select".Translate()));
                  });
                 yield return new FloatMenuOption("CQF_OpenFloatingPalette".Translate(), () =>
                 {
@@ -84,7 +74,9 @@ namespace QuestEditor_Library
                         item => item.Thing == thing && (item.Stuff == null || item.Stuff == stuff),
                         item => (item.Stuff == null ? "" : item.Stuff.LabelAsStuff + " ")
                             + (item.Thing.label ?? item.Thing.defName)
-                            + (item.Thing.description.NullOrEmpty() ? "" : "\n\n" + item.Thing.description)));
+                            + (item.Thing.description.NullOrEmpty() ? "" : "\n\n" + item.Thing.description),
+                        GetCategoryFilters().ToDictionary(filter => filter.Key,
+                            filter => new Func<DesignatorThingSelection, bool>(item => filter.Value(item.Thing)))));
                 });
                 yield break;
             }
@@ -158,6 +150,58 @@ namespace QuestEditor_Library
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
             return true;
+        }
+
+        private static Dictionary<string, Func<ThingDef, bool>> GetCategoryFilters()
+        {
+            List<ThingDef> things = Bespawnable;
+            Dictionary<string, Func<ThingDef, bool>> filters = new Dictionary<string, Func<ThingDef, bool>>
+            {
+                { "CQF_SpawnCategory_Buildings".Translate(), def => def.category == ThingCategory.Building },
+                { "CQF_SpawnCategory_Items".Translate(), def => def.category == ThingCategory.Item },
+                { "CQF_SpawnCategory_Plants".Translate(), def => def.category == ThingCategory.Plant },
+                { "CQF_SpawnCategory_Filth".Translate(), def => def.category == ThingCategory.Filth },
+                { "CQF_SpawnCategory_Other".Translate(), def => def.category != ThingCategory.Building
+                    && def.category != ThingCategory.Item && def.category != ThingCategory.Plant && def.category != ThingCategory.Filth }
+            };
+            filters = filters.Where(filter => things.Any(filter.Value)).ToDictionary(filter => filter.Key, filter => filter.Value);
+            foreach (DesignationCategoryDef category in things.Where(def => def.designationCategory != null)
+                .Select(def => def.designationCategory).Distinct().OrderBy(category => category.label))
+            {
+                string label = "CQF_SpawnCategory_BuildMenu".Translate(category.LabelCap);
+                if (filters.ContainsKey(label)) label += " (" + category.defName + ")";
+                filters.Add(label, def => def.designationCategory == category);
+            }
+            HashSet<ThingCategoryDef> categories = new HashSet<ThingCategoryDef>();
+            foreach (ThingDef def in things)
+            {
+                if (def.thingCategories == null) continue;
+                foreach (ThingCategoryDef leaf in def.thingCategories)
+                {
+                    for (ThingCategoryDef category = leaf; category?.parent != null; category = category.parent)
+                    {
+                        categories.Add(category);
+                    }
+                }
+            }
+            Dictionary<string, Func<ThingDef, bool>> itemFilters = new Dictionary<string, Func<ThingDef, bool>>();
+            foreach (ThingCategoryDef category in categories.OrderBy(category => category.defName))
+            {
+                List<string> path = new List<string>();
+                for (ThingCategoryDef parent = category; parent?.parent != null; parent = parent.parent)
+                {
+                    path.Add(parent.LabelCap);
+                }
+                path.Reverse();
+                string label = "CQF_SpawnCategory_ThingCategory".Translate(string.Join(" / ", path));
+                if (itemFilters.ContainsKey(label)) label += " (" + category.defName + ")";
+                itemFilters.Add(label, def => def.IsWithinCategory(category));
+            }
+            foreach (KeyValuePair<string, Func<ThingDef, bool>> filter in itemFilters.OrderBy(filter => filter.Key))
+            {
+                filters.Add(filter.Key, filter.Value);
+            }
+            return filters;
         }
 
         private void RecordRecentSelection(ThingDef def, ThingDef stuffDef)

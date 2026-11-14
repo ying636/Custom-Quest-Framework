@@ -155,6 +155,8 @@ namespace QuestEditor_Library
         {
             tree.ResolveOptions();
             CQFAIChanges.Validate(tree);
+            string[] presentationErrors = tree.PresentationErrors().ToArray();
+            if (presentationErrors.Length > 0) throw new InvalidDataException(string.Join("\n", presentationErrors));
             if (!tree.nodeMoulds.ContainsKey(0)) throw new InvalidDataException("CQF_DialogGraph_KeepEntry");
             foreach (KeyValuePair<int, DialogNode> pair in tree.nodeMoulds)
             {

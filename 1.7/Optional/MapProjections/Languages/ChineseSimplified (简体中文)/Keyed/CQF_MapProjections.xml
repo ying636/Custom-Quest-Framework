@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_MP_Title>地图投影</CQF_MP_Title>
+  <CQF_MP_Add>添加投影</CQF_MP_Add>
+  <CQF_MP_Source>来源地图</CQF_MP_Source>
+  <CQF_MP_Enabled>启用投影</CQF_MP_Enabled>
+  <CQF_MP_Control>可以控制</CQF_MP_Control>
+  <CQF_MP_Display>纯显示</CQF_MP_Display>
+  <CQF_MP_Background>显示在地形下方</CQF_MP_Background>
+  <CQF_MP_Whole>显示整张来源地图</CQF_MP_Whole>
+  <CQF_MP_SourceRect>来源地图选区</CQF_MP_SourceRect>
+  <CQF_MP_Destination>当前地图显示区域</CQF_MP_Destination>
+  <CQF_MP_Resolution>图像分辨率（像素）</CQF_MP_Resolution>
+  <CQF_MP_Refresh>刷新间隔（帧）</CQF_MP_Refresh>
+  <CQF_MP_Apply>应用设置</CQF_MP_Apply>
+  <CQF_MP_Remove>删除投影</CQF_MP_Remove>
+  <CQF_MP_Invalid>无法应用投影设置。请确认输入均为整数，选区未超出地图，分辨率为 128–4096 像素，刷新间隔为 1–60 帧。详细原因已写入日志。</CQF_MP_Invalid>
+  <CQF_MP_X>起点 X 坐标</CQF_MP_X>
+  <CQF_MP_Z>起点 Z 坐标</CQF_MP_Z>
+  <CQF_MP_Width>宽度（格）</CQF_MP_Width>
+  <CQF_MP_Height>高度（格）</CQF_MP_Height>
+  <CQF_MP_ID>投影标识</CQF_MP_ID>
+  <CQF_MP_Host>宿主地图</CQF_MP_Host>
+  <CQFAction_SetMapProjection>创建或更新地图投影</CQFAction_SetMapProjection>
+  <CQFAction_RemoveMapProjection>删除地图投影</CQFAction_RemoveMapProjection>
+  <CQF_MP_AutoName>{0}投影</CQF_MP_AutoName>
+  <CQF_MP_NoSource>来源地图不可用</CQF_MP_NoSource>
+  <CQF_MP_Manage>投影管理</CQF_MP_Manage>
+  <CQF_MP_Controlling>正在控制：{0}</CQF_MP_Controlling>
+  <CQF_MP_ReturnHost>返回当前地图</CQF_MP_ReturnHost>
+  <CQF_MP_NewName>地图投影 {0}</CQF_MP_NewName>
+  <CQF_MP_AreaSize>{0} × {1} 格</CQF_MP_AreaSize>
+  <CQF_MP_Edit>编辑投影</CQF_MP_Edit>
+  <CQF_MP_Name>投影名称</CQF_MP_Name>
+  <CQF_MP_Change>更换</CQF_MP_Change>
+  <CQF_MP_PreviewTip>显示来源地图的全部内容。选择“框选区域”后，可以在缩略图上拖动选取范围。</CQF_MP_PreviewTip>
+  <CQF_MP_CropTip>在缩略图上按住鼠标左键拖动，框选需要显示的区域。右键或 Esc 取消本次框选。</CQF_MP_CropTip>
+  <CQF_MP_FullMap>整张地图</CQF_MP_FullMap>
+  <CQF_MP_SelectArea>框选区域</CQF_MP_SelectArea>
+  <CQF_MP_Mode>显示模式</CQF_MP_Mode>
+  <CQF_MP_ModeTip>纯显示只供观察。游玩模式可选择单位、建筑和物品，使用原版操作，并在窗口内缩放和平移。所有对象仍属于来源地图。</CQF_MP_ModeTip>
+  <CQF_MP_Layer>显示层</CQF_MP_Layer>
+  <CQF_MP_Above>覆盖地形</CQF_MP_Above>
+  <CQF_MP_Below>地形下方</CQF_MP_Below>
+  <CQF_MP_LayerTip>覆盖地形会将投影叠加在当前地图上。地形下方适合从空地或地形缺口观察来源地图；不透明地形会遮住投影。</CQF_MP_LayerTip>
+  <CQF_MP_KeepAspect>保持来源比例</CQF_MP_KeepAspect>
+  <CQF_MP_Placing>拖拽放置到地图</CQF_MP_Placing>
+  <CQF_MP_PlaceAgain>重新放置</CQF_MP_PlaceAgain>
+  <CQF_MP_PlacementTip>在当前地图上按住左键拖出显示范围。放置后，拖动内部可移动，拖动四角可缩放；右键或 Esc 取消本次拖动。</CQF_MP_PlacementTip>
+  <CQF_MP_Advanced>高级设置</CQF_MP_Advanced>
+  <CQF_MP_HideAdvanced>收起高级设置</CQF_MP_HideAdvanced>
+  <CQF_MP_Finish>完成</CQF_MP_Finish>
+  <CQF_MP_ApplyCoordinates>应用坐标</CQF_MP_ApplyCoordinates>
+  <CQF_MP_Empty>当前地图还没有投影</CQF_MP_Empty>
+  <CQF_MP_Rename>重命名</CQF_MP_Rename>
+  <CQF_MP_RowInfo>{0} · {1} × {2} 格</CQF_MP_RowInfo>
+  <CQF_MP_On>已启用</CQF_MP_On>
+  <CQF_MP_Off>已停用</CQF_MP_Off>
+  <CQF_MP_Locate>定位</CQF_MP_Locate>
+  <CQF_MP_Delete>删除</CQF_MP_Delete>
+  <CQF_MP_ChooseSource>选择来源地图</CQF_MP_ChooseSource>
+  <CQF_MP_Search>搜索地图</CQF_MP_Search>
+  <CQF_MP_NoMaps>没有符合条件的其他地图</CQF_MP_NoMaps>
+  <CQF_MP_MapName>地图 {0}</CQF_MP_MapName>
+  <CQF_MP_Play>游玩模式</CQF_MP_Play>
+  <CQF_MP_Layout>调整窗口</CQF_MP_Layout>
+  <CQF_MP_Playing>游玩中：{0}</CQF_MP_Playing>
+  <CQF_MP_ResetView>重置视图</CQF_MP_ResetView>
+  <CQF_MP_NavigateTip>左键选择对象，拖框多选；右键下达命令。滚轮缩放小地图，按住鼠标中键拖动平移；指针停在小地图内时，也可使用地图移动和缩放快捷键。点击外部地图或“返回当前地图”切回主地图。</CQF_MP_NavigateTip>
+  <CQF_MP_LayoutTip>此模式用于调整来源范围、窗口位置和尺寸。点击“完成并游玩”后，左键就会用于选择小地图中的对象。</CQF_MP_LayoutTip>
+  <CQF_MP_FinishAndPlay>完成并游玩</CQF_MP_FinishAndPlay>
+  <CQF_MP_AllowZoom>允许缩放</CQF_MP_AllowZoom>
+  <CQF_MP_AllowZoomTip>允许使用滚轮和地图缩放快捷键调整视角。关闭后保持当前缩放比例。</CQF_MP_AllowZoomTip>
+  <CQF_MP_MatchCellSize>格子 1:1</CQF_MP_MatchCellSize>
+  <CQF_MP_MatchCellSizeTip>每个来源格占用一个宿主格，窗口尺寸由来源选区决定。启用后锁定视角缩放，并禁止拉伸。</CQF_MP_MatchCellSizeTip>
+  <CQF_MP_NavigateLockedTip>左键选择对象，拖框多选；右键下达命令。此视口的配置已锁定缩放。按住鼠标中键可在来源范围内平移。点击外部地图或“返回当前地图”切回主地图。</CQF_MP_NavigateLockedTip>
+  <CQF_MP_CellSizeTooLarge>来源选区过大，无法按格子 1:1 放入宿主地图，请缩小来源选区。</CQF_MP_CellSizeTooLarge>
+</LanguageData>

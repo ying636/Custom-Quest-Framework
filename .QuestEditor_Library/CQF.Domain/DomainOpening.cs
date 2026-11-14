@@ -9,7 +9,7 @@ public abstract class DomainOpening : Thing
     public abstract Pawn? Caster { get; }
     public abstract bool Active { get; }
     public virtual bool SupportsFusion => false;
-    public virtual float Progress => startTick < 0 ? 1f : IsClosing
+    public virtual float Progress => IsDissolving ? cancelledProgress : startTick < 0 ? 1f : IsClosing
         ? ClosingStart + (1f - ClosingStart) * Mathf.Clamp01((GenTicks.TicksGame - closingTick) / (float)ClosingTicks)
         : ClosingStart * Mathf.Clamp01((GenTicks.TicksGame - startTick) / (float)OpeningTicks);
     public virtual float Radius => Definition.OpeningRadius;
@@ -17,6 +17,8 @@ public abstract class DomainOpening : Thing
     public virtual int OpeningTicks => Definition.visuals?.openingTicks ?? 360;
     public virtual int ClosingTicks => Definition.visuals?.closingTicks ?? 120;
     public bool IsClosing => closingTick >= 0;
+    public bool IsDissolving => cancelledTick >= 0;
+    public float Opacity => IsDissolving ? 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((GenTicks.TicksGame - cancelledTick) / 60f)) : 1f;
     public bool IsCounterOpening => counterOpening;
     public bool ReadyToClose => startTick >= 0 && GenTicks.TicksGame - startTick >= OpeningTicks;
     protected bool ReadyToTransfer => IsCounterOpening ? IsClosing : Progress >= 1f;
@@ -52,6 +54,8 @@ public abstract class DomainOpening : Thing
         Scribe_References.Look(ref fusion, "fusion");
         Scribe_Values.Look(ref startTick, "phaseStartTick", -1);
         Scribe_Values.Look(ref closingTick, "closingTick", -1);
+        Scribe_Values.Look(ref cancelledTick, "cancelledTick", -1);
+        Scribe_Values.Look(ref cancelledProgress, "cancelledProgress");
         Scribe_Values.Look(ref counterOpening, "counterOpening");
         Scribe_Values.Look(ref locksReleased, "openingLocksReleased");
         Scribe_Collections.Look(ref entrants, "closingEntrants", LookMode.Reference);
@@ -65,6 +69,15 @@ public abstract class DomainOpening : Thing
 
     public virtual void ReleaseForFusion() => ReleaseOpeningLocks();
     public virtual void ResumeAfterFusion() { }
+
+    public void CancelOpening()
+    {
+        if (Destroyed || IsDissolving) return;
+        cancelledProgress = Progress;
+        cancelledTick = GenTicks.TicksGame;
+        ReleaseForFusion();
+        if (Fusion is { Destroyed: false } fusion) fusion.Destroy();
+    }
 
     internal void MoveWithBattlefield(Map destination, IntVec3 cell)
     {
@@ -100,11 +113,12 @@ public abstract class DomainOpening : Thing
 #if RIMWORLD_1_7
     internal void DrawCounterOpening()
     {
-        if (!IsCounterOpening || !Active || counterSurfaceError || Definition.surface == null) return;
+        if (!IsCounterOpening || !Active && !IsDissolving || counterSurfaceError || Definition.surface == null) return;
         try
         {
             counterSurface ??= new DomainSurfaceVisuals(Definition.surface);
-            float progress = Mathf.Clamp01((GenTicks.TicksGame - startTick) / (float)OpeningTicks);
+            float progress = IsDissolving ? Mathf.Clamp01(cancelledProgress / ClosingStart)
+                : Mathf.Clamp01((GenTicks.TicksGame - startTick) / (float)OpeningTicks);
             float radius = Radius * Mathf.SmoothStep(0f, 1f, progress);
             float extent = Radius + 4f;
             Vector3 origin = Position.ToVector3Shifted();
@@ -115,8 +129,8 @@ public abstract class DomainOpening : Thing
             Vector3 center = new((left + right) * 0.5f, AltitudeLayer.LayingPawn.AltitudeFor() - 0.01f, (bottom + top) * 0.5f);
             counterSurface.Draw(MeshPool.plane10,
                 Matrix4x4.TRS(center, Quaternion.identity, new Vector3(right - left, 1f, top - bottom)),
-                GenTicks.TicksGame / 60f + 6f, new Vector4(origin.x, origin.z, radius, 0f),
-                opacity: Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(progress / 0.1f)), clash: new Vector4(0f, 0f, 0f, 3f));
+                GenTicks.TicksGame / 60f + 6f, 2902, new Vector4(origin.x, origin.z, radius, 0f), default,
+                Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(progress / 0.1f)), new Vector4(0f, 0f, 0f, 3f), 1f - Opacity);
         }
         catch (Exception error)
         {
@@ -163,6 +177,11 @@ public abstract class DomainOpening : Thing
     protected override void Tick()
     {
         base.Tick();
+        if (IsDissolving)
+        {
+            if (Opacity <= 0f && !Destroyed) Destroy();
+            return;
+        }
         if (startTick < 0 || !Active || locksReleased) return;
         if (IsClosing) CaptureClosingPawns();
         for (int index = 0; index < lockedPawns.Count; index++)
@@ -224,6 +243,8 @@ public abstract class DomainOpening : Thing
     private CQFDomainRuntime? runtime;
     private int startTick = -1;
     private int closingTick = -1;
+    private int cancelledTick = -1;
+    private float cancelledProgress;
     private bool counterOpening;
     private bool locksReleased;
     private List<Pawn> entrants = new();

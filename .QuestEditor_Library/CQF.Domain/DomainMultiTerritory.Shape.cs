@@ -15,6 +15,10 @@ public sealed partial class DomainMultiTerritory
         centerDistances = new float[Count][];
         owners = new int[width * height];
         baseOwners = new int[owners.Length];
+        cornerOwners = null;
+        rivalOwners = null;
+        ownerScores = null;
+        rivalScores = null;
         oldBoundary = new bool[owners.Length];
         protectedOwners = new int[owners.Length];
         overrides = new int[owners.Length];

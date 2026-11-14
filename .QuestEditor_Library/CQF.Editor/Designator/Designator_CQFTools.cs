@@ -63,10 +63,11 @@ namespace QuestEditor_Library
             {
                 yield return new FloatMenuOption("Select".Translate(), () =>
                  {
-                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(CQFEditorTools.CustomThings, x => x.uiIcon, x => x.label + $"({Designator_CQFTools.GetCQFToolTypeLabel(x)})", x =>
+                     Find.WindowStack.Add(new Dialog_Select<ThingDef>(new TextureSelectDrawer<ThingDef>(Basespawnable, x => x.uiIcon, x => x.label + $"({Designator_CQFTools.GetCQFToolTypeLabel(x)})", x =>
             {
                 this.SelectThing(x);
-            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null)), "Select".Translate()));
+            }, t => t.graphic?.Color ?? Color.white, (t, r) => Widgets.DefIcon(r, t, null),
+                getRawText: t => t.defName, typeFilters: GetCategoryFilters()), "Select".Translate()));
                  });
                 yield return new FloatMenuOption("CQF_OpenFloatingPalette".Translate(), () =>
                 {
@@ -83,7 +84,9 @@ namespace QuestEditor_Library
                         item => item.Thing == thing && (item.Stuff == null || item.Stuff == stuff),
                         item => (item.Stuff == null ? "" : item.Stuff.LabelAsStuff + " ")
                             + (item.Thing.label ?? item.Thing.defName) + " (" + GetCQFToolTypeLabel(item.Thing) + ")"
-                            + (item.Thing.description.NullOrEmpty() ? "" : "\n\n" + item.Thing.description)));
+                            + (item.Thing.description.NullOrEmpty() ? "" : "\n\n" + item.Thing.description),
+                        GetCategoryFilters().ToDictionary(filter => filter.Key,
+                            filter => new Func<DesignatorThingSelection, bool>(item => filter.Value(item.Thing)))));
                 });
                 yield break;
             }
@@ -160,6 +163,27 @@ namespace QuestEditor_Library
         public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
             return true;
+        }
+
+        private static Dictionary<string, Func<ThingDef, bool>> GetCategoryFilters()
+        {
+            Dictionary<string, HashSet<ThingDef>> categories = new Dictionary<string, HashSet<ThingDef>>();
+            List<Type> toolTypes = ToolTypes;
+            foreach (ThingDef def in Basespawnable)
+            {
+                Type? type = def.thingClass;
+                while (type != null && !toolTypes.Contains(type)) type = type.BaseType;
+                string label = IsSpecialBuilding(def) ? "CQFSpecialBuilding".Translate().ToString()
+                    : (type?.Name ?? def.thingClass.Name).Translate().ToString();
+                if (!categories.TryGetValue(label, out HashSet<ThingDef>? things))
+                {
+                    things = new HashSet<ThingDef>();
+                    categories.Add(label, things);
+                }
+                things.Add(def);
+            }
+            return categories.OrderBy(category => category.Key).ToDictionary(category => category.Key,
+                category => new Func<ThingDef, bool>(category.Value.Contains));
         }
 
         private void RecordRecentSelection(ThingDef def, ThingDef? stuffDef)

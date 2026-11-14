@@ -37,7 +37,7 @@ namespace QuestEditor_Library
                 {
                     details.Add(title.Replace('\n', ' ').Replace('\r', ' '));
                 }
-                details.Add(CQFAction_Letter.GetTypeLabel(letter.letterDef));
+                details.Add(CQFAction_Letter.GetTypeLabel(letter.LetterDef));
                 if (letter.targetsText?.Count > 0)
                 {
                     details.Add("TargetKey".Translate() + " " + string.Join(", ", letter.targetsText));

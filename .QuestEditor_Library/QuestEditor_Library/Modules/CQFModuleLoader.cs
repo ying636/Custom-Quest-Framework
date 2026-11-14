@@ -9,6 +9,8 @@ public static class CQFModuleLoader
 {
     public static bool DomainLoaded => mapModuleFactory != null;
 
+    public static bool IsLoaded(string module) => loadedModules.Contains(module);
+
     public static void Load(ModContentPack framework, IReadOnlyList<ModContentPack> activeMods)
     {
         List<CQFModuleFolder> declarations = new();
@@ -24,20 +26,30 @@ public static class CQFModuleLoader
                 folder.Content.foldersToLoadDescendingOrder.RemoveAll(path => SamePath(path, folder.Path));
             List<CQFModuleFolder> requests = declarations.Where(folder => !folder.Provider).ToList();
             if (requests.Count == 0) return;
-            CQFModuleFolder[] providers = declarations.Where(folder => folder.Provider && folder.Module == "Domain").ToArray();
-            if (providers.Length != 1)
-                throw new InvalidDataException("[CQF] Domain requested by " + string.Join(", ", requests.Select(folder => folder.Content.PackageId))
-                    + " but exactly one selected IfCQFModule=Domain folder is required.");
-            CQFModuleFolder provider = providers[0];
-            ValidateFolder(provider);
             foreach (CQFModuleFolder request in requests) ValidateFolder(request);
-            string modulePath = Path.Combine(provider.Path, "CQF.Domain.dll");
-            if (!File.Exists(modulePath)) throw new FileNotFoundException("[CQF] Domain module requested by "
-                + string.Join(", ", requests.Select(folder => folder.Content.PackageId)), modulePath);
-            Assembly moduleAssembly = LoadAssembly(provider, modulePath);
-            Type entry = moduleAssembly.GetType("QuestEditor_Library.CQFDomainModule", true)!;
-            ((ICQFModule)Activator.CreateInstance(entry)!).Initialize();
-            if (!DomainLoaded) throw new InvalidOperationException("[CQF] Domain module did not register its map runtime.");
+            HashSet<string> requested = new(requests.SelectMany(folder => folder.Modules), StringComparer.Ordinal);
+            List<CQFModuleFolder> selectedProviders = new();
+            foreach (string module in requested.OrderBy(name => name, StringComparer.Ordinal))
+            {
+                CQFModuleFolder[] providers = declarations.Where(folder => folder.Provider && folder.Modules.Contains(module)).ToArray();
+                string requesters = string.Join(", ", requests.Where(folder => folder.Modules.Contains(module)).Select(folder => folder.Content.PackageId).Distinct());
+                if (providers.Length != 1)
+                    throw new InvalidDataException("[CQF] " + module + " requested by " + requesters
+                        + " but exactly one selected IfCQFModule=" + module + " folder is required.");
+                ValidateFolder(providers[0]);
+                string modulePath = Path.Combine(providers[0].Path, "CQF." + module + ".dll");
+                if (!File.Exists(modulePath)) throw new FileNotFoundException("[CQF] " + module + " module requested by " + requesters, modulePath);
+                selectedProviders.Add(providers[0]);
+            }
+            foreach (CQFModuleFolder provider in selectedProviders)
+            {
+                string module = provider.Modules[0];
+                Assembly moduleAssembly = LoadAssembly(provider, Path.Combine(provider.Path, "CQF." + module + ".dll"));
+                Type entry = moduleAssembly.GetType(moduleEntries[module], true)!;
+                ((ICQFModule)Activator.CreateInstance(entry)!).Initialize();
+                if (module == "Domain" && !DomainLoaded) throw new InvalidOperationException("[CQF] Domain module did not register its map runtime.");
+                if (!loadedModules.Add(module)) throw new InvalidOperationException("[CQF] Module initialized more than once: " + module);
+            }
             foreach (ModContentPack content in activeMods)
                 foreach (string path in originals[content].AsEnumerable().Reverse())
                 {
@@ -50,7 +62,8 @@ public static class CQFModuleLoader
             foreach (KeyValuePair<ModContentPack, List<string>> original in originals)
             {
                 original.Key.foldersToLoadDescendingOrder.Clear();
-                original.Key.foldersToLoadDescendingOrder.AddRange(original.Value);
+                original.Key.foldersToLoadDescendingOrder.AddRange(original.Value.Where(path => !declarations.Any(folder => folder.Provider
+                    && folder.Content == original.Key && SamePath(folder.Path, path) && !requested.Contains(folder.Modules[0]))));
             }
             GenTypes.ClearCache();
         }
@@ -72,7 +85,33 @@ public static class CQFModuleLoader
         mapModuleFactory = factory ?? throw new ArgumentNullException(nameof(factory));
     }
 
+    public static void RegisterMapLifetimeModule(ICQFMapLifetimeModule module)
+    {
+        if (module == null) throw new ArgumentNullException(nameof(module));
+        if (mapLifetimeModules.Any(existing => existing.GetType() == module.GetType()))
+            throw new InvalidOperationException("[CQF] A map lifetime module is already registered: " + module.GetType().FullName);
+        mapLifetimeModules.Add(module);
+    }
+
     internal static ICQFMapModule? CreateMapModule(GameComponent_MapManager host) => mapModuleFactory?.Invoke(host);
+
+    internal static bool KeepsMapActive(Game game, Map map)
+    {
+        foreach (ICQFMapLifetimeModule module in mapLifetimeModules)
+            if (module.KeepsMapActive(game, map)) return true;
+        return false;
+    }
+
+    internal static void BeforeMapsDisposed(Game game)
+    {
+        List<Exception>? errors = null;
+        foreach (ICQFMapLifetimeModule module in mapLifetimeModules)
+        {
+            try { module.BeforeMapsDisposed(game); }
+            catch (Exception error) { (errors ??= new()).Add(error); }
+        }
+        if (errors != null) throw new AggregateException("[CQF] Optional map modules failed to release game state.", errors);
+    }
 
     private static IEnumerable<CQFModuleFolder> ReadFolders(ModContentPack content, ModContentPack framework)
     {
@@ -109,12 +148,15 @@ public static class CQFModuleLoader
             XmlAttribute? request = node.Attributes["RequiresCQFModule"];
             if (provider != null && request != null)
                 throw new InvalidDataException("[CQF] Module folder cannot provide and request a module: " + content.PackageId + ": " + relative);
-            string module = (provider ?? request)!.Value.Trim();
-            if (module != "Domain") throw new InvalidDataException("[CQF] Unknown module requested by " + content.PackageId + ": " + module);
+            string[] modules = (provider ?? request)!.Value.Split(',').Select(name => name.Trim()).ToArray();
+            foreach (string module in modules)
+                if (!moduleEntries.ContainsKey(module)) throw new InvalidDataException("[CQF] Unknown module requested by " + content.PackageId + ": " + module);
+            if (modules.Distinct(StringComparer.Ordinal).Count() != modules.Length || provider != null && modules.Length != 1)
+                throw new InvalidDataException("[CQF] Invalid module list for " + content.PackageId + ": " + relative);
             if ((provider != null) != (content == framework))
                 throw new InvalidDataException("[CQF] IfCQFModule belongs to CQF; submods must use RequiresCQFModule: " + content.PackageId);
             if (!declared.Add(path)) throw new InvalidDataException("[CQF] Repeated selected module folder: " + content.PackageId + ": " + relative);
-            yield return new CQFModuleFolder(content, path, module, provider != null);
+            yield return new CQFModuleFolder(content, path, modules, provider != null);
         }
     }
 
@@ -149,4 +191,11 @@ public static class CQFModuleLoader
     private static bool SamePath(string first, string second) => string.Equals(Path.GetFullPath(first), Path.GetFullPath(second), StringComparison.OrdinalIgnoreCase);
 
     private static Func<GameComponent_MapManager, ICQFMapModule>? mapModuleFactory;
+    private static readonly HashSet<string> loadedModules = new(StringComparer.Ordinal);
+    private static readonly List<ICQFMapLifetimeModule> mapLifetimeModules = new();
+    private static readonly Dictionary<string, string> moduleEntries = new(StringComparer.Ordinal)
+    {
+        ["Domain"] = "QuestEditor_Library.CQFDomainModule",
+        ["MapProjections"] = "QuestEditor_Library.CQFMapProjectionsModule"
+    };
 }
