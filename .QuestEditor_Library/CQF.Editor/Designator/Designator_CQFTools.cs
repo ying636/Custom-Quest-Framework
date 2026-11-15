@@ -24,7 +24,20 @@ namespace QuestEditor_Library
 
         public override ThingDef? StuffDef => stuff;
         public override Color IconDrawColor => this.PlacingDef.MadeFromStuff && this.StuffDef != null ? this.PlacingDef?.GetColorForStuff(this.StuffDef) ?? base.IconDrawColor : base.IconDrawColor;
-        public static IReadOnlyList<DesignatorThingSelection> RecentSelections => recentSelections;
+        public static IReadOnlyList<DesignatorThingSelection> RecentSelections
+        {
+            get
+            {
+                CustomQuestFramework_ModSetting settings = CustomQuestFramework_ModSetting.setting;
+                if (settings != recentSettings)
+                {
+                    recentSelections.Clear();
+                    if (settings != null) recentSelections.AddRange(DesignatorThingSelection.RestoreRecent(settings.recentCQFTools).Take(RecentSelectionLimit));
+                    recentSettings = settings;
+                }
+                return recentSelections;
+            }
+        }
         public static List<ThingDef> Basespawnable
         {
             get
@@ -188,11 +201,18 @@ namespace QuestEditor_Library
 
         private void RecordRecentSelection(ThingDef def, ThingDef? stuffDef)
         {
+            _ = RecentSelections;
             recentSelections.RemoveAll(selection => selection.Thing == def && selection.Stuff == stuffDef);
             recentSelections.Insert(0, new DesignatorThingSelection(def, stuffDef));
             if (recentSelections.Count > RecentSelectionLimit)
             {
                 recentSelections.RemoveRange(RecentSelectionLimit, recentSelections.Count - RecentSelectionLimit);
+            }
+            if (recentSettings != null)
+            {
+                recentSettings.recentCQFTools = recentSelections.Select(selection => new CQFPaletteSelection
+                    { thingDef = selection.Thing.defName, stuffDef = selection.Stuff?.defName ?? string.Empty }).ToList();
+                recentSettings.Write();
             }
         }
 
@@ -200,6 +220,7 @@ namespace QuestEditor_Library
         public static ThingDef? stuff = ThingDefOf.WoodLog;
         private const int RecentSelectionLimit = 5;
         private static readonly List<DesignatorThingSelection> recentSelections = new List<DesignatorThingSelection>();
+        private static CustomQuestFramework_ModSetting? recentSettings;
         private static List<ThingDef> bespawnable = new List<ThingDef>();
     }
 }

@@ -52,6 +52,7 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         this.sceneOccluders ??= new List<Bounds>();
         this.sceneOccluders.Clear();
         for (int i = 0; i < boxes.Count; i++) this.sceneOccluders.Add(boxes[i]);
+        this.occludersDirty = true;
         this.shadowDirty = true;
         this.immediateShadow = true;
     }
@@ -174,6 +175,7 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
     public override void FinalizeInit()
     {
         if (this.lights is { Count: > 0 }) this.Subscribe();
+        this.occludersDirty = true;
         this.shadowDirty = this.nativeDirty = true;
         this.immediateShadow = this.immediateNative = true;
     }
@@ -208,6 +210,8 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
             this.subscribed = false;
         }
         this.lastFrame = -1;
+        this.occluders?.Clear();
+        this.occludersDirty = true;
         this.shadowDirty = this.nativeDirty = true;
         this.immediateShadow = this.immediateNative = true;
     }
@@ -279,26 +283,33 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         }
         if (this.shadowDirty && this.runtimeLights.Count > 0 && (this.immediateShadow || Time.realtimeSinceStartup - this.lastShadowTime >= .1f))
         {
-            this.occluders ??= new List<Bounds>();
-            this.occluders.Clear();
-            if (this.sceneOccluders != null) this.occluders.AddRange(this.sceneOccluders);
-            foreach (Building building in this.map.listerThings.AllThings.OfType<Building>())
-            {
-                if (!building.def.blockLight || building is Building_Door { Open: true }) continue;
-                CellRect rect = building.OccupiedRect();
-                Bounds box = new Bounds(new Vector3(rect.minX + rect.Width * .5f, 1.6f, rect.minZ + rect.Height * .5f), new Vector3(rect.Width, 3.2f, rect.Height));
-                bool included = false;
-                if (this.sceneOccluders != null)
-                    foreach (Bounds scene in this.sceneOccluders)
-                        if (scene.Contains(box.center)) { included = true; break; }
-                if (!included) this.occluders.Add(box);
-            }
+            this.UpdateOccluders();
             this.shadows ??= new CQFSceneShadowAtlas();
-            this.shadows.Rebuild(this.runtimeLights, this.occluders);
+            this.shadows.Rebuild(this.runtimeLights, this.occluders!);
             this.shadowDirty = false;
             this.immediateShadow = false;
             this.lastShadowTime = Time.realtimeSinceStartup;
         }
+    }
+
+    private void UpdateOccluders()
+    {
+        if (!this.occludersDirty) return;
+        this.occluders ??= new List<Bounds>();
+        this.occluders.Clear();
+        if (this.sceneOccluders != null) this.occluders.AddRange(this.sceneOccluders);
+        foreach (Building building in this.map.listerThings.AllThings.OfType<Building>())
+        {
+            if (!building.def.blockLight || building is Building_Door { Open: true }) continue;
+            CellRect rect = building.OccupiedRect();
+            Bounds box = new Bounds(new Vector3(rect.minX + rect.Width * .5f, 1.6f, rect.minZ + rect.Height * .5f), new Vector3(rect.Width, 3.2f, rect.Height));
+            bool included = false;
+            if (this.sceneOccluders != null)
+                foreach (Bounds scene in this.sceneOccluders)
+                    if (scene.Contains(box.center)) { included = true; break; }
+            if (!included) this.occluders.Add(box);
+        }
+        this.occludersDirty = false;
     }
 
     private void UpdateBeamState()
@@ -339,8 +350,8 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         this.subscribed = true;
     }
 
-    private void BuildingChanged(Building building) { if (building.def.blockLight) this.shadowDirty = this.immediateShadow = true; }
-    private void DoorChanged(Building_Door door) => this.shadowDirty = this.immediateShadow = true;
+    private void BuildingChanged(Building building) { if (building.def.blockLight) this.occludersDirty = this.shadowDirty = this.immediateShadow = true; }
+    private void DoorChanged(Building_Door door) => this.occludersDirty = this.shadowDirty = this.immediateShadow = true;
 
     private void ClearNativeLights()
     {
@@ -383,5 +394,6 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
     private bool shadowDirty = true;
     private bool nativeDirty = true;
     private bool subscribed;
+    private bool occludersDirty = true;
 }
 #endif

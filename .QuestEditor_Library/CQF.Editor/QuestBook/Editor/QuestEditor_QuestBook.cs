@@ -72,7 +72,7 @@ namespace QuestEditor_Library
                 List<FloatMenuOption> options = DefDatabase<QuestBookDef>.AllDefsListForReading
                     .Select(def => new FloatMenuOption(def.defName, () =>
                     {
-                        curDef = def;
+                        curDef = this.CopyDefinition(def);
                         PrepareEditableText(curDef);
                         nodeCanvas.ResetView();
                     })).ToList();
@@ -140,8 +140,9 @@ namespace QuestEditor_Library
                 string path = Path.Combine(directory, curDef.defName + ".xml");
                 XElement language;
                 XElement compiledBook = BuildCompiledBookXml(out language);
+                QuestBookDef published = this.CopyDefinition(curDef);
                 new CQFContentTextExport(curDef.defName).Save(compiledBook, typeof(QuestBookDef), path, additionalTranslations: language);
-                CQFQuestDefBootstrap.HotLoadQuestBookDef(curDef);
+                CQFQuestDefBootstrap.HotLoadQuestBookDef(published);
                 Messages.Message("CQF_QuestBook_SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
             catch (Exception exception)
@@ -219,6 +220,12 @@ namespace QuestEditor_Library
             return new string(value.Select(character => char.IsLetterOrDigit(character) ? character : '_').ToArray());
         }
 
+        private QuestBookDef CopyDefinition(QuestBookDef book)
+        {
+            this.draftModel ??= new CQFAIModel();
+            return (QuestBookDef)this.draftModel.Copy(book);
+        }
+
         private static void PrepareEditableText(QuestBookDef book)
         {
             foreach (QuestBookChapter chapter in book.chapters)
@@ -259,5 +266,6 @@ namespace QuestEditor_Library
         private static QuestBookDef curDef;
         private readonly QuestBookNodeCanvas nodeCanvas = new QuestBookNodeCanvas();
         private readonly QuestBookChapterSidebar chapterSidebar = new QuestBookChapterSidebar();
+        private CQFAIModel? draftModel;
     }
 }

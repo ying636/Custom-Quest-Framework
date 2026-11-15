@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>CQF.OptimizationChecks</AssemblyName>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <Import Project="../../RimWorld.props" />
+  <ItemGroup>
+    <Reference Include="QuestEditor_Library" HintPath="$(CoreAssembly)" Private="false" />
+    <Reference Include="CQF.Editor" HintPath="$(EditorAssembly)" Private="false" />
+    <Reference Include="CQF.Domain" HintPath="$(DomainAssembly)" Private="false" />
+  </ItemGroup>
+</Project>

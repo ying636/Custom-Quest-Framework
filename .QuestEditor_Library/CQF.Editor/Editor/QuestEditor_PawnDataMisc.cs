@@ -103,7 +103,8 @@ namespace QuestEditor_Library
                 PawnKindDef kind = this.data.extraKinds[i];
                 if (CQFUIStyle.ButtonText(rectKind, kind.label, false))
                 {
-                    CQFEditorTools.DrawFloatMenu<PawnKindDef>(DefDatabase<PawnKindDef>.AllDefs.ToList(), (k) => this.data.extraKinds[i] = k, (k) =>
+                    int index = i;
+                    CQFEditorTools.DrawFloatMenu<PawnKindDef>(DefDatabase<PawnKindDef>.AllDefs.ToList(), (k) => this.data.extraKinds[index] = k, (k) =>
                     {
                         string result = k.label;
                         return result;

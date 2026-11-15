@@ -70,40 +70,67 @@ public sealed partial class DomainContest
 
     private void TickMultiple(MapComponent_Domain first)
     {
-        List<MapComponent_Domain> sides = first.Instances.ToList();
-        bool ready = sides.Where(side => side.Active).All(side => side.Ready && !side.ArrivalLocked && side.Worker?.SuspendLifecycle != true);
-        int revision = Partition.Revision;
-        Partition.Prune(GenTicks.TicksGame, sides.Select(side => side.Ready).ToList());
-        Partition.ErodeClaims(GenTicks.TicksGame, ready, sides.Select(side => side.Definition.contestClaimErosionTicks).ToList());
-        List<IntVec3?> captures = new();
-        bool capturing = false;
-        for (int index = 0; index < sides.Count; index++)
+        DomainContestTickBuffer buffer = this.TakeTickBuffer(first);
+        try
         {
-            MapComponent_Domain side = sides[index];
-            bool capture = occupations![index].Advance(GenTicks.TicksGame, ready && first.ActiveDomainCount > 1 && side.Ready && CanOccupy(side));
-            captures.Add(capture ? side.Caster!.Position : null);
-            capturing |= capture;
+            List<MapComponent_Domain> sides = buffer.Sides;
+            bool ready = true;
+            foreach (MapComponent_Domain side in sides)
+            {
+                buffer.Ready.Add(side.Ready);
+                buffer.ErosionTicks.Add(side.Definition.contestClaimErosionTicks);
+                if (ready && side.Active && (!side.Ready || side.ArrivalLocked || side.Worker?.SuspendLifecycle == true)) ready = false;
+            }
+            int revision = Partition.Revision;
+            Partition.Prune(GenTicks.TicksGame, buffer.Ready);
+            Partition.ErodeClaims(GenTicks.TicksGame, ready, buffer.ErosionTicks);
+            bool capturing = false;
+            for (int index = 0; index < sides.Count; index++)
+            {
+                MapComponent_Domain side = sides[index];
+                bool capture = occupations![index].Advance(GenTicks.TicksGame, ready && first.ActiveDomainCount > 1 && side.Ready && CanOccupy(side));
+                buffer.Captures.Add(capture ? side.Caster!.Position : null);
+                capturing |= capture;
+            }
+            if (capturing)
+            {
+                int[] gained = Partition.Capture(buffer.Captures);
+                for (int index = 0; index < gained.Length; index++) if (gained[index] > 0) sides[index].RestoreHealth(300f);
+            }
+            int duration = 0;
+            foreach (MapComponent_Domain side in sides)
+            {
+                buffer.Health.Add(side.Active ? side.Health : 0f);
+                if (side.Active) duration = Math.Max(duration, side.Definition.contestBoundaryTicks);
+            }
+            Partition.Advance(buffer.Health, 1f / (duration == 0 ? 120 : duration));
+            if (GenTicks.TicksGame % 60 == 0) RefreshLayouts(first);
+            if (revision == Partition.Revision) return;
+            dirtySections.Clear();
+            foreach (IntVec3 cell in Partition.ChangedCells) ApplyCell(first, cell);
+            foreach (UnityEngine.Rect bounds in Partition.DirtyBounds) MarkBounds(first, bounds);
+            foreach (Section section in dirtySections)
+                first.map.mapDrawer.MapMeshDirty(new IntVec3(section.CellRect.minX, 0, section.CellRect.minZ), MapMeshFlagDefOf.Terrain);
+            if (Partition.ChangedCells.Count == 0) return;
+            RefreshLayouts(first);
+            foreach (MapComponent_Domain side in sides) if (side.Active) side.Worker?.TerritoryChanged();
         }
-        if (capturing)
+        finally
         {
-            int[] gained = Partition.Capture(captures);
-            for (int index = 0; index < gained.Length; index++) if (gained[index] > 0) sides[index].RestoreHealth(300f);
+            buffer.Clear();
+            this.tickBuffers.Push(buffer);
         }
-        int duration = sides.Where(side => side.Active).Select(side => side.Definition.contestBoundaryTicks).DefaultIfEmpty(120).Max();
-        Partition.Advance(sides.Select(side => side.Active ? side.Health : 0f).ToList(), 1f / duration);
-        if (GenTicks.TicksGame % 60 == 0) RefreshLayouts(first);
-        if (revision == Partition.Revision) return;
-        dirtySections.Clear();
-        foreach (IntVec3 cell in Partition.ChangedCells) ApplyCell(first, cell);
-        foreach (UnityEngine.Rect bounds in Partition.DirtyBounds) MarkBounds(first, bounds);
-        foreach (Section section in dirtySections)
-            first.map.mapDrawer.MapMeshDirty(new IntVec3(section.CellRect.minX, 0, section.CellRect.minZ), MapMeshFlagDefOf.Terrain);
-        if (Partition.ChangedCells.Count == 0) return;
-        RefreshLayouts(first);
-        foreach (MapComponent_Domain side in sides.Where(side => side.Active)) side.Worker?.TerritoryChanged();
+    }
+
+    private DomainContestTickBuffer TakeTickBuffer(MapComponent_Domain first)
+    {
+        DomainContestTickBuffer buffer = this.tickBuffers.Count > 0 ? this.tickBuffers.Pop() : new DomainContestTickBuffer();
+        for (int index = 0; index < first.InstanceCount; index++) buffer.Sides.Add(first.InstanceAt(index));
+        return buffer;
     }
 
     private List<DomainTerrainSnapshot>? allTerrains;
     private List<DomainOccupation>? occupations;
     private DomainMultiContestOverlay? multiOverlay;
+    private readonly Stack<DomainContestTickBuffer> tickBuffers = new();
 }

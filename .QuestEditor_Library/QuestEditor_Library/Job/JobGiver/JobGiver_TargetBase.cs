@@ -16,7 +16,7 @@ namespace QuestEditor_Library
             }
             if (this.useRuntimeDatabase)
             {
-                CustomDutyMap runtime = GameComponent_ComplexDuty.Instance?.GetRuntime(pawn);
+                CustomDutyMap runtime = GameComponent_ComplexDuty.Instance?.TryGetRuntime(pawn);
                 target = runtime?.GetTarget(this.targetKey) ?? TargetInfo.Invalid;
                 if (target.IsValid)
                 {

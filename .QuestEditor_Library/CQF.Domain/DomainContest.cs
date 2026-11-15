@@ -255,11 +255,22 @@ public sealed partial class DomainContest : IExposable, IDisposable
         int tick = GenTicks.TicksGame;
         if (settlementTick == tick) return;
         settlementTick = tick;
-        List<MapComponent_Domain> sides = first.Instances.Where(side => side.Active).ToList();
-        if (sides.Count < 2 || sides.Any(side => !side.Ready || side.ArrivalLocked || side.Worker?.SuspendLifecycle == true)) return;
-        float multiplier = HealthLossMultiplier(sides.Count);
-        foreach (MapComponent_Domain side in sides)
-            side.SpendHealth(side.MaximumHealth * side.Definition.contestHealthLossPerSecond * multiplier / 60f, false);
+        DomainContestTickBuffer buffer = this.TakeTickBuffer(first);
+        try
+        {
+            buffer.Sides.RemoveAll(side => !side.Active);
+            if (buffer.Sides.Count < 2) return;
+            foreach (MapComponent_Domain side in buffer.Sides)
+                if (!side.Ready || side.ArrivalLocked || side.Worker?.SuspendLifecycle == true) return;
+            float multiplier = HealthLossMultiplier(buffer.Sides.Count);
+            foreach (MapComponent_Domain side in buffer.Sides)
+                side.SpendHealth(side.MaximumHealth * side.Definition.contestHealthLossPerSecond * multiplier / 60f, false);
+        }
+        finally
+        {
+            buffer.Clear();
+            this.tickBuffers.Push(buffer);
+        }
     }
 
     private void MarkBounds(MapComponent_Domain first, Rect bounds)

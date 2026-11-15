@@ -99,7 +99,7 @@ namespace QuestEditor_Library
 
         public void NotifyPawnDamaged(Pawn pawn, DamageInfo dinfo)
         {
-            CustomDutyMap runtime = this.GetRuntime(pawn);
+            CustomDutyMap runtime = this.TryGetRuntime(pawn);
             if (runtime?.dutyMap == null)
             {
                 return;

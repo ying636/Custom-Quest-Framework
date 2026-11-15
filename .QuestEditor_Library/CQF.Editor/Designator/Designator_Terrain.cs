@@ -25,7 +25,26 @@ namespace QuestEditor_Library
             }
         }
         public override bool DragDrawMeasurements => true;
-        public static IReadOnlyList<TerrainDef> RecentSelections => recentSelections;
+        public static IReadOnlyList<TerrainDef> RecentSelections
+        {
+            get
+            {
+                CustomQuestFramework_ModSetting settings = CustomQuestFramework_ModSetting.setting;
+                if (settings != recentSettings)
+                {
+                    recentSelections.Clear();
+                    if (settings != null)
+                        foreach (string name in settings.recentTerrains)
+                        {
+                            TerrainDef def = DefDatabase<TerrainDef>.GetNamedSilentFail(name);
+                            if (def == null) Log.Warning("[CQF] Recent palette TerrainDef is unavailable: " + name);
+                            else if (!recentSelections.Contains(def) && recentSelections.Count < RecentSelectionLimit) recentSelections.Add(def);
+                        }
+                    recentSettings = settings;
+                }
+                return recentSelections;
+            }
+        }
         public override IEnumerable<FloatMenuOption> RightClickFloatMenuOptions
         {
             get
@@ -74,11 +93,17 @@ namespace QuestEditor_Library
 
         private void RecordRecentSelection(TerrainDef def)
         {
+            _ = RecentSelections;
             recentSelections.Remove(def);
             recentSelections.Insert(0, def);
             if (recentSelections.Count > RecentSelectionLimit)
             {
                 recentSelections.RemoveRange(RecentSelectionLimit, recentSelections.Count - RecentSelectionLimit);
+            }
+            if (recentSettings != null)
+            {
+                recentSettings.recentTerrains = recentSelections.Select(selection => selection.defName).ToList();
+                recentSettings.Write();
             }
         }
 
@@ -87,5 +112,6 @@ namespace QuestEditor_Library
         private const int RecentSelectionLimit = 5;
 
         private static readonly List<TerrainDef> recentSelections = new List<TerrainDef>();
+        private static CustomQuestFramework_ModSetting? recentSettings;
     }
 }

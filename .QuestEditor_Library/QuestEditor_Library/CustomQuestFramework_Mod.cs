@@ -89,6 +89,12 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.dialogAIModel, "dialogAIModel", string.Empty);
             Scribe_Values.Look(ref this.dialogAIKey, "dialogAIKey", string.Empty);
             Scribe_Values.Look(ref this.dialogAITimeout, "dialogAITimeout", 120);
+            Scribe_Collections.Look(ref this.recentSpawnThings, "CQF_recentSpawnThings", LookMode.Deep);
+            Scribe_Collections.Look(ref this.recentCQFTools, "CQF_recentCQFTools", LookMode.Deep);
+            Scribe_Collections.Look(ref this.recentTerrains, "CQF_recentTerrains", LookMode.Value);
+            this.recentSpawnThings ??= new List<CQFPaletteSelection>();
+            this.recentCQFTools ??= new List<CQFPaletteSelection>();
+            this.recentTerrains ??= new List<string>();
         }
 
         public bool enableEditor;
@@ -111,6 +117,9 @@ namespace QuestEditor_Library
         public string dialogAIModel = string.Empty;
         public string dialogAIKey = string.Empty;
         public int dialogAITimeout = 120;
+        public List<CQFPaletteSelection> recentSpawnThings = new List<CQFPaletteSelection>();
+        public List<CQFPaletteSelection> recentCQFTools = new List<CQFPaletteSelection>();
+        public List<string> recentTerrains = new List<string>();
         public static CustomQuestFramework_ModSetting setting;
     }
 

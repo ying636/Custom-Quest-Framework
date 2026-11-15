@@ -56,7 +56,7 @@ namespace QuestEditor_Library
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
             float contentHeight = 0f;
-            contentHeight = this.DrawItems(viewRect, contentHeight);
+            contentHeight = this.DrawItems(viewRect, contentHeight, outRect.height);
             contentHeight = this.DrawExtraOptions(contentHeight, viewRect);
             Widgets.EndScrollView();
             this.height = contentHeight;
@@ -97,8 +97,9 @@ namespace QuestEditor_Library
             return y + RowSpacing;
         }
 
-        private float DrawItems(Rect viewRect, float contentHeight)
+        private float DrawItems(Rect viewRect, float contentHeight, float visibleHeight)
         {
+            this.drawer.VisibleRect = new Rect(0f, this.pos.y, viewRect.width, visibleHeight);
             return this.drawer.DrawItems(viewRect, contentHeight, () => this.Close(), this.selectedType?.ts ?? this.drawer.ts);
         }
 
@@ -217,6 +218,10 @@ namespace QuestEditor_Library
             this.typeTips = typeTips;
         }
 
+        public Rect? VisibleRect { get; set; }
+        protected List<Rect> ItemRects => this.itemRects;
+        protected float LayoutHeight { get; set; }
+
         public abstract float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts);
 
         public void UpdateTypes(Func<T, bool> canShowItem)
@@ -310,6 +315,43 @@ namespace QuestEditor_Library
             closeAction();
         }
 
+        protected bool NeedsLayout(Rect viewRect, float contentHeight, List<T> items)
+        {
+            if (ReferenceEquals(this.layoutItems, items) && this.layoutCount == items.Count
+                && this.layoutWidth == viewRect.width && this.layoutStart == contentHeight
+                && this.layoutFont == Text.Font && this.layoutWrap == Text.WordWrap) return false;
+            this.layoutItems = items;
+            this.layoutCount = items.Count;
+            this.layoutWidth = viewRect.width;
+            this.layoutStart = contentHeight;
+            this.layoutFont = Text.Font;
+            this.layoutWrap = Text.WordWrap;
+            this.itemRects.Clear();
+            this.layoutBottoms.Clear();
+            return true;
+        }
+
+        protected void AddItemRect(Rect rect)
+        {
+            this.itemRects.Add(rect);
+            float previous = this.layoutBottoms.Count == 0 ? float.NegativeInfinity : this.layoutBottoms[this.layoutBottoms.Count - 1];
+            this.layoutBottoms.Add(Mathf.Max(previous, rect.yMax));
+        }
+
+        protected int FirstVisibleItem()
+        {
+            if (!this.VisibleRect.HasValue) return 0;
+            float top = this.VisibleRect.Value.yMin;
+            int low = 0, high = this.layoutBottoms.Count;
+            while (low < high)
+            {
+                int middle = low + (high - low) / 2;
+                if (this.layoutBottoms[middle] < top) low = middle + 1;
+                else high = middle;
+            }
+            return low;
+        }
+
         private List<T> FilterAndSort(IEnumerable<T> source, Func<T, bool> canShowItem)
         {
             List<T> result = source.Where(canShowItem).ToList();
@@ -331,6 +373,14 @@ namespace QuestEditor_Library
         public List<SelectType<T>> types = new List<SelectType<T>>();
         public List<T> ts;
         private readonly Dictionary<T, SelectItem<T>> cachedItems = new Dictionary<T, SelectItem<T>>();
+        private readonly List<Rect> itemRects = new List<Rect>();
+        private readonly List<float> layoutBottoms = new List<float>();
+        private List<T>? layoutItems;
+        private int layoutCount;
+        private float layoutWidth;
+        private float layoutStart;
+        private GameFont layoutFont;
+        private bool layoutWrap;
     }
 
     public class SelectType<T>
@@ -364,23 +414,32 @@ namespace QuestEditor_Library
 
         public override float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts)
         {
-            float y = contentHeight;
-            foreach (T t in ts)
+            if (this.NeedsLayout(viewRect, contentHeight, ts))
             {
-                SelectItem<T> item = this.ItemFor(t);
+                float y = contentHeight;
                 float rowWidth = Mathf.Min(TextRowWidth, viewRect.width);
-                Rect rect = new Rect(this.GetCenteredX(rowWidth, viewRect.width), y, rowWidth, RowHeight);
-                string label = item.text;
-                rect.height = Text.CalcHeight(label, rect.width);
+                foreach (T t in ts)
+                {
+                    Rect rect = new Rect(this.GetCenteredX(rowWidth, viewRect.width), y, rowWidth, RowHeight);
+                    rect.height = Text.CalcHeight(this.ItemFor(t).text, rect.width);
+                    this.AddItemRect(rect);
+                    y += rect.height + TextRowSpacing;
+                }
+                this.LayoutHeight = y;
+            }
+            for (int index = this.FirstVisibleItem(); index < ts.Count; index++)
+            {
+                Rect rect = this.ItemRects[index];
+                if (this.VisibleRect.HasValue && rect.yMin > this.VisibleRect.Value.yMax) break;
+                SelectItem<T> item = this.ItemFor(ts[index]);
                 Color color = item.color ?? Widgets.NormalOptionColor;
-                if (CQFUIStyle.ButtonText(rect, label, false, true, color))
+                if (CQFUIStyle.ButtonText(rect, item.text, false, true, color))
                 {
                     this.AcceptAndClose(item.value, closeAction);
                 }
                 TooltipHandler.TipRegion(rect, item.tip);
-                y += rect.height + TextRowSpacing;
             }
-            return y;
+            return this.LayoutHeight;
         }
 
         private const float RowHeight = 25f;
@@ -408,30 +467,41 @@ namespace QuestEditor_Library
         protected virtual float ItemWidth => IconSize;
 
         protected virtual float RowSpacing => IconRowSpacing;
+        protected virtual float RowGap => this.RowSpacing - this.ItemHeight;
 
         public override float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts)
         {
-            float x = this.GetFirstX(viewRect.width);
-            float y = contentHeight;
-            foreach (T t in ts)
+            if (this.NeedsLayout(viewRect, contentHeight, ts))
             {
-                SelectItem<T> item = this.ItemFor(t);
-                Rect rect = new Rect(x, y, this.ItemWidth, this.ItemHeight);
+                float firstX = this.GetFirstX(viewRect.width);
+                float x = firstX, y = contentHeight, rowHeight = 0f;
+                foreach (T t in ts)
+                {
+                    float height = this.GetItemHeight(this.ItemFor(t));
+                    this.AddItemRect(new Rect(x, y, this.ItemWidth, height));
+                    rowHeight = Mathf.Max(rowHeight, height);
+                    x += this.ItemSpacingX;
+                    if (x + this.ItemWidth > viewRect.width)
+                    {
+                        x = firstX;
+                        y += rowHeight + this.RowGap;
+                        rowHeight = 0f;
+                    }
+                }
+                this.LayoutHeight = y + (rowHeight > 0f ? rowHeight + this.RowGap : 0f);
+            }
+            for (int index = this.FirstVisibleItem(); index < ts.Count; index++)
+            {
+                Rect rect = this.ItemRects[index];
+                if (this.VisibleRect.HasValue && rect.yMin > this.VisibleRect.Value.yMax) break;
+                SelectItem<T> item = this.ItemFor(ts[index]);
                 this.DrawItem(item, rect, closeAction);
                 TooltipHandler.TipRegion(rect, item.tip);
-                x += this.ItemSpacingX;
-                if (x + this.ItemWidth > viewRect.width)
-                {
-                    x = this.GetFirstX(viewRect.width);
-                    y += this.RowSpacing;
-                }
             }
-            if (x > 0f)
-            {
-                y += this.RowSpacing;
-            }
-            return y;
+            return this.LayoutHeight;
         }
+
+        protected virtual float GetItemHeight(SelectItem<T> item) => this.ItemHeight;
 
         protected virtual Rect GetImageRect(Rect rect)
         {
@@ -504,29 +574,10 @@ namespace QuestEditor_Library
 
         protected override float RowSpacing => LabeledRowSpacing;
 
-        public override float DrawItems(Rect viewRect, float contentHeight, Action closeAction, List<T> ts)
-        {
-            float x = this.GetFirstX(viewRect.width);
-            float y = contentHeight;
-            float rowHeight = 0f;
-            foreach (T t in ts)
-            {
-                SelectItem<T> item = this.ItemFor(t);
-                Rect rect = new Rect(x, y, ItemWidth, 0f);
-                float itemHeight = this.DrawItem(item, rect, closeAction);
-                rect.height = itemHeight;
-                TooltipHandler.TipRegion(rect, item.tip);
-                rowHeight = Mathf.Max(rowHeight, itemHeight);
-                x += ItemSpacingX;
-                if (x + ItemWidth > viewRect.width)
-                {
-                    x = this.GetFirstX(viewRect.width);
-                    y += rowHeight + RowSpacing;
-                    rowHeight = 0f;
-                }
-            }
-            return y + rowHeight + RowSpacing;
-        }
+        protected override float RowGap => this.RowSpacing;
+
+        protected override float GetItemHeight(SelectItem<T> item)
+            => IconSize + LabelGap + Mathf.Max(1f, Text.CalcHeight(item.text, ItemWidth));
 
         protected override Rect GetImageRect(Rect rect)
         {
@@ -535,8 +586,7 @@ namespace QuestEditor_Library
 
         protected override float DrawItem(SelectItem<T> item, Rect rect, Action closeAction)
         {
-            float labelHeight = Mathf.Max(1f, Text.CalcHeight(item.text, ItemWidth));
-            float itemHeight = IconSize + LabelGap + labelHeight;
+            float itemHeight = rect.height;
             rect.height = itemHeight;
             base.DrawItem(item, rect, closeAction);
             TextAnchor oldAnchor = Text.Anchor;

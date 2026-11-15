@@ -475,7 +475,7 @@ namespace QuestEditor_Library
         public void Notify_PawnSpawned(Pawn pawn, Map map)
         {
             this.EnsureRuntime(map);
-            if (this.PawnMatches(pawn, map))
+            if (pawn != null && !pawn.Destroyed && pawn.Spawned && pawn.Map == map)
             {
                 this.pawns.Add(pawn);
             }
@@ -491,19 +491,28 @@ namespace QuestEditor_Library
         public bool TryTrigger(Map map, Quest quest)
         {
             this.EnsureRuntime(map);
-            foreach (Pawn pawn in this.pawns.ToList())
+            this.pawnCheckBuffer.Clear();
+            this.pawnCheckBuffer.AddRange(this.pawns);
+            try
             {
-                if (pawn == null || pawn.Destroyed || !pawn.Spawned || pawn.Map != map)
+                foreach (Pawn pawn in this.pawnCheckBuffer)
                 {
-                    this.pawns.Remove(pawn);
-                    continue;
+                    if (pawn == null || pawn.Destroyed || !pawn.Spawned || pawn.Map != map)
+                    {
+                        this.pawns.Remove(pawn);
+                        continue;
+                    }
+                    if (this.cellSet.Contains(pawn.Position) && this.PawnMatches(pawn, map))
+                    {
+                        MapComponent_CustomMapData.GetComp(map).EventAreas.Remove(this);
+                        this.Trigger(pawn, map, quest);
+                        return true;
+                    }
                 }
-                if (this.cellSet.Contains(pawn.Position))
-                {
-                    MapComponent_CustomMapData.GetComp(map).EventAreas.Remove(this);
-                    this.Trigger(pawn, map, quest);
-                    return true;
-                }
+            }
+            finally
+            {
+                this.pawnCheckBuffer.Clear();
             }
             return false;
         }
@@ -599,5 +608,6 @@ namespace QuestEditor_Library
 
         private HashSet<IntVec3> cellSet;
         private HashSet<Pawn> pawns;
+        private readonly List<Pawn> pawnCheckBuffer = new List<Pawn>();
     }
 }
