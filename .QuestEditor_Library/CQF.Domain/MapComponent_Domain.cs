@@ -93,6 +93,7 @@ public sealed partial class MapComponent_Domain : MapComponent
             layout = new DomainLayout(this, CQFDomainRuntime.Instance.GetMapTemplate(Definition, sourceMap), true);
             layout.RevealOwned();
             worker!.Entering();
+            map.mapDrawer.WholeMapChanged(MapMeshFlagDefOf.Terrain);
             if (Definition.protection != null)
             {
                 Hediff_DomainProtection protection = pawn.health.AddHediff(Definition.protection) as Hediff_DomainProtection

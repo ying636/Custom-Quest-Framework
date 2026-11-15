@@ -1,5 +1,7 @@
 # CQF 基础领域视觉
 
+单领域入场必须在 `active=true` 且 `Worker.Entering` 完成后，以 `WholeMapChanged(MapMeshFlagDefOf.Terrain)` 标记地形层重建。预生成时专用地面层的 `Visible` 为 false，地图即使执行过 `RegenerateEverythingNow`，入场时也可能仍持有空网格；边框和血条正常不能证明地面已绘制。此通知每次入场一次，由原版重建可见分区，不改为逐帧强制刷新。回归同时检查首次入场、完整存读档、休眠复用与单个基础领域；入口为 `Tests/MapProjectionsRuntime/RunChecks.ps1 -Modules Domain -BloodSeaSurface`，需要本地血海子 Mod，默认不改其源码、DLL 或 Shader。
+
 当前多方对抗共用按实例索引生成的地形裁剪、覆盖纹理与动态接触带；没有 surface 的领域仍可通过真实地形和建筑参加。额外领域不要求新增配对 Shader。扩图及战场合并保留完整遮盖屏障；原地图的单领域展开演出沿用各自定义。
 
 CQF 可选 Domain 模块提供基础地面扩散、幕墙升起/闭合、进入与返回转场，以及独立的领域通用平面。通用平面表示领域的基础视觉特征，不能据此替换领域原有展开动画。寂屋邪祭保留自己的血海展开，血海平面和地形共用材质算法；CQF 不依赖血海程序集。

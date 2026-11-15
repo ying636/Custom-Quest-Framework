@@ -1,4 +1,4 @@
-param(
+﻿param(
     [string]$RunRoot = 'D:/RimWorld-Dev/TestWorkspaces/CQFMapProjections',
     [ValidateSet('English','ChineseSimplified')][string]$Language = 'ChineseSimplified',
     [switch]$CameraPlus,
@@ -6,6 +6,8 @@ param(
     [switch]$CorePerformance,
     [switch]$DomainPerformance,
     [switch]$DomainGameplay,
+    [switch]$BloodSeaSurface,
+    [string]$BloodSeaRoot = 'D:/Steam/steamapps/common/RimWorld/Mods/RitesOfTheSilentHouse',
     [ValidateSet('','MapLayouts','DialogPresentation')][string]$ContentChecks = '',
     [switch]$EnableEditor,
     [ValidateSet('None','Domain','MapProjections','Both')][string]$Modules = 'MapProjections',
@@ -23,6 +25,7 @@ $taskProject = Join-Path $taskRoot 'RimDevProject'
 $taskOutput = Join-Path $taskRoot ('Evidence-' + [guid]::NewGuid().ToString('N'))
 $taskFeatureEnabled = $Modules -in @('MapProjections','Both')
 if ($DomainGameplay) { $DomainPerformance = $true }
+if ($BloodSeaSurface -and ($Modules -ne 'Domain' -or $DomainPerformance -or $ContentChecks)) { throw 'Blood sea surface checks require -Modules Domain without another fixture.' }
 if ($ContentChecks) { $EnableEditor = $true }
 if ($ContentChecks -and $Modules -ne 'Domain') { throw 'Content checks require -Modules Domain.' }
 if ($CorePerformance -and $Modules -ne 'None') { throw 'Core performance checks require -Modules None.' }
@@ -42,26 +45,28 @@ $taskProjection = Join-Path $taskCandidate '1.7/Optional/MapProjections'
 & $Dotnet build (Join-Path $PSScriptRoot '../../CQF.MapProjections/CQF.MapProjections.csproj') -c Release -v quiet "-p:RimWorldDir=$taskGame" "-p:HarmonyPath=$taskGame/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" "-p:CoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:OutputPath=$taskProjection/" *> (Join-Path $taskOutput 'build-projections.log')
 if ($LASTEXITCODE -ne 0) { throw ('Projection module compilation failed: ' + $taskOutput) }
 $taskDomain = Join-Path $taskCandidate '1.7/Optional/Domain'
-if ($DomainPerformance) {
+if ($DomainPerformance -or $BloodSeaSurface) {
     & $Dotnet build (Join-Path $PSScriptRoot '../../CQF.Domain/CQF.Domain.csproj') -c Release -v quiet "-p:RimWorldDir=$taskGame" "-p:HarmonyPath=$taskGame/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" "-p:CoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:OutputPath=$taskDomain/" *> (Join-Path $taskOutput 'build-domain.log')
     if ($LASTEXITCODE -ne 0) { throw ('Domain module compilation failed: ' + $taskOutput) }
 }
-$taskFixtureProject = if($ContentChecks -eq 'MapLayouts') { Join-Path $PSScriptRoot '../MapLayoutsRuntime/Checks.csproj' } elseif($ContentChecks -eq 'DialogPresentation') { Join-Path $PSScriptRoot '../DialogPresentationRuntime/Checks.csproj' } elseif($DomainPerformance) { Join-Path $PSScriptRoot '../DomainPerformanceRuntime/Checks.csproj' } elseif($CorePerformance) { Join-Path $PSScriptRoot '../CorePerformanceRuntime/Checks.csproj' } elseif($taskFeatureEnabled) { Join-Path $PSScriptRoot 'Checks.csproj' } else { Join-Path $PSScriptRoot '../ProjectionModulesRuntime/Checks.csproj' }
-$taskFixtureFolder = if($taskFeatureEnabled -or $DomainPerformance -or $ContentChecks) { 'Checks' } else { 'Assemblies' }
+$taskFixtureProject = if($BloodSeaSurface) { Join-Path $PSScriptRoot '../BloodSeaSurfaceRuntime/Checks.csproj' } elseif($ContentChecks -eq 'MapLayouts') { Join-Path $PSScriptRoot '../MapLayoutsRuntime/Checks.csproj' } elseif($ContentChecks -eq 'DialogPresentation') { Join-Path $PSScriptRoot '../DialogPresentationRuntime/Checks.csproj' } elseif($DomainPerformance) { Join-Path $PSScriptRoot '../DomainPerformanceRuntime/Checks.csproj' } elseif($CorePerformance) { Join-Path $PSScriptRoot '../CorePerformanceRuntime/Checks.csproj' } elseif($taskFeatureEnabled) { Join-Path $PSScriptRoot 'Checks.csproj' } else { Join-Path $PSScriptRoot '../ProjectionModulesRuntime/Checks.csproj' }
+$taskFixtureFolder = if($taskFeatureEnabled -or $DomainPerformance -or $ContentChecks -or $BloodSeaSurface) { 'Checks' } else { 'Assemblies' }
 & $Dotnet build $taskFixtureProject -c Release -v quiet "-p:RimWorldDir=$taskGame" "-p:HarmonyPath=$taskGame/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" "-p:CoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:CQFCoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:CQFEditorAssembly=$taskCandidate/1.7/Optional/Editor/CQF.Editor.dll" "-p:ProjectionAssembly=$taskProjection/CQF.MapProjections.dll" "-p:DomainAssembly=$taskDomain/CQF.Domain.dll" "-p:OutputPath=$taskFixture/$taskFixtureFolder/" *> (Join-Path $taskOutput 'build-fixture.log')
 if ($LASTEXITCODE -ne 0) { throw ('Fixture compilation failed: ' + $taskOutput) }
 '<ModMetaData><name>CQF_MapProjectionChecks</name><author>24904</author><packageId>local.cqfprojectionchecks</packageId><supportedVersions><li>1.7</li></supportedVersions></ModMetaData>' | Set-Content -LiteralPath (Join-Path $taskFixture 'About/About.xml') -Encoding utf8
 $taskRequest = switch($Modules) { 'MapProjections' { 'MapProjections' }; 'Both' { 'Domain,MapProjections' }; 'Domain' { 'Domain' }; default { '' } }
-$taskDeclaration = if($taskFeatureEnabled -or $DomainPerformance -or $ContentChecks) { '<li RequiresCQFModule="' + $taskRequest + '">Checks</li>' } elseif($taskRequest) { New-Item -ItemType Directory -Path (Join-Path $taskFixture 'Request') -Force | Out-Null; '<li RequiresCQFModule="' + $taskRequest + '">Request</li>' } else { '' }
+$taskDeclaration = if($taskFeatureEnabled -or $DomainPerformance -or $ContentChecks -or $BloodSeaSurface) { '<li RequiresCQFModule="' + $taskRequest + '">Checks</li>' } elseif($taskRequest) { New-Item -ItemType Directory -Path (Join-Path $taskFixture 'Request') -Force | Out-Null; '<li RequiresCQFModule="' + $taskRequest + '">Request</li>' } else { '' }
 ('<loadFolders><v1.7><li>/</li>' + $taskDeclaration + '</v1.7></loadFolders>') | Set-Content -LiteralPath (Join-Path $taskFixture 'LoadFolders.xml') -Encoding utf8
 Copy-Item -LiteralPath (Join-Path $taskCandidate 'About/About.xml') -Destination (Join-Path $taskProject 'About/About.xml') -Force
 $taskMods = @('brrainz.harmony','ludeon.rimworld','ludeon.rimworld.royalty','ludeon.rimworld.ideology','ludeon.rimworld.biotech','ludeon.rimworld.anomaly','ludeon.rimworld.odyssey','hailuan.customquestframework','local.cqfprojectionchecks','trigger.logsyncmod')
 if ($CameraPlus) { $taskMods += 'brrainz.cameraplus' }
+if ($BloodSeaSurface) { $taskMods += 'hailuan.ritesofthesilenthouse' }
 $taskArguments = @('-savedatafolder=D:/RimWorld-Dev/SaveData','-NoFileLog','-quicktest','-cqfprojectionchecks',('-cqfprojectionmodules=' + $Modules),('-cqfprojectionoutput=' + $taskOutput))
 if ($Profile) { $taskArguments += '-cqfprojectionprofile' }
 if ($CorePerformance) { $taskArguments += '-cqfcoreperformancechecks' }
 if ($DomainPerformance) { $taskArguments += '-cqfdomainperformancechecks' }
 if ($DomainGameplay) { $taskArguments += '-cqfdomaingameplaychecks' }
+if ($BloodSeaSurface) { $taskArguments += '-cqfbloodseasurfacechecks' }
 if ($ContentChecks -eq 'MapLayouts') { $taskArguments += '-cqfmaplayoutchecks' }
 if ($ContentChecks -eq 'DialogPresentation') { $taskArguments += '-cqfdialogpresentationchecks' }
 @{
@@ -94,6 +99,13 @@ Get-ChildItem -LiteralPath (Join-Path $taskGame 'Mods/LogSyncMod') -Force | Copy
 $taskClean = [IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $RimDevTools) '../../../../1.7/Assemblies'))
 foreach ($taskExtension in @('dll','pdb')) { Copy-Item -LiteralPath (Join-Path $taskClean ('AutoTestRunner.' + $taskExtension)) -Destination (Join-Path $taskTool '1.7/Assemblies') -Force }
 $taskMirrors = @{ 'Custom-Quest-Framework' = $taskCandidate; 'LogSyncMod' = $taskTool }
+if ($BloodSeaSurface) {
+    $taskBloodSea = Join-Path $taskRoot 'RSH'
+    New-Item -ItemType Directory -Path $taskBloodSea -Force | Out-Null
+    & robocopy $BloodSeaRoot $taskBloodSea /E /XD .git .RSH /XF Assets.zip* /NFL /NDL /NJH /NJS *> (Join-Path $taskOutput 'copy-bloodsea.log')
+    if ($LASTEXITCODE -ge 8) { throw 'Blood sea snapshot copy failed.' }
+    $taskMirrors['RitesOfTheSilentHouse'] = $taskBloodSea
+}
 $taskOriginal = @{}
 foreach ($taskName in $taskMirrors.Keys) {
     $taskLink = Get-Item -LiteralPath (Join-Path $taskGame ('Mods/' + $taskName))
