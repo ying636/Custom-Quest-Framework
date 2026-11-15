@@ -9,7 +9,9 @@ namespace QuestEditor_Library;
 public static class CQFMapProjectionNavigation
 {
     public static bool BlocksHostCamera { get; private set; }
-    public static bool HoldsHostCamera => Current.ProgramState == ProgramState.Playing && WorldRendererUtility.DrawingMap
+    public static bool HoldsHostCamera => Current.ProgramState == ProgramState.Playing && !LongEventHandler.AnyEventNowOrWaiting
+        && Current.Game != null && Find.World?.renderer != null && Find.CurrentMap?.generatorDef != null
+        && (dragged != null || CQFMapProjectionContext.Focused is { CanControl: true }) && WorldRendererUtility.DrawingMap
         && GameComponent_CQFProjectionUI.Instance?.Session == null && (dragged != null
             || CQFMapProjectionContext.Focused is { CanControl: true } projection
             && projection.ScreenRect(Current.Camera).Contains(UI.MousePositionOnUIInverted)
@@ -70,8 +72,9 @@ public static class CQFMapProjectionNavigation
 
     public static void Update()
     {
-        if (!WorldRendererUtility.DrawingMap || GameComponent_CQFProjectionUI.Instance?.Session != null || Find.WindowStack.AnyWindowAbsorbingAllInput
-            || GUIUtility.keyboardControl != 0 || CQFMapProjectionContext.Focused is not { CanControl: true } projection
+        if (Current.ProgramState != ProgramState.Playing || LongEventHandler.AnyEventNowOrWaiting || Current.Game == null
+            || Find.World?.renderer == null || Find.CurrentMap?.generatorDef == null || CQFMapProjectionContext.Focused is not { CanControl: true } projection
+            || !WorldRendererUtility.DrawingMap || GameComponent_CQFProjectionUI.Instance?.Session != null || Find.WindowStack.AnyWindowAbsorbingAllInput || GUIUtility.keyboardControl != 0
             || !projection.ScreenRect(Current.Camera).Contains(UI.MousePositionOnUIInverted)) return;
         Vector2 direction = Vector2.zero;
         if (KeyBindingDefOf.MapDolly_Left.IsDown) direction.x -= 1f;

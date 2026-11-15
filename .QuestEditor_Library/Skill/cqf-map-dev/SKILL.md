@@ -39,6 +39,8 @@ description: "Detailed skill for building CQF maps, submaps, zone layouts, inter
 
 ## 核心目标
 
+制作 1.7 自定义地图的点光、聚光、条形光、表面受光、动态斜光、缓存软阴影与丁达尔散射时，读取 [场景光源](references/scene-lighting.md)。通用入口为 `MapComponent_CQFSceneLighting`，其他子 Mod 可配置光源和主光束复用，并通过原版自定义光源登记接入地图照明。
+
 本 Skill 的最终目标不是“帮用户查源码”，而是让 AI 可以直接做出以下内容：
 - 一张完整的 CQF 地图
 - 一套可进入、可推进、可完成、可离开的地图流程

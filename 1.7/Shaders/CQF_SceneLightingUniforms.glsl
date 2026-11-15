@@ -1,0 +1,14 @@
+vec4 _CQFSunDirection;
+float _CQFLightCount;
+vec4 _CQFShadowInfo;
+vec4 _CQFLightPositionRange0; vec4 _CQFLightPositionRange1; vec4 _CQFLightPositionRange2; vec4 _CQFLightPositionRange3;
+vec4 _CQFLightColorIntensity0; vec4 _CQFLightColorIntensity1; vec4 _CQFLightColorIntensity2; vec4 _CQFLightColorIntensity3;
+vec4 _CQFLightEndKind0; vec4 _CQFLightEndKind1; vec4 _CQFLightEndKind2; vec4 _CQFLightEndKind3;
+vec4 _CQFLightDirectionCone0; vec4 _CQFLightDirectionCone1; vec4 _CQFLightDirectionCone2; vec4 _CQFLightDirectionCone3;
+vec4 _CQFLightParameters0; vec4 _CQFLightParameters1; vec4 _CQFLightParameters2; vec4 _CQFLightParameters3;
+vec4 _CQFBeamPlane;
+vec4 _CQFBeamShape;
+vec4 _CQFBeamColor;
+vec4 _CQFBeamOrigin;
+vec4 _CQFBeamParameters;
+vec4 _CQFBeamTime;
