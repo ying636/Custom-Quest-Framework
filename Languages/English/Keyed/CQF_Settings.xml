@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_Settings_AlwaysLoadSystems>Always load systems</CQF_Settings_AlwaysLoadSystems>
+  <CQF_Settings_AlwaysLoadSystem>Always load {0}</CQF_Settings_AlwaysLoadSystem>
+  <CQF_Settings_QuestBookCheckInterval>Quest book check interval (ticks)</CQF_Settings_QuestBookCheckInterval>
+  <CQF_Module_Domain>Domain system</CQF_Module_Domain>
+  <CQF_Module_MapProjections>Map projections</CQF_Module_MapProjections>
+</LanguageData>

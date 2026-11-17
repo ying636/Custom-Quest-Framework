@@ -2,6 +2,7 @@ using RimWorld;
 using RimWorld.QuestGen;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
@@ -51,6 +52,16 @@ namespace QuestEditor_Library
         {
             base.ExposeData();
             Scribe_Defs.Look(ref targetResearch, "targetResearch");
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (targetResearch != null)
+            {
+                result.Add(new XElement("targetResearch", targetResearch.defName));
+            }
+            return result;
         }
 
         public ResearchProjectDef targetResearch;

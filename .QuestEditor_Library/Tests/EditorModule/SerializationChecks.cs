@@ -26,6 +26,56 @@ internal static class SerializationChecks
         XElement vanilla = DirectXmlSaver.XElementFromObject(new Saveable(), typeof(Saveable), "ordinary");
         Check(vanilla.Element("written") == null, "native XML serialization is unaffected by CQF ISaveable handling");
         Check(typeof(CustomMapDataDef).Assembly.GetType("QuestEditor_Library.Patch_SaveXml") == null, "CQF exports require no global XML patch");
+        CheckQuestBookTargets();
+    }
+
+    private static void CheckQuestBookTargets()
+    {
+        FieldInfo prefs = typeof(Prefs).GetField("data", BindingFlags.Static | BindingFlags.NonPublic)!;
+        prefs.SetValue(null, System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(prefs.FieldType));
+        ModContentPack content = (ModContentPack)System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(typeof(ModContentPack));
+        content.assemblies = new ModAssemblyHandler(content);
+        content.assemblies.loadedAssemblies.Add(typeof(QuestBookDef).Assembly);
+        LoadedModManager.RunningModsListForReading.Add(content);
+        GenTypes.ClearCache();
+        ResearchProjectDef research = new() { defName = "CQF_Check_ResearchTarget" };
+        ThingDef thing = new() { defName = "CQF_Check_ThingTarget" };
+        DefDatabase<ResearchProjectDef>.Add(research);
+        DefDatabase<ThingDef>.Add(thing);
+        QuestBookStep step = new()
+        {
+            id = "CQF_Check_Step",
+            objectives = new()
+            {
+                new QuestBookObjective_Research { TargetResearch = research },
+                new QuestBookObjective_Building { TargetThingDef = thing, TargetCount = 3 },
+                new QuestBookObjective_Resource { TargetThingDef = thing, TargetCount = 7 }
+            }
+        };
+        QuestBookDef book = new()
+        {
+            defName = "CQF_Check_Book",
+            chapters = new() { new QuestBookChapter { id = "CQF_Check_Chapter", steps = new() { step } } }
+        };
+        XElement xml = book.SaveToXElement("QuestEditor_Library.QuestBookDef");
+        XElement[] objectives = xml.Descendants("objectives").Single().Elements("li").ToArray();
+        Check(objectives[0].Element("targetResearch")?.Value == research.defName, "quest book exports the selected research as a defName reference");
+        Check(objectives[1].Element("targetThingDef")?.Value == thing.defName, "quest book exports the selected building as a defName reference");
+        Check(objectives[2].Element("targetThingDef")?.Value == thing.defName, "quest book exports the selected resource as a defName reference");
+        XmlDocument document = new();
+        document.LoadXml(xml.ToString());
+        QuestBookDef restored = DirectXmlToObject.ObjectFromXml<QuestBookDef>(document.DocumentElement!, false);
+        DirectXmlCrossRefLoader.ResolveAllWantedCrossReferences(FailMode.LogErrors);
+        List<QuestBookObjective> restoredObjectives = restored.chapters.Single().steps.Single().objectives;
+        Check(ReferenceEquals(restoredObjectives[0].TargetResearch, research), "selected research survives quest book XML reload");
+        Check(ReferenceEquals(restoredObjectives[1].TargetThingDef, thing) && restoredObjectives[1].TargetCount == 3,
+            "selected building and target count survive quest book XML reload");
+        Check(ReferenceEquals(restoredObjectives[2].TargetThingDef, thing) && restoredObjectives[2].TargetCount == 7,
+            "selected resource and target count survive quest book XML reload");
+        Check(new QuestBookObjective_Research().SaveToXElement("li").Element("targetResearch") == null,
+            "an unselected research target remains absent from exported XML");
+        Check(new QuestBookObjective_Building().SaveToXElement("li").Element("targetThingDef") == null,
+            "an unselected thing target remains absent from exported XML");
     }
 
     private static void Check(bool passed, string name)

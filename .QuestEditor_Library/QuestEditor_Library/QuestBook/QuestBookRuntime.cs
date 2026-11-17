@@ -12,6 +12,7 @@ namespace QuestEditor_Library
         public GameComponent_QuestBook(Game game)
         {
             Instance = this;
+            objectiveCheckInterval = CustomQuestFramework_ModSetting.setting?.QuestBookCheckInterval ?? GenDate.TicksPerDay;
         }
 
         public static GameComponent_QuestBook Instance;
@@ -108,11 +109,17 @@ namespace QuestEditor_Library
         public override void GameComponentTick()
         {
             int currentTick = Find.TickManager.TicksGame;
+            int interval = CustomQuestFramework_ModSetting.setting?.QuestBookCheckInterval ?? GenDate.TicksPerDay;
+            if (interval != objectiveCheckInterval)
+            {
+                objectiveCheckInterval = interval;
+                nextObjectiveCheckTick = (long)currentTick + interval;
+            }
             if (currentTick < nextObjectiveCheckTick)
             {
                 return;
             }
-            nextObjectiveCheckTick = currentTick + GenDate.TicksPerDay;
+            nextObjectiveCheckTick = (long)currentTick + interval;
             foreach (QuestBookInstance instance in Instances.Where(x => x?.state == QuestBookState.Active).ToList())
             {
                 instance.CheckObjectives();
@@ -134,6 +141,7 @@ namespace QuestEditor_Library
             base.ExposeData();
             Scribe_Collections.Look(ref instances, "CQF_QuestBook_instances", LookMode.Deep);
             Scribe_Values.Look(ref nextObjectiveCheckTick, "CQF_QuestBook_nextObjectiveCheckTick");
+            Scribe_Values.Look(ref objectiveCheckInterval, "CQF_QuestBook_objectiveCheckInterval", GenDate.TicksPerDay);
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 instances ??= new List<QuestBookInstance>();
@@ -186,7 +194,8 @@ namespace QuestEditor_Library
         }
 
         private List<QuestBookInstance> instances = new List<QuestBookInstance>();
-        private int nextObjectiveCheckTick;
+        private long nextObjectiveCheckTick;
+        private int objectiveCheckInterval;
     }
 
     public class QuestBookInstance : IExposable

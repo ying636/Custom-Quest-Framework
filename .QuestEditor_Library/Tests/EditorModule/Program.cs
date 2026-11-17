@@ -26,6 +26,7 @@ internal static class Program
             else if (args.Any(arg => arg.StartsWith("modules-", StringComparison.Ordinal))) OptionalModuleChecks.Run(game, args.Single());
             else if (args.Contains("callbacks")) NativeCallbackChecks.Run();
             else if (args.Contains("serialization")) SerializationChecks.Run();
+            else if (args.Contains("settings")) FrameworkSettingsChecks.Run();
             else if (args.Contains("hibernation")) HibernationSchedulingChecks.Run();
             else if (args.Contains("patches")) Version17Checks.Run(game);
             else if (args.Contains("caravan-native")) CaravanActionsNativeChecks.Run();

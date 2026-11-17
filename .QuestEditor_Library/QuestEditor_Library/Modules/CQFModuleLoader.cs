@@ -8,10 +8,11 @@ namespace QuestEditor_Library;
 public static class CQFModuleLoader
 {
     public static bool DomainLoaded => mapModuleFactory != null;
+    public static IReadOnlyList<string> AvailableModules { get; private set; } = Array.Empty<string>();
 
     public static bool IsLoaded(string module) => loadedModules.Contains(module);
 
-    public static void Load(ModContentPack framework, IReadOnlyList<ModContentPack> activeMods)
+    public static void Load(ModContentPack framework, IReadOnlyList<ModContentPack> activeMods, IEnumerable<string>? alwaysLoadedModules = null)
     {
         List<CQFModuleFolder> declarations = new();
         Dictionary<ModContentPack, List<string>> originals = new();
@@ -25,14 +26,18 @@ public static class CQFModuleLoader
             foreach (CQFModuleFolder folder in declarations)
                 folder.Content.foldersToLoadDescendingOrder.RemoveAll(path => SamePath(path, folder.Path));
             List<CQFModuleFolder> requests = declarations.Where(folder => !folder.Provider).ToList();
-            if (requests.Count == 0) return;
+            AvailableModules = declarations.Where(folder => folder.Provider).SelectMany(folder => folder.Modules)
+                .Distinct(StringComparer.Ordinal).OrderBy(module => module, StringComparer.Ordinal).ToArray();
             foreach (CQFModuleFolder request in requests) ValidateFolder(request);
             HashSet<string> requested = new(requests.SelectMany(folder => folder.Modules), StringComparer.Ordinal);
+            requested.UnionWith((alwaysLoadedModules ?? Enumerable.Empty<string>()).Where(AvailableModules.Contains));
+            if (requested.Count == 0) return;
             List<CQFModuleFolder> selectedProviders = new();
             foreach (string module in requested.OrderBy(name => name, StringComparer.Ordinal))
             {
                 CQFModuleFolder[] providers = declarations.Where(folder => folder.Provider && folder.Modules.Contains(module)).ToArray();
-                string requesters = string.Join(", ", requests.Where(folder => folder.Modules.Contains(module)).Select(folder => folder.Content.PackageId).Distinct());
+                string requesters = string.Join(", ", requests.Where(folder => folder.Modules.Contains(module)).Select(folder => folder.Content.PackageId)
+                    .Concat((alwaysLoadedModules ?? Enumerable.Empty<string>()).Contains(module) ? new[] { framework.PackageId } : Array.Empty<string>()).Distinct());
                 if (providers.Length != 1)
                     throw new InvalidDataException("[CQF] " + module + " requested by " + requesters
                         + " but exactly one selected IfCQFModule=" + module + " folder is required.");

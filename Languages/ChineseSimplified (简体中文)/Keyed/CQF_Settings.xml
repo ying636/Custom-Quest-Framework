@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+  <CQF_Settings_AlwaysLoadSystems>是否一直加载对应系统</CQF_Settings_AlwaysLoadSystems>
+  <CQF_Settings_AlwaysLoadSystem>是否一直加载{0}</CQF_Settings_AlwaysLoadSystem>
+  <CQF_Settings_QuestBookCheckInterval>任务书自定义检查时间（Tick）</CQF_Settings_QuestBookCheckInterval>
+  <CQF_Module_Domain>领域系统</CQF_Module_Domain>
+  <CQF_Module_MapProjections>地图投影</CQF_Module_MapProjections>
+</LanguageData>

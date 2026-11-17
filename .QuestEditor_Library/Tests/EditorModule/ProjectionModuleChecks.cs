@@ -24,7 +24,10 @@ internal static class ProjectionModuleChecks
             "projections-unknown" => "MapProjections,CQF_Unknown",
             _ => "MapProjections"
         };
-        string declaration = mode == "projections-disabled" ? "" : "<li RequiresCQFModule=\"" + request + "\""
+        bool forceProjection = mode is "projections-forced" or "projections-forced-both";
+        bool forceDomain = mode is "projections-forced-domain" or "projections-forced-both" or "projections-forced-with-request";
+        bool onlyForced = mode is "projections-forced" or "projections-forced-domain" or "projections-forced-both";
+        string declaration = mode == "projections-disabled" || onlyForced ? "" : "<li RequiresCQFModule=\"" + request + "\""
             + (mode == "projections-filtered" ? " IfModActive=\"CQF_Absent\"" : "") + ">Request</li>";
         File.WriteAllText(Path.Combine(fixture, "LoadFolders.xml"), "<loadFolders><v1.6><li RequiresCQFModule=\"CQF_OldVersion\">Old</li></v1.6><v1.7><li>/</li>" + declaration + "</v1.7></loadFolders>");
         if (mode == "projections-early")
@@ -54,9 +57,14 @@ internal static class ProjectionModuleChecks
             Check(!CQFModuleLoader.IsLoaded("MapProjections"), "invalid declarations do not initialize the projection module");
             return;
         }
-        CQFModuleLoader.Load(owner, active);
-        bool projections = mode is "projections-enabled" or "projections-both";
-        bool domain = mode is "projections-domain" or "projections-both";
+        List<string> forced = new();
+        if (forceProjection) forced.Add("MapProjections");
+        if (forceDomain) forced.Add("Domain");
+        CQFModuleLoader.Load(owner, active, forced);
+        Check(CQFModuleLoader.AvailableModules.SequenceEqual(new[] { "Domain", "MapProjections" }),
+            "settings discover all version-selected module providers even when no module is requested");
+        bool projections = forceProjection || mode is "projections-enabled" or "projections-both" or "projections-forced-with-request";
+        bool domain = forceDomain || mode is "projections-domain" or "projections-both";
         Check(CQFModuleLoader.IsLoaded("MapProjections") == projections && CQFModuleLoader.DomainLoaded == domain, "module requests activate only their selected modules");
         Check(AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.GetName().Name == "CQF.MapProjections") == projections, "projection assembly loading matches demand");
         Check(owner.foldersToLoadDescendingOrder.Any(path => path.EndsWith(Path.Combine("Optional", "MapProjections"))) == projections, "unrequested projection content is excluded");

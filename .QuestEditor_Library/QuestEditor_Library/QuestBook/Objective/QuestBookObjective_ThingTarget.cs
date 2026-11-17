@@ -1,6 +1,7 @@
 using RimWorld;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
 
@@ -45,6 +46,16 @@ namespace QuestEditor_Library
         {
             base.ExposeData();
             Scribe_Defs.Look(ref targetThingDef, "targetThingDef");
+        }
+
+        public override XElement SaveToXElement(string nodeName)
+        {
+            XElement result = base.SaveToXElement(nodeName);
+            if (targetThingDef != null)
+            {
+                result.Add(new XElement("targetThingDef", targetThingDef.defName));
+            }
+            return result;
         }
 
         public ThingDef targetThingDef;
