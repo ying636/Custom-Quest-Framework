@@ -91,11 +91,17 @@ public sealed partial class CQFMapProjectionEditSession
     private void DrawAdvanced(ref float y, float width)
     {
         int resolution = Draft.resolution, refresh = Draft.refreshFrames;
+        bool automatic = Draft.autoResolution;
+        Widgets.CheckboxLabeled(new Rect(0f, y, width, 28f), "CQF_MP_AutoResolution".Translate(), ref Draft.autoResolution);
+        TooltipHandler.TipRegion(new Rect(0f, y, width, 28f), "CQF_MP_AutoResolutionTip".Translate()); y += 34f;
+        bool resolutionEnabled = GUI.enabled;
+        GUI.enabled &= !Draft.autoResolution;
         Widgets.Label(new Rect(0f, y, width, 24f), "CQF_MP_Resolution".Translate()); y += 26f;
         Widgets.TextFieldNumeric(new Rect(0f, y, width, 40f), ref Draft.resolution, ref resolutionBuffer, 128f, 4096f); y += 48f;
+        GUI.enabled = resolutionEnabled;
         Widgets.Label(new Rect(0f, y, width, 24f), "CQF_MP_Refresh".Translate()); y += 26f;
         Widgets.TextFieldNumeric(new Rect(0f, y, width, 40f), ref Draft.refreshFrames, ref refreshBuffer, 1f, 60f); y += 48f;
-        if (resolution != Draft.resolution || refresh != Draft.refreshFrames) Draft.Dispose();
+        if (resolution != Draft.resolution || refresh != Draft.refreshFrames || automatic != Draft.autoResolution) Draft.Dispose();
         if (!preciseDirty)
         {
             CellRect source = Draft.SourceBounds, destination = Draft.DestinationBounds;

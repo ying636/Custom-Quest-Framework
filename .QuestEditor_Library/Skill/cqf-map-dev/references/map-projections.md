@@ -50,6 +50,7 @@ component.Add(new CQFMapProjection
     mode = CQFMapProjectionMode.Control,
     background = false,
     resolution = 1024,
+    autoResolution = true,
     refreshFrames = 1,
     allowZoom = false,
     matchCellSize = true
@@ -71,8 +72,9 @@ component.Remove("MyMod_Observation");
 | `mode` | `Display` 或 `Control` |
 | `background` | `true` 时位于宿主地形下；可通过 `QE_EtherealVoid` 等透明地形露出。现有 `QE_Null` 贴图 alpha 为 175–255，会遮挡画面，不能当作纯透明地形 |
 | `enabled` | 是否启用；关闭时释放绘制资源和控制焦点 |
-| `resolution` | 离屏图像长边像素数，范围 128–4096，默认 1024 |
-| `refreshFrames` | 刷新间隔，范围 1–60 帧；正在控制的投影逐帧刷新 |
+| `autoResolution` | 默认 `true`；按屏幕物理像素分配可见区域的纹理，每边最多 4096，以 64 像素为分配档位。关闭后使用固定分辨率 |
+| `resolution` | 手动模式下可见区域离屏图像的长边像素数，范围 128–4096，默认 1024；来源缩略图仍使用该固定预算 |
+| `refreshFrames` | 刷新间隔，范围 1–60 帧；纯显示与正在控制均遵守该间隔，视角、裁剪范围、分辨率或控制焦点改变时立即刷新。命令处理不受绘制间隔限制 |
 | `allowZoom` | 默认 `true`；关闭后禁止交互和 `ZoomView` 改变比例 |
 | `matchCellSize` | 默认 `false`；启用后每个来源格占用一个宿主格，固定占地尺寸并锁定视角缩放 |
 
@@ -91,6 +93,7 @@ component.Remove("MyMod_Observation");
   <background>false</background>
   <enabled>true</enabled>
   <resolution>1024</resolution>
+  <autoResolution>true</autoResolution>
   <refreshFrames>1</refreshFrames>
   <allowZoom>false</allowZoom>
   <matchCellSize>true</matchCellSize>
@@ -116,6 +119,8 @@ component.Remove("MyMod_Observation");
 - `CanZoom` 为考虑两个配置后的实际缩放权限；`DestinationBounds` 为实际宿主占地。`Copy()`、投影存档和 `CQFAction_SetMapProjection` 的 XML/存档均保存两项配置。`Set()` 和动作更新在验证成功后替换同标识对象，失败保留原对象。
 - 编辑草稿与来源缩略图不保存。保存游戏前、切换宿主地图或退出游戏时结束草稿并释放预览；保存只包含已经完成的投影。关闭编辑器恢复进入前的游戏速度。
 - 独立捕获绘制提交，按渲染队列与原提交顺序排序，避免来源网格进入宿主场景。来源的地形、建筑、人物、光照、天气、特效和选择覆盖层共同进入离屏图像。
+- 世界投影只捕获与屏幕相交的来源区域，并只在对应宿主矩形绘制纹理。完全离屏继续跳过；来源缩略图始终捕获完整选区。捕获作用域的 `VisibleCells` 从实际离屏相机取范围，输入作用域继续使用完整 `Projection.VisibleCells`，不能用显示裁剪改变命令坐标。自动分辨率按屏幕物理像素计算，包含 UI 缩放；手动分辨率、该开关及刷新间隔均通过 C#、CQF 动作 XML、复制和存读档保存。
+- 原版后端支持公开 `RenderItems` 时，复用投影实例内的预备提交列表，成功和异常均归还池对象；仍使用原同步离屏提交。后端不支持该入口时明确警告并使用标准 `Render`，绑定异常完整报错后回退。空命令沿用标准清屏，不保留上一帧图像；不额外安装 Patch 或引用主机程序集。
 - 输入通过有限作用域提供来源地图、视区和虚拟相机。鼠标位置、名称、框选及目标位置使用相同坐标变换。框选越界被裁到来源区域；区域外的普通指针不作为来源命令目标。
 - 复用原版全局选择器、检查面板和菜单，不创建第二份 Game 或 UI 根。1.7 的窗口内容可以延后到 UIRootOnGUI 返回后执行，因此 Window.InnerWindowOnGUI 单独建立并释放来源上下文；否则 FloatMenuMap 在点击时会按宿主地图重新验证目标，导致装备和使用物品失效。
 - 来源视区使用前置补丁直接返回，不写入原版宿主的同帧视区缓存。选择框和 Designator 拖拽使用当前可见来源范围，绘制与点击共用同一变换。
@@ -147,9 +152,10 @@ component.Remove("MyMod_Observation");
 
 - 用宿主的 `MapComponent_CQFMapProjections.Add/Set/Remove` 或 CQF 动作管理投影，标识使用子 Mod 自身前缀。来源可使用地图系统已有的自定义地图与休眠地图。
 - `ToSource`、`ToHost`、`ScreenRect` 与 `DestinationBounds` 提供相同坐标规则；使用实际占地属性，避免在 1:1 模式仍读取配置里的旧宽高。
+- `Texture` 现在可能只包含屏幕可见的来源区域；直接消费该纹理的子 Mod 必须用 `TextureBounds` 获取实际来源浮点矩形，不能默认纹理始终覆盖 `ViewRect`。纹理尚未建立时该矩形为空。`RenderPreview` 继续捕获完整视区。
 - `CQFMapProjectionContext.Current` 暴露当前投影、宿主相机与来源绘制/输入状态；`IsRendering` 可用于识别离屏捕获。来源地图的 MapComponent 绘制会被捕获，依赖全局屏幕的特殊 UI 或缓存需按此状态适配。
 - 原版菜单和检查窗口已覆盖同步与延后窗口回调。子 Mod 的异步、长事件和自行排队的操作应捕获人物、物品及来源地图引用；不要在稍后执行时仅依赖 `Find.CurrentMap`。确需原版地图查询上下文时，在实际执行的主线程回调内部使用 `CQFMapProjectionContext` 作用域，并在退出时释放；不要跨异步等待持有该作用域。
-- 主要成本来自额外来源绘制、纹理和保持来源运行。增加同来源投影会增加绘制次数；不同来源还会增加活动地图模拟。增大 `refreshFrames` 可降低纯显示投影的刷新频率，控制焦点下仍逐帧刷新。分辨率主要影响离屏图像和图形资源成本，格子 1:1 本身不表示免渲染成本。
+- 主要成本来自额外来源绘制、纹理和保持来源运行。增加同来源投影会增加绘制次数；不同来源还会增加活动地图模拟。增大 `refreshFrames` 可以降低纯显示与控制投影的刷新频率。分辨率主要影响离屏图像和图形资源成本，格子 1:1 本身不表示免渲染成本。原版 `CameraTextureBaker.RecordAndSubmit` 每次提交后同步等待 GPU，本模块仍使用该公开离屏接口；可见区域裁剪与减少刷新不能等同于异步渲染。
 
 ## 本机性能采样（2026-11-15）
 

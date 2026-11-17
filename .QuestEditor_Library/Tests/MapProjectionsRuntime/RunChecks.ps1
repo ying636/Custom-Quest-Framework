@@ -7,6 +7,10 @@
     [switch]$DomainPerformance,
     [switch]$DomainGameplay,
     [switch]$BloodSeaSurface,
+    [switch]$ProjectionQuality,
+    [switch]$ProjectionPaired,
+    [switch]$ProjectionPool,
+    [string]$ProjectionAssemblyOverride = '',
     [string]$BloodSeaRoot = 'D:/Steam/steamapps/common/RimWorld/Mods/RitesOfTheSilentHouse',
     [ValidateSet('','MapLayouts','DialogPresentation')][string]$ContentChecks = '',
     [switch]$EnableEditor,
@@ -25,6 +29,10 @@ $taskProject = Join-Path $taskRoot 'RimDevProject'
 $taskOutput = Join-Path $taskRoot ('Evidence-' + [guid]::NewGuid().ToString('N'))
 $taskFeatureEnabled = $Modules -in @('MapProjections','Both')
 if ($DomainGameplay) { $DomainPerformance = $true }
+if ($ProjectionPool) { $ProjectionPaired = $true }
+if ($ProjectionPaired) { $ProjectionQuality = $true }
+if ($ProjectionQuality -and ($Modules -ne 'MapProjections' -or $BloodSeaSurface -or $DomainPerformance -or $CorePerformance -or $ContentChecks)) { throw 'Projection quality checks require -Modules MapProjections without another fixture.' }
+if ($ProjectionQuality) { $Profile = $true }
 if ($BloodSeaSurface -and ($Modules -ne 'Domain' -or $DomainPerformance -or $ContentChecks)) { throw 'Blood sea surface checks require -Modules Domain without another fixture.' }
 if ($ContentChecks) { $EnableEditor = $true }
 if ($ContentChecks -and $Modules -ne 'Domain') { throw 'Content checks require -Modules Domain.' }
@@ -44,12 +52,16 @@ if ($CoreAssemblyOverride) {
 $taskProjection = Join-Path $taskCandidate '1.7/Optional/MapProjections'
 & $Dotnet build (Join-Path $PSScriptRoot '../../CQF.MapProjections/CQF.MapProjections.csproj') -c Release -v quiet "-p:RimWorldDir=$taskGame" "-p:HarmonyPath=$taskGame/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" "-p:CoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:OutputPath=$taskProjection/" *> (Join-Path $taskOutput 'build-projections.log')
 if ($LASTEXITCODE -ne 0) { throw ('Projection module compilation failed: ' + $taskOutput) }
+if ($ProjectionAssemblyOverride) {
+    Copy-Item -LiteralPath $ProjectionAssemblyOverride -Destination (Join-Path $taskProjection 'CQF.MapProjections.dll') -Force
+    Copy-Item -LiteralPath ([IO.Path]::ChangeExtension($ProjectionAssemblyOverride, '.pdb')) -Destination (Join-Path $taskProjection 'CQF.MapProjections.pdb') -Force
+}
 $taskDomain = Join-Path $taskCandidate '1.7/Optional/Domain'
 if ($DomainPerformance -or $BloodSeaSurface) {
     & $Dotnet build (Join-Path $PSScriptRoot '../../CQF.Domain/CQF.Domain.csproj') -c Release -v quiet "-p:RimWorldDir=$taskGame" "-p:HarmonyPath=$taskGame/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" "-p:CoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:OutputPath=$taskDomain/" *> (Join-Path $taskOutput 'build-domain.log')
     if ($LASTEXITCODE -ne 0) { throw ('Domain module compilation failed: ' + $taskOutput) }
 }
-$taskFixtureProject = if($BloodSeaSurface) { Join-Path $PSScriptRoot '../BloodSeaSurfaceRuntime/Checks.csproj' } elseif($ContentChecks -eq 'MapLayouts') { Join-Path $PSScriptRoot '../MapLayoutsRuntime/Checks.csproj' } elseif($ContentChecks -eq 'DialogPresentation') { Join-Path $PSScriptRoot '../DialogPresentationRuntime/Checks.csproj' } elseif($DomainPerformance) { Join-Path $PSScriptRoot '../DomainPerformanceRuntime/Checks.csproj' } elseif($CorePerformance) { Join-Path $PSScriptRoot '../CorePerformanceRuntime/Checks.csproj' } elseif($taskFeatureEnabled) { Join-Path $PSScriptRoot 'Checks.csproj' } else { Join-Path $PSScriptRoot '../ProjectionModulesRuntime/Checks.csproj' }
+$taskFixtureProject = if($ProjectionQuality) { Join-Path $PSScriptRoot '../ProjectionQualityRuntime/Checks.csproj' } elseif($BloodSeaSurface) { Join-Path $PSScriptRoot '../BloodSeaSurfaceRuntime/Checks.csproj' } elseif($ContentChecks -eq 'MapLayouts') { Join-Path $PSScriptRoot '../MapLayoutsRuntime/Checks.csproj' } elseif($ContentChecks -eq 'DialogPresentation') { Join-Path $PSScriptRoot '../DialogPresentationRuntime/Checks.csproj' } elseif($DomainPerformance) { Join-Path $PSScriptRoot '../DomainPerformanceRuntime/Checks.csproj' } elseif($CorePerformance) { Join-Path $PSScriptRoot '../CorePerformanceRuntime/Checks.csproj' } elseif($taskFeatureEnabled) { Join-Path $PSScriptRoot 'Checks.csproj' } else { Join-Path $PSScriptRoot '../ProjectionModulesRuntime/Checks.csproj' }
 $taskFixtureFolder = if($taskFeatureEnabled -or $DomainPerformance -or $ContentChecks -or $BloodSeaSurface) { 'Checks' } else { 'Assemblies' }
 & $Dotnet build $taskFixtureProject -c Release -v quiet "-p:RimWorldDir=$taskGame" "-p:HarmonyPath=$taskGame/Mods/Workshop-2009463077/1.7/Assemblies/0Harmony.dll" "-p:CoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:CQFCoreAssembly=$taskCandidate/1.7/Assemblies/net10.0/QuestEditor_Library.dll" "-p:CQFEditorAssembly=$taskCandidate/1.7/Optional/Editor/CQF.Editor.dll" "-p:ProjectionAssembly=$taskProjection/CQF.MapProjections.dll" "-p:DomainAssembly=$taskDomain/CQF.Domain.dll" "-p:OutputPath=$taskFixture/$taskFixtureFolder/" *> (Join-Path $taskOutput 'build-fixture.log')
 if ($LASTEXITCODE -ne 0) { throw ('Fixture compilation failed: ' + $taskOutput) }
@@ -63,6 +75,9 @@ if ($CameraPlus) { $taskMods += 'brrainz.cameraplus' }
 if ($BloodSeaSurface) { $taskMods += 'hailuan.ritesofthesilenthouse' }
 $taskArguments = @('-savedatafolder=D:/RimWorld-Dev/SaveData','-NoFileLog','-quicktest','-cqfprojectionchecks',('-cqfprojectionmodules=' + $Modules),('-cqfprojectionoutput=' + $taskOutput))
 if ($Profile) { $taskArguments += '-cqfprojectionprofile' }
+if ($ProjectionQuality) { $taskArguments += '-cqfprojectionquality' }
+if ($ProjectionPaired) { $taskArguments += '-cqfprojectionpaired' }
+if ($ProjectionPool) { $taskArguments += '-cqfprojectionpoolpaired' }
 if ($CorePerformance) { $taskArguments += '-cqfcoreperformancechecks' }
 if ($DomainPerformance) { $taskArguments += '-cqfdomainperformancechecks' }
 if ($DomainGameplay) { $taskArguments += '-cqfdomaingameplaychecks' }

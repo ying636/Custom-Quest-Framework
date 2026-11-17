@@ -36,6 +36,7 @@ public sealed class CQFMapProjection : IExposable, IDisposable
     public bool CanControl => enabled && mode == CQFMapProjectionMode.Control && sourceMap is { Disposed: false };
     public RenderTexture? Texture => renderer?.Texture;
     public int RenderedFrame => renderer?.RenderedFrame ?? -1;
+    public Rect TextureBounds => renderer?.RenderedBounds ?? default;
 
     public Vector3 ToSource(Vector3 hostPosition)
     {
@@ -60,7 +61,7 @@ public sealed class CQFMapProjection : IExposable, IDisposable
     {
         id = id, name = name, sourceMap = sourceMap, sourceRect = sourceRect, destination = destination,
         mode = mode, background = background, enabled = enabled, resolution = resolution, refreshFrames = refreshFrames,
-        allowZoom = allowZoom, matchCellSize = matchCellSize,
+        allowZoom = allowZoom, matchCellSize = matchCellSize, autoResolution = autoResolution,
         viewZoom = viewZoom, viewCenter = viewCenter
     };
 
@@ -142,6 +143,7 @@ public sealed class CQFMapProjection : IExposable, IDisposable
         Scribe_Values.Look(ref refreshFrames, "refreshFrames", 1);
         Scribe_Values.Look(ref allowZoom, "allowZoom", true);
         Scribe_Values.Look(ref matchCellSize, "matchCellSize");
+        Scribe_Values.Look(ref autoResolution, "autoResolution", true);
         Scribe_Values.Look(ref viewZoom, "viewZoom", 1f);
         Scribe_Values.Look(ref viewCenter, "viewCenter", Vector2.zero);
     }
@@ -194,6 +196,7 @@ public sealed class CQFMapProjection : IExposable, IDisposable
     public int refreshFrames = 1;
     public bool allowZoom = true;
     public bool matchCellSize;
+    public bool autoResolution = true;
     private CQFMapProjectionRenderer? renderer;
     private Vector2 viewCenter;
     private float viewZoom = 1f;

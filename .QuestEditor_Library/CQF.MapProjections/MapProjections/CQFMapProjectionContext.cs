@@ -27,6 +27,17 @@ public sealed class CQFMapProjectionContext : IDisposable
     public Camera? RenderCamera { get; }
     public Camera? InputCamera { get; }
     public bool AllowsOutsidePointer { get; }
+    public CellRect VisibleCells
+    {
+        get
+        {
+            if (RenderCamera == null) return Projection.VisibleCells;
+            Vector3 center = RenderCamera.transform.position;
+            float halfHeight = RenderCamera.orthographicSize, halfWidth = halfHeight * RenderCamera.aspect;
+            return CellRect.FromLimits(Mathf.FloorToInt(center.x - halfWidth), Mathf.FloorToInt(center.z - halfHeight),
+                Mathf.CeilToInt(center.x + halfWidth) - 1, Mathf.CeilToInt(center.z + halfHeight) - 1);
+        }
+    }
     public bool PointerInside
     {
         get

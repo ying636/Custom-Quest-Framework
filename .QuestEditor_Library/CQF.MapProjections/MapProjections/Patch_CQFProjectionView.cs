@@ -12,7 +12,7 @@ public static class Patch_CQFProjectionView
     public static bool Prefix(ref CellRect __result)
     {
         if (CQFMapProjectionContext.Current is not { } context) return true;
-        __result = context.Projection.VisibleCells;
+        __result = context.VisibleCells;
         return false;
     }
 }

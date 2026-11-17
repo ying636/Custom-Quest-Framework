@@ -190,6 +190,7 @@ public sealed partial class ProjectionChecksDriver : MonoBehaviour
         foreach (object? wait in Frames(3)) yield return wait;
         display.allowZoom = false;
         display.matchCellSize = true;
+        display.autoResolution = false;
         GameDataSaveLoader.SaveGame("CQF_MapProjectionChecks");
         foreach (object? wait in Frames(3)) yield return wait;
         Game previous = Current.Game;
@@ -204,8 +205,8 @@ public sealed partial class ProjectionChecksDriver : MonoBehaviour
         display = component.Projections.Single(projection => projection.mode == CQFMapProjectionMode.Display);
         control = component.Projections.Single(projection => projection.mode == CQFMapProjectionMode.Control);
         Check(!display.allowZoom && display.matchCellSize && display.DestinationBounds.Width == display.SourceBounds.Width
-            && display.DestinationBounds.Height == display.SourceBounds.Height && !display.CanZoom,
-            "native reload preserves zoom permission and one-to-one source cell sizing");
+            && display.DestinationBounds.Height == display.SourceBounds.Height && !display.CanZoom && !display.autoResolution && control.autoResolution,
+            "native reload preserves zoom, one-to-one sizing and independent automatic resolution settings");
         Check(control.sourceRect == new CellRect(20, 12, 32, 24) && control.destination == new CellRect(46, 22, 32, 24), "native reload preserves crop and destination geometry");
         Check(Mathf.Abs(control.ViewZoom - savedViewportZoom) < 0.001f && control.ViewRect == savedViewportRect, "native reload preserves independent viewport zoom and position");
         Check(display.name == "CQF_MP_NewName".Translate(1), "native reload preserves the projection display name");

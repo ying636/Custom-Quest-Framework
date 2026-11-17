@@ -75,4 +75,6 @@
   <CQF_MP_MatchCellSizeTip>每个来源格占用一个宿主格，窗口尺寸由来源选区决定。启用后锁定视角缩放，并禁止拉伸。</CQF_MP_MatchCellSizeTip>
   <CQF_MP_NavigateLockedTip>左键选择对象，拖框多选；右键下达命令。此视口的配置已锁定缩放。按住鼠标中键可在来源范围内平移。点击外部地图或“返回当前地图”切回主地图。</CQF_MP_NavigateLockedTip>
   <CQF_MP_CellSizeTooLarge>来源选区过大，无法按格子 1:1 放入宿主地图，请缩小来源选区。</CQF_MP_CellSizeTooLarge>
+  <CQF_MP_AutoResolution>匹配屏幕分辨率</CQF_MP_AutoResolution>
+  <CQF_MP_AutoResolutionTip>按屏幕像素密度绘制可见区域，每边最多 4096 像素。关闭后使用固定绘制分辨率。</CQF_MP_AutoResolutionTip>
 </LanguageData>

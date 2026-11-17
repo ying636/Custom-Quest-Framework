@@ -75,4 +75,6 @@
   <CQF_MP_MatchCellSizeTip>Each source cell occupies one host cell. The source area determines the window size. This setting locks zoom and prevents stretching.</CQF_MP_MatchCellSizeTip>
   <CQF_MP_NavigateLockedTip>Left-click to select objects, drag to select a group, and right-click to issue orders. Zoom is locked by this viewport's configuration. Drag with the middle mouse button to pan within the available source area. Click the host map or Return to host map to switch back.</CQF_MP_NavigateLockedTip>
   <CQF_MP_CellSizeTooLarge>The source area is too large to fit in the host map at 1:1 cell size. Select a smaller source area.</CQF_MP_CellSizeTooLarge>
+  <CQF_MP_AutoResolution>Match screen resolution</CQF_MP_AutoResolution>
+  <CQF_MP_AutoResolutionTip>Render the visible area at screen pixel density, up to 4096 pixels per side. Disable to use the fixed render resolution.</CQF_MP_AutoResolutionTip>
 </LanguageData>

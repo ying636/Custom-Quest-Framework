@@ -18,7 +18,7 @@ public sealed class CQFAction_SetMapProjection : CQFAction
             throw new InvalidOperationException("[CQF] SetMapProjection requires exactly one host and one source map.");
         CQFMapProjection projection = new() { id = id, sourceMap = sources[0], sourceRect = sourceRect, destination = destination,
             mode = mode, background = background, enabled = enabled, resolution = resolution, refreshFrames = refreshFrames,
-            allowZoom = allowZoom, matchCellSize = matchCellSize };
+            allowZoom = allowZoom, matchCellSize = matchCellSize, autoResolution = autoResolution };
         hosts[0].GetComponent<MapComponent_CQFMapProjections>().Set(projection);
     }
 
@@ -45,8 +45,13 @@ public sealed class CQFAction_SetMapProjection : CQFAction
         if (whole != previousWhole) sourceRect = whole ? CellRect.Empty : new CellRect(0, 0, 40, 40);
         if (!whole) DrawRect(ref y, x, width, "CQF_MP_SourceRect", ref sourceRect, 0);
         DrawRect(ref y, x, width, "CQF_MP_Destination", ref destination, 4);
+        Widgets.CheckboxLabeled(new Rect(x, y, width, 30f), "CQF_MP_AutoResolution".Translate(), ref autoResolution);
+        TooltipHandler.TipRegion(new Rect(x, y, width, 30f), "CQF_MP_AutoResolutionTip".Translate()); y += 36f;
+        bool resolutionEnabled = GUI.enabled;
+        GUI.enabled &= !autoResolution;
         Widgets.Label(new Rect(x, y, width * 0.55f, 30f), "CQF_MP_Resolution".Translate());
         Widgets.TextFieldNumeric(new Rect(x + width * 0.55f, y, width * 0.45f, 30f), ref resolution, ref resolutionBuffer, 128f, 4096f); y += 36f;
+        GUI.enabled = resolutionEnabled;
         Widgets.Label(new Rect(x, y, width * 0.55f, 30f), "CQF_MP_Refresh".Translate());
         Widgets.TextFieldNumeric(new Rect(x + width * 0.55f, y, width * 0.45f, 30f), ref refreshFrames, ref refreshBuffer, 1f, 60f); y += 36f;
     }
@@ -57,7 +62,8 @@ public sealed class CQFAction_SetMapProjection : CQFAction
         result.Add(new XElement("id", id), new XElement("hostKey", hostKey), new XElement("sourceKey", sourceKey),
             new XElement("sourceRect", sourceRect.ToString()), new XElement("destination", destination.ToString()), new XElement("mode", mode),
             new XElement("background", background), new XElement("enabled", enabled), new XElement("resolution", resolution),
-            new XElement("refreshFrames", refreshFrames), new XElement("allowZoom", allowZoom), new XElement("matchCellSize", matchCellSize));
+            new XElement("refreshFrames", refreshFrames), new XElement("allowZoom", allowZoom), new XElement("matchCellSize", matchCellSize),
+            new XElement("autoResolution", autoResolution));
         return result;
     }
 
@@ -75,6 +81,7 @@ public sealed class CQFAction_SetMapProjection : CQFAction
         Scribe_Values.Look(ref refreshFrames, "refreshFrames", 1);
         Scribe_Values.Look(ref allowZoom, "allowZoom", true);
         Scribe_Values.Look(ref matchCellSize, "matchCellSize");
+        Scribe_Values.Look(ref autoResolution, "autoResolution", true);
     }
 
     private void DrawRect(ref float y, float x, float width, string key, ref CellRect rect, int offset)
@@ -108,6 +115,7 @@ public sealed class CQFAction_SetMapProjection : CQFAction
     public int refreshFrames = 1;
     public bool allowZoom = true;
     public bool matchCellSize;
+    public bool autoResolution = true;
     private readonly string[] rectBuffers = new string[8];
     private string resolutionBuffer = string.Empty;
     private string refreshBuffer = string.Empty;

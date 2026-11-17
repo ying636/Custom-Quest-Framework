@@ -74,3 +74,5 @@
 "CQF_MP_MatchCellSizeTip","地图投影配置","每个来源格占用一个宿主格，窗口尺寸由来源选区决定。启用后锁定视角缩放，并禁止拉伸。","Each source cell occupies one host cell. The source area determines the window size. This setting locks zoom and prevents stretching.","生成占位","生成占位","待审核","","",""
 "CQF_MP_NavigateLockedTip","地图投影配置","左键选择对象，拖框多选；右键下达命令。此视口的配置已锁定缩放。按住鼠标中键可在来源范围内平移。点击外部地图或“返回当前地图”切回主地图。","Left-click to select objects, drag to select a group, and right-click to issue orders. Zoom is locked by this viewport's configuration. Drag with the middle mouse button to pan within the available source area. Click the host map or Return to host map to switch back.","生成占位","生成占位","待审核","","",""
 "CQF_MP_CellSizeTooLarge","地图投影配置","来源选区过大，无法按格子 1:1 放入宿主地图，请缩小来源选区。","The source area is too large to fit in the host map at 1:1 cell size. Select a smaller source area.","生成占位","生成占位","待审核","","",""
+"CQF_MP_AutoResolution","地图投影","匹配屏幕分辨率","Match screen resolution","生成占位","生成占位","待审核","","",""
+"CQF_MP_AutoResolutionTip","地图投影","按屏幕像素密度绘制可见区域，每边最多 4096 像素。关闭后使用固定绘制分辨率。","Render the visible area at screen pixel density, up to 4096 pixels per side. Disable to use the fixed render resolution.","生成占位","生成占位","待审核","","",""

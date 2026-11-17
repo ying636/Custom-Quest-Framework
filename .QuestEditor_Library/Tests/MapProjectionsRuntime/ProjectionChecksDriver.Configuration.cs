@@ -65,13 +65,14 @@ public sealed partial class ProjectionChecksDriver
         cells.ZoomView(0.4f, new Vector3(25f, 0f, 15f));
         Check(cells.ViewZoom == 1f && cells.Copy().matchCellSize && cells.Copy().allowZoom, "one-to-one views resist programmatic zoom and copy both authoring settings");
         CQFAction_SetMapProjection action = new() { id = "CQF_CellSizingAction", sourceKey = "CQF_Source", sourceRect = cells.sourceRect,
-            destination = cells.destination, allowZoom = false, matchCellSize = true };
+            destination = cells.destination, allowZoom = false, matchCellSize = true, autoResolution = false };
         CQFAction_SetMapProjection copy = (CQFAction_SetMapProjection)action.Copy();
-        Check(!copy.allowZoom && copy.matchCellSize, "submod action XML round trip preserves both projection settings");
+        Check(!copy.allowZoom && copy.matchCellSize && !copy.autoResolution, "submod action XML round trip preserves zoom, cell sizing and manual resolution");
         Dictionary<string, TargetInfo> targets = new() { ["Position"] = new TargetInfo(host.Center, host), ["CQF_Source"] = new TargetInfo(source!.Center, source) };
         copy.Work(targets, null!);
         CQFMapProjection saved = component.Projections.Single(projection => projection.id == action.id);
-        Check(saved.DestinationBounds == cells.DestinationBounds && !saved.CanZoom, "submod action applies one-to-one sizing through the shared map component API");
+        Check(saved.DestinationBounds == cells.DestinationBounds && !saved.CanZoom && !saved.autoResolution,
+            "submod action applies one-to-one sizing and resolution through the shared map component API");
         copy.destination = new CellRect(host.Size.x - 1, host.Size.z - 1, 1, 1);
         bool rejected = false;
         try { copy.Work(targets, null!); } catch (InvalidOperationException) { rejected = true; }
