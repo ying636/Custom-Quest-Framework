@@ -25,15 +25,16 @@ C# 子 Mod 编译时同时引用主库和 `1.7/Optional/MapProjections/CQF.MapPr
 
 ## 使用入口
 
-- 模块启用后，配置入口统一为开发者命令菜单 `CQF → 地图投影`（英文为 `Map projections`）；不要求启用 CQF.Editor。普通地图界面不提供管理或调整窗口按钮，游玩时保留重置视图与返回宿主地图。
+- 模块启用后，配置入口统一为开发者命令菜单 `CQF → 地图投影`（英文为 `Map projections`）；不要求启用 CQF.Editor。普通地图界面不提供管理或调整窗口按钮。游玩状态、重置视图与返回宿主地图面板默认隐藏，通过 `CQF → 显示/隐藏投影操作面板`（`Toggle projection controls`）切换，状态随游戏保存；隐藏面板不影响选择与命令。
 - 添加投影后，在来源选择窗口按地图名称搜索并点击缩略图。支持活动地图和休眠地图，未命名地图显示本地化的“地图 {编号}”。预览按需唤醒来源，窗口关闭或草稿结束后恢复原休眠状态；已经被启用投影使用的来源继续保持活动。
 - 左侧面板可以选择整图或在缩略图上左键拖出来源选区。在宿主地图上左键拖出显示范围，放置后拖动内部移动、拖动四角缩放。“保持来源比例”约束放置与缩放，取消勾选可拉伸。右键或 Esc 先取消当前拖动，再次 Esc 退出编辑。
 - 新建投影默认选择“游玩模式”。“调整窗口”只编辑来源、位置、尺寸和配置；“完成并游玩”提交后立即把操作焦点交给新视口，并释放名称输入框的键盘焦点。游玩时显示细边框，窗口移动和四角缩放仅在调整状态可用。
 - 名称、来源、选区、显示模式、图层和启用状态都使用独立草稿；“完成”验证后一次性写入，“取消”保留原配置。编辑期间暂停游戏并关闭跨图输入；高级设置提供分辨率、刷新间隔及精确坐标。管理列表提供重命名、定位、启停和删除。
 - `CQFMapProjectionMode.Display` 为纯显示。
-- `CQFMapProjectionMode.Control` 为可控制。点击投影内的人物后，可使用原版检查面板、征召按钮、右键命令与目标选择器。右上角显示当前控制状态并提供“返回当前地图”；点击投影外的地图也可返回宿主操作，窗口内的按钮保留来源地图上下文。
-- 游玩视口接入原版选择器和 Designator：可以点选人物、动物、建筑与物品，查看检查面板并使用原版 Gizmo、建造和划区。允许缩放时，滚轮围绕指针缩放小地图；中键拖动平移，指针位于视口内时也可使用地图移动和允许的缩放快捷键。此时宿主相机的滚轮、拖动、惯性和边缘滚屏被隔离。
-- “允许缩放”关闭后，滚轮、缩放快捷键与 `ZoomView` 不改变当前比例，平移仍受来源范围约束。“格子 1:1”优先级更高：来源 20×10 格固定占宿主 20×10 格，锁定视角缩放与窗口拉伸；改变来源选区会同步改变占地。普通缩放锁定时，重置按钮仅重新居中。
+- `CQFMapProjectionMode.Control` 为可控制。点击投影内的人物后，可使用原版检查面板、征召按钮、右键命令与目标选择器。点击投影外的地图可返回宿主操作，窗口内的按钮保留来源地图上下文。
+- 游玩视口接入原版选择器和 Designator：可以点选人物、动物、建筑与物品，查看检查面板并使用原版 Gizmo、建造和划区。WASD、滚轮、地图缩放快捷键和中键拖动始终操作主相机；鼠标在投影上或选中来源对象时仍可使用，沿用原版及 Camera+ 的移动、缩放范围和窗口输入规则，不改变投影内部视角。
+- “允许缩放”关闭后，`ZoomView` 不改变投影内部比例，`PanView` 仍受来源范围约束。“格子 1:1”优先级更高：来源 20×10 格固定占宿主 20×10 格，锁定内部视角缩放与窗口拉伸；改变来源选区会同步改变占地。两项配置都不限制主相机缩放。普通内部缩放锁定时，重置按钮仅重新居中。
+- 编辑中开启格子 1:1、切换来源或改为整图后，选区若比宿主大，会使用现有本地化提示并把草稿转为待放置状态，释放旧预览；保留原选区及 1:1 设置，不自动缩小或把正常编辑状态记录为绘制异常。缩小来源选区后重新放置即可继续完成。配置改变先结束旧的宿主拖动和来源框选，防止后续取消或鼠标松开恢复旧位置；正式 `Validate` 与动作边界检查仍保留。取消编辑不改变已保存投影。
 - 独立视角以来源选区为边界，最小短边为 4 格或整个更小选区；整图来源可在全图内浏览。视角与窗口尺寸分开保存，移动或缩放来源视角不会移动窗口。原版跳转与选中来源物体只改变视口和原版选择，不切换实际宿主地图。
 - 用户已授权生成自然文案，配置窗口、动作名称、参数提示和错误提示均提供自然中英文；“纯显示”“可以控制”保留用户原文。中英文文本及审核意见维护在 `.QuestEditor_Library/TextReview/MapProjections.csv` 与 `.xlsx`，新增生成文案仍标记为待审核。
 
@@ -132,12 +133,12 @@ component.Remove("MyMod_Observation");
 
 ## 验证入口
 
-本功能当前有 17 个补丁类和 17 个目标方法或属性；模块被请求时使用 Harmony owner `CQF.MapProjections` 安装，不启用 Camera+ 时注册其中 16 个，模块未被请求时为零。UIRootOnGUI 和 InnerWindowOnGUI 各使用 Prefix 与 Finalizer，其他目标各使用一个 Prefix 或 Postfix。已删除 UI.UIToMapPosition 的重复转换补丁，原版通过虚拟相机完成转换；两个鼠标入口分别保留格子无效状态、浮点边界与拖拽裁切。原版 Vector3 转 IntVec3 会将 y 设为 0，无法仅靠公共浮点入口保留 IntVec3.Invalid 的 IsValid=false，因此格子入口不能直接合并。
+本功能当前有 15 个补丁类和 15 个目标方法或属性；模块被请求时使用 Harmony owner `CQF.MapProjections` 安装，不启用 Camera+ 时注册其中 14 个，模块未被请求时为零。UIRootOnGUI 和 InnerWindowOnGUI 各使用 Prefix 与 Finalizer，其他目标各使用一个 Prefix 或 Postfix。原版 Root.OnGUI 在 UIRootOnGUI 完成、来源上下文释放后才调用 CameraDriverOnGUI，原版与 Camera+ 直接接收真实宿主地图和主相机。已删除 CameraDriverOnGUI、CameraDriver.Update 两个拦截补丁及内部输入导航类。UI.UIToMapPosition 的重复转换补丁也已删除，原版通过虚拟相机完成转换；两个鼠标入口分别保留格子无效状态、浮点边界与拖拽裁切。原版 Vector3 转 IntVec3 会将 y 设为 0，无法仅靠公共浮点入口保留 IntVec3.Invalid 的 IsValid=false，因此格子入口不能直接合并。
 
 | 范围 | 原版或 Mod 目标 | 数量 |
 | --- | --- | --- |
 | 来源地图 | Game.CurrentMap.get | 1 |
-| 相机与视区 | Find.Camera.get、CameraDriver.CurrentRealPosition.get、CurrentViewRect.get、CameraDriverOnGUI、Update | 5 |
+| 相机与视区 | Find.Camera.get、CameraDriver.CurrentRealPosition.get、CurrentViewRect.get | 3 |
 | 坐标与框选 | UI.MapToUIPosition、MouseCell、MouseMapPosition、DragBox.ScreenRect.get | 4 |
 | GUI、延后窗口与绘制 | UIRoot_Play.UIRootOnGUI、Window.InnerWindowOnGUI、MapInterface.MapInterfaceUpdate | 3 |
 | 跳转与选择 | CameraJumper.TryJumpInternal(IntVec3, Map, MovementMode)、TrySelectInternal(Thing) | 2 |
@@ -171,3 +172,7 @@ component.Remove("MyMod_Observation");
 上表使用有效 Render scope 的每次均值乘实际刷新率；每帧刷新组的有效 scope 为 119 次、四投影为 476 次，独立计数分别为 120 和 480 次，存在一帧采样边界差异。每 6 帧刷新组两种计数均为 20 次。耗时包含分析器开销，不代表 GPU 耗时、实际 FPS/TPS 或大型地图的性能保证，也没有做精简前后的性能增益对照。53 生物、四投影组的 Render scope 托管分配约 83 KB/采样帧，多个实时投影会增加分配压力。
 
 证据与完整数值：`D:/RimWorld-Dev/TestWorkspaces/CQFProjectionAuthoring/Evidence-8d60c8e912564510ba6fbe03efc7c368/ProfilerSummary.json`；原始分组数据和原版窗口截图位于同目录 `Profiler`。
+
+## 纹理替换与释放
+
+投影重建目标时先完成离屏捕获，再发布新纹理及独立材质；不要在绘制仍可能引用旧对象时提前释放。CQFProjectionRenderRetirement 保留旧资源三个渲染帧后释放，并在退出时清理剩余项。该机制同时覆盖尺寸变化和投影 Dispose，保持自动分辨率、可见区域裁剪及刷新间隔。

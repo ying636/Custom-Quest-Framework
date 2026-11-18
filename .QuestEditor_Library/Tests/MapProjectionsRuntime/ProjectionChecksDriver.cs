@@ -155,6 +155,8 @@ public sealed partial class ProjectionChecksDriver : MonoBehaviour
         foreach (object? wait in Frames(3)) yield return wait;
         foreach (object? wait in CheckViewport()) yield return wait;
         foreach (object? wait in CheckProjectionConfiguration()) yield return wait;
+        foreach (object? wait in CheckMainCamera()) yield return wait;
+        foreach (object? wait in CheckDraftSizing()) yield return wait;
         GameComponent_CQFProjectionUI.Instance!.OpenManager(host);
         Dialog_CQFMapProjections window = Find.WindowStack.WindowOfType<Dialog_CQFMapProjections>()!;
         foreach (object? wait in Frames(3)) yield return wait;
@@ -197,6 +199,7 @@ public sealed partial class ProjectionChecksDriver : MonoBehaviour
         GameDataSaveLoader.LoadGame("CQF_MapProjectionChecks");
         yield return null;
         Check(Current.Game != previous, "native full game reload completed");
+        Check(GameComponent_CQFProjectionUI.Instance!.ShowControls, "native reload preserves the DebugAction projection panel switch");
         host = Current.Game.Maps.Single(map => map.uniqueID == hostID);
         source = Current.Game.Maps.Single(map => map.uniqueID == sourceID);
         Current.Game.CurrentMap = host;

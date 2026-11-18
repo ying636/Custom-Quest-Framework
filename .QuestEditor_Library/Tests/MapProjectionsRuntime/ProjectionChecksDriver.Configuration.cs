@@ -14,25 +14,31 @@ public sealed partial class ProjectionChecksDriver
         {
             control!.allowZoom = false;
             float zoom = control.ViewZoom;
-            Vector3 camera = Current.Camera.transform.position;
+            float camera = MainCameraZoomTarget;
             FirePlaying(actor!.DrawPos, EventType.ScrollWheel, delta: new Vector2(0f, -4f));
             control.ZoomView(0.5f, actor.DrawPos);
-            Check(control.ViewZoom == zoom && Current.Camera.transform.position == camera, "disabled zoom blocks native wheel and public zoom API without moving the host");
+            Check(control.ViewZoom == zoom && MainCameraZoomTarget < camera, "disabled source zoom preserves public API lock while allowing main camera wheel zoom");
             Vector2 start = control.ScreenRect(Current.Camera).center;
             Rect before = control.ViewRect;
             FirePlayingScreen(start, EventType.MouseDown, 2);
-            FirePlayingScreen(start + new Vector2(12f, 6f), EventType.MouseDrag, 2);
+            Vector3 cameraPosition = Current.Camera.transform.position;
+            FirePlayingScreen(start + new Vector2(12f, 6f), EventType.MouseDrag, 2, new Vector2(12f, 6f));
             FirePlayingScreen(start + new Vector2(12f, 6f), EventType.MouseUp, 2);
-            Check(control.ViewRect.center != before.center, "zoom-disabled viewports retain independent middle-button panning");
+            Check(control.ViewRect == before && Current.Camera.transform.position != cameraPosition, "zoom-disabled projections allow main camera panning without changing the source view");
+            Find.CameraDriver.SetRootPosAndSize(new Vector3(44f, 0f, 34f), 32f);
+            Find.CameraDriver.Update();
             control.allowZoom = true;
             control.ResetView();
             CellRect oldDestination = control.destination;
             control.destination = new CellRect(oldDestination.minX, oldDestination.minZ, 4, 4);
             control.matchCellSize = true;
             ClickPlaying(actor.DrawPos);
+            camera = MainCameraZoomTarget;
             FirePlaying(actor.DrawPos, EventType.ScrollWheel, delta: new Vector2(0f, -4f));
-            Check(Find.Selector.IsSelected(actor) && control.ViewZoom == 1f && control.DestinationBounds == oldDestination,
-                "one-to-one gameplay selects source pawns and locks wheel zoom with a derived host footprint");
+            Check(Find.Selector.IsSelected(actor) && control.ViewZoom == 1f && control.DestinationBounds == oldDestination && MainCameraZoomTarget < camera,
+                "one-to-one gameplay preserves source selection and cell scale while the main camera zooms");
+            Find.CameraDriver.SetRootPosAndSize(new Vector3(44f, 0f, 34f), 32f);
+            Find.CameraDriver.Update();
             control.matchCellSize = false;
             control.destination = oldDestination;
             savedViewportZoom = control.ViewZoom;
@@ -43,7 +49,7 @@ public sealed partial class ProjectionChecksDriver
                 return patches != null && patches.Prefixes.Concat(patches.Postfixes).Concat(patches.Finalizers)
                     .Any(patch => patch.PatchMethod.DeclaringType?.Name.StartsWith("Patch_CQFProjection", StringComparison.Ordinal) == true);
             }).ToList();
-            int expected = AccessTools.TypeByName("CameraPlus.EdgeUIInsets") == null ? 16 : 17;
+            int expected = AccessTools.TypeByName("CameraPlus.EdgeUIInsets") == null ? 14 : 15;
             Check(methods.Count == expected && !methods.Any(method => method.DeclaringType == typeof(UI) && method.Name == "UIToMapPosition"),
                 "projection runtime registers the reduced patch set and uses native screen-to-map conversion");
             SetPointer(new Vector2(20f, UI.screenHeight - 20f), EventType.Repaint);

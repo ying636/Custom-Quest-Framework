@@ -20,5 +20,18 @@ public static class DebugActions_MapProjections
         Map host = CQFMapProjectionContext.HostMap ?? throw new InvalidOperationException("[CQF] Map projection editor requires a host map.");
         GameComponent_CQFProjectionUI.Instance!.OpenManager(host);
     }
+
+    [DebugAction("CQF", "CQF_MP_ToggleControls", allowedGameStates = AllowedGameStates.PlayingOnMap)]
+    public static DebugActionNode Controls()
+    {
+        return new DebugActionNode("CQF_MP_ToggleControls".Translate(), action: () =>
+        {
+            GameComponent_CQFProjectionUI ui = GameComponent_CQFProjectionUI.Instance!;
+            ui.ShowControls = !ui.ShowControls;
+        })
+        {
+            labelGetter = () => "CQF_MP_ToggleControls".Translate()
+        };
+    }
 }
 #endif

@@ -39,11 +39,7 @@ public sealed partial class CQFMapProjectionEditSession
         float half = (inner - 6f) / 2f;
         if (Choice(new Rect(0f, y, half, 32f), "CQF_MP_FullMap", whole))
         {
-            whole = true;
-            Draft.sourceRect = CellRect.Empty;
-            Draft.ResetView();
-            Draft.Dispose();
-            SyncCellSize();
+            SetSource(Draft.sourceMap!);
         }
         if (Choice(new Rect(half + 6f, y, half, 32f), "CQF_MP_SelectArea", !whole)) whole = false;
         y += 38f;

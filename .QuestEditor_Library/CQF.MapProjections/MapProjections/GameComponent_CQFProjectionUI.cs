@@ -13,6 +13,12 @@ public sealed class GameComponent_CQFProjectionUI : GameComponent, IDisposable
     public static GameComponent_CQFProjectionUI? Instance => Current.Game?.GetComponent<GameComponent_CQFProjectionUI>();
     public CQFMapProjectionEditSession? Session { get; private set; }
     public bool IsDisposed => disposed;
+    public bool ShowControls { get => showControls; set => showControls = value; }
+
+    public override void ExposeData()
+    {
+        Scribe_Values.Look(ref showControls, "showProjectionControls", false);
+    }
 
     public void OpenManager(Map host)
     {
@@ -70,7 +76,6 @@ public sealed class GameComponent_CQFProjectionUI : GameComponent, IDisposable
         }
         foreach (Map source in sourceUsers.Keys.ToArray())
             if (!source.Disposed) GameComponent_MapManager.Instance?.Activate(source);
-        CQFMapProjectionNavigation.Update();
     }
 
     public override void GameComponentOnGUI()
@@ -81,7 +86,7 @@ public sealed class GameComponent_CQFProjectionUI : GameComponent, IDisposable
         if (Session != null) { Session.OnGUI(); return; }
         if (Find.WindowStack.AnyWindowAbsorbingAllInput) return;
         DrawViewportFrames(host);
-        if (CQFMapProjectionContext.Focused is { } focused)
+        if (ShowControls && CQFMapProjectionContext.Focused is { } focused)
         {
             Rect status = new(UI.screenWidth - 342f, 94f, 330f, 28f);
             Text.Anchor = TextAnchor.MiddleRight;
@@ -150,5 +155,6 @@ public sealed class GameComponent_CQFProjectionUI : GameComponent, IDisposable
     private readonly Dictionary<Map, int> sourceUsers = new();
     private readonly Dictionary<Map, bool> sourceWasSleeping = new();
     private bool disposed;
+    private bool showControls;
 }
 #endif

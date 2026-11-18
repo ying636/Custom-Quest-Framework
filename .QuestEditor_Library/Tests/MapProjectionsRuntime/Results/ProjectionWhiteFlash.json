@@ -1,0 +1,22 @@
+{
+  "date": "2026-11-18",
+  "modVersion": "5.6",
+  "projectionDLLSHA256": "5214CB3046FC5232F4D6B6E19EBC4CF13A7FB08739A9F11CC727CCA3E6D6E14F",
+  "frameworkRegression": {
+    "run": "D:\\RimWorld-Dev\\TestWorkspaces\\PoolcoreProjectionWhite20261117\\FrameworkRegressionFinal\\Evidence-19934a6b0444430e94bbf2b28b3616e8",
+    "nativeChecks": 148,
+    "nativeErrors": 0
+  },
+  "motionCaptures": 96,
+  "baselineWhiteFrames": 1,
+  "candidateWhiteFrames": 0,
+  "textureReplacements": {
+    "PC_EndlessMall_Lower2": 93,
+    "PC_EndlessMall_Lower1": 84
+  },
+  "retirementCleanupPassed": true,
+  "translationKeys": 78,
+  "reviewWorkbookMatchesCsv": true,
+  "poolcoreEvidenceCommit": "https://github.com/ying636/Poolcore/commit/b89479fd7b98ac4094efed7df46e27ff6f2154ec",
+  "comparison": "https://github.com/ying636/Poolcore/blob/b89479fd7b98ac4094efed7df46e27ff6f2154ec/Preview/Scenes/EndlessMallProjectionWhiteComparison.png"
+}

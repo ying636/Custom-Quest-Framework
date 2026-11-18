@@ -83,7 +83,6 @@ public sealed class CQFMapProjectionContext : IDisposable
 
     public static CQFMapProjectionContext? BeginGUI()
     {
-        CQFMapProjectionNavigation.BeginEvent();
         if (GameComponent_CQFProjectionUI.Instance?.Session != null) return null;
         Map? host = HostMap;
         if (host == null || !WorldRendererUtility.DrawingMap || focusedHost != null && focusedHost != host
@@ -93,7 +92,6 @@ public sealed class CQFMapProjectionContext : IDisposable
             return null;
         }
         Event ev = Event.current;
-        CQFMapProjectionNavigation.HandleInput(host);
         if (ev.type == EventType.MouseDown && ev.button <= 1 && Find.WindowStack.GetWindowAt(UI.MousePositionOnUIInverted) == null)
         {
             Vector3 mouse = UI.UIToMapPosition(UI.MousePositionOnUI);
@@ -107,7 +105,6 @@ public sealed class CQFMapProjectionContext : IDisposable
 
     public static void Release(CQFMapProjection projection)
     {
-        CQFMapProjectionNavigation.Release(projection);
         while (Current is { } context && ReferenceEquals(context.Projection, projection)) context.Dispose();
         if (ReferenceEquals(Focused, projection)) ReleaseFocus();
     }
@@ -119,7 +116,6 @@ public sealed class CQFMapProjectionContext : IDisposable
 
     public static void ReturnToHost()
     {
-        CQFMapProjectionNavigation.CancelDrag();
         while (Current is { } context) context.Dispose();
         ReleaseFocus();
     }

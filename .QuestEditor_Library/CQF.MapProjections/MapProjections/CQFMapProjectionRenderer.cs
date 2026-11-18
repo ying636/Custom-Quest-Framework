@@ -87,12 +87,7 @@ public sealed class CQFMapProjectionRenderer : IDisposable
 
     public void Dispose()
     {
-        if (texture != null)
-        {
-            texture.Release();
-            UnityEngine.Object.Destroy(texture);
-        }
-        if (material != null) UnityEngine.Object.Destroy(material);
+        CQFProjectionRenderRetirement.Retire(texture, material);
         if (camera != null) UnityEngine.Object.Destroy(camera.gameObject);
         if (inputCamera != null) UnityEngine.Object.Destroy(inputCamera.gameObject);
         texture = null;
@@ -123,61 +118,82 @@ public sealed class CQFMapProjectionRenderer : IDisposable
         camera.nearClipPlane = 0.1f;
         camera.farClipPlane = 200f;
         camera.transform.position = new Vector3(bounds.center.x, 65f, bounds.center.y);
-        if (texture == null || texture.width != width || texture.height != height)
+        bool replace = texture == null || texture.width != width || texture.height != height;
+        RenderTexture target = texture!;
+        try
         {
-            if (texture != null) { texture.Release(); UnityEngine.Object.Destroy(texture); }
-            texture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32)
-                { name = "CQF_MapProjection_" + projection.id, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
-            if (!texture.Create()) throw new InvalidOperationException("[CQF] Could not allocate map projection texture: " + projection.id);
-            material ??= new Material(ShaderDatabase.Transparent);
-            material.mainTexture = texture;
-            material.mainTextureScale = Vector2.one;
-            material.mainTextureOffset = Vector2.zero;
-        }
-        commands.Clear();
-        using (CQFMapProjectionContext context = new(projection, hostCamera, camera))
-        {
-            try
+            if (replace)
             {
-                GlobalRendererUtility.UpdateGlobalShadersParams();
-                PlantFallColors.SetFallShaderGlobals(source);
-                source.waterInfo.SetTextures();
-                using (MeshDrawSubmission.BeginCapture(commands))
+                target = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32)
+                    { name = "CQF_MapProjection_" + projection.id, filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+                if (!target.Create()) throw new InvalidOperationException("[CQF] Could not allocate map projection texture: " + projection.id);
+            }
+            commands.Clear();
+            using (CQFMapProjectionContext context = new(projection, hostCamera, camera))
+            {
+                try
                 {
-                    source.mapDrawer.MapMeshDrawerUpdate_First();
-                    source.mapDrawer.DrawMapMesh();
-                    source.dynamicDrawManager.DrawDynamicThings();
-                    source.gameConditionManager.GameConditionManagerDraw(source);
-                    source.designationManager.DrawDesignations();
-                    source.overlayDrawer.DrawAllOverlays();
-                    source.temporaryThingDrawer.Draw();
-                    source.flecks.FleckManagerDraw();
-                    source.weatherManager.DrawAllWeather();
-                    if (focused) Find.MapUI.MapInterfaceUpdate();
-                    else MapComponentUtility.MapComponentOnDraw(source);
+                    GlobalRendererUtility.UpdateGlobalShadersParams();
+                    PlantFallColors.SetFallShaderGlobals(source);
+                    source.waterInfo.SetTextures();
+                    using (MeshDrawSubmission.BeginCapture(commands))
+                    {
+                        source.mapDrawer.MapMeshDrawerUpdate_First();
+                        source.mapDrawer.DrawMapMesh();
+                        source.dynamicDrawManager.DrawDynamicThings();
+                        source.gameConditionManager.GameConditionManagerDraw(source);
+                        source.designationManager.DrawDesignations();
+                        source.overlayDrawer.DrawAllOverlays();
+                        source.temporaryThingDrawer.Draw();
+                        source.flecks.FleckManagerDraw();
+                        source.weatherManager.DrawAllWeather();
+                        if (focused) Find.MapUI.MapInterfaceUpdate();
+                        else MapComponentUtility.MapComponentOnDraw(source);
+                    }
+                    commandOrder.Clear();
+                    orderedCommands.Clear();
+                    for (int i = 0; i < commands.Count; i++) commandOrder.Add(i);
+                    commandOrder.Sort(CompareDrawOrder);
+                    foreach (int index in commandOrder) orderedCommands.Add(commands[index]);
+                    ICameraTextureRenderer backend = CameraTextureRenderer.Current
+                        ?? throw new InvalidOperationException("[CQF] Map projection texture renderer is unavailable.");
+                    SubmitCommands(backend, target);
+                    if (replace)
+                    {
+                        Material nextMaterial = new(ShaderDatabase.Transparent)
+                        {
+                            mainTexture = target,
+                            mainTextureScale = Vector2.one,
+                            mainTextureOffset = Vector2.zero
+                        };
+                        CQFProjectionRenderRetirement.Retire(texture, material);
+                        texture = target;
+                        material = nextMaterial;
+                    }
+                    RenderedFrame = Time.frameCount;
+                    RenderedBounds = bounds;
+                    renderedFocused = focused;
+                    invalidated = false;
                 }
-                commandOrder.Clear();
-                orderedCommands.Clear();
-                for (int i = 0; i < commands.Count; i++) commandOrder.Add(i);
-                commandOrder.Sort(CompareDrawOrder);
-                foreach (int index in commandOrder) orderedCommands.Add(commands[index]);
-                ICameraTextureRenderer backend = CameraTextureRenderer.Current
-                    ?? throw new InvalidOperationException("[CQF] Map projection texture renderer is unavailable.");
-                SubmitCommands(backend);
-                RenderedFrame = Time.frameCount;
-                RenderedBounds = bounds;
-                renderedFocused = focused;
-                invalidated = false;
+                finally
+                {
+                    PlantFallColors.SetFallShaderGlobals(host);
+                    host.waterInfo.SetTextures();
+                }
             }
-            finally
+        }
+        catch
+        {
+            if (replace && !ReferenceEquals(target, texture) && target != null)
             {
-                PlantFallColors.SetFallShaderGlobals(host);
-                host.waterInfo.SetTextures();
+                target.Release();
+                UnityEngine.Object.Destroy(target);
             }
+            throw;
         }
     }
 
-    private void SubmitCommands(ICameraTextureRenderer backend)
+    private void SubmitCommands(ICameraTextureRenderer backend, RenderTexture target)
     {
         if (!ReferenceEquals(preparedBackend, backend))
         {
@@ -198,7 +214,7 @@ public sealed class CQFMapProjectionRenderer : IDisposable
         }
         if (renderPreparedItems == null || MeshDrawSubmission.DrawItemMaker is not { } factory || orderedCommands.Count == 0)
         {
-            backend.Render(texture!, orderedCommands, CameraViewFactory.GetView(camera!), camera!.rect, Color.clear);
+            backend.Render(target, orderedCommands, CameraViewFactory.GetView(camera!), camera!.rect, Color.clear);
             return;
         }
         Waylith.Rendering.GpuTextureService.FlushPendingTextureCommands();
@@ -213,8 +229,8 @@ public sealed class CQFMapProjectionRenderer : IDisposable
                 if (item != null) preparedItems.Add(item);
             }
             if (preparedItems.Count == 0)
-                backend.Render(texture!, orderedCommands, CameraViewFactory.GetView(camera!), camera!.rect, Color.clear);
-            else renderPreparedItems(texture!, preparedItems, camera!, camera!.rect, Color.clear, null);
+                backend.Render(target, orderedCommands, CameraViewFactory.GetView(camera!), camera!.rect, Color.clear);
+            else renderPreparedItems(target, preparedItems, camera!, camera!.rect, Color.clear, null);
         }
         finally
         {

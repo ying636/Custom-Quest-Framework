@@ -43,6 +43,8 @@ public sealed partial class CQFMapProjectionEditSession : IDisposable
     public void SetSource(Map source, bool resetArea = true)
     {
         if (source == Host || source.Disposed) throw new InvalidOperationException("[CQF] Invalid projection editor source map.");
+        Placement.CancelGesture();
+        Canvas.Cancel();
         if (leasedSource != source)
         {
             owner.AcquireSource(source);
@@ -69,6 +71,8 @@ public sealed partial class CQFMapProjectionEditSession : IDisposable
     {
         if (Draft.sourceMap == null || area.IsEmpty || !area.Min.InBounds(Draft.sourceMap) || !area.Max.InBounds(Draft.sourceMap))
             throw new InvalidOperationException("[CQF] Invalid source selection in projection editor.");
+        Placement.CancelGesture();
+        Canvas.Cancel();
         Draft.sourceRect = area;
         Draft.ResetView();
         Draft.Dispose();
@@ -81,6 +85,8 @@ public sealed partial class CQFMapProjectionEditSession : IDisposable
 
     public void SetMatchCellSize(bool value)
     {
+        Placement.CancelGesture();
+        Canvas.Cancel();
         Draft.matchCellSize = value;
         Draft.ResetView();
         SyncCellSize();
@@ -158,6 +164,13 @@ public sealed partial class CQFMapProjectionEditSession : IDisposable
     {
         if (!Draft.matchCellSize) return;
         CellRect area = Draft.DestinationBounds;
+        if (area.Width > Host.Size.x || area.Height > Host.Size.z)
+        {
+            Placed = false;
+            Draft.Dispose();
+            Messages.Message("CQF_MP_CellSizeTooLarge".Translate(), MessageTypeDefOf.RejectInput, false);
+            return;
+        }
         Draft.destination = new CellRect(Mathf.Clamp(area.minX, 0, Mathf.Max(0, Host.Size.x - area.Width)),
             Mathf.Clamp(area.minZ, 0, Mathf.Max(0, Host.Size.z - area.Height)), area.Width, area.Height);
     }

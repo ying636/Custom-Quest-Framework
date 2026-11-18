@@ -19,17 +19,19 @@ public sealed partial class ProjectionChecksDriver
         {
             Camera hostCamera = Current.Camera;
             Vector3 cameraPosition = hostCamera.transform.position;
-            float cameraSize = hostCamera.orthographicSize;
+            float cameraSize = MainCameraZoomTarget;
             FirePlaying(actor!.Position.ToVector3Shifted(), EventType.ScrollWheel, delta: new Vector2(0f, -3f));
-            Check(control!.ViewZoom < 1f && hostCamera.transform.position == cameraPosition && hostCamera.orthographicSize == cameraSize,
-                "wheel zoom changes only the small viewport and leaves the host camera unchanged");
+            Check(control!.ViewZoom == 1f && MainCameraZoomTarget < cameraSize,
+                "wheel over a playable projection requests main camera zoom and preserves the source view");
             Vector2 start = control.ScreenRect(hostCamera).center;
             Rect oldView = control.ViewRect;
             FirePlayingScreen(start, EventType.MouseDown, 2);
-            FirePlayingScreen(start + new Vector2(24f, 12f), EventType.MouseDrag, 2);
+            FirePlayingScreen(start + new Vector2(24f, 12f), EventType.MouseDrag, 2, new Vector2(24f, 12f));
             FirePlayingScreen(start + new Vector2(24f, 12f), EventType.MouseUp, 2);
-            Check(control.ViewRect.center != oldView.center && hostCamera.transform.position == cameraPosition && hostCamera.orthographicSize == cameraSize,
-                "middle-button drag pans only the small viewport");
+            Check(control.ViewRect == oldView && hostCamera.transform.position != cameraPosition,
+                "middle-button drag over the projection pans the main camera only");
+            Find.CameraDriver.SetRootPosAndSize(new Vector3(44f, 0f, 34f), 32f);
+            Find.CameraDriver.Update();
             control.ResetView();
             control.ZoomView(0.65f, actor.Position.ToVector3Shifted());
             ClickPlaying(new Vector3(30.5f, 0f, 20.5f));
@@ -92,20 +94,23 @@ public sealed partial class ProjectionChecksDriver
         FirePlayingScreen(new Vector2(point.x / Prefs.UIScale, UI.screenHeight - point.y / Prefs.UIScale), type, button, delta);
     }
 
-    private void FirePlayingScreen(Vector2 point, EventType type, int button = 0, Vector2 delta = default)
+    private void FirePlayingScreen(Vector2 point, EventType type, int button = 0, Vector2 delta = default, KeyCode key = KeyCode.None)
     {
         Event before = Event.current;
         try
         {
             SetPointer(point, type, button);
             Event.current.delta = delta;
+            Event.current.keyCode = key;
+            Bootstrap.PressedKey = key == KeyCode.None ? null : key;
+            Bootstrap.CameraDragDelta = type == EventType.MouseDrag && button == 2 ? delta : null;
             Find.UIRoot.UIRootOnGUI();
             using (CQFMapProjectionContext? scope = CQFMapProjectionContext.BeginGUI())
                 if (Find.DesignatorManager.SelectedDesignator != null) Find.DesignatorManager.Dragger.DraggerUpdate();
             Current.CameraDriver.CameraDriverOnGUI();
             Current.CameraDriver.Update();
         }
-        finally { Bootstrap.MousePosition = null; Event.current = before; }
+        finally { Bootstrap.MousePosition = null; Bootstrap.PressedKey = null; Bootstrap.CameraDragDelta = null; Event.current = before; }
     }
 
     private float savedViewportZoom;

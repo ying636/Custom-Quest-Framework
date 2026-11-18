@@ -66,15 +66,16 @@
   <CQF_MP_Layout>调整窗口</CQF_MP_Layout>
   <CQF_MP_Playing>游玩中：{0}</CQF_MP_Playing>
   <CQF_MP_ResetView>重置视图</CQF_MP_ResetView>
-  <CQF_MP_NavigateTip>左键选择对象，拖框多选；右键下达命令。滚轮缩放小地图，按住鼠标中键拖动平移；指针停在小地图内时，也可使用地图移动和缩放快捷键。点击外部地图或“返回当前地图”切回主地图。</CQF_MP_NavigateTip>
+  <CQF_MP_NavigateTip>左键选择对象，拖框多选；右键下达命令。WASD、中键拖动和滚轮控制主相机。点击投影外的地图可返回当前地图操作。</CQF_MP_NavigateTip>
   <CQF_MP_LayoutTip>此模式用于调整来源范围、窗口位置和尺寸。点击“完成并游玩”后，左键就会用于选择小地图中的对象。</CQF_MP_LayoutTip>
   <CQF_MP_FinishAndPlay>完成并游玩</CQF_MP_FinishAndPlay>
   <CQF_MP_AllowZoom>允许缩放</CQF_MP_AllowZoom>
-  <CQF_MP_AllowZoomTip>允许使用滚轮和地图缩放快捷键调整视角。关闭后保持当前缩放比例。</CQF_MP_AllowZoomTip>
+  <CQF_MP_AllowZoomTip>允许调整投影内部的缩放比例。关闭后锁定内部比例，主相机仍可正常缩放。</CQF_MP_AllowZoomTip>
   <CQF_MP_MatchCellSize>格子 1:1</CQF_MP_MatchCellSize>
-  <CQF_MP_MatchCellSizeTip>每个来源格占用一个宿主格，窗口尺寸由来源选区决定。启用后锁定视角缩放，并禁止拉伸。</CQF_MP_MatchCellSizeTip>
-  <CQF_MP_NavigateLockedTip>左键选择对象，拖框多选；右键下达命令。此视口的配置已锁定缩放。按住鼠标中键可在来源范围内平移。点击外部地图或“返回当前地图”切回主地图。</CQF_MP_NavigateLockedTip>
+  <CQF_MP_MatchCellSizeTip>每个来源格占用一个宿主格，窗口尺寸由来源选区决定。锁定投影内部缩放并禁止拉伸，主相机仍可正常缩放。</CQF_MP_MatchCellSizeTip>
+  <CQF_MP_NavigateLockedTip>左键选择对象，拖框多选；右键下达命令。投影内部缩放已锁定，WASD、中键拖动和滚轮仍控制主相机。点击投影外的地图可返回当前地图操作。</CQF_MP_NavigateLockedTip>
   <CQF_MP_CellSizeTooLarge>来源选区过大，无法按格子 1:1 放入宿主地图，请缩小来源选区。</CQF_MP_CellSizeTooLarge>
   <CQF_MP_AutoResolution>匹配屏幕分辨率</CQF_MP_AutoResolution>
   <CQF_MP_AutoResolutionTip>按屏幕像素密度绘制可见区域，每边最多 4096 像素。关闭后使用固定绘制分辨率。</CQF_MP_AutoResolutionTip>
+  <CQF_MP_ToggleControls>显示/隐藏投影操作面板</CQF_MP_ToggleControls>
 </LanguageData>
