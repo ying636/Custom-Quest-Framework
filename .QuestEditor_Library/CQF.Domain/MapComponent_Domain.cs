@@ -37,13 +37,31 @@ public sealed partial class MapComponent_Domain : MapComponent
 
     public bool ProtectsFromOpening(Pawn pawn)
     {
+        return TryGetOpeningContext(pawn, out _, out _, out _);
+    }
+
+    public bool TryGetOpeningContext(Pawn pawn, out DomainDef definition, out DomainOpening? opening, out MapComponent_Domain? transitionDomain)
+    {
+        definition = null!;
+        opening = null;
+        transitionDomain = null;
         if (pawn.Dead || pawn.Downed) return false;
-        if (active && (entering || arrivalLocked) && caster == pawn) return true;
-        if (challenger?.ProtectsFromOpening(pawn) == true) return true;
+        if (active && (entering || arrivalLocked) && caster == pawn)
+        {
+            definition = Definition;
+            transitionDomain = this;
+            return true;
+        }
+        if (challenger?.TryGetOpeningContext(pawn, out definition, out opening, out transitionDomain) == true) return true;
         for (int index = 0; index < additionalDomains.Count; index++)
-            if (additionalDomains[index].ProtectsFromOpening(pawn)) return true;
-        foreach (DomainOpening opening in openings)
-            if (!opening.Destroyed && opening.Active && opening.Caster == pawn) return true;
+            if (additionalDomains[index].TryGetOpeningContext(pawn, out definition, out opening, out transitionDomain)) return true;
+        foreach (DomainOpening candidate in openings)
+        {
+            if (candidate.Destroyed || !candidate.Active || candidate.Caster != pawn) continue;
+            definition = candidate.Definition;
+            opening = candidate;
+            return true;
+        }
         return false;
     }
 

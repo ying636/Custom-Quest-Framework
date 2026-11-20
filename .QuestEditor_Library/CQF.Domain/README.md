@@ -38,7 +38,15 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 `worldObject` 的类必须继承 `MapParent_Domain`，`anchor` 的类必须继承 `Building_Domain`，`protection` 的类必须继承 `Hediff_DomainProtection`。后两项可以省略。`workerClass` 必须有公开无参构造函数。`preload` 默认开启，每种领域定义预生成两张地图，并保存地形与建筑模板；更多并发领域按需生成。
 
-`openingAbility` 是可选的原版 `AbilityDef` 引用。配置后，施术者执行该能力工作期间由框架提供展开无敌，包括展开物件生成前的施法阶段。通过玩家能力或自定义调用展开时，可直接使用下述 `DomainOpening` 接口。
+`openingAbility` 是可选的原版 `AbilityDef` 引用。配置后，施术者执行该能力工作期间获得展开护盾，包括展开物件生成前的施法阶段。护盾默认吸收 1000 点伤害，展开、入场期间共用剩余值；单次伤害超过剩余护盾时，溢出部分作用于施术者。护盾耗尽后不再吸收伤害。需要覆盖默认值时，在 `AbilityDef` 的组件中配置：
+
+```xml
+<li Class="QuestEditor_Library.AbilityCompProperties_DomainProtection">
+  <openingShield>1000</openingShield>
+</li>
+```
+
+通过玩家能力或自定义调用展开时，可直接使用下述 `DomainOpening` 接口。
 
 显示名使用英文原文与 `DefInjected/QuestEditor_Library.DomainDef` 中的中文翻译。CQF 主库不引用血海的程序集、定义和图形资源。
 
@@ -95,7 +103,7 @@ CQF 的 LoadFolders 条目使用 `<li IfCQFModule="Domain">1.7/Optional/Domain</
 
 ## 转场
 
-`Comp_DomainProtection` 通过原生伤害回调保护领域施术者：执行已配置的展开能力、活动展开物件存在、同步进入领域以及入场锁定期间，伤害置零并跳过后续处理，不消耗领域血量。展开和入场结束后恢复通常的领域血量吸收；其他参与者、普通能力和已失效展开不会获得该无敌。死亡或倒地人物不适用展开保护。
+`Comp_DomainProtection` 通过原生伤害回调处理展开护盾：执行已配置的展开能力、活动展开物件存在、同步进入领域以及入场锁定期间，共用同一护盾值且不消耗领域血量。超过护盾剩余值的伤害溢出到施术者，护盾耗尽后按正常伤害流程处理。其他参与者、普通能力和已失效展开不会获得该护盾。死亡或倒地人物不适用展开保护。
 
 `DomainTransition` 管理地图切换、等待领域地形完成绘制、入场和返回期间的人物锁定、过渡结束及资源清理。具体实现提供 `Duration`、`CoverProgress`、`RevealProgress`、`DrawEffect` 和 `ReleaseVisuals`。基础截图、材质和动画由 DomainMaterialTransition / DomainOpeningVisuals 提供，特殊表现仍可由子 Mod 扩展。
 

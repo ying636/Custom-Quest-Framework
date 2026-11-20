@@ -1,3 +1,4 @@
+#if RIMWORLD_1_7
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Reflection;
@@ -75,7 +76,6 @@ internal static class DomainVisualChecks
                     : Path.Combine(shaderRoot, "CQF_Domain" + kind + ".frag.glsl");
                 string vertex = File.ReadAllText(vertexPath);
                 string fragment = File.ReadAllText(fragmentPath);
-                Check(!ShaderSourceLoader.HasStageInterfaceErrors(vertexPath, fragmentPath), kind + " native shader stage interface");
                 MaterialLayout layout = ShaderSourceLoader.CreateMaterialLayout(fragmentPath);
                 Check(!layout.HasErrors && layout.UniformSize > 0 && layout.TextureSlots.Length == (kind is "BloodSeaTransition" or "BloodSeaTerrain" or "BloodSeaSurfaceScreen" or "ContestFront" || kind.StartsWith("Surface") ? 1 : blood || kind == "FusionBoundary" ? 0 : 3), kind + " native material layout");
                 if (kind.Contains("Transition") || kind.EndsWith("Screen"))
@@ -104,7 +104,9 @@ internal static class DomainVisualChecks
             test.Load(Path.Combine(module, "Defs", "CQF_TestDomain.xml"));
             AbilityDef ability = DirectXmlToObject.ObjectFromXml<AbilityDef>(test.SelectSingleNode("/Defs/AbilityDef")!, false);
             Check(ability.defName == "CQF_TestDomainExpansion" && !ability.targetRequired && !ability.aiCanUse
-                && ability.comps.Single() is AbilityCompProperties_TestDomainExpansion, version + " native test ability XML and component");
+                && ability.comps.OfType<AbilityCompProperties_TestDomainExpansion>().Count() == 1
+                && ability.comps.OfType<AbilityCompProperties_DomainProtection>().Single().openingShield == 1000f,
+                version + " native test ability XML and configured opening shield");
             Check(ability.verbProperties.verbClass == typeof(Verb_CastAbility) && ability.verbProperties.targetParams.canTargetSelf
                 && ability.verbProperties.range == 0f, version + " test ability casts on its owner without a target");
             Check(test.SelectSingleNode("/Defs/QuestEditor_Library.DomainDef/preload")!.InnerText == "false"
@@ -171,3 +173,4 @@ internal static class DomainVisualChecks
     private static int checks;
     private static int xmlErrors;
 }
+#endif

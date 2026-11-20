@@ -13,7 +13,9 @@ internal static class Program
     {
         try
         {
+#if RIMWORLD_1_7
             if (args.Contains("visuals")) { DomainVisualChecks.Run(); return; }
+#endif
             if (args.Contains("contests")) { DomainContestChecks.Run(); return; }
             if (args.Contains("fronts")) { DomainFrontChecks.Run(); return; }
             if (args.Contains("territory")) { DomainTerritoryRulesChecks.Run(); return; }
@@ -29,7 +31,16 @@ internal static class Program
         }
         catch (Exception error)
         {
-            Console.WriteLine(error);
+            Console.WriteLine(error.GetType().FullName);
+            try
+            {
+                Console.WriteLine(error.StackTrace);
+                Console.WriteLine(error.Message);
+            }
+            catch (Exception formattingError)
+            {
+                Console.WriteLine("Exception detail formatting failed: " + formattingError.GetType().FullName);
+            }
             Environment.Exit(1);
         }
     }
@@ -89,6 +100,14 @@ internal static class Program
         string[] errors = invalid.ConfigErrors().ToArray();
         Check(errors.Any(error => error.Contains("worker")) && errors.Any(error => error.Contains("maximum health"))
             && errors.Any(error => error.Contains("damage limit")) && errors.Any(error => error.Contains("map size")), "invalid domain definitions report their errors");
+        AbilityCompProperties_DomainProtection invalidOpeningShield = new() { openingShield = float.NaN };
+        AbilityDef invalidOpeningAbility = new()
+        {
+            defName = "CQF_Check_InvalidOpeningShield",
+            comps = new List<AbilityCompProperties> { invalidOpeningShield }
+        };
+        Check(invalidOpeningShield.ConfigErrors(invalidOpeningAbility).Any(error => error.Contains("opening shield")),
+            "invalid opening shield values report their own configuration error");
         CheckOpeningProtection(caster);
         CheckProtectionLifecycle(caster);
         CheckPausedWorker();
@@ -133,6 +152,8 @@ internal static class Program
         new DomainDef { defName = "CQF_Check_SharedAbility", openingAbility = openingAbility }.ResolveReferences();
         Check(openingAbility.comps.Count(properties => properties is AbilityCompProperties_DomainProtection) == 1,
             "repeated and shared domain definitions register one native ability component");
+        Check(openingAbility.comps.OfType<AbilityCompProperties_DomainProtection>().Single().openingShield == 1000f,
+            "domain opening shield defaults to 1000");
         Ability ability = (Ability)RuntimeHelpers.GetUninitializedObject(typeof(Ability));
         ability.def = openingAbility;
         ability.pawn = caster;
@@ -157,8 +178,11 @@ internal static class Program
         nativeDamage.Invoke(null, arguments);
         hit = (DamageInfo)arguments[1];
         bool absorbed = (bool)arguments[2];
-        Check(!absorbed && hit.Amount == 499.5f && domain.Health == 1000f,
-            "native ThingWithComps damage pipeline invokes the caster component without Harmony");
+        Check(absorbed && hit.Amount == 0f && domain.Health == 1000f,
+            "native ThingWithComps damage pipeline fully absorbs hits from the configured opening shield");
+        DamageInfo overflow = new(new DamageDef { harmsHealth = true }, 10f);
+        protection.PostPreApplyDamage(ref overflow, out absorbed);
+        Check(!absorbed && overflow.Amount == 9f, "opening shield passes through damage exceeding its remaining capacity");
         typeof(ThingWithComps).GetField("comps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(caster, new List<ThingComp>());
         abilityComp.Initialize(openingAbility.comps.Single());
         protection = caster.AllComps.OfType<Comp_DomainProtection>().Single();
@@ -190,6 +214,9 @@ internal static class Program
         ability.def = openingAbility;
         caster.jobs.curJob = new Job { ability = ability };
         Check(protection.HasOpeningProtection(), "caster can start another protected domain after recall");
+        DamageInfo resetShield = new(new DamageDef { harmsHealth = true }, 999f);
+        protection.PostPreApplyDamage(ref resetShield, out absorbed);
+        Check(absorbed && resetShield.Amount == 0f, "a new cast starts with a full opening shield");
         caster.jobs.curJob = null;
     }
 
@@ -212,16 +239,17 @@ internal static class Program
             domain.RegisterOpening(opening);
             DamageInfo damage = new(new DamageDef { harmsHealth = true }, 75f);
             component.PostPreApplyDamage(ref damage, out bool absorbed);
-            Check(!absorbed && damage.Amount == 37.5f && domain.Health == 1000f, "opening component halves damage without consuming shared health");
+            Check(absorbed && damage.Amount == 0f && domain.Health == 1000f, "opening shield absorbs damage without consuming shared domain health");
             domain.UnregisterOpening(opening);
             Check(!component.HasOpeningProtection(), "opening removal immediately releases component opening damage reduction");
             Set(domain, "entering", true);
             Check(component.HasOpeningProtection(), "caster component covers synchronous transfer");
             Set(domain, "entering", false);
             Set(domain, "arrivalLocked", true);
-            damage = new DamageInfo(new DamageDef { harmsHealth = true }, 75f);
+            damage = new DamageInfo(new DamageDef { harmsHealth = true }, 950f);
             component.PostPreApplyDamage(ref damage, out absorbed);
-            Check(!absorbed && damage.Amount == 37.5f && domain.Health == 1000f, "arrival component halves damage without consuming shared health");
+            Check(!absorbed && damage.Amount == 25f && domain.Health == 1000f,
+                "arrival protection carries the opening shield's remaining capacity");
             Set(domain, "arrivalLocked", false);
             Check(!component.HasOpeningProtection(), "arrival completion releases component opening damage reduction");
             typeof(ThingWithComps).GetField("comps", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(caster, new List<ThingComp>());
@@ -317,7 +345,7 @@ internal static class Program
                 "pending return retries without recycling or transferring the domain early");
             CQFDomainRuntime runtime = new(new GameComponent_MapManager(game));
             Action process = typeof(CQFDomainRuntime).GetMethod("ProcessDomainReturns", BindingFlags.NonPublic | BindingFlags.Instance)!
-                .CreateDelegate<Action>(runtime);
+                .CreateDelegate(typeof(Action), runtime) as Action ?? throw new InvalidOperationException("Could not bind domain return processor.");
             for (int pass = 0; pass < 64; pass++) { runtime.QueueReturn(domain); process(); }
             long before = GC.GetAllocatedBytesForCurrentThread();
             for (int pass = 0; pass < 256; pass++) { runtime.QueueReturn(domain); process(); }

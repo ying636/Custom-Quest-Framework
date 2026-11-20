@@ -26,6 +26,9 @@
     </verbProperties>
     <comps>
       <li Class="QuestEditor_Library.AbilityCompProperties_TestDomainExpansion" />
+      <li Class="QuestEditor_Library.AbilityCompProperties_DomainProtection">
+        <openingShield>1000</openingShield>
+      </li>
     </comps>
   </AbilityDef>
   <QuestEditor_Library.DomainDef>
