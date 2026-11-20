@@ -31,6 +31,8 @@ public sealed class CQFSceneBeam : IExposable, ISaveable
         Scribe_Values.Look(ref this.sway, "sway", .035f);
         Scribe_Values.Look(ref this.period, "period", 180f);
         Scribe_Values.Look(ref this.skyResponse, "skyResponse", .3f);
+        Scribe_Values.Look(ref this.sunPeakHour, "sunPeakHour", 14f);
+        Scribe_Values.Look(ref this.sunHalfWidthHours, "sunHalfWidthHours");
         Scribe_Values.Look(ref this.density, "density", .055f);
         Scribe_Values.Look(ref this.dust, "dust", .018f);
         Scribe_Values.Look(ref this.scatterHeight, "scatterHeight", 6f);
@@ -51,6 +53,8 @@ public sealed class CQFSceneBeam : IExposable, ISaveable
     public float sway = .035f;
     public float period = 180f;
     public float skyResponse = .3f;
+    public float sunPeakHour = 14f;
+    public float sunHalfWidthHours;
     public float density = .055f;
     public float dust = .018f;
     public float scatterHeight = 6f;

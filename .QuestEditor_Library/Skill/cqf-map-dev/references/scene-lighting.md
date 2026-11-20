@@ -42,6 +42,7 @@ Poolcore 的 `CustomMapStep_CoreScene.lights`（原砼核）和 `CustomMapStep_C
 | `intensity`、`color` | 主光艺术强度与颜色，同时作用于表面、散射和原版补光 |
 | `drift`、`sway`、`period` | 平移幅度、斜率摆动幅度、基础周期（游戏秒） |
 | `skyResponse` | 原版天空亮度的影响比例，0 为不跟随，1 为完全跟随 |
+| `sunPeakHour`、`sunHalfWidthHours` | 地图当地时间的直射峰值小时和窗口半宽。半宽为 0 时全天可见。窗口内平滑淡入淡出，窗口外关闭同源表面直射、散射和地面补光 |
 | `density`、`dust` | 散射密度与稀疏浮尘强度，密度为 0 时跳过散射绘制 |
 | `scatterHeight` | 简化散射平面高度，默认 6 格 |
 | `enabled` | 主光束及对应原版补光开关 |

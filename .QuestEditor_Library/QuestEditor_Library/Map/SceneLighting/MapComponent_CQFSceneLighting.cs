@@ -35,6 +35,8 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         if (this.beam != null && (this.beam.lightIndex < 0 || this.beam.lightIndex >= copy.Count)) throw new ArgumentOutOfRangeException(nameof(mainBeam), "CQF_SceneBeamLightIndex");
         if (this.beam != null && (!float.IsFinite(this.beam.period) || this.beam.period <= 0f)) throw new ArgumentException("CQF_SceneBeamPeriod");
         if (this.beam != null && (this.beam.innerWidth < 0f || this.beam.outerWidth <= this.beam.innerWidth)) throw new ArgumentException("CQF_SceneBeamWidth");
+        if (this.beam != null && (!(this.beam.sunPeakHour >= 0f && this.beam.sunPeakHour < 24f) || !(this.beam.sunHalfWidthHours >= 0f && this.beam.sunHalfWidthHours <= 12f)))
+            throw new ArgumentOutOfRangeException(nameof(mainBeam), "CQF_SceneBeamSunHours");
         this.phaseTicks = 0;
         this.lastFingerprint = 0;
         this.shadowDirty = this.nativeDirty = true;
@@ -326,6 +328,14 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         light.end.x += offsetChange + slopeChange * light.end.z;
         float sky = Mathf.Lerp(1f, Mathf.Clamp01(this.map.skyManager.CurSkyGlow), Mathf.Clamp01(this.beam.skyResponse));
         float modulation = sky * (.96f + .04f * Mathf.Cos(angle * 1.3f));
+        if (this.beam.sunHalfWidthHours > 0f)
+        {
+            float localHour = GenLocalDate.DayTick(this.map) / 2500f;
+            float distance = Mathf.Abs(localHour - this.beam.sunPeakHour);
+            distance = Mathf.Min(distance, 24f - distance);
+            float exposure = Mathf.Clamp01(1f - distance / this.beam.sunHalfWidthHours);
+            modulation *= Mathf.SmoothStep(0f, 1f, exposure);
+        }
         light.intensity *= modulation * this.beam.intensity;
         light.color *= this.beam.color;
         light.enabled &= this.beam.enabled;
