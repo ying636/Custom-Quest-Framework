@@ -1,4 +1,5 @@
 using System.Text;
+using System.Xml;
 using QuestEditor_Library;
 using RimWorld;
 using UnityEngine;
@@ -174,6 +175,30 @@ public sealed class PresentationChecksDriver : MonoBehaviour
             {
                 foreach (string path in Directory.GetFiles(Path.Combine(Root, "Screenshots"), "*.png"))
                     Check(new FileInfo(path).Length > 512, "rendered screenshot is nonempty: " + Path.GetFileName(path));
+                tree = CreateVisibilityTree();
+                Open();
+                Go(15);
+            }
+            else if (stage == 15)
+            {
+                CheckVisibilityOptions("classic");
+                window!.options[0].action();
+                Go(16);
+            }
+            else if (stage == 16)
+            {
+                Check(window!.CurrentNodeIndex == 1 && window.options.Count == 0, "classic node with only hidden choices clears stale choices");
+                window.Close(false);
+                CQFDialogPresentation_Galgame galgame = new();
+                tree!.presentations.Add(galgame);
+                tree.dialogStyle = galgame.Id;
+                Open();
+                Go(17);
+            }
+            else if (stage == 17)
+            {
+                CheckVisibilityOptions("Galgame");
+                window!.Close(false);
                 Finish(true);
             }
         }
@@ -219,6 +244,56 @@ public sealed class PresentationChecksDriver : MonoBehaviour
         result.nodeMoulds[1] = new DialogNode(1) { text = "CQF_Test_Node_1", options = new() { new DialogOption { text = "CQF_Test_Close", results = new() { new DialogResult() } } } };
         result.Update();
         return result;
+    }
+
+    private DialogTreeDef CreateVisibilityTree()
+    {
+        DialogTreeDef result = new() { defName = "CQF_Test_DialogVisibility", title = "CQF_Test_DialogVisibility" };
+        result.nodeMoulds[0].text = "CQF_Test_Node_0";
+        result.nodeMoulds[0].options.Add(ReadVisibilityOption("CQF_Test_Enabled", true, true, false));
+        result.nodeMoulds[0].options.Add(ReadVisibilityOption("CQF_Test_Hidden", true, true, true));
+        result.nodeMoulds[0].options.Add(ReadVisibilityOption("CQF_Test_HiddenReason", false, true, true));
+        result.nodeMoulds[0].options.Add(ReadVisibilityOption("CQF_Test_VisibleReason", false, false, true));
+        result.nodeMoulds[1] = new DialogNode(1) { text = "CQF_Test_Node_1" };
+        result.nodeMoulds[1].options.Add(ReadVisibilityOption("CQF_Test_Hidden", true, false, true));
+        result.Update();
+        return result;
+    }
+
+    private DialogOption ReadVisibilityOption(string text, bool hideWhenDisabled, bool hideFailReason, bool shouldFail)
+    {
+        XmlDocument xml = new();
+        xml.LoadXml($"""
+            <option>
+              <text>{text}</text>
+              <hideWhenDisabled>{XmlConvert.ToString(hideWhenDisabled)}</hideWhenDisabled>
+              <hideFailReason>{XmlConvert.ToString(hideFailReason)}</hideFailReason>
+              <results><li><nextIndex>1</nextIndex></li></results>
+            </option>
+            """);
+        DialogOption option = DirectXmlToObject.ObjectFromXml<DialogOption>(xml.DocumentElement!, false);
+        Check(option.hideWhenDisabled == hideWhenDisabled && option.hideFailReason == hideFailReason, "loaded XML flags for " + text);
+        if (shouldFail)
+        {
+            option.conditions.Add(new DialogCondition_Hediff
+            {
+                targetText = "Interviewer",
+                hediff = DefDatabase<HediffDef>.GetNamed("Anesthetic"),
+                severity = 0.1f,
+                needToBeGreater = true
+            });
+        }
+        return option;
+    }
+
+    private void CheckVisibilityOptions(string style)
+    {
+        IReadOnlyList<DialogElement_Option> options = window!.options;
+        Check(options.Select(option => option.text).SequenceEqual(new[] { "CQF_Test_Enabled", "CQF_Test_HiddenReason", "CQF_Test_VisibleReason" }),
+            style + " removes only the disabled choice configured as hidden");
+        Check(!options[0].disabled, style + " keeps an enabled choice selectable when both flags are set");
+        Check(options[1].disabled && string.IsNullOrEmpty(options[1].disableReason), style + " keeps the disabled choice visible without its reason");
+        Check(options[2].disabled && !string.IsNullOrEmpty(options[2].disableReason), style + " preserves the failure reason by default");
     }
 
     private void Capture(string name, Action next)

@@ -92,7 +92,7 @@ public sealed class CQFDialogRenderer_Galgame : CQFDialogRenderer
     private void DrawOptions(Rect rect, CQFDialogFrame frame)
     {
         float width = Mathf.Max(1f, rect.width - 20f);
-        float height = frame.Options.Sum(option => Mathf.Max(42f, Text.CalcHeight(option.text + (option.disabled ? $"({option.disableReason})" : null), width - 16f) + 12f) + 8f);
+        float height = frame.Options.Sum(option => Mathf.Max(42f, Text.CalcHeight(option.DisplayLabel, width - 16f) + 12f) + 8f);
         Widgets.BeginScrollView(rect, ref optionScroll, new Rect(0f, 0f, width, Mathf.Max(rect.height, height)));
         try
         {

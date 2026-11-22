@@ -46,15 +46,16 @@ public class CQFDialogTreeWindow : Window
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
+        if (this.optionsPending)
+        {
+            this.options.Clear();
+            this.options.AddRange(this.nextOptions);
+            this.nextOptions.Clear();
+            this.optionsPending = false;
+        }
+
         if (this.presentationRenderer != null)
         {
-            if (this.presentationOptionsPending)
-            {
-                this.options.Clear();
-                this.options.AddRange(this.nextOptions);
-                this.nextOptions.Clear();
-                this.presentationOptionsPending = false;
-            }
             this.presentationRenderer.Draw(inRect, new CQFDialogFrame(this.tree, this.curNode, this.title,
                 this.currentElements, this.options, this.interviewer, this.interviewee, () => this.Close()));
             return;
@@ -97,11 +98,13 @@ public class CQFDialogTreeWindow : Window
             dialogElement.Draw(ref y,curRect);
         }
 
-        if (!nextOptions.NullOrEmpty())
+        if (this.options.Count == 0)
         {
-            this.options.Clear();
-            this.options.AddRange(nextOptions);
-            this.nextOptions.Clear();
+            if (CQFUIStyle.ButtonText(new Rect(curRect.x, y, curRect.width, 42f), "Close".Translate()))
+            {
+                this.Close();
+            }
+            y += 50f;
         }
 
         y += 10f;
@@ -129,11 +132,14 @@ public class CQFDialogTreeWindow : Window
             this.nextOptions.Clear();
             this.currentElements = this.curNode.Get(interviewer,interviewee,tree,this.quest);
             this.elements.AddRange(this.currentElements);
-            this.presentationOptionsPending = true;
+            this.optionsPending = true;
             foreach (var curNodeOption in this.curNode.options)
             {
                 foreach (var op in curNodeOption.GetDEOptions(interviewer,interviewee,tree,this.quest))
                 {
+                    if (op.disabled && curNodeOption.hideWhenDisabled) continue;
+                    if (curNodeOption.hideFailReason) op.disableReason = string.Empty;
+
                     if (op.nextIndex != null)
                     {
                         op.action += () =>
@@ -187,7 +193,7 @@ public class CQFDialogTreeWindow : Window
     private string title;
     private readonly CQFDialogRenderer? presentationRenderer;
     private List<IDialogElement> currentElements = new();
-    private bool presentationOptionsPending;
+    private bool optionsPending;
 
 
     private static readonly Rect DefaultTexCoords = new Rect(0f, 0f, 1f, 1f);
