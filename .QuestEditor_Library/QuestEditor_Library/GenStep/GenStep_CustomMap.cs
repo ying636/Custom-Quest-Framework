@@ -15,8 +15,11 @@ namespace QuestEditor_Library
         {
             if (map.Parent is MapParent_Custom parent)
             {
-                GenStep_CustomMap.SpawnCustomMap(map, parms, parent.mapDataDef, parent.quest,
+                List<Thing> spawned = GenStep_CustomMap.SpawnCustomMap(map, parms, parent.mapDataDef, parent.quest,
                     false, null, false, true, false, parent.mapDataDef.destroyAllThing);
+#if RIMWORLD_1_7
+                if (parent is CQFCompositeMapParent composite) composite.GenerationCompleted = spawned != null;
+#endif
             }
             else if (map.Parent is EditorMapObject editor && editor.mapDef != null)
             {
@@ -173,7 +176,11 @@ namespace QuestEditor_Library
             }
             catch(Exception e) 
             {
-                if (!isGenerateByCore && def != null && (def.regions.Count > 0 || def.customSteps.OfType<CustomMapStep_Layout>().Any() || def.preCustomSteps.OfType<CustomMapStep_Layout>().Any()))
+                bool compositeMap = false;
+#if RIMWORLD_1_7
+                compositeMap = map.Parent is CQFCompositeMapParent;
+#endif
+                if (!isGenerateByCore && def != null && (compositeMap || def.regions.Count > 0 || def.customSteps.OfType<CustomMapStep_Layout>().Any() || def.preCustomSteps.OfType<CustomMapStep_Layout>().Any()))
                 {
                     GameTools.ClearTemporaryTargets(); GameTools.isGeneratingMap = false;
                     faction = null!; replaceData?.Clear(); replaceData = null!;

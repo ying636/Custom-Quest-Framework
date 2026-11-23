@@ -155,6 +155,9 @@ public sealed partial class GameComponent_MapManager
         {
             pendingHibernation.Remove(map);
             ValidateMap(map);
+#if RIMWORLD_1_7
+            if (GetCompositeMap(map) != null && !CanHibernateComposite(map)) continue;
+#endif
             HibernateNow(map, new CQFHibernatingMap(map));
         }
     }

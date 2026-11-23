@@ -438,6 +438,10 @@ AI 设计地图时，先明确：
 - 如果要保存“门已打开、奖励已领取、Boss 已死亡”等状态，应设计稳定 key 写入 `MainSite` 或数据库，而不是依赖旧地图仍存在。
 - 如果需要短期完全保留玩家改造过的地图，不应使用当前 MainMap 机制；RimWorld 原版没有可靠的轻量 Map 休眠 API。
 
+### 复合地图
+
+按定义生成多张相连地图，配置右上角小地图、边缘通行和出入口，见 [复合地图](references/composite-maps.md)。
+
 ### 独立地图休眠
 
 地图休眠由唯一的 `GameComponent_MapManager` 托管。领域通过可选 `CQF.Domain` 模块接入同一组件。休眠地图移出原版 `Game.Maps`，不再参与地图和物件调度；其中 Thing 视为未生成，原版 `Spawned=false`、`Map=null`，但对象没有被销毁。不要为休眠物件补出生成状态或地图引用。

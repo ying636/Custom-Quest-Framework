@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_CompositeMap>复合地图</CQF_CompositeMap>
+  <CQF_Composite_PortalTravel>出入口通行：前往{0}</CQF_Composite_PortalTravel>
+  <CQF_Composite_DestinationUnavailable>目的地地图不可用。</CQF_Composite_DestinationUnavailable>
+  <CQF_Composite_ArrivalBlocked>目的地的到达点被堵住了。</CQF_Composite_ArrivalBlocked>
+  <CQF_Composite_FullMap>展开全地图</CQF_Composite_FullMap>
+  <CQF_Composite_TravelReport>正在前往相邻地图。</CQF_Composite_TravelReport>
+  <CQF_CompositeCity>大城市</CQF_CompositeCity>
+  <CQF_CompositeCity_Center>中央广场</CQF_CompositeCity_Center>
+  <CQF_CompositeCity_North>住宅区</CQF_CompositeCity_North>
+  <CQF_CompositeCity_West>仓库区</CQF_CompositeCity_West>
+  <CQF_CompositeCity_East>花园区</CQF_CompositeCity_East>
+  <CQF_CompositeCity_South>商业区</CQF_CompositeCity_South>
+  <CQF_CompositeCity_Underground>地下通道</CQF_CompositeCity_Underground>
+  <CQF_Composite_EntryMap>{0}（入口地图）</CQF_Composite_EntryMap>
+  <CQF_Composite_EntranceButton>{0} · 入口地图：{1}</CQF_Composite_EntranceButton>
+  <CQF_Composite_SelectTraveler>选择要通过此出入口的殖民者。</CQF_Composite_SelectTraveler>
+  <CQFAction_ShowMapTitle>行为：地图入场文字</CQFAction_ShowMapTitle>
+  <CQF_EntranceTitleText>入场文字</CQF_EntranceTitleText>
+</LanguageData>

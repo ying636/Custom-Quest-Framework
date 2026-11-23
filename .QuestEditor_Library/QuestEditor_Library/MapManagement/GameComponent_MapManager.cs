@@ -32,6 +32,10 @@ public sealed partial class GameComponent_MapManager : GameComponent
         try
         {
             Module?.Update();
+#if RIMWORLD_1_7
+            ProcessCompositeTransfers();
+            UpdateCompositeMaps();
+#endif
         }
         finally
         {
@@ -39,19 +43,34 @@ public sealed partial class GameComponent_MapManager : GameComponent
         }
     }
 
-    public override void GameComponentOnGUI() => Module?.OnGUI();
+    public override void GameComponentOnGUI()
+    {
+        Module?.OnGUI();
+#if RIMWORLD_1_7
+        DrawMapEntranceTitle();
+#endif
+    }
 
     public override void StartedNewGame() => Module?.StartedNewGame();
 
     public override void LoadedGame()
     {
         RestoreHibernatingMaps();
+#if RIMWORLD_1_7
+        RestoreCompositeMaps();
+#endif
         Module?.LoadedGame();
     }
 
     public override void ExposeData()
     {
         ExposeHibernationData();
+#if RIMWORLD_1_7
+        Scribe_Collections.Look(ref compositeMaps, "CQF_compositeMaps", LookMode.Deep);
+        compositeMaps ??= new();
+        Scribe_Collections.Look(ref shownEntranceTitles, "CQF_shownEntranceTitles", LookMode.Value);
+        shownEntranceTitles ??= new();
+#endif
         if (Module != null && Scribe.EnterNode("cqfMapModule"))
         {
             try { Module.ExposeData(); }

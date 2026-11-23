@@ -10,6 +10,7 @@ namespace QuestEditor_Library
     public class MapParent_Custom : PocketMapParent
     {
         public CustomMapExit Exit => this.exit;
+        protected virtual bool RefogAfterMapGeneration => true;
         public virtual string MapName => (!this.customName.NullOrEmpty() ? this.customName 
             : this.mapDataDef?.label ?? this.def?.label);
         public override bool ShouldRemoveMapNow(out bool alsoRemoveWorldObject)
@@ -34,6 +35,7 @@ namespace QuestEditor_Library
         public override void PostMapGenerate()
         {
             base.PostMapGenerate();
+            if (!RefogAfterMapGeneration) return;
             CellIndices cellIndices = this.Map.cellIndices;
             GameTools.FogMap(this.Map);
             if (Current.ProgramState == ProgramState.Playing)

@@ -10,6 +10,10 @@ namespace QuestEditor_Library
         {
             XElement result = new XElement(nodeName);
             result.Add(new XElement("defName", this.defName));
+            if (this.showEntranceTitle)
+            {
+                result.Add(new XElement("showEntranceTitle", this.showEntranceTitle));
+            }
             if (!this.maps.NullOrEmpty())
             {
                 result.Add(CQFSerialization.SaveList_Saveable(this.maps, "maps"));
@@ -17,6 +21,7 @@ namespace QuestEditor_Library
             return result;
         }
 
+        public bool showEntranceTitle;
         public List<MainMapAndCondition> maps = new List<MainMapAndCondition>();
     }
 }

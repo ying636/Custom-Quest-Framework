@@ -12,4 +12,8 @@
     <OutputPath>$(MSBuildThisFileDirectory)..\..\$(RimWorldVersion)\Assemblies\</OutputPath>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(RimWorldVersion)' != '1.7'">
+    <Compile Remove="CompositeMaps\**\*.cs;MapManagement\GameComponent_MapManager.CompositeMaps.cs;MapManagement\GameComponent_MapManager.EntranceTitle.cs" />
+  </ItemGroup>
+
 </Project>

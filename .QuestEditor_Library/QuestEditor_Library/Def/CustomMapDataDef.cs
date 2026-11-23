@@ -292,6 +292,7 @@ namespace QuestEditor_Library
             result.isPart = this.isPart;
             result.destroyAllThing = this.destroyAllThing;
             result.fogged = this.fogged;
+            result.showEntranceTitle = this.showEntranceTitle;
             result.tags = this.tags.ListFullCopy();
             result.regions = this.regions.Select(r => r.Copy()).ToList();
             result.disgenerate = this.disgenerate.ListFullCopy();
@@ -472,6 +473,11 @@ namespace QuestEditor_Library
             if (this.fogged)
             {
                 result.Add(new XElement("fogged", this.fogged));
+            }
+
+            if (this.showEntranceTitle)
+            {
+                result.Add(new XElement("showEntranceTitle", this.showEntranceTitle));
             }
 
             result.Add(new XElement("size", this.size));
@@ -984,6 +990,7 @@ namespace QuestEditor_Library
         }
 
         public bool fogged = false;
+        public bool showEntranceTitle;
         public IntVec3 size;
         public bool isPart = false;
         public bool destroyAllThing = true;
