@@ -9,9 +9,10 @@ internal sealed class CQFCompositeMinimap : Window
     {
         this.manager = manager;
         Instance = instance;
-        portraitInteraction = new CQFCompositePortraitInteraction(manager, useColonistBarFrame: true);
-        mapLayout = new CQFCompositeMapLayout(instance.Definition, full: false);
+        portraitInteraction = new CQFCompositePortraitInteraction(manager);
+        mapLayout = new CQFCompositeMapLayout(full: false);
         selectRegion = manager.ViewCompositeRegion;
+        selectGroup = OpenOverview;
         layer = WindowLayer.GameUI;
         doWindowBackground = false;
         drawShadow = false;
@@ -25,7 +26,7 @@ internal sealed class CQFCompositeMinimap : Window
     internal CQFCompositeMapInstance Instance { get; }
     public override Vector2 InitialSize => new(Mathf.Min(315, UI.screenWidth * 0.40f), MapPanelHeight + PortraitPanelHeight);
     private float MapPanelHeight => Instance.MinimapExpanded ? 196 : 34;
-    private float PortraitPanelHeight => colonists is { Count: > 0 } ? 40 : 0;
+    private float PortraitPanelHeight => colonists is { Count: > 0 } ? CQFCompositeMapWindow.ColonistRowHeight + 12f : 0;
     protected override float Margin => 0;
 
     public override void DoWindowContents(Rect inRect)
@@ -33,31 +34,45 @@ internal sealed class CQFCompositeMinimap : Window
         using CQFUIScope scope = new();
         bool expanded = Instance.MinimapExpanded;
         bool repaint = Event.current.type == EventType.Repaint;
+        CQFCompositeMapGroup group = Instance.GetGroup(Find.CurrentMap) ?? Instance.RootGroup;
+        Map? parent = group.ParentRegion is { } region ? Instance.GetMap(region) : null;
         Rect mapPanel = new(0, 0, inRect.width, MapPanelHeight);
-        Rect handle = new(4, 3, 22, 28);
-        Rect expand = new(inRect.width - 36, 3, 32, 28);
+        Rect fullMap = new(4, 3, 22, 28);
+        Rect header = new(30, 3, inRect.width - 70, 28);
+        Rect back = new(30, 3, 22, 28);
+        if (parent != null) header.xMin = back.xMax + 4f;
+        Rect toggle = new(inRect.width - 36, 3, 32, 28);
+        bool fullMapOpen = Find.WindowStack.IsOpen(typeof(CQFCompositeMapWindow));
         if (repaint)
         {
             Widgets.DrawBoxSolid(mapPanel, CQFUIStyle.Panel);
             CQFUIStyle.DrawBox(mapPanel);
-            CQFUIStyle.DrawBackground(handle, expanded);
+            CQFUIStyle.DrawBackground(fullMap, fullMapOpen);
             for (int y = -5; y <= 5; y += 5)
-                Widgets.DrawLineHorizontal(handle.center.x - 6, handle.center.y + y, 12, CQFUIStyle.TextColor);
+                Widgets.DrawLineHorizontal(fullMap.center.x - 6, fullMap.center.y + y, 12, CQFUIStyle.TextColor);
+            CQFUIStyle.DrawBackground(toggle, expanded);
+            GUI.DrawTexture(toggle.ContractedBy(7f), expanded ? TexButton.Collapse : TexButton.Reveal, ScaleMode.ScaleToFit);
 
-            Rect header = new(30, 3, inRect.width - 70, 28);
             Text.Anchor = TextAnchor.MiddleLeft;
             Text.WordWrap = false;
-            Widgets.Label(header, Instance.DisplayName.Truncate(header.width));
-            TooltipHandler.TipRegionByKey(expand, "CQF_Composite_FullMap");
+            Widgets.Label(header, Instance.GroupName(group).Truncate(header.width));
+            TooltipHandler.TipRegionByKey(fullMap, "CQF_Composite_FullMap");
         }
 
-        HandleToggleAndDrag(handle);
-        if (CQFUIStyle.ButtonText(expand, "↗") && !Find.WindowStack.IsOpen(typeof(CQFCompositeMapWindow)))
-            Find.WindowStack.Add(new CQFCompositeMapWindow(manager, Instance));
+        if (Widgets.ButtonInvisible(fullMap) && !fullMapOpen)
+            OpenOverview(group);
+        if (parent != null && CQFCompositeMapWindow.DrawParentButton(back, GameComponent_MapManager.MapTitle(parent)))
+        {
+            selectRegion(parent);
+            return;
+        }
+        HandleDrag(header);
+        if (Widgets.ButtonInvisible(toggle))
+            Instance.MinimapExpanded = !expanded;
 
         if (expanded)
-            CQFCompositeMapWindow.DrawLayout(manager, Instance, mapLayout,
-                new Rect(9, 38, inRect.width - 18, mapPanel.height - 46), selectRegion);
+            CQFCompositeMapWindow.DrawLayout(manager, Instance, group, mapLayout,
+                new Rect(9, 38, inRect.width - 18, mapPanel.height - 46), selectRegion, selectGroup);
 
         if (colonists is { Count: > 0 })
         {
@@ -67,7 +82,7 @@ internal sealed class CQFCompositeMinimap : Window
                 Widgets.DrawBoxSolid(portraits, CQFUIStyle.Panel);
                 CQFUIStyle.DrawBox(portraits);
             }
-            CQFCompositeMapWindow.DrawColonists(portraits.ContractedBy(4), colonists, 28, ref portraitScroll, portraitInteraction);
+            CQFCompositeMapWindow.DrawColonists(portraits.ContractedBy(4), colonists, ref portraitScroll, portraitInteraction);
         }
     }
 
@@ -103,11 +118,11 @@ internal sealed class CQFCompositeMinimap : Window
         base.PostClose();
     }
 
-    private void HandleToggleAndDrag(Rect handle)
+    private void HandleDrag(Rect header)
     {
         Event current = Event.current;
         int control = GUIUtility.GetControlID(FocusType.Passive);
-        if (current.type == EventType.MouseDown && current.button == 0 && handle.Contains(current.mousePosition))
+        if (current.type == EventType.MouseDown && current.button == 0 && header.Contains(current.mousePosition))
         {
             dragControl = control;
             pointerTravel = Vector2.zero;
@@ -134,8 +149,6 @@ internal sealed class CQFCompositeMinimap : Window
             }
             else if (current.type == EventType.MouseUp && current.button == 0)
             {
-                if (!dragging && handle.Contains(current.mousePosition))
-                    Instance.MinimapExpanded = !Instance.MinimapExpanded;
                 GUIUtility.hotControl = 0;
                 dragControl = 0;
                 current.Use();
@@ -143,10 +156,23 @@ internal sealed class CQFCompositeMinimap : Window
         }
     }
 
+    private void OpenOverview(CQFCompositeMapGroup group)
+    {
+        CQFCompositeMapWindow? window = Find.WindowStack.WindowOfType<CQFCompositeMapWindow>();
+        if (window?.Instance != Instance)
+        {
+            if (window != null) Find.WindowStack.TryRemove(window, false);
+            window = new CQFCompositeMapWindow(manager, Instance);
+            Find.WindowStack.Add(window);
+        }
+        window.SelectGroup(group);
+    }
+
     private readonly GameComponent_MapManager manager;
     private readonly CQFCompositePortraitInteraction portraitInteraction;
     private readonly CQFCompositeMapLayout mapLayout;
     private readonly Action<Map> selectRegion;
+    private readonly Action<CQFCompositeMapGroup> selectGroup;
     private Vector2 pendingMove;
     private int dragControl;
     private Vector2 pointerTravel;

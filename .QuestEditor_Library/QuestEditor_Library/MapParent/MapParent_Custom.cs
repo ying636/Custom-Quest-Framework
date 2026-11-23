@@ -50,6 +50,15 @@ namespace QuestEditor_Library
 
         public override void Notify_MyMapRemoved(Map map)
         {
+#if RIMWORLD_1_7
+            this.rootSite?.allSubMaps.Remove(this);
+            this.sourceMap?.GetComponent<MapComponent_CustomMapData>()?.subMaps.Remove(this);
+            if (this.entrance?.CustomMap == map)
+            {
+                this.entrance.CustomMap = null!;
+                if (this.entrance.exit == this.exit) this.entrance.exit = null!;
+            }
+#endif
             base.Notify_MyMapRemoved(map);
             if (Prefs.DevMode)
             {

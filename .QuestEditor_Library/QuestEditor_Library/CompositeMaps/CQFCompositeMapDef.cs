@@ -100,4 +100,5 @@ public sealed class CQFCompositeMapDef : Def
     public string entry = "";
     public IntVec3 entryCell = IntVec3.Invalid;
     public bool showEntranceTitle;
+    public CQFCompositeMapPlacement appendedLayout;
 }

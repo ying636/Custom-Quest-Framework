@@ -6,6 +6,9 @@ namespace QuestEditor_Library;
 
 public sealed class CQFSceneLight : IExposable
 {
+    internal (Vector3 Position, Vector3 End, CQFSceneLightKind Kind, float Range, bool CastsShadows) ShadowGeometry =>
+        (this.position, this.end, this.kind, this.range, this.castsShadows);
+
     public CQFSceneLight Copy() => (CQFSceneLight)this.MemberwiseClone();
 
     public void CopyTo(CQFSceneLight target)
@@ -32,6 +35,13 @@ public sealed class CQFSceneLight : IExposable
         Scribe_Values.Look(ref this.enabled, "enabled", true);
         Scribe_Values.Look(ref this.glowRadius, "glowRadius");
     }
+
+    internal bool HasSameConfiguration(CQFSceneLight other) =>
+        this.position.Equals(other.position) && this.end.Equals(other.end) && this.direction.Equals(other.direction)
+        && this.color.Equals(other.color) && this.kind == other.kind && this.range == other.range
+        && this.intensity == other.intensity && this.enabled == other.enabled && this.castsShadows == other.castsShadows
+        && this.softness == other.softness && this.innerAngle == other.innerAngle && this.outerAngle == other.outerAngle
+        && this.glowRadius.Equals(other.glowRadius);
 
     public CQFSceneLightKind kind;
     public Vector3 position;

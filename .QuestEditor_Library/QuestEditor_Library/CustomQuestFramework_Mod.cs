@@ -14,6 +14,7 @@ namespace QuestEditor_Library
         public CustomQuestFramework_Mod(ModContentPack content) : base(content)
         {
             this.setting = this.GetSettings<CustomQuestFramework_ModSetting>();
+            this.questBookCheckIntervalBuffer = this.setting.QuestBookCheckInterval.ToString();
             this.alwaysLoadedModulesAtStartup = new HashSet<string>(this.setting.alwaysLoadedModules, StringComparer.Ordinal);
             CQFContentPaths.Initialize(content.RootDir);
             this.editorEnabledAtStartup = this.setting.enableEditor;
@@ -39,13 +40,11 @@ namespace QuestEditor_Library
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             bool previous = this.setting.enableEditor;
             float y = inRect.y;
-            Widgets.CheckboxLabeled(new Rect(inRect.x, y, inRect.width, 30f), "CQF_Editor_Enable".Translate(), ref this.setting.enableEditor);
+            Rect editorRow = new Rect(inRect.x, y, inRect.width, 30f);
+            Widgets.CheckboxLabeled(editorRow, "CQF_Editor_Enable".Translate(), ref this.setting.enableEditor);
+            TooltipHandler.TipRegion(editorRow, "CQF_Editor_EnableHint".Translate());
             if (previous != this.setting.enableEditor) this.setting.Write();
             y += 38f;
-            string hint = "CQF_Editor_EnableHint".Translate();
-            float hintHeight = Text.CalcHeight(hint, inRect.width);
-            Widgets.Label(new Rect(inRect.x, y, inRect.width, hintHeight), hint);
-            y += hintHeight + 12f;
             if (this.setting.enableEditor != this.editorEnabledAtStartup
                 || !this.alwaysLoadedModulesAtStartup.SetEquals(this.setting.alwaysLoadedModules))
             {
@@ -100,7 +99,7 @@ namespace QuestEditor_Library
         private readonly HashSet<string> alwaysLoadedModulesAtStartup;
         private Vector2 settingsScrollPosition;
         private float settingsContentHeight;
-        private string questBookCheckIntervalBuffer = string.Empty;
+        private string questBookCheckIntervalBuffer;
     }
 
     public class CustomQuestFramework_ModSetting : ModSettings

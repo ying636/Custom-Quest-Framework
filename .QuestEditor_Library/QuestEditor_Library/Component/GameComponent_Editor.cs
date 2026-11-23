@@ -195,19 +195,23 @@ namespace QuestEditor_Library
             {
                 if (Find.World?.renderer?.wantedMode == WorldRenderMode.None)
                 {
+                    Map currentMap = Find.CurrentMap;
                     this.dialogDrawBuffer.Clear();
                     foreach (KeyValuePair<Thing, DialogManagerDef> dialog in this.Dialogs)
                     {
-                        if (dialog.Key != null && dialog.Key.Spawned && dialog.Key.Map == Find.CurrentMap && dialog.Value != null)
+                        if (dialog.Key != null && dialog.Key.Spawned && dialog.Key.Map == currentMap && dialog.Value != null)
                         {
                             this.dialogDrawBuffer.Add(dialog);
                         }
                     }
                     try
                     {
+                        bool hasDialogsToDraw = this.dialogDrawBuffer.Count > 0;
+                        CellRect? view = hasDialogsToDraw ? Find.CameraDriver?.CurrentViewRect.ExpandedBy(1) : null;
+                        float realTime = hasDialogsToDraw ? Time.realtimeSinceStartup : 0f;
                         foreach (KeyValuePair<Thing, DialogManagerDef> d in this.dialogDrawBuffer)
                         {
-                            if (d.Key.Spawned && d.Key.Map == Find.CurrentMap && !d.Key.Fogged())
+                            if (d.Key.Spawned && d.Key.Map == currentMap)
                             {
                                 Vector3 drawPos = d.Key.DrawPos;
                                 drawPos.y = BaseAlt;
@@ -216,8 +220,10 @@ namespace QuestEditor_Library
                                     drawPos.x += (float)d.Key.def.size.x - 0.52f;
                                     drawPos.z += (float)d.Key.def.size.z - 0.45f;
                                 }
-                                float num = ((float)Math.Sin((double)((Time.realtimeSinceStartup + 397f * (float)(
-                d.Key.thingIDNumber % 571)) * 4f)) + 1f) * 0.5f;
+                                if ((view.HasValue && !view.Value.Contains(drawPos.ToIntVec3())) || d.Key.Fogged())
+                                    continue;
+
+                                float num = ((float)Math.Sin((realTime + 397f * (d.Key.thingIDNumber % 571)) * 4f) + 1f) * 0.5f;
                                 num = 0.3f + num * 0.7f;
                                 Material material = FadedMaterialPool.FadedVersionOf(
                                     GetDialogIconMaterial(d.Value.iconColor), num);

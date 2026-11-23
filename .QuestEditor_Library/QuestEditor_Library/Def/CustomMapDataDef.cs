@@ -109,6 +109,13 @@ namespace QuestEditor_Library
             QuestUtility.AddQuestTag(ref customMap.Parent.questTags, "Quest" + questID + "." + custom.level);
             Find.World.info.seedString = seed;
             DeepProfiler.End();
+#if RIMWORLD_1_7
+            if (entrance != null && custom.exit?.Map == customMap)
+            {
+                entrance.CustomMap = customMap;
+                entrance.NotifySubMapGenerated(parent, customMap);
+            }
+#endif
         }
 
         public IEnumerable<GenStepWithParams> GetSteps()

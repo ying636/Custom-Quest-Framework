@@ -65,13 +65,18 @@ public sealed partial class GameComponent_MapManager
             instance.Bind(entrance);
             compositeMaps.Add(instance);
             foreach (Map map in instance.Maps) compositeByMap.Add(map, instance);
+            RegisterCompositeEdges(instance);
             if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
             return instance;
         }
         catch (Exception error)
         {
             compositeMaps.Remove(instance);
-            foreach (Map map in instance.Maps) compositeByMap.Remove(map);
+            foreach (Map map in instance.Maps)
+            {
+                compositeByMap.Remove(map);
+                ForgetCompositeEdges(map);
+            }
             List<Exception> failures = new() { error };
             try { if (entrance?.Spawned == true) entrance.Destroy(); }
             catch (Exception cleanup) { failures.Add(cleanup); }
@@ -95,25 +100,20 @@ public sealed partial class GameComponent_MapManager
     {
         if (!compositeMaps.Contains(instance))
             throw new InvalidOperationException("[CQF] Composite map instance is unavailable.");
-        foreach (Map map in instance.Maps)
+        if (instance.UsesRegisteredMaps)
         {
-            if (map.Disposed) continue;
-            if (HasCompositeColonists(map))
-                throw new InvalidOperationException("[CQF] Composite map still has colonists: " + map.GetUniqueLoadID());
-            if (Find.World.pocketMaps.Any(parent => parent.sourceMap == map))
-                throw new InvalidOperationException("[CQF] Another pocket map uses this region as its return map: " + map.GetUniqueLoadID());
+            DestroyEntranceCompositeBranch(instance.RootGroup.Owner!);
+            return;
         }
-        if (instance.Maps.Contains(game.CurrentMap) && !instance.Source.Disposed)
+        List<Map> maps = GetCompositeBranchMaps(instance, instance.Groups);
+        if (CompositeRemovalBlock(maps) is { } blocked)
+            throw new InvalidOperationException(blocked.Translate().ToString());
+        if (maps.Contains(game.CurrentMap) && !instance.Source.Disposed)
         {
             Activate(instance.Source);
             CameraJumper.TryJump(instance.EntranceCell, instance.Source, CameraJumper.MovementMode.Cut);
         }
-        foreach (Map map in instance.Maps)
-        {
-            if (map.Disposed) continue;
-            Activate(map);
-            RemoveCompositeRegion((CQFCompositeMapParent)map.Parent);
-        }
+        RemoveCompositeBranchMaps(maps);
         if (instance.Entrance is { Destroyed: false } entrance && !instance.Source.Disposed)
         {
             bool wasHibernating = IsHibernating(instance.Source);
@@ -122,8 +122,8 @@ public sealed partial class GameComponent_MapManager
             if (wasHibernating) Hibernate(instance.Source);
         }
         foreach (Map map in instance.Maps) compositeByMap.Remove(map);
-        compositeMaps.Remove(instance);
-        if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
+        CloseCompositeInstance(instance);
+        DirtyCompositeColonists();
     }
 
 
@@ -222,9 +222,28 @@ public sealed partial class GameComponent_MapManager
         if (Current.ProgramState != ProgramState.Playing || LongEventHandler.AnyEventNowOrWaiting ||
             (compositeMaps.Count == 0 && minimap == null)) return;
         RememberCompositeCamera();
-        foreach (Map map in game.Maps)
-            if (GetCompositeMap(map) != null && CanHibernateComposite(map))
-                Hibernate(map);
+        try
+        {
+            if (compositeMaps.Exists(static instance => !instance.UsesRegisteredMaps))
+            {
+                foreach (Map map in game.Maps)
+                    if (map.Parent is CQFCompositeMapParent && GetCompositeMap(map) != null && CanHibernateComposite(map))
+                        compositeHibernationCandidates.Add(map);
+            }
+
+            HashSet<Map>? collectedMaps = null;
+            if (compositeHibernationCandidates.Count > 1)
+            {
+                CQFModuleLoader.CollectLifetimeMaps(game, compositeLifetimeMaps);
+                collectedMaps = compositeLifetimeMaps;
+            }
+            foreach (Map map in compositeHibernationCandidates) RequestHibernation(map, collectedMaps);
+        }
+        finally
+        {
+            compositeHibernationCandidates.Clear();
+            compositeLifetimeMaps.Clear();
+        }
         Map? currentMap = WorldRendererUtility.DrawingMap ? game.CurrentMap : null;
         UpdateCompositeMinimap(GetCompositeMap(currentMap));
 
@@ -255,7 +274,8 @@ public sealed partial class GameComponent_MapManager
     }
 
     private bool CanHibernateComposite(Map map) =>
-        (map != game.CurrentMap || !WorldRendererUtility.DrawingMap) && !HasCompositeColonists(map);
+        (map != game.CurrentMap || !WorldRendererUtility.DrawingMap) && !HasCompositeColonists(map) &&
+        GetCompositeMap(map)?.KeepsSourceActive(map) != true;
 
     private static bool HasCompositeColonists(Map map)
     {
@@ -280,11 +300,22 @@ public sealed partial class GameComponent_MapManager
     {
         foreach (CQFCompositeMapInstance instance in compositeMaps)
         {
-            if (instance.Definition == null || instance.Source == null || instance.EntryMap == null)
+            instance.RestoreGroups();
+            if (instance.Source == null || instance.EntryMap == null)
                 throw new InvalidOperationException("[CQF] A saved composite map has an unresolved definition, source or entry.");
+            foreach (CQFCompositeMapGroup group in instance.Groups)
+            {
+                if (group == instance.RootGroup && !instance.UsesRegisteredMaps) continue;
+                if (group.Owner == null || instance.GetMap(group.EntryRegion) is not { } entry ||
+                    entry != group.Owner.CustomMap ||
+                    (group != instance.RootGroup && (group.ParentRegion == null || instance.GetMap(group.ParentRegion) == null)) ||
+                    !compositeByEntrance.TryAdd(group.Owner, group))
+                    throw new InvalidOperationException("[CQF] A saved composite map has an unresolved or duplicate entrance.");
+            }
             foreach (Map map in instance.Maps)
                 if (map == null || !compositeByMap.TryAdd(map, instance))
                     throw new InvalidOperationException("[CQF] A saved composite map has an unresolved or duplicate region.");
+            RegisterCompositeEdges(instance);
         }
     }
 
@@ -311,6 +342,8 @@ public sealed partial class GameComponent_MapManager
     private List<CQFCompositeMapInstance> compositeMaps = new();
     private readonly Dictionary<Map, CQFCompositeMapInstance> compositeByMap = new();
     private readonly List<Action> compositeTransfers = new();
+    private readonly List<Map> compositeHibernationCandidates = new();
+    private readonly HashSet<Map> compositeLifetimeMaps = new();
     private CQFCompositeMinimap? minimap;
 
 }

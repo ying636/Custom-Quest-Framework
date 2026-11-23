@@ -54,13 +54,16 @@ namespace QuestEditor_Library
         public override void CompTick()
         {
             base.CompTick();
-            this.comps?.ForEach(s =>
+            if (this.comps == null) return;
+
+            foreach (ActionComp comp in this.comps)
             {
-                if (s.mode == ActionTriggerMode.Tick && s.ValidateTickInterval(this.parent.ThingID) && this.parent.IsHashIntervalTick(s.tick))
-                {
-                    s.actions.ForEach(a => a.Work(this.GetTargetThis(), this.Quest));
-                }
-            });
+                if (comp.mode != ActionTriggerMode.Tick || !comp.ValidateTickInterval(this.parent.ThingID) || !this.parent.IsHashIntervalTick(comp.tick))
+                    continue;
+
+                foreach (CQFAction action in comp.actions)
+                    action.Work(this.GetTargetThis(), this.Quest);
+            }
         }
 
         public override void Notify_SignalReceived(Signal signal)

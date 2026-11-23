@@ -130,6 +130,11 @@ public sealed class GameComponent_CQFProjectionUI : GameComponent, IDisposable
         CQFMapProjectionContext.ReturnToHost();
     }
 
+    internal void CollectHeldSources(HashSet<Map> sources)
+    {
+        foreach (Map source in this.sourceUsers.Keys) sources.Add(source);
+    }
+
     private void DrawViewportFrames(Map host)
     {
         Camera camera = CQFMapProjectionContext.Current?.HostCamera ?? Current.Camera;

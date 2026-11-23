@@ -63,7 +63,8 @@ namespace QuestEditor_Library
         }
         public override void Notify_MyMapRemoved(Map map)
         {
-            map.GetComponent<MapComponent_CustomMapData>().subMaps.ForEach(m => m.Destroy());
+            foreach (MapParent_Custom submap in map.GetComponent<MapComponent_CustomMapData>().Submaps.ToArray())
+                submap.Destroy();
         }
         public override bool ShouldRemoveMapNow(out bool alsoRemoveWorldObject)
         {

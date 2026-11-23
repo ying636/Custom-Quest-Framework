@@ -3,6 +3,7 @@
   <QuestEditor_Library.CQFCompositeMapDef>
     <defName>CQF_CompositeCity</defName>
     <label>Large City</label>
+    <showEntranceTitle>true</showEntranceTitle>
     <entry>Center</entry>
     <entryCell>(49, 0, 49)</entryCell>
     <regions>

@@ -93,9 +93,32 @@ public sealed class MapComponent_CQFMapProjections : MapComponent, IDisposable
         foreach (Map host in game.Maps)
         {
             MapComponent_CQFMapProjections? component = host.GetComponent<MapComponent_CQFMapProjections>();
-            if (component is { disposed: false } && component.projections.Any(p => p.enabled && p.sourceMap == source)) return true;
+            if (component is not { disposed: false }) continue;
+            List<CQFMapProjection> hostProjections = component.projections;
+            for (int i = 0; i < hostProjections.Count; i++)
+            {
+                CQFMapProjection projection = hostProjections[i];
+                if (projection.enabled && projection.sourceMap == source) return true;
+            }
         }
         return false;
+    }
+
+    internal static void CollectActiveSources(Game game, HashSet<Map> sources)
+    {
+        if (game.components != null) game.GetComponent<GameComponent_CQFProjectionUI>()?.CollectHeldSources(sources);
+        Map? previousSource = null;
+        foreach (Map host in game.Maps)
+        {
+            MapComponent_CQFMapProjections? component = host.GetComponent<MapComponent_CQFMapProjections>();
+            if (component is not { disposed: false }) continue;
+            foreach (CQFMapProjection projection in component.projections)
+            {
+                if (!projection.enabled || projection.sourceMap is not { } source || source == previousSource) continue;
+                sources.Add(source);
+                previousSource = source;
+            }
+        }
     }
 
     private void Fail(CQFMapProjection projection, Exception error)

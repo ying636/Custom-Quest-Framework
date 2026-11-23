@@ -6,36 +6,36 @@ namespace QuestEditor_Library;
 
 internal sealed class CQFCompositePortraitInteraction
 {
-    internal CQFCompositePortraitInteraction(GameComponent_MapManager manager, Action? onFocus = null,
-        bool useColonistBarFrame = false)
+    internal CQFCompositePortraitInteraction(GameComponent_MapManager manager, Action? onFocus = null)
     {
         this.manager = manager;
         this.onFocus = onFocus;
-        this.useColonistBarFrame = useColonistBarFrame;
     }
 
-    internal void Draw(Rect portrait, Pawn pawn)
+    internal void Draw(Rect portrait, Pawn pawn, float scale)
     {
         Selector selector = Find.Selector;
         if (Event.current.type == EventType.Repaint)
         {
-            bool selected = windowSelection == pawn || (windowSelection == null && selector.IsSelected(pawn));
-            if (useColonistBarFrame)
+            using CQFUIScope scope = new();
+            Text.WordWrap = false;
+            Matrix4x4 previous = GUI.matrix;
+            try
             {
-                GUI.DrawTexture(portrait, ColonistBar.BGTex);
-                if (selected)
+                if (scale < 1f)
                 {
-                    float scale = portrait.width / ColonistBar.BaseSize.x;
-                    SelectionDrawerUtility.DrawSelectionOverlayOnGUI(pawn, portrait.ExpandedBy(2f * scale),
-                        ColonistBar.BaseSelectedTexScale * scale, ColonistBar.BaseSelectedTexJump * scale);
+                    Vector2 offset = (GUIUtility.GUIToScreenPoint(Vector2.zero) + portrait.position) * (1f - scale);
+                    GUI.matrix = previous * Matrix4x4.TRS(new Vector3(offset.x, offset.y, 0f),
+                        Quaternion.identity, new Vector3(scale, scale, 1f));
                 }
+                ColonistBar bar = Find.ColonistBar;
+                bar.drawer.DrawColonist(new Rect(portrait.position, bar.Size), pawn, pawn.MapHeld,
+                    highlight: windowSelection == pawn, reordering: false);
             }
-            else if (selected)
+            finally
             {
-                CQFUIStyle.DrawHighlightSelected(portrait);
+                GUI.matrix = previous;
             }
-            GUI.DrawTexture(portrait, PortraitsCache.Get(pawn, portrait.size, Rot4.South,
-                ColonistBarColonistDrawer.PawnTextureCameraOffset, 1.28205f));
         }
         TooltipHandler.TipRegion(portrait, pawn.LabelShortCap);
 
@@ -73,7 +73,6 @@ internal sealed class CQFCompositePortraitInteraction
 
     private readonly GameComponent_MapManager manager;
     private readonly Action? onFocus;
-    private readonly bool useColonistBarFrame;
     private Pawn? clickedPawn;
     private Pawn? windowSelection;
     private int clickCount;

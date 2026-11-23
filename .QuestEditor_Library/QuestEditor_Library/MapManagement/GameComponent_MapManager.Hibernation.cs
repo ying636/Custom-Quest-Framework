@@ -12,12 +12,7 @@ public sealed partial class GameComponent_MapManager
 
     public bool IsHibernateRequested(Map? map) => map != null && pendingHibernation.Contains(map);
 
-    public void Hibernate(Map map)
-    {
-        ValidateMap(map);
-        if (CQFModuleLoader.KeepsMapActive(game, map)) return;
-        if (!IsHibernating(map)) pendingHibernation.Add(map);
-    }
+    public void Hibernate(Map map) => RequestHibernation(map, null);
 
     public Map Activate(Map map)
     {
@@ -43,6 +38,9 @@ public sealed partial class GameComponent_MapManager
         }
         records.Remove(map);
         hibernatingMaps.Remove(map);
+#if RIMWORLD_1_7
+        ActivateCompositeEdges(map);
+#endif
         if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
         Module?.MapAdded(map);
         return map;
@@ -55,6 +53,17 @@ public sealed partial class GameComponent_MapManager
         pendingHibernation.Remove(map);
         records.Remove(map);
         hibernatingMaps.Remove(map);
+#if RIMWORLD_1_7
+        ForgetCompositeEdges(map);
+        ForgetRegisteredCompositeRegion(map);
+#endif
+    }
+
+    private void RequestHibernation(Map map, HashSet<Map>? collectedMaps)
+    {
+        ValidateMap(map);
+        if (CQFModuleLoader.KeepsMapActive(game, map, collectedMaps)) return;
+        if (!IsHibernating(map)) pendingHibernation.Add(map);
     }
 
     private void ExposeHibernationData()
@@ -191,6 +200,9 @@ public sealed partial class GameComponent_MapManager
         if (index < 0) throw new InvalidOperationException("[CQF] Cannot detach an unregistered map: " + map.GetUniqueLoadID());
         CQFHibernatingMap.SetMapIndex(map, -1);
         game.Maps.RemoveAt(index);
+#if RIMWORLD_1_7
+        DetachCompositeEdges(map);
+#endif
         for (int i = index; i < game.Maps.Count; i++) CQFHibernatingMap.SetMapIndex(game.Maps[i], (sbyte)i);
         game.currentMapIndex = selected == null || selected == map ? (sbyte)-1 : (sbyte)game.Maps.IndexOf(selected);
         map.regionAndRoomUpdater.Enabled = false;

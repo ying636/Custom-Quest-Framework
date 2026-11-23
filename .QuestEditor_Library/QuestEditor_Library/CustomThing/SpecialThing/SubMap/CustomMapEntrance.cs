@@ -359,7 +359,16 @@ namespace QuestEditor_Library
 
             Find.World.info.seedString = seed;
             DeepProfiler.End();
+#if RIMWORLD_1_7
+            if (this.exit?.Map == this.customMap)
+                NotifySubMapGenerated(map, this.customMap);
+#endif
         }
+
+#if RIMWORLD_1_7
+        protected internal virtual void NotifySubMapGenerated(Map source, Map destination) =>
+            GameComponent_MapManager.Instance?.RegisterCompositeSubMap(source, destination);
+#endif
 
         public IEnumerable<GenStepWithParams> GetSteps()
         {

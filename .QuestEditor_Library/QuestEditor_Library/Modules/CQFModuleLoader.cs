@@ -101,10 +101,23 @@ public static class CQFModuleLoader
     internal static ICQFMapModule? CreateMapModule(GameComponent_MapManager host) => mapModuleFactory?.Invoke(host);
 
     internal static bool KeepsMapActive(Game game, Map map)
+        => KeepsMapActive(game, map, null);
+
+    internal static bool KeepsMapActive(Game game, Map map, HashSet<Map>? collectedMaps)
+    {
+        if (collectedMaps?.Contains(map) == true) return true;
+        foreach (ICQFMapLifetimeModule module in mapLifetimeModules)
+        {
+            if (collectedMaps != null && module is ICQFMapLifetimeCollector) continue;
+            if (module.KeepsMapActive(game, map)) return true;
+        }
+        return false;
+    }
+
+    internal static void CollectLifetimeMaps(Game game, HashSet<Map> maps)
     {
         foreach (ICQFMapLifetimeModule module in mapLifetimeModules)
-            if (module.KeepsMapActive(game, map)) return true;
-        return false;
+            if (module is ICQFMapLifetimeCollector collector) collector.CollectActiveMaps(game, maps);
     }
 
     internal static void BeforeMapsDisposed(Game game)

@@ -5,6 +5,9 @@
   <CQF_Composite_DestinationUnavailable>The destination map is unavailable.</CQF_Composite_DestinationUnavailable>
   <CQF_Composite_ArrivalBlocked>The arrival point is blocked.</CQF_Composite_ArrivalBlocked>
   <CQF_Composite_FullMap>Open full map</CQF_Composite_FullMap>
+  <CQF_Composite_BranchOccupied>Someone is still on the connected maps.</CQF_Composite_BranchOccupied>
+  <CQF_Composite_BranchInUse>Someone is using a connected passage.</CQF_Composite_BranchInUse>
+  <CQF_Composite_BranchHasReturn>Another map still uses one of these maps as its return point.</CQF_Composite_BranchHasReturn>
   <CQF_Composite_TravelReport>Traveling to another map.</CQF_Composite_TravelReport>
   <CQF_CompositeCity>Large City</CQF_CompositeCity>
   <CQF_CompositeCity_Center>Central Plaza</CQF_CompositeCity_Center>

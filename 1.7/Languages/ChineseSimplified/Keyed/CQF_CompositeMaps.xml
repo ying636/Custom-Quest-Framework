@@ -5,6 +5,9 @@
   <CQF_Composite_DestinationUnavailable>目的地地图不可用。</CQF_Composite_DestinationUnavailable>
   <CQF_Composite_ArrivalBlocked>目的地的到达点被堵住了。</CQF_Composite_ArrivalBlocked>
   <CQF_Composite_FullMap>展开全地图</CQF_Composite_FullMap>
+  <CQF_Composite_BranchOccupied>相连地图里还有角色。</CQF_Composite_BranchOccupied>
+  <CQF_Composite_BranchInUse>有角色正在通过相连的出入口。</CQF_Composite_BranchInUse>
+  <CQF_Composite_BranchHasReturn>还有另一张地图以这里为返回点。</CQF_Composite_BranchHasReturn>
   <CQF_Composite_TravelReport>正在前往相邻地图。</CQF_Composite_TravelReport>
   <CQF_CompositeCity>大城市</CQF_CompositeCity>
   <CQF_CompositeCity_Center>中央广场</CQF_CompositeCity_Center>

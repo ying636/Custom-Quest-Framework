@@ -3,7 +3,7 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public sealed class CQFMapProjectionsModule : ICQFModule, ICQFMapLifetimeModule
+public sealed class CQFMapProjectionsModule : ICQFModule, ICQFMapLifetimeCollector
 {
     public void Initialize()
     {
@@ -21,6 +21,8 @@ public sealed class CQFMapProjectionsModule : ICQFModule, ICQFMapLifetimeModule
     }
 
     public bool KeepsMapActive(Game game, Map map) => MapComponent_CQFMapProjections.KeepsActive(game, map);
+
+    public void CollectActiveMaps(Game game, HashSet<Map> maps) => MapComponent_CQFMapProjections.CollectActiveSources(game, maps);
 
     public void BeforeMapsDisposed(Game game)
     {

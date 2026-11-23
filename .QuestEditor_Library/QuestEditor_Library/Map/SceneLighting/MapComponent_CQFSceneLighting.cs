@@ -13,7 +13,7 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
 
     public IReadOnlyList<CQFSceneLight> Lights => this.lights ?? (IReadOnlyList<CQFSceneLight>)Array.Empty<CQFSceneLight>();
     public int ShadowRevision => this.shadows?.Revision ?? 0;
-    public int NativeLightCount => this.glowHandles?.Count ?? 0;
+    public int NativeLightCount => this.nativeLights?.Sum(light => light.Count) ?? 0;
     public Texture2D? ShadowTexture => this.shadows?.Texture;
     public CQFSceneBeam? Beam => this.beam;
     public long PhaseTicks => this.phaseTicks;
@@ -29,18 +29,20 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         List<CQFSceneLight> copy = sources.Select(source => source.Copy()).ToList();
         if (copy.Count > 16) throw new ArgumentOutOfRangeException(nameof(sources), "CQF_SceneLightLimit");
         foreach (CQFSceneLight source in copy) this.Validate(source);
-        this.lights = copy;
-        this.runtimeLights = copy.Select(source => source.Copy()).ToList();
-        this.beam = mainBeam?.Copy();
-        if (this.beam != null && (this.beam.lightIndex < 0 || this.beam.lightIndex >= copy.Count)) throw new ArgumentOutOfRangeException(nameof(mainBeam), "CQF_SceneBeamLightIndex");
-        if (this.beam != null && (!float.IsFinite(this.beam.period) || this.beam.period <= 0f)) throw new ArgumentException("CQF_SceneBeamPeriod");
-        if (this.beam != null && (this.beam.innerWidth < 0f || this.beam.outerWidth <= this.beam.innerWidth)) throw new ArgumentException("CQF_SceneBeamWidth");
-        if (this.beam != null && (!(this.beam.sunPeakHour >= 0f && this.beam.sunPeakHour < 24f) || !(this.beam.sunHalfWidthHours >= 0f && this.beam.sunHalfWidthHours <= 12f)))
+        CQFSceneBeam? beamCopy = mainBeam?.Copy();
+        if (beamCopy != null && (beamCopy.lightIndex < 0 || beamCopy.lightIndex >= copy.Count)) throw new ArgumentOutOfRangeException(nameof(mainBeam), "CQF_SceneBeamLightIndex");
+        if (beamCopy != null && (!float.IsFinite(beamCopy.period) || beamCopy.period <= 0f)) throw new ArgumentException("CQF_SceneBeamPeriod");
+        if (beamCopy != null && (beamCopy.innerWidth < 0f || beamCopy.outerWidth <= beamCopy.innerWidth)) throw new ArgumentException("CQF_SceneBeamWidth");
+        if (beamCopy != null && (!(beamCopy.sunPeakHour >= 0f && beamCopy.sunPeakHour < 24f) || !(beamCopy.sunHalfWidthHours >= 0f && beamCopy.sunHalfWidthHours <= 12f)))
             throw new ArgumentOutOfRangeException(nameof(mainBeam), "CQF_SceneBeamSunHours");
+        this.lights = copy;
+        this.lightConfigurations = null;
+        this.runtimeLights = null;
+        this.runtimeBeamIndex = -1;
+        this.beam = beamCopy;
         this.phaseTicks = 0;
-        this.lastFingerprint = 0;
-        this.shadowDirty = this.nativeDirty = true;
-        this.immediateShadow = this.immediateNative = true;
+        this.lastFrame = -1;
+        this.shadowDirty = this.immediateShadow = this.refreshNativeLights = true;
         this.Subscribe();
     }
 
@@ -178,8 +180,7 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
     {
         if (this.lights is { Count: > 0 }) this.Subscribe();
         this.occludersDirty = true;
-        this.shadowDirty = this.nativeDirty = true;
-        this.immediateShadow = this.immediateNative = true;
+        this.shadowDirty = this.immediateShadow = this.refreshNativeLights = true;
     }
 
     public override void ExposeData()
@@ -193,7 +194,8 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
 
     public void Dispose()
     {
-        this.ClearNativeLights();
+        if (this.nativeLights != null)
+            foreach (CQFSceneNativeLight light in this.nativeLights) light.Clear(this.map);
         this.shadows?.Dispose();
         this.shadows = null;
         this.scattering?.Dispose();
@@ -214,8 +216,7 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         this.lastFrame = -1;
         this.occluders?.Clear();
         this.occludersDirty = true;
-        this.shadowDirty = this.nativeDirty = true;
-        this.immediateShadow = this.immediateNative = true;
+        this.shadowDirty = this.immediateShadow = this.refreshNativeLights = true;
     }
 
     private void UpdateLighting()
@@ -223,75 +224,86 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         if (this.lastFrame == Time.frameCount) return;
         this.lastFrame = Time.frameCount;
         if (this.lights == null) return;
-        this.runtimeLights ??= this.lights.Select(source => source.Copy()).ToList();
-        this.UpdateBeamState();
-        HashCode fingerprint = new HashCode();
-        HashCode configurationShadow = new HashCode();
-        HashCode shadowFingerprint = new HashCode();
-        HashCode nativeFingerprint = new HashCode();
-        foreach (CQFSceneLight light in this.lights)
-        {
-            fingerprint.Add(light.position); fingerprint.Add(light.end); fingerprint.Add(light.direction); fingerprint.Add(light.color);
-            fingerprint.Add(light.kind); fingerprint.Add(light.range); fingerprint.Add(light.intensity); fingerprint.Add(light.enabled);
-            fingerprint.Add(light.castsShadows); fingerprint.Add(light.softness); fingerprint.Add(light.innerAngle); fingerprint.Add(light.outerAngle); fingerprint.Add(light.glowRadius);
-            configurationShadow.Add(light.position); configurationShadow.Add(light.end); configurationShadow.Add(light.kind); configurationShadow.Add(light.range); configurationShadow.Add(light.castsShadows);
-        }
-        for (int index = 0; index < this.runtimeLights.Count; index++)
-        {
-            CQFSceneLight light = this.runtimeLights[index];
-            shadowFingerprint.Add(light.position); shadowFingerprint.Add(light.end); shadowFingerprint.Add(light.kind); shadowFingerprint.Add(light.range); shadowFingerprint.Add(light.castsShadows);
-            Vector3 nativePosition = light.position, nativeEnd = light.end;
-            if (this.beam != null && index == this.beam.lightIndex) { nativePosition.x -= this.beam.heightSlope * nativePosition.y; nativeEnd.x -= this.beam.heightSlope * nativeEnd.y; }
-            nativeFingerprint.Add(new IntVec3(Mathf.FloorToInt(nativePosition.x), 0, Mathf.FloorToInt(nativePosition.z)));
-            nativeFingerprint.Add(new IntVec3(Mathf.FloorToInt(nativeEnd.x), 0, Mathf.FloorToInt(nativeEnd.z)));
-            nativeFingerprint.Add(light.kind); nativeFingerprint.Add((Color32)(light.color * Mathf.Clamp01(light.intensity))); nativeFingerprint.Add(light.enabled); nativeFingerprint.Add(light.glowRadius);
-        }
-        int current = fingerprint.ToHashCode();
-        if (current != this.lastFingerprint)
+        if (this.lightConfigurations == null)
         {
             foreach (CQFSceneLight light in this.lights) this.Validate(light);
-            this.lastFingerprint = current;
-            this.nativeDirty = this.immediateNative = true;
+            this.lightConfigurations = this.lights.Select(light => light.Copy()).ToList();
+            this.runtimeLights = new List<CQFSceneLight>(this.lightConfigurations);
         }
-        int configurationState = configurationShadow.ToHashCode();
-        if (configurationState != this.lastConfigurationShadow) { this.immediateShadow = true; this.lastConfigurationShadow = configurationState; }
-        int shadowState = shadowFingerprint.ToHashCode(), nativeState = nativeFingerprint.ToHashCode();
-        if (shadowState != this.lastShadowFingerprint) { this.shadowDirty = true; this.lastShadowFingerprint = shadowState; }
-        if (nativeState != this.lastNativeFingerprint) { this.nativeDirty = true; this.lastNativeFingerprint = nativeState; }
-        if (this.nativeDirty && (this.immediateNative || Time.realtimeSinceStartup - this.lastNativeTime >= .2f))
+
+        int previousBeamIndex = this.runtimeBeamIndex;
+        int beamIndex = this.beam?.lightIndex ?? -1;
+        if (previousBeamIndex != beamIndex)
         {
-            this.ClearNativeLights();
-            this.glowHandles ??= new List<int>();
-            for (int index = 0; index < this.runtimeLights.Count; index++)
-            {
-                CQFSceneLight light = this.runtimeLights[index];
-                if (!light.enabled || light.intensity <= 0f || light.glowRadius <= 0f) continue;
-                int samples = light.kind == CQFSceneLightKind.Strip ? Mathf.Clamp(Mathf.CeilToInt((light.end - light.position).magnitude / 8f), 2, 8) : 1;
-                for (int i = 0; i < samples; i++)
-                {
-                    Vector3 point = samples == 1 ? light.position : Vector3.Lerp(light.position, light.end, (i + .5f) / samples);
-                    if (this.beam != null && index == this.beam.lightIndex) point.x -= this.beam.heightSlope * point.y;
-                    IntVec3 cell = new IntVec3(Mathf.FloorToInt(point.x), 0, Mathf.FloorToInt(point.z));
-                    if (!cell.InBounds(this.map)) continue;
-                    Color color = light.color * Mathf.Clamp01(light.intensity / Mathf.Sqrt(samples));
-                    color.a = 1f;
-                    this.glowHandles.Add(this.map.glowGrid.RegisterCustomGlower(cell, Mathf.Min(40f, light.glowRadius), new ColorInt(color)));
-                }
-            }
-            this.nativeDirty = false;
-            this.immediateNative = false;
-            this.lastNativeTime = Time.realtimeSinceStartup;
-            this.NativeRevision++;
+            if (previousBeamIndex >= 0) this.runtimeLights![previousBeamIndex] = this.lightConfigurations[previousBeamIndex];
+            this.runtimeBeamIndex = beamIndex;
+            this.shadowDirty = this.immediateShadow = true;
         }
-        if (this.shadowDirty && this.runtimeLights.Count > 0 && (this.immediateShadow || Time.realtimeSinceStartup - this.lastShadowTime >= .1f))
+
+        bool beamVisibilityChanged = false;
+        if (this.beam != null)
+        {
+            this.beamLight ??= new CQFSceneLight();
+            var previousGeometry = this.beamLight.ShadowGeometry;
+            bool previouslyLit = this.beamLight.enabled && this.beamLight.intensity > 0f;
+            this.lights[beamIndex].CopyTo(this.beamLight);
+            this.UpdateBeamState(this.beam, this.beamLight);
+            this.runtimeLights![beamIndex] = this.beamLight;
+            if (!previousGeometry.Equals(this.beamLight.ShadowGeometry)) this.shadowDirty = true;
+            beamVisibilityChanged = previouslyLit != (this.beamLight.enabled && this.beamLight.intensity > 0f);
+        }
+        else this.beamGain = 0f;
+
+        float time = Time.realtimeSinceStartup;
+        bool nativeChanged = this.ResizeNativeLights(this.lights.Count);
+        for (int index = 0; index < this.lights.Count; index++)
+        {
+            CQFSceneLight source = this.lights[index];
+            CQFSceneLight configuration = this.lightConfigurations[index];
+            bool configurationChanged = !source.HasSameConfiguration(configuration);
+            if (configurationChanged)
+            {
+                this.Validate(source);
+                if (!source.ShadowGeometry.Equals(configuration.ShadowGeometry)) this.shadowDirty = this.immediateShadow = true;
+            }
+
+            bool isBeam = index == beamIndex;
+            bool beamSlotChanged = previousBeamIndex != beamIndex && (isBeam || index == previousBeamIndex);
+            if (this.refreshNativeLights || configurationChanged || beamSlotChanged
+                || (isBeam && (beamVisibilityChanged || time >= this.nextNativeBeamUpdate)))
+            {
+                CQFSceneLight light = isBeam ? this.beamLight! : source;
+                nativeChanged |= this.nativeLights![index].Update(this.map, light, isBeam ? this.beam!.heightSlope : null);
+                if (isBeam) this.nextNativeBeamUpdate = time + .2f;
+            }
+            if (configurationChanged) source.CopyTo(configuration);
+        }
+        this.refreshNativeLights = false;
+        if (nativeChanged) this.NativeRevision++;
+
+        if (this.shadowDirty && this.runtimeLights!.Count > 0 && (this.immediateShadow || time - this.lastShadowTime >= .1f))
         {
             this.UpdateOccluders();
             this.shadows ??= new CQFSceneShadowAtlas();
             this.shadows.Rebuild(this.runtimeLights, this.occluders!);
             this.shadowDirty = false;
             this.immediateShadow = false;
-            this.lastShadowTime = Time.realtimeSinceStartup;
+            this.lastShadowTime = time;
         }
+    }
+
+    private bool ResizeNativeLights(int count)
+    {
+        if (count == 0 && this.nativeLights == null) return false;
+        this.nativeLights ??= new List<CQFSceneNativeLight>(count);
+        bool changed = false;
+        for (int index = this.nativeLights.Count - 1; index >= count; index--)
+        {
+            changed |= this.nativeLights[index].Clear(this.map);
+            this.nativeLights.RemoveAt(index);
+        }
+        while (this.nativeLights.Count < count) this.nativeLights.Add(new CQFSceneNativeLight());
+        return changed;
     }
 
     private void UpdateOccluders()
@@ -314,32 +326,29 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
         this.occludersDirty = false;
     }
 
-    private void UpdateBeamState()
+    private void UpdateBeamState(CQFSceneBeam beam, CQFSceneLight light)
     {
-        for (int index = 0; index < this.lights!.Count; index++) this.lights[index].CopyTo(this.runtimeLights![index]);
         this.beamGain = 0f;
-        if (this.beam == null) return;
-        float angle = this.phaseTicks / 60f * Mathf.PI * 2f / this.beam.period;
-        float offsetChange = Mathf.Sin(angle) * this.beam.drift;
-        float slopeChange = Mathf.Sin(angle * .67f) * this.beam.sway;
-        this.beamPlane = new Vector4(1f, -this.beam.heightSlope, -this.beam.slope - slopeChange, -this.beam.offset - offsetChange);
-        CQFSceneLight light = this.runtimeLights![this.beam.lightIndex];
+        float angle = this.phaseTicks / 60f * Mathf.PI * 2f / beam.period;
+        float offsetChange = Mathf.Sin(angle) * beam.drift;
+        float slopeChange = Mathf.Sin(angle * .67f) * beam.sway;
+        this.beamPlane = new Vector4(1f, -beam.heightSlope, -beam.slope - slopeChange, -beam.offset - offsetChange);
         light.position.x += offsetChange + slopeChange * light.position.z;
         light.end.x += offsetChange + slopeChange * light.end.z;
-        float sky = Mathf.Lerp(1f, Mathf.Clamp01(this.map.skyManager.CurSkyGlow), Mathf.Clamp01(this.beam.skyResponse));
+        float sky = Mathf.Lerp(1f, Mathf.Clamp01(this.map.skyManager.CurSkyGlow), Mathf.Clamp01(beam.skyResponse));
         float modulation = sky * (.96f + .04f * Mathf.Cos(angle * 1.3f));
-        if (this.beam.sunHalfWidthHours > 0f)
+        if (beam.sunHalfWidthHours > 0f)
         {
             float localHour = GenLocalDate.DayTick(this.map) / 2500f;
-            float distance = Mathf.Abs(localHour - this.beam.sunPeakHour);
+            float distance = Mathf.Abs(localHour - beam.sunPeakHour);
             distance = Mathf.Min(distance, 24f - distance);
-            float exposure = Mathf.Clamp01(1f - distance / this.beam.sunHalfWidthHours);
+            float exposure = Mathf.Clamp01(1f - distance / beam.sunHalfWidthHours);
             modulation *= Mathf.SmoothStep(0f, 1f, exposure);
         }
-        light.intensity *= modulation * this.beam.intensity;
-        light.color *= this.beam.color;
-        light.enabled &= this.beam.enabled;
-        if (light.enabled && light.intensity > 0f) this.beamGain = this.beam.intensity * modulation;
+        light.intensity *= modulation * beam.intensity;
+        light.color *= beam.color;
+        light.enabled &= beam.enabled;
+        if (light.enabled && light.intensity > 0f) this.beamGain = beam.intensity * modulation;
     }
 
     private void Validate(CQFSceneLight light)
@@ -363,25 +372,20 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
     private void BuildingChanged(Building building) { if (building.def.blockLight) this.occludersDirty = this.shadowDirty = this.immediateShadow = true; }
     private void DoorChanged(Building_Door door) => this.occludersDirty = this.shadowDirty = this.immediateShadow = true;
 
-    private void ClearNativeLights()
-    {
-        if (this.glowHandles == null) return;
-        foreach (int handle in this.glowHandles) this.map.glowGrid.DeregisterCustomGlower(handle);
-        this.glowHandles.Clear();
-    }
-
     private static readonly string[] PositionNames = { "_CQFLightPositionRange0", "_CQFLightPositionRange1", "_CQFLightPositionRange2", "_CQFLightPositionRange3" };
     private static readonly string[] ColorNames = { "_CQFLightColorIntensity0", "_CQFLightColorIntensity1", "_CQFLightColorIntensity2", "_CQFLightColorIntensity3" };
     private static readonly string[] EndNames = { "_CQFLightEndKind0", "_CQFLightEndKind1", "_CQFLightEndKind2", "_CQFLightEndKind3" };
     private static readonly string[] DirectionNames = { "_CQFLightDirectionCone0", "_CQFLightDirectionCone1", "_CQFLightDirectionCone2", "_CQFLightDirectionCone3" };
     private static readonly string[] ParameterNames = { "_CQFLightParameters0", "_CQFLightParameters1", "_CQFLightParameters2", "_CQFLightParameters3" };
     private List<CQFSceneLight>? lights;
+    private List<CQFSceneLight>? lightConfigurations;
     private List<CQFSceneLight>? runtimeLights;
+    private CQFSceneLight? beamLight;
     private CQFSceneBeam? beam;
     private CQFSceneScattering? scattering;
     private List<Bounds>? sceneOccluders;
     private List<Bounds>? occluders;
-    private List<int>? glowHandles;
+    private List<CQFSceneNativeLight>? nativeLights;
     private Dictionary<Material, Material>? materials;
     private CQFSceneShadowAtlas? shadows;
     private Vector4[]? positions;
@@ -393,16 +397,12 @@ public sealed class MapComponent_CQFSceneLighting : MapComponent, IDisposable
     private float beamGain;
     private long phaseTicks;
     private int lastFrame = -1;
-    private int lastFingerprint;
-    private int lastShadowFingerprint;
-    private int lastNativeFingerprint;
-    private int lastConfigurationShadow;
+    private int runtimeBeamIndex = -1;
     private float lastShadowTime = -1f;
-    private float lastNativeTime = -1f;
+    private float nextNativeBeamUpdate;
     private bool immediateShadow = true;
-    private bool immediateNative = true;
     private bool shadowDirty = true;
-    private bool nativeDirty = true;
+    private bool refreshNativeLights = true;
     private bool subscribed;
     private bool occludersDirty = true;
 }

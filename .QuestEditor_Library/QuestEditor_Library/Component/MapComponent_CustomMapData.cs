@@ -307,8 +307,13 @@ namespace QuestEditor_Library
         }
         private void Notify_ThingSpawned(Thing thing)
         {
-            GameComponent_MapManager.Instance?.NotifyMapActivity(map);
-            if (thing is Pawn pawn) Notify_PawnSpawned(pawn);
+            GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
+            manager?.NotifyMapActivity(map);
+            if (thing is Pawn pawn)
+            {
+                if (map.Parent is CQFCompositeMapParent) manager?.NotifyCompositeEdgeSpawned(pawn, map);
+                Notify_PawnSpawned(pawn);
+            }
         }
         private void Notify_ThingDespawned(Thing thing)
         {
