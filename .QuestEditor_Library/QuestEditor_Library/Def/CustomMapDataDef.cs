@@ -130,52 +130,40 @@ namespace QuestEditor_Library
             return resolved;
         }
 
-        public CellRect GetRect(IntVec3 pos)
-        {
-            List<IntVec3> cells = this.GetAllPosition();
-            int? minX = null;
-            int? maxX = null;
-            int? minZ = null;
-            int? maxZ = null;
-            cells.ToList().ForEach((c) =>
-            {
-                maxX = maxX != null && c.x < maxX ? maxX : c.x;
-                minX = minX != null && c.x > minX ? minX : c.x;
-                minZ = minZ != null && c.z > minZ ? minZ : c.z;
-                maxZ = maxZ != null && c.z < maxZ ? maxZ : c.z;
-            });
-            CellRect result = CellRect.FromLimits(pos.x + minX.Value, pos.z + minZ.Value, pos.x + maxX.Value, pos.z + maxZ.Value);
-            return result;
-        }
+        public CellRect GetRect(IntVec3 pos) => GetRect(pos, this.GetOccupiedPositions());
 
         public List<IntVec3> GetAllPosition()
         {
             List<IntVec3> result = new List<IntVec3>();
-            Action<IntVec3> add = p =>
+            HashSet<IntVec3> seen = new HashSet<IntVec3>();
+            this.VisitPositions(cell =>
             {
-                if (!result.Contains(p))
-                {
-                    result.Add(p);
-                }
-            };
-            this.customThings.ForEach(t => add(t.position));
-            this.thingDatas.ForEach(d =>
-            {
-                add(d.position);
-                d.allPositions.ForEach(add);
-                d.allRect.ForEach(d2 => d2.Cells.ToList().ForEach(d3 => add(d3)));
+                if (seen.Add(cell)) result.Add(cell);
             });
-            this.zoneCores.ForEach(d => add(d.position));
-            this.pawns.Keys.ToList().ForEach(p => add(p));
-            this.specialSpawnPawns.Keys.ToList().ForEach(p => add(p));
-            this.enterSpots.ForEach(add);
-            this.routes.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
-            this.terrains.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
-            this.terrainsRect.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 => add(p3))));
-            this.terrainsColorRect.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 => add(p3))));
-            this.roofs.Values.ToList().ForEach(p => p.ForEach(p2 => add(p2)));
-            this.roofRects.Values.ToList().ForEach(p => p.ForEach(p2 => p2.Cells.ToList().ForEach(p3 => add(p3))));
             return result;
+        }
+
+        internal HashSet<IntVec3> GetOccupiedPositions()
+        {
+            HashSet<IntVec3> result = new HashSet<IntVec3>();
+            this.VisitPositions(cell => result.Add(cell));
+            return result;
+        }
+
+        internal static CellRect GetRect(IntVec3 pos, IEnumerable<IntVec3> cells)
+        {
+            int? minX = null;
+            int? maxX = null;
+            int? minZ = null;
+            int? maxZ = null;
+            foreach (IntVec3 cell in cells)
+            {
+                minX = Math.Min(minX ?? cell.x, cell.x);
+                maxX = Math.Max(maxX ?? cell.x, cell.x);
+                minZ = Math.Min(minZ ?? cell.z, cell.z);
+                maxZ = Math.Max(maxZ ?? cell.z, cell.z);
+            }
+            return CellRect.FromLimits(pos.x + minX.Value, pos.z + minZ.Value, pos.x + maxX.Value, pos.z + maxZ.Value);
         }
 
         public CustomMapDataDef GetRotated(Rot4 rot)
@@ -367,7 +355,7 @@ namespace QuestEditor_Library
                 }
             }
 
-            this.SaveThings(centre, map.listerThings.AllThings, map.AllCells.ToList());
+            this.SaveThings(centre, map.listerThings.AllThings, CellRect.WholeMap(map));
             if (captureCells) SavePoss(map, map.AllCells.ToList(), centre);
             map.designationManager.designationsByDef[QEDefOf.QE_Disgenerate].ForEach(d => this.disgenerate.Add(d.target.Cell - centre));
             map.designationManager.designationsByDef[QEDefOf.QE_Disdestroy].ForEach(d => this.disdestroy.Add(d.target.Cell - centre));
@@ -377,11 +365,15 @@ namespace QuestEditor_Library
         {
             int? minX = null;
             int? minZ = null;
-            poss.ToList().ForEach((c) =>
+            int maxX = int.MinValue;
+            int maxZ = int.MinValue;
+            foreach (IntVec3 cell in poss)
             {
-                minX = minX != null && c.x > minX ? minX : c.x;
-                minZ = minZ != null && c.z > minZ ? minZ : c.z;
-            });
+                minX = Math.Min(minX ?? cell.x, cell.x);
+                minZ = Math.Min(minZ ?? cell.z, cell.z);
+                maxX = Math.Max(maxX, cell.x);
+                maxZ = Math.Max(maxZ, cell.z);
+            }
             IntVec3 centre = new IntVec3(minX.Value, 0, minZ.Value);
             this.size = size;
             this.regions = MapComponent_CustomMapData.GetComp(map).Regions.Capture(poss, centre);
@@ -399,7 +391,7 @@ namespace QuestEditor_Library
                     });
                 }
             });
-            this.SaveThings(centre, things, poss);
+            this.SaveThings(centre, things, CellRect.FromLimits(centre.x, centre.z, maxX, maxZ));
             this.SavePoss(map, poss, centre);
             if (map.GetComponent<MapComponent_CustomMapData>()is MapComponent_CustomMapData component && component.route != null)
             {
@@ -423,49 +415,43 @@ namespace QuestEditor_Library
         {
             List<CellRect> result = new List<CellRect>();
             allPos.SortBy(p => p.DistanceTo(IntVec3.Zero));
-            while (allPos.Any())
+            Dictionary<(int x, int z), int> remaining = new Dictionary<(int x, int z), int>(allPos.Count);
+            Dictionary<int, int> nextOccurrence = new Dictionary<int, int>();
+            for (int index = allPos.Count - 1; index >= 0; index--)
             {
-                IntVec3 position = allPos.First();
-                int x = position.x;
-                int z = position.z;
-                int curX = position.x;
-                int curZ = position.z;
-                while (true)
-                {
-                    if (allPos.Contains(position + IntVec3.East))
-                    {
-                        position.x++;
-                        curX++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                bool unended = true;
-                while (unended)
-                {
-                    for (int x1 = x; x1 <= curX; x1++)
-                    {
-                        if (!allPos.Contains(new IntVec3(x1, 0, curZ + 1)))
-                        {
-                            unended = false;
-                            break;
-                        }
-                    }
-
-                    if (unended)
-                    {
-                        curZ++;
-                    }
-                }
-
-                CellRect rect = new CellRect(x, z, curX - x + 1, curZ - z + 1);
-                rect.Cells.ToList().ForEach(c => allPos.Remove(c));
-                result.Add(rect);
+                IntVec3 cell = allPos[index];
+                var key = (cell.x, cell.z);
+                if (remaining.TryGetValue(key, out int next)) nextOccurrence.Add(index, next);
+                remaining[key] = index;
             }
 
+            for (int index = 0; index < allPos.Count; index++)
+            {
+                IntVec3 position = allPos[index];
+                if (!remaining.TryGetValue((position.x, position.z), out int first) || first != index) continue;
+                int maxX = position.x;
+                int maxZ = position.z;
+                while (remaining.ContainsKey((maxX + 1, position.z))) maxX++;
+                while (true)
+                {
+                    int x = position.x;
+                    while (x <= maxX && remaining.ContainsKey((x, maxZ + 1))) x++;
+                    if (x <= maxX) break;
+                    maxZ++;
+                }
+
+                CellRect rect = CellRect.FromLimits(position.x, position.z, maxX, maxZ);
+                foreach (IntVec3 cell in rect.Cells)
+                {
+                    var key = (cell.x, cell.z);
+                    if (nextOccurrence.TryGetValue(remaining[key], out int next)) remaining[key] = next;
+                    else remaining.Remove(key);
+                }
+                result.Add(rect);
+                if (remaining.Count == 0) break;
+            }
+
+            allPos.Clear();
             return result;
         }
 
@@ -844,7 +830,35 @@ namespace QuestEditor_Library
             });
         }
 
-        private void SaveThings(IntVec3 centre, List<Thing> things, List<IntVec3> rect)
+        private void VisitPositions(Action<IntVec3> visit)
+        {
+            foreach (CustomThingData thing in this.customThings) visit(thing.position);
+            foreach (ThingData thing in this.thingDatas)
+            {
+                visit(thing.position);
+                thing.allPositions.ForEach(visit);
+                foreach (CellRect rect in thing.allRect)
+                    foreach (IntVec3 cell in rect.Cells) visit(cell);
+            }
+            foreach (CustomThingData core in this.zoneCores) visit(core.position);
+            foreach (IntVec3 cell in this.pawns.Keys) visit(cell);
+            foreach (IntVec3 cell in this.specialSpawnPawns.Keys) visit(cell);
+            this.enterSpots.ForEach(visit);
+            foreach (List<IntVec3> route in this.routes.Values) route.ForEach(visit);
+            foreach (List<IntVec3> terrain in this.terrains.Values) terrain.ForEach(visit);
+            foreach (List<CellRect> terrain in this.terrainsRect.Values)
+                foreach (CellRect rect in terrain)
+                    foreach (IntVec3 cell in rect.Cells) visit(cell);
+            foreach (List<CellRect> color in this.terrainsColorRect.Values)
+                foreach (CellRect rect in color)
+                    foreach (IntVec3 cell in rect.Cells) visit(cell);
+            foreach (List<IntVec3> roof in this.roofs.Values) roof.ForEach(visit);
+            foreach (List<CellRect> roof in this.roofRects.Values)
+                foreach (CellRect rect in roof)
+                    foreach (IntVec3 cell in rect.Cells) visit(cell);
+        }
+
+        private void SaveThings(IntVec3 centre, List<Thing> things, CellRect bounds)
         {
             List<ThingData> datas = new List<ThingData>();
             foreach (Thing thing in things)
@@ -858,19 +872,8 @@ namespace QuestEditor_Library
                 if (thing is ZoneCore core)
                 {
                     CustomThingData_ZoneCore dataCore = new CustomThingData_ZoneCore(core, savePos);
-                    int? minX = null;
-                    int? maxX = null;
-                    int? minZ = null;
-                    int? maxZ = null;
-                    rect.ForEach((c) =>
-                    {
-                        IntVec3 curPos = c - centre;
-                        minX = minX != null && savePos.x - curPos.x < minX ? minX : savePos.x - curPos.x;
-                        maxX = maxX != null && curPos.x - savePos.x < maxX ? maxX : curPos.x - savePos.x;
-                        minZ = minZ != null && savePos.z - curPos.z < minZ ? minZ : savePos.z - curPos.z;
-                        maxZ = maxZ != null && curPos.z - savePos.z < maxZ ? maxZ : curPos.z - savePos.z;
-                    });
-                    dataCore.size = new CoreSize(minX.Value, minZ.Value, maxX.Value, maxZ.Value);
+                    dataCore.size = new CoreSize(thing.Position.x - bounds.minX, thing.Position.z - bounds.minZ,
+                        bounds.maxX - thing.Position.x, bounds.maxZ - thing.Position.z);
                     this.zoneCores.Add(dataCore);
                     continue;
                 }
@@ -952,7 +955,7 @@ namespace QuestEditor_Library
                 }
                 else
                 {
-                    datas.Add(new ThingData(thing, savePos));
+                    datas.Add(data);
                 }
             }
 

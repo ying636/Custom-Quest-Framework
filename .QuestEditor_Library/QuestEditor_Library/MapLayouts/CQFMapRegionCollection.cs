@@ -51,8 +51,9 @@ public sealed class CQFMapRegionCollection : IExposable
 
     public List<CQFMapRegion> Capture(IEnumerable<IntVec3> selected, IntVec3 origin)
     {
-        HashSet<IntVec3> selection = new HashSet<IntVec3>(selected);
         List<CQFMapRegion> result = new List<CQFMapRegion>();
+        if (regions.Count == 0) return result;
+        HashSet<IntVec3> selection = new HashSet<IntVec3>(selected);
         foreach (CQFMapRegion region in regions)
         {
             if (!region.cells.Any(selection.Contains)) continue;

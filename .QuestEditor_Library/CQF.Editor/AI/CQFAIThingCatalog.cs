@@ -28,10 +28,18 @@ namespace QuestEditor_Library
                 new XElement("def", new XAttribute("name", def.defName), new XAttribute("label", def.label ?? def.defName), new XAttribute("mod", def.modContentPack?.PackageId ?? ""),
                     new XElement("description", def.description ?? ""), Describe(def))));
         }
-        public static XElement? Describe(ThingDef def)
+        public static XElement? Describe(ThingDef def) => Describe(def, false);
+
+        internal static XElement? Describe(ThingDef def, bool compact)
         {
             string kind = Kind(def);
             if (kind.Length == 0) return null;
+            bool worker = def.comps?.Any(comp => comp.compClass != null && typeof(CompActionWorker).IsAssignableFrom(comp.compClass)) == true;
+            bool text = def.comps?.Any(comp => comp.compClass != null && typeof(CompCustomText).IsAssignableFrom(comp.compClass)) == true;
+            bool pawn = def.thingClass != null && typeof(Pawn).IsAssignableFrom(def.thingClass);
+            bool editable = !pawn && (kind is "interaction" or "entrance" or "exit" or "loot" or "trap" or "door" or "container" or "spawner" or "zone" or "generation" or "custom_text" or "action_worker" || worker || text);
+            if (compact) return new XElement("cqf", new XAttribute("kind", kind), new XAttribute("liveFeatureEditing", editable));
+
             Type? data = kind switch
             {
                 "interaction" => typeof(CustomThingData_InteractableThing), "entrance" => typeof(CustomThingData_CustomMapEntrance), "exit" => typeof(CustomThingData_CustomMapExit),
@@ -45,11 +53,7 @@ namespace QuestEditor_Library
                 "exit" => new[] { "cqf_read_map_thing", "cqf_edit_map_thing", "cqf_configure_exit" },
                 "loot" or "trap" or "door" or "container" or "spawner" or "zone" or "generation" or "custom_text" or "action_worker" => new[] { "cqf_read_map_thing", "cqf_edit_map_thing" }, _ => new[] { "cqf_read_map_thing" }
             };
-            bool worker = def.comps?.Any(comp => comp.compClass != null && typeof(CompActionWorker).IsAssignableFrom(comp.compClass)) == true;
-            bool text = def.comps?.Any(comp => comp.compClass != null && typeof(CompCustomText).IsAssignableFrom(comp.compClass)) == true;
-            bool pawn = def.thingClass != null && typeof(Pawn).IsAssignableFrom(def.thingClass);
             bool facility = Facilities(def);
-            bool editable = !pawn && (kind is "interaction" or "entrance" or "exit" or "loot" or "trap" or "door" or "container" or "spawner" or "zone" or "generation" or "custom_text" or "action_worker" || worker || text);
             if ((worker || text) && !tools.Contains("cqf_edit_map_thing")) tools = tools.Concat(new[] { "cqf_edit_map_thing" }).ToArray();
             if (pawn) tools = new[] { "cqf_read_map_thing" };
             if (facility || pawn) tools = tools.Concat(new[] { "cqf_read_runtime", "cqf_operate_runtime", "cqf_runtime_help" }).Distinct().ToArray();

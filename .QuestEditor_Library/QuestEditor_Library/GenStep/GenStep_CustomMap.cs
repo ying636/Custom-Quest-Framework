@@ -491,106 +491,69 @@ namespace QuestEditor_Library
             foreach (KeyValuePair<string, List<IntVec3>> content in def.terrains)
             {
                 TerrainDef terrain = GetTerrainDef(TerrainDef.Named(content.Key), def);
-                content.Value.ForEach(x =>
-                {
-                    if ((x + center).InBounds(map))
-                    {
-                        SetTerrainSafely(map, x + center, terrain);
-                    }
-                });
+                foreach (IntVec3 cell in content.Value) SetTerrainSafely(map, cell + center, terrain);
             }
             foreach (KeyValuePair<string, List<CellRect>> content in def.terrainsRect)
             {
                 TerrainDef terrain = GetTerrainDef(TerrainDef.Named(content.Key), def);
-                content.Value.ForEach(x =>
-                {
-                    foreach (var item in x.Cells.ToList())
-                    {
-                        if ((item + center).InBounds(map))
-                        {
-                            SetTerrainSafely(map, item + center, terrain);
-                        }
-                    }
-                });
+                foreach (CellRect rect in content.Value)
+                    foreach (IntVec3 cell in rect.Cells)
+                        SetTerrainSafely(map, cell + center, terrain);
             }
             foreach (var content in def.terrainsColorRect)
-            { 
-                content.Value.ForEach(x =>
-                {
-                    foreach (var item in x.Cells.ToList())
+                foreach (CellRect rect in content.Value)
+                    foreach (IntVec3 position in rect.Cells)
                     {
-                        if ((item + center).InBounds(map))
-                        {
-                            map.terrainGrid.SetTerrainColor(item + center,content.Key);
-                        }
+                        IntVec3 cell = position + center;
+                        if (cell.InBounds(map)) map.terrainGrid.SetTerrainColor(cell, content.Key);
                     }
-                });
-            }
             foreach (KeyValuePair<RoofDef, List<IntVec3>> content in def.roofs)
             {
-                content.Value.ForEach(x =>
+                foreach (IntVec3 position in content.Value)
                 {
-                    if ((x + center).InBounds(map))
-                    {
-                        map.roofGrid.SetRoof(x + center, content.Key);
-                    }
-                });
+                    IntVec3 cell = position + center;
+                    if (cell.InBounds(map)) map.roofGrid.SetRoof(cell, content.Key);
+                }
             }
             foreach (KeyValuePair<RoofDef, List<CellRect>> content in def.roofRects)
-            { 
-                content.Value.ForEach(x =>
-                {
-                    foreach (var item in x.Cells.ToList())
+                foreach (CellRect rect in content.Value)
+                    foreach (IntVec3 position in rect.Cells)
                     {
-                        if ((item + center).InBounds(map))
-                        {
-                            map.roofGrid.SetRoof(item + center, content.Key);
-                        }
+                        IntVec3 cell = position + center;
+                        if (cell.InBounds(map)) map.roofGrid.SetRoof(cell, content.Key);
                     }
-                });
-            }
         }
 
         private static void Pretreat(Map map, CustomMapDataDef def, IntVec3 center,
             bool isGenerateByCore, List<IntVec3> disgenerate2, 
             bool destroyThings = false, Func<Thing, bool> validator = null)
         {
-            CellRect rect = def.GetRect(center);
-            List<IntVec3> poss = rect.Cells.ToList();
-            HashSet<IntVec3> customMapCells = new HashSet<IntVec3>(def.GetAllPosition().Select(p => p + center));
+            HashSet<IntVec3> customMapCells = def.GetOccupiedPositions();
+            CellRect rect = CustomMapDataDef.GetRect(center, customMapCells);
             List<Thing> things = new List<Thing>();
             if (map.fogGrid == null)
             {
                 map.ConstructComponents();
             }
-            poss.ForEach(x =>
+            foreach (IntVec3 cell in rect.Cells)
             {
-                if (x.InBounds(map) && customMapCells.Contains(x) && !def.disdestroy.Contains(x - center))
-                {
-                    if (!isGenerateByCore && destroyThings) 
-                    {
-                        map.roofGrid.SetRoof(x, null);
-                    }
-                    things.AddRange(x.GetThingList(map).ListFullCopy().FindAll(t => validator == null || validator(t)));
-                    if (isGenerateByCore)
-                    {
-                        disgenerate2.Add(x);
-                    }
-                }
-            });
+                if (!cell.InBounds(map)) continue;
+                IntVec3 position = cell - center;
+                if (!customMapCells.Contains(position) || def.disdestroy.Contains(position)) continue;
+                if (!isGenerateByCore && destroyThings) map.roofGrid.SetRoof(cell, null);
+                List<Thing> occupants = cell.GetThingList(map);
+                if (validator == null) things.AddRange(occupants);
+                else things.AddRange(occupants.ListFullCopy().FindAll(t => validator(t)));
+                if (isGenerateByCore) disgenerate2.Add(cell);
+            }
             if (!isGenerateByCore || destroyThings)
             {
-                while (things.Count != 0)
+                foreach (Thing thing in things)
                 {
-                    Thing thing = things[0];
                     if (thing.def.destroyable && !thing.Destroyed && !(thing is CustomMapExit)
                         && !(thing is Skyfaller))
                     {
                         thing.Destroy();
-                    }
-                    if (things.Contains(thing))
-                    {
-                        things.Remove(thing);
                     }
                 }
             }

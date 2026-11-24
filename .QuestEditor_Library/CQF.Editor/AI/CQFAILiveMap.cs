@@ -31,11 +31,25 @@ namespace QuestEditor_Library
             if (offset < 0 || offset > 4096 || limit < 1 || limit > 400) throw new InvalidDataException("CQF_AI_InvalidTool: pagination");
             IntVec3[] page = region.Skip(offset).Take(limit).ToArray();
             if (compact) return ReadRegionCompact(region, offset, page);
-            return new XElement("region", new XAttribute("map", Map.uniqueID), new XAttribute("total", region.Area), new XAttribute("offset", offset), new XAttribute("encoding", "thing_refs"),
-                page.Select(cell => new XElement("cell", new XAttribute("x", cell.x), new XAttribute("z", cell.z),
+            XElement result = new XElement("region", new XAttribute("map", Map.uniqueID), new XAttribute("total", region.Area),
+                new XAttribute("offset", offset), new XAttribute("encoding", "thing_refs"));
+            XElement things = new XElement("things");
+            HashSet<Thing> seen = new HashSet<Thing>();
+            foreach (IntVec3 cell in page)
+            {
+                List<Thing> contents = cell.GetThingList(Map);
+                XElement entry = new XElement("cell", new XAttribute("x", cell.x), new XAttribute("z", cell.z),
                     new XAttribute("terrain", Map.terrainGrid.TerrainAt(cell).defName), new XAttribute("roof", Map.roofGrid.RoofAt(cell)?.defName ?? ""),
-                    new XAttribute("thingCount", cell.GetThingList(Map).Count), cell.GetThingList(Map).Take(20).Select(thing => new XElement("thingRef", new XAttribute("id", thing.ThingID))))),
-                new XElement("things", page.SelectMany(cell => cell.GetThingList(Map).Take(20)).Distinct().Select(DescribeRegionThing)));
+                    new XAttribute("thingCount", contents.Count));
+                foreach (Thing thing in contents.Take(20))
+                {
+                    entry.Add(new XElement("thingRef", new XAttribute("id", thing.ThingID)));
+                    if (seen.Add(thing)) things.Add(DescribeRegionThing(thing));
+                }
+                result.Add(entry);
+            }
+            result.Add(things);
+            return result;
         }
         public XElement ReadThing(string id)
         {
@@ -120,24 +134,19 @@ namespace QuestEditor_Library
             if (configuration.exit != null) CQFAIThingContext.Apply(thing, configuration.exit);
             CQFAILiveFeatures.Apply(thing, configuration);
         }
-        private static XElement DescribeRegionThing(Thing thing)
-        {
-            XElement result = Describe(thing);
-            foreach (string attribute in new[] { "hitPoints", "maxHitPoints", "stackLimit", "faction", "interaction", "entrance", "exit" }) result.Attribute(attribute)?.Remove();
-            XElement? cqf = result.Element("cqf");
-            if (cqf != null) cqf.ReplaceWith(new XElement("cqf", cqf.Attributes().Where(attribute => attribute.Name.LocalName is "kind" or "liveFeatureEditing")));
-            return result;
-        }
-        private static XElement Describe(Thing thing)
+        private static XElement DescribeRegionThing(Thing thing) => Describe(thing, true);
+
+        private static XElement Describe(Thing thing, bool compact = false)
         {
             CellRect footprint = thing.OccupiedRect();
+            XAttribute[]? details = compact ? null : new[] {
+                new XAttribute("hitPoints", thing.def.useHitPoints ? thing.HitPoints : 0), new XAttribute("maxHitPoints", thing.def.useHitPoints ? thing.MaxHitPoints : 0),
+                new XAttribute("stackLimit", thing.def.stackLimit), new XAttribute("faction", thing.Faction?.Name ?? ""),
+                new XAttribute("interaction", thing is InteractableThing), new XAttribute("entrance", thing is CustomMapEntrance), new XAttribute("exit", thing is CustomMapExit) };
             return new XElement("thing", new XAttribute("id", thing.ThingID), new XAttribute("def", thing.def.defName),
             new XAttribute("x", thing.Position.x), new XAttribute("z", thing.Position.z), new XAttribute("rotation", thing.Rotation.AsInt),
             new XAttribute("category", thing.def.category), new XAttribute("stuff", thing.Stuff?.defName ?? ""), new XAttribute("count", thing.stackCount),
-            new XAttribute("hitPoints", thing.def.useHitPoints ? thing.HitPoints : 0), new XAttribute("maxHitPoints", thing.def.useHitPoints ? thing.MaxHitPoints : 0),
-            new XAttribute("stackLimit", thing.def.stackLimit), new XAttribute("faction", thing.Faction?.Name ?? ""),
-            new XAttribute("interaction", thing is InteractableThing), new XAttribute("entrance", thing is CustomMapEntrance), new XAttribute("exit", thing is CustomMapExit),
-            CQFAIThingCatalog.Describe(thing.def),
+            details, CQFAIThingCatalog.Describe(thing.def, compact),
             thing.def.rotatable || thing.def.size.x > 1 || thing.def.size.z > 1
                 ? new XElement("footprint", new XAttribute("x", footprint.minX), new XAttribute("z", footprint.minZ), new XAttribute("width", footprint.Width), new XAttribute("height", footprint.Height)) : null,
             ThingUtility.InteractionCellsWhenAt(thing.def, thing.Position, thing.Rotation, thing.Map)
