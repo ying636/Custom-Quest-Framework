@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <CQF_TrapArrow.label>暗箭发射器</CQF_TrapArrow.label>
+    <CQF_TrapArrow.description>朝面对的方向发射一轮暗箭。</CQF_TrapArrow.description>
+    <CQF_TrapRollingStone.label>滚石发射器</CQF_TrapRollingStone.label>
+    <CQF_TrapRollingStone.description>朝面对的方向释放滚石。</CQF_TrapRollingStone.description>
+    <CQF_TrapSpikes.label>伸缩地刺</CQF_TrapSpikes.label>
+    <CQF_TrapSpikes.description>短暂预警后，从地面升起一排尖刺。</CQF_TrapSpikes.description>
+    <CQF_TrapArrowFlight.label>暗箭</CQF_TrapArrowFlight.label>
+    <CQF_TrapRollingStoneFlight.label>滚石</CQF_TrapRollingStoneFlight.label>
+</LanguageData>

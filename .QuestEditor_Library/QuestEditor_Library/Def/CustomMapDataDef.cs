@@ -868,6 +868,11 @@ namespace QuestEditor_Library
                     continue;
                 }
 
+#if RIMWORLD_1_7
+                if (thing is CQFTrapMovingHazard)
+                    continue;
+#endif
+
                 IntVec3 savePos = thing.Position - centre;
                 if (thing is ZoneCore core)
                 {

@@ -54,7 +54,13 @@ namespace QuestEditor_Library
             {
                 if (spawnableThings.Count == 0)
                 {
-                    spawnableThings.AddRange(DefDatabase<ThingDef>.AllDefsListForReading.Where(def => def.category != ThingCategory.Gas && def.category != ThingCategory.Mote && def.category != ThingCategory.Projectile && def.category != ThingCategory.Pawn && def.category != ThingCategory.Attachment && !def.IsCorpse && !def.IsFrame && !IsCustomThing(def)));
+                    spawnableThings.AddRange(DefDatabase<ThingDef>.AllDefsListForReading.Where(def =>
+#if RIMWORLD_1_7
+                        def.thingClass != typeof(CQFTrapMovingHazard) &&
+#endif
+                        def.category != ThingCategory.Gas && def.category != ThingCategory.Mote && def.category != ThingCategory.Projectile
+                        && def.category != ThingCategory.Pawn && def.category != ThingCategory.Attachment
+                        && !def.IsCorpse && !def.IsFrame && !IsCustomThing(def)));
                 }
 
                 return spawnableThings;

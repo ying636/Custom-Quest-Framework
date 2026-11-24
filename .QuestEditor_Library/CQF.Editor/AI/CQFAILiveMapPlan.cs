@@ -89,7 +89,11 @@ namespace QuestEditor_Library
             Attributes(operation, "def", "stuff", "x", "z", "rotation", "count", "faction");
             string name = operation.Attribute("def")?.Value ?? "";
             ThingDef def = DefDatabase<ThingDef>.GetNamedSilentFail(name) ?? throw new InvalidDataException("CQF_AI_MissingResource: " + name);
-            if (def.category is not (ThingCategory.Building or ThingCategory.Item or ThingCategory.Plant) || def.IsBlueprint || def.IsFrame || def.IsCorpse || def.randomizeRotationOnSpawn)
+            bool placeable = def.category is ThingCategory.Building or ThingCategory.Item or ThingCategory.Plant;
+#if RIMWORLD_1_7
+            placeable |= def.category == ThingCategory.Attachment && typeof(CustomTrap).IsAssignableFrom(def.thingClass);
+#endif
+            if (!placeable || def.IsBlueprint || def.IsFrame || def.IsCorpse || def.randomizeRotationOnSpawn)
                 throw new InvalidDataException("CQF_AI_InvalidValue: live placement type");
             int rotation = Number(operation, "rotation", 0), count = Number(operation, "count", 1);
             if (rotation < 0 || rotation > 3 || count < 1 || count > def.stackLimit) throw new InvalidDataException("CQF_AI_InvalidValue: placement");

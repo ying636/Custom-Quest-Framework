@@ -123,6 +123,14 @@ namespace QuestEditor_Library
             {
                 if (signal.tag == c.inSignal)
                 {
+#if RIMWORLD_1_7
+                    if (signal.args.TryGetArg("Trigger", out Pawn contact)
+                        || signal.args.TryGetArg(CQFAction_TrapMechanism.SignalContactKey, out contact))
+                    {
+                        c.TriggerFromSignal(this, contact);
+                        return;
+                    }
+#endif
                     c.Trigger(this);
                 };
             });
@@ -179,24 +187,15 @@ namespace QuestEditor_Library
 
         public void Trigger(CustomTrap trap, Pawn pawn = null)
         {
-            if (Prefs.DevMode)
-            {
-                Log.Message("CQF Trap Trigger:" + trap.trapName);
-            }
-
-            this.actions.ForEach(a =>
-            {
-                if (pawn == null)
-                {
-                    a.Work(trap.GetTargetThis(), GameTools.GetQuestFromThing(trap));
-                    return;
-                }
-
-                Dictionary<string, TargetInfo> targets = trap.GetTargetThis();
-                targets.Add("Trigger", pawn);
-                a.Work(targets, GameTools.GetQuestFromThing(trap));
-            });
+            this.TriggerWithContext(trap, pawn, "Trigger");
         }
+
+#if RIMWORLD_1_7
+        internal void TriggerFromSignal(CustomTrap trap, Pawn contact)
+        {
+            this.TriggerWithContext(trap, contact, CQFAction_TrapMechanism.SignalContactKey);
+        }
+#endif
 
         public void Draw(ref float y, Rect inRect, float x)
         {
@@ -268,6 +267,22 @@ namespace QuestEditor_Library
             this.actions.ForEach((x) => actions.Add(x.SaveToXElement("li")));
             result.Add(actions);
             return result;
+        }
+
+        private void TriggerWithContext(CustomTrap trap, Pawn pawn, string contextKey)
+        {
+            if (Prefs.DevMode)
+            {
+                Log.Message("CQF Trap Trigger:" + trap.trapName);
+            }
+
+            this.actions.ForEach(a =>
+            {
+                Dictionary<string, TargetInfo> targets = trap.GetTargetThis();
+                if (pawn != null)
+                    targets.Add(contextKey, pawn);
+                a.Work(targets, GameTools.GetQuestFromThing(trap));
+            });
         }
 
         public bool triggerWhenDamaged = true;

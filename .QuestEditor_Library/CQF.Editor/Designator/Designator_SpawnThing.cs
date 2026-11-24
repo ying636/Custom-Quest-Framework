@@ -49,6 +49,9 @@ namespace QuestEditor_Library
                         ThingCategory.Pawn, ThingCategory.Attachment };
                     foreach (ThingDef def in DefDatabase<ThingDef>.AllDefsListForReading)
                     {
+#if RIMWORLD_1_7
+                        if (def.thingClass == typeof(CQFTrapMovingHazard)) continue;
+#endif
                         if (!disable.Contains(def.category)
                             && !def.IsCorpse && !def.IsFrame && !Designator_CQFTools.IsCQFTool(def))
                         {

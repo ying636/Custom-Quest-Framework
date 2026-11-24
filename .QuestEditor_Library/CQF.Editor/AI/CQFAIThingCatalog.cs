@@ -78,6 +78,9 @@ namespace QuestEditor_Library
         private static string Kind(ThingDef def)
         {
             Type? type = def.thingClass;
+#if RIMWORLD_1_7
+            if (type == typeof(CQFTrapMovingHazard)) return "";
+#endif
             if (type != null)
             {
                 if (typeof(InteractableThing).IsAssignableFrom(type)) return "interaction";

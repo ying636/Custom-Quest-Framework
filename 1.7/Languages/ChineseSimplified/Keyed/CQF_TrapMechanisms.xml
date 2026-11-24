@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <CQFAction_TrapMechanism>控制陷阱机关</CQFAction_TrapMechanism>
+    <CQFAction_TrapMechanism_Tip>启动、停用或启用目标机关。机关的朝向决定作用方向。</CQFAction_TrapMechanism_Tip>
+    <CQF_TrapCommand_Start>启动一轮机关</CQF_TrapCommand_Start>
+    <CQF_TrapCommand_Disable>停用机关</CQF_TrapCommand_Disable>
+    <CQF_TrapCommand_Enable>启用机关</CQF_TrapCommand_Enable>
+    <CQF_TrapDefaultProgram>使用机关的默认方案</CQF_TrapDefaultProgram>
+    <CQF_TrapDirectionTip>摆放前按 Q 或 E 调整机关朝向。</CQF_TrapDirectionTip>
+    <CQF_TrapProgramMissing>CQF 机关 {0} 缺少机关方案。</CQF_TrapProgramMissing>
+    <CQF_TrapProgramInvalid>CQF 机关方案 {0} 无法运行。{1}</CQF_TrapProgramInvalid>
+    <CQF_TrapTargetNotThing>CQF 机关动作需要以事物为目标。</CQF_TrapTargetNotThing>
+    <CQF_TrapTargetNotMechanism>{0} 没有 CQF 机关组件。</CQF_TrapTargetNotMechanism>
+    <CQF_TrapTargetMissing>CQF 机关动作找不到目标。</CQF_TrapTargetMissing>
+</LanguageData>

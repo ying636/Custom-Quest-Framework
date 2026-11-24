@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <CQFAction_TrapMechanism>Control trap mechanism</CQFAction_TrapMechanism>
+    <CQFAction_TrapMechanism_Tip>Start, disable, or enable the targeted trap mechanism. Its facing sets the direction.</CQFAction_TrapMechanism_Tip>
+    <CQF_TrapCommand_Start>Start trap cycle</CQF_TrapCommand_Start>
+    <CQF_TrapCommand_Disable>Disable mechanism</CQF_TrapCommand_Disable>
+    <CQF_TrapCommand_Enable>Enable mechanism</CQF_TrapCommand_Enable>
+    <CQF_TrapDefaultProgram>Use mechanism's default program</CQF_TrapDefaultProgram>
+    <CQF_TrapDirectionTip>Press Q or E to turn the mechanism before placing it.</CQF_TrapDirectionTip>
+    <CQF_TrapProgramMissing>CQF trap {0} has no program.</CQF_TrapProgramMissing>
+    <CQF_TrapProgramInvalid>CQF trap program {0} is invalid. {1}</CQF_TrapProgramInvalid>
+    <CQF_TrapTargetNotThing>The CQF trap action needs a thing as its target.</CQF_TrapTargetNotThing>
+    <CQF_TrapTargetNotMechanism>{0} has no CQF trap mechanism.</CQF_TrapTargetNotMechanism>
+    <CQF_TrapTargetMissing>The CQF trap action could not resolve a target.</CQF_TrapTargetMissing>
+</LanguageData>

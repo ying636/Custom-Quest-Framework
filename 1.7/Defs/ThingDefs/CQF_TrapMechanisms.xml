@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <QuestEditor_Library.CQFTrapProgramDef>
+        <defName>CQF_TrapProgram_Arrow</defName>
+        <label>arrow volley</label>
+        <pattern>Arrow</pattern>
+        <movingThing>CQF_TrapArrowFlight</movingThing>
+        <damage>ArrowHighVelocity</damage>
+        <damageAmount>12</damageAmount>
+        <length>16</length>
+        <pulses>3</pulses>
+        <intervalTicks>12</intervalTicks>
+        <ticksPerCell>3</ticksPerCell>
+    </QuestEditor_Library.CQFTrapProgramDef>
+
+    <QuestEditor_Library.CQFTrapProgramDef>
+        <defName>CQF_TrapProgram_RollingStone</defName>
+        <label>rolling stone</label>
+        <pattern>RollingStone</pattern>
+        <movingThing>CQF_TrapRollingStoneFlight</movingThing>
+        <damage>Blunt</damage>
+        <damageAmount>24</damageAmount>
+        <length>14</length>
+        <ticksPerCell>6</ticksPerCell>
+    </QuestEditor_Library.CQFTrapProgramDef>
+
+    <QuestEditor_Library.CQFTrapProgramDef>
+        <defName>CQF_TrapProgram_Spikes</defName>
+        <label>retractable spikes</label>
+        <pattern>Spikes</pattern>
+        <damage>Stab</damage>
+        <damageAmount>16</damageAmount>
+        <length>4</length>
+        <activeGraphic>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Building/Security/TrapSpikeArmed</texPath>
+        </activeGraphic>
+    </QuestEditor_Library.CQFTrapProgramDef>
+
+    <ThingDef Name="CQF_TrapMechanismBase" ParentName="CustomTrapBase" Abstract="True">
+        <thingClass>QuestEditor_Library.CustomTrap</thingClass>
+        <rotatable>true</rotatable>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_TrapMechanismBase">
+        <defName>CQF_TrapArrow</defName>
+        <label>arrow launcher</label>
+        <description>Fires a volley of arrows along the direction it faces.</description>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Projectile/Arrow_Small</texPath>
+        </graphicData>
+        <comps>
+            <li Class="QuestEditor_Library.CompProperties_CQFTrapMechanism">
+                <program>CQF_TrapProgram_Arrow</program>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_TrapMechanismBase">
+        <defName>CQF_TrapRollingStone</defName>
+        <label>rolling stone launcher</label>
+        <description>Releases a rolling stone along the direction it faces.</description>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/StonePressurePlate</texPath>
+        </graphicData>
+        <comps>
+            <li Class="QuestEditor_Library.CompProperties_CQFTrapMechanism">
+                <program>CQF_TrapProgram_RollingStone</program>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_TrapMechanismBase">
+        <defName>CQF_TrapSpikes</defName>
+        <label>retractable floor spikes</label>
+        <description>Raises a row of spikes from the floor after a short warning.</description>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <texPath>Things/Trap/PressurePlate</texPath>
+        </graphicData>
+        <comps>
+            <li Class="QuestEditor_Library.CompProperties_CQFTrapMechanism">
+                <program>CQF_TrapProgram_Spikes</program>
+            </li>
+        </comps>
+    </ThingDef>
+
+    <ThingDef Name="CQF_TrapMovingHazardBase" Abstract="True">
+        <thingClass>QuestEditor_Library.CQFTrapMovingHazard</thingClass>
+        <category>Ethereal</category>
+        <tickerType>Normal</tickerType>
+        <drawerType>RealtimeOnly</drawerType>
+        <altitudeLayer>Projectile</altitudeLayer>
+        <useHitPoints>false</useHitPoints>
+        <selectable>false</selectable>
+        <rotatable>true</rotatable>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_TrapMovingHazardBase">
+        <defName>CQF_TrapArrowFlight</defName>
+        <label>trap arrow</label>
+        <graphicData>
+            <graphicClass>Graphic_Single</graphicClass>
+            <shaderType>Transparent</shaderType>
+            <texPath>Things/Projectile/Arrow_Small</texPath>
+        </graphicData>
+    </ThingDef>
+
+    <ThingDef ParentName="CQF_TrapMovingHazardBase">
+        <defName>CQF_TrapRollingStoneFlight</defName>
+        <label>trap stone</label>
+        <graphicData>
+            <graphicClass>Graphic_Random</graphicClass>
+            <texPath>Things/Item/Chunk/ChunkStone</texPath>
+            <color>(105,95,97)</color>
+            <drawSize>(1.35,1.35)</drawSize>
+        </graphicData>
+    </ThingDef>
+</Defs>
