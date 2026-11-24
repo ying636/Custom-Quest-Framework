@@ -240,4 +240,34 @@ Counts come from the API and include completed tool rounds. +? means the total i
 Requests sent: {2}/{3}
 Estimated reservation for active requests: {4} tokens</CQF_AI_BudgetUsage>
   <CQF_AI_BudgetEstimated>Budget accounting includes estimated usage for requests with unavailable usage or interrupted responses. Reported token totals above remain unchanged.</CQF_AI_BudgetEstimated>
+  <CQF_AI_External>External agent (MCP)</CQF_AI_External>
+  <CQF_AI_ExternalBusy>Processing a CQF tool call</CQF_AI_ExternalBusy>
+  <CQF_AI_ExternalCopy>Copy the local pipe name for CQF.McpHost.</CQF_AI_ExternalCopy>
+  <CQF_AI_ExternalDuplicate>This request ID was already used with different arguments.</CQF_AI_ExternalDuplicate>
+  <CQF_AI_ExternalEditing>MCP bridge ready · editing enabled</CQF_AI_ExternalEditing>
+  <CQF_AI_ExternalError>MCP bridge failed</CQF_AI_ExternalError>
+  <CQF_AI_ExternalLimit>This bridge session reached its request limit. Reopen the bridge before starting another session.</CQF_AI_ExternalLimit>
+  <CQF_AI_ExternalReadOnly>MCP bridge ready · read-only</CQF_AI_ExternalReadOnly>
+  <CQF_AI_ExternalStart>Start local MCP bridge</CQF_AI_ExternalStart>
+  <CQF_AI_ExternalUndo>Undo external edits</CQF_AI_ExternalUndo>
+  <CQF_AI_LargeDraft>Large map draft</CQF_AI_LargeDraft>
+  <CQF_AI_LargeDraftAlreadyApplied>This draft is applied. Undo it or open a new draft.</CQF_AI_LargeDraftAlreadyApplied>
+  <CQF_AI_LargeDraftApply>Apply draft</CQF_AI_LargeDraftApply>
+  <CQF_AI_LargeDraftApplyConfirm>Apply the previewed draft to the current map?</CQF_AI_LargeDraftApplyConfirm>
+  <CQF_AI_LargeDraftApplying>Applying map draft</CQF_AI_LargeDraftApplying>
+  <CQF_AI_LargeDraftBlueprintComplex>This blueprint uses configuration unsupported by the map draft.</CQF_AI_LargeDraftBlueprintComplex>
+  <CQF_AI_LargeDraftClear>Clear draft</CQF_AI_LargeDraftClear>
+  <CQF_AI_LargeDraftCounts>Terrain cells: {0} · Roof cells: {1} · Objects: {2}</CQF_AI_LargeDraftCounts>
+  <CQF_AI_LargeDraftExport>Export map XML</CQF_AI_LargeDraftExport>
+  <CQF_AI_LargeDraftExportConflict>Resolve the highlighted road or placement conflicts first.</CQF_AI_LargeDraftExportConflict>
+  <CQF_AI_LargeDraftExportExists>A map with this export name already exists.</CQF_AI_LargeDraftExportExists>
+  <CQF_AI_LargeDraftExportName>Unique export defName beginning with CQF_.</CQF_AI_LargeDraftExportName>
+  <CQF_AI_LargeDraftPlacementConflict>Blueprint footprints have placement conflicts.</CQF_AI_LargeDraftPlacementConflict>
+  <CQF_AI_LargeDraftRoadBlocked>At least one road cell is blocked.</CQF_AI_LargeDraftRoadBlocked>
+  <CQF_AI_LargeDraftRoadTerrain>A road requires walkable terrain.</CQF_AI_LargeDraftRoadTerrain>
+  <CQF_AI_LargeDraftUndoing>Undoing map draft</CQF_AI_LargeDraftUndoing>
+  <CQF_AI_LargeDraftWaterTerrain>A waterway requires water terrain.</CQF_AI_LargeDraftWaterTerrain>
+  <CQF_AI_LargeDraftNew>New draft</CQF_AI_LargeDraftNew>
+  <CQF_AI_LargeDraftNewConfirm>Start a new draft and discard the undo history of the applied draft?</CQF_AI_LargeDraftNewConfirm>
+  <CQF_AI_LargeDraftPreparing>Preparing map draft</CQF_AI_LargeDraftPreparing>
 </LanguageData>

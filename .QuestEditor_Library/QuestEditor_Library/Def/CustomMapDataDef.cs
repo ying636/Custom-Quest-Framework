@@ -341,7 +341,9 @@ namespace QuestEditor_Library
             return result;
         }
 
-        public void LoadData(Map map)
+        public void LoadData(Map map) => LoadData(map, true);
+
+        public void LoadData(Map map, bool captureCells)
         {
             if (map == null)
             {
@@ -366,7 +368,7 @@ namespace QuestEditor_Library
             }
 
             this.SaveThings(centre, map.listerThings.AllThings, map.AllCells.ToList());
-            SavePoss(map, map.AllCells.ToList(), centre);
+            if (captureCells) SavePoss(map, map.AllCells.ToList(), centre);
             map.designationManager.designationsByDef[QEDefOf.QE_Disgenerate].ForEach(d => this.disgenerate.Add(d.target.Cell - centre));
             map.designationManager.designationsByDef[QEDefOf.QE_Disdestroy].ForEach(d => this.disdestroy.Add(d.target.Cell - centre));
         }

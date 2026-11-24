@@ -4,7 +4,7 @@ using Verse;
 
 namespace QuestEditor_Library
 {
-    public sealed class CQFAILiveMap : ICQFAILiveMap
+    public sealed partial class CQFAILiveMap : ICQFAILiveMap
     {
         public CQFAILiveMap(Map map) { Map = map; }
         public Map Map { get; }
@@ -12,11 +12,25 @@ namespace QuestEditor_Library
         public bool IsValid => Current.Game != null && Find.Maps.Contains(Map);
         public CQFAILiveMapInfo Info => new CQFAILiveMapInfo { mapId = Map.uniqueID, size = Map.Size, center = Map.Center,
             selectedThingId = Find.Selector.SingleSelectedThing is Thing selected && selected.Map == Map ? selected.ThingID : string.Empty, backend = this };
-        public XElement ReadRegion(CellRect region, int offset, int limit)
+        public XElement ReadOverview(CellRect region, int divisions) => ReadOverview(region, divisions, false);
+
+        public XElement ReadOverview(CellRect region, int divisions, bool compact)
+        {
+            if (!region.InBounds(Map)) throw new InvalidDataException("CQF_AI_MapBounds");
+            CQFAIMapOverview overview = new CQFAIMapOverview(cell =>
+                (Map.terrainGrid.TerrainAt(cell).defName, Map.roofGrid.RoofAt(cell) != null, cell.Walkable(Map)));
+            XElement result = overview.Describe(region, divisions, compact);
+            result.SetAttributeValue("map", Map.uniqueID);
+            return result;
+        }
+        public XElement ReadRegion(CellRect region, int offset, int limit) => ReadRegion(region, offset, limit, false);
+
+        public XElement ReadRegion(CellRect region, int offset, int limit, bool compact)
         {
             if (!region.InBounds(Map) || region.Width < 1 || region.Height < 1 || (long)region.Width * region.Height > 4096) throw new InvalidDataException("CQF_AI_MapBounds");
             if (offset < 0 || offset > 4096 || limit < 1 || limit > 400) throw new InvalidDataException("CQF_AI_InvalidTool: pagination");
             IntVec3[] page = region.Skip(offset).Take(limit).ToArray();
+            if (compact) return ReadRegionCompact(region, offset, page);
             return new XElement("region", new XAttribute("map", Map.uniqueID), new XAttribute("total", region.Area), new XAttribute("offset", offset), new XAttribute("encoding", "thing_refs"),
                 page.Select(cell => new XElement("cell", new XAttribute("x", cell.x), new XAttribute("z", cell.z),
                     new XAttribute("terrain", Map.terrainGrid.TerrainAt(cell).defName), new XAttribute("roof", Map.roofGrid.RoofAt(cell)?.defName ?? ""),

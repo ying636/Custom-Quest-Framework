@@ -23,6 +23,7 @@ namespace QuestEditor_Library
         {
             if (!IsCurrent) throw new InvalidOperationException("CQF_AI_StaleTarget");
             object draft = new CQFAIChanges(model).Build(CanUndo ? context.Read() : Draft ?? Source, changes, command, generateText);
+            context.PrepareDraft?.Invoke(draft);
             context.Validate?.Invoke(draft);
             Draft = draft;
         }

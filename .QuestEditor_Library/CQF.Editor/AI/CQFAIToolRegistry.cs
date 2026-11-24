@@ -31,6 +31,31 @@ namespace QuestEditor_Library
             Register(new CQFAITool("cqf_list_def_types", "Find exact fully qualified loaded Def CLR type names, 40 per page. These include native and Mod Def types.",
                 arguments => catalog.Discover(false, Text(arguments, "search", ""), Number(arguments, "offset", 0)),
                 ("search", "Type name substring, at most 100 characters.", false), ("offset", "Page offset, integer text from 0 to 100000.", false)));
+            Register(new CQFAITool("cqf_scene_assets", "Find loaded scene assets in one exact Mod. Returns compact entries and texture paths. Optional placement metadata for selected Defs.",
+                arguments => catalog.SceneAssets(Text(arguments, "mod", ""), Text(arguments, "kind", ""), Text(arguments, "search", ""),
+                    Number(arguments, "offset", 0), Number(arguments, "limit", 12), Text(arguments, "detail", "brief") switch
+                    {
+                        "brief" => false,
+                        "placement" => true,
+                        _ => throw new InvalidDataException("CQF_AI_InvalidTool: scene asset detail")
+                    }),
+                ("mod", "Exact loaded package ID.", true), ("kind", "building, item, plant or terrain.", true),
+                ("search", "Filter by name or label.", false), ("offset", "Page offset.", false),
+                ("limit", "1 to 20, default 12.", false), ("detail", "brief or placement.", false)));
+            Register(new CQFAITool("cqf_scene_preview", "Open a separate native editor map for an exact map definition, read preview status, or capture its current view. Open can execute configured generation steps. Capture writes a local PNG; check the resulting file.",
+                arguments => CQFAIScenePreview.Run(Text(arguments, "action", ""), Text(arguments, "name", ""),
+                    Number(arguments, "x", -1), Number(arguments, "z", -1), Number(arguments, "zoom", 38), EditingAllowed),
+                ("action", "open, status or capture.", true), ("name", "Exact loaded CustomMapDataDef.", true),
+                ("x", "Capture center X.", false), ("z", "Capture center Z.", false), ("zoom", "Capture size from 10 to the greater of 60 and the map's longest edge.", false)));
+            Register(new CQFAITool("cqf_scene_checks", "Check actual placements, terrain and native cell-to-cell reachability with doors allowed. Pass an exact live map ID. A failed check returns passed=false and full evidence.",
+                arguments =>
+                {
+                    int mapId = Number(arguments, "map_id", -1);
+                    Map map = Current.Game?.Maps.FirstOrDefault(map => map.uniqueID == mapId)
+                        ?? throw new InvalidDataException("CQF_AI_MissingResource: scene map");
+                    return CQFAISceneChecks.Read(map, Text(arguments, "checks_xml", ""));
+                }, ("map_id", "Exact live map ID.", true),
+                ("checks_xml", "<checks> with up to 24 route (x,z,toX,toZ), thing (x,z,def) or terrain (x,z,def) entries.</checks>", true)));
             Register(new CQFAITool("cqf_list_databases", "List existing Global, Temporary and Quest CQF databases and counts. Does not initialize missing data or modify state.",
                 arguments => CQFAIDatabaseCatalog.List(Number(arguments, "offset", 0), Number(arguments, "limit", 20)),
                 ("offset", "Page offset from 0 to 100000.", false), ("limit", "Page size from 1 to 40.", false)));
@@ -66,6 +91,38 @@ namespace QuestEditor_Library
             {
                 if (liveMap is CQFAILiveMap runtimeMap)
                 {
+                    Register(new CQFAITool("cqf_read_map_overview", "Sample the map. Grid rows run by increasing z, tuples by increasing x. Adjacent xEdges/zEdges define tile bounds (end exclusive). Tuples use fields and terrain IDs. Inspect exact cells before editing.", arguments =>
+                    {
+                        int x = Number(arguments, "x", 0), z = Number(arguments, "z", 0);
+                        if (x < 0 || z < 0 || x >= runtimeMap.Map.Size.x || z >= runtimeMap.Map.Size.z) throw new InvalidDataException("CQF_AI_MapBounds");
+                        int width = Number(arguments, "width", runtimeMap.Map.Size.x - x), height = Number(arguments, "height", runtimeMap.Map.Size.z - z);
+                        if (width < 1 || height < 1 || (long)x + width > runtimeMap.Map.Size.x || (long)z + height > runtimeMap.Map.Size.z)
+                            throw new InvalidDataException("CQF_AI_MapBounds");
+                        return runtimeMap.ReadOverview(new CellRect(x, z, width, height), Number(arguments, "divisions", 8), UseCompactMapResult(arguments));
+                    }, ("x", "Minimum absolute X, default 0.", false), ("z", "Minimum absolute Z, default 0.", false),
+                        ("width", "Width, defaults to the remaining map width.", false), ("height", "Height, defaults to the remaining map height.", false),
+                        ("divisions", "Tiles per axis, 1–16, default 8.", false), ("format", "compact (default) or expanded.", false)));
+                    if (EditingAllowed)
+                    {
+                        Register(new CQFAITool("cqf_list_map_blueprints", "List imported, in-memory and loaded CQF blueprint names for draft placement.", arguments =>
+                        {
+                            string search = Text(arguments, "search", "");
+                            int offset = Number(arguments, "offset", 0);
+                            CQFAIRuntimeCatalog.ValidatePage(search, offset, 40);
+                            var matches = CQFLargeMapDraft.Blueprints().Where(def => def.defName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToArray();
+                            return new XElement("blueprints", new XAttribute("total", matches.Length), new XAttribute("offset", offset),
+                                matches.Skip(offset).Take(40).Select(def => new XElement("blueprint", new XAttribute("name", def.defName),
+                                    new XAttribute("width", def.size.x), new XAttribute("height", def.size.z))));
+                        }, ("search", "Optional name substring.", false), ("offset", "Page offset.", false)));
+                        Register(new CQFAITool("cqf_map_draft_status", "Read draft preparation progress, revision and current conflicts. A queued draft becomes ready when busy is false and there is no error.",
+                            _ => CQFLargeMapDraftWindow.Status(runtimeMap.Map)));
+                        Register(new CQFAITool("cqf_stage_map_draft", "Stage without changing the game map. The player previews, confirms application, or exports it in the draft window. Repeated calls add to the same preview. Poll cqf_map_draft_status after queuing. Draft preparation does not apply edits.", arguments =>
+                        {
+                            if (!runtimeMap.IsValid) throw new InvalidOperationException("CQF_AI_StaleTarget");
+                            XElement command = CQFAIChanges.Parse(arguments.Element("draft_xml")!.Value);
+                            return CQFLargeMapDraftWindow.Open(runtimeMap.Map).Draft.Stage(command);
+                        }, ("draft_xml", "XML rooted at draft: fill(x,z,width,height,terrain), replace(same plus from), road or waterway(terrain,width with two or more point children x,z), blueprint(name,x,z,rotation,repeatX,repeatZ,stepX,stepZ). Integer absolute coordinates. Terrain values are exact TerrainDef names. Roads follow the given waypoints; use readback to adjust blocked points.", true)));
+                    }
                     Register(new CQFAITool("cqf_read_map_configuration", "Read actual map event areas and map-level damage triggers. Root reads a bounded summary; use /eventAreas, /triggers and narrower paths with pagination for full data. Map trigger targets are exact Building Thing IDs.",
                         arguments => ReadMapConfiguration(runtimeMap.Map, arguments),
                         ("path", "Configuration path, default / summary. /eventAreas/0/cells reads a region's cell list.", false),
@@ -79,10 +136,11 @@ namespace QuestEditor_Library
                         ("search", "Signal, source or Thing ID substring, at most 100 characters.", false), ("offset", "Page offset from 0 to 100000.", false),
                         ("limit", "Page size from 1 to 40.", false)));
                 }
-                Register(new CQFAITool("cqf_read_map_region", "Read actual terrain, roofs and Thing IDs in the current game map. Inspect a region before changing it. Coordinates are absolute game map cells. Cells contain thingRef IDs; the things table describes each sampled object once, including actual rotation, footprint and interaction cells. Use cqf_read_map_thing for full state/configuration and cqf_list_cqf_things for feature/tool discovery.", ReadLiveRegion,
+                Register(new CQFAITool("cqf_read_map_region", "Read exact live map cells. Compact tuples are x,z,terrain,roof,count,refs. Terrain and roof indices are zero-based; - means no roof. Refs are colon-separated indices into things, or -. Count may exceed returned refs. Things retain exact IDs, rotation and footprint.", ReadLiveRegion,
                     ("x", "Minimum X coordinate as integer text.", true), ("z", "Minimum Z coordinate as integer text.", true),
                     ("width", "Region width; at most 4096 cells total.", true), ("height", "Region height; at most 4096 cells total.", true),
-                    ("offset", "Cell page offset as integer text.", false), ("limit", "Cells per page, from 1 to 400; default 100.", false)));
+                    ("offset", "Cell page offset.", false), ("limit", "Cells per page, 1–400, default 100.", false),
+                    ("format", "compact (default) or expanded.", false)));
                 Register(new CQFAITool("cqf_read_map_thing", "Read an actual Thing's rotation, footprint, interaction cells, state and editable configuration. Large configurations default to a field summary; read narrower paths and collection pages. Pawns are inspection-only.", ReadLiveThing,
                     ("thing_id", "Exact Thing ID returned by map tools.", true), ("path", "Optional configuration field path, such as /loot/loots or /actionWorkers/0/comps.", false),
                     ("offset", "Collection page offset from 0 to 100000.", false), ("limit", "Page size from 1 to 40, default 20.", false)));
@@ -137,13 +195,13 @@ namespace QuestEditor_Library
             foreach (string name in tools.Keys.Where(name => name is not ("cqf_get_context" or "cqf_list_mods" or "cqf_list_def_types" or "cqf_query_resources"
                 or "cqf_find_types" or "cqf_get_schema" or "cqf_read_resource" or "cqf_read_target" or "cqf_validate_target" or "cqf_read_map_region" or "cqf_read_map_thing"
                 or "cqf_list_targets" or "cqf_select_target" or "cqf_list_cqf_things" or "cqf_list_databases" or "cqf_read_database"
-                or "cqf_read_map_targets" or "cqf_read_map_signals" or "cqf_read_map_configuration" or "cqf_runtime_help" or "cqf_read_runtime" or "cqf_check_conditions" or "cqf_inspect_map" or "cqf_export_definition")).ToArray()) tools.Remove(name);
+                or "cqf_scene_assets" or "cqf_scene_checks" or "cqf_read_map_targets" or "cqf_read_map_signals" or "cqf_read_map_configuration" or "cqf_runtime_help" or "cqf_read_runtime" or "cqf_check_conditions" or "cqf_inspect_map" or "cqf_export_definition")).ToArray()) tools.Remove(name);
         }
         public void AddInstruction(string text) { command += "\n" + text; runtimeTools.AddInstruction(text); }
         public void FinishQueuedExecution() { QueuedTransaction = null; }
         public XElement Execute(CQFAIToolCall call)
         {
-            bool independent = call.Name is "cqf_runtime_help" or "cqf_read_runtime" or "cqf_operate_runtime" or "cqf_check_conditions" or "cqf_inspect_map" or "cqf_manage_definition" or "cqf_export_definition";
+            bool independent = call.Name is "cqf_scene_assets" or "cqf_scene_preview" or "cqf_scene_checks" or "cqf_runtime_help" or "cqf_read_runtime" or "cqf_operate_runtime" or "cqf_check_conditions" or "cqf_inspect_map" or "cqf_manage_definition" or "cqf_export_definition";
             if (!independent && (context?.IsValid?.Invoke() == false || transaction != null && !transaction.IsTargetValid)) throw new InvalidOperationException("CQF_AI_StaleTarget");
             if (transaction == null && call.Name is "cqf_apply_changes" or "cqf_edit_map_thing" or "cqf_edit_map_configuration" or "cqf_add_dialogue_branch" or "cqf_add_interaction" or "cqf_configure_entrance" or "cqf_configure_exit")
                 throw new InvalidDataException(EditingAllowed && context == null ? "CQF_AI_NoEditingTarget" : "CQF_AI_ReadOnly");
@@ -276,12 +334,25 @@ namespace QuestEditor_Library
                 new XElement("value", field.Attributes(), field.Nodes()))));
             return Apply(liveMap == null ? changes : new XElement("changes", new XElement("editThing", new XAttribute("id", id), changes)));
         }
+        private static bool UseCompactMapResult(XElement arguments)
+        {
+            return Text(arguments, "format", "compact") switch
+            {
+                "compact" => true,
+                "expanded" => false,
+                _ => throw new InvalidDataException("CQF_AI_InvalidTool: format")
+            };
+        }
+
         private XElement ReadLiveRegion(XElement arguments)
         {
             int x = Number(arguments, "x", -1), z = Number(arguments, "z", -1), width = Number(arguments, "width", 0), height = Number(arguments, "height", 0);
             var size = liveMap!.Info.size;
             if (x < 0 || z < 0 || width < 1 || height < 1 || (long)x + width > size.x || (long)z + height > size.z || (long)width * height > 4096) throw new InvalidDataException("CQF_AI_MapBounds");
-            return liveMap.ReadRegion(new CellRect(x, z, width, height), Number(arguments, "offset", 0), Number(arguments, "limit", 100));
+            var region = new CellRect(x, z, width, height);
+            int offset = Number(arguments, "offset", 0), limit = Number(arguments, "limit", 100);
+            bool compact = UseCompactMapResult(arguments);
+            return liveMap is CQFAILiveMap runtime ? runtime.ReadRegion(region, offset, limit, compact) : liveMap.ReadRegion(region, offset, limit);
         }
         private XElement ReadLiveThing(XElement arguments)
         {

@@ -45,6 +45,52 @@ internal static class AICostChecks
             "repeated schema rounds fit the smaller working context while retaining full local history");
         Console.WriteLine("COST fixture instructions=" + harness.Instructions.Length + " history=" + harness.RequestMessages.Sum(message => CQFDialogAIClient.MessageContextLength(message, true))
             + " totalContext=" + CQFDialogAIClient.RequestContextLength(harness.Instructions, harness.RequestMessages, harness.Registry.Tools));
+        CQFAIConversation compactConversation = new(model, catalog);
+        CQFAIHarness compact = new(model, catalog, compactConversation, null, "", false, false, true, compactRequests: true);
+        compactConversation.Add("user", "CQF_Check_CurrentCommand");
+        Check(compact.RequestTools.Any(tool => tool.Name == "cqf_discover_tools") &&
+            !compact.RequestTools.Any(tool => tool.Name == "cqf_read_database") &&
+            compact.RequestTools.Any(tool => tool.Name == "cqf_get_schema"),
+            "compact request starts with core tools and hides specialized database tools");
+        CQFAIConversation fullConversation = new(model, catalog);
+        CQFAIHarness full = new(model, catalog, fullConversation, null, "", false, false, true);
+        fullConversation.Add("user", "CQF_Check_CurrentCommand");
+        Check(CQFDialogAIClient.RequestContextLength(compact.Instructions, compact.RequestMessages, compact.RequestTools) <
+            CQFDialogAIClient.RequestContextLength(full.Instructions, full.RequestMessages, full.RequestTools),
+            "compact request uses less context than the full native tool list");
+        compact.Process(AIToolChecks.Response("CQF_Check_DiscoverDatabase", "cqf_discover_tools", ("search", "cqf_read_database")));
+        Check(compact.RequestTools.Any(tool => tool.Name == "cqf_read_database") &&
+            !compact.RequestTools.Any(tool => tool.Name == "cqf_export_definition"),
+            "exact discovery adds only the matching tool to the next request");
+        Check(compact.LastResults.Single().Descendants("enabled_tools").Elements("tool").Single().Attribute("description") == null,
+            "discovery result avoids duplicating the native tool definition");
+        Check(!compact.RequestTools.Any(tool => tool.Name.StartsWith("cqf_scene_", StringComparison.Ordinal)),
+            "scene tools do not consume context before discovery");
+        compact.Process(AIToolChecks.Response("CQF_Check_DiscoverSceneAssets", "cqf_discover_tools", ("search", "cqf_scene_assets")));
+        Check(compact.RequestTools.Where(tool => tool.Name.StartsWith("cqf_scene_", StringComparison.Ordinal))
+            .Select(tool => tool.Name).SequenceEqual(new[] { "cqf_scene_assets" }),
+            "scene asset discovery loads the lookup without preview or verification schemas");
+        compact.Process(AIToolChecks.Response("CQF_Check_CompactSchema", "cqf_get_schema", ("type", typeof(InteractionOperation).FullName!)));
+        Check(compact.Instructions.Contains("interactionText") && compact.RequestTools.Any(tool => tool.Name == "cqf_read_database") &&
+            compact.RequestMessages.Any(message => message.Role == "tool" && message.ToolCallId == "CQF_Check_CompactSchema"),
+            "compact requests retain exact reusable schema and a complete latest tool exchange");
+        int polls = 0;
+        compact.Registry.Register(new CQFAITool("cqf_map_draft_status", "CQF_Check_Status", _ =>
+        {
+            polls++;
+            return new XElement("mapDraft", new XAttribute("map", 1), new XAttribute("revision", polls == 3 ? 2 : 1),
+                new XAttribute("busy", polls < 3), new XAttribute("phase", "CQF_Check_Preparing"),
+                new XAttribute("progress", "CQF_Check_Progress_" + polls),
+                Enumerable.Range(0, 20).Select(x => new XElement("blocked", new XAttribute("x", x))),
+                polls == 2 ? new XElement("error", "CQF_Check_DraftError") : null);
+        }));
+        for (int poll = 1; poll <= 3; poll++)
+            compact.Process(AIToolChecks.Response("CQF_Check_Poll_" + poll, "cqf_map_draft_status"));
+        string requestHistory = string.Join("\\n", compact.RequestMessages.Select(message => message.Content));
+        Check(!requestHistory.Contains("CQF_Check_Progress_1") && requestHistory.Contains("CQF_Check_DraftError") &&
+            requestHistory.Contains("CQF_Check_Progress_3") &&
+            compactConversation.Messages.Any(message => message.Content.Contains("CQF_Check_Progress_1")),
+            "historical successful draft polls lose redundant progress while full local history, errors and latest results survive");
         TcpListener probe = new(IPAddress.Loopback, 0); probe.Start();
         int port = ((IPEndPoint)probe.LocalEndpoint).Port; probe.Stop();
         using HttpListener listener = new(); listener.Prefixes.Add("http://127.0.0.1:" + port + "/"); listener.Start();

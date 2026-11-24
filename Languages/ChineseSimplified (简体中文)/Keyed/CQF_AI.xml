@@ -240,4 +240,34 @@
 已发送请求：{2}/{3}
 正在请求的估算预留：{4} token</CQF_AI_BudgetUsage>
   <CQF_AI_BudgetEstimated>预算扣除包含未返回用量或中断请求的估算量，上方的接口报告用量不受影响。</CQF_AI_BudgetEstimated>
+  <CQF_AI_External>外部 Agent（MCP）</CQF_AI_External>
+  <CQF_AI_ExternalBusy>正在处理 CQF 工具调用</CQF_AI_ExternalBusy>
+  <CQF_AI_ExternalCopy>复制 CQF.McpHost 所需的本地管道名。</CQF_AI_ExternalCopy>
+  <CQF_AI_ExternalDuplicate>此请求 ID 已用于不同参数。</CQF_AI_ExternalDuplicate>
+  <CQF_AI_ExternalEditing>MCP 桥接已就绪 · 允许编辑</CQF_AI_ExternalEditing>
+  <CQF_AI_ExternalError>MCP 桥接启动失败</CQF_AI_ExternalError>
+  <CQF_AI_ExternalLimit>此桥接会话已达到请求上限。请重新打开桥接再开始新会话。</CQF_AI_ExternalLimit>
+  <CQF_AI_ExternalReadOnly>MCP 桥接已就绪 · 只读</CQF_AI_ExternalReadOnly>
+  <CQF_AI_ExternalStart>启动本地 MCP 桥接</CQF_AI_ExternalStart>
+  <CQF_AI_ExternalUndo>撤销外部编辑</CQF_AI_ExternalUndo>
+  <CQF_AI_LargeDraft>大地图草稿</CQF_AI_LargeDraft>
+  <CQF_AI_LargeDraftAlreadyApplied>此草稿已应用。请撤销应用或打开新草稿。</CQF_AI_LargeDraftAlreadyApplied>
+  <CQF_AI_LargeDraftApply>应用草稿</CQF_AI_LargeDraftApply>
+  <CQF_AI_LargeDraftApplyConfirm>将预览中的草稿应用到当前地图？</CQF_AI_LargeDraftApplyConfirm>
+  <CQF_AI_LargeDraftApplying>正在应用地图草稿</CQF_AI_LargeDraftApplying>
+  <CQF_AI_LargeDraftBlueprintComplex>此蓝图包含地图草稿尚未支持的配置。</CQF_AI_LargeDraftBlueprintComplex>
+  <CQF_AI_LargeDraftClear>清空草稿</CQF_AI_LargeDraftClear>
+  <CQF_AI_LargeDraftCounts>地形格：{0} · 屋顶格：{1} · 物件：{2}</CQF_AI_LargeDraftCounts>
+  <CQF_AI_LargeDraftExport>导出地图 XML</CQF_AI_LargeDraftExport>
+  <CQF_AI_LargeDraftExportConflict>请先处理预览中标出的道路或摆放冲突。</CQF_AI_LargeDraftExportConflict>
+  <CQF_AI_LargeDraftExportExists>已有涵盖此导出名称的地图。</CQF_AI_LargeDraftExportExists>
+  <CQF_AI_LargeDraftExportName>以 CQF_ 开头的唯一导出 defName。</CQF_AI_LargeDraftExportName>
+  <CQF_AI_LargeDraftPlacementConflict>蓝图占地存在摆放冲突。</CQF_AI_LargeDraftPlacementConflict>
+  <CQF_AI_LargeDraftRoadBlocked>至少一格道路无法通行。</CQF_AI_LargeDraftRoadBlocked>
+  <CQF_AI_LargeDraftRoadTerrain>道路需要使用可通行的地形。</CQF_AI_LargeDraftRoadTerrain>
+  <CQF_AI_LargeDraftUndoing>正在撤销地图草稿</CQF_AI_LargeDraftUndoing>
+  <CQF_AI_LargeDraftWaterTerrain>水道需要使用水体地形。</CQF_AI_LargeDraftWaterTerrain>
+  <CQF_AI_LargeDraftNew>新建草稿</CQF_AI_LargeDraftNew>
+  <CQF_AI_LargeDraftNewConfirm>新建草稿并清除已应用草稿的撤销记录？</CQF_AI_LargeDraftNewConfirm>
+  <CQF_AI_LargeDraftPreparing>正在准备地图草稿</CQF_AI_LargeDraftPreparing>
 </LanguageData>

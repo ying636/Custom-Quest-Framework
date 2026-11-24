@@ -89,6 +89,22 @@ namespace QuestEditor_Library
         private float DrawConnection(float width, CustomQuestFramework_ModSetting setting)
         {
             float y = 4f;
+#if RIMWORLD_1_7
+            if (CQFAIIconButton.DrawText(new Rect(0f, y, width, 32f), "CQF_AI_External".Translate()))
+            {
+                if (Find.WindowStack.TryGetWindow<CQFAIExternalWindow>(out CQFAIExternalWindow bridge))
+                    Find.WindowStack.Notify_ManuallySetFocus(bridge);
+                else
+                    Find.WindowStack.Add(new CQFAIExternalWindow());
+            }
+            y += 40f;
+#endif
+            if (Find.CurrentMap is { } map)
+            {
+                if (CQFAIIconButton.DrawText(new Rect(0f, y, width, 32f), "CQF_AI_LargeDraft".Translate()))
+                    CQFLargeMapDraftWindow.Open(map);
+                y += 40f;
+            }
             DrawCheckbox(width, ref y, "CQF_DialogAI_Enabled", ref setting.dialogAIEnabled);
             y += 10f;
             Widgets.Label(new Rect(0f, y, width, 26f), "CQF_DialogAI_Endpoint".Translate());

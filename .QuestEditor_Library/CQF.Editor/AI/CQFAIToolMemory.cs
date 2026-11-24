@@ -6,6 +6,10 @@ namespace QuestEditor_Library
     {
         private XElement CompactToolResult(XElement result, int maximumCharacters = 8192)
         {
+            XElement? status = result.Element("mapDraft");
+            if (result.Attribute("name")?.Value == "cqf_map_draft_status" && status != null && (bool?)status.Attribute("busy") == true && status.Element("error") == null)
+                return new XElement(result.Name, result.Attributes(), new XElement("mapDraft",
+                    status.Attributes().Where(attribute => attribute.Name == "map" || attribute.Name == "revision" || attribute.Name == "busy")));
             result.Descendants("defs").Elements("def").Elements("description").Remove();
             foreach (XElement schemas in result.Descendants("schemas").ToArray())
             {

@@ -50,7 +50,10 @@ namespace QuestEditor_Library
             }
             else if (node != null) this.SelectNode(node, false);
             this.session.Observe(tree);
-        }, value => new CQFDialogPatch(this.session).Validate((DialogTreeDef)value), () => Find.WindowStack.Windows.Contains(this), this);
+        }, value => new CQFDialogPatch(this.session).Validate((DialogTreeDef)value), () => Find.WindowStack.Windows.Contains(this), this)
+        {
+            PrepareDraft = value => this.canvas.EnsurePositions((DialogTreeDef)value)
+        };
         public DialogTreeDef CurTree
         {
             get => tree;

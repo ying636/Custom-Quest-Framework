@@ -4,13 +4,14 @@ namespace QuestEditor_Library
 {
     public sealed class CQFAIHarness
     {
-        public CQFAIHarness(CQFAIModel model, CQFAIResourceCatalog catalog, CQFAIConversation conversation, CQFAIEditorContext? context, string command, bool editing, bool generateText, bool nativeTools = false, CQFAITargetCatalog? targets = null, string additionalPrompt = "", bool inspectionOnly = false)
+        public CQFAIHarness(CQFAIModel model, CQFAIResourceCatalog catalog, CQFAIConversation conversation, CQFAIEditorContext? context, string command, bool editing, bool generateText, bool nativeTools = false, CQFAITargetCatalog? targets = null, string additionalPrompt = "", bool inspectionOnly = false, bool compactRequests = false)
         {
             this.additionalPrompt = additionalPrompt.Trim();
             if (this.additionalPrompt.Length > 16000) throw new InvalidDataException("CQF_AI_PromptTooLong");
             this.conversation = conversation;
             this.initialContext = context;
             InspectionOnly = inspectionOnly;
+            if (compactRequests && nativeTools) requestTools = new CQFAIRequestTools();
             if (inspectionOnly && editing) throw new InvalidOperationException("CQF_AI_InvalidAgent");
             this.editing = editing; this.generateText = generateText; this.nativeTools = nativeTools;
             conversation.BeginTask();
@@ -24,10 +25,11 @@ namespace QuestEditor_Library
             if (inspectionOnly) registry.RestrictToInspection();
             Instructions = conversation.Instructions(workspace != null ? null : context?.Read(), editing, generateText, Registry, nativeTools, workspace != null);
             if (workspace != null) Instructions += WorkspaceInstructions;
-            if (InspectionOnly) RefreshInstructions();
+            if (InspectionOnly || requestTools != null) RefreshInstructions();
         }
         public CQFAIToolRegistry Registry => workspace?.Registry ?? registry;
         public CQFAITransaction? Transaction => workspace != null ? editing ? workspace.Transaction : null : registry.RuntimeJournal.HasMutations ? runtimeTransaction : transaction;
+        public IReadOnlyCollection<CQFAITool> RequestTools => requestTools?.Select(Registry) ?? Registry.Tools;
         public string Instructions { get; private set; }
         public IEnumerable<CQFAIMessage> RequestMessages => GetRequestMessages();
         public int Rounds { get; private set; }
@@ -196,11 +198,11 @@ namespace QuestEditor_Library
         }
         private IEnumerable<CQFAIMessage> GetRequestMessages()
         {
-            CQFAITool[] tools = nativeTools ? Registry.Tools.ToArray() : Array.Empty<CQFAITool>();
+            CQFAITool[] tools = nativeTools ? RequestTools.ToArray() : Array.Empty<CQFAITool>();
             CQFAIMessage[] additional = additionalPrompt.Length == 0 ? Array.Empty<CQFAIMessage>() : new[] { new CQFAIMessage("system", additionalPrompt, visible: false) };
             long available = Math.Min(32000, CQFDialogAIClient.MaxRequestCharacters - 4096L - CQFDialogAIClient.RequestContextLength(Instructions, additional, tools));
             bool dialogue = (workspace?.Context ?? initialContext)?.Read() is DialogTreeDef;
-            IEnumerable<CQFAIMessage> history = conversation.GetRequestMessages(Math.Max(0, available), tools.Length > 0).Select(message =>
+            IEnumerable<CQFAIMessage> history = conversation.GetRequestMessages(Math.Max(0, available), tools.Length > 0, requestTools == null ? 2 : 1).Select(message =>
             {
                 if (message.Role != "tool" || !message.Content.StartsWith("<tool_result", StringComparison.Ordinal)) return message;
                 XElement result = CQFAIChanges.Parse(message.Content);
@@ -219,9 +221,11 @@ namespace QuestEditor_Library
         {
             TaskState?.Register(Registry); Orchestration?.Register(Registry);
             if (InspectionOnly) Registry.RestrictToInspection();
+            requestTools?.Register(Registry);
             CQFAIEditorContext? current = workspace != null ? workspace.Context : initialContext;
             Instructions = conversation.Instructions(current?.IsValid?.Invoke() == false ? null : current?.Read(), editing, generateText, Registry, nativeTools, workspace != null);
             if (workspace != null) Instructions += WorkspaceInstructions;
+            if (requestTools != null) Instructions += "\nUse cqf_discover_tools for specialized database, definition, condition and spatial diagnostics tools when needed.\n";
             if (workspace?.Context != null && workspace.Context.IsValid?.Invoke() != false) Instructions += "\nCurrent selection persists across tool rounds: "
                 + new XElement("selected_target", new XAttribute("id", workspace.SelectedTargetId), new XAttribute("name", workspace.Context.Name)).ToString(SaveOptions.DisableFormatting)
                 + ". Reuse this selection. Re-list targets only when selecting another object or when this one is invalid.\n";
@@ -238,6 +242,7 @@ namespace QuestEditor_Library
             return new XElement("tool_result", new XAttribute("id", id), new XAttribute("name", name), new XAttribute("success", false), new XElement("error", new XAttribute("code", code), error.Message));
         }
         private readonly CQFAIConversation conversation;
+        private readonly CQFAIRequestTools? requestTools;
         private readonly CQFAIEditorContext? initialContext;
         private readonly string additionalPrompt;
         private const string WorkspaceInstructions = "\nThis chat has no fixed editing target. At the start of a new player task, discover objects with cqf_list_targets and select an exact returned ID using cqf_select_target. Selection persists across all subsequent tool rounds; do not rediscover or reselect the same object on each response. You may switch targets; never ask the player to bind this chat to an editor. After selecting a live map, use live map tools and absolute coordinates; after selecting editor data or a loaded definition, use its schema and generic field operations. Loaded definitions without an editor are changed in runtime memory, not persisted to Mod source XML. Historical write receipts must never be replayed; current selection metadata is provided separately. If names are ambiguous, read candidate summaries or ask the player. For XML transport, use the tool definitions returned by selection before the next operation.\n";

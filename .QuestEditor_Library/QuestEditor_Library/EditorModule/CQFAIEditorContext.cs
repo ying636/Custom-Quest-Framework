@@ -17,6 +17,7 @@ namespace QuestEditor_Library
         public Func<object> Read { get; }
         public Action<object> Apply { get; }
         public Action<object>? Validate { get; }
+        public Action<object>? PrepareDraft { get; set; }
         public Func<bool>? IsValid { get; }
         public object? Owner { get; }
         public object Identity => identity ?? Read();

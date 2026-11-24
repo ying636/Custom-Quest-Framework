@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace QuestEditor_Library
 {
-    public sealed class CQFAIResourceCatalog
+    public sealed partial class CQFAIResourceCatalog
     {
         public CQFAIResourceCatalog(CQFAIModel model) { this.model = model; }
         public XElement Summary()

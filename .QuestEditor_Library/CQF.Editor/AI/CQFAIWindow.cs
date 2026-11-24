@@ -527,7 +527,7 @@ namespace QuestEditor_Library
                 if (string.IsNullOrWhiteSpace(command)) return;
                 nativeTools = setting.dialogAIUseTools;
                 harness = new CQFAIHarness(model, catalog, conversation, null, command, setting.dialogAIAllowEditing && CQFEditorBridge.IsLoaded, setting.dialogAIAllowTextGeneration, nativeTools,
-                    new CQFAITargetCatalog(() => CQFAITargetCatalog.Discover(model)), setting.dialogAIAdditionalPromptEnabled ? setting.dialogAIAdditionalPrompt : string.Empty);
+                    new CQFAITargetCatalog(() => CQFAITargetCatalog.Discover(model)), setting.dialogAIAdditionalPromptEnabled ? setting.dialogAIAdditionalPrompt : string.Empty, compactRequests: true);
                 taskUsage.Clear();
                 conversation.Add("user", command);
                 currentActivity = new CQFAIActivity(conversation.VisibleMessages.Count());
@@ -580,14 +580,14 @@ namespace QuestEditor_Library
         {
             CQFAIConversation workerConversation = new CQFAIConversation(model, catalog);
             CQFAIHarness workerHarness = new CQFAIHarness(model, catalog, workerConversation, null, record.Assignment, false, false, nativeTools,
-                new CQFAITargetCatalog(() => CQFAITargetCatalog.Discover(model)), prompt, inspectionOnly: true);
+                new CQFAITargetCatalog(() => CQFAITargetCatalog.Discover(model)), prompt, inspectionOnly: true, compactRequests: true);
             workerConversation.Add("user", record.Assignment);
             CQFDialogAIClient workerClient = new CQFDialogAIClient(endpoint, agentModel, key, timeout) { RequestBudget = requestBudget };
             bool accounted = false;
             return new CQFAIAgentRunner(record, workerHarness, (worker, cancellationToken) =>
             {
                 accounted = false;
-                return workerClient.CompleteConversationAsync(worker.Instructions, worker.RequestMessages, cancellationToken, nativeTools ? worker.Registry.Tools : null, stream: true);
+                return workerClient.CompleteConversationAsync(worker.Instructions, worker.RequestMessages, cancellationToken, nativeTools ? worker.RequestTools : null, stream: true);
             }, token, () => workerClient.LastProgress, () =>
             {
                 if (accounted || !workerClient.ReceivedResponse) return;
@@ -610,7 +610,7 @@ namespace QuestEditor_Library
         {
             harness!.CollectAgentReports();
             pendingSteering = false;
-            task = client!.CompleteConversationAsync(harness.Instructions, harness.RequestMessages, cancellation!.Token, nativeTools ? harness.Registry.Tools : null, stream: true);
+            task = client!.CompleteConversationAsync(harness.Instructions, harness.RequestMessages, cancellation!.Token, nativeTools ? harness.RequestTools : null, stream: true);
         }
 
         private void Poll()

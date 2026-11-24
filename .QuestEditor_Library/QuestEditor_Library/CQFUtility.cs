@@ -604,10 +604,25 @@ namespace QuestEditor_Library
             }
 
             Thing thing = ThingMaker.MakeThing(def, def.MadeFromStuff ? forcedStuff ?? getDef(this.stuff, true) : null);
+            this.ConfigureUnspawned(thing);
+
+            Thing spawned = GenSpawn.Spawn(thing, pos, map, forcedRot ?? this.rotation);
+            if (spawned != null && !this.targetKeys.NullOrEmpty())
+            {
+                foreach (string key in this.targetKeys)
+                {
+                    map.GetComponent<MapComponent_CQFTargets>().TryRegister(key, spawned);
+                }
+            }
+
+            return spawned;
+        }
+
+        public void ConfigureUnspawned(Thing thing)
+        {
             thing.stackCount = this.count;
             thing.StyleDef = this.style;
             thing.Rotation = this.rotation;
-            thing.stackCount = this.count;
             if (thing.TryGetComp<CompQuality>()is CompQuality compQ)
             {
                 compQ.SetQuality(this.quality, null);
@@ -647,17 +662,6 @@ namespace QuestEditor_Library
             {
                 b.ChangePaint(this.colorDef);
             }
-
-            Thing spawned = GenSpawn.Spawn(thing, pos, map, forcedRot ?? this.rotation);
-            if (spawned != null && !this.targetKeys.NullOrEmpty())
-            {
-                foreach (string key in this.targetKeys)
-                {
-                    map.GetComponent<MapComponent_CQFTargets>().TryRegister(key, spawned);
-                }
-            }
-
-            return spawned;
         }
 
         public XElement SaveToXElement(string nodeName)

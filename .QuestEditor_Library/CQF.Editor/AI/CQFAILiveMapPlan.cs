@@ -65,7 +65,25 @@ namespace QuestEditor_Library
             if (edits.Count > 10000) throw new InvalidDataException("CQF_AI_ToolLimit");
             return edits;
         }
-        private void Place(XElement operation, IntVec3 cell)
+        internal IReadOnlyList<CQFAILiveMapEdit> PrepareDraftCell(IntVec3 cell, TerrainDef? terrain, RoofDef? roof)
+        {
+            edits.Clear();
+            removed.Clear();
+            if (terrain != null) Terrain(cell, terrain);
+            else Roof(cell, roof);
+            return edits;
+        }
+
+        internal IReadOnlyList<CQFAILiveMapEdit> PrepareDraftPlacement(XElement command, ThingData data)
+        {
+            edits.Clear();
+            removed.Clear();
+            plannedCells.Clear();
+            Place(command, data.position, data);
+            return edits;
+        }
+
+        private void Place(XElement operation, IntVec3 cell, ThingData? blueprint = null)
         {
             if (edits.Count >= 10000) throw new InvalidDataException("CQF_AI_ToolLimit");
             Attributes(operation, "def", "stuff", "x", "z", "rotation", "count", "faction");
@@ -104,7 +122,8 @@ namespace QuestEditor_Library
             if (!def.CanSpawnAt(cell, rot, map)) throw new InvalidDataException("CQF_AI_LiveMapBlocked: " + name);
             Thing thing = ThingMaker.MakeThing(def, stuff);
             thing.Position = cell; thing.Rotation = rot; thing.stackCount = count;
-            if (def.CanHaveFaction && faction == "player") thing.SetFaction(Faction.OfPlayer);
+            if (blueprint != null) blueprint.ConfigureUnspawned(thing);
+            else if (def.CanHaveFaction && faction == "player") thing.SetFaction(Faction.OfPlayer);
             foreach (IntVec3 position in footprint)
             {
                 if (!plannedCells.TryGetValue(position, out List<Thing> entries)) { entries = new List<Thing>(); plannedCells.Add(position, entries); }

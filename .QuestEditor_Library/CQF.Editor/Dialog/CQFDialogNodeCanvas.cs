@@ -79,28 +79,32 @@ namespace QuestEditor_Library
             this.editor.RecordChanges();
         }
 
-        public void EnsurePositions()
+        public void EnsurePositions() => this.EnsurePositions(this.Tree);
+
+        public void EnsurePositions(DialogTreeDef tree)
         {
-            this.Tree.ResolveOptions();
-            float nextX = this.Tree.nodeMoulds.Values.Where(node => node.editorPositionSet).Select(node => node.editorX + 720f).DefaultIfEmpty(0f).Max();
+            tree.ResolveOptions();
+            float nextX = tree.nodeMoulds.Values.Where(node => node.editorPositionSet).Select(node => node.editorX + 720f).DefaultIfEmpty(0f).Max();
             int i = 0;
-            foreach (DialogNode node in this.Tree.nodeMoulds.Values)
+            foreach (DialogNode node in tree.nodeMoulds.Values)
                 if (!node.editorPositionSet) { node.editorX = nextX; node.editorY = i++ * 280f; node.editorPositionSet = true; }
-            foreach (DialogOption option in this.Tree.optionMoulds.Values)
+            foreach (DialogOption option in tree.optionMoulds.Values)
             {
                 if (option.editorPositionSet) continue;
-                DialogNode? owner = this.Tree.nodeMoulds.Values.FirstOrDefault(node => node.options.Contains(option));
-                Vector2 position = this.GetOptionPosition(owner, this.OptionHeight(option));
+                DialogNode? owner = tree.nodeMoulds.Values.FirstOrDefault(node => node.options.Contains(option));
+                Vector2 position = this.GetOptionPosition(tree, owner, this.OptionHeight(option));
                 option.editorX = position.x;
                 option.editorY = position.y;
                 option.editorPositionSet = true;
             }
         }
 
-        public Vector2 GetOptionPosition(DialogNode? owner, float height = 170f)
+        public Vector2 GetOptionPosition(DialogNode? owner, float height = 170f) => this.GetOptionPosition(this.Tree, owner, height);
+
+        private Vector2 GetOptionPosition(DialogTreeDef tree, DialogNode? owner, float height)
         {
             float x = (owner?.editorX ?? 0f) + 360f, y = owner?.editorY ?? 0f;
-            Rect[] occupied = this.Tree.optionMoulds.Values.Where(option => option.editorPositionSet)
+            Rect[] occupied = tree.optionMoulds.Values.Where(option => option.editorPositionSet)
                 .Select(option => new Rect(option.editorX, option.editorY, CardWidth, this.OptionHeight(option))).ToArray();
             while (true)
             {
