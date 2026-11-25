@@ -52,7 +52,8 @@
 
   <OpenNode>Open Node</OpenNode>
 
-  <QuestNode_IsNull>Node:Is Null</QuestNode_IsNull>
+  <QuestNode_IsNull>Node: Check for Null</QuestNode_IsNull>
+  <QuestNode_IsNull_Tip>Run the matching branch based on whether the specified value is null.</QuestNode_IsNull_Tip>
   <ObjectKeyword>Key:</ObjectKeyword>
   <SelectTrueNode>Select True Node</SelectTrueNode>
   <SelectFalseNode>Select False Node</SelectFalseNode>

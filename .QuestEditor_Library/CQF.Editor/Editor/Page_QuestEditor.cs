@@ -192,12 +192,14 @@ namespace QuestEditor_Library
 
         public static void DrawQuestNodeData(QuestNode node, ref float y, Rect inRect, float x = 15f)
         {
-            Color color = CQFUIStyle.Accent;
-            color.a = 0.1f;
-            CQFUIStyle.DrawBox(new Rect(x - 15f, y, Mathf.Max(40f, inRect.width - x - 8f), Mathf.Max(40f, Page_QuestEditor.drawHeight.ContainsKey("Node" + node.GetHashCode()) ? Page_QuestEditor.drawHeight["Node" + node.GetHashCode()] - y : 0f)), 1, CQFUIStyle.AccentTexture);
+            string nodeKey = "Node" + node.GetHashCode();
+            Page_QuestEditor.drawHeight.TryGetValue(nodeKey, out float bottom);
+            Rect panel = new Rect(x - 15f, y, Mathf.Max(40f, inRect.width - x - 8f), Mathf.Max(40f, bottom - y));
+            CQFUIStyle.DrawBox(panel, 1, CQFUIStyle.AccentTexture);
+            float fieldWidth = Mathf.Max(1f, panel.xMax - x - 12f);
             y += 10f;
             Text.Font = GameFont.Medium;
-            Rect rectTitle = new Rect(x, y + 10f, Mathf.Max(40f, inRect.width - x - 12f), 36f);
+            Rect rectTitle = new Rect(x, y + 10f, fieldWidth, 36f);
             Widgets.Label(rectTitle, node.GetType().Name.Translate().Colorize(CQFUIStyle.Accent));
             if ((node.GetType().Name + "_Tip").CanTranslate())
             {
@@ -275,16 +277,13 @@ namespace QuestEditor_Library
                         QuestEndOutcome.Success }, (o) => nodeEnd.outcome = o, (o) => o.ToString().Translate());
                 }
                 y += 45f;
-                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), nodeEnd.inSignal.ToString(), value => nodeEnd.inSignal = new SlateRef<string>(value), x, inRect.width - x - 12f);
-                y += 30f;
+                Page_QuestEditor.DrawQuestSignalField(ref y, x, fieldWidth, "InSignal".Translate(), nodeEnd.inSignal.ToString(), value => nodeEnd.inSignal = new SlateRef<string>(value));
                 custom = false;
             }
             if (node is QuestNode_Signal signal)
             {
-                CQFSignalEditor.DrawBookField(y, "InSignal".Translate(), signal.inSignal.ToString(), value => signal.inSignal = new SlateRef<string>(value), x, inRect.width - x - 12f);
-                y += 30f;
-                CQFSignalEditor.DrawBookField(y, "inSignalDisable".Translate(), signal.inSignalDisable.ToString(), value => signal.inSignalDisable = new SlateRef<string>(value), x, inRect.width - x - 12f);
-                y += 30f;
+                Page_QuestEditor.DrawQuestSignalField(ref y, x, fieldWidth, "InSignal".Translate(), signal.inSignal.ToString(), value => signal.inSignal = new SlateRef<string>(value));
+                Page_QuestEditor.DrawQuestSignalField(ref y, x, fieldWidth, "inSignalDisable".Translate(), signal.inSignalDisable.ToString(), value => signal.inSignalDisable = new SlateRef<string>(value));
                 Widgets.Label(new Rect(x, y, 150f, 25f), "SignalNode".Translate());
                 y += 30f;
                 if (signal.node != null)
@@ -309,9 +308,7 @@ namespace QuestEditor_Library
                     y += 55f;
                 }
 
-                string key = "Node" + signal.GetHashCode();
-                CQFSignalEditor.DrawBookField(y, "outSignals".Translate(), signal.outSignals.ToString(), value => signal.outSignals = new SlateRef<IEnumerable<string>>(value), x, inRect.width - x - 12f);
-                y += 30f;
+                Page_QuestEditor.DrawQuestSignalField(ref y, x, fieldWidth, "outSignals".Translate(), signal.outSignals.ToString(), value => signal.outSignals = new SlateRef<IEnumerable<string>>(value));
                 custom = false;
                 y += 10f;
             }
@@ -321,19 +318,19 @@ namespace QuestEditor_Library
                 {
                     object value = field.GetValue(node);
                     string key = node.GetHashCode() + field.Name;
-                    if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0 && field.FieldType == typeof(string))
+                    bool signalField = field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (signalField && field.FieldType == typeof(string))
                     {
-                        CQFSignalEditor.DrawBookField(y, field.Name.Translate(), value as string, selected => field.SetValue(node, selected), x, inRect.width - x - 12f);
-                        y += 30f;
+                        Page_QuestEditor.DrawQuestSignalField(ref y, x, fieldWidth, field.Name.Translate(), value as string, selected => field.SetValue(node, selected));
                         continue;
                     }
-                    if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0
+                    if (signalField
                         && (field.FieldType == typeof(List<string>) || field.FieldType == typeof(IEnumerable<string>) || field.FieldType == typeof(string[])))
                     {
                         CQFSignalEditor.DrawBookList(ref y, field.Name.Translate(), value as IEnumerable<string>, selected =>
                         {
                             field.SetValue(node, field.FieldType == typeof(string[]) ? (object)selected.ToArray() : selected);
-                        }, x, inRect.width - x - 12f);
+                        }, x, fieldWidth);
                         continue;
                     }
                     if (value == null)
@@ -389,84 +386,125 @@ namespace QuestEditor_Library
                         }
                         y += 40f;
                     }
-                    if (value is int num)
+                    if (value is int || value is float)
                     {
+                        string label = field.Name.Translate();
+                        Page_QuestEditor.GetQuestFieldRects(ref y, x, fieldWidth, label, out Rect labelRect, out Rect inputRect);
+                        Page_QuestEditor.DrawQuestFieldLabel(labelRect, label);
                         string buffer = Page_QuestEditor.GetBuffer(key);
-                        CQFEditorTools.DrawLabelAndText_Line<int>(y, field.Name.Translate(), ref num, ref buffer, x);
-                        Page_QuestEditor.buffers[key] = buffer;
-                        y += 30f;
-                        continue;
-                    }
-                    if (value is float numf)
-                    {
-                        string buffer = Page_QuestEditor.GetBuffer(key);
-                        CQFEditorTools.DrawLabelAndText_Line<float>(y, field.Name.Translate(), ref numf, ref buffer, x);
-                        Page_QuestEditor.buffers[key] = buffer;
-                        y += 30f;
-                        continue;
-                    }
-                    Type type = value.GetType();
-                    if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SlateRef<>))
-                    {
-                        FieldInfo slateRefField = type.GetField("slateRef", BindingFlags.NonPublic | BindingFlags.Instance);
-                        string slateRef = (string)slateRefField.GetValue(value);
-                        Type slateType = typeof(SlateRef<>).MakeGenericType(new Type[] { type.GenericTypeArguments[0] });
-                        Type genericType = type.GenericTypeArguments[0];
-                        if (field.Name.IndexOf("signal", StringComparison.OrdinalIgnoreCase) >= 0
-                            && (genericType == typeof(string) || genericType == typeof(IEnumerable<string>) || genericType == typeof(List<string>) || genericType == typeof(string[])))
+                        if (value is int number)
                         {
-                            CQFSignalEditor.DrawBookField(y, field.Name.Translate(), slateRef, selected => field.SetValue(node, Activator.CreateInstance(slateType, new object[] { selected })), x, inRect.width - x - 12f);
-                            y += 30f;
-                            continue;
-                        }
-                        if (genericType == typeof(bool) || genericType == typeof(bool?))
-                        {
-                            CQFEditorTools.DrawSelectableText(y, field.Name.Translate(), ref slateRef, () => CQFEditorTools.DrawFloatMenu(new List<bool>() { true, false }, b => field.SetValue(node, genericType == typeof(bool?) ? new SlateRef<bool?>(b.ToString()) : (object)new SlateRef<bool>(b.ToString())), b => b.ToString().Translate()), x + 20f, 150f);
-                        }
-                        else if (genericType.IsSubclassOf(typeof(Def)))
-                        {
-                            var defs_var = typeof(DefDatabase<>).MakeGenericType(genericType).GetMethod("get_AllDefsListForReading", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
-                            List<Def> defs = new List<Def>();
-                            typeof(List<Def>).GetMethod("AddRange", BindingFlags.Public | BindingFlags.Instance).Invoke(defs, new object[] { defs_var });
-                            CQFEditorTools.DrawSelectableText(y, field.Name.Translate(), ref slateRef,
-                                () => CQFEditorTools.DrawFloatMenu(defs, d =>
-                        {
-                            object o = Activator.CreateInstance(typeof(SlateRef<>).MakeGenericType(genericType), new object[] {d.defName});
-                            field.SetValue(node,o);
-                        },d => d.label ?? d.defName), x + 20f, 150f);
-                        }
-                        else if (genericType.IsEnum)
-                        {
-                            List<string> values = new List<string>();
-                            foreach (string s in Enum.GetValues(genericType))
-                            {
-                                values.Add(s);
-                            };
-                            CQFEditorTools.DrawSelectableText(y, field.Name.Translate(), ref slateRef,
-                                () => CQFEditorTools.DrawFloatMenu(values, d =>
-                                {
-                                    object o = Activator.CreateInstance(typeof(SlateRef<>).MakeGenericType(genericType), new object[] { d });
-                                    field.SetValue(node, o);
-                                }, d => d), x + 20f, 150f);
+                            Widgets.TextFieldNumeric(inputRect, ref number, ref buffer, -9999);
                         }
                         else
                         {
-                            string typeName = genericType.Name;
-                            bool isNull = genericType.IsGenericType && (genericType.GetGenericTypeDefinition() == typeof(Nullable<>));
-                            if (isNull)
-                            {
-                                typeName = genericType.GenericTypeArguments.First().Name;
-                            }
-                            CQFEditorTools.DrawLabelAndText_Line(y, field.Name.Translate() + $"({(typeName)})", ref slateRef, x + 20f, 150f);
+                            float decimalNumber = (float)value;
+                            Widgets.TextFieldNumeric(inputRect, ref decimalNumber, ref buffer, -9999);
                         }
-                        var vaule_set = Activator.CreateInstance(slateType);
-                        slateRefField.SetValue(vaule_set, slateRef);
-                        field.SetValue(node, vaule_set);
-                        y += 30f;
+                        Page_QuestEditor.buffers[key] = buffer;
+                        continue;
+                    }
+
+                    Type type = field.FieldType;
+                    if (value is ISlateRef reference && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SlateRef<>))
+                    {
+                        Type argument = type.GenericTypeArguments[0];
+                        string text = reference.SlateRef ?? string.Empty;
+                        string label = field.Name.Translate();
+                        void WriteReference(string selected)
+                        {
+                            reference.SlateRef = selected;
+                            field.SetValue(node, reference);
+                        }
+
+                        if (signalField && (argument == typeof(string) || argument == typeof(IEnumerable<string>)
+                            || argument == typeof(List<string>) || argument == typeof(string[])))
+                        {
+                            Page_QuestEditor.DrawQuestSignalField(ref y, x, fieldWidth, label, text, WriteReference);
+                            continue;
+                        }
+
+                        Action? select = null;
+                        if (argument == typeof(bool) || argument == typeof(bool?))
+                        {
+                            select = () => CQFEditorTools.DrawFloatMenu(new List<bool> { true, false },
+                                selected => WriteReference(selected.ToString()), selected => selected.ToString().Translate());
+                        }
+                        else if (argument.IsSubclassOf(typeof(Def)))
+                        {
+                            select = () =>
+                            {
+                                Type database = typeof(DefDatabase<>).MakeGenericType(argument);
+                                if (database.GetProperty(nameof(DefDatabase<ThingDef>.AllDefsListForReading))?.GetValue(null) is not IEnumerable<Def> definitions)
+                                {
+                                    throw new InvalidOperationException($"Cannot read the definition list for {argument.FullName}");
+                                }
+                                CQFEditorTools.DrawFloatMenu(definitions.ToList(),
+                                    selected => WriteReference(selected.defName), selected => selected.label ?? selected.defName);
+                            };
+                        }
+                        else if (argument.IsEnum)
+                        {
+                            select = () => CQFEditorTools.DrawFloatMenu(Enum.GetNames(argument).ToList(), WriteReference, selected => selected);
+                        }
+
+                        Page_QuestEditor.GetQuestFieldRects(ref y, x, fieldWidth, label, out Rect labelRect, out Rect inputRect);
+                        Page_QuestEditor.DrawQuestFieldLabel(labelRect, label, select);
+                        if (select == null)
+                        {
+                            string typeName = (Nullable.GetUnderlyingType(argument) ?? argument).Name;
+                            TooltipHandler.TipRegion(labelRect, label + "\n" + "type".Translate() + " " + typeName);
+                        }
+                        string edited = Widgets.TextField(inputRect, text);
+                        if (edited != text)
+                        {
+                            WriteReference(edited);
+                        }
                     }
                 }
             }
-            Page_QuestEditor.drawHeight.SetOrAdd("Node" + node.GetHashCode(), y);
+            y += 8f;
+            Page_QuestEditor.drawHeight.SetOrAdd(nodeKey, y);
+        }
+
+        private static void DrawQuestSignalField(ref float y, float x, float width, string label, string? value, Action<string> setValue)
+        {
+            Page_QuestEditor.GetQuestFieldRects(ref y, x, width, label, out Rect labelRect, out Rect inputRect);
+            CQFSignalEditor.DrawBookField(labelRect, inputRect, label, value, setValue);
+        }
+
+        private static void GetQuestFieldRects(ref float y, float x, float width, string label, out Rect labelRect, out Rect inputRect)
+        {
+            const float inputHeight = 28f;
+            const float columnGap = 10f;
+            const float rowGap = 6f;
+            bool stacked = width < 360f;
+            float labelWidth = stacked ? width : Mathf.Min(260f, width * 0.42f);
+            using CQFUIScope scope = new CQFUIScope();
+            float labelHeight = Text.CalcHeight(label, Mathf.Max(1f, labelWidth - 12f));
+            labelHeight = labelHeight > inputHeight ? Mathf.Max(42f, labelHeight) : inputHeight;
+            labelRect = new Rect(x, y, labelWidth, labelHeight);
+            inputRect = stacked
+                ? new Rect(x, labelRect.yMax + 3f, width, inputHeight)
+                : new Rect(labelRect.xMax + columnGap, y + (labelHeight - inputHeight) * 0.5f, width - labelWidth - columnGap, inputHeight);
+            y = Mathf.Max(labelRect.yMax, inputRect.yMax) + rowGap;
+        }
+
+        private static void DrawQuestFieldLabel(Rect rect, string label, Action? select = null)
+        {
+            if (select != null)
+            {
+                if (CQFUIStyle.ButtonText(rect, label, false, overrideTextAnchor: TextAnchor.MiddleLeft))
+                {
+                    select();
+                }
+                return;
+            }
+
+            using CQFUIScope scope = new CQFUIScope();
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Rect textRect = rect.ContractedBy(Mathf.Min(6f, rect.width / 4f), 0f);
+            Widgets.Label(textRect, label);
         }
 
         private static void OpenQuestNodeSelect(Action<Type> acceptAction)

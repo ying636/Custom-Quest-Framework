@@ -123,114 +123,188 @@
     <arrivalMode>Arrival Mode</arrivalMode>
     <canTimeoutOrFlee>Can Timeout Or Flee</canTimeoutOrFlee>
 
+    <aggressive>Aggressive Behavior</aggressive>
+    <allowedBiomes>Allowed Biomes</allowedBiomes>
+    <allowedLandmarks>Allowed Landmarks</allowedLandmarks>
+    <benefit>Benefit</benefit>
+    <canBeSpace>Allow Space Maps</canBeSpace>
+    <canRetargetAnyMap>Allow Retargeting to Any Map</canRetargetAnyMap>
+    <canSelectComboLandmarks>Allow Combined Landmarks</canSelectComboLandmarks>
+    <canSelectSpace>Allow Space Tiles</canSelectSpace>
+    <desperateIgnoreBiome>Ignore Biome in Fallback Search</desperateIgnoreBiome>
+    <desperateIgnoreDistance>Ignore Distance in Fallback Search</desperateIgnoreDistance>
+    <distanceFromColonyRange>Distance from Colony in Tiles</distanceFromColonyRange>
+    <downside>Downside</downside>
+    <factionDef>Faction Definition</factionDef>
+    <factionMustBePermanent>Require Permanent Faction</factionMustBePermanent>
+    <forPawns>Pawns Used to Determine Arrival Map</forPawns>
+    <form>Form</form>
+    <giveDependentDrugs>Give Dependency Drugs</giveDependentDrugs>
+    <inSignalsRemovePawn>Remove Pawn Input Signals</inSignalsRemovePawn>
+    <layerBlacklist>Excluded Planet Layers</layerBlacklist>
+    <layerWhitelist>Allowed Planet Layers</layerWhitelist>
+    <maxHilliness>Maximum Hilliness</maxHilliness>
+    <mustHaveSettlementOnLayer>Require Faction Settlement on Same Layer</mustHaveSettlementOnLayer>
+    <raidAttackRemainingHoursRange>Scan Hours Remaining at Raid</raidAttackRemainingHoursRange>
+    <raidChance>Raid Chance</raidChance>
+    <rejection>Rejection Response</rejection>
+    <requireSameOrAdjacentLayer>Require Same or Adjacent Layer</requireSameOrAdjacentLayer>
+    <requiredSubquestsGiven>Required Number of Subquests Given</requiredSubquestsGiven>
+    <requiresLandmark>Require Landmark</requiresLandmark>
+    <reserach>Required Research Project</reserach>
+    <selectLandmarkChance>Landmark Selection Chance</selectLandmarkChance>
+    <signalAccept>Acceptance Signal</signalAccept>
+    <signalReject>Rejection Signal</signalReject>
+    <sitePartDef>Site Part Definition</sitePartDef>
+    <storeAggressiveAs>Store Aggressive Behavior As</storeAggressiveAs>
+    <storeBenefitAs>Store Benefit As</storeBenefitAs>
+    <storeCanCaravanAs>Store Caravan Availability As</storeCanCaravanAs>
+    <storeDownsideAs>Store Downside As</storeDownsideAs>
+    <storeFormAs>Store Form As</storeFormAs>
+    <storeRejectionAs>Store Rejection Response As</storeRejectionAs>
+    <structureMutator>Ancient Structure Tile Mutator</structureMutator>
+    <title>Title</title>
+    <useAcceptanceExpiry>Use Acceptance Expiry</useAcceptanceExpiry>
+    <waitUntilPlayerHasHomeMap>Wait for a Player Home Map</waitUntilPlayerHasHomeMap>
+    <worldObjectDef>World Object Definition</worldObjectDef>
+
     <!--Node Text-->
 
     <!--QuestNode_Add-->
-    <QuestNode_Add>QuestNode_Add</QuestNode_Add>
+    <QuestNode_Add>Node: Add Numbers</QuestNode_Add>
+    <QuestNode_Add_Tip>Add two values and store the result.</QuestNode_Add_Tip>
 
     <!--QuestNode_Divide-->
-    <QuestNode_Divide>QuestNode_Divide</QuestNode_Divide>
+    <QuestNode_Divide>Node: Divide Numbers</QuestNode_Divide>
+    <QuestNode_Divide_Tip>Divide the first value by the second and store the quotient.</QuestNode_Divide_Tip>
 
     <!--QuestNode_MultiplyRange-->
-    <QuestNode_MultiplyRange>QuestNode_MultiplyRange</QuestNode_MultiplyRange>
+    <QuestNode_MultiplyRange>Node: Scale Numeric Range</QuestNode_MultiplyRange>
+    <QuestNode_MultiplyRange_Tip>Multiply the range bounds by the specified factor and store the range.</QuestNode_MultiplyRange_Tip>
 
     <!--QuestNode_Equal-->
-    <QuestNode_Equal>QuestNode_Equal</QuestNode_Equal>
+    <QuestNode_Equal>Node: Compare for Equality</QuestNode_Equal>
+    <QuestNode_Equal_Tip>Compare two values as the specified type and run the matching branch.</QuestNode_Equal_Tip>
 
     <!--QuestNode_EqualOrFail-->
-    <QuestNode_EqualOrFail>QuestNode_EqualOrFail</QuestNode_EqualOrFail>
+    <QuestNode_EqualOrFail>Node: Require Equality</QuestNode_EqualOrFail>
+    <QuestNode_EqualOrFail_Tip>Pass the generation check if the values compare equal as the specified type, then optionally run the child node.</QuestNode_EqualOrFail_Tip>
 
     <!--QuestNode_Greater-->
-    <QuestNode_Greater>QuestNode_Greater</QuestNode_Greater>
+    <QuestNode_Greater>Node: Compare Greater Than</QuestNode_Greater>
+    <QuestNode_Greater_Tip>Run the matching branch based on whether the first value is greater than the second.</QuestNode_Greater_Tip>
 
     <!--QuestNode_IsInList-->
-    <QuestNode_IsInList>QuestNode_IsInList</QuestNode_IsInList>
+    <QuestNode_IsInList>Node: Check List Membership</QuestNode_IsInList>
+    <QuestNode_IsInList_Tip>Run the matching branch based on whether the list contains the specified value.</QuestNode_IsInList_Tip>
 
     <!--QuestNode_IsSet-->
-    <QuestNode_IsSet>QuestNode_IsSet</QuestNode_IsSet>
+    <QuestNode_IsSet>Node: Check Whether Variable Is Set</QuestNode_IsSet>
+    <QuestNode_IsSet_Tip>Run the matching branch based on whether the named entry exists in the quest slate.</QuestNode_IsSet_Tip>
 
     <!--QuestNode_AddTag-->
-    <QuestNode_AddTag>QuestNode_AddTag</QuestNode_AddTag>
+    <QuestNode_AddTag>Node: Add Quest Tag</QuestNode_AddTag>
+    <QuestNode_AddTag_Tip>Tag the selected targets for quest signal routing.</QuestNode_AddTag_Tip>
 
     <!--QuestNode_AllSignals-->
-    <QuestNode_AllSignals>QuestNode_AllSignals</QuestNode_AllSignals>
+    <QuestNode_AllSignals>Node: Wait for All Signals</QuestNode_AllSignals>
+    <QuestNode_AllSignals_Tip>Trigger the child node or send output signals after every input arrives.</QuestNode_AllSignals_Tip>
 
     <!--QuestNode_AllSignalsActivable-->
-    <QuestNode_AllSignalsActivable>QuestNode_AllSignalsActivable</QuestNode_AllSignalsActivable>
+    <QuestNode_AllSignalsActivable>Node: Wait for All Signals (Toggleable)</QuestNode_AllSignalsActivable>
+    <QuestNode_AllSignalsActivable_Tip>While enabled, wait for every input before triggering the child node or sending outputs.</QuestNode_AllSignalsActivable_Tip>
 
     <!--QuestNode_AnySignalActivable-->
-    <QuestNode_AnySignalActivable>QuestNode_AnySignalActivable</QuestNode_AnySignalActivable>
+    <QuestNode_AnySignalActivable>Node: Wait for Any Signal (Toggleable)</QuestNode_AnySignalActivable>
+    <QuestNode_AnySignalActivable_Tip>While enabled, trigger the child node or send outputs when any input arrives.</QuestNode_AnySignalActivable_Tip>
 
     <!--QuestNode_Chance-->
-    <QuestNode_Chance>QuestNode_Chance</QuestNode_Chance>
+    <QuestNode_Chance>Node: Branch by Chance</QuestNode_Chance>
+    <QuestNode_Chance_Tip>Roll for a branch and try the alternative if the selected branch cannot run.</QuestNode_Chance_Tip>
     <chance>Chance</chance>
 
     <!--QuestNode_Clamp-->
-    <QuestNode_Clamp>QuestNode_Clamp</QuestNode_Clamp>
+    <QuestNode_Clamp>Node: Clamp Value</QuestNode_Clamp>
+    <QuestNode_Clamp_Tip>Clamp a value to the specified bounds and store it.</QuestNode_Clamp_Tip>
 
     <!--QuestNode_Delay-->
-    <QuestNode_Delay>QuestNode_Delay</QuestNode_Delay>
+    <QuestNode_Delay>Node: Delay Trigger</QuestNode_Delay>
+    <QuestNode_Delay_Tip>Start a timer when enabled, then trigger the child node or send a completion signal.</QuestNode_Delay_Tip>
 
     <!--QuestNode_End-->
-    <QuestNode_End>QuestNode_End</QuestNode_End>
+    <QuestNode_End>Node: End Quest</QuestNode_End>
+    <QuestNode_End_Tip>End the quest with the selected outcome when signaled.</QuestNode_End_Tip>
     <outcome>Outcome {0}</outcome>
     <goodwillChangeAmount>Goodwill Change Amount</goodwillChangeAmount>
     <goodwillChangeFactionOf>Goodwill Change Faction Of</goodwillChangeFactionOf>
     <goodwillChangeReason>Goodwill Change Reason</goodwillChangeReason>
 
     <!--QuestNode_ExpansionActive-->
-    <QuestNode_ExpansionActive>QuestNode_ExpansionActive</QuestNode_ExpansionActive>
+    <QuestNode_ExpansionActive>Node: Check Active Expansion</QuestNode_ExpansionActive>
+    <QuestNode_ExpansionActive_Tip>Run the matching branch based on whether the specified expansion is active.</QuestNode_ExpansionActive_Tip>
 
     <!--QuestNode_Prefix-->
-    <QuestNode_Prefix>QuestNode_Prefix</QuestNode_Prefix>
+    <QuestNode_Prefix>Node: Set Slate Prefix</QuestNode_Prefix>
+    <QuestNode_Prefix_Tip>Run the child node under a variable prefix, with optional access to unprefixed entries.</QuestNode_Prefix_Tip>
 
     <!--QuestNode_RandomNode-->
-    <QuestNode_RandomNode>QuestNode_RandomNode</QuestNode_RandomNode>
+    <QuestNode_RandomNode>Node: Run Random Child Node</QuestNode_RandomNode>
+    <QuestNode_RandomNode_Tip>Choose and run a weighted random child from those that pass their generation checks.</QuestNode_RandomNode_Tip>
 
     <!--QuestNode_SendSignals-->
-    <QuestNode_SendSignals>QuestNode_SendSignals</QuestNode_SendSignals>
+    <QuestNode_SendSignals>Node: Send Quest Signals</QuestNode_SendSignals>
+    <QuestNode_SendSignals_Tip>Broadcast the configured outputs on the current quest trigger, optionally generating names from a format.</QuestNode_SendSignals_Tip>
     <outSignalsFormat>Out Signals Format</outSignalsFormat>
     <outSignalsFormattedCount>Out Signals Formatted Count</outSignalsFormattedCount>
 
     <!--QuestNode_Sequence-->
-    <QuestNode_Sequence>Quest Node:Sequence</QuestNode_Sequence>
+    <QuestNode_Sequence>Node: Run Sequence</QuestNode_Sequence>
+    <QuestNode_Sequence_Tip>Run child nodes in list order so later nodes can use earlier results.</QuestNode_Sequence_Tip>
 
     <!--QuestNode_Set-->
-    <QuestNode_Set>Quest Node:Set</QuestNode_Set>
+    <QuestNode_Set>Node: Set Quest Variable</QuestNode_Set>
+    <QuestNode_Set_Tip>Set the named quest variable, optionally converting the value to the specified type.</QuestNode_Set_Tip>
     <convertTo>Convert To</convertTo>
 
     <!--QuestNode_Signal-->
-    <QuestNode_Signal>Quest Node:Signal</QuestNode_Signal>
-    <QuestNode_Signal_Tip>This node is used to receive signals from quest and execute the behavior that its signalnode and emits outsignals.
-    Note: signalnode must have a receiving signal entry to function properly. Otherwise, it cannot take effect normally.</QuestNode_Signal_Tip>
+    <QuestNode_Signal>Node: Listen for Signal</QuestNode_Signal>
+    <QuestNode_Signal_Tip>On the specified input, trigger the configured child node and send any configured outputs.</QuestNode_Signal_Tip>
     <SignalNode>Trigger node:</SignalNode>
 
     <!--QuestNode_SubScript-->
-    <QuestNode_SubScript>QuestNode_SubScript</QuestNode_SubScript>
+    <QuestNode_SubScript>Node: Run Quest Subscript</QuestNode_SubScript>
+    <QuestNode_SubScript_Tip>Run another quest script within the current quest, with optional inputs and returned variables.</QuestNode_SubScript_Tip>
 
     <!--QuestNode_Log-->
-    <QuestNode_Log>QuestNode_Log</QuestNode_Log>
+    <QuestNode_Log>Node: Write Generation Log</QuestNode_Log>
+    <QuestNode_Log_Tip>Write the specified diagnostic text to the game log during quest generation.</QuestNode_Log_Tip>
 
     <!--QuestNode_RuntimeLog-->
-    <QuestNode_RuntimeLog>QuestNode_RuntimeLog</QuestNode_RuntimeLog>
+    <QuestNode_RuntimeLog>Node: Write Runtime Log</QuestNode_RuntimeLog>
+    <QuestNode_RuntimeLog_Tip>Write the specified diagnostic message to the game log when signaled.</QuestNode_RuntimeLog_Tip>
 
     <!--QuestNode_GenerateMonumentMarker-->
-    <QuestNode_GenerateMonumentMarker>QuestNode_GenerateMonumentMarker</QuestNode_GenerateMonumentMarker>
+    <QuestNode_GenerateMonumentMarker>Node: Generate Monument Marker</QuestNode_GenerateMonumentMarker>
+    <QuestNode_GenerateMonumentMarker_Tip>Create and store a monument marker from the supplied sketch.</QuestNode_GenerateMonumentMarker_Tip>
     <sketch>Sketch</sketch>
 
     <!--QuestNode_GenerateNonBuildableMonumentRequiredResources-->
-    <QuestNode_GenerateNonBuildableMonumentRequiredResources>QuestNode_GenerateNonBuildableMonumentRequiredResources</QuestNode_GenerateNonBuildableMonumentRequiredResources>
+    <QuestNode_GenerateNonBuildableMonumentRequiredResources>Node: Generate Special Monument Buildings</QuestNode_GenerateNonBuildableMonumentRequiredResources>
+    <QuestNode_GenerateNonBuildableMonumentRequiredResources_Tip>Create the player-unbuildable structures in the monument sketch and add them to the named list.</QuestNode_GenerateNonBuildableMonumentRequiredResources_Tip>
 
     <!--QuestNode_GeneratePawn-->
-    <QuestNode_GeneratePawn>QuestNode_GeneratePawn</QuestNode_GeneratePawn>
+    <QuestNode_GeneratePawn>Node: Generate Pawn</QuestNode_GeneratePawn>
+    <QuestNode_GeneratePawn_Tip>Generate a pawn using the specified kind, faction, and constraints, then optionally store or list it.</QuestNode_GeneratePawn_Tip>
 
     <!--QuestNode_GeneratePawnRandDevelopmentStage-->
-    <QuestNode_GeneratePawnRandDevelopmentStage>QuestNode_GeneratePawnRandDevelopmentStage</QuestNode_GeneratePawnRandDevelopmentStage>
+    <QuestNode_GeneratePawnRandDevelopmentStage>Node: Generate Pawn with Random Life Stage</QuestNode_GeneratePawnRandDevelopmentStage>
+    <QuestNode_GeneratePawnRandDevelopmentStage_Tip>Generate a child or adult by weight, subject to the difficulty’s child setting.</QuestNode_GeneratePawnRandDevelopmentStage_Tip>
     <childChance>Child Chance</childChance>
     <adultChance>Adult Chance</adultChance>
 
     <!--QuestNode_GenerateShuttle-->
-    <QuestNode_GenerateShuttle>QuestNode_GenerateShuttle</QuestNode_GenerateShuttle>
+    <QuestNode_GenerateShuttle>Node: Generate Shuttle</QuestNode_GenerateShuttle>
+    <QuestNode_GenerateShuttle_Tip>Create a shuttle with the specified passenger, cargo, or loading requirements.</QuestNode_GenerateShuttle_Tip>
     <requiredPawns>Required Pawns</requiredPawns>
     <requiredItems>Required Items</requiredItems>
     <requireColonistCount>Require Colonist Count</requireColonistCount>
@@ -243,56 +317,69 @@
     <overrideMass>Override Mass</overrideMass>
 
     <!--QuestNode_GenerateSite-->
-    <QuestNode_GenerateSite>QuestNode_GenerateSite</QuestNode_GenerateSite>
+    <QuestNode_GenerateSite>Node: Generate Site</QuestNode_GenerateSite>
+    <QuestNode_GenerateSite_Tip>Create and store a quest site using the specified parts, faction, and tile.</QuestNode_GenerateSite_Tip>
     <singleSitePartRules>Single Site Part Rules</singleSitePartRules>
     <hiddenSitePartsPossible>Hidden Site Parts Possible</hiddenSitePartsPossible>
 
     <!--QuestNode_GenerateThing-->
-    <QuestNode_GenerateThing>QuestNode_GenerateThing</QuestNode_GenerateThing>
+    <QuestNode_GenerateThing>Node: Generate Thing</QuestNode_GenerateThing>
+    <QuestNode_GenerateThing_Tip>Create a thing with the specified definition and stack count, then optionally store or list it.</QuestNode_GenerateThing_Tip>
     <stackCount>Stack Count</stackCount>
 
     <!--QuestNode_GenerateThingSet-->
-    <QuestNode_GenerateThingSet>QuestNode_GenerateThingSet</QuestNode_GenerateThingSet>
+    <QuestNode_GenerateThingSet>Node: Generate Thing Set</QuestNode_GenerateThingSet>
+    <QuestNode_GenerateThingSet_Tip>Generate and store a set of items using the selected generator and value range.</QuestNode_GenerateThingSet_Tip>
     <thingSetMaker>Thing Set Maker</thingSetMaker>
     <totalMarketValueRange>Total Market Value Range</totalMarketValueRange>
     <qualityGenerator>Quality Generator</qualityGenerator>
 
     <!--QuestNode_GenerateWorldObject-->
-    <QuestNode_GenerateWorldObject>QuestNode_GenerateWorldObject</QuestNode_GenerateWorldObject>
+    <QuestNode_GenerateWorldObject>Node: Generate World Object</QuestNode_GenerateWorldObject>
+    <QuestNode_GenerateWorldObject_Tip>Create and store a world object using the specified definition, tile, and faction.</QuestNode_GenerateWorldObject_Tip>
 
     <!--QuestNode_GenerateTransportShip-->
-    <QuestNode_GenerateTransportShip>QuestNode_GenerateTransportShip</QuestNode_GenerateTransportShip>
+    <QuestNode_GenerateTransportShip>Node: Generate Transport Ship</QuestNode_GenerateTransportShip>
+    <QuestNode_GenerateTransportShip_Tip>Create a transport ship with the specified contents and set it up on a signal.</QuestNode_GenerateTransportShip_Tip>
     <shipThing>Ship Thing</shipThing>
 
     <!--QuestNode_AddShipJob-->
-    <QuestNode_AddShipJob>QuestNode_AddShipJob</QuestNode_AddShipJob>
+    <QuestNode_AddShipJob>Node: Add Transport Ship Job</QuestNode_AddShipJob>
+    <QuestNode_AddShipJob_Tip>Assign the selected job to a transport ship when signaled.</QuestNode_AddShipJob_Tip>
 
     <!--QuestNode_AddShipJob_Arrive-->
-    <QuestNode_AddShipJob_Arrive>QuestNode_AddShipJob_Arrive</QuestNode_AddShipJob_Arrive>
+    <QuestNode_AddShipJob_Arrive>Node: Schedule Transport Ship Arrival</QuestNode_AddShipJob_Arrive>
+    <QuestNode_AddShipJob_Arrive_Tip>Schedule a transport ship to arrive on a map, with an optional landing cell.</QuestNode_AddShipJob_Arrive_Tip>
     <landingCell>Landing Cell</landingCell>
 
     <!--QuestNode_AddShipJob_Wait-->
-    <QuestNode_AddShipJob_Wait>QuestNode_AddShipJob_Wait</QuestNode_AddShipJob_Wait>
+    <QuestNode_AddShipJob_Wait>Node: Schedule Transport Ship Wait</QuestNode_AddShipJob_Wait>
+    <QuestNode_AddShipJob_Wait_Tip>Schedule a ship to wait, optionally ending the wait once loading requirements are met.</QuestNode_AddShipJob_Wait_Tip>
     <leaveImmediatelyWhenSatisfied>Leave Immediately When Satisfied</leaveImmediatelyWhenSatisfied>
     <sendAwayIfAllDespawned>Send Away If All Despawned</sendAwayIfAllDespawned>
 
     <!--QuestNode_AddShipJob_Unload-->
-    <QuestNode_AddShipJob_Unload>QuestNode_AddShipJob_Unload</QuestNode_AddShipJob_Unload>
+    <QuestNode_AddShipJob_Unload>Node: Schedule Transport Ship Unloading</QuestNode_AddShipJob_Unload>
+    <QuestNode_AddShipJob_Unload_Tip>Schedule a transport ship to unload using the selected mode.</QuestNode_AddShipJob_Unload_Tip>
     <dropMode>Drop Mode</dropMode>
 
     <!--QuestNode_AddShipJob_FlyAway-->
-    <QuestNode_AddShipJob_FlyAway>QuestNode_AddShipJob_FlyAway</QuestNode_AddShipJob_FlyAway>
+    <QuestNode_AddShipJob_FlyAway>Node: Schedule Transport Ship Departure</QuestNode_AddShipJob_FlyAway>
+    <QuestNode_AddShipJob_FlyAway_Tip>Schedule a transport ship departure with optional destination and incomplete-loading behavior.</QuestNode_AddShipJob_FlyAway_Tip>
     <destination>Destination</destination>
 
     <!--QuestNode_SendTransportShipAwayOnCleanup-->
-    <QuestNode_SendTransportShipAwayOnCleanup>QuestNode_SendTransportShipAwayOnCleanup</QuestNode_SendTransportShipAwayOnCleanup>
+    <QuestNode_SendTransportShipAwayOnCleanup>Node: Send Transport Ship Away on Cleanup</QuestNode_SendTransportShipAwayOnCleanup>
+    <QuestNode_SendTransportShipAwayOnCleanup_Tip>Send the transport ship away during quest cleanup using the configured unloading behavior.</QuestNode_SendTransportShipAwayOnCleanup_Tip>
     <unloadContents>Unload Contents</unloadContents>
 
     <!--QuestNode_EvaluateSimpleCurve-->
-    <QuestNode_EvaluateSimpleCurve>QuestNode_EvaluateSimpleCurve</QuestNode_EvaluateSimpleCurve>
+    <QuestNode_EvaluateSimpleCurve>Node: Evaluate Simple Curve</QuestNode_EvaluateSimpleCurve>
+    <QuestNode_EvaluateSimpleCurve_Tip>Evaluate the curve at the input and store the result, with optional stochastic rounding.</QuestNode_EvaluateSimpleCurve_Tip>
 
     <!--QuestNode_GetAnimalToHunt-->
-    <QuestNode_GetAnimalToHunt>QuestNode_GetAnimalToHunt</QuestNode_GetAnimalToHunt>
+    <QuestNode_GetAnimalToHunt>Node: Pick Animals to Hunt</QuestNode_GetAnimalToHunt>
+    <QuestNode_GetAnimalToHunt_Tip>Select an animal and target count for a hunt using quest points and map conditions.</QuestNode_GetAnimalToHunt_Tip>
     <storeAnimalToHuntAs>Store Animal To Hunt As</storeAnimalToHuntAs>
     <storeCountToHuntAs>Store Count To Hunt As</storeCountToHuntAs>
     <pointsToAnimalsToHuntCountCurve>Points To Animals To Hunt Count Curve</pointsToAnimalsToHuntCountCurve>
@@ -300,33 +387,40 @@
     <animalsToHuntCountRandomFactorRange>Animals To Hunt Count Random Factor Range</animalsToHuntCountRandomFactorRange>
 
     <!--QuestNode_GetBodySize-->
-    <QuestNode_GetBodySize>QuestNode_GetBodySize</QuestNode_GetBodySize>
+    <QuestNode_GetBodySize>Node: Get Base Body Size</QuestNode_GetBodySize>
+    <QuestNode_GetBodySize_Tip>Store the base body size of the specified pawn kind’s race.</QuestNode_GetBodySize_Tip>
     <pawnKind>Pawn Kind</pawnKind>
 
     <!--QuestNode_GetColonistCountFromColonyPercentage-->
-    <QuestNode_GetColonistCountFromColonyPercentage>QuestNode_GetColonistCountFromColonyPercentage</QuestNode_GetColonistCountFromColonyPercentage>
+    <QuestNode_GetColonistCountFromColonyPercentage>Node: Calculate Colonist Count by Percentage</QuestNode_GetColonistCountFromColonyPercentage>
+    <QuestNode_GetColonistCountFromColonyPercentage_Tip>Compute a colonist count from the specified percentage, with an optional availability requirement.</QuestNode_GetColonistCountFromColonyPercentage_Tip>
     <colonyPercentage>Colony Percentage</colonyPercentage>
     <mustHaveFreeColonistsAvailableCount>Must Have Free Colonists Available Count</mustHaveFreeColonistsAvailableCount>
 
     <!--QuestNode_GetFreeColonistsCount-->
-    <QuestNode_GetFreeColonistsCount>QuestNode_GetFreeColonistsCount</QuestNode_GetFreeColonistsCount>
+    <QuestNode_GetFreeColonistsCount>Node: Count Free Colonists</QuestNode_GetFreeColonistsCount>
+    <QuestNode_GetFreeColonistsCount_Tip>Count free colonists, optionally on a specific map.</QuestNode_GetFreeColonistsCount_Tip>
     <onlyThisMap>Only This Map</onlyThisMap>
 
     <!--QuestNode_GetDefaultSitePartsParams-->
-    <QuestNode_GetDefaultSitePartsParams>QuestNode_GetDefaultSitePartsParams</QuestNode_GetDefaultSitePartsParams>
+    <QuestNode_GetDefaultSitePartsParams>Node: Generate Default Site Part Parameters</QuestNode_GetDefaultSitePartsParams>
+    <QuestNode_GetDefaultSitePartsParams_Tip>Generate default site part parameters from the tile, faction, and quest points.</QuestNode_GetDefaultSitePartsParams_Tip>
     <storeSitePartsParamsAs>Store Site Parts Params As</storeSitePartsParamsAs>
 
     <!--QuestNode_GetDropSpot-->
-    <QuestNode_GetDropSpot>QuestNode_GetDropSpot</QuestNode_GetDropSpot>
+    <QuestNode_GetDropSpot>Node: Find Drop Spot</QuestNode_GetDropSpot>
+    <QuestNode_GetDropSpot_Tip>Find a drop spot on the quest map with an optional minimum distance from the edge.</QuestNode_GetDropSpot_Tip>
     <minDistanceFromEdge>Min Distance From Edge</minDistanceFromEdge>
 
     <!--QuestNode_GetEventDelays-->
-    <QuestNode_GetEventDelays>QuestNode_GetEventDelays</QuestNode_GetEventDelays>
+    <QuestNode_GetEventDelays>Node: Calculate Event Delays</QuestNode_GetEventDelays>
+    <QuestNode_GetEventDelays_Tip>Generate a schedule of randomly spaced events and store the event count.</QuestNode_GetEventDelays_Tip>
     <intervalTicksRange>Interval Ticks Range</intervalTicksRange>
     <storeDelaysAs>Store Delays As</storeDelaysAs>
 
     <!--QuestNode_GetFaction-->
-    <QuestNode_GetFaction>QuestNode_GetFaction</QuestNode_GetFaction>
+    <QuestNode_GetFaction>Node: Select Faction</QuestNode_GetFaction>
+    <QuestNode_GetFaction_Tip>Select and store a faction that matches conditions such as relations and leader status.</QuestNode_GetFaction_Tip>
     <allowEnemy>Allow Enemy</allowEnemy>
     <allowNeutral>Allow Neutral</allowNeutral>
     <allowAlly>Allow Ally</allowAlly>
@@ -342,55 +436,67 @@
     <allowedHiddenFactions>Allowed Hidden Factions</allowedHiddenFactions>
 
     <!--QuestNode_GetFactionOf-->
-    <QuestNode_GetFactionOf>QuestNode_GetFactionOf</QuestNode_GetFactionOf>
+    <QuestNode_GetFactionOf>Node: Get Thing’s Faction</QuestNode_GetFactionOf>
+    <QuestNode_GetFactionOf_Tip>Get and store the faction of the specified thing or pawn.</QuestNode_GetFactionOf_Tip>
 
     <!--QuestNode_GetFieldValue-->
-    <QuestNode_GetFieldValue>QuestNode_GetFieldValue</QuestNode_GetFieldValue>
+    <QuestNode_GetFieldValue>Node: Read Object Field</QuestNode_GetFieldValue>
+    <QuestNode_GetFieldValue_Tip>Read and store a named field from the specified object.</QuestNode_GetFieldValue_Tip>
     <obj>Obj</obj>
     <field>Field</field>
     <type>Type</type>
 
     <!--QuestNode_GetHediff-->
-    <QuestNode_GetHediff>QuestNode_GetHediff</QuestNode_GetHediff>
+    <QuestNode_GetHediff>Node: Pick Weighted Health Condition</QuestNode_GetHediff>
+    <QuestNode_GetHediff_Tip>Pick a weighted health condition and optionally store its affected body parts.</QuestNode_GetHediff_Tip>
     <storeHediffAs>Store Hediff As</storeHediffAs>
     <storePartsToAffectAs>Store Parts To Affect As</storePartsToAffectAs>
 
     <!--QuestNode_GetLargestClearArea-->
-    <QuestNode_GetLargestClearArea>QuestNode_GetLargestClearArea</QuestNode_GetLargestClearArea>
+    <QuestNode_GetLargestClearArea>Node: Find Largest Clear Area Size</QuestNode_GetLargestClearArea>
+    <QuestNode_GetLargestClearArea_Tip>Find the largest clear area size, with an optional minimum requirement.</QuestNode_GetLargestClearArea_Tip>
     <failIfSmaller>Fail If Smaller</failIfSmaller>
 
     <!--QuestNode_GetMap-->
-    <QuestNode_GetMap>QuestNode_GetMap</QuestNode_GetMap>
+    <QuestNode_GetMap>Node: Select Quest Map</QuestNode_GetMap>
+    <QuestNode_GetMap_Tip>Select a player map that meets conditions such as layer, space, and infestation eligibility.</QuestNode_GetMap_Tip>
     <mustBeInfestable>Must Be Infestable</mustBeInfestable>
     <preferMapWithMinFreeColonists>Prefer Map With Min Free Colonists</preferMapWithMinFreeColonists>
 
     <!--QuestNode_GetMapOf-->
-    <QuestNode_GetMapOf>QuestNode_GetMapOf</QuestNode_GetMapOf>
+    <QuestNode_GetMapOf>Node: Get Thing’s Map</QuestNode_GetMapOf>
+    <QuestNode_GetMapOf_Tip>Get and store the map currently holding the specified thing.</QuestNode_GetMapOf_Tip>
 
     <!--QuestNode_GetMarketValue-->
-    <QuestNode_GetMarketValue>QuestNode_GetMarketValue</QuestNode_GetMarketValue>
+    <QuestNode_GetMarketValue>Node: Calculate Total Market Value</QuestNode_GetMarketValue>
+    <QuestNode_GetMarketValue_Tip>Calculate and store the total market value of the specified things.</QuestNode_GetMarketValue_Tip>
 
     <!--QuestNode_GetMonumentRequiredResourcesString-->
-    <QuestNode_GetMonumentRequiredResourcesString>QuestNode_GetMonumentRequiredResourcesString</QuestNode_GetMonumentRequiredResourcesString>
+    <QuestNode_GetMonumentRequiredResourcesString>Node: List Monument Materials</QuestNode_GetMonumentRequiredResourcesString>
+    <QuestNode_GetMonumentRequiredResourcesString_Tip>Build a text list of monument materials and optionally store their market value.</QuestNode_GetMonumentRequiredResourcesString_Tip>
 
     <!--QuestNode_GetMonumentSketch-->
-    <QuestNode_GetMonumentSketch>QuestNode_GetMonumentSketch</QuestNode_GetMonumentSketch>
+    <QuestNode_GetMonumentSketch>Node: Generate Monument Sketch</QuestNode_GetMonumentSketch>
+    <QuestNode_GetMonumentSketch_Tip>Generate a monument sketch using quest points and the configured limits.</QuestNode_GetMonumentSketch_Tip>
     <useOnlyResourcesAvailableOnMap>Use Only Resources Available On Map</useOnlyResourcesAvailableOnMap>
     <maxSize>Max Size</maxSize>
     <pointsPerArea>Points Per Area</pointsPerArea>
     <clearStuff>Clear Stuff</clearStuff>
 
     <!--QuestNode_GetNearbySettlement-->
-    <QuestNode_GetNearbySettlement>QuestNode_GetNearbySettlement</QuestNode_GetNearbySettlement>
+    <QuestNode_GetNearbySettlement>Node: Find Nearby Settlement</QuestNode_GetNearbySettlement>
+    <QuestNode_GetNearbySettlement_Tip>Find a nearby settlement matching distance and layer conditions, with optional faction and leader outputs.</QuestNode_GetNearbySettlement_Tip>
     <allowActiveTradeRequest>Allow Active Trade Request</allowActiveTradeRequest>
     <maxTileDistance>Max Tile Distance</maxTileDistance>
     <storeFactionLeaderAs>Store Faction Leader As</storeFactionLeaderAs>
 
     <!--QuestNode_GetNearestHomeMapOf-->
-    <QuestNode_GetNearestHomeMapOf>QuestNode_GetNearestHomeMapOf</QuestNode_GetNearestHomeMapOf>
+    <QuestNode_GetNearestHomeMapOf>Node: Find Nearest Home Map</QuestNode_GetNearestHomeMapOf>
+    <QuestNode_GetNearestHomeMapOf_Tip>Store the target’s current home map or find the closest one by world-tile distance.</QuestNode_GetNearestHomeMapOf_Tip>
 
     <!--QuestNode_GetPawn-->
-    <QuestNode_GetPawn>QuestNode_GetPawn</QuestNode_GetPawn>
+    <QuestNode_GetPawn>Node: Select Existing Pawn</QuestNode_GetPawn>
+    <QuestNode_GetPawn_Tip>Select an existing pawn that meets conditions such as colonist status, faction, or title.</QuestNode_GetPawn_Tip>
     <mustBeFactionLeader>Must Be Faction Leader</mustBeFactionLeader>
     <mustBeWorldPawn>Must Be World Pawn</mustBeWorldPawn>
     <ifWorldPawnThenMustBeFree>If World Pawn Then Must Be Free</ifWorldPawnThenMustBeFree>
@@ -413,7 +519,8 @@
     <maxUsablePawnsToGenerate>Max Usable Pawns To Generate</maxUsablePawnsToGenerate>
 
     <!--QuestNode_GetPawnCountByPointsWeighted-->
-    <QuestNode_GetPawnCountByPointsWeighted>QuestNode_GetPawnCountByPointsWeighted</QuestNode_GetPawnCountByPointsWeighted>
+    <QuestNode_GetPawnCountByPointsWeighted>Node: Calculate Weighted Pawn Count</QuestNode_GetPawnCountByPointsWeighted>
+    <QuestNode_GetPawnCountByPointsWeighted_Tip>Calculate a pawn count from quest points, challenge rating, and weighting curves.</QuestNode_GetPawnCountByPointsWeighted_Tip>
     <maxCountOneStar>Max Count One Star</maxCountOneStar>
     <maxCountTwoStar>Max Count Two Star</maxCountTwoStar>
     <maxCountThreeStar>Max Count Three Star</maxCountThreeStar>
@@ -421,14 +528,17 @@
     <chancesCurve>Chances Curve</chancesCurve>
 
     <!--QuestNode_GetPawnKind-->
-    <QuestNode_GetPawnKind>QuestNode_GetPawnKind</QuestNode_GetPawnKind>
+    <QuestNode_GetPawnKind>Node: Select Pawn Kind</QuestNode_GetPawnKind>
+    <QuestNode_GetPawnKind_Tip>Select a pawn kind from the configured candidates using their conditions and weights.</QuestNode_GetPawnKind_Tip>
 
     <!--QuestNode_GetPawnsWithRoyalTitle-->
-    <QuestNode_GetPawnsWithRoyalTitle>QuestNode_GetPawnsWithRoyalTitle</QuestNode_GetPawnsWithRoyalTitle>
+    <QuestNode_GetPawnsWithRoyalTitle>Node: Find Pawns with Royal Titles</QuestNode_GetPawnsWithRoyalTitle>
+    <QuestNode_GetPawnsWithRoyalTitle_Tip>Filter the specified pawns for royal titles, with optional list, count, and label outputs.</QuestNode_GetPawnsWithRoyalTitle_Tip>
     <storePawnsLabelAs>Store Pawns Label As</storePawnsLabelAs>
 
     <!--QuestNode_GetPlantPlayerCanHarvest-->
-    <QuestNode_GetPlantPlayerCanHarvest>QuestNode_GetPlantPlayerCanHarvest</QuestNode_GetPlantPlayerCanHarvest>
+    <QuestNode_GetPlantPlayerCanHarvest>Node: Select Harvestable Crop</QuestNode_GetPlantPlayerCanHarvest>
+    <QuestNode_GetPlantPlayerCanHarvest_Tip>Pick a crop the player can harvest and calculate the required yield and growing time.</QuestNode_GetPlantPlayerCanHarvest_Tip>
     <storeHarvestItemDefAs>Store Harvest Item Def As</storeHarvestItemDefAs>
     <storeHarvestItemCountAs>Store Harvest Item Count As</storeHarvestItemCountAs>
     <storeGrowDaysAs>Store Grow Days As</storeGrowDaysAs>
@@ -436,48 +546,58 @@
     <workRandomFactorRange>Work Random Factor Range</workRandomFactorRange>
 
     <!--QuestNode_GetRandomByCurve-->
-    <QuestNode_GetRandomByCurve>QuestNode_GetRandomByCurve</QuestNode_GetRandomByCurve>
+    <QuestNode_GetRandomByCurve>Node: Sample Random Value from Curve</QuestNode_GetRandomByCurve>
+    <QuestNode_GetRandomByCurve_Tip>Sample a value from the curve, with optional rounding and bounds.</QuestNode_GetRandomByCurve_Tip>
 
     <!--QuestNode_GetRandomFactionForSite-->
-    <QuestNode_GetRandomFactionForSite>QuestNode_GetRandomFactionForSite</QuestNode_GetRandomFactionForSite>
+    <QuestNode_GetRandomFactionForSite>Node: Pick Random Site Faction</QuestNode_GetRandomFactionForSite>
+    <QuestNode_GetRandomFactionForSite_Tip>Pick a random faction that meets the site parts’ and hostility requirements.</QuestNode_GetRandomFactionForSite_Tip>
 
     <!--QuestNode_GetRandomInRangeFloat-->
-    <QuestNode_GetRandomInRangeFloat>QuestNode_GetRandomInRangeFloat</QuestNode_GetRandomInRangeFloat>
+    <QuestNode_GetRandomInRangeFloat>Node: Pick Random Float in Range</QuestNode_GetRandomInRangeFloat>
+    <QuestNode_GetRandomInRangeFloat_Tip>Sample a random floating-point value from the specified range.</QuestNode_GetRandomInRangeFloat_Tip>
 
     <!--QuestNode_GetRandomInRangeForChallengeRating-->
-    <QuestNode_GetRandomInRangeForChallengeRating>QuestNode_GetRandomInRangeForChallengeRating</QuestNode_GetRandomInRangeForChallengeRating>
+    <QuestNode_GetRandomInRangeForChallengeRating>Node: Sample Range by Challenge Rating</QuestNode_GetRandomInRangeForChallengeRating>
+    <QuestNode_GetRandomInRangeForChallengeRating_Tip>Select the range for the quest’s star rating and draw a random value from it.</QuestNode_GetRandomInRangeForChallengeRating_Tip>
     <oneStarRange>One Star Range</oneStarRange>
     <twoStarRange>Two Star Range</twoStarRange>
     <threeStarRange>Three Star Range</threeStarRange>
 
     <!--QuestNode_GetRandomNegativeGameCondition-->
-    <QuestNode_GetRandomNegativeGameCondition>QuestNode_GetRandomNegativeGameCondition</QuestNode_GetRandomNegativeGameCondition>
+    <QuestNode_GetRandomNegativeGameCondition>Node: Pick Random Negative Game Condition</QuestNode_GetRandomNegativeGameCondition>
+    <QuestNode_GetRandomNegativeGameCondition_Tip>Pick an eligible negative map condition and store its duration and difficulty information.</QuestNode_GetRandomNegativeGameCondition_Tip>
     <storeGameConditionAs>Store Game Condition As</storeGameConditionAs>
     <storeGameConditionDurationAs>Store Game Condition Duration As</storeGameConditionDurationAs>
     <storeGameConditionDifficultyAs>Store Game Condition Difficulty As</storeGameConditionDifficultyAs>
 
     <!--QuestNode_GetRelationsInfo-->
-    <QuestNode_GetRelationsInfo>QuestNode_GetRelationsInfo</QuestNode_GetRelationsInfo>
+    <QuestNode_GetRelationsInfo>Node: List Pawn Relationships</QuestNode_GetRelationsInfo>
+    <QuestNode_GetRelationsInfo_Tip>Summarize the pawn’s relationships with the selected other pawns as text.</QuestNode_GetRelationsInfo_Tip>
     <otherPawns>Other Pawns</otherPawns>
     <nonRelatedLabel>Non Related Label</nonRelatedLabel>
     <nonRelatedLabelPlural>Non Related Label Plural</nonRelatedLabelPlural>
 
     <!--QuestNode_GetSitePartDefsByTagsAndFaction-->
-    <QuestNode_GetSitePartDefsByTagsAndFaction>QuestNode_GetSitePartDefsByTagsAndFaction</QuestNode_GetSitePartDefsByTagsAndFaction>
+    <QuestNode_GetSitePartDefsByTagsAndFaction>Node: Select Site Parts by Tags and Faction</QuestNode_GetSitePartDefsByTagsAndFaction>
+    <QuestNode_GetSitePartDefsByTagsAndFaction_Tip>Select a set of site parts using their tags and faction requirements.</QuestNode_GetSitePartDefsByTagsAndFaction_Tip>
     <sitePartsTags>Site Parts Tags</sitePartsTags>
 
     <!--QuestNode_GetSiteThreatPoints-->
-    <QuestNode_GetSiteThreatPoints>QuestNode_GetSiteThreatPoints</QuestNode_GetSiteThreatPoints>
+    <QuestNode_GetSiteThreatPoints>Node: Get Site Threat Points</QuestNode_GetSiteThreatPoints>
+    <QuestNode_GetSiteThreatPoints_Tip>Read a site’s actual threat points or calculate them from site part parameters.</QuestNode_GetSiteThreatPoints_Tip>
     <site>Site</site>
 
     <!--QuestNode_GetSiteTile-->
-    <QuestNode_GetSiteTile>QuestNode_GetSiteTile</QuestNode_GetSiteTile>
+    <QuestNode_GetSiteTile>Node: Find Site Tile</QuestNode_GetSiteTile>
+    <QuestNode_GetSiteTile_Tip>Find an eligible site tile using criteria such as distance, landmarks, and space access.</QuestNode_GetSiteTile_Tip>
     <preferCloserTiles>Prefer Closer Tiles</preferCloserTiles>
     <allowCaravans>Allow Caravans</allowCaravans>
     <clampRangeBySiteParts>Clamp Range By Site Parts</clampRangeBySiteParts>
 
     <!--QuestNode_GetThingPlayerCanProduce-->
-    <QuestNode_GetThingPlayerCanProduce>QuestNode_GetThingPlayerCanProduce</QuestNode_GetThingPlayerCanProduce>
+    <QuestNode_GetThingPlayerCanProduce>Node: Select Producible Item</QuestNode_GetThingPlayerCanProduce>
+    <QuestNode_GetThingPlayerCanProduce_Tip>Pick an item the player can make and calculate the required quantity from quest points.</QuestNode_GetThingPlayerCanProduce_Tip>
     <storeProductionItemDefAs>Store Production Item Def As</storeProductionItemDefAs>
     <storeProductionItemStuffAs>Store Production Item Stuff As</storeProductionItemStuffAs>
     <storeProductionItemCountAs>Store Production Item Count As</storeProductionItemCountAs>
@@ -489,7 +609,8 @@
     <productionItemCountRandomFactorRange>Production Item Count Random Factor Range</productionItemCountRandomFactorRange>
 
     <!--QuestNode_SplitRandomly-->
-    <QuestNode_SplitRandomly>QuestNode_SplitRandomly</QuestNode_SplitRandomly>
+    <QuestNode_SplitRandomly>Node: Split Value Randomly</QuestNode_SplitRandomly>
+    <QuestNode_SplitRandomly_Tip>Randomly divide a value into the specified number of shares and store each share.</QuestNode_SplitRandomly_Tip>
     <storeAsFormat>Store As Format</storeAsFormat>
     <storeAs1>Store As1</storeAs1>
     <storeAs2>Store As2</storeAs2>
@@ -510,117 +631,145 @@
     <minFraction5>Min Fraction5</minFraction5>
 
     <!--QuestNode_AssaultColony-->
-    <QuestNode_AssaultColony>QuestNode_AssaultColony</QuestNode_AssaultColony>
+    <QuestNode_AssaultColony>Node: Order a Colony Assault</QuestNode_AssaultColony>
+    <QuestNode_AssaultColony_Tip>Have the specified pawns form an assault group when signaled.</QuestNode_AssaultColony_Tip>
 
     <!--QuestNode_VisitColony-->
-    <QuestNode_VisitColony>QuestNode_VisitColony</QuestNode_VisitColony>
+    <QuestNode_VisitColony>Node: Schedule Colony Visit</QuestNode_VisitColony>
+    <QuestNode_VisitColony_Tip>Have the specified faction’s pawns visit the colony for the configured duration when signaled.</QuestNode_VisitColony_Tip>
 
     <!--QuestNode_HasRoyalTitleInCurrentFaction-->
-    <QuestNode_HasRoyalTitleInCurrentFaction>QuestNode_HasRoyalTitleInCurrentFaction</QuestNode_HasRoyalTitleInCurrentFaction>
+    <QuestNode_HasRoyalTitleInCurrentFaction>Node: Check Title in Current Faction</QuestNode_HasRoyalTitleInCurrentFaction>
+    <QuestNode_HasRoyalTitleInCurrentFaction_Tip>Run the matching branch based on whether the pawn holds a royal title in its current faction.</QuestNode_HasRoyalTitleInCurrentFaction_Tip>
 
     <!--QuestNode_IsFactionHostileToPlayer-->
-    <QuestNode_IsFactionHostileToPlayer>QuestNode_IsFactionHostileToPlayer</QuestNode_IsFactionHostileToPlayer>
+    <QuestNode_IsFactionHostileToPlayer>Node: Check Faction Hostility to Player</QuestNode_IsFactionHostileToPlayer>
+    <QuestNode_IsFactionHostileToPlayer_Tip>Run the matching branch based on whether the selected faction is hostile to the player.</QuestNode_IsFactionHostileToPlayer_Tip>
 
     <!--QuestNode_IsOfFaction-->
-    <QuestNode_IsOfFaction>QuestNode_IsOfFaction</QuestNode_IsOfFaction>
+    <QuestNode_IsOfFaction>Node: Check Faction Membership</QuestNode_IsOfFaction>
+    <QuestNode_IsOfFaction_Tip>Run the matching branch based on whether the target belongs to the specified faction.</QuestNode_IsOfFaction_Tip>
 
     <!--QuestNode_ModIsActive-->
-    <QuestNode_ModIsActive>QuestNode_ModIsActive</QuestNode_ModIsActive>
+    <QuestNode_ModIsActive>Node: Check Active Mod</QuestNode_ModIsActive>
+    <QuestNode_ModIsActive_Tip>Run the matching branch based on whether the mod with the given package ID is active.</QuestNode_ModIsActive_Tip>
 
     <!--QuestNode_AddContentsToShuttle-->
-    <QuestNode_AddContentsToShuttle>QuestNode_AddContentsToShuttle</QuestNode_AddContentsToShuttle>
+    <QuestNode_AddContentsToShuttle>Node: Load Shuttle Contents</QuestNode_AddContentsToShuttle>
+    <QuestNode_AddContentsToShuttle_Tip>Load the specified contents into the shuttle when signaled.</QuestNode_AddContentsToShuttle_Tip>
 
     <!--QuestNode_AddHediff-->
-    <QuestNode_AddHediff>QuestNode_AddHediff</QuestNode_AddHediff>
+    <QuestNode_AddHediff>Node: Add Health Condition</QuestNode_AddHediff>
+    <QuestNode_AddHediff_Tip>Apply a health condition to the specified pawns when signaled.</QuestNode_AddHediff_Tip>
     <hediffDef>Hediff Def</hediffDef>
     <partsToAffect>Parts To Affect</partsToAffect>
     <checkDiseaseContractChance>Check Disease Contract Chance</checkDiseaseContractChance>
     <addToHyperlinks>Add To Hyperlinks</addToHyperlinks>
 
     <!--QuestNode_AddItemsReward-->
-    <QuestNode_AddItemsReward>QuestNode_AddItemsReward</QuestNode_AddItemsReward>
+    <QuestNode_AddItemsReward>Node: Add Item Reward</QuestNode_AddItemsReward>
+    <QuestNode_AddItemsReward_Tip>Offer the specified items as a quest reward.</QuestNode_AddItemsReward_Tip>
 
     <!--QuestNode_AddMemoryThought-->
-    <QuestNode_AddMemoryThought>QuestNode_AddMemoryThought</QuestNode_AddMemoryThought>
+    <QuestNode_AddMemoryThought>Node: Add Thought Memory</QuestNode_AddMemoryThought>
+    <QuestNode_AddMemoryThought_Tip>Give the specified pawns a thought memory when signaled.</QuestNode_AddMemoryThought_Tip>
 
     <!--QuestNode_AddPassageOffworldReward-->
-    <QuestNode_AddPassageOffworldReward>QuestNode_AddPassageOffworldReward</QuestNode_AddPassageOffworldReward>
+    <QuestNode_AddPassageOffworldReward>Node: Add Offworld Passage Reward</QuestNode_AddPassageOffworldReward>
+    <QuestNode_AddPassageOffworldReward_Tip>Offer passage offworld as a quest reward.</QuestNode_AddPassageOffworldReward_Tip>
 
     <!--QuestNode_AddPawnReward-->
-    <QuestNode_AddPawnReward>QuestNode_AddPawnReward</QuestNode_AddPawnReward>
+    <QuestNode_AddPawnReward>Node: Add Pawn Reward</QuestNode_AddPawnReward>
+    <QuestNode_AddPawnReward_Tip>Offer the specified pawn as a quest reward.</QuestNode_AddPawnReward_Tip>
 
     <!--QuestNode_AllowDecreesForLodger-->
-    <QuestNode_AllowDecreesForLodger>QuestNode_AllowDecreesForLodger</QuestNode_AllowDecreesForLodger>
+    <QuestNode_AllowDecreesForLodger>Node: Allow Lodger Decrees</QuestNode_AllowDecreesForLodger>
+    <QuestNode_AllowDecreesForLodger_Tip>Allow the designated lodger to issue decrees during the quest.</QuestNode_AllowDecreesForLodger_Tip>
     <lodger>Lodger</lodger>
 
     <!--QuestNode_BetrayMTB-->
-    <QuestNode_BetrayMTB>QuestNode_BetrayMTB</QuestNode_BetrayMTB>
+    <QuestNode_BetrayMTB>Node: Trigger Timed Betrayal</QuestNode_BetrayMTB>
+    <QuestNode_BetrayMTB_Tip>While enabled, signal betrayal at a random time influenced by how many colonists are downed.</QuestNode_BetrayMTB_Tip>
 
     <!--QuestNode_ChangeFactionGoodwill-->
-    <QuestNode_ChangeFactionGoodwill>QuestNode_ChangeFactionGoodwill</QuestNode_ChangeFactionGoodwill>
+    <QuestNode_ChangeFactionGoodwill>Node: Change Faction Goodwill</QuestNode_ChangeFactionGoodwill>
+    <QuestNode_ChangeFactionGoodwill_Tip>Adjust the selected faction’s goodwill toward the player when signaled.</QuestNode_ChangeFactionGoodwill_Tip>
     <change>Change</change>
     <canSendLetter>Can Send Letter</canSendLetter>
     <canSendMessage>Can Send Message:</canSendMessage>
     <ensureHostile>Ensure Hostile</ensureHostile>
 
     <!--QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle-->
-    <QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle</QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>
+    <QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>Node: Change Goodwill for Missing Passengers</QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle>
+    <QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle_Tip>When signaled, adjust goodwill for each designated pawn still alive and missing from the shuttle.</QuestNode_ChangeGoodwillForAlivePawnsMissingFromShuttle_Tip>
     <goodwillChange>Goodwill Change</goodwillChange>
 
     <!--QuestNode_ChangeHeir-->
-    <QuestNode_ChangeHeir>QuestNode_ChangeHeir</QuestNode_ChangeHeir>
+    <QuestNode_ChangeHeir>Node: Change Title Heir</QuestNode_ChangeHeir>
+    <QuestNode_ChangeHeir_Tip>Set the pawn’s title heir for the selected faction when signaled.</QuestNode_ChangeHeir_Tip>
     <holder>Holder</holder>
     <heir>Heir</heir>
 
     <!--QuestNode_ChangeNeed-->
-    <QuestNode_ChangeNeed>QuestNode_ChangeNeed</QuestNode_ChangeNeed>
+    <QuestNode_ChangeNeed>Node: Change Need Level</QuestNode_ChangeNeed>
+    <QuestNode_ChangeNeed_Tip>Apply the specified offset to a pawn’s need level when signaled.</QuestNode_ChangeNeed_Tip>
     <need>Need</need>
     <offset>Offset</offset>
 
     <!--QuestNode_DamageUntilDowned-->
-    <QuestNode_DamageUntilDowned>QuestNode_DamageUntilDowned</QuestNode_DamageUntilDowned>
+    <QuestNode_DamageUntilDowned>Node: Damage Until Downed</QuestNode_DamageUntilDowned>
+    <QuestNode_DamageUntilDowned_Tip>Injure the specified pawns until they are downed when signaled.</QuestNode_DamageUntilDowned_Tip>
     <allowBleedingWounds>Allow Bleeding Wounds</allowBleedingWounds>
 
     <!--QuestNode_DestroyOrPassToWorld-->
-    <QuestNode_DestroyOrPassToWorld>QuestNode_DestroyOrPassToWorld</QuestNode_DestroyOrPassToWorld>
+    <QuestNode_DestroyOrPassToWorld>Node: Destroy or Pass to World</QuestNode_DestroyOrPassToWorld>
+    <QuestNode_DestroyOrPassToWorld_Tip>Destroy the specified objects or pass pawns to world management when signaled.</QuestNode_DestroyOrPassToWorld_Tip>
 
     <!--QuestNode_DestroyWorldObject-->
-    <QuestNode_DestroyWorldObject>QuestNode_DestroyWorldObject</QuestNode_DestroyWorldObject>
+    <QuestNode_DestroyWorldObject>Node: Destroy World Object</QuestNode_DestroyWorldObject>
+    <QuestNode_DestroyWorldObject_Tip>Destroy the selected world object when signaled.</QuestNode_DestroyWorldObject_Tip>
 
     <!--QuestNode_DropMonumentMarkerCopy-->
-    <QuestNode_DropMonumentMarkerCopy>QuestNode_DropMonumentMarkerCopy</QuestNode_DropMonumentMarkerCopy>
+    <QuestNode_DropMonumentMarkerCopy>Node: Drop Monument Marker Copy</QuestNode_DropMonumentMarkerCopy>
+    <QuestNode_DropMonumentMarkerCopy_Tip>Drop a copy of the monument marker on the quest map when signaled.</QuestNode_DropMonumentMarkerCopy_Tip>
     <outSignalResult>Out Signal Result</outSignalResult>
     <destroyOrPassToWorldOnCleanup>Destroy Or Pass To World On Cleanup</destroyOrPassToWorldOnCleanup>
 
     <!--QuestNode_DropPods-->
-    <QuestNode_DropPods>QuestNode_DropPods</QuestNode_DropPods>
+    <QuestNode_DropPods>Node: Drop Pods</QuestNode_DropPods>
+    <QuestNode_DropPods_Tip>Deliver the specified items or pawns to the target map in drop pods when signaled.</QuestNode_DropPods_Tip>
     <useTradeDropSpot>Use Trade Drop Spot</useTradeDropSpot>
     <thingsToExcludeFromHyperlinks>Things To Exclude From Hyperlinks</thingsToExcludeFromHyperlinks>
 
     <!--QuestNode_EndGame-->
-    <QuestNode_EndGame>QuestNode_EndGame</QuestNode_EndGame>
+    <QuestNode_EndGame>Node: Trigger Game Ending</QuestNode_EndGame>
+    <QuestNode_EndGame_Tip>Trigger the game ending with the configured text when signaled.</QuestNode_EndGame_Tip>
     <introText>Intro Text</introText>
     <endingText>Ending Text</endingText>
     <introTextRules>Intro Text Rules</introTextRules>
     <endingTextRules>Ending Text Rules</endingTextRules>
 
     <!--QuestNode_ExtraFaction-->
-    <QuestNode_ExtraFaction>QuestNode_ExtraFaction</QuestNode_ExtraFaction>
+    <QuestNode_ExtraFaction>Node: Add Extra Faction Association</QuestNode_ExtraFaction>
+    <QuestNode_ExtraFaction_Tip>Register an additional faction association for the selected pawns during the quest.</QuestNode_ExtraFaction_Tip>
     <factionType>Faction Type</factionType>
     <areHelpers>Are Helpers</areHelpers>
 
     <!--QuestNode_FactionGoodwillForMoodChange-->
-    <QuestNode_FactionGoodwillForMoodChange>QuestNode_FactionGoodwillForMoodChange</QuestNode_FactionGoodwillForMoodChange>
+    <QuestNode_FactionGoodwillForMoodChange>Node: Calculate Goodwill from Mood</QuestNode_FactionGoodwillForMoodChange>
+    <QuestNode_FactionGoodwillForMoodChange_Tip>Track average mood and signal the resulting goodwill adjustment.</QuestNode_FactionGoodwillForMoodChange_Tip>
     <outSignalSuccess>Out Signal Success</outSignalSuccess>
     <outSignalFailed>Out Signal Failed</outSignalFailed>
 
     <!--QuestNode_GetRandomPawnKindForFaction-->
-    <QuestNode_GetRandomPawnKindForFaction>QuestNode_GetRandomPawnKindForFaction</QuestNode_GetRandomPawnKindForFaction>
+    <QuestNode_GetRandomPawnKindForFaction>Node: Pick Random Pawn Kind for Faction</QuestNode_GetRandomPawnKindForFaction>
+    <QuestNode_GetRandomPawnKindForFaction_Tip>Pick a random pawn kind matching the faction, with an optional fallback.</QuestNode_GetRandomPawnKindForFaction_Tip>
     <choices>Choices</choices>
     <fallback>Fallback</fallback>
 
     <!--QuestNode_GiveNearPawn-->
-    <QuestNode_GiveNearPawn>QuestNode_GiveNearPawn</QuestNode_GiveNearPawn>
+    <QuestNode_GiveNearPawn>Node: Deliver Contents Near Pawn</QuestNode_GiveNearPawn>
+    <QuestNode_GiveNearPawn_Tip>Deliver the specified contents near the pawn or into their caravan inventory when signaled.</QuestNode_GiveNearPawn_Tip>
     <nearPawn>Near Pawn</nearPawn>
     <customDropPodsLetterLabel>Custom Drop Pods Letter Label</customDropPodsLetterLabel>
     <customDropPodsLetterText>Custom Drop Pods Letter Text</customDropPodsLetterText>
@@ -632,41 +781,50 @@
     <customCaravanInventoryLetterTextRules>Custom Caravan Inventory Letter Text Rules</customCaravanInventoryLetterTextRules>
 
     <!--QuestNode_GiveRewards-->
-    <QuestNode_GiveRewards>QuestNode_GiveRewards</QuestNode_GiveRewards>
+    <QuestNode_GiveRewards>Node: Give Quest Rewards</QuestNode_GiveRewards>
+    <QuestNode_GiveRewards_Tip>Generate quest rewards using the supplied parameters and bind them to the delivery signal.</QuestNode_GiveRewards_Tip>
     <useDifficultyFactor>Use Difficulty Factor</useDifficultyFactor>
     <nodeIfChosenPawnSignalUsed>Node If Chosen Pawn Signal Used</nodeIfChosenPawnSignalUsed>
     <variants>Variants</variants>
     <addCampLootReward>Add Camp Loot Reward</addCampLootReward>
 
     <!--QuestNode_GiveRoyalFavor-->
-    <QuestNode_GiveRoyalFavor>QuestNode_GiveRoyalFavor</QuestNode_GiveRoyalFavor>
+    <QuestNode_GiveRoyalFavor>Node: Grant Royal Favor</QuestNode_GiveRoyalFavor>
+    <QuestNode_GiveRoyalFavor_Tip>Grant royal favor to the selected pawn or quest accepter when signaled.</QuestNode_GiveRoyalFavor_Tip>
 
     <!--QuestNode_GiveRoyalFavorAndDevelopmentPoints-->
-    <QuestNode_GiveRoyalFavorAndDevelopmentPoints>QuestNode_GiveRoyalFavorAndDevelopmentPoints</QuestNode_GiveRoyalFavorAndDevelopmentPoints>
+    <QuestNode_GiveRoyalFavorAndDevelopmentPoints>Node: Offer Royal Favor and Development Points</QuestNode_GiveRoyalFavorAndDevelopmentPoints>
+    <QuestNode_GiveRoyalFavorAndDevelopmentPoints_Tip>Add a development-point reward to each royal favor choice.</QuestNode_GiveRoyalFavorAndDevelopmentPoints_Tip>
 
     <!--QuestNode_GiveTechprints-->
-    <QuestNode_GiveTechprints>QuestNode_GiveTechprints</QuestNode_GiveTechprints>
+    <QuestNode_GiveTechprints>Node: Give Techprints</QuestNode_GiveTechprints>
+    <QuestNode_GiveTechprints_Tip>Select a research project and grant its techprints when signaled.</QuestNode_GiveTechprints_Tip>
     <fixedProject>Fixed Project</fixedProject>
     <storeProjectAs>Store Project As</storeProjectAs>
 
     <!--QuestNode_GuardianShipDelay-->
-    <QuestNode_GuardianShipDelay>QuestNode_GuardianShipDelay</QuestNode_GuardianShipDelay>
+    <QuestNode_GuardianShipDelay>Node: Time Guardianship</QuestNode_GuardianShipDelay>
+    <QuestNode_GuardianShipDelay_Tip>Time the designated pawn’s guardianship while enabled, pausing the count while the pawn is suspended.</QuestNode_GuardianShipDelay_Tip>
 
     <!--QuestNode_InspectString-->
-    <QuestNode_InspectString>QuestNode_InspectString</QuestNode_InspectString>
+    <QuestNode_InspectString>Node: Add Inspect Text</QuestNode_InspectString>
+    <QuestNode_InspectString_Tip>Show the configured text in the selected targets’ inspect panes when enabled.</QuestNode_InspectString_Tip>
 
     <!--QuestNode_Leave-->
-    <QuestNode_Leave>QuestNode_Leave</QuestNode_Leave>
+    <QuestNode_Leave>Node: Have Pawns Leave</QuestNode_Leave>
+    <QuestNode_Leave_Tip>Have the specified pawns leave when signaled, with an option to send them away on cleanup.</QuestNode_Leave_Tip>
     <leaveOnCleanup>Leave On Cleanup</leaveOnCleanup>
 
     <!--QuestNode_LendColonistsToFaction-->
-    <QuestNode_LendColonistsToFaction>QuestNode_LendColonistsToFaction</QuestNode_LendColonistsToFaction>
+    <QuestNode_LendColonistsToFaction>Node: Lend Colonists to Faction</QuestNode_LendColonistsToFaction>
+    <QuestNode_LendColonistsToFaction_Tip>Lend colonists to the target faction by shuttle and schedule their return.</QuestNode_LendColonistsToFaction_Tip>
     <outSignalColonistsDied>Out Signal Colonists Died</outSignalColonistsDied>
     <lendColonistsToFactionOf>Lend Colonists To Faction Of</lendColonistsToFactionOf>
     <returnLentColonistsInTicks>Return Lent Colonists In Ticks</returnLentColonistsInTicks>
 
     <!--QuestNode_Letter-->
-    <QuestNode_Letter>QuestNode_Letter</QuestNode_Letter>
+    <QuestNode_Letter>Node: Send Letter</QuestNode_Letter>
+    <QuestNode_Letter_Tip>Send a letter with the configured type, text, and look targets when signaled.</QuestNode_Letter_Tip>
     <relatedFaction>Related Faction</relatedFaction>
     <letterDef>Letter Def</letterDef>
     <label>Label</label>
@@ -680,87 +838,109 @@
     <filterDeadPawnsFromLookTargets>Filter Dead Pawns From Look Targets</filterDeadPawnsFromLookTargets>
 
     <!--QuestNode_LoopCount-->
-    <QuestNode_LoopCount>QuestNode_LoopCount</QuestNode_LoopCount>
+    <QuestNode_LoopCount>Node: Loop a Fixed Number of Times</QuestNode_LoopCount>
+    <QuestNode_LoopCount_Tip>Run the child node a fixed number of times and optionally store the zero-based iteration index.</QuestNode_LoopCount_Tip>
     <loopCount>Loop Count</loopCount>
     <storeLoopCounterAs>Store Loop Counter As</storeLoopCounterAs>
 
     <!--QuestNode_Message-->
-    <QuestNode_Message>Node:Message</QuestNode_Message>
+    <QuestNode_Message>Node: Send Message</QuestNode_Message>
+    <QuestNode_Message_Tip>Show an in-game message of the selected type when signaled.</QuestNode_Message_Tip>
     <messageType>Message Type:</messageType>
 
     <!--QuestNode_MoodBelow-->
-    <QuestNode_MoodBelow>QuestNode_MoodBelow</QuestNode_MoodBelow>
+    <QuestNode_MoodBelow>Node: Monitor Low Mood</QuestNode_MoodBelow>
+    <QuestNode_MoodBelow_Tip>Monitor the specified pawns’ mood while enabled and trigger a signal or child node below the threshold.</QuestNode_MoodBelow_Tip>
     <threshold>Threshold</threshold>
 
     <!--QuestNode_NoWorldObject-->
-    <QuestNode_NoWorldObject>QuestNode_NoWorldObject</QuestNode_NoWorldObject>
+    <QuestNode_NoWorldObject>Node: Monitor World Object Removal</QuestNode_NoWorldObject>
+    <QuestNode_NoWorldObject_Tip>While enabled, trigger completion or the child node when the specified world object is gone.</QuestNode_NoWorldObject_Tip>
 
     <!--QuestNode_Notify_PlayerRaidedSomeone-->
-    <QuestNode_Notify_PlayerRaidedSomeone>QuestNode_Notify_PlayerRaidedSomeone</QuestNode_Notify_PlayerRaidedSomeone>
+    <QuestNode_Notify_PlayerRaidedSomeone>Node: Notify of Player Raid</QuestNode_Notify_PlayerRaidedSomeone>
+    <QuestNode_Notify_PlayerRaidedSomeone_Tip>Report the selected map’s free colonists as raid participants to the ideology system when signaled.</QuestNode_Notify_PlayerRaidedSomeone_Tip>
     <getRaidersFromMap>Get Raiders From Map</getRaidersFromMap>
     <getRaidersFromMapParent>Get Raiders From Map Parent</getRaidersFromMapParent>
 
     <!--QuestNode_PawnsArrive-->
-    <QuestNode_PawnsArrive>QuestNode_PawnsArrive</QuestNode_PawnsArrive>
+    <QuestNode_PawnsArrive>Node: Have Pawns Arrive</QuestNode_PawnsArrive>
+    <QuestNode_PawnsArrive_Tip>Bring the specified pawns onto the map using the selected arrival mode when signaled.</QuestNode_PawnsArrive_Tip>
     <customLetterDef>Custom Letter Def</customLetterDef>
 
     <!--QuestNode_PawnsKilled-->
-    <QuestNode_PawnsKilled>QuestNode_PawnsKilled</QuestNode_PawnsKilled>
+    <QuestNode_PawnsKilled>Node: Track Kills by Race</QuestNode_PawnsKilled>
+    <QuestNode_PawnsKilled_Tip>Count the player’s kills of the specified race on the quest map and signal completion at the target.</QuestNode_PawnsKilled_Tip>
     <outSignalPawnsNotAvailable>Out Signal Pawns Not Available</outSignalPawnsNotAvailable>
     <race>Race</race>
 
     <!--QuestNode_PlantsHarvested-->
-    <QuestNode_PlantsHarvested>QuestNode_PlantsHarvested</QuestNode_PlantsHarvested>
+    <QuestNode_PlantsHarvested>Node: Track Plant Harvests</QuestNode_PlantsHarvested>
+    <QuestNode_PlantsHarvested_Tip>Count the quantity harvested from the specified plant and signal completion at the target.</QuestNode_PlantsHarvested_Tip>
     <plant>Plant</plant>
 
     <!--QuestNode_QuestUnique-->
-    <QuestNode_QuestUnique>QuestNode_QuestUnique</QuestNode_QuestUnique>
+    <QuestNode_QuestUnique>Node: Prevent Duplicate Tagged Quests</QuestNode_QuestUnique>
+    <QuestNode_QuestUnique_Tip>Block quest generation if a matching quest tag already exists, optionally scoped by faction.</QuestNode_QuestUnique_Tip>
     <storeProcessedTagAs>Store Processed Tag As</storeProcessedTagAs>
 
     <!--QuestNode_RecordHistoryEvent-->
-    <QuestNode_RecordHistoryEvent>QuestNode_RecordHistoryEvent</QuestNode_RecordHistoryEvent>
+    <QuestNode_RecordHistoryEvent>Node: Record History Event</QuestNode_RecordHistoryEvent>
+    <QuestNode_RecordHistoryEvent_Tip>Record a history event of the selected type when signaled.</QuestNode_RecordHistoryEvent_Tip>
     <historyDef>History Def</historyDef>
 
     <!--QuestNode_RemoveMemoryThought-->
-    <QuestNode_RemoveMemoryThought>QuestNode_RemoveMemoryThought</QuestNode_RemoveMemoryThought>
+    <QuestNode_RemoveMemoryThought>Node: Remove Thought Memory</QuestNode_RemoveMemoryThought>
+    <QuestNode_RemoveMemoryThought_Tip>Remove the specified type and number of thought memories from the target pawn when signaled.</QuestNode_RemoveMemoryThought_Tip>
 
     <!--QuestNode_RequirementsToAcceptColonistWithTitle-->
-    <QuestNode_RequirementsToAcceptColonistWithTitle>QuestNode_RequirementsToAcceptColonistWithTitle</QuestNode_RequirementsToAcceptColonistWithTitle>
+    <QuestNode_RequirementsToAcceptColonistWithTitle>Node: Require Titled Colonist to Accept</QuestNode_RequirementsToAcceptColonistWithTitle>
+    <QuestNode_RequirementsToAcceptColonistWithTitle_Tip>Require a colonist with at least the specified title in the selected faction before accepting.</QuestNode_RequirementsToAcceptColonistWithTitle_Tip>
     <minimumTitle>Minimum Title</minimumTitle>
 
     <!--QuestNode_SendShuttleAway-->
-    <QuestNode_SendShuttleAway>QuestNode_SendShuttleAway</QuestNode_SendShuttleAway>
+    <QuestNode_SendShuttleAway>Node: Send Shuttle Away</QuestNode_SendShuttleAway>
+    <QuestNode_SendShuttleAway_Tip>Send the selected shuttle away when signaled, with optional unloading first.</QuestNode_SendShuttleAway_Tip>
 
     <!--QuestNode_SendShuttleAwayOnCleanup-->
-    <QuestNode_SendShuttleAwayOnCleanup>QuestNode_SendShuttleAwayOnCleanup</QuestNode_SendShuttleAwayOnCleanup>
+    <QuestNode_SendShuttleAwayOnCleanup>Node: Send Shuttle Away on Cleanup</QuestNode_SendShuttleAwayOnCleanup>
+    <QuestNode_SendShuttleAwayOnCleanup_Tip>Send the selected shuttle away during quest cleanup, with optional unloading first.</QuestNode_SendShuttleAwayOnCleanup_Tip>
 
     <!--QuestNode_SetChallengeRating-->
-    <QuestNode_SetChallengeRating>QuestNode_SetChallengeRating</QuestNode_SetChallengeRating>
+    <QuestNode_SetChallengeRating>Node: Set Quest Challenge Rating</QuestNode_SetChallengeRating>
+    <QuestNode_SetChallengeRating_Tip>Set the quest’s displayed challenge rating.</QuestNode_SetChallengeRating_Tip>
 
     <!--QuestNode_SetItemStashContents-->
-    <QuestNode_SetItemStashContents>QuestNode_SetItemStashContents</QuestNode_SetItemStashContents>
+    <QuestNode_SetItemStashContents>Node: Set Item Stash Contents</QuestNode_SetItemStashContents>
+    <QuestNode_SetItemStashContents_Tip>Store the specified items and category selections as the stash contents.</QuestNode_SetItemStashContents_Tip>
     <categories>Categories</categories>
 
     <!--QuestNode_SetRoyalTitle-->
-    <QuestNode_SetRoyalTitle>QuestNode_SetRoyalTitle</QuestNode_SetRoyalTitle>
+    <QuestNode_SetRoyalTitle>Node: Set Royal Title</QuestNode_SetRoyalTitle>
+    <QuestNode_SetRoyalTitle_Tip>Set the specified pawn’s royal title in the selected faction.</QuestNode_SetRoyalTitle_Tip>
     <royalTitle>Royal Title</royalTitle>
 
     <!--QuestNode_SetTicksUntilAcceptanceExpiry-->
-    <QuestNode_SetTicksUntilAcceptanceExpiry>QuestNode_SetTicksUntilAcceptanceExpiry</QuestNode_SetTicksUntilAcceptanceExpiry>
+    <QuestNode_SetTicksUntilAcceptanceExpiry>Node: Set Quest Acceptance Deadline</QuestNode_SetTicksUntilAcceptanceExpiry>
+    <QuestNode_SetTicksUntilAcceptanceExpiry_Tip>Set the quest acceptance deadline to the current time plus the specified ticks.</QuestNode_SetTicksUntilAcceptanceExpiry_Tip>
 
     <!--QuestNode_ShuttleDelay-->
-    <QuestNode_ShuttleDelay>QuestNode_ShuttleDelay</QuestNode_ShuttleDelay>
+    <QuestNode_ShuttleDelay>Node: Count Down to Shuttle Arrival</QuestNode_ShuttleDelay>
+    <QuestNode_ShuttleDelay_Tip>Count down to shuttle arrival for the lodgers, then trigger the follow-up.</QuestNode_ShuttleDelay_Tip>
     <lodgers>Lodgers</lodgers>
 
     <!--QuestNode_ShuttleLeaveDelay-->
-    <QuestNode_ShuttleLeaveDelay>QuestNode_ShuttleLeaveDelay</QuestNode_ShuttleLeaveDelay>
+    <QuestNode_ShuttleLeaveDelay>Node: Count Down to Shuttle Departure</QuestNode_ShuttleLeaveDelay>
+    <QuestNode_ShuttleLeaveDelay_Tip>Count down to the selected shuttle’s departure, with optional cancellation signals.</QuestNode_ShuttleLeaveDelay_Tip>
     <inSignalsDisable>In Signals Disable</inSignalsDisable>
 
     <!--QuestNode_SpawnMechCluster-->
-    <QuestNode_SpawnMechCluster>QuestNode_SpawnMechCluster</QuestNode_SpawnMechCluster>
+    <QuestNode_SpawnMechCluster>Node: Spawn Mech Cluster</QuestNode_SpawnMechCluster>
+    <QuestNode_SpawnMechCluster_Tip>Deploy a mech cluster on the quest map using the configured points when signaled.</QuestNode_SpawnMechCluster_Tip>
 
     <!--QuestNode_SpawnSkyfaller-->
-    <QuestNode_SpawnSkyfaller>QuestNode_SpawnSkyfaller</QuestNode_SpawnSkyfaller>
+    <QuestNode_SpawnSkyfaller>Node: Spawn Skyfaller</QuestNode_SpawnSkyfaller>
+    <QuestNode_SpawnSkyfaller_Tip>Spawn a skyfaller with optional contents at the designated location when signaled.</QuestNode_SpawnSkyfaller_Tip>
     <skyfallerDef>Skyfaller Def</skyfallerDef>
     <innerThings>Inner Things</innerThings>
     <cell>Cell</cell>
@@ -769,57 +949,69 @@
     <tryLandInShipLandingZone>Try Land In Ship Landing Zone</tryLandInShipLandingZone>
 
     <!--QuestNode_SpawnWorldObjects-->
-    <QuestNode_SpawnWorldObjects>QuestNode_SpawnWorldObjects</QuestNode_SpawnWorldObjects>
+    <QuestNode_SpawnWorldObjects>Node: Spawn World Objects</QuestNode_SpawnWorldObjects>
+    <QuestNode_SpawnWorldObjects_Tip>Place the supplied world objects on the world map when signaled.</QuestNode_SpawnWorldObjects_Tip>
     <worldObjects>World Objects</worldObjects>
     <defsToExcludeFromHyperlinks>Defs To Exclude From Hyperlinks</defsToExcludeFromHyperlinks>
 
     <!--QuestNode_ThingsProduced-->
-    <QuestNode_ThingsProduced>QuestNode_ThingsProduced</QuestNode_ThingsProduced>
+    <QuestNode_ThingsProduced>Node: Track Item Production</QuestNode_ThingsProduced>
+    <QuestNode_ThingsProduced_Tip>Track production of the specified item and signal completion at the required count, with an optional material filter.</QuestNode_ThingsProduced_Tip>
     <stuff>Stuff</stuff>
 
     <!--QuestNode_TrackWhenExitMentalState-->
-    <QuestNode_TrackWhenExitMentalState>QuestNode_TrackWhenExitMentalState</QuestNode_TrackWhenExitMentalState>
+    <QuestNode_TrackWhenExitMentalState>Node: Track Exit from Mental State</QuestNode_TrackWhenExitMentalState>
+    <QuestNode_TrackWhenExitMentalState_Tip>Track tagged pawns and signal when all have left the specified mental state.</QuestNode_TrackWhenExitMentalState_Tip>
     <mentalStateDef>Mental State Def</mentalStateDef>
 
     <!--QuestNode_WorkDisabled-->
-    <QuestNode_WorkDisabled>QuestNode_WorkDisabled</QuestNode_WorkDisabled>
+    <QuestNode_WorkDisabled>Node: Disable Work Types</QuestNode_WorkDisabled>
+    <QuestNode_WorkDisabled_Tip>While enabled, prevent the specified pawns from doing work with the selected tags.</QuestNode_WorkDisabled_Tip>
     <disabledWorkTags>Disabled Work Tags</disabledWorkTags>
 
     <!--QuestNode_WorldObjectTimeout-->
-    <QuestNode_WorldObjectTimeout>QuestNode_WorldObjectTimeout</QuestNode_WorldObjectTimeout>
+    <QuestNode_WorldObjectTimeout>Node: Set World Object Timeout</QuestNode_WorldObjectTimeout>
+    <QuestNode_WorldObjectTimeout_Tip>Set a timer that removes the world object when it expires.</QuestNode_WorldObjectTimeout_Tip>
     <destroyOnCleanup>Destroy On Cleanup</destroyOnCleanup>
 
     <!--QuestNode_Root_BestowingCeremony-->
-    <QuestNode_Root_BestowingCeremony>QuestNode_Root_BestowingCeremony</QuestNode_Root_BestowingCeremony>
+    <QuestNode_Root_BestowingCeremony>Node: Bestowing Ceremony Quest</QuestNode_Root_BestowingCeremony>
+    <QuestNode_Root_BestowingCeremony_Tip>Bring a bestower by shuttle to confer a title on the eligible pawn.</QuestNode_Root_BestowingCeremony_Tip>
     <QuestTag>Quest Tag</QuestTag>
 
     <!--QuestNode_Root_RefugeeBetrayal-->
-    <QuestNode_Root_RefugeeBetrayal>QuestNode_Root_RefugeeBetrayal</QuestNode_Root_RefugeeBetrayal>
+    <QuestNode_Root_RefugeeBetrayal>Node: Refugee Betrayal Offer Quest</QuestNode_Root_RefugeeBetrayal>
+    <QuestNode_Root_RefugeeBetrayal_Tip>Have another faction offer a reward for betraying the refugee lodgers.</QuestNode_Root_RefugeeBetrayal_Tip>
     <FailureRecruitedSignal>Failure Recruited Signal</FailureRecruitedSignal>
     <FailureLeftSignal>Failure Left Signal</FailureLeftSignal>
 
     <!--QuestNode_Root_Hospitality_Refugee-->
-    <QuestNode_Root_Hospitality_Refugee>QuestNode_Root_Hospitality_Refugee</QuestNode_Root_Hospitality_Refugee>
+    <QuestNode_Root_Hospitality_Refugee>Node: Refugee Hospitality Quest</QuestNode_Root_Hospitality_Refugee>
+    <QuestNode_Root_Hospitality_Refugee_Tip>Bring refugees to stay at the colony and handle outcomes such as recruitment, departure, and betrayal.</QuestNode_Root_Hospitality_Refugee_Tip>
     <RewardFactor_BetrayalOffer>Reward Factor_ Betrayal Offer</RewardFactor_BetrayalOffer>
     <BetrayalOfferGoodwillReward>Betrayal Offer Goodwill Reward</BetrayalOfferGoodwillReward>
 
     <!--QuestNode_Root_MechanitorShip-->
-    <QuestNode_Root_MechanitorShip>QuestNode_Root_MechanitorShip</QuestNode_Root_MechanitorShip>
+    <QuestNode_Root_MechanitorShip>Node: Mechanitor Ship Crash Quest</QuestNode_Root_MechanitorShip>
+    <QuestNode_Root_MechanitorShip_Tip>Crash a mechanitor’s shuttle so the mechlink can be recovered.</QuestNode_Root_MechanitorShip_Tip>
     <combatPointsFactor>Combat Points Factor</combatPointsFactor>
     <mechGroups>Mech Groups</mechGroups>
 
     <!--QuestNode_Root_MechanitorStartingMech-->
-    <QuestNode_Root_MechanitorStartingMech>QuestNode_Root_MechanitorStartingMech</QuestNode_Root_MechanitorStartingMech>
+    <QuestNode_Root_MechanitorStartingMech>Node: Mechanitor Starting Mech Quest</QuestNode_Root_MechanitorStartingMech>
+    <QuestNode_Root_MechanitorStartingMech_Tip>Deliver a starting mech by drop pod and assign it to the specified mechanitor.</QuestNode_Root_MechanitorStartingMech_Tip>
     <mechTypes>Mech Types</mechTypes>
 
     <!--QuestNode_Root_Mission_BanditCamp-->
-    <QuestNode_Root_Mission_BanditCamp>QuestNode_Root_Mission_BanditCamp</QuestNode_Root_Mission_BanditCamp>
+    <QuestNode_Root_Mission_BanditCamp>Node: Bandit Camp Mission</QuestNode_Root_Mission_BanditCamp>
+    <QuestNode_Root_Mission_BanditCamp_Tip>Spawn a bandit camp and set up the objective to clear its threats.</QuestNode_Root_Mission_BanditCamp_Tip>
     <factionsToDrawLeaderFrom>Factions To Draw Leader From</factionsToDrawLeaderFrom>
     <siteFactions>Site Factions</siteFactions>
     <timeLimitDays>Time Limit Days</timeLimitDays>
 
     <!--QuestNode_Root_SanguophageMeetingHost-->
-    <QuestNode_Root_SanguophageMeetingHost>QuestNode_Root_SanguophageMeetingHost</QuestNode_Root_SanguophageMeetingHost>
+    <QuestNode_Root_SanguophageMeetingHost>Node: Sanguophage Meeting Quest</QuestNode_Root_SanguophageMeetingHost>
+    <QuestNode_Root_SanguophageMeetingHost_Tip>Bring sanguophages to the colony for a meeting and set up possible conflict and rewards.</QuestNode_Root_SanguophageMeetingHost_Tip>
     <SanguophageFactionAlias>Sanguophage Faction Alias</SanguophageFactionAlias>
     <SanguophageListAlias>Sanguophage List Alias</SanguophageListAlias>
     <ReimplantWaitTicksAlias>Reimplant Wait Ticks Alias</ReimplantWaitTicksAlias>
@@ -828,74 +1020,90 @@
     <ReimplantWaitDurationTicks>Reimplant Wait Duration Ticks</ReimplantWaitDurationTicks>
 
     <!--QuestNode_Root_WandererJoin_WalkIn-->
-    <QuestNode_Root_WandererJoin_WalkIn>QuestNode_Root_WandererJoin_WalkIn</QuestNode_Root_WandererJoin_WalkIn>
+    <QuestNode_Root_WandererJoin_WalkIn>Node: Wanderer Walk-In Quest</QuestNode_Root_WandererJoin_WalkIn>
+    <QuestNode_Root_WandererJoin_WalkIn_Tip>Offer to have a wanderer arrive on foot and join the colony.</QuestNode_Root_WandererJoin_WalkIn_Tip>
     <RelationWithColonistWeight>Relation With Colonist Weight</RelationWithColonistWeight>
 
     <!--QuestNode_TradeRequest_Initiate-->
-    <QuestNode_TradeRequest_Initiate>QuestNode_TradeRequest_Initiate</QuestNode_TradeRequest_Initiate>
+    <QuestNode_TradeRequest_Initiate>Node: Initiate Trade Request</QuestNode_TradeRequest_Initiate>
+    <QuestNode_TradeRequest_Initiate_Tip>Have the selected settlement issue a timed trade request on the quest trigger.</QuestNode_TradeRequest_Initiate_Tip>
     <requestedThingDef>Requested Thing Def</requestedThingDef>
     <requestedThingCount>Requested Thing Count</requestedThingCount>
 
     <!--QuestNode_TradeRequest_GetRequestedThing-->
-    <QuestNode_TradeRequest_GetRequestedThing>QuestNode_TradeRequest_GetRequestedThing</QuestNode_TradeRequest_GetRequestedThing>
+    <QuestNode_TradeRequest_GetRequestedThing>Node: Select Trade Request Item</QuestNode_TradeRequest_GetRequestedThing>
+    <QuestNode_TradeRequest_GetRequestedThing_Tip>Choose an item for a trade request and calculate its quantity and market value.</QuestNode_TradeRequest_GetRequestedThing_Tip>
     <storeThingAs>Store Thing As</storeThingAs>
     <storeThingCountAs>Store Thing Count As</storeThingCountAs>
     <storeHasQualityAs>Store Has Quality As</storeHasQualityAs>
     <dontRequest>Dont Request</dontRequest>
 
     <!--QuestNode_TradeRequest_RandomOfferDuration-->
-    <QuestNode_TradeRequest_RandomOfferDuration>QuestNode_TradeRequest_RandomOfferDuration</QuestNode_TradeRequest_RandomOfferDuration>
+    <QuestNode_TradeRequest_RandomOfferDuration>Node: Calculate Trade Request Duration</QuestNode_TradeRequest_RandomOfferDuration>
+    <QuestNode_TradeRequest_RandomOfferDuration_Tip>Calculate a randomized offer duration from the estimated journey and optionally store the travel time.</QuestNode_TradeRequest_RandomOfferDuration_Tip>
     <storeEstimatedTravelTimeAs>Store Estimated Travel Time As</storeEstimatedTravelTimeAs>
 
     <!--QuestNode_ResolveQuestDescription-->
-    <QuestNode_ResolveQuestDescription>QuestNode_ResolveQuestDescription</QuestNode_ResolveQuestDescription>
+    <QuestNode_ResolveQuestDescription>Node: Resolve Quest Description</QuestNode_ResolveQuestDescription>
+    <QuestNode_ResolveQuestDescription_Tip>Resolve the current quest description using its text rules.</QuestNode_ResolveQuestDescription_Tip>
 
     <!--QuestNode_ResolveQuestName-->
-    <QuestNode_ResolveQuestName>QuestNode_ResolveQuestName</QuestNode_ResolveQuestName>
+    <QuestNode_ResolveQuestName>Node: Resolve Quest Name</QuestNode_ResolveQuestName>
+    <QuestNode_ResolveQuestName_Tip>Resolve the current quest name using its text rules.</QuestNode_ResolveQuestName_Tip>
 
     <!--QuestNode_ResolveTextNow-->
-    <QuestNode_ResolveTextNow>QuestNode_ResolveTextNow</QuestNode_ResolveTextNow>
+    <QuestNode_ResolveTextNow>Node: Resolve Text Immediately</QuestNode_ResolveTextNow>
+    <QuestNode_ResolveTextNow_Tip>Resolve the specified text rule root immediately and store the result.</QuestNode_ResolveTextNow_Tip>
     <root>Root</root>
 
     <!--QuestNode_TextRules-->
-    <QuestNode_TextRules>QuestNode_TextRules</QuestNode_TextRules>
+    <QuestNode_TextRules>Node: Add Quest Text Rules</QuestNode_TextRules>
+    <QuestNode_TextRules_Tip>Add the supplied text rules to the quest name, description, or both.</QuestNode_TextRules_Tip>
     <target>Target</target>
 
     <!--QuestNode_CreateIncidents-->
-    <QuestNode_CreateIncidents>QuestNode_CreateIncidents</QuestNode_CreateIncidents>
+    <QuestNode_CreateIncidents>Node: Schedule Recurring Incidents</QuestNode_CreateIncidents>
+    <QuestNode_CreateIncidents_Tip>While enabled, schedule incidents of the specified type at intervals over a set period.</QuestNode_CreateIncidents_Tip>
     <intervalTicks>Interval Ticks</intervalTicks>
     <randomIncidents>Random Incidents</randomIncidents>
     <startOffsetTicks>Start Offset Ticks</startOffsetTicks>
 
     <!--QuestNode_GameCondition-->
-    <QuestNode_GameCondition>QuestNode_GameCondition</QuestNode_GameCondition>
+    <QuestNode_GameCondition>Node: Apply Game Condition</QuestNode_GameCondition>
+    <QuestNode_GameCondition_Tip>Apply a timed game condition to the selected map or the world when signaled.</QuestNode_GameCondition_Tip>
     <gameCondition>Game Condition</gameCondition>
     <targetWorld>Target World</targetWorld>
     <storeGameConditionDescriptionFutureAs>Store Game Condition Description Future As</storeGameConditionDescriptionFutureAs>
 
     <!--QuestNode_GenerateThreats-->
-    <QuestNode_GenerateThreats>QuestNode_GenerateThreats</QuestNode_GenerateThreats>
+    <QuestNode_GenerateThreats>Node: Schedule Threats</QuestNode_GenerateThreats>
+    <QuestNode_GenerateThreats_Tip>Schedule a series of threats on the quest map with optional start timing and faction.</QuestNode_GenerateThreats_Tip>
     <storeThreatExampleAs>Store Threat Example As</storeThreatExampleAs>
     <threatStartTicks>Threat Start Ticks</threatStartTicks>
 
     <!--QuestNode_Incident-->
-    <QuestNode_Incident>QuestNode_Incident</QuestNode_Incident>
+    <QuestNode_Incident>Node: Trigger Incident</QuestNode_Incident>
+    <QuestNode_Incident_Tip>Trigger the specified incident on the quest map when signaled, with an optional custom letter.</QuestNode_Incident_Tip>
 
     <!--QuestNode_Infestation-->
-    <QuestNode_Infestation>QuestNode_Infestation</QuestNode_Infestation>
+    <QuestNode_Infestation>Node: Trigger Infestation</QuestNode_Infestation>
+    <QuestNode_Infestation_Tip>Trigger an infestation with the specified hive count on the quest map when signaled.</QuestNode_Infestation_Tip>
     <hivesCount>Hives Count</hivesCount>
 
     <!--QuestNode_ManhunterPack-->
-    <QuestNode_ManhunterPack>QuestNode_ManhunterPack</QuestNode_ManhunterPack>
+    <QuestNode_ManhunterPack>Node: Trigger Manhunter Pack</QuestNode_ManhunterPack>
+    <QuestNode_ManhunterPack_Tip>Spawn a pack of manhunting animals on the quest map when signaled.</QuestNode_ManhunterPack_Tip>
     <animalCount>Animal Count</animalCount>
 
     <!--QuestNode_Raid-->
-    <QuestNode_Raid>QuestNode_Raid</QuestNode_Raid>
+    <QuestNode_Raid>Node: Schedule Raid</QuestNode_Raid>
+    <QuestNode_Raid_Tip>Launch a raid on the quest map using the quest points and raid settings when signaled.</QuestNode_Raid_Tip>
     <raidPawnKind>Raid Pawn Kind</raidPawnKind>
     <inSignalLeave>In Signal Leave</inSignalLeave>
 
     <!--QuestNode_RandomRaid-->
-    <QuestNode_RandomRaid>QuestNode_RandomRaid</QuestNode_RandomRaid>
+    <QuestNode_RandomRaid>Node: Schedule Random Raid</QuestNode_RandomRaid>
+    <QuestNode_RandomRaid_Tip>Schedule a randomized raid using the configured faction and threat points, then launch it on a signal.</QuestNode_RandomRaid_Tip>
     <useCurrentThreatPoints>Use Current Threat Points</useCurrentThreatPoints>
     <currentThreatPointsFactor>Current Threat Points Factor</currentThreatPointsFactor>
 
@@ -910,4 +1118,259 @@
     <distance>Distance</distance>
     <blacklist>Blacklist</blacklist>
     <siteName>Site Name</siteName>
+
+    <QuestNode_AddRangeToList>Node: Add Range to List</QuestNode_AddRangeToList>
+    <QuestNode_AddRangeToList_Tip>Append all entries from a collection to the named list.</QuestNode_AddRangeToList_Tip>
+    <QuestNode_AddToList>Node: Add to List</QuestNode_AddToList>
+    <QuestNode_AddToList_Tip>Add an entry to the named list, creating the list if needed.</QuestNode_AddToList_Tip>
+    <QuestNode_AnyHiddenSitePart>Node: Check for Hidden Site Parts</QuestNode_AnyHiddenSitePart>
+    <QuestNode_AnyHiddenSitePart_Tip>Run the matching branch based on whether any specified site part is hidden by default.</QuestNode_AnyHiddenSitePart_Tip>
+    <QuestNode_AnyPawnAlive>Node: Check for Living Pawns</QuestNode_AnyPawnAlive>
+    <QuestNode_AnyPawnAlive_Tip>On the input signal, trigger the child node if any specified pawn is alive.</QuestNode_AnyPawnAlive_Tip>
+    <QuestNode_AnySignal>Node: Wait for Any Signal</QuestNode_AnySignal>
+    <QuestNode_AnySignal_Tip>Trigger the child node or send outputs when any input arrives.</QuestNode_AnySignal_Tip>
+    <QuestNode_BiocodeWeapons>Node: Biocode Weapons</QuestNode_BiocodeWeapons>
+    <QuestNode_BiocodeWeapons_Tip>Biocode the specified pawns’ weapons to their holders when signaled.</QuestNode_BiocodeWeapons_Tip>
+    <QuestNode_CampLootReward>Node: Add Camp Loot Reward</QuestNode_CampLootReward>
+    <QuestNode_CampLootReward_Tip>List camp loot as a quest reward.</QuestNode_CampLootReward_Tip>
+    <QuestNode_CannotRun>Node: Fail Quest Generation Check</QuestNode_CannotRun>
+    <QuestNode_CannotRun_Tip>Always fail the quest generation check.</QuestNode_CannotRun_Tip>
+    <QuestNode_ChildrenAllowed>Node: Check Whether Children Are Allowed</QuestNode_ChildrenAllowed>
+    <QuestNode_ChildrenAllowed_Tip>Run the matching branch based on whether the current difficulty allows children.</QuestNode_ChildrenAllowed_Tip>
+    <QuestNode_DestroyOrPassToWorldOnCleanup>Node: Destroy or Pass to World on Cleanup</QuestNode_DestroyOrPassToWorldOnCleanup>
+    <QuestNode_DestroyOrPassToWorldOnCleanup_Tip>Destroy the specified objects or pass pawns to world management during quest cleanup.</QuestNode_DestroyOrPassToWorldOnCleanup_Tip>
+    <QuestNode_DisableRandomMoodCausedMentalBreaks>Node: Disable Random Mood Breaks</QuestNode_DisableRandomMoodCausedMentalBreaks>
+    <QuestNode_DisableRandomMoodCausedMentalBreaks_Tip>While enabled, prevent random mood-driven mental breaks for the selected pawns.</QuestNode_DisableRandomMoodCausedMentalBreaks_Tip>
+    <QuestNode_EndGame_ShipEscape_FindShipTile>Node: Find Escape Ship Tile</QuestNode_EndGame_ShipEscape_FindShipTile>
+    <QuestNode_EndGame_ShipEscape_FindShipTile_Tip>Find and store a suitable world tile far from a player settlement for the escape ship.</QuestNode_EndGame_ShipEscape_FindShipTile_Tip>
+    <QuestNode_FactionExists>Node: Check for Faction</QuestNode_FactionExists>
+    <QuestNode_FactionExists_Tip>Run the matching branch based on whether the referenced faction exists.</QuestNode_FactionExists_Tip>
+    <QuestNode_Filter_AnyColonistAlive>Node: Filter Signal by Living Colonists</QuestNode_Filter_AnyColonistAlive>
+    <QuestNode_Filter_AnyColonistAlive_Tip>Pass the signal if the target map still has a living colonist.</QuestNode_Filter_AnyColonistAlive_Tip>
+    <QuestNode_Filter_DecreeNotPossible>Node: Filter Signal by Unavailable Decree</QuestNode_Filter_DecreeNotPossible>
+    <QuestNode_Filter_DecreeNotPossible_Tip>Pass the signal if its pawn can no longer issue the decree associated with this quest.</QuestNode_Filter_DecreeNotPossible_Tip>
+    <QuestNode_Filter_FactionNonPlayer>Node: Filter Signal by Non-Player Faction</QuestNode_Filter_FactionNonPlayer>
+    <QuestNode_Filter_FactionNonPlayer_Tip>Pass the signal if its faction or pawn belongs to a non-player faction.</QuestNode_Filter_FactionNonPlayer_Tip>
+    <QuestNode_GetAnimalKindByPoints>Node: Pick Animal Kind by Points</QuestNode_GetAnimalKindByPoints>
+    <QuestNode_GetAnimalKindByPoints_Tip>Select an animal kind using quest points and animal combat power.</QuestNode_GetAnimalKindByPoints_Tip>
+    <QuestNode_GetExampleRaid>Node: Generate Example Raid Roster</QuestNode_GetExampleRaid>
+    <QuestNode_GetExampleRaid_Tip>Generate a sample raid roster from the faction and raid points.</QuestNode_GetExampleRaid_Tip>
+    <QuestNode_GetHivesCountFromPoints>Node: Calculate Hive Count by Points</QuestNode_GetHivesCountFromPoints>
+    <QuestNode_GetHivesCountFromPoints_Tip>Calculate a hive count from quest points, with a minimum of one.</QuestNode_GetHivesCountFromPoints_Tip>
+    <QuestNode_GetMapWealth>Node: Get Map Wealth</QuestNode_GetMapWealth>
+    <QuestNode_GetMapWealth_Tip>Get and store the selected map’s total wealth.</QuestNode_GetMapWealth_Tip>
+    <QuestNode_GetMonumentSize>Node: Get Monument Size</QuestNode_GetMonumentSize>
+    <QuestNode_GetMonumentSize_Tip>Get and store the monument marker’s dimensions.</QuestNode_GetMonumentSize_Tip>
+    <QuestNode_GetPawnKindCombatPower>Node: Get Pawn Kind Combat Power</QuestNode_GetPawnKindCombatPower>
+    <QuestNode_GetPawnKindCombatPower_Tip>Get and store the combat power of the selected pawn kind.</QuestNode_GetPawnKindCombatPower_Tip>
+    <QuestNode_GetPlayerFaction>Node: Get Player Faction</QuestNode_GetPlayerFaction>
+    <QuestNode_GetPlayerFaction_Tip>Store the player faction in the specified quest variable.</QuestNode_GetPlayerFaction_Tip>
+    <QuestNode_GetPopIntentForQuest>Node: Get Quest Population Intent</QuestNode_GetPopIntentForQuest>
+    <QuestNode_GetPopIntentForQuest_Tip>Get the storyteller’s current population intent for quests.</QuestNode_GetPopIntentForQuest_Tip>
+    <QuestNode_GetRandomElement>Node: Pick Random Element</QuestNode_GetRandomElement>
+    <QuestNode_GetRandomElement_Tip>Pick and store a random entry from the candidates.</QuestNode_GetRandomElement_Tip>
+    <QuestNode_GetRandomElementByWeight>Node: Pick Weighted Random Element</QuestNode_GetRandomElementByWeight>
+    <QuestNode_GetRandomElementByWeight_Tip>Pick and store an entry using the configured weights.</QuestNode_GetRandomElementByWeight_Tip>
+    <QuestNode_GetRandomInRangeInt>Node: Pick Random Integer in Range</QuestNode_GetRandomInRangeInt>
+    <QuestNode_GetRandomInRangeInt_Tip>Sample a random integer from the specified range.</QuestNode_GetRandomInRangeInt_Tip>
+    <QuestNode_GetSameQuestsCount>Node: Count Quests of the Same Script</QuestNode_GetSameQuestsCount>
+    <QuestNode_GetSameQuestsCount_Tip>Count quests in the quest manager that use the same script.</QuestNode_GetSameQuestsCount_Tip>
+    <QuestNode_GetSiteDisturbanceFactor>Node: Calculate Site Threat Disturbance Factor</QuestNode_GetSiteDisturbanceFactor>
+    <QuestNode_GetSiteDisturbanceFactor_Tip>Multiply the site parts’ active-threat disturbance factors and store the result.</QuestNode_GetSiteDisturbanceFactor_Tip>
+    <QuestNode_GetWalkInSpot>Node: Find Walk-In Spot</QuestNode_GetWalkInSpot>
+    <QuestNode_GetWalkInSpot_Tip>Find and store a walk-in entry cell on the quest map.</QuestNode_GetWalkInSpot_Tip>
+    <QuestNode_GreaterOrEqual>Node: Compare Greater Than or Equal</QuestNode_GreaterOrEqual>
+    <QuestNode_GreaterOrEqual_Tip>Run the matching branch based on whether the first value is at least the second.</QuestNode_GreaterOrEqual_Tip>
+    <QuestNode_GreaterOrFail>Node: Require Greater Than</QuestNode_GreaterOrFail>
+    <QuestNode_GreaterOrFail_Tip>Pass the generation check when the first value exceeds the second, then optionally run the child node.</QuestNode_GreaterOrFail_Tip>
+    <QuestNode_HasGravEngine>Node: Check for Grav Engine</QuestNode_HasGravEngine>
+    <QuestNode_HasGravEngine_Tip>Run the matching branch based on whether the player has a grav engine.</QuestNode_HasGravEngine_Tip>
+    <QuestNode_IsAnimal>Node: Check Whether Pawn Is an Animal</QuestNode_IsAnimal>
+    <QuestNode_IsAnimal_Tip>Run the matching branch based on whether the pawn is an animal.</QuestNode_IsAnimal_Tip>
+    <QuestNode_IsFactionLeader>Node: Check Whether Pawn Is a Faction Leader</QuestNode_IsFactionLeader>
+    <QuestNode_IsFactionLeader_Tip>Run the matching branch based on whether the pawn leads its faction.</QuestNode_IsFactionLeader_Tip>
+    <QuestNode_IsFlesh>Node: Check Whether Pawn Is Flesh</QuestNode_IsFlesh>
+    <QuestNode_IsFlesh_Tip>Run the matching branch based on whether the pawn’s race is flesh.</QuestNode_IsFlesh_Tip>
+    <QuestNode_IsFreeWorldPawn>Node: Check Whether Pawn Is Free in the World</QuestNode_IsFreeWorldPawn>
+    <QuestNode_IsFreeWorldPawn_Tip>Run the matching branch based on whether the pawn is a free world pawn.</QuestNode_IsFreeWorldPawn_Tip>
+    <QuestNode_IsHumanlike>Node: Check Whether Pawn Is Humanlike</QuestNode_IsHumanlike>
+    <QuestNode_IsHumanlike_Tip>Run the matching branch based on whether the pawn is humanlike.</QuestNode_IsHumanlike_Tip>
+    <QuestNode_IsMechanoid>Node: Check Whether Pawn Is a Mechanoid</QuestNode_IsMechanoid>
+    <QuestNode_IsMechanoid_Tip>Run the matching branch based on whether the pawn is a mechanoid.</QuestNode_IsMechanoid_Tip>
+    <QuestNode_IsOfRoyalFaction>Node: Check Royal Faction Membership</QuestNode_IsOfRoyalFaction>
+    <QuestNode_IsOfRoyalFaction_Tip>Run the matching branch based on whether the target belongs to a royal faction.</QuestNode_IsOfRoyalFaction_Tip>
+    <QuestNode_IsPermanentEnemy>Node: Check for Permanent Enemy</QuestNode_IsPermanentEnemy>
+    <QuestNode_IsPermanentEnemy_Tip>Run the matching branch based on whether the target’s faction is a permanent enemy.</QuestNode_IsPermanentEnemy_Tip>
+    <QuestNode_IsTrue>Node: Check Whether Value Is True</QuestNode_IsTrue>
+    <QuestNode_IsTrue_Tip>Run the matching branch based on whether the specified Boolean is true.</QuestNode_IsTrue_Tip>
+    <QuestNode_IsTrueOrUnset>Node: Check for True or Unset</QuestNode_IsTrueOrUnset>
+    <QuestNode_IsTrueOrUnset_Tip>Run the main branch if the Boolean is true or unset, otherwise run the alternative.</QuestNode_IsTrueOrUnset_Tip>
+    <QuestNode_IsZero>Node: Check for Zero</QuestNode_IsZero>
+    <QuestNode_IsZero_Tip>Run the matching branch based on whether the value is zero.</QuestNode_IsZero_Tip>
+    <QuestNode_JoinPlayer>Node: Have Pawns Join Player</QuestNode_JoinPlayer>
+    <QuestNode_JoinPlayer_Tip>Make the specified pawns join the player faction or become prisoners when signaled.</QuestNode_JoinPlayer_Tip>
+    <QuestNode_LeaveOnCleanup>Node: Have Pawns Leave on Cleanup</QuestNode_LeaveOnCleanup>
+    <QuestNode_LeaveOnCleanup_Tip>Have the specified pawns leave during quest cleanup, with an optional letter.</QuestNode_LeaveOnCleanup_Tip>
+    <QuestNode_Less>Node: Compare Less Than</QuestNode_Less>
+    <QuestNode_Less_Tip>Run the matching branch based on whether the first value is less than the second.</QuestNode_Less_Tip>
+    <QuestNode_LessOrEqual>Node: Compare Less Than or Equal</QuestNode_LessOrEqual>
+    <QuestNode_LessOrEqual_Tip>Run the matching branch based on whether the first value is at most the second.</QuestNode_LessOrEqual_Tip>
+    <QuestNode_LessOrFail>Node: Require Less Than</QuestNode_LessOrFail>
+    <QuestNode_LessOrFail_Tip>Pass the generation check when the first value is below the second, then optionally run the child node.</QuestNode_LessOrFail_Tip>
+    <QuestNode_MakeMinified>Node: Minify Thing</QuestNode_MakeMinified>
+    <QuestNode_MakeMinified_Tip>Convert the specified thing to its minified form and store it.</QuestNode_MakeMinified_Tip>
+    <QuestNode_Multiply>Node: Multiply Numbers</QuestNode_Multiply>
+    <QuestNode_Multiply_Tip>Multiply two values and store the product.</QuestNode_Multiply_Tip>
+    <QuestNode_ReleaseParalyzedAnimals>Node: Release Paralyzed Animals</QuestNode_ReleaseParalyzedAnimals>
+    <QuestNode_ReleaseParalyzedAnimals_Tip>Release the specified paralyzed animals into the wild during quest cleanup.</QuestNode_ReleaseParalyzedAnimals_Tip>
+    <QuestNode_RemoveEquipmentFromPawns>Node: Remove Pawn Equipment</QuestNode_RemoveEquipmentFromPawns>
+    <QuestNode_RemoveEquipmentFromPawns_Tip>Remove equipment from the specified pawns when signaled.</QuestNode_RemoveEquipmentFromPawns_Tip>
+    <QuestNode_ReplaceLostLeaderReferences>Node: Replace Lost Leader References</QuestNode_ReplaceLostLeaderReferences>
+    <QuestNode_ReplaceLostLeaderReferences_Tip>Replace obsolete references to faction leaders with their current leaders when signaled.</QuestNode_ReplaceLostLeaderReferences_Tip>
+    <QuestNode_RequirementsToAcceptBedroom>Node: Require Bedrooms to Accept</QuestNode_RequirementsToAcceptBedroom>
+    <QuestNode_RequirementsToAcceptBedroom_Tip>Require suitable bedrooms on the quest map for the designated pawns before accepting.</QuestNode_RequirementsToAcceptBedroom_Tip>
+    <QuestNode_RequirementsToAcceptPlanetLayer>Node: Restrict Planet Layer to Accept</QuestNode_RequirementsToAcceptPlanetLayer>
+    <QuestNode_RequirementsToAcceptPlanetLayer_Tip>Limit quest acceptance using the map’s planet layer, space allowance, and layer lists.</QuestNode_RequirementsToAcceptPlanetLayer_Tip>
+    <QuestNode_RequirementsToAcceptResearch>Node: Require Research to Accept</QuestNode_RequirementsToAcceptResearch>
+    <QuestNode_RequirementsToAcceptResearch_Tip>Require completion of the specified research before accepting the quest.</QuestNode_RequirementsToAcceptResearch_Tip>
+    <QuestNode_RequireRoyalFavorFromFaction>Node: Require Faction’s Royal Favor</QuestNode_RequireRoyalFavorFromFaction>
+    <QuestNode_RequireRoyalFavorFromFaction_Tip>Pass the generation check only if the faction qualifies to award royal favor.</QuestNode_RequireRoyalFavorFromFaction_Tip>
+    <QuestNode_ResolveTextRequests>Node: Resolve Pending Text Requests</QuestNode_ResolveTextRequests>
+    <QuestNode_ResolveTextRequests_Tip>Resolve queued quest text requests after adding any supplied rules.</QuestNode_ResolveTextRequests_Tip>
+    <QuestNode_Root_AncientMercenaries>Node: Ancient Mercenaries Quest</QuestNode_Root_AncientMercenaries>
+    <QuestNode_Root_AncientMercenaries_Tip>Generate an ancient mercenary site with unique weapon loot.</QuestNode_Root_AncientMercenaries_Tip>
+    <QuestNode_Root_AncientSignalActivation>Node: Ancient Signal Activation Quest</QuestNode_Root_AncientSignalActivation>
+    <QuestNode_Root_AncientSignalActivation_Tip>Handle signal activation, scheduling reward drops and a possible raid.</QuestNode_Root_AncientSignalActivation_Tip>
+    <QuestNode_Root_AncientStructure>Node: Ancient Structure Quest</QuestNode_Root_AncientStructure>
+    <QuestNode_Root_AncientStructure_Tip>Spawn a site with the configured ancient structure and set its quest end conditions.</QuestNode_Root_AncientStructure_Tip>
+    <QuestNode_Root_ArchonexusVictory>Node: Archonexus Main Quest</QuestNode_Root_ArchonexusVictory>
+    <QuestNode_Root_ArchonexusVictory_Tip>Create the main archonexus quest and generate its stage quests.</QuestNode_Root_ArchonexusVictory_Tip>
+    <QuestNode_Root_ArchonexusVictory_FirstCycle>Node: Archonexus Quest (First Cycle)</QuestNode_Root_ArchonexusVictory_FirstCycle>
+    <QuestNode_Root_ArchonexusVictory_FirstCycle_Tip>Set up the first colony trade for part of the archonexus map.</QuestNode_Root_ArchonexusVictory_FirstCycle_Tip>
+    <QuestNode_Root_ArchonexusVictory_SecondCycle>Node: Archonexus Quest (Second Cycle)</QuestNode_Root_ArchonexusVictory_SecondCycle>
+    <QuestNode_Root_ArchonexusVictory_SecondCycle_Tip>Set up the second colony trade for part of the archonexus map.</QuestNode_Root_ArchonexusVictory_SecondCycle_Tip>
+    <QuestNode_Root_ArchonexusVictory_ThirdCycle>Node: Archonexus Quest (Third Cycle)</QuestNode_Root_ArchonexusVictory_ThirdCycle>
+    <QuestNode_Root_ArchonexusVictory_ThirdCycle_Tip>Spawn the final archonexus site and set up its ending.</QuestNode_Root_ArchonexusVictory_ThirdCycle_Tip>
+    <QuestNode_Root_Asteroid>Node: Asteroid Mining Quest</QuestNode_Root_Asteroid>
+    <QuestNode_Root_Asteroid_Tip>Spawn a time-limited orbital asteroid mining site.</QuestNode_Root_Asteroid_Tip>
+    <QuestNode_Root_Beggars>Node: Beggar Visit Quest</QuestNode_Root_Beggars>
+    <QuestNode_Root_Beggars_Tip>Bring visitors who ask the colony for supplies and handle the outcome.</QuestNode_Root_Beggars_Tip>
+    <QuestNode_Root_Bossgroup>Node: Mechanoid Bossgroup Quest</QuestNode_Root_Bossgroup>
+    <QuestNode_Root_Bossgroup_Tip>Bring in the specified mechanoid bossgroup and set up its reward.</QuestNode_Root_Bossgroup_Tip>
+    <QuestNode_Root_Creepjoiner_Arrival>Node: Creepjoiner Arrival Quest</QuestNode_Root_Creepjoiner_Arrival>
+    <QuestNode_Root_Creepjoiner_Arrival_Tip>Generate a creepjoiner and handle their request to join and its outcomes.</QuestNode_Root_Creepjoiner_Arrival_Tip>
+    <QuestNode_Root_DelayedRewardDropPods>Node: Delayed Drop Pod Reward Quest</QuestNode_Root_DelayedRewardDropPods>
+    <QuestNode_Root_DelayedRewardDropPods_Tip>Deliver quest rewards by drop pod after the configured delay.</QuestNode_Root_DelayedRewardDropPods_Tip>
+    <QuestNode_Root_DistressCall>Node: Distress Call Quest</QuestNode_Root_DistressCall>
+    <QuestNode_Root_DistressCall_Tip>Spawn the site that sent the distress call and set up exploration and a possible ambush.</QuestNode_Root_DistressCall_Tip>
+    <QuestNode_Root_Gravcore_AbandonedSettlement>Node: Gravcore Quest (Abandoned Settlement)</QuestNode_Root_Gravcore_AbandonedSettlement>
+    <QuestNode_Root_Gravcore_AbandonedSettlement_Tip>Spawn an abandoned settlement with a recoverable gravcore.</QuestNode_Root_Gravcore_AbandonedSettlement_Tip>
+    <QuestNode_Root_Gravcore_AncientReactor>Node: Gravcore Quest (Ancient Reactor)</QuestNode_Root_Gravcore_AncientReactor>
+    <QuestNode_Root_Gravcore_AncientReactor_Tip>Spawn an ancient reactor site with a recoverable gravcore.</QuestNode_Root_Gravcore_AncientReactor_Tip>
+    <QuestNode_Root_Gravcore_AncientStockpile>Node: Gravcore Quest (Ancient Stockpile)</QuestNode_Root_Gravcore_AncientStockpile>
+    <QuestNode_Root_Gravcore_AncientStockpile_Tip>Spawn an ancient stockpile site with a recoverable gravcore.</QuestNode_Root_Gravcore_AncientStockpile_Tip>
+    <QuestNode_Root_Gravcore_CrashedMechanoidPlatform>Node: Gravcore Quest (Crashed Mechanoid Platform)</QuestNode_Root_Gravcore_CrashedMechanoidPlatform>
+    <QuestNode_Root_Gravcore_CrashedMechanoidPlatform_Tip>Spawn a crashed mechanoid platform with a recoverable gravcore.</QuestNode_Root_Gravcore_CrashedMechanoidPlatform_Tip>
+    <QuestNode_Root_Gravcore_FrozenTerraformer>Node: Gravcore Quest (Frozen Terraformer)</QuestNode_Root_Gravcore_FrozenTerraformer>
+    <QuestNode_Root_Gravcore_FrozenTerraformer_Tip>Spawn a frozen terraformer site with a recoverable gravcore.</QuestNode_Root_Gravcore_FrozenTerraformer_Tip>
+    <QuestNode_Root_Gravcore_InsectLair>Node: Gravcore Quest (Insect Lair)</QuestNode_Root_Gravcore_InsectLair>
+    <QuestNode_Root_Gravcore_InsectLair_Tip>Spawn an insect lair with a recoverable gravcore.</QuestNode_Root_Gravcore_InsectLair_Tip>
+    <QuestNode_Root_Gravcore_MechanoidRelay>Node: Gravcore Quest (Mechanoid Relay)</QuestNode_Root_Gravcore_MechanoidRelay>
+    <QuestNode_Root_Gravcore_MechanoidRelay_Tip>Spawn the mechanoid relay and set up its stabilizer and gravcore objectives.</QuestNode_Root_Gravcore_MechanoidRelay_Tip>
+    <QuestNode_Root_Gravcore_Mechhive>Node: Orbital Mechhive Quest</QuestNode_Root_Gravcore_Mechhive>
+    <QuestNode_Root_Gravcore_Mechhive_Tip>Spawn the orbital mechhive and set up its core and stabilizer objectives.</QuestNode_Root_Gravcore_Mechhive_Tip>
+    <QuestNode_Root_Gravcore_OrbitalAncientPlatform>Node: Gravcore Quest (Orbital Ancient Platform)</QuestNode_Root_Gravcore_OrbitalAncientPlatform>
+    <QuestNode_Root_Gravcore_OrbitalAncientPlatform_Tip>Spawn an ancient orbital platform with a recoverable gravcore.</QuestNode_Root_Gravcore_OrbitalAncientPlatform_Tip>
+    <QuestNode_Root_Gravcore_OrbitalMechanoidPlatform>Node: Gravcore Quest (Orbital Mechanoid Platform)</QuestNode_Root_Gravcore_OrbitalMechanoidPlatform>
+    <QuestNode_Root_Gravcore_OrbitalMechanoidPlatform_Tip>Spawn an orbital mechanoid platform with a recoverable gravcore.</QuestNode_Root_Gravcore_OrbitalMechanoidPlatform_Tip>
+    <QuestNode_Root_GravShip>Node: Gravship Main Quest</QuestNode_Root_GravShip>
+    <QuestNode_Root_GravShip_Tip>Manage the gravship questline and its gravcore subquests.</QuestNode_Root_GravShip_Tip>
+    <QuestNode_Root_Gravship_Wreckage>Node: Gravship Wreckage Quest</QuestNode_Root_Gravship_Wreckage>
+    <QuestNode_Root_Gravship_Wreckage_Tip>Spawn an explorable gravship wreckage site.</QuestNode_Root_Gravship_Wreckage_Tip>
+    <QuestNode_Root_Hack_AncientComplex>Node: Ancient Complex Hacking Quest</QuestNode_Root_Hack_AncientComplex>
+    <QuestNode_Root_Hack_AncientComplex_Tip>Spawn an ancient complex with terminals to hack for relic clues.</QuestNode_Root_Hack_AncientComplex_Tip>
+    <QuestNode_Root_Hack_Spacedrone>Node: Space Drone Hacking Quest</QuestNode_Root_Hack_Spacedrone>
+    <QuestNode_Root_Hack_Spacedrone_Tip>Bring a space drone to the quest map to be hacked for a relic clue.</QuestNode_Root_Hack_Spacedrone_Tip>
+    <QuestNode_Root_Hack_WorshippedTerminal>Node: Worshipped Terminal Hacking Quest</QuestNode_Root_Hack_WorshippedTerminal>
+    <QuestNode_Root_Hack_WorshippedTerminal_Tip>Spawn a village with a worshipped terminal that can be hacked for a relic clue.</QuestNode_Root_Hack_WorshippedTerminal_Tip>
+    <QuestNode_Root_Loot_AncientComplex>Node: Ancient Complex Loot Quest</QuestNode_Root_Loot_AncientComplex>
+    <QuestNode_Root_Loot_AncientComplex_Tip>Spawn an ancient complex containing loot.</QuestNode_Root_Loot_AncientComplex_Tip>
+    <QuestNode_Root_Loot_AncientComplex_Mechanitor>Node: Mechanitor Complex Loot Quest</QuestNode_Root_Loot_AncientComplex_Mechanitor>
+    <QuestNode_Root_Loot_AncientComplex_Mechanitor_Tip>Spawn the ancient complex variant associated with a mechanitor.</QuestNode_Root_Loot_AncientComplex_Mechanitor_Tip>
+    <QuestNode_Root_MechanoidSignal>Node: Mechanoid Signal Quest</QuestNode_Root_MechanoidSignal>
+    <QuestNode_Root_MechanoidSignal_Tip>Spawn a grav engine at the colony and set up the subsequent mechanoid threat.</QuestNode_Root_MechanoidSignal_Tip>
+    <QuestNode_Root_Mission_AncientComplex>Node: Ancient Complex Mission</QuestNode_Root_Mission_AncientComplex>
+    <QuestNode_Root_Mission_AncientComplex_Tip>Set up an ancient complex mission with terminal hacking and incoming raids.</QuestNode_Root_Mission_AncientComplex_Tip>
+    <QuestNode_Root_MonolithMigration>Node: Monolith Migration Quest</QuestNode_Root_MonolithMigration>
+    <QuestNode_Root_MonolithMigration_Tip>Set up the void monolith to appear on a new map.</QuestNode_Root_MonolithMigration_Tip>
+    <QuestNode_Root_MysteriousCargoRevenantSpine>Node: Mysterious Cargo Quest (Revenant Spine)</QuestNode_Root_MysteriousCargoRevenantSpine>
+    <QuestNode_Root_MysteriousCargoRevenantSpine_Tip>Deliver a revenant spine by drop pod.</QuestNode_Root_MysteriousCargoRevenantSpine_Tip>
+    <QuestNode_Root_MysteriousCargoUnnaturalCorpse>Node: Mysterious Cargo Quest (Unnatural Corpse)</QuestNode_Root_MysteriousCargoUnnaturalCorpse>
+    <QuestNode_Root_MysteriousCargoUnnaturalCorpse_Tip>Deliver an unnatural corpse linked to a selected colonist by drop pod.</QuestNode_Root_MysteriousCargoUnnaturalCorpse_Tip>
+    <QuestNode_Root_MysteriousCargoUnnaturalCube>Node: Mysterious Cargo Quest (Golden Cube)</QuestNode_Root_MysteriousCargoUnnaturalCube>
+    <QuestNode_Root_MysteriousCargoUnnaturalCube_Tip>Deliver the golden cube by drop pod.</QuestNode_Root_MysteriousCargoUnnaturalCube_Tip>
+    <QuestNode_Root_OrbitalFugitive>Node: Orbital Fugitive Quest</QuestNode_Root_OrbitalFugitive>
+    <QuestNode_Root_OrbitalFugitive_Tip>Spawn the fugitive and related pawns at an orbital site.</QuestNode_Root_OrbitalFugitive_Tip>
+    <QuestNode_Root_PollutionDump>Node: Pollution Dump Quest</QuestNode_Root_PollutionDump>
+    <QuestNode_Root_PollutionDump_Tip>Schedule wastepacks to be dropped onto a player map.</QuestNode_Root_PollutionDump_Tip>
+    <QuestNode_Root_PollutionRaid>Node: Pollution Raid Quest</QuestNode_Root_PollutionRaid>
+    <QuestNode_Root_PollutionRaid_Tip>Schedule a retaliatory raid by a faction affected by pollution.</QuestNode_Root_PollutionRaid_Tip>
+    <QuestNode_Root_PollutionRetaliation>Node: Pollution Retaliation Quest</QuestNode_Root_PollutionRetaliation>
+    <QuestNode_Root_PollutionRetaliation_Tip>Have the affected faction retaliate by dropping wastepacks onto a player map.</QuestNode_Root_PollutionRetaliation_Tip>
+    <QuestNode_Root_RefugeeDelayedReward>Node: Refugee Delayed Reward Quest</QuestNode_Root_RefugeeDelayedReward>
+    <QuestNode_Root_RefugeeDelayedReward_Tip>Arrange for departed refugees to send a delayed thank-you drop.</QuestNode_Root_RefugeeDelayedReward_Tip>
+    <QuestNode_Root_RefugeePodCrash>Node: Refugee Pod Crash Quest</QuestNode_Root_RefugeePodCrash>
+    <QuestNode_Root_RefugeePodCrash_Tip>Generate a crashed transport pod carrying an injured refugee.</QuestNode_Root_RefugeePodCrash_Tip>
+    <QuestNode_Root_RefugeePodCrash_Baby>Node: Baby Pod Crash Quest</QuestNode_Root_RefugeePodCrash_Baby>
+    <QuestNode_Root_RefugeePodCrash_Baby_Tip>Generate a crashed transport pod carrying a baby and possibly a parent.</QuestNode_Root_RefugeePodCrash_Baby_Tip>
+    <QuestNode_Root_RefugeePodCrash_Ghoul>Node: Ghoul Pod Crash Quest</QuestNode_Root_RefugeePodCrash_Ghoul>
+    <QuestNode_Root_RefugeePodCrash_Ghoul_Tip>Generate a crashed transport pod carrying a ghoul.</QuestNode_Root_RefugeePodCrash_Ghoul_Tip>
+    <QuestNode_Root_RelicHunt>Node: Relic Hunt Quest</QuestNode_Root_RelicHunt>
+    <QuestNode_Root_RelicHunt_Tip>Set up the search for relic clues and reveal the relic site when the requirements are met.</QuestNode_Root_RelicHunt_Tip>
+    <QuestNode_Root_ReliquaryPilgrims>Node: Reliquary Pilgrimage Quest</QuestNode_Root_ReliquaryPilgrims>
+    <QuestNode_Root_ReliquaryPilgrims_Tip>Bring pilgrims to the colony to venerate a relic.</QuestNode_Root_ReliquaryPilgrims_Tip>
+    <QuestNode_Root_SanguophageShip>Node: Sanguophage Ship Quest</QuestNode_Root_SanguophageShip>
+    <QuestNode_Root_SanguophageShip_Tip>Set up the sanguophage ship event and handle the post-crash encounter and outcomes.</QuestNode_Root_SanguophageShip_Tip>
+    <QuestNode_Root_ShuttleCrash_Rescue>Node: Shuttle Crash Rescue Quest</QuestNode_Root_ShuttleCrash_Rescue>
+    <QuestNode_Root_ShuttleCrash_Rescue_Tip>Crash a shuttle and set the objective to protect survivors until rescue.</QuestNode_Root_ShuttleCrash_Rescue_Tip>
+    <QuestNode_Root_SightstealerArrival>Node: Sightstealer Arrival Quest</QuestNode_Root_SightstealerArrival>
+    <QuestNode_Root_SightstealerArrival_Tip>Bring a group of sightstealers in from the colony map edge.</QuestNode_Root_SightstealerArrival_Tip>
+    <QuestNode_Root_Site>Node: Generic Site Quest</QuestNode_Root_Site>
+    <QuestNode_Root_Site_Tip>Spawn a quest site with the selected part on a tile that meets the layer requirements.</QuestNode_Root_Site_Tip>
+    <QuestNode_Root_SurveyScanner>Node: Survey Scanner Quest</QuestNode_Root_SurveyScanner>
+    <QuestNode_Root_SurveyScanner_Tip>Set up a survey site with a scanner objective and a possible raid.</QuestNode_Root_SurveyScanner_Tip>
+    <QuestNode_Root_UnnaturalDarkness>Node: Unnatural Darkness Quest</QuestNode_Root_UnnaturalDarkness>
+    <QuestNode_Root_UnnaturalDarkness_Tip>Apply unnatural darkness to the quest map and set up its event phases.</QuestNode_Root_UnnaturalDarkness_Tip>
+    <QuestNode_Root_VoidAwakening>Node: Void Awakening Quest</QuestNode_Root_VoidAwakening>
+    <QuestNode_Root_VoidAwakening_Tip>Set up the void awakening’s stages of darkness and structure activation.</QuestNode_Root_VoidAwakening_Tip>
+    <QuestNode_Root_VoidMonolith>Node: Void Monolith Quest</QuestNode_Root_VoidMonolith>
+    <QuestNode_Root_VoidMonolith_Tip>Link the void monolith to the quest and track its investigation and progress.</QuestNode_Root_VoidMonolith_Tip>
+    <QuestNode_Root_WandererJoinAbasia>Node: Abasia Wanderer Join Quest</QuestNode_Root_WandererJoinAbasia>
+    <QuestNode_Root_WandererJoinAbasia_Tip>Offer to let a wanderer with abasia join the colony.</QuestNode_Root_WandererJoinAbasia_Tip>
+    <QuestNode_Root_WorkSite>Node: Work Site Quest</QuestNode_Root_WorkSite>
+    <QuestNode_Root_WorkSite_Tip>Spawn a temporary faction work site and notify the player when discovered.</QuestNode_Root_WorkSite_Tip>
+    <QuestNode_RoyalTitleHyperlink>Node: Add Royal Title Hyperlink</QuestNode_RoyalTitleHyperlink>
+    <QuestNode_RoyalTitleHyperlink_Tip>Add a clickable link to the specified faction title in the quest details.</QuestNode_RoyalTitleHyperlink_Tip>
+    <QuestNode_SetAllApparelLocked>Node: Lock All Apparel</QuestNode_SetAllApparelLocked>
+    <QuestNode_SetAllApparelLocked_Tip>Lock the apparel currently worn by the specified pawns when signaled.</QuestNode_SetAllApparelLocked_Tip>
+    <QuestNode_SetAndRestore>Node: Temporarily Set Quest Variable</QuestNode_SetAndRestore>
+    <QuestNode_SetAndRestore_Tip>Set the variable for the child node and restore its previous state afterward.</QuestNode_SetAndRestore_Tip>
+    <QuestNode_SetChildCount>Node: Count Children</QuestNode_SetChildCount>
+    <QuestNode_SetChildCount_Tip>Count children among the specified pawns and store the result in childCount.</QuestNode_SetChildCount_Tip>
+    <QuestNode_SetFaction>Node: Set Faction</QuestNode_SetFaction>
+    <QuestNode_SetFaction_Tip>Assign the selected faction to the specified targets when signaled.</QuestNode_SetFaction_Tip>
+    <QuestNode_SetupCreepjoiner>Node: Configure Creepjoiner</QuestNode_SetupCreepjoiner>
+    <QuestNode_SetupCreepjoiner_Tip>Select and store the creepjoiner’s form, benefit, downside, aggression, and rejection behavior.</QuestNode_SetupCreepjoiner_Tip>
+    <QuestNode_SignalActivable>Node: Listen for Signal (Toggleable)</QuestNode_SignalActivable>
+    <QuestNode_SignalActivable_Tip>While enabled, trigger the child node or send outputs when the specified input arrives.</QuestNode_SignalActivable_Tip>
+    <QuestNode_SituationalThought>Node: Apply Situational Thought</QuestNode_SituationalThought>
+    <QuestNode_SituationalThought_Tip>Apply the configured situational thought to the selected pawn while enabled, with an optional delay.</QuestNode_SituationalThought_Tip>
+    <QuestNode_SlateDump>Node: Dump Quest Slate</QuestNode_SlateDump>
+    <QuestNode_SlateDump_Tip>Write the current quest slate to the game log for debugging.</QuestNode_SlateDump_Tip>
+    <QuestNode_Subtract>Node: Subtract Numbers</QuestNode_Subtract>
+    <QuestNode_Subtract_Tip>Subtract the second value from the first and store the difference.</QuestNode_Subtract_Tip>
+    <QuestNode_Unset>Node: Remove Quest Variable</QuestNode_Unset>
+    <QuestNode_Unset_Tip>Remove the named entry from the quest slate.</QuestNode_Unset_Tip>
+    <QuestNode_ViolentQuestsAllowed>Node: Check Whether Violent Quests Are Allowed</QuestNode_ViolentQuestsAllowed>
+    <QuestNode_ViolentQuestsAllowed_Tip>Run the matching branch based on whether the current difficulty allows violent quests.</QuestNode_ViolentQuestsAllowed_Tip>
 </LanguageData>

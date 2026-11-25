@@ -95,8 +95,9 @@
   <!-- EN: Open Node -->
   <OpenNode>打开节点</OpenNode>
 
-  <!-- EN: Node:Is Null -->
-  <QuestNode_IsNull>节点：存在</QuestNode_IsNull>
+  <!-- EN: Node: Check for Null -->
+  <QuestNode_IsNull>节点：判断是否为空</QuestNode_IsNull>
+  <QuestNode_IsNull_Tip>根据指定值是否为空，运行对应分支。</QuestNode_IsNull_Tip>
   <!-- EN: Key: -->
   <ObjectKeyword>对象密匙：</ObjectKeyword>
   <!-- EN: Select True Node -->
