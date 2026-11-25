@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <JobDef>
+    <defName>CQF_CrossMapWalk</defName>
+    <driverClass>QuestEditor_Library.JobDriver_CQFCrossMapWalk</driverClass>
+    <reportString>Traveling to another map.</reportString>
+  </JobDef>
+  <JobDef>
+    <defName>CQF_CrossMapHaul</defName>
+    <driverClass>QuestEditor_Library.JobDriver_CQFCrossMapHaul</driverClass>
+    <reportString>Hauling TargetA to another map.</reportString>
+  </JobDef>
+</Defs>

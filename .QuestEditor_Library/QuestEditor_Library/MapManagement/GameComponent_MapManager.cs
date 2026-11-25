@@ -34,6 +34,7 @@ public sealed partial class GameComponent_MapManager : GameComponent
             Module?.Update();
 #if RIMWORLD_1_7
             ProcessCompositeTransfers();
+            crossMap.Update(this);
             UpdateCompositeMaps();
 #endif
         }
@@ -58,6 +59,7 @@ public sealed partial class GameComponent_MapManager : GameComponent
         RestoreHibernatingMaps();
 #if RIMWORLD_1_7
         RestoreCompositeMaps();
+        crossMap.Restore();
 #endif
         Module?.LoadedGame();
     }
@@ -66,6 +68,8 @@ public sealed partial class GameComponent_MapManager : GameComponent
     {
         ExposeHibernationData();
 #if RIMWORLD_1_7
+        Scribe_Deep.Look(ref crossMap!, "CQF_crossMap");
+        crossMap ??= new();
         Scribe_Collections.Look(ref compositeMaps, "CQF_compositeMaps", LookMode.Deep);
         compositeMaps ??= new();
         Scribe_Collections.Look(ref shownEntranceTitles, "CQF_shownEntranceTitles", LookMode.Value);

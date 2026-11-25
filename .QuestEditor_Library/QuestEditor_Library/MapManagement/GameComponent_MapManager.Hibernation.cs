@@ -40,6 +40,7 @@ public sealed partial class GameComponent_MapManager
         hibernatingMaps.Remove(map);
 #if RIMWORLD_1_7
         ActivateCompositeEdges(map);
+        crossMap.NotifyActivated(map);
 #endif
         if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
         Module?.MapAdded(map);
@@ -55,6 +56,8 @@ public sealed partial class GameComponent_MapManager
         hibernatingMaps.Remove(map);
 #if RIMWORLD_1_7
         ForgetCompositeEdges(map);
+        InvalidateCrossMapRoutes();
+        crossMap.NotifyMapRemoved(map);
         ForgetRegisteredCompositeRegion(map);
 #endif
     }

@@ -66,6 +66,7 @@ public sealed partial class GameComponent_MapManager
             compositeMaps.Add(instance);
             foreach (Map map in instance.Maps) compositeByMap.Add(map, instance);
             RegisterCompositeEdges(instance);
+            InvalidateCrossMapRoutes();
             if (Current.ProgramState == ProgramState.Playing) Find.ColonistBar.MarkColonistsDirty();
             return instance;
         }
@@ -129,7 +130,7 @@ public sealed partial class GameComponent_MapManager
 
     internal void ViewCompositeRegion(Map map)
     {
-        if (GetCompositeMap(map) is not CQFCompositeMapInstance instance || map.Disposed)
+        if (GetCompositeMapForView(map) is not CQFCompositeMapInstance instance || map.Disposed)
             throw new InvalidOperationException("[CQF] Composite map region is unavailable.");
         RememberCompositeCamera();
         Activate(map);
@@ -139,7 +140,7 @@ public sealed partial class GameComponent_MapManager
 
     internal bool FocusCompositeColonist(Pawn pawn)
     {
-        if (pawn.MapHeld is not { Disposed: false } map || GetCompositeMap(map) == null) return false;
+        if (pawn.MapHeld is not { Disposed: false } map || GetCompositeMapForView(map) == null) return false;
         IntVec3 cell = pawn.PositionHeld;
         if (!cell.InBounds(map)) return false;
         RememberCompositeCamera();
@@ -155,6 +156,16 @@ public sealed partial class GameComponent_MapManager
     }
 
     internal void QueueCompositeTransfer(Action transfer) => compositeTransfers.Add(transfer);
+
+    internal CQFCompositeMapInstance? GetCompositeMapForView(Map? map)
+    {
+        if (GetCompositeMap(map) is { } member) return member;
+        if (map?.Parent is not CustomSite || map.Disposed) return null;
+        if (minimap?.Instance is { } shown && shown.ViewableSource == map) return shown;
+        foreach (CQFCompositeMapInstance instance in compositeMaps)
+            if (instance.ViewableSource == map) return instance;
+        return null;
+    }
 
     internal void QueueCompositeEdgeTravel(Pawn pawn, Map source, IntVec3 cell)
     {
@@ -185,6 +196,7 @@ public sealed partial class GameComponent_MapManager
         }
 
         Map source = pawn.Map;
+        List<Pawn>? pursuers = crossMap.FindPursuers(pawn, source);
         IntVec3 sourceCell = pawn.Position;
         Rot4 rotation = pawn.Rotation;
         bool drafted = pawn.Drafted;
@@ -201,6 +213,7 @@ public sealed partial class GameComponent_MapManager
         }
 
         if (pawn.drafter != null) pawn.drafter.Drafted = drafted;
+        crossMap.Pursue(pursuers, pawn, source, target, sourceCell);
         if (follow) CameraJumper.TryJumpAndSelect(new GlobalTargetInfo(pawn), CameraJumper.MovementMode.Cut);
         return true;
     }
@@ -245,7 +258,7 @@ public sealed partial class GameComponent_MapManager
             compositeLifetimeMaps.Clear();
         }
         Map? currentMap = WorldRendererUtility.DrawingMap ? game.CurrentMap : null;
-        UpdateCompositeMinimap(GetCompositeMap(currentMap));
+        UpdateCompositeMinimap(GetCompositeMapForView(currentMap));
 
     }
 
@@ -266,7 +279,7 @@ public sealed partial class GameComponent_MapManager
     private void RememberCompositeCamera()
     {
         Map map = game.CurrentMap;
-        if (WorldRendererUtility.DrawingMap && GetCompositeMap(map) is CQFCompositeMapInstance instance)
+        if (WorldRendererUtility.DrawingMap && GetCompositeMapForView(map) is CQFCompositeMapInstance instance)
         {
             IntVec3 cell = Find.CameraDriver.MapPosition;
             if (cell.InBounds(map)) instance.RememberCamera(map, cell);

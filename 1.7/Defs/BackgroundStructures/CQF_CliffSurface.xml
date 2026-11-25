@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ShaderDef>
+    <defName>CQF_CliffSurface</defName>
+    <shaderProgram>
+      <vertexShaderFileName>CQF_CliffSurface.vert.glsl</vertexShaderFileName>
+      <fragmentShaderFileName>CQF_CliffSurface.frag.glsl</fragmentShaderFileName>
+      <transparent>true</transparent>
+      <blendMode>Alpha</blendMode>
+      <depthTest>true</depthTest>
+      <depthWrite>false</depthWrite>
+      <cullMode>None</cullMode>
+      <renderQueue>1916</renderQueue>
+    </shaderProgram>
+  </ShaderDef>
+</Defs>

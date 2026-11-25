@@ -16,6 +16,27 @@ namespace QuestEditor_Library
 #endif
         }
         public CQFMapRegionCollection Regions => this.regions ??= new CQFMapRegionCollection();
+#if RIMWORLD_1_7
+        public CustomMapBackgroundData BackgroundForDrawing => this.backgroundPreview ?? this.background;
+
+        public void SetBackgroundPreview(CustomMapBackgroundData? preview)
+        {
+            bool drewEdges = this.BackgroundForDrawing?.enableTerrainEdges == true;
+            this.backgroundPreview = preview;
+            if (drewEdges != (this.BackgroundForDrawing?.enableTerrainEdges == true))
+                this.map.mapDrawer.RegenerateEverythingNow();
+            this.RefreshBackgroundDrawing();
+        }
+
+        public void RefreshBackgroundDrawing()
+        {
+            if (this.map.mapDrawer.GlobalLayers == null) return;
+            if (this.map.mapDrawer.GetGlobalLayer<MapDrawLayer_CQFCustomBackground>() is { } backdrop) backdrop.Dirty = true;
+            if (this.map.mapDrawer.GetGlobalLayer<MapDrawLayer_CQFBackgroundStructures>() is { } scene) scene.Dirty = true;
+        }
+#else
+        public CustomMapBackgroundData BackgroundForDrawing => this.background;
+#endif
 
         public List<MapParent_Custom> Submaps 
         {
@@ -309,6 +330,7 @@ namespace QuestEditor_Library
         {
             GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
             manager?.NotifyMapActivity(map);
+            if (thing is CQFCompositeMapPortal or CQFMapPortal) manager?.InvalidateCrossMapRoutes();
             if (thing is Pawn pawn)
             {
                 if (map.Parent is CQFCompositeMapParent) manager?.NotifyCompositeEdgeSpawned(pawn, map);
@@ -317,7 +339,9 @@ namespace QuestEditor_Library
         }
         private void Notify_ThingDespawned(Thing thing)
         {
-            GameComponent_MapManager.Instance?.NotifyMapActivity(map);
+            GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
+            manager?.NotifyMapActivity(map);
+            if (thing is CQFCompositeMapPortal or CQFMapPortal) manager?.InvalidateCrossMapRoutes();
             if (thing is Pawn pawn) Notify_PawnDespawned(pawn);
         }
 #endif
@@ -386,6 +410,9 @@ namespace QuestEditor_Library
         public string questTag = "";
 
         public CustomMapBackgroundData background;
+#if RIMWORLD_1_7
+        private CustomMapBackgroundData? backgroundPreview;
+#endif
 
         private CQFMapRegionCollection regions = new CQFMapRegionCollection();
 

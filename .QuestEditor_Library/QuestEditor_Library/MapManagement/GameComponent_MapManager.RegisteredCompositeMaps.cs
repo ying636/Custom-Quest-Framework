@@ -31,6 +31,7 @@ public sealed partial class GameComponent_MapManager
         CQFCompositeMapGroup group = instance.AddGroup(owner, source, destination);
         compositeByEntrance.Add(owner, group);
         compositeByMap.Add(destination, instance);
+        InvalidateCrossMapRoutes();
         if (existing == null) compositeMaps.Add(instance);
         NotifyMapActivity(source);
         DirtyCompositeColonists();

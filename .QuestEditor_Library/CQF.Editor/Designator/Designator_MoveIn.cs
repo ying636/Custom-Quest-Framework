@@ -33,6 +33,26 @@ namespace QuestEditor_Library
             {
                 if (Find.CurrentMap is Map map)
                 {
+#if RIMWORLD_1_7
+                    if (GameComponent_MapManager.Instance is { } manager)
+                    {
+                        IReadOnlyList<Map> maps = manager.GetReachableCQFMaps(map);
+                        if (manager.GetCompositeMap(map) != null || maps.Any(candidate => manager.GetCompositeMap(candidate) != null))
+                        {
+                            foreach (Map destination in maps)
+                            {
+                                string label = destination.Parent is MapParent_Custom custom ? custom.MapName : destination.Parent.LabelCap;
+                                yield return new FloatMenuOption(label, () =>
+                                {
+                                    crossMapSource = map;
+                                    crossMapTarget = destination;
+                                    this.defaultLabel = "QE_Designator_MoveIn".Translate(label);
+                                });
+                            }
+                            yield break;
+                        }
+                    }
+#endif
                     if (map.GetComponent<MapComponent_CustomMapData>() is MapComponent_CustomMapData data)
                     {
                         if (data.subMaps != null && data.subMaps.Any()) 
@@ -43,6 +63,9 @@ namespace QuestEditor_Library
                                 {
                                     yield return new FloatMenuOption(parent.MapName, () =>
                                     {
+#if RIMWORLD_1_7
+                                        crossMapSource = crossMapTarget = null;
+#endif
                                         Designator_MoveIn.entrance = parent.entrance;
                                         Designator_MoveIn.target = parent;
                                         this.defaultLabel = "QE_Designator_MoveIn".Translate(parent.MapName);
@@ -85,6 +108,17 @@ namespace QuestEditor_Library
             Thing target = targetPawn != null && (targetPawn.Faction == Faction.OfPlayer || targetPawn.IsPrisoner || targetPawn.Downed) ? targetPawn : loc.GetFirstItem(this.Map);
             if (target != null && !this.Map.designationManager.HasMapDesignationOn(target)) 
             {
+#if RIMWORLD_1_7
+                if (crossMapSource == target.Map && crossMapTarget is { } destination &&
+                    GameComponent_MapManager.Instance is { } manager)
+                {
+                    if (manager.AssignCrossMapHaul(target.Map, target, destination))
+                        this.Map.designationManager.AddDesignation(new Designation(target, QEDefOf.QE_MoveIn));
+                    else
+                        Messages.Message("NoPath".Translate(), MessageTypeDefOf.RejectInput);
+                    return;
+                }
+#endif
                 if (Designator_MoveIn.target != null)
                 {
                     if (target.Map == Designator_MoveIn.entrance.Map)
@@ -110,5 +144,9 @@ namespace QuestEditor_Library
 
         public static CustomMapEntrance entrance = null;
         public static MapParent_Custom target = null;
+#if RIMWORLD_1_7
+        private Map? crossMapSource;
+        private Map? crossMapTarget;
+#endif
     }
 }

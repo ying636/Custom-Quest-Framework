@@ -66,6 +66,19 @@ namespace QuestEditor_Library
             Thing target = targetPawn != null && (targetPawn.Faction == Faction.OfPlayer || targetPawn.IsPrisoner || targetPawn.Downed) ? targetPawn : loc.GetFirstItem(this.Map);
             if (target != null && !this.Map.designationManager.HasMapDesignationOn(target))
             {
+#if RIMWORLD_1_7
+                if (GameComponent_MapManager.Instance is { } manager && manager.GetCompositeMap(target.Map) != null)
+                {
+                    Map? destination = manager.GetCQFMapAbove(target.Map, this.moveToRoot);
+                    if (destination == null)
+                        Messages.Message("TargetIsntWithinSubMap".Translate(), MessageTypeDefOf.RejectInput);
+                    else if (!manager.AssignCrossMapHaul(target.Map, target, destination))
+                        Messages.Message("NoPath".Translate(), MessageTypeDefOf.RejectInput);
+                    else
+                        this.Map.designationManager.AddDesignation(new Designation(target, this.moveToRoot ? QEDefOf.QE_MoveToRoot : QEDefOf.QE_MoveOut));
+                    return;
+                }
+#endif
                 if (target.Map.Parent is MapParent_Custom custom && custom.exit != null)
                 {
                     this.Map.designationManager.AddDesignation(new Designation(target, this.moveToRoot ? QEDefOf.QE_MoveToRoot : QEDefOf.QE_MoveOut));

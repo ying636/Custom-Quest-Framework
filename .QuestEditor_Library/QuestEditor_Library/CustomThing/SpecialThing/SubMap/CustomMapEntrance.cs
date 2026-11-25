@@ -366,8 +366,12 @@ namespace QuestEditor_Library
         }
 
 #if RIMWORLD_1_7
-        protected internal virtual void NotifySubMapGenerated(Map source, Map destination) =>
-            GameComponent_MapManager.Instance?.RegisterCompositeSubMap(source, destination);
+        protected internal virtual void NotifySubMapGenerated(Map source, Map destination)
+        {
+            if (GameComponent_MapManager.Instance is not { } manager) return;
+            manager.InvalidateCrossMapRoutes();
+            manager.RegisterCompositeSubMap(source, destination);
+        }
 #endif
 
         public IEnumerable<GenStepWithParams> GetSteps()
@@ -484,6 +488,12 @@ namespace QuestEditor_Library
             }
             this.GetOtherMap();
             if (this.exit.Map == null) throw new InvalidOperationException("[CQF] Portal destination is not active after map activation.");
+#if RIMWORLD_1_7
+            GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
+            Map source = this.Map;
+            IntVec3 departure = thing.Position;
+            List<Pawn>? pursuers = thing is Pawn traveler ? manager?.CrossMap.FindPursuers(traveler, source) : null;
+#endif
 
             this.thereIsPawnIsEntering = true;
             if (thing.Spawned)
@@ -495,6 +505,9 @@ namespace QuestEditor_Library
             if (thing is Pawn pawn)
             {
                 this.OnEntered(pawn);
+#if RIMWORLD_1_7
+                manager?.CrossMap.Pursue(pursuers, pawn, source, pawn.Map, departure);
+#endif
             }
 
             this.thereIsPawnIsEntering = false;

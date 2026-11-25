@@ -12,15 +12,16 @@ public class DialogElement_Image(Texture2D texture, float scale) : IDialogElemen
 
     public virtual void Draw(ref float y, Rect inRect)
     {
-        if (this.texture != null)
+        if (this.texture != null && this.texture.width > 0 && this.texture.height > 0 && this.scale > 0f)
         {
-            float width = inRect.width * this.scale;
-            float height = width / this.texture.width * this.texture.height;
-            Widgets.DrawTextureFitted(new Rect(inRect.x, y, width, height), this.texture, 1f);
-            y += height + 5f;
-            return;
+            float maxWidth = inRect.width * Mathf.Min(1f, this.scale);
+            float maxHeight = inRect.height > 0f ? Mathf.Min(320f, inRect.height * .75f) : 320f;
+            float ratio = Mathf.Min(maxWidth / this.texture.width, maxHeight / this.texture.height);
+            float width = this.texture.width * ratio;
+            float height = this.texture.height * ratio;
+            Widgets.DrawTextureFitted(new Rect(inRect.center.x - width / 2f, y, width, height), this.texture, 1f);
+            y += height;
         }
-        y += 30f;
     }
 
     public Texture2D texture = texture;

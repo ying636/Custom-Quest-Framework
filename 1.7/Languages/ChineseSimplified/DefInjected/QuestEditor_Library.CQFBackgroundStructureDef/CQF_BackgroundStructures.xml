@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_BackgroundWallTorch.label>岩壁火把</CQF_BackgroundWallTorch.label>
+  <CQF_BackgroundRockPillar.label>岩柱</CQF_BackgroundRockPillar.label>
+  <CQF_BackgroundRockPillar.description>从地图下方升起的岩柱，适合放在宽阔的裂隙中，衬出落差。</CQF_BackgroundRockPillar.description>
+  <CQF_BackgroundRockShelf.label>岩台</CQF_BackgroundRockShelf.label>
+  <CQF_BackgroundRockShelf.description>宽阔的岩石平台，可沿开口边缘摆放，形成低于地面的岩层。</CQF_BackgroundRockShelf.description>
+</LanguageData>

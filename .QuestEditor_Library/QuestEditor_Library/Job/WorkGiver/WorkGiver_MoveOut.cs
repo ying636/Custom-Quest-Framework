@@ -28,6 +28,10 @@ namespace QuestEditor_Library
 
         public override Job JobOnThing(Pawn pawn, Thing t, bool forced = false)
         {
+#if RIMWORLD_1_7
+            if (GameComponent_MapManager.Instance is { } manager && manager.CrossMap.HaulDestination(t) != null)
+                return manager.CrossMap.HaulJob(manager, pawn, t);
+#endif
             Job result = JobMaker.MakeJob(QEDefOf.QE_MoveTargetOutOfSubMap, t);
             result.count = t.stackCount;
             return result;

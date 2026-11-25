@@ -69,6 +69,8 @@ internal sealed class CQFCompositeMapWindow : Window
             }
             foreach ((CQFCompositeMapGroup branch, Rect rect) in branches)
                 DrawConnection(positions[branch.ParentRegion!].center, rect.center, full, true, branchBackground);
+            if (layout.SourcePosition is { } sourcePosition)
+                DrawConnection(sourcePosition.center, positions[group.EntryRegion].center, full, true);
         }
 
         using CQFUIScope scope = new();
@@ -77,47 +79,14 @@ internal sealed class CQFCompositeMapWindow : Window
         Text.WordWrap = false;
         Map currentMap = Find.CurrentMap;
         Map? entryMap = instance.GetMap(group.EntryRegion);
+        if (layout.SourcePosition is { } sourceRect && instance.ViewableSource is { } source)
+            DrawRegion(source, sourceRect, source == currentMap, isEntry: false, manager, select, portraits);
         for (int i = 0; i < regions.Count; i++)
         {
             CQFCompositeMapRegion region = regions[i];
             Map? map = instance.GetMap(region.id);
             if (map == null || map.Disposed) continue;
-            Rect rect = positions[region.id];
-            if (rect.width <= 4 || rect.height <= 4) continue;
-            bool current = map == currentMap;
-            List<Pawn>? colonists = full && rect.height >= 53 && rect.width >= 40 && !manager.IsHibernating(map)
-                ? map.mapPawns.FreeColonists : null;
-            float nameHeight = Mathf.Min(21f, rect.height);
-            Rect name = new(rect.x, rect.center.y - nameHeight * 0.5f, rect.width, nameHeight);
-            if (repaint)
-            {
-                CQFUIStyle.DrawBackground(rect, current);
-                if (GetRegionHighlight(map, manager, current) is Color outline)
-                {
-                    Color original = GUI.color;
-                    try
-                    {
-                        GUI.color = outline;
-                        Widgets.DrawBox(rect.ContractedBy(1), full ? 3 : 2);
-                    }
-                    finally { GUI.color = original; }
-                }
-                string label = GameComponent_MapManager.MapTitle(map);
-                if (map == entryMap)
-                    TooltipHandler.TipRegionByKey(name, "CQF_Composite_EntryMap", label);
-                else
-                    TooltipHandler.TipRegion(name, label);
-                Widgets.Label(name.ContractedBy(3, 0), label.Truncate(name.width - 6));
-            }
-            if (colonists is { Count: > 0 } && portraits != null)
-            {
-                Vector2 scroll = Vector2.zero;
-                DrawColonists(new Rect(rect.x + 5, name.yMax + 3, rect.width - 10, rect.yMax - name.yMax - 7),
-                    colonists, ref scroll, portraits, fitAll: true);
-            }
-            if (Widgets.ButtonInvisible(rect) &&
-                (full || !current))
-                select(map);
+            DrawRegion(map, positions[region.id], map == currentMap, map == entryMap, manager, select, portraits);
         }
         foreach ((CQFCompositeMapGroup branch, Rect rect) in branches)
         {
@@ -217,6 +186,45 @@ internal sealed class CQFCompositeMapWindow : Window
     internal void SelectGroup(CQFCompositeMapGroup target)
     {
         if (instance.Groups.Contains(target)) group = target;
+    }
+
+    private static void DrawRegion(Map map, Rect rect, bool current, bool isEntry,
+        GameComponent_MapManager manager, Action<Map> select, CQFCompositePortraitInteraction? portraits)
+    {
+        if (rect.width <= 4 || rect.height <= 4) return;
+        bool full = portraits != null;
+        List<Pawn>? colonists = full && rect.height >= 53 && rect.width >= 40 && !manager.IsHibernating(map)
+            ? map.mapPawns.FreeColonists : null;
+        float nameHeight = Mathf.Min(21f, rect.height);
+        Rect name = new(rect.x, rect.center.y - nameHeight * 0.5f, rect.width, nameHeight);
+        if (Event.current.type == EventType.Repaint)
+        {
+            CQFUIStyle.DrawBackground(rect, current);
+            if (GetRegionHighlight(map, manager, current) is Color outline)
+            {
+                Color original = GUI.color;
+                try
+                {
+                    GUI.color = outline;
+                    Widgets.DrawBox(rect.ContractedBy(1), full ? 3 : 2);
+                }
+                finally { GUI.color = original; }
+            }
+            string label = GameComponent_MapManager.MapTitle(map);
+            if (isEntry)
+                TooltipHandler.TipRegionByKey(name, "CQF_Composite_EntryMap", label);
+            else
+                TooltipHandler.TipRegion(name, label);
+            Widgets.Label(name.ContractedBy(3, 0), label.Truncate(name.width - 6));
+        }
+        if (colonists is { Count: > 0 } && portraits != null)
+        {
+            Vector2 scroll = Vector2.zero;
+            DrawColonists(new Rect(rect.x + 5, name.yMax + 3, rect.width - 10, rect.yMax - name.yMax - 7),
+                colonists, ref scroll, portraits, fitAll: true);
+        }
+        if (Widgets.ButtonInvisible(rect) && (full || !current))
+            select(map);
     }
 
     private static Color? GetRegionHighlight(Map map, GameComponent_MapManager? manager, bool current)

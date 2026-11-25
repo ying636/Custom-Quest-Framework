@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_BackgroundPlacementStart>地图布景</CQF_BackgroundPlacementStart>
+  <CQF_BackgroundPlacementStartTip>打开布景面板，摆放悬崖和构件，或调整地图背景。</CQF_BackgroundPlacementStartTip>
+  <CQF_BackgroundPlacementPause>暂停摆放</CQF_BackgroundPlacementPause>
+  <CQF_BackgroundPlacementResume>继续摆放</CQF_BackgroundPlacementResume>
+  <CQF_BackgroundPlacementReturnToMap>返回编辑地图</CQF_BackgroundPlacementReturnToMap>
+  <CQF_BackgroundPlacementReturnToMapTip>草稿留在原地图。回到原地图就能继续编辑。</CQF_BackgroundPlacementReturnToMapTip>
+  <CQF_BackgroundPlacementPanorama>全景背景</CQF_BackgroundPlacementPanorama>
+  <CQF_BackgroundPlacementCliff>悬崖</CQF_BackgroundPlacementCliff>
+  <CQF_BackgroundPlacementCliffTip>框选「虚无缥缈」地块。崖壁沿开口与实地的交界绘制，可指定方向和深度。</CQF_BackgroundPlacementCliffTip>
+  <CQF_BackgroundPlacementPlaced>已摆放</CQF_BackgroundPlacementPlaced>
+  <CQF_BackgroundPlacementUndo>撤销</CQF_BackgroundPlacementUndo>
+  <CQF_BackgroundPlacementApply>应用</CQF_BackgroundPlacementApply>
+  <CQF_BackgroundPlacementDepth>深度</CQF_BackgroundPlacementDepth>
+  <CQF_BackgroundPlacementMove>移动</CQF_BackgroundPlacementMove>
+  <CQF_BackgroundPlacementRotation>旋转</CQF_BackgroundPlacementRotation>
+  <CQF_BackgroundPlacementScale>缩放</CQF_BackgroundPlacementScale>
+  <CQF_BackgroundPlacementCliffArea>悬崖  {0}–{1}</CQF_BackgroundPlacementCliffArea>
+  <CQF_BackgroundPlacementEmpty>这张地图还没有布景元素。</CQF_BackgroundPlacementEmpty>
+  <CQF_BackgroundPlacementNorth>北</CQF_BackgroundPlacementNorth>
+  <CQF_BackgroundPlacementEast>东</CQF_BackgroundPlacementEast>
+  <CQF_BackgroundPlacementSouth>南</CQF_BackgroundPlacementSouth>
+  <CQF_BackgroundPlacementWest>西</CQF_BackgroundPlacementWest>
+  <CQF_ScenerySettings>整体设置</CQF_ScenerySettings>
+  <CQF_SceneryOtherStructures>其他构件</CQF_SceneryOtherStructures>
+  <CQF_SceneryCloseTip>关闭面板，放弃上次应用之后的修改。</CQF_SceneryCloseTip>
+  <CQF_SceneryCliffElement>崖壁</CQF_SceneryCliffElement>
+  <CQF_SceneryCliffProperties>崖壁属性</CQF_SceneryCliffProperties>
+  <CQF_SceneryPlacedStructure>{0}  {1}</CQF_SceneryPlacedStructure>
+  <CQF_SceneryRedrawCliff>重新框选</CQF_SceneryRedrawCliff>
+  <CQF_SceneryLocate>定位</CQF_SceneryLocate>
+  <CQF_ScenerySelectElement>选择一个布景元素以查看和编辑属性。</CQF_ScenerySelectElement>
+  <CQF_SceneryPick>选取元素</CQF_SceneryPick>
+  <CQF_SceneryStopPicking>停止选取</CQF_SceneryStopPicking>
+  <CQF_SceneryPickTip>左键拿起布景，按 Q 或 E 旋转，再左键落位。右键点选布景可编辑属性或删除。</CQF_SceneryPickTip>
+  <CQF_SceneryDelete>删除元素</CQF_SceneryDelete>
+  <CQF_SceneryPanoramaTip>让背景图铺满镜头视野，并延伸到地图边界外。</CQF_SceneryPanoramaTip>
+  <CQF_SceneryBackgroundMap>背景地图</CQF_SceneryBackgroundMap>
+  <CQF_SceneryChooseTexture>选择背景贴图</CQF_SceneryChooseTexture>
+  <CQF_SceneryClearTexture>移除贴图</CQF_SceneryClearTexture>
+  <CQF_ScenerySetTexture>使用路径</CQF_ScenerySetTexture>
+  <CQF_SceneryTexturePath>贴图路径</CQF_SceneryTexturePath>
+  <CQF_SceneryTexturePathTip>可输入已加载模组中的贴图资源路径，省略文件扩展名。</CQF_SceneryTexturePathTip>
+  <CQF_SceneryMissingTexture>在已加载的素材中找不到贴图 {0}。</CQF_SceneryMissingTexture>
+  <CQF_SceneryFit>贴图铺法</CQF_SceneryFit>
+  <CQF_SceneryOpacity>不透明度</CQF_SceneryOpacity>
+  <CQF_ScenerySize>宽度与高度</CQF_ScenerySize>
+  <CQF_ScenerySizeTip>宽度和高度均设为零时使用地图大小。</CQF_ScenerySizeTip>
+  <CQF_SceneryTextureScale>贴图缩放</CQF_SceneryTextureScale>
+  <CQF_SceneryOffset>贴图偏移</CQF_SceneryOffset>
+  <CQF_SceneryTint>贴图颜色</CQF_SceneryTint>
+</LanguageData>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_DutyNode_JobGiver_CQFCrossMapMove>前往目标地图</CQF_DutyNode_JobGiver_CQFCrossMapMove>
+  <CQF_DutyNode_JobGiver_CQFCrossMapMove_Tip>通过 CQF 通道前往当前复合地图实例里的目标地图。复合地图键留空时，使用职责的目标 key。</CQF_DutyNode_JobGiver_CQFCrossMapMove_Tip>
+  <CQF_DutyNode_JobGiver_CQFCrossMapReport>跨地图报信</CQF_DutyNode_JobGiver_CQFCrossMapReport>
+  <CQF_DutyNode_JobGiver_CQFCrossMapReport_Tip>发现敌对殖民者后，前往目标地图报信。只有带指定援军标签的小组里的现有同阵营成员才会响应。</CQF_DutyNode_JobGiver_CQFCrossMapReport_Tip>
+  <CQF_DutyField_compositeMapKey>复合地图键</CQF_DutyField_compositeMapKey>
+  <CQF_DutyFieldTip_compositeMapKey>填写区域 ID、地图键或地图模板 defName。留空时使用职责的目标 key。</CQF_DutyFieldTip_compositeMapKey>
+  <CQF_DutyField_compositeMapLookup>查找方式</CQF_DutyField_compositeMapLookup>
+  <CQF_DutyEnum_CQFCompositeMapLookup_RegionId>区域 ID</CQF_DutyEnum_CQFCompositeMapLookup_RegionId>
+  <CQF_DutyEnum_CQFCompositeMapLookup_MapKey>地图键</CQF_DutyEnum_CQFCompositeMapLookup_MapKey>
+  <CQF_DutyEnum_CQFCompositeMapLookup_MapTemplate>地图模板 defName</CQF_DutyEnum_CQFCompositeMapLookup_MapTemplate>
+  <CQF_DutyField_currentCompositeGroupOnly>仅当前布局组</CQF_DutyField_currentCompositeGroupOnly>
+  <CQF_DutyFieldTip_currentCompositeGroupOnly>只在角色当前的布局组内查找。结果必须唯一。</CQF_DutyFieldTip_currentCompositeGroupOnly>
+  <CQF_DutyField_reinforcementGroupTag>援军小组标签</CQF_DutyField_reinforcementGroupTag>
+  <CQF_DutyFieldTip_reinforcementGroupTag>必填。允许派出援军的小组必须配置完全相同的标签。</CQF_DutyFieldTip_reinforcementGroupTag>
+  <CQF_DutyField_detectionRadius>发现范围</CQF_DutyField_detectionRadius>
+  <CQF_DutyField_responders>最大援军数量</CQF_DutyField_responders>
+  <CQF_DutyField_assemblyTicks>集结时间（Tick）</CQF_DutyField_assemblyTicks>
+  <CQF_DutyField_cooldownTicks>警报冷却（Tick）</CQF_DutyField_cooldownTicks>
+</LanguageData>

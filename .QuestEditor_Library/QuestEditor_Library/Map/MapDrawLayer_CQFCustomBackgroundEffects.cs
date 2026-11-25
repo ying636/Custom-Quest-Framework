@@ -36,7 +36,7 @@ public class MapDrawLayer_CQFCustomBackgroundEffects : MapDrawLayer
         this.propertyBlock.Clear();
     }
 
-    private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.background;
+    private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.BackgroundForDrawing;
 
     private void EnsureWorkers()
     {

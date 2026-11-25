@@ -10,11 +10,33 @@ public class CustomMapStep_MapBackground : CustomMapStep
     {
         if (MapComponent_CustomMapData.GetComp(map)is { } comp)
         {
+#if RIMWORLD_1_7
+            CustomMapBackgroundData placed = this.background?.Copy();
+            if (placed?.HasStructures == true && context.Origin != IntVec3.Zero)
+                placed.TransformScene(cell => cell + context.Origin);
+            if (this.sceneOnly && placed != null)
+            {
+                comp.background ??= new CustomMapBackgroundData();
+                comp.background.cliffs.AddRange(placed.cliffs);
+                comp.background.structures.AddRange(placed.structures);
+                comp.RefreshBackgroundDrawing();
+                return;
+            }
+#endif
             List<CustomMapBackgroundEffectDef> backgroundEffects = comp.background?.backgroundEffects;
+#if RIMWORLD_1_7
+            comp.background = placed;
+#else
             comp.background = this.background?.Copy();
+#endif
             if (comp.background != null && backgroundEffects != null)
             {
+#if RIMWORLD_1_7
+                foreach (var effect in backgroundEffects)
+                    if (!comp.background.backgroundEffects.Contains(effect)) comp.background.backgroundEffects.Add(effect);
+#else
                 comp.background.backgroundEffects = backgroundEffects;
+#endif
             }
 
             if (Current.ProgramState == ProgramState.Playing)
@@ -38,9 +60,15 @@ public class CustomMapStep_MapBackground : CustomMapStep
         {
             result.Add(this.background.SaveToXElement("background"));
         }
+#if RIMWORLD_1_7
+        if (this.sceneOnly) result.Add(new XElement("sceneOnly", true));
+#endif
 
         return result;
     }
 
     public CustomMapBackgroundData background = new CustomMapBackgroundData();
+#if RIMWORLD_1_7
+    public bool sceneOnly;
+#endif
 }

@@ -315,6 +315,14 @@ namespace QuestEditor_Library
         private void DrawThinkNodeFields(ref float y, ThinkNode node, string key, float x, float width)
         {
             List<FieldInfo> fields = this.GetEditableFields(node.GetType()).ToList();
+#if RIMWORLD_1_7
+            if (node is JobGiver_CQFCrossMapTarget crossMap)
+            {
+                if (!string.IsNullOrWhiteSpace(crossMap.compositeMapKey))
+                    fields.RemoveAll(field => field.DeclaringType == typeof(JobGiver_TargetBase));
+                fields = fields.OrderBy(field => field.DeclaringType == typeof(JobGiver_CQFCrossMapTarget) ? 0 : 1).ToList();
+            }
+#endif
             if (!fields.Any())
             {
                 return;
@@ -322,7 +330,7 @@ namespace QuestEditor_Library
             Rect fieldsRect = new Rect(x, y, width, fields.Count * 32f + 8f);
             Widgets.DrawBoxSolid(fieldsRect, new Color(0.06f, 0.07f, 0.08f, 0.34f));
             y += 4f;
-            foreach (FieldInfo field in this.GetEditableFields(node.GetType()))
+            foreach (FieldInfo field in fields)
             {
                 this.DrawField(ref y, node, field, key + "." + field.Name, x + 8f, width - 16f);
             }
@@ -332,7 +340,12 @@ namespace QuestEditor_Library
         private void DrawField(ref float y, object owner, FieldInfo field, string key, float x, float width)
         {
             string label = this.FieldLabel(field);
+            float top = y;
             this.DrawValue(ref y, label, field.FieldType, field.GetValue(owner), value => field.SetValue(owner, value), key, x, width);
+#if RIMWORLD_1_7
+            if (owner is JobGiver_CQFCrossMapTarget && this.FieldTip(field) is { } tip)
+                TooltipHandler.TipRegion(new Rect(x, top, width, y - top), tip);
+#endif
         }
 
         private void DrawValue(ref float y, string label, Type fieldType, object value, Action<object> setValue, string key, float x, float width)

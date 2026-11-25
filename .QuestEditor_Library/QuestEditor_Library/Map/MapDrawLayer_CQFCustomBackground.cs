@@ -53,7 +53,7 @@ public class MapDrawLayer_CQFCustomBackground : MapDrawLayer
         base.DrawLayer();
     }
 
-    private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.background;
+    private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.BackgroundForDrawing;
 
     private const int BackgroundRenderQueue = 1900;
     private const int CameraVisibleRenderQueue = 1880;

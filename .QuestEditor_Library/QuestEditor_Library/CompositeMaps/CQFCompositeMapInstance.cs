@@ -23,6 +23,7 @@ public sealed class CQFCompositeMapInstance : IExposable
     }
 
     public CQFCompositeMapDef? Definition => definition;
+    public CQFCompositeMapDatabase MapDatabase => mapDatabase;
     public Map Source => source;
     public CQFCompositeMapGroup RootGroup => groups[0];
     public IReadOnlyList<CQFCompositeMapGroup> Groups => groups;
@@ -36,6 +37,7 @@ public sealed class CQFCompositeMapInstance : IExposable
     internal IReadOnlyList<CQFCompositeMapConnection> Edges => RootGroup.Edges;
     internal bool MinimapExpanded { get; set; } = true;
     internal CQFCompositeMapPortal? Entrance => entrance;
+    internal Map? ViewableSource => UsesRegisteredMaps && source is { Disposed: false, Parent: CustomSite } ? source : null;
     internal Vector2 MinimapPosition { get => minimapPosition; set => minimapPosition = value; }
 
     public Map? GetMap(string id) => maps.GetValueOrDefault(id);
@@ -50,6 +52,8 @@ public sealed class CQFCompositeMapInstance : IExposable
         Scribe_Collections.Look(ref maps, "maps", LookMode.Value, LookMode.Reference, ref savedIds, ref savedMaps);
         Scribe_Collections.Look(ref groups, "groups", LookMode.Deep);
         groups ??= new();
+        Scribe_Deep.Look(ref mapDatabase!, "mapDatabase");
+        mapDatabase ??= new();
         Scribe_Collections.Look(ref camera, "camera", LookMode.Value, LookMode.Value);
         Scribe_Values.Look(ref minimapPosition, "minimapPosition", new Vector2(-1, -1));
         bool expanded = MinimapExpanded;
@@ -62,6 +66,7 @@ public sealed class CQFCompositeMapInstance : IExposable
         maps.Add(id, map);
         groupsByMap.Add(map, RootGroup);
         idsByMap.Add(map, id);
+        mapDatabase.Register(RootGroup.Regions.First(region => region.id == id), map, RootGroup);
     }
 
     internal void Bind(CQFCompositeMapPortal portal) => entrance = portal;
@@ -142,7 +147,7 @@ public sealed class CQFCompositeMapInstance : IExposable
     internal bool KeepsSourceActive(Map map) => linkedSources.Contains(map);
     internal void RememberCamera(Map map, IntVec3 cell) => camera[map.uniqueID] = cell;
     internal IntVec3 CameraCell(Map map) => camera.GetValueOrDefault(map.uniqueID,
-        map == EntryMap && definition != null ? definition.entryCell : map.Center);
+        map == source ? entranceCell : map == EntryMap && definition != null ? definition.entryCell : map.Center);
 
     internal bool TryGetEdge(Map map, IntVec3 cell, out Map target, out IntVec3 arrival)
     {
@@ -176,6 +181,7 @@ public sealed class CQFCompositeMapInstance : IExposable
         idsByMap.Clear();
         children.Clear();
         linkedSources.Clear();
+        mapDatabase.ClearIndex();
         for (int i = 0; i < groups.Count; i++)
         {
             CQFCompositeMapGroup group = groups[i];
@@ -185,6 +191,7 @@ public sealed class CQFCompositeMapInstance : IExposable
                 if (GetMap(region.id) is not { } map) continue;
                 groupsByMap.Add(map, group);
                 idsByMap.Add(map, region.id);
+                mapDatabase.Register(region, map, group);
                 if (map.Parent is MapParent_Custom { sourceMap: { } upstream } && map.Parent is not CQFCompositeMapParent)
                     linkedSources.Add(upstream);
             }
@@ -193,6 +200,7 @@ public sealed class CQFCompositeMapInstance : IExposable
                 children.Add(parent, branches = new());
             branches.Add(group);
         }
+        mapDatabase.PruneBindings();
     }
 
     private static bool TryResolveEdge(Map source, IntVec3 cell, CQFCompositeMapEdge edge, int start,
@@ -216,6 +224,7 @@ public sealed class CQFCompositeMapInstance : IExposable
     private CQFCompositeMapPortal? entrance;
     private Dictionary<string, Map> maps = new(StringComparer.Ordinal);
     private List<CQFCompositeMapGroup> groups = new();
+    private CQFCompositeMapDatabase mapDatabase = new();
     private Dictionary<int, IntVec3> camera = new();
     private List<string>? savedIds;
     private List<Map>? savedMaps;

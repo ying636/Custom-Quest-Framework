@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_DutyNode_JobGiver_CQFCrossMapMove>Move to target map</CQF_DutyNode_JobGiver_CQFCrossMapMove>
+  <CQF_DutyNode_JobGiver_CQFCrossMapMove_Tip>Use CQF passages to reach a map in this composite instance. Leave the composite map key empty to use the duty target key.</CQF_DutyNode_JobGiver_CQFCrossMapMove_Tip>
+  <CQF_DutyNode_JobGiver_CQFCrossMapReport>Report to another map</CQF_DutyNode_JobGiver_CQFCrossMapReport>
+  <CQF_DutyNode_JobGiver_CQFCrossMapReport_Tip>On sighting a hostile colonist, report to the destination map. Only existing allies in groups with the specified reinforcement tag can respond.</CQF_DutyNode_JobGiver_CQFCrossMapReport_Tip>
+  <CQF_DutyField_compositeMapKey>Composite map key</CQF_DutyField_compositeMapKey>
+  <CQF_DutyFieldTip_compositeMapKey>Enter the region ID, map key, or template defName. Leave empty to use the duty target key.</CQF_DutyFieldTip_compositeMapKey>
+  <CQF_DutyField_compositeMapLookup>Composite map lookup</CQF_DutyField_compositeMapLookup>
+  <CQF_DutyEnum_CQFCompositeMapLookup_RegionId>Region ID</CQF_DutyEnum_CQFCompositeMapLookup_RegionId>
+  <CQF_DutyEnum_CQFCompositeMapLookup_MapKey>Map key</CQF_DutyEnum_CQFCompositeMapLookup_MapKey>
+  <CQF_DutyEnum_CQFCompositeMapLookup_MapTemplate>Map template defName</CQF_DutyEnum_CQFCompositeMapLookup_MapTemplate>
+  <CQF_DutyField_currentCompositeGroupOnly>Current layout group only</CQF_DutyField_currentCompositeGroupOnly>
+  <CQF_DutyFieldTip_currentCompositeGroupOnly>Search within the pawn's current layout group. A lookup must match exactly one map.</CQF_DutyFieldTip_currentCompositeGroupOnly>
+  <CQF_DutyField_reinforcementGroupTag>Reinforcement group tag</CQF_DutyField_reinforcementGroupTag>
+  <CQF_DutyFieldTip_reinforcementGroupTag>Required. Add this exact tag to the groups that may send reinforcements.</CQF_DutyFieldTip_reinforcementGroupTag>
+  <CQF_DutyField_detectionRadius>Detection radius</CQF_DutyField_detectionRadius>
+  <CQF_DutyField_responders>Maximum reinforcements</CQF_DutyField_responders>
+  <CQF_DutyField_assemblyTicks>Assembly time (ticks)</CQF_DutyField_assemblyTicks>
+  <CQF_DutyField_cooldownTicks>Alert cooldown (ticks)</CQF_DutyField_cooldownTicks>
+</LanguageData>

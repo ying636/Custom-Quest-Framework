@@ -101,7 +101,7 @@ internal sealed class CQFCompositeMinimap : Window
         Map map = Find.CurrentMap;
         if (portraitMap != map) portraitScroll = Vector2.zero;
         portraitMap = map;
-        colonists = manager.GetCompositeMap(map) == Instance ? map.mapPawns.FreeColonists : null;
+        colonists = manager.GetCompositeMapForView(map) == Instance ? map.mapPawns.FreeColonists : null;
         Vector2 size = InitialSize;
         Vector2 requested = windowRect.position + pendingMove;
         pendingMove = Vector2.zero;

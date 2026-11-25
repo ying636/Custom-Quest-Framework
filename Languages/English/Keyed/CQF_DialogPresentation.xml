@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQF_DialogStyle_Style>CQF_DialogStyle_Style</CQF_DialogStyle_Style>
-  <CQF_DialogStyle_Classic>CQF_DialogStyle_Classic</CQF_DialogStyle_Classic>
-  <CQF_DialogStyle_Galgame>CQF_DialogStyle_Galgame</CQF_DialogStyle_Galgame>
-  <CQF_DialogStyle_Left>CQF_DialogStyle_Left</CQF_DialogStyle_Left>
-  <CQF_DialogStyle_Right>CQF_DialogStyle_Right</CQF_DialogStyle_Right>
-  <CQF_DialogStyle_Speaker>CQF_DialogStyle_Speaker</CQF_DialogStyle_Speaker>
-  <CQF_DialogStyle_None>CQF_DialogStyle_None</CQF_DialogStyle_None>
-  <CQF_DialogStyle_OverrideLeft>CQF_DialogStyle_OverrideLeft</CQF_DialogStyle_OverrideLeft>
-  <CQF_DialogStyle_OverrideRight>CQF_DialogStyle_OverrideRight</CQF_DialogStyle_OverrideRight>
-  <CQF_DialogStyle_Source>CQF_DialogStyle_Source</CQF_DialogStyle_Source>
-  <CQF_DialogStyle_Participant>CQF_DialogStyle_Participant</CQF_DialogStyle_Participant>
-  <CQF_DialogStyle_Image>CQF_DialogStyle_Image</CQF_DialogStyle_Image>
-  <CQF_DialogStyle_Hidden>CQF_DialogStyle_Hidden</CQF_DialogStyle_Hidden>
-  <CQF_DialogStyle_Interviewee>CQF_DialogStyle_Interviewee</CQF_DialogStyle_Interviewee>
-  <CQF_DialogStyle_Interviewer>CQF_DialogStyle_Interviewer</CQF_DialogStyle_Interviewer>
-  <CQF_DialogStyle_NameKey>CQF_DialogStyle_NameKey</CQF_DialogStyle_NameKey>
-  <CQF_DialogStyle_OffsetX>CQF_DialogStyle_OffsetX</CQF_DialogStyle_OffsetX>
-  <CQF_DialogStyle_OffsetY>CQF_DialogStyle_OffsetY</CQF_DialogStyle_OffsetY>
-  <CQF_DialogStyle_Mirror>CQF_DialogStyle_Mirror</CQF_DialogStyle_Mirror>
-  <CQF_DialogStyle_Placement>CQF_DialogStyle_Placement</CQF_DialogStyle_Placement>
-  <CQF_DialogStyle_Center>CQF_DialogStyle_Center</CQF_DialogStyle_Center>
-  <CQF_DialogStyle_Background>CQF_DialogStyle_Background</CQF_DialogStyle_Background>
+  <CQF_DialogStyle_Style>Dialog style</CQF_DialogStyle_Style>
+  <CQF_DialogStyle_Classic>Classic dialog</CQF_DialogStyle_Classic>
+  <CQF_DialogStyle_Galgame>Visual novel</CQF_DialogStyle_Galgame>
+  <CQF_DialogStyle_Left>Left portrait</CQF_DialogStyle_Left>
+  <CQF_DialogStyle_Right>Right portrait</CQF_DialogStyle_Right>
+  <CQF_DialogStyle_Speaker>Speaker</CQF_DialogStyle_Speaker>
+  <CQF_DialogStyle_None>Narration</CQF_DialogStyle_None>
+  <CQF_DialogStyle_OverrideLeft>Override left portrait</CQF_DialogStyle_OverrideLeft>
+  <CQF_DialogStyle_OverrideRight>Override right portrait</CQF_DialogStyle_OverrideRight>
+  <CQF_DialogStyle_Source>Portrait source</CQF_DialogStyle_Source>
+  <CQF_DialogStyle_Participant>Participant</CQF_DialogStyle_Participant>
+  <CQF_DialogStyle_Image>Custom image</CQF_DialogStyle_Image>
+  <CQF_DialogStyle_Hidden>Hidden</CQF_DialogStyle_Hidden>
+  <CQF_DialogStyle_Interviewee>Interviewee</CQF_DialogStyle_Interviewee>
+  <CQF_DialogStyle_Interviewer>Interviewer</CQF_DialogStyle_Interviewer>
+  <CQF_DialogStyle_NameKey>Display name or translation key</CQF_DialogStyle_NameKey>
+  <CQF_DialogStyle_OffsetX>Horizontal offset</CQF_DialogStyle_OffsetX>
+  <CQF_DialogStyle_OffsetY>Vertical offset</CQF_DialogStyle_OffsetY>
+  <CQF_DialogStyle_Mirror>Mirror horizontally</CQF_DialogStyle_Mirror>
+  <CQF_DialogStyle_Placement>Image placement</CQF_DialogStyle_Placement>
+  <CQF_DialogStyle_Center>Center</CQF_DialogStyle_Center>
+  <CQF_DialogStyle_Background>Background</CQF_DialogStyle_Background>
 </LanguageData>

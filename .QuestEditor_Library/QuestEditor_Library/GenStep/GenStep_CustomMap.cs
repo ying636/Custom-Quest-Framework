@@ -132,6 +132,9 @@ namespace QuestEditor_Library
                 GenStep_CustomMap.AddPawnDataToLord(map, def, center);
                 map.GetComponent<MapComponent_CustomMapData>().questTag = "Quest" + questId;
                 context.Quest = quest;
+#if RIMWORLD_1_7
+                context.Origin = center;
+#endif
                 def.customSteps.ForEach(s => s.Generate(map, def, context));
                 if (!isGenerateByCore)
                 {

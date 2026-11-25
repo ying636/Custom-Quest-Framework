@@ -38,7 +38,8 @@ public class CQFDialogTreeWindow : Window
     }
 
     protected override float Margin => this.presentationRenderer?.Margin ?? 15f;
-    public override Vector2 InitialSize => this.presentationRenderer?.GetInitialSize(new Vector2(UI.screenWidth, UI.screenHeight)) ?? new Vector2(620 + Margin, 620 + Margin);
+    public override Vector2 InitialSize => this.presentationRenderer?.GetInitialSize(new Vector2(UI.screenWidth, UI.screenHeight))
+        ?? new Vector2(Mathf.Min(688f, UI.screenWidth - 24f), Mathf.Min(616f, UI.screenHeight - 24f));
     public float CharacterWidth => 0f;
     public int CurrentNodeIndex { get; private set; } = -1;
     public bool IsClosed { get; private set; }
@@ -60,56 +61,27 @@ public class CQFDialogTreeWindow : Window
                 this.currentElements, this.options, this.interviewer, this.interviewee, () => this.Close()));
             return;
         }
-        if (this.title != null)
+        Text.Font = GameFont.Small;
+        float bodyTop = 0f;
+        if (!string.IsNullOrWhiteSpace(this.title))
         {
-            Text.Font = GameFont.Medium;
-            Rect titleRect = new Rect(CharacterWidth, 0f, inRect.width - CharacterWidth*2f, 40f);
+            Rect titleRect = new Rect(inRect.x, inRect.y, inRect.width, 37f);
             Widgets.DrawBoxSolid(titleRect, CQFUIStyle.Header);
             CQFUIStyle.DrawBox(titleRect);
             Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(titleRect, this.title);
+            Rect titleContent = titleRect.ContractedBy(12f, 0f);
+            if (Widgets.LabelFit(titleContent, this.title)) TooltipHandler.TipRegion(titleContent, this.title);
             Text.Anchor = TextAnchor.UpperLeft;
-            Text.Font = GameFont.Small;
+            bodyTop = titleRect.height + 8f;
         }
-        // if (this.interviewee != null)
-        // {
-        //     this.DrawCharacter(0f,this.interviewee);
-        // }
-        // if (this.interviewer != null)
-        // {
-        //     this.DrawCharacter(rightLine,this.interviewer);
-        // }
-
-        Rect dialogRect = new Rect(CharacterWidth,40f,inRect.width - CharacterWidth * 2f,inRect.height - 40f );
-        Widgets.DrawBoxSolid(dialogRect, CQFUIStyle.Panel);
-        CQFUIStyle.DrawBox(dialogRect);
-        Rect curRect = new Rect(16f, 0f, dialogRect.width - 52f, dialogRect.height);
-        float y = 15f;
-        Widgets.BeginScrollView(dialogRect,ref pos,new Rect(0,0,dialogRect.width - 16f,Mathf.Max(dialogRect.height, height)));
-        using CQFUIScope contentScope = new CQFUIScope(curRect.width);
-        foreach (var dialogElement in this.elements)
-        {
-            dialogElement.Draw(ref y,curRect);
-        }
-
-        y += 20f;
-        foreach (var dialogElement in this.options)
-        {
-            dialogElement.Draw(ref y,curRect);
-        }
-
-        if (this.options.Count == 0)
-        {
-            if (CQFUIStyle.ButtonText(new Rect(curRect.x, y, curRect.width, 42f), "Close".Translate()))
-            {
-                this.Close();
-            }
-            y += 50f;
-        }
-
-        y += 10f;
-        this.height = y;
-        Widgets.EndScrollView();
+        float bodyHeight = inRect.height - bodyTop;
+        float choiceWidth = Mathf.Max(22f, inRect.width - 36f);
+        float choicesHeight = this.options.Count == 0 ? 42f : this.options.Sum(option => option.HeightForWidth(choiceWidth)) - 8f;
+        float choicePanelHeight = Mathf.Min(choicesHeight + 20f, bodyHeight * .46f);
+        Rect choices = new Rect(inRect.x, inRect.yMax - choicePanelHeight, inRect.width, choicePanelHeight);
+        Rect history = new Rect(inRect.x, inRect.y + bodyTop, inRect.width, bodyHeight - choicePanelHeight - 8f);
+        this.DrawClassicHistory(history);
+        this.DrawClassicOptions(choices, choiceWidth, choicesHeight);
     }
 
     public void DrawCharacter(float x,Thing thing)
@@ -127,6 +99,9 @@ public class CQFDialogTreeWindow : Window
     {
         if (this.tree.nodeMoulds.TryGetValue(index,out var node))
         {
+            this.followLatest = this.CurrentNodeIndex >= 0;
+            this.choiceScroll = Vector2.zero;
+            this.latestElement = this.elements.Count;
             this.CurrentNodeIndex = index;
             this.curNode = node;
             this.nextOptions.Clear();
@@ -144,7 +119,7 @@ public class CQFDialogTreeWindow : Window
                     {
                         op.action += () =>
                         {
-                            this.elements.Add(new DialogElement_Text("----" + op.text));
+                            this.elements.Add(new DialogElement_Text(("› " + op.text).Colorize(CQFUIStyle.Muted)));
                             this.GoToNode(op.nextIndex.Value);
                         };
                     }
@@ -177,6 +152,49 @@ public class CQFDialogTreeWindow : Window
         }
     }
 
+    private void DrawClassicHistory(Rect rect)
+    {
+        CQFUIStyle.DrawMenuSection(rect);
+        Rect scroll = rect.ContractedBy(10f);
+        float width = Mathf.Max(22f, scroll.width - 16f);
+        float latestY = 0f;
+        float y = 0f;
+        Widgets.BeginScrollView(scroll, ref this.pos, new Rect(0f, 0f, width, Mathf.Max(scroll.height, this.height)));
+        try
+        {
+            using CQFUIScope scope = new CQFUIScope(width, scroll.height);
+            var content = new Rect(0f, 0f, width, scroll.height);
+            for (int index = 0; index < this.elements.Count; index++)
+            {
+                if (index == this.latestElement) latestY = y;
+                this.elements[index].Draw(ref y, content);
+                y += 7f;
+            }
+        }
+        finally { Widgets.EndScrollView(); }
+        this.height = y;
+        if (this.followLatest)
+        {
+            this.pos.y = Mathf.Clamp(latestY, 0f, Mathf.Max(0f, y - scroll.height));
+            this.followLatest = false;
+        }
+    }
+
+    private void DrawClassicOptions(Rect rect, float width, float height)
+    {
+        CQFUIStyle.DrawMenuSection(rect);
+        Rect scroll = rect.ContractedBy(10f);
+        Widgets.BeginScrollView(scroll, ref this.choiceScroll, new Rect(0f, 0f, width, Mathf.Max(scroll.height, height)));
+        try
+        {
+            float y = 0f;
+            Rect content = new Rect(0f, 0f, width, scroll.height);
+            foreach (DialogElement_Option option in this.options) option.Draw(ref y, content);
+            if (this.options.Count == 0 && CQFUIStyle.ButtonText(new Rect(0f, 0f, width, 42f), "Close".Translate())) this.Close();
+        }
+        finally { Widgets.EndScrollView(); }
+    }
+
     public Vector2 pos;
     public float height;
     public List<IDialogElement> elements = new List<IDialogElement>();
@@ -194,6 +212,9 @@ public class CQFDialogTreeWindow : Window
     private readonly CQFDialogRenderer? presentationRenderer;
     private List<IDialogElement> currentElements = new();
     private bool optionsPending;
+    private bool followLatest;
+    private int latestElement;
+    private Vector2 choiceScroll;
 
 
     private static readonly Rect DefaultTexCoords = new Rect(0f, 0f, 1f, 1f);

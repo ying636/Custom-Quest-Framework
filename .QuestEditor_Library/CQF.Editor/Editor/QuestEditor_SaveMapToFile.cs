@@ -28,6 +28,16 @@ namespace QuestEditor_Library
         public override Vector2 InitialSize => QuestEditor_SaveMapToFile.size;
         public override string PageTitle => "SaveMapToFile".Translate();
         public CQFAIEditorContext? AIContext => Find.CurrentMap is Map map ? CQFAILiveMapContext.Create(map) : null;
+#if RIMWORLD_1_7
+        public bool PanoramaBackground { get; private set; }
+
+        public override void PreOpen()
+        {
+            base.PreOpen();
+            PanoramaBackground = Find.CurrentMap is Map map
+                && MapComponent_CustomMapData.GetComp(map).background?.DrawOnCameraVisibleArea == true;
+        }
+#endif
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -91,6 +101,9 @@ namespace QuestEditor_Library
             LongEventHandler.QueueLongEvent((Action)(() =>
             {
                 saveAction();
+#if RIMWORLD_1_7
+                if (!def.isPart) def.SetPanoramaBackground(this.PanoramaBackground);
+#endif
                 XElement defXml = QuestEditor_SaveMapToFile.def.SaveToXElement("QuestEditor_Library.CustomMapDataDef");
                 new CQFContentTextExport(def.defName).Save(defXml, typeof(CustomMapDataDef), path);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
@@ -155,6 +168,9 @@ namespace QuestEditor_Library
         {
             bool drawFullMapOptions = !def.isPart;
             float sectionHeight = drawFullMapOptions ? 148f : 82f;
+#if RIMWORLD_1_7
+            if (drawFullMapOptions) sectionHeight += 32f;
+#endif
             Rect sectionRect = new Rect(0f, y, width, sectionHeight);
             CQFUIStyle.DrawMenuSection(sectionRect);
             Widgets.Label(new Rect(12f, y + 8f, width - 24f, 25f),
@@ -164,6 +180,11 @@ namespace QuestEditor_Library
                 "CustomMapIsPartTip".Translate());
             if (drawFullMapOptions)
             {
+#if RIMWORLD_1_7
+                bool panorama = this.PanoramaBackground;
+                this.DrawCheckboxRow(ref y, width, "CQF_BackgroundPlacementPanorama".Translate(), ref panorama);
+                this.PanoramaBackground = panorama;
+#endif
                 this.DrawCheckboxRow(ref y, width, "CustomMapDestroyAllThing".Translate(), ref def.destroyAllThing,
                     "CustomMapDestroyAllThingTip".Translate());
                 Rect reserveRect = new Rect(12f, y, width - 24f, 30f);

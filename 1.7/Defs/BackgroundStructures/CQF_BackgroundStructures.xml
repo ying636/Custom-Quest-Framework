@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <QuestEditor_Library.CQFBackgroundStructureCategoryDef>
+    <defName>CQF_BackgroundRock</defName>
+    <label>Rock formations</label>
+    <order>100</order>
+  </QuestEditor_Library.CQFBackgroundStructureCategoryDef>
+  <QuestEditor_Library.CQFBackgroundStructureDef>
+    <defName>CQF_BackgroundRockPillar</defName>
+    <label>rock pillar</label>
+    <description>A column of rock rising from beneath the map. Place it inside a wide opening to give the chasm a sense of depth.</description>
+    <category>CQF_BackgroundRock</category>
+    <texturePath>Terrain/Surfaces/RoughStone</texturePath>
+    <size>(5,5)</size>
+    <height>12</height>
+    <color>(141,134,129)</color>
+  </QuestEditor_Library.CQFBackgroundStructureDef>
+  <QuestEditor_Library.CQFBackgroundStructureDef>
+    <defName>CQF_BackgroundRockShelf</defName>
+    <label>rock shelf</label>
+    <description>A broad rock ledge for creating a lower tier along the side of an opening.</description>
+    <category>CQF_BackgroundRock</category>
+    <texturePath>Terrain/Surfaces/RoughStone</texturePath>
+    <size>(12,5)</size>
+    <height>2.5</height>
+    <color>(164,156,149)</color>
+  </QuestEditor_Library.CQFBackgroundStructureDef>
+  <QuestEditor_Library.CQFBackgroundStructureDef>
+    <defName>CQF_BackgroundWallTorch</defName>
+    <label>wall torch</label>
+    <category>CQF_BackgroundRock</category>
+    <texturePath>Things/Building/Misc/WallTorch/WallTorch_MenuIcon</texturePath>
+    <size>(1.05,1.05)</size>
+    <height>0</height>
+    <wallLightRadius>4.9</wallLightRadius>
+  </QuestEditor_Library.CQFBackgroundStructureDef>
+</Defs>

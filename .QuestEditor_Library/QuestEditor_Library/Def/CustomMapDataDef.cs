@@ -288,6 +288,7 @@ namespace QuestEditor_Library
             result.destroyAllThing = this.destroyAllThing;
             result.fogged = this.fogged;
             result.showEntranceTitle = this.showEntranceTitle;
+            result.compositeMapKey = this.compositeMapKey;
             result.tags = this.tags.ListFullCopy();
             result.regions = this.regions.Select(r => r.Copy()).ToList();
             result.disgenerate = this.disgenerate.ListFullCopy();
@@ -324,7 +325,21 @@ namespace QuestEditor_Library
             result.preCustomSteps = new List<CustomMapStep>();
             this.preCustomSteps.ForEach(t => result.preCustomSteps.Add(t));
             result.customSteps = new List<CustomMapStep>();
-            this.customSteps.ForEach(t => result.customSteps.Add(t));
+            foreach (CustomMapStep step in this.customSteps)
+            {
+#if RIMWORLD_1_7
+                if (step is CustomMapStep_MapBackground backgroundStep && backgroundStep.background?.HasStructures == true)
+                {
+                    result.customSteps.Add(new CustomMapStep_MapBackground
+                    {
+                        background = backgroundStep.background.Copy(),
+                        sceneOnly = backgroundStep.sceneOnly
+                    });
+                    continue;
+                }
+#endif
+                result.customSteps.Add(step);
+            }
             result.origin = this.Origin;
             return result;
         }
@@ -341,6 +356,9 @@ namespace QuestEditor_Library
             IntVec3 centre = IntVec3.Zero;
             this.size = map.Size;
             this.regions = MapComponent_CustomMapData.GetComp(map).Regions.Capture(map.AllCells, centre);
+#if RIMWORLD_1_7
+            this.CaptureBackgroundScene(map, centre, null);
+#endif
             if (map.GetComponent<MapComponent_CustomMapData>()is MapComponent_CustomMapData component && component.route != null)
             {
                 foreach (KeyValuePair<string, Route> route in component.route)
@@ -377,6 +395,9 @@ namespace QuestEditor_Library
             IntVec3 centre = new IntVec3(minX.Value, 0, minZ.Value);
             this.size = size;
             this.regions = MapComponent_CustomMapData.GetComp(map).Regions.Capture(poss, centre);
+#if RIMWORLD_1_7
+            this.CaptureBackgroundScene(map, centre, CellRect.FromLimits(centre.x, centre.z, maxX, maxZ));
+#endif
             List<Thing> things = new List<Thing>();
             poss.ForEach(p =>
             {
@@ -473,6 +494,10 @@ namespace QuestEditor_Library
             if (this.showEntranceTitle)
             {
                 result.Add(new XElement("showEntranceTitle", this.showEntranceTitle));
+            }
+            if (!this.compositeMapKey.NullOrEmpty())
+            {
+                result.Add(new XElement("compositeMapKey", this.compositeMapKey));
             }
 
             result.Add(new XElement("size", this.size));
@@ -676,6 +701,11 @@ namespace QuestEditor_Library
 
         private void ChangePosition(IntVec3 variable, Func<IntVec3, IntVec3, IntVec3> ChangingAction)
         {
+#if RIMWORLD_1_7
+            foreach (CustomMapStep_MapBackground step in this.customSteps.OfType<CustomMapStep_MapBackground>())
+                if (step.background?.HasStructures == true)
+                    step.background.TransformScene(cell => ChangingAction(variable, cell));
+#endif
             this.regions = this.regions.Select(r => r.Copy(c => ChangingAction(variable, c))).ToList();
             this.disgenerate = this.disgenerate.Select(c => ChangingAction(variable, c)).ToList();
             this.thingDatas.ForEach(d =>
@@ -858,6 +888,53 @@ namespace QuestEditor_Library
                     foreach (IntVec3 cell in rect.Cells) visit(cell);
         }
 
+#if RIMWORLD_1_7
+        public void SetPanoramaBackground(bool enabled)
+        {
+            CustomMapStep_MapBackground step = this.customSteps.OfType<CustomMapStep_MapBackground>()
+                .LastOrDefault(item => !item.sceneOnly);
+            if (step == null)
+            {
+                if (!enabled) return;
+                this.customSteps.Add(step = new CustomMapStep_MapBackground());
+            }
+            if (step.background == null)
+            {
+                if (!enabled) return;
+                step.background = new CustomMapBackgroundData();
+            }
+            if (step.background.DrawOnCameraVisibleArea == enabled) return;
+            var replacement = new CustomMapStep_MapBackground { background = step.background.Copy() };
+            replacement.background.drawScope = enabled ? CustomMapBackgroundDrawScope.CameraVisible : CustomMapBackgroundDrawScope.Map;
+            this.customSteps[this.customSteps.IndexOf(step)] = replacement;
+        }
+
+        private void CaptureBackgroundScene(Map map, IntVec3 origin, CellRect? partial)
+        {
+            CustomMapBackgroundData current = MapComponent_CustomMapData.GetComp(map).background;
+            if (current == null) return;
+            var step = new CustomMapStep_MapBackground { background = current.Copy(), sceneOnly = partial.HasValue };
+            if (partial is CellRect bounds)
+            {
+                step.background.structures.RemoveAll(item => !bounds.Contains(item.position));
+                step.background.cliffs.RemoveAll(item => !bounds.Overlaps(item.area));
+                foreach (CQFBackgroundCliff item in step.background.cliffs)
+                    item.area = CellRect.FromLimits(Math.Max(bounds.minX, item.area.minX), Math.Max(bounds.minZ, item.area.minZ),
+                        Math.Min(bounds.maxX, item.area.maxX), Math.Min(bounds.maxZ, item.area.maxZ));
+                if (step.background.cliffs.Count == 0 && step.background.structures.Count == 0) return;
+                step.background = new CustomMapBackgroundData
+                {
+                    cliffs = step.background.cliffs,
+                    structures = step.background.structures
+                };
+            }
+            step.background.TransformScene(cell => cell - origin);
+            int index = this.customSteps.FindLastIndex(item => item is CustomMapStep_MapBackground background && background.sceneOnly == step.sceneOnly);
+            if (index >= 0) this.customSteps[index] = step;
+            else this.customSteps.Add(step);
+        }
+#endif
+
         private void SaveThings(IntVec3 centre, List<Thing> things, CellRect bounds)
         {
             List<ThingData> datas = new List<ThingData>();
@@ -867,7 +944,6 @@ namespace QuestEditor_Library
                 {
                     continue;
                 }
-
 #if RIMWORLD_1_7
                 if (thing is CQFTrapMovingHazard)
                     continue;
@@ -1008,6 +1084,7 @@ namespace QuestEditor_Library
 
         public bool fogged = false;
         public bool showEntranceTitle;
+        public string compositeMapKey = "";
         public IntVec3 size;
         public bool isPart = false;
         public bool destroyAllThing = true;

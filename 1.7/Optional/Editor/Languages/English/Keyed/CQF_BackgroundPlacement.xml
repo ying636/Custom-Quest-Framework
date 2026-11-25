@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_BackgroundPlacementStart>Map Scenery</CQF_BackgroundPlacementStart>
+  <CQF_BackgroundPlacementStartTip>Open the scenery palette to place cliffs and structures or edit the map background.</CQF_BackgroundPlacementStartTip>
+  <CQF_BackgroundPlacementPause>Pause placement</CQF_BackgroundPlacementPause>
+  <CQF_BackgroundPlacementResume>Resume placement</CQF_BackgroundPlacementResume>
+  <CQF_BackgroundPlacementReturnToMap>Return to the editing map</CQF_BackgroundPlacementReturnToMap>
+  <CQF_BackgroundPlacementReturnToMapTip>Your draft is kept on its original map. Return to that map to continue editing.</CQF_BackgroundPlacementReturnToMapTip>
+  <CQF_BackgroundPlacementPanorama>Panoramic background</CQF_BackgroundPlacementPanorama>
+  <CQF_BackgroundPlacementCliff>Cliffs</CQF_BackgroundPlacementCliff>
+  <CQF_BackgroundPlacementCliffTip>Draw a rectangle over ethereal void. Cliff faces follow the boundary with solid ground on the sides you enable.</CQF_BackgroundPlacementCliffTip>
+  <CQF_BackgroundPlacementPlaced>Placed scenery</CQF_BackgroundPlacementPlaced>
+  <CQF_BackgroundPlacementUndo>Undo</CQF_BackgroundPlacementUndo>
+  <CQF_BackgroundPlacementApply>Apply</CQF_BackgroundPlacementApply>
+  <CQF_BackgroundPlacementDepth>Depth</CQF_BackgroundPlacementDepth>
+  <CQF_BackgroundPlacementMove>Move</CQF_BackgroundPlacementMove>
+  <CQF_BackgroundPlacementRotation>Rotation</CQF_BackgroundPlacementRotation>
+  <CQF_BackgroundPlacementScale>Scale</CQF_BackgroundPlacementScale>
+  <CQF_BackgroundPlacementCliffArea>Cliff  {0}–{1}</CQF_BackgroundPlacementCliffArea>
+  <CQF_BackgroundPlacementEmpty>There is no scenery on this map yet.</CQF_BackgroundPlacementEmpty>
+  <CQF_BackgroundPlacementNorth>North</CQF_BackgroundPlacementNorth>
+  <CQF_BackgroundPlacementEast>East</CQF_BackgroundPlacementEast>
+  <CQF_BackgroundPlacementSouth>South</CQF_BackgroundPlacementSouth>
+  <CQF_BackgroundPlacementWest>West</CQF_BackgroundPlacementWest>
+  <CQF_ScenerySettings>Map settings</CQF_ScenerySettings>
+  <CQF_SceneryOtherStructures>Other structures</CQF_SceneryOtherStructures>
+  <CQF_SceneryCloseTip>Close the palette and discard edits made since the last Apply.</CQF_SceneryCloseTip>
+  <CQF_SceneryCliffElement>Cliff face</CQF_SceneryCliffElement>
+  <CQF_SceneryCliffProperties>Cliff properties</CQF_SceneryCliffProperties>
+  <CQF_SceneryPlacedStructure>{0}  {1}</CQF_SceneryPlacedStructure>
+  <CQF_SceneryRedrawCliff>Redraw</CQF_SceneryRedrawCliff>
+  <CQF_SceneryLocate>Locate</CQF_SceneryLocate>
+  <CQF_ScenerySelectElement>Select a scenery element to edit its properties.</CQF_ScenerySelectElement>
+  <CQF_SceneryPick>Pick scenery</CQF_SceneryPick>
+  <CQF_SceneryStopPicking>Stop picking</CQF_SceneryStopPicking>
+  <CQF_SceneryPickTip>Left-click scenery to pick it up. Use Q or E to rotate and left-click to place it. Right-click scenery to edit or delete it.</CQF_SceneryPickTip>
+  <CQF_SceneryDelete>Delete</CQF_SceneryDelete>
+  <CQF_SceneryPanoramaTip>Draw the background across the camera view, including the area beyond the map edges.</CQF_SceneryPanoramaTip>
+  <CQF_SceneryBackgroundMap>Background map</CQF_SceneryBackgroundMap>
+  <CQF_SceneryChooseTexture>Choose background texture</CQF_SceneryChooseTexture>
+  <CQF_SceneryClearTexture>Remove texture</CQF_SceneryClearTexture>
+  <CQF_ScenerySetTexture>Use path</CQF_ScenerySetTexture>
+  <CQF_SceneryTexturePath>Texture path</CQF_SceneryTexturePath>
+  <CQF_SceneryTexturePathTip>Enter a texture resource path from a loaded mod, without the file extension.</CQF_SceneryTexturePathTip>
+  <CQF_SceneryMissingTexture>No loaded texture was found at {0}.</CQF_SceneryMissingTexture>
+  <CQF_SceneryFit>Texture fit</CQF_SceneryFit>
+  <CQF_SceneryOpacity>Opacity</CQF_SceneryOpacity>
+  <CQF_ScenerySize>Width and height</CQF_ScenerySize>
+  <CQF_ScenerySizeTip>Set both values to zero to use the map size.</CQF_ScenerySizeTip>
+  <CQF_SceneryTextureScale>Texture scale</CQF_SceneryTextureScale>
+  <CQF_SceneryOffset>Texture offset</CQF_SceneryOffset>
+  <CQF_SceneryTint>Texture tint</CQF_SceneryTint>
+</LanguageData>

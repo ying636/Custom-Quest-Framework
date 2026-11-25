@@ -90,6 +90,12 @@ namespace QuestEditor_Library
             }
             this.GetOtherMap();
             if (this.entrance.Map == null) throw new InvalidOperationException("[CQF] Portal source is not active after map activation.");
+#if RIMWORLD_1_7
+            GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
+            Map source = this.Map;
+            IntVec3 departure = thing.Position;
+            List<Pawn>? pursuers = thing is Pawn traveler ? manager?.CrossMap.FindPursuers(traveler, source) : null;
+#endif
 
             bool moveToRoot = this.Map.designationManager.DesignationOn(thing)?.def == QEDefOf.QE_MoveToRoot;
             if (thing.Spawned)
@@ -102,6 +108,9 @@ namespace QuestEditor_Library
             if (thing is Pawn pawn)
             {
                 this.OnEntered(pawn);
+#if RIMWORLD_1_7
+                manager?.CrossMap.Pursue(pursuers, pawn, source, pawn.Map, departure);
+#endif
             }
 
             this.thereIsPawnIsEntering = false;

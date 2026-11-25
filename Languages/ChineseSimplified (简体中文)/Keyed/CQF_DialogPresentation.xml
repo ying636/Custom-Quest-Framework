@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-  <CQF_DialogStyle_Style>CQF_DialogStyle_Style</CQF_DialogStyle_Style>
-  <CQF_DialogStyle_Classic>CQF_DialogStyle_Classic</CQF_DialogStyle_Classic>
-  <CQF_DialogStyle_Galgame>CQF_DialogStyle_Galgame</CQF_DialogStyle_Galgame>
-  <CQF_DialogStyle_Left>CQF_DialogStyle_Left</CQF_DialogStyle_Left>
-  <CQF_DialogStyle_Right>CQF_DialogStyle_Right</CQF_DialogStyle_Right>
-  <CQF_DialogStyle_Speaker>CQF_DialogStyle_Speaker</CQF_DialogStyle_Speaker>
-  <CQF_DialogStyle_None>CQF_DialogStyle_None</CQF_DialogStyle_None>
-  <CQF_DialogStyle_OverrideLeft>CQF_DialogStyle_OverrideLeft</CQF_DialogStyle_OverrideLeft>
-  <CQF_DialogStyle_OverrideRight>CQF_DialogStyle_OverrideRight</CQF_DialogStyle_OverrideRight>
-  <CQF_DialogStyle_Source>CQF_DialogStyle_Source</CQF_DialogStyle_Source>
-  <CQF_DialogStyle_Participant>CQF_DialogStyle_Participant</CQF_DialogStyle_Participant>
-  <CQF_DialogStyle_Image>CQF_DialogStyle_Image</CQF_DialogStyle_Image>
-  <CQF_DialogStyle_Hidden>CQF_DialogStyle_Hidden</CQF_DialogStyle_Hidden>
-  <CQF_DialogStyle_Interviewee>CQF_DialogStyle_Interviewee</CQF_DialogStyle_Interviewee>
-  <CQF_DialogStyle_Interviewer>CQF_DialogStyle_Interviewer</CQF_DialogStyle_Interviewer>
-  <CQF_DialogStyle_NameKey>CQF_DialogStyle_NameKey</CQF_DialogStyle_NameKey>
-  <CQF_DialogStyle_OffsetX>CQF_DialogStyle_OffsetX</CQF_DialogStyle_OffsetX>
-  <CQF_DialogStyle_OffsetY>CQF_DialogStyle_OffsetY</CQF_DialogStyle_OffsetY>
-  <CQF_DialogStyle_Mirror>CQF_DialogStyle_Mirror</CQF_DialogStyle_Mirror>
-  <CQF_DialogStyle_Placement>CQF_DialogStyle_Placement</CQF_DialogStyle_Placement>
-  <CQF_DialogStyle_Center>CQF_DialogStyle_Center</CQF_DialogStyle_Center>
-  <CQF_DialogStyle_Background>CQF_DialogStyle_Background</CQF_DialogStyle_Background>
+  <CQF_DialogStyle_Style>对话风格</CQF_DialogStyle_Style>
+  <CQF_DialogStyle_Classic>经典对话</CQF_DialogStyle_Classic>
+  <CQF_DialogStyle_Galgame>视觉小说（Galgame）</CQF_DialogStyle_Galgame>
+  <CQF_DialogStyle_Left>左侧立绘</CQF_DialogStyle_Left>
+  <CQF_DialogStyle_Right>右侧立绘</CQF_DialogStyle_Right>
+  <CQF_DialogStyle_Speaker>发言者</CQF_DialogStyle_Speaker>
+  <CQF_DialogStyle_None>旁白</CQF_DialogStyle_None>
+  <CQF_DialogStyle_OverrideLeft>覆盖左侧立绘</CQF_DialogStyle_OverrideLeft>
+  <CQF_DialogStyle_OverrideRight>覆盖右侧立绘</CQF_DialogStyle_OverrideRight>
+  <CQF_DialogStyle_Source>立绘来源</CQF_DialogStyle_Source>
+  <CQF_DialogStyle_Participant>对话参与者</CQF_DialogStyle_Participant>
+  <CQF_DialogStyle_Image>自定义图片</CQF_DialogStyle_Image>
+  <CQF_DialogStyle_Hidden>隐藏</CQF_DialogStyle_Hidden>
+  <CQF_DialogStyle_Interviewee>受访者</CQF_DialogStyle_Interviewee>
+  <CQF_DialogStyle_Interviewer>发起者</CQF_DialogStyle_Interviewer>
+  <CQF_DialogStyle_NameKey>显示名称或翻译键</CQF_DialogStyle_NameKey>
+  <CQF_DialogStyle_OffsetX>横向偏移</CQF_DialogStyle_OffsetX>
+  <CQF_DialogStyle_OffsetY>纵向偏移</CQF_DialogStyle_OffsetY>
+  <CQF_DialogStyle_Mirror>水平镜像</CQF_DialogStyle_Mirror>
+  <CQF_DialogStyle_Placement>图片位置</CQF_DialogStyle_Placement>
+  <CQF_DialogStyle_Center>中间插图</CQF_DialogStyle_Center>
+  <CQF_DialogStyle_Background>背景图</CQF_DialogStyle_Background>
 </LanguageData>

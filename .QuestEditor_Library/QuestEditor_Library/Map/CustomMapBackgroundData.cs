@@ -14,6 +14,9 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
     public bool Enabled => !this.texPath.NullOrEmpty();
     public bool DrawOnMap => this.drawScope == CustomMapBackgroundDrawScope.Map;
     public bool DrawOnCameraVisibleArea => this.drawScope == CustomMapBackgroundDrawScope.CameraVisible;
+#if RIMWORLD_1_7
+    internal bool HasStructures => this.cliffs.Count > 0 || this.structures.Count > 0;
+#endif
 
     internal string DrawScopeLabel
     {
@@ -58,9 +61,40 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
             scale = this.scale,
             offset = this.offset,
             enableTerrainEdges = this.enableTerrainEdges,
-            backgroundEffects = this.backgroundEffects.ListFullCopy()
+            backgroundEffects = this.backgroundEffects.ListFullCopy(),
+#if RIMWORLD_1_7
+            cliffs = this.cliffs.Select(item => item.Copy()).ToList(),
+            structures = this.structures.Select(item => item.Copy()).ToList(),
+#endif
         };
     }
+
+#if RIMWORLD_1_7
+    public void TransformScene(Func<IntVec3, IntVec3> transform)
+    {
+        IntVec3 origin = transform(IntVec3.Zero);
+        IntVec3 north = transform(IntVec3.North) - origin;
+        float turn = Mathf.Atan2(north.x, north.z) * Mathf.Rad2Deg;
+        int turns = (Mathf.RoundToInt(turn / 90f) + 4) % 4;
+        Quaternion rotation = Quaternion.AngleAxis(turn, Vector3.up);
+        foreach (CQFBackgroundStructure item in this.structures)
+        {
+            item.position = transform(item.position);
+            item.rotation = Mathf.Repeat(item.rotation + turn, 360f);
+            Vector3 offset = rotation * new Vector3(item.offset.x, 0f, item.offset.y);
+            item.offset = new Vector2(offset.x, offset.z);
+        }
+        foreach (CQFBackgroundCliff item in this.cliffs)
+        {
+            IntVec3 min = transform(item.area.Min);
+            IntVec3 max = transform(item.area.Max);
+            item.area = CellRect.FromLimits(Math.Min(min.x, max.x), Math.Min(min.z, max.z),
+                Math.Max(min.x, max.x), Math.Max(min.z, max.z));
+            int flags = (int)item.edges;
+            item.edges = (CQFCliffEdges)(((flags << turns) | (flags >> (4 - turns))) & 15);
+        }
+    }
+#endif
 
     public void Draw(ref float y, Rect inRect, float x)
     {
@@ -106,6 +140,12 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         Scribe_Values.Look(ref this.enableTerrainEdges, "enableTerrainEdges");
         Scribe_Collections.Look(ref this.backgroundEffects, "backgroundEffects", LookMode.Def);
         this.backgroundEffects ??= new List<CustomMapBackgroundEffectDef>();
+#if RIMWORLD_1_7
+        Scribe_Collections.Look(ref this.cliffs, "cliffs", LookMode.Deep);
+        Scribe_Collections.Look(ref this.structures, "structures", LookMode.Deep);
+        this.cliffs ??= new List<CQFBackgroundCliff>();
+        this.structures ??= new List<CQFBackgroundStructure>();
+#endif
     }
 
     public XElement SaveToXElement(string nodeName)
@@ -147,6 +187,12 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
         {
             result.Add(new XElement("enableTerrainEdges", this.enableTerrainEdges));
         }
+#if RIMWORLD_1_7
+        if (this.backgroundEffects.Count > 0)
+            result.Add(new XElement("backgroundEffects", this.backgroundEffects.Select(item => new XElement("li", item.defName))));
+        if (this.cliffs.Count > 0) result.Add(new XElement("cliffs", this.cliffs.Select(item => item.SaveToXElement("li"))));
+        if (this.structures.Count > 0) result.Add(new XElement("structures", this.structures.Select(item => item.SaveToXElement("li"))));
+#endif
 
         return result;
     }
@@ -246,6 +292,10 @@ public class CustomMapBackgroundData : IExposable, ISaveable, IDrawable
     public Vector2 offset = Vector2.zero;
     public bool enableTerrainEdges;
     public List<CustomMapBackgroundEffectDef> backgroundEffects = new List<CustomMapBackgroundEffectDef>();
+#if RIMWORLD_1_7
+    public List<CQFBackgroundCliff> cliffs = new List<CQFBackgroundCliff>();
+    public List<CQFBackgroundStructure> structures = new List<CQFBackgroundStructure>();
+#endif
     internal string bufferAlpha;
     internal string bufferScale;
     internal string bufferDrawSizeX;

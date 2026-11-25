@@ -46,7 +46,7 @@ public class SectionLayer_CQFCustomTerrainEdges : SectionLayer
         base.FinalizeMesh(MeshParts.All);
     }
 
-    private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.background;
+    private CustomMapBackgroundData Background => MapComponent_CustomMapData.GetComp(base.Map)?.BackgroundForDrawing;
 
     private void DrawEdges(TerrainDef terrain, IntVec3 cell, EdgeDirections edgeDirections, float altitude)
     {

@@ -11,12 +11,23 @@ internal sealed class CQFCompositeMapLayout
     }
 
     internal Dictionary<CQFCompositeMapGroup, Rect> BranchPositions => branchPositions;
+    internal Rect? SourcePosition { get; private set; }
 
     internal Dictionary<string, Rect> GetPositions(CQFCompositeMapInstance instance, CQFCompositeMapGroup group, Rect available)
     {
-        if (displayedGroup == group && area == available && layoutVersion == group.LayoutVersion) return positions;
+        bool showSource = group == instance.RootGroup && instance.ViewableSource != null;
+        if (displayedGroup == group && area == available && layoutVersion == group.LayoutVersion &&
+            SourcePosition.HasValue == showSource) return positions;
         IReadOnlyList<CQFCompositeMapRegion> regions = group.Regions;
         HashSet<IntVec2> occupied = new(regions.Select(region => region.position));
+        IntVec2? sourceCell = null;
+        if (showSource)
+        {
+            IntVec2 cell = regions.First(region => region.id == group.EntryRegion).position;
+            IntVec2 step = group.Placement == CQFCompositeMapPlacement.Vertical ? new(0, 1) : new(-1, 0);
+            do { cell += step; } while (!occupied.Add(cell));
+            sourceCell = cell;
+        }
         Dictionary<CQFCompositeMapGroup, IntVec2> branchCells = new();
         foreach (CQFCompositeMapRegion region in regions)
             foreach (CQFCompositeMapGroup branch in instance.ChildrenAt(region.id))
@@ -33,6 +44,7 @@ internal sealed class CQFCompositeMapLayout
         float gutter = Mathf.Min(full ? 10f : 4f, height * 0.20f);
         positions.Clear();
         branchPositions.Clear();
+        SourcePosition = sourceCell is { } source ? At(source) : null;
 
         foreach (CQFCompositeMapRegion region in regions)
             positions[region.id] = At(region.position);

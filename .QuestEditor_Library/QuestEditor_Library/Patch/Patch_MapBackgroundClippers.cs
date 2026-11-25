@@ -13,7 +13,7 @@ public class Patch_MapBackgroundClippers
         {
             return;
         }
-        CustomMapBackgroundData background = MapComponent_CustomMapData.GetComp(__instance)?.background;
+        CustomMapBackgroundData background = MapComponent_CustomMapData.GetComp(__instance)?.BackgroundForDrawing;
         if (background is { Enabled: true, DrawOnCameraVisibleArea: true })
         {
             __result = false;

@@ -10,7 +10,7 @@ public sealed class MapDrawLayer_CQFPanoramaLighting : MapDrawLayer
     }
 
     public override bool Visible => DebugViewSettings.drawLightingOverlay
-        && MapComponent_CustomMapData.GetComp(this.Map)?.background
+        && MapComponent_CustomMapData.GetComp(this.Map)?.BackgroundForDrawing
             is { Enabled: true, DrawOnCameraVisibleArea: true };
 
     public override void Regenerate()

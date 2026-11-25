@@ -14,6 +14,7 @@ public sealed class CQFDialogRenderer_Galgame : CQFDialogRenderer
     {
         using CQFUIScope scope = new(rect.width, rect.height);
         GUI.color = Color.white;
+        Text.Font = GameFont.Small;
         if (!ReferenceEquals(lastNode, frame.Node))
         {
             lastNode = frame.Node;
@@ -36,10 +37,15 @@ public sealed class CQFDialogRenderer_Galgame : CQFDialogRenderer
             float dialogHeight = Mathf.Clamp(rect.height * 0.3f, 180f, 300f);
             dialogHeight = Mathf.Min(dialogHeight, rect.height * 0.55f);
             Rect dialog = new(padding, rect.height - dialogHeight - padding, rect.width - padding * 2f, dialogHeight);
-            Rect stage = new(padding, padding, rect.width - padding * 2f, Mathf.Max(40f, dialog.y - padding));
-            Rect leftRect = new(stage.x, stage.y, stage.width * 0.29f, stage.height + 22f);
-            Rect rightRect = new(stage.xMax - leftRect.width, stage.y, leftRect.width, leftRect.height);
-            Rect center = new(leftRect.xMax + 12f, stage.y + 30f, Mathf.Max(20f, rightRect.x - leftRect.xMax - 24f), Mathf.Max(20f, stage.height - 42f));
+            float stageTop = padding + (string.IsNullOrWhiteSpace(frame.Title) ? 0f : 32f);
+            Rect stage = new(padding, stageTop, rect.width - padding * 2f, Mathf.Max(1f, dialog.y - stageTop));
+            float leftWidth = left.source == CQFDialogPortraitSource.Hidden ? 0f : stage.width * 0.29f;
+            float rightWidth = right.source == CQFDialogPortraitSource.Hidden ? 0f : stage.width * 0.29f;
+            Rect leftRect = new(stage.x, stage.y, leftWidth, stage.height + 20f);
+            Rect rightRect = new(stage.xMax - rightWidth, stage.y, rightWidth, stage.height + 20f);
+            float centerX = leftRect.xMax + (leftWidth > 0f ? 10f : 0f);
+            float centerRight = rightRect.x - (rightWidth > 0f ? 10f : 0f);
+            Rect center = new(centerX, stage.y, Mathf.Max(1f, centerRight - centerX), Mathf.Max(1f, stage.height - 8f));
             DrawPortrait(leftRect, left, frame, node.speaker == CQFDialogSpeaker.None || node.speaker == CQFDialogSpeaker.Left);
             DrawPortrait(rightRect, right, frame, node.speaker == CQFDialogSpeaker.None || node.speaker == CQFDialogSpeaker.Right);
             CQFDialogSceneImage[] topics = node.images.Where(image => image.placement == CQFDialogImagePlacement.Center).ToArray();
@@ -58,19 +64,21 @@ public sealed class CQFDialogRenderer_Galgame : CQFDialogRenderer
                 Widgets.DrawBoxSolid(nameRect, CQFUIStyle.Header);
                 CQFUIStyle.DrawBox(nameRect);
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(nameRect.ContractedBy(12f, 0f), name.Colorize(CQFUIStyle.Accent));
+                Rect nameContent = nameRect.ContractedBy(12f, 0f);
+                if (Widgets.LabelFit(nameContent, name.Colorize(CQFUIStyle.Accent))) TooltipHandler.TipRegion(nameContent, name);
                 Text.Anchor = TextAnchor.UpperLeft;
             }
-            if (!string.IsNullOrEmpty(frame.Title))
+            if (!string.IsNullOrWhiteSpace(frame.Title))
             {
                 Rect title = new(padding, padding, rect.width - padding * 2f, 28f);
-                Widgets.Label(title, frame.Title.Colorize(CQFUIStyle.TextColor));
+                if (Widgets.LabelFit(title, frame.Title.Colorize(CQFUIStyle.TextColor))) TooltipHandler.TipRegion(title, frame.Title);
             }
             Rect inner = dialog.ContractedBy(16f);
             bool wide = inner.width >= 680f;
             float optionWidth = wide ? Mathf.Clamp(inner.width * 0.31f, 220f, 390f) : inner.width;
+            float narrowChoiceHeight = Mathf.Min(inner.height * .59f, this.OptionsHeight(frame, optionWidth));
             Rect textRect = wide ? new(inner.x, inner.y, inner.width - optionWidth - 20f, inner.height)
-                : new(inner.x, inner.y, inner.width, inner.height * 0.48f);
+                : new(inner.x, inner.y, inner.width, Mathf.Max(1f, inner.height - narrowChoiceHeight - 8f));
             Rect optionsRect = wide ? new(inner.xMax - optionWidth, inner.y, optionWidth, inner.height)
                 : new(inner.x, textRect.yMax + 8f, inner.width, inner.yMax - textRect.yMax - 8f);
             DrawText(textRect, frame.Elements);
@@ -91,8 +99,8 @@ public sealed class CQFDialogRenderer_Galgame : CQFDialogRenderer
 
     private void DrawOptions(Rect rect, CQFDialogFrame frame)
     {
-        float width = Mathf.Max(1f, rect.width - 20f);
-        float height = frame.Options.Sum(option => Mathf.Max(42f, Text.CalcHeight(option.DisplayLabel, width - 16f) + 12f) + 8f);
+        float width = Mathf.Max(22f, rect.width - 20f);
+        float height = this.OptionsHeight(frame, rect.width);
         Widgets.BeginScrollView(rect, ref optionScroll, new Rect(0f, 0f, width, Mathf.Max(rect.height, height)));
         try
         {
@@ -102,6 +110,9 @@ public sealed class CQFDialogRenderer_Galgame : CQFDialogRenderer
         }
         finally { Widgets.EndScrollView(); }
     }
+
+    private float OptionsHeight(CQFDialogFrame frame, float width) => frame.Options.Count == 0 ? 42f
+        : frame.Options.Sum(option => option.HeightForWidth(Mathf.Max(22f, width - 20f))) - 8f;
 
     private void DrawSceneImage(Rect rect, CQFDialogSceneImage image, bool background)
     {

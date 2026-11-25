@@ -44,7 +44,8 @@ public sealed class PresentationChecksDriver : MonoBehaviour
             else if (Age < 0.6f) return;
             else if (stage == 1)
             {
-                Check(window!.InitialSize == new Vector2(635f, 635f) && window.doWindowBackground, "classic window retains its size and background");
+                Check(window!.InitialSize == new Vector2(Mathf.Min(688f, UI.screenWidth - 24f), Mathf.Min(616f, UI.screenHeight - 24f))
+                    && window.doWindowBackground, "classic window fits the viewport and retains its background");
                 Check(window.CurrentNodeIndex == 0 && window.options.Count == 1 && window.elements.Count == 2, "classic text, image and option are available");
                 Capture("01_Classic", () =>
                 {
