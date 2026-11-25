@@ -10,5 +10,6 @@ namespace QuestEditor_Library
         public int cooldownTicks;
         public MetaLordEventTrigger trigger;
         public List<CQFAction> actions = new List<CQFAction>();
+        public List<MetaLordSquadOrder> orders = new();
     }
 }

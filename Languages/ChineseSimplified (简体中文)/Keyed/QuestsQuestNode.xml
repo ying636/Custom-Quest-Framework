@@ -1946,4 +1946,11 @@
   <QuestNode_Unset_Tip>从任务变量表中移除指定名称的条目。</QuestNode_Unset_Tip>
   <QuestNode_ViolentQuestsAllowed>节点：检查是否允许暴力任务</QuestNode_ViolentQuestsAllowed>
   <QuestNode_ViolentQuestsAllowed_Tip>根据当前难度是否允许暴力任务，运行对应分支。</QuestNode_ViolentQuestsAllowed_Tip>
+  <QuestNode_Root_SightstealerArrival_Space>节点：太空隐形魔抵达任务</QuestNode_Root_SightstealerArrival_Space>
+  <QuestNode_Root_DistressCall_FleshHive>节点：血肉巢穴求救信号任务</QuestNode_Root_DistressCall_FleshHive>
+  <QuestNode_Root_FleshSurvivor>节点：血肉幸存者任务</QuestNode_Root_FleshSurvivor>
+  <QuestNodeRootSpiderUnlock>节点：初火协议任务</QuestNodeRootSpiderUnlock>
+  <QuestNodeRootWuDeLiDao>节点：倒吊人离岛任务</QuestNodeRootWuDeLiDao>
+  <QuestNode_DaisyRescue>节点：黛西救援任务</QuestNode_DaisyRescue>
+  <FatalisQuestRoot>节点：收容事故·黑龙</FatalisQuestRoot>
 </LanguageData>

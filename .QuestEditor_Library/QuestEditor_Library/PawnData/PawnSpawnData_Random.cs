@@ -20,6 +20,8 @@ namespace QuestEditor_Library
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             Rect rect = new Rect(16f + x, y + 10f, 500f, 45f);
             this.DrawName(ref y, x, rect);
+            if (!ReferenceEquals(CQFEditorContext.FixedPawnHeader, this))
+                this.DrawMapGroup(ref y, x);
             CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 16f + x, this.datas, inRect, "PawnSpawnDatas".Translate(), d => d.dataName);
             this.DrawCanSaveWarning(ref y, x, inRect);
         }
@@ -31,6 +33,8 @@ namespace QuestEditor_Library
 
         public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null, bool setLord = true)
         {
+            if (!this.TryResolveMapGroup(map, ref lord))
+                return new Dictionary<string, TargetInfo>();
             if (!this.datas.Any())
             {
                 Log.Error("Custom Quset Framework Error:Pawn data list of PawnSpawnData_Random is empty");

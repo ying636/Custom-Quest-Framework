@@ -36,6 +36,17 @@ namespace QuestEditor_Library
         {
             XElement result = new XElement(nodeName);
             result.Add(new XElement("name", this.name));
+            if (!this.metaLordName.NullOrEmpty())
+                result.Add(new XElement("metaLordName", this.metaLordName));
+            if (this.metaLordEvents != null)
+                result.Add(new XElement("metaLordEvents", this.metaLordEvents.defName));
+            if (this.groupTemplate != null)
+            {
+                result.Add(new XElement("groupTemplate", this.groupTemplate.defName));
+                if (!this.faction.NullOrEmpty())
+                    result.Add(new XElement("faction", this.faction));
+                return result;
+            }
             result.Add(this.Data.SaveToXElement("lordJobData"));
             result.Add(new XElement("faction", this.faction));
             if (this.actions.Any())
@@ -43,10 +54,6 @@ namespace QuestEditor_Library
                 result.Add(CQFSerialization.SaveList_Saveable(this.actions, "actions"));
             }
 
-            if (!this.metaLordName.NullOrEmpty())
-                result.Add(new XElement("metaLordName", this.metaLordName));
-            if (this.metaLordEvents != null)
-                result.Add(new XElement("metaLordEvents", this.metaLordEvents.defName));
             if (this.groupTags.Count > 0)
                 result.Add(CQFSerialization.SaveList(this.groupTags, "groupTags"));
             if (this.capacity > 0)
@@ -54,11 +61,44 @@ namespace QuestEditor_Library
             return result;
         }
 
+        public LordData ResolveGroupTemplate(string? instanceName = null)
+        {
+            LordData source = this.groupTemplate?.lord ?? this;
+            if (source.groupTemplate != null)
+                throw new InvalidOperationException("[CQF] A group template cannot link to another template: " + this.groupTemplate?.defName);
+            LordData result = source.Copy();
+            result.name = instanceName ?? this.name;
+            result.faction = this.faction.NullOrEmpty() ? source.faction : this.faction;
+            result.metaLordName = this.metaLordName.NullOrEmpty() ? source.metaLordName : this.metaLordName;
+            result.metaLordEvents = this.metaLordEvents ?? source.metaLordEvents;
+            return result;
+        }
+
+        internal LordData Copy()
+        {
+            var copy = (LordData)this.MemberwiseClone();
+            copy.groupTags = new List<string>(this.groupTags);
+            copy.actions = new List<CQFAction_Lord>(this.actions);
+            copy.lordJobData = this.lordJobData?.CopyFor(copy);
+            return copy;
+        }
+
         public void Draw(ref float y, Rect inRect, float x)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
-            CQFEditorTools.DrawLabelAndText_Line(y, "LordName".Translate(), ref this.name, x, Mathf.Max(80f, inRect.width - x - 180f));
-            y += 30f;
+            CQFEditorTools.DrawLabelAndText_Line(y, "LordName".Translate(), ref this.name, x, inRect.width - x);
+            y += 34f;
+            if (this.groupTemplate != null)
+            {
+                Widgets.Label(new Rect(x, y, inRect.width - x, 28f), "CQF_PawnGroupDef".Translate(this.groupTemplate.DisplayName));
+                y += 30f;
+                CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordName".Translate(), ref this.metaLordName, x, 180f);
+                y += 30f;
+                if (typeof(MultLevelLordJobBase).IsAssignableFrom(this.groupTemplate.lord.Data.LordJob))
+                    this.DrawOrganizationRules(ref y, inRect, x, this.groupTemplate.lord.metaLordEvents);
+                this.DrawFaction(ref y, inRect, x);
+                return;
+            }
             this.Data.Draw(ref y, inRect, x);
             if (typeof(MultLevelLordJobBase).IsAssignableFrom(this.Data.LordJob))
             {
@@ -66,21 +106,35 @@ namespace QuestEditor_Library
                 y += 30f;
                 CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordCapacity".Translate(), ref this.capacity, ref this.capacityBuffer, x, 100f);
                 y += 30f;
-                if (CQFUIStyle.ButtonText(new Rect(x, y, inRect.width - x - 12f, 30f), "CQF_MetaLordEvents".Translate() + ": " + (this.metaLordEvents?.defName ?? "Null")))
-                    CQFEditorTools.DrawFloatMenu(DefDatabase<MetaLordEventDef>.AllDefsListForReading, value => this.metaLordEvents = value, value => value.defName);
-                y += 36f;
+                this.DrawOrganizationRules(ref y, inRect, x);
                 CQFEditorTools.DrawEditableStringList(this.groupTags, ref y, "CQF_MetaLordTags".Translate(), x: x, width: 180f);
             }
 
-            CQFEditorTools.DrawSelectableText(y, "MapDataFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll((f) => !f.isPlayer), (f) => this.faction = f.defName, (f) => f.label, new List<FloatMenuOption>() { new FloatMenuOption("RandomHostile".Translate(), () => this.faction = "RandomHostile"), new FloatMenuOption("RandomAlly".Translate(), () => this.faction = "RandomAlly"), new FloatMenuOption("RandomNeutral".Translate(), () => this.faction = "RandomNeutral"), new FloatMenuOption("PawnDataMapFaction".Translate(), () => this.faction = "MapFaction") }), x, Mathf.Max(80f, inRect.width - x - 180f));
-            y += 30f;
+            this.DrawFaction(ref y, inRect, x);
             CQFEditorTools.DrawIDrawList_UseWindow_UseIcon(ref y, x, this.actions, inRect, "ActionsAfterGeneration".Translate(), a => a.GetType().Name.Translate());
+        }
+
+        private void DrawOrganizationRules(ref float y, Rect rect, float x, MetaLordEventDef inherited = null)
+        {
+            string name = (this.metaLordEvents ?? inherited)?.LabelCap.ToString() ?? "CQF_MetaLord_Unassigned".Translate().ToString();
+            if (CQFUIStyle.ButtonText(new Rect(x, y, rect.width - x - 12f, 30f), "CQF_MetaLord_RulesField".Translate(name)))
+            {
+                var options = new List<FloatMenuOption>
+                {
+                    new FloatMenuOption("CQF_MetaLord_ClearOverride".Translate(), () => this.metaLordEvents = null)
+                };
+                options.AddRange(DefDatabase<MetaLordEventDef>.AllDefsListForReading.Select(def =>
+                    new FloatMenuOption(def.LabelCap, () => this.metaLordEvents = def)));
+                Find.WindowStack.Add(new FloatMenu(options));
+            }
+            y += 36f;
         }
 
         public void ExposeData()
         {
             Scribe_Values.Look(ref this.name, "name");
             Scribe_Values.Look(ref this.faction, "faction");
+            Scribe_Defs.Look(ref this.groupTemplate, "groupTemplate");
             Scribe_Deep.Look(ref this.lordJobData, "lordJobData");
             Scribe_Collections.Look(ref this.actions, "actions", LookMode.Deep);
             Scribe_Values.Look(ref this.metaLordName, "metaLordName");
@@ -95,8 +149,15 @@ namespace QuestEditor_Library
             }
         }
 
+        private void DrawFaction(ref float y, Rect inRect, float x)
+        {
+            CQFEditorTools.DrawSelectableText(y, "MapDataFaction".Translate(), ref this.faction, () => CQFEditorTools.DrawFloatMenu<FactionDef>(DefDatabase<FactionDef>.AllDefs.ToList().FindAll((f) => !f.isPlayer), (f) => this.faction = f.defName, (f) => f.label, new List<FloatMenuOption>() { new FloatMenuOption("RandomHostile".Translate(), () => this.faction = "RandomHostile"), new FloatMenuOption("RandomAlly".Translate(), () => this.faction = "RandomAlly"), new FloatMenuOption("RandomNeutral".Translate(), () => this.faction = "RandomNeutral"), new FloatMenuOption("PawnDataMapFaction".Translate(), () => this.faction = "MapFaction") }), x, inRect.width - x);
+            y += 34f;
+        }
+
         public string name = "default";
         public string faction;
+        public GroupDataDef groupTemplate;
         public LordJobData lordJobData;
         public List<CQFAction_Lord> actions = new List<CQFAction_Lord>();
         [NoTranslate]
@@ -107,13 +168,20 @@ namespace QuestEditor_Library
         public string capacityBuffer;
     }
 
-    public class LordJobData : ISaveable, IDrawable, IExposable
+    public partial class LordJobData : ISaveable, IDrawable, IExposable
     {
         public virtual bool JobSelectable => true;
         public virtual Type LordJob => this.lordJob;
 
         public virtual LordJob CreateJob(Map map, Quest quest)
         {
+            if (this.HasVanillaConfiguration)
+                return this.CreateVanillaJob(map, quest, this.UsesVanillaFaction ? GameTools.GetFaction(this.lordData?.faction, map) : null, map.Center);
+
+            string? reason = this.UnavailableJobReason(this.lordJob);
+            if (reason != null)
+                throw new InvalidOperationException(reason);
+
             LordJob result = (LordJob)Activator.CreateInstance(this.lordJob);
             if (result is LordJob_ComplexCustom complexJob)
             {
@@ -134,24 +202,48 @@ namespace QuestEditor_Library
             return result;
         }
 
+        internal LordJobData CopyFor(LordData owner)
+        {
+            var copy = (LordJobData)this.MemberwiseClone();
+            copy.lordData = owner;
+            return copy;
+        }
+
         public virtual void Draw(ref float y, Rect inRect, float x)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width);
             this.DrawName(ref y, inRect, x);
-            y += 38f;
-            if (this.JobSelectable)
+            y += 34f;
+            using (new CQFUIScope(inRect.width))
             {
-                if (CQFUIStyle.ButtonText(new Rect(x, y, Mathf.Max(80f, inRect.width - x - 12f), 32f), "CQF_LordJob".Translate(this.lordJob.Name.CanTranslate() ? this.lordJob.Name.Translate().ToString() : this.lordJob.Name), false, overrideTextAnchor: TextAnchor.MiddleLeft))
+                Rect selection = CQFEditorTools.DrawFieldLabel(y, "CQF_LordJobField".Translate(), x, inRect.width - x);
+                string label = QuestEditor_Library.LordJobData.JobLabel(this.LordJob);
+                if (this.JobSelectable)
                 {
-                    Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(typeof(LordJob).AllSubclassesNonAbstract(), t => t.Name.CanTranslate() ? t.Name.Translate().ToString() : t.Name, t => this.lordJob = t, null, t => (t.Name + "_Tip").CanTranslate() ? (t.Name + "_Tip").Translate().ToString() : ""), "Select".Translate()));
+                    if (CQFUIStyle.ButtonText(selection, label, overrideTextAnchor: TextAnchor.MiddleLeft))
+                    {
+                        Find.WindowStack.Add(new Dialog_Select<Type>(new TextSelectDrawer<Type>(
+                            typeof(LordJob).AllSubclassesNonAbstract(), QuestEditor_Library.LordJobData.JobLabel,
+                            type =>
+                            {
+                                string? reason = this.UnavailableJobReason(type);
+                                if (reason == null) this.lordJob = type;
+                                else Messages.Message(reason, MessageTypeDefOf.RejectInput);
+                            }, null, type =>
+                            {
+                                string key = type.Name + "_Tip";
+                                return this.UnavailableJobReason(type) ?? (key.CanTranslate() ? key.Translate().ToString() : string.Empty);
+                            }, null, type => type.Name), "Select".Translate()));
+                    }
+                }
+                else
+                {
+                    Widgets.Label(selection, label);
                 }
             }
-            else
-            {
-                Widgets.Label(new Rect(x, y, Mathf.Max(80f, inRect.width - x - 12f), 32f), "CQF_LordJob".Translate(this.LordJob.Name.CanTranslate() ? this.LordJob.Name.Translate().ToString() : this.LordJob.Name));
-            }
 
-            y += 38f;
+            y += 34f;
+            this.DrawVanillaConfiguration(ref y, inRect, x);
             if (typeof(LordJob_ComplexCustom).IsAssignableFrom(this.lordJob))
             {
                 this.DrawComplexDutyMap(ref y, x);
@@ -160,8 +252,9 @@ namespace QuestEditor_Library
 
         public virtual void DrawName(ref float y, Rect inRect, float x)
         {
-            Rect rect = new Rect(x, y, Mathf.Max(80f, inRect.width - x - 12f), 32f);
-            if (CQFUIStyle.ButtonText(rect, this.GetType().Name.Translate(), false, overrideTextAnchor: TextAnchor.MiddleLeft))
+            using var scope = new CQFUIScope(inRect.width);
+            Rect rect = CQFEditorTools.DrawFieldLabel(y, "CQF_LordJobDataField".Translate(), x, inRect.width - x);
+            if (CQFUIStyle.ButtonText(rect, this.GetType().Name.Translate(), overrideTextAnchor: TextAnchor.MiddleLeft))
             {
                 List<Type> types = typeof(LordJobData).AllSubclassesNonAbstract().ListFullCopy();
                 types.Add(typeof(LordJobData));
@@ -197,12 +290,16 @@ namespace QuestEditor_Library
                 result.Add(new XElement("dutyMapStartNodeId", this.dutyMapStartNodeId));
             }
 
+            this.SaveVanillaConfiguration(result);
             return result;
         }
 
         public virtual void ExposeData()
         {
             Scribe_Values.Look(ref this.lordJob, "lordJob", typeof(LordJob_Custom), true);
+            Scribe_Values.Look(ref this.vanillaTargetKey, "vanillaTargetKey");
+            Scribe_Values.Look(ref this.vanillaRadius, "vanillaRadius", 12f);
+            Scribe_Values.Look(ref this.vanillaUrgency, "vanillaUrgency", Verse.AI.LocomotionUrgency.Jog);
             Scribe_Defs.Look(ref this.dutyMap, "dutyMap");
             Scribe_Values.Look(ref this.dutyMapStartNodeId, "dutyMapStartNodeId");
         }

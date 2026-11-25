@@ -25,4 +25,36 @@
 
   <LordJobData>Lord job data</LordJobData>
 
+  <LordJob_DefendPoint>Defend point</LordJob_DefendPoint>
+  <LordJob_ExitMapBest>Exit map by best route</LordJob_ExitMapBest>
+  <LordJob_ExitMapNear>Exit map near point</LordJob_ExitMapNear>
+  <LordJob_Travel>Travel to point</LordJob_Travel>
+  <LordJob_TravelAndExit>Travel to point and exit</LordJob_TravelAndExit>
+  <LordJob_AssaultColony>Assault colony</LordJob_AssaultColony>
+  <LordJob_AssaultThings>Assault designated target</LordJob_AssaultThings>
+  <LordJob_AssistColony>Assist colony</LordJob_AssistColony>
+  <LordJob_BegForItems>Beg for items</LordJob_BegForItems>
+  <LordJob_BestowingCeremony>Hold bestowing ceremony</LordJob_BestowingCeremony>
+  <LordJob_BossgroupAssaultColony>Mechanoid bossgroup assault</LordJob_BossgroupAssaultColony>
+  <LordJob_ChimeraAssault>Chimera assault</LordJob_ChimeraAssault>
+  <LordJob_CreepJoiner>Creepjoiner visit</LordJob_CreepJoiner>
+  <LordJob_DefendAndExpandHive>Defend and expand hive</LordJob_DefendAndExpandHive>
+  <LordJob_DefendAttackedTraderCaravan>Defend attacked trader caravan</LordJob_DefendAttackedTraderCaravan>
+  <CQF_LordJobDataField>Behavior configuration</CQF_LordJobDataField>
+  <CQF_LordJobField>Squad behavior</CQF_LordJobField>
+  <CQF_LordJobTargetField>Map target key</CQF_LordJobTargetField>
+  <CQF_LordJobRadiusField>Action radius</CQF_LordJobRadiusField>
+  <CQF_LordJobUrgencyField>Movement urgency</CQF_LordJobUrgencyField>
+  <CQF_LordJobInvalidTarget>Behavior {0} cannot find target {1} on this map.</CQF_LordJobInvalidTarget>
+  <CQF_LordJobFactionRequired>Behavior {0} requires a valid map faction.</CQF_LordJobFactionRequired>
+  <CQF_LordJobThingRequired>Behavior {0} requires a map target key that points to a thing.</CQF_LordJobThingRequired>
+  <CQF_LordJobInvalidRadius>Behavior {0} requires an action radius greater than zero.</CQF_LordJobInvalidRadius>
+  <CQF_LordJobTaskContext>Behavior {0} requires parameters supplied by its original quest.</CQF_LordJobTaskContext>
+  <CQF_LordJobNoConstructor>Behavior {0} has no constructor for direct creation.</CQF_LordJobNoConstructor>
+  <CQF_LordJobUrgency_Amble>Amble</CQF_LordJobUrgency_Amble>
+  <CQF_LordJobUrgency_Walk>Walk</CQF_LordJobUrgency_Walk>
+  <CQF_LordJobUrgency_Jog>Jog</CQF_LordJobUrgency_Jog>
+  <CQF_LordJobUrgency_Sprint>Sprint</CQF_LordJobUrgency_Sprint>
+  <CQF_LordJobPointTargetTip>Enter a map target key, or leave it empty to use the squad spawn point or map template center.</CQF_LordJobPointTargetTip>
+  <CQF_LordJobThingTargetTip>Enter the key of an existing thing on this map.</CQF_LordJobThingTargetTip>
 </LanguageData>

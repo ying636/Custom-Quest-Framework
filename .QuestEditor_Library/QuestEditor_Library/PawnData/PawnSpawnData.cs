@@ -39,6 +39,8 @@ namespace QuestEditor_Library
         {
             using CQFUIScope scope = new CQFUIScope(inRect.width);
             this.DrawName(ref y, x, new Rect(x, y, inRect.width - x, 36f));
+            if (!ReferenceEquals(CQFEditorContext.FixedPawnHeader, this))
+                this.DrawMapGroup(ref y, x);
             DrawSection(ref y, x, "CQF_PawnData_GenerationSettings");
             this.DrawKind(x, ref y);
             Rect faction = DrawField(ref y, x, "PawnDataFaction".Translate());
@@ -94,11 +96,6 @@ namespace QuestEditor_Library
                         CQFEditorTools.DrawFloatMenu(new List<Rot4> { Rot4.East, Rot4.West, Rot4.North, Rot4.South }, value => this.rotation = value, value => value.ToStringHuman());
                 }
 
-                Rect lord = DrawField(ref y, x, "LordNameWithTarget".Translate());
-                this.lordDataName = Widgets.TextField(new Rect(lord.x, lord.y, lord.width - 34f, lord.height), this.lordDataName ?? string.Empty);
-                if (CQFUIStyle.ButtonImage(new Rect(lord.xMax - 28f, lord.y + 2f, 28f, 28f), TexButton.ReorderDown, tooltip: "Select".Translate()) && Find.CurrentMap != null)
-                    CQFEditorTools.DrawFloatMenu(Find.CurrentMap.GetComponent<MapComponent_CustomMapData>().Lords, value => this.lordDataName = value.data.name, value => value.data.name);
-                TooltipHandler.TipRegion(new Rect(lord.x, lord.y, lord.width - 34f, lord.height), "CustomLordNameTip".Translate());
             }
 
             Rect dialog = DrawField(ref y, x, "DialogTree".Translate(string.Empty));
@@ -118,6 +115,41 @@ namespace QuestEditor_Library
             return this.kind != null && this.count.max >= 1;
         }
 
+        public void DrawMapGroup(ref float y, float x)
+        {
+            Rect field = DrawField(ref y, x, "CQF_Spawn_JoinGroup".Translate());
+            TooltipHandler.TipRegion(field, "CQF_Spawn_JoinGroup_Tip".Translate());
+            string selected = this.lordDataName.NullOrEmpty() ? "CQF_Spawn_NoGroup".Translate().ToString() : this.lordDataName;
+            if (!CQFUIStyle.ButtonText(field, selected, overrideTextAnchor: TextAnchor.MiddleLeft)) return;
+            Map map = CQFEditorContext.Map;
+            var linked = map?.GetComponent<MapComponent_CustomMapData>()?.Lords
+                .Where(group => group.data?.groupTemplate != null && !group.data.name.NullOrEmpty())
+                .OrderBy(group => group.data.name).ToList() ?? new List<LordWithName>();
+            var options = new List<FloatMenuOption>
+            {
+                new FloatMenuOption("CQF_Spawn_NoGroup".Translate(), () => this.lordDataName = string.Empty)
+            };
+            if (linked.Count == 0)
+                options.Add(new FloatMenuOption("CQF_Spawn_NoMapGroups".Translate(), null));
+            else
+                options.AddRange(linked.Select(group =>
+                {
+                    string name = group.data.name;
+                    string label = "CQF_Spawn_MapGroupOption".Translate(name, group.data.groupTemplate.DisplayName);
+                    return new FloatMenuOption(label, () => this.lordDataName = name);
+                }));
+            Find.WindowStack.Add(new FloatMenu(options));
+        }
+
+        protected bool TryResolveMapGroup(Map map, ref Lord lord)
+        {
+            if (lord != null || this.lordDataName.NullOrEmpty()) return true;
+            if (map != null && MapComponent_CustomMapData.GetComp(map)?.TryGetLord(this.lordDataName, out lord) == true && lord != null)
+                return true;
+            Log.Error("[CQF] Missing destination group '" + this.lordDataName + "' for spawn data: " + this.dataName);
+            return false;
+        }
+
         protected internal void DrawCanSaveWarning(ref float y, float x, Rect inRect)
         {
             if (this.CanSaveToMap())
@@ -131,13 +163,15 @@ namespace QuestEditor_Library
                 return;
             using CQFUIScope scope = new CQFUIScope();
             float right = CQFUIScope.ContentWidth - 12f;
-            float renameWidth = Mathf.Min(100f, (right - x) * 0.25f);
-            Rect title = new Rect(x + 12f, y, Mathf.Max(40f, right - x - renameWidth - 96f), 32f);
+            Rect title = new Rect(x + 12f, y, Mathf.Max(40f, right - x - 128f), 32f);
             Text.Font = GameFont.Medium;
-            Widgets.Label(title, (this.dataName ?? string.Empty).Truncate(title.width).Colorize(CQFUIStyle.Accent));
+            string fullName = this.dataName ?? string.Empty;
+            string visible = fullName.Truncate(title.width);
+            Widgets.Label(title, visible.Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
-            TooltipHandler.TipRegion(title, "PawnDataNameTip".Translate());
-            if (CQFUIStyle.ButtonText(new Rect(right - renameWidth - 76f, y, renameWidth, 32f), "Rename".Translate()))
+            string tip = "PawnDataNameTip".Translate();
+            TooltipHandler.TipRegion(title, visible == fullName ? tip : fullName + "\n" + tip);
+            if (CQFUIStyle.ButtonImage(new Rect(right - 108f, y + 2f, 28f, 28f), TexButton.Rename, tooltip: "Rename".Translate()))
                 Find.WindowStack.Add(new Dialog_RenameForQE(name => this.dataName = name));
             if (CQFUIStyle.ButtonImage(new Rect(right - 68f, y + 2f, 28f, 28f), TexButton.Copy, tooltip: "Copy".Translate()))
                 CQFEditorTools.data = this.Copy();
@@ -194,11 +228,9 @@ namespace QuestEditor_Library
             if (this.enableLord)
             {
                 result.Add(new XElement("enableLord", this.enableLord));
-                if (!this.lordDataName.NullOrEmpty())
-                {
-                    result.Add(new XElement("lordDataName", this.lordDataName));
-                }
             }
+            if (!this.lordDataName.NullOrEmpty())
+                result.Add(new XElement("lordDataName", this.lordDataName));
 
             if (!this.roundTrip)
             {
@@ -294,8 +326,10 @@ namespace QuestEditor_Library
                 {
                     return null;
                 }
+                if (!this.TryResolveMapGroup(map, ref lord))
+                    return new Dictionary<string, TargetInfo>();
 
-                Faction faction = GameTools.GetFaction(this.faction, map);
+                Faction faction = lord?.LordJob is MultLevelLordJobBase ? lord.faction : GameTools.GetFaction(this.faction, map);
                 Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
                 if (!position.Fogged(map) && this.spawnMessage != null && !this.spawnMessage.NullOrEmpty())
                 {

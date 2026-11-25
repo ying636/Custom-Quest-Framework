@@ -103,17 +103,21 @@ namespace QuestEditor_Library
                     });
                     def.lordDatas.ForEach(l =>
                     {
-                        l.Data.lordData = l;
-                        LordJob job = l.Data.CreateJob(map, quest);
-                        Faction lordFaction = (job as MultLevelLordJobBase)?.metaLord.faction ?? GameTools.GetFaction(l.faction, map);
+                        if (l.groupTemplate != null && (l.name.NullOrEmpty() || lordsWithName.ContainsKey(l.name)))
+                            throw new InvalidOperationException("[CQF] Invalid or duplicate linked group name: " + l.name);
+                        LordData config = l.groupTemplate == null ? l : l.ResolveGroupTemplate();
+                        LordJob job = config.Data.CreateJobForGroup(map, quest, center, out Faction lordFaction);
                         Lord lord = LordMaker.MakeNewLord(lordFaction, job, map);
-                        map.GetComponent<MapComponent_CustomMapData>().Lords.Add(new LordWithName() { name = l.name, lord = lord });
-                        GameComponent_Editor.Instance.GetQuestData(quest)?.Lords.SetOrAdd(l.name, lord);
+                        map.GetComponent<MapComponent_CustomMapData>().Lords.Add(new LordWithName() { name = l.name, lord = lord, data = l.Copy() });
+                        var questLords = GameComponent_Editor.Instance.GetQuestData(quest)?.Lords;
+                        if (l.groupTemplate == null || questLords?.ContainsKey(l.name) == false)
+                            questLords?.SetOrAdd(l.name, lord);
                         if (!lordsWithName.ContainsKey(l.name))
                         {
                             lordsWithName.Add(l.name, lord);
                         }
-                        lordsWithData.Add(lord, l);
+                        lordsWithData.Add(lord, config);
+                        lordsWithTarget.Add(lord, new Dictionary<string, TargetInfo>());
                     });
                     result.AddRange(GenStep_CustomMap.SpawnZone(map, def, quest, parms, center, load));
                     result.AddRange(GenStep_CustomMap.SpawnPawns(map, def, center, questId, quest));
@@ -162,6 +166,7 @@ namespace QuestEditor_Library
                         generatedLimit_Key.Clear();
                         lordsWithName.Clear();
                         lordsWithData.Clear();
+                        lordsWithTarget.Clear();
 
                     }
                     foreach (var item in requests)
@@ -314,7 +319,7 @@ namespace QuestEditor_Library
                     {
                         lord = lordsWithName[pawnData.lordDataName];
                     }
-                    else if (pawnData != null)
+                    else if (pawnData != null && pawnData.lordDataName.NullOrEmpty() && pawnData is not PawnSpawnData_Group)
                     {
                         if (faction == null && pawnData.faction != null && GameTools.GetFaction(pawnData.faction, map) != null)
                         {

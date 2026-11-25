@@ -24,8 +24,8 @@
   <SpawnTypeTip_BuildingTick>生成时会自动选择生成位置上的建筑物作为“生成者”，当生成者存在时每隔一段时间生成实体，被破坏后无效</SpawnTypeTip_BuildingTick>
   <TimeToSpawn>生成一次的间隔Tick：</TimeToSpawn>
   <BuildingDestroyed>建筑物被破坏时</BuildingDestroyed>
-  <EnableLord>启用集群AI：</EnableLord>
-  <LordAndFactionTip>启用集群AI必须要有一个派系</LordAndFactionTip>
+  <EnableLord>启用小队AI：</EnableLord>
+  <LordAndFactionTip>启用小队AI必须要有一个派系</LordAndFactionTip>
   <PawnDataNameTip>用于输出信号。\n  每个实体执行被杀死或受伤时等等事件时就会输出[标签].[数据名称].[编号].[行为]的信号（实际上最前面会加相关任务的编号以识别是哪个任务需要接受的信号，但你本身不用填写）。\n  其中编号是在生成这个数据的所有实体时，根据生成顺序赋予的，从0开始，如一共生成十个实体，第五个生成的编号为4\n  如一个生成地图时生成的，数据名称为骸鸾的，第五个生成的实体被杀死时会发出[骸鸾.4.Kiied]的信号，\n  由战利品箱(LootBox)生成时，[标签]为战利品箱的名字，若不是则为无，同时不会具有标签后的“.”。\n  以下是行为与信号对应列表：\n  改变派系：ChangedFaction\n  改变派系且新派系不是玩家派系：ChangedFactionToNonPlayer\n  改变派系且新派系是玩家派系：ChangedFactionToPlayer\n  实体生成时：Spawned\n  实体被摧毁时：Despawned\n  实体被杀死时：Killed\n  受到来自玩家派系的伤害：TookDamageFromPlayer\n  离开地图：LeftMap\n  \n  在生成时，会将生成的实体记录到“任务数据库”中，其“密匙”则是其数据名字</PawnDataNameTip>
   <PawnRotation>面朝方向：{0}</PawnRotation>
   <PawnHediffs>状态：</PawnHediffs>
@@ -42,9 +42,9 @@
   <CQF_PawnGroupMaker_Tip>根据派系定义的生成组(PawnGroupMaker)来生成实体</CQF_PawnGroupMaker_Tip>
   <SpawmPoint>生成点数：</SpawmPoint>
 
-  <PawnSpawnData_Group>集群生成数据</PawnSpawnData_Group>
+  <PawnSpawnData_Group>小队生成数据</PawnSpawnData_Group>
   <PawnSpawnData_Group_Tip>实体组生成数据。会把生成的实体记录到指定任务组，供后续行为或条件使用。</PawnSpawnData_Group_Tip>
-  <CQF_PawnGroupDef>集群数据：{0}</CQF_PawnGroupDef>
+  <CQF_PawnGroupDef>小队数据：{0}</CQF_PawnGroupDef>
 
   <PawnSpawnData_Character>角色生成数据</PawnSpawnData_Character>
   <CharacterSpawnDef>角色定义：{0}</CharacterSpawnDef>
@@ -65,7 +65,7 @@
   <MainPawnGenerateConditions>生成条件</MainPawnGenerateConditions>
   <MainPawnRegenerateConditions>重新生成条件</MainPawnRegenerateConditions>
   <CQF_PawnData_GenerationSettings>生成设置</CQF_PawnData_GenerationSettings>
-  <CQF_PawnData_LordAndDialog>集群与对话</CQF_PawnData_LordAndDialog>
+  <CQF_PawnData_LordAndDialog>小队与对话</CQF_PawnData_LordAndDialog>
   <CQF_PawnData_Inventory>库存</CQF_PawnData_Inventory>
   <CQF_PawnData_MissingKind>请选择实体类型。</CQF_PawnData_MissingKind>
   <CQF_PawnData_InvalidCount>数量上限必须至少为 1。</CQF_PawnData_InvalidCount>

@@ -6,7 +6,7 @@
   <CQFAction_HibernateMap_Tip>Hibernate the target's map, preserving the map and its things while stopping map and thing updates. Activation resumes the same map without regenerating it.</CQFAction_HibernateMap_Tip>
   <CQFAction_ActivateMap>Action: activate map</CQFAction_ActivateMap>
   <CQFAction_ActivateMap_Tip>Activate the target's hibernating map, returning the original map to the active map list and resuming updates without regenerating it.</CQFAction_ActivateMap_Tip>
-  <CQFAction_MetaLord>Action: multi-level organization</CQFAction_MetaLord>
+  <CQFAction_MetaLord>Action: organization</CQFAction_MetaLord>
   <CQFActions>Dialog actions</CQFActions>
   <CQF_RunActions>Run actions</CQF_RunActions>
   <AddCQFAction>Add dialog action</AddCQFAction>

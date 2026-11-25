@@ -45,7 +45,10 @@ namespace QuestEditor_Library
 
         public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null, bool setLord = true)
         {
-            if (GameTools.GetFaction(this.faction, map)is Faction f)
+            if (!this.TryResolveMapGroup(map, ref lord))
+                return new Dictionary<string, TargetInfo>();
+            Faction faction = lord?.LordJob is MultLevelLordJobBase ? lord.faction : GameTools.GetFaction(this.faction, map);
+            if (faction is Faction f)
             {
                 List<PawnGroupMaker> makers = f.def.pawnGroupMakers.FindAll(g => this.kindDef == null ? true : g.kindDef == this.kindDef);
                 if (makers.Any() && makers.RandomElementByWeight(m => m.commonality)is PawnGroupMaker maker)

@@ -124,9 +124,9 @@
   <RequiredRotation>需求海洋方向：{0}</RequiredRotation>
 
   <!-- EN: Node:Generate Group -->
-  <QuestNode_GenerateGroup>节点：生成集群</QuestNode_GenerateGroup>
+  <QuestNode_GenerateGroup>节点：生成小队</QuestNode_GenerateGroup>
   <!-- EN: Group def: -->
-  <groupDef>集群定义：</groupDef>
+  <groupDef>小队定义：</groupDef>
 
   <!-- EN: Quest:Remove Data When End -->
   <QuestNode_RemoveDataWhenEnd>节点：移除数据当结束任务的时候</QuestNode_RemoveDataWhenEnd>
@@ -135,4 +135,7 @@
   <CQF_QuestNodeCategory_CQF>CQF</CQF_QuestNodeCategory_CQF>
   <CQF_QuestNodeCategory_Vanilla>原版</CQF_QuestNodeCategory_Vanilla>
 
+  <QuestNode_BindQuestBook>节点：绑定任务书</QuestNode_BindQuestBook>
+  <QuestNode_GenerateCustomWorldObject>节点：生成自定义世界对象</QuestNode_GenerateCustomWorldObject>
+  <QuestNode_Root_MainMap>节点：生成主要地图</QuestNode_Root_MainMap>
 </LanguageData>

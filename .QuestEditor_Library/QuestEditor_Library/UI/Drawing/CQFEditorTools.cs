@@ -1242,20 +1242,22 @@ namespace QuestEditor_Library
             return def.defName == "QF_MiracleWall" || customThingTypes.Any(type => def.thingClass == type || def.thingClass.IsSubclassOf(type));
         }
 
-        private static Rect DrawFieldLabel(float y, string label, float x, float width, Action? selectAction = null)
+        internal static Rect DrawFieldLabel(float y, string label, float x, float width, Action? selectAction = null)
         {
             float available = Mathf.Max(80f, CQFUIScope.ContentWidth - x - 12f);
             float labelWidth = label.NullOrEmpty() ? 0f : Mathf.Min(160f, available * 0.45f);
             Rect labelRect = new Rect(x, y, labelWidth, 25f);
             Text.Anchor = TextAnchor.MiddleLeft;
             Text.WordWrap = false;
-            if (selectAction != null)
+            if (labelWidth > 0f)
             {
-                if (CQFUIStyle.ButtonText(labelRect, label, false, overrideTextAnchor: TextAnchor.MiddleLeft))
+                string visible = label.Truncate(labelWidth);
+                Widgets.Label(labelRect, visible);
+                if (visible != label && Mouse.IsOver(labelRect))
+                    TooltipHandler.TipRegion(labelRect, label);
+                if (selectAction != null && GUI.enabled && Widgets.ButtonInvisible(labelRect, true))
                     selectAction();
             }
-            else if (labelWidth > 0f)
-                Widgets.Label(labelRect, label.Truncate(labelWidth));
             float gap = labelWidth > 0f ? 8f : 0f;
             return new Rect(x + labelWidth + gap, y, Mathf.Min(Mathf.Max(20f, width), Mathf.Max(20f, available - labelWidth - gap)), 25f);
         }

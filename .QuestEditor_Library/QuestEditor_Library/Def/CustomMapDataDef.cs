@@ -312,6 +312,8 @@ namespace QuestEditor_Library
             this.roofRects.ToList().ForEach(t => result.roofRects.Add(t.Key, t.Value));
             result.pawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
             this.pawns.ToList().ForEach(t => result.pawns.Add(t.Key, t.Value));
+            if (this.lordDatas != null)
+                result.lordDatas.AddRange(this.lordDatas.Select(lord => lord.Copy()));
             result.specialSpawnPawns = new Dictionary<IntVec3, List<PawnSpawnData>>();
             this.specialSpawnPawns.ToList().ForEach(t => result.specialSpawnPawns.Add(t.Key, t.Value));
             result.enterSpots = this.enterSpots.ListFullCopy();

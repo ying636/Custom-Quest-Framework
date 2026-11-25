@@ -700,9 +700,13 @@ namespace QuestEditor_Library
                 textXml.Save(path,SaveOptions.DisableFormatting);
                 Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
             }
-            if (Page_QuestEditor.DrawToolButton(NextToolRect(), groupEditorIcon, "GroupEditor"))
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), groupEditorIcon, "CQF_GroupTemplate_Title"))
             {
                 Find.WindowStack.Add(new QuestEditor_GroupEditor());
+            }
+            if (Page_QuestEditor.DrawToolButton(NextToolRect(), Designator_CustomLord.icon_Lord, "CQF_Organization_Title"))
+            {
+                Find.WindowStack.Add(new Window_CQFOrganization(Current.Game?.CurrentMap));
             }
             if (CQFAIButton.Draw(NextToolRect())) CQFAIBridge.Open(this.AIContext);
         }

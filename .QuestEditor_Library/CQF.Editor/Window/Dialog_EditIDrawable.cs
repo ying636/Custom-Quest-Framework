@@ -51,6 +51,8 @@ namespace QuestEditor_Library
             if (this.iDrawable is PawnSpawnData pawnData)
             {
                 pawnData.DrawName(ref top, 0f, new Rect(0f, top, inRect.width, 36f));
+                using (new CQFEditorContext(this.owner))
+                    pawnData.DrawMapGroup(ref top, 0f);
                 float entityButtonWidth = (inRect.width - 8f) / 2f;
                 if (CQFUIStyle.ButtonText(new Rect(0f, top, entityButtonWidth, 30f), "CQF_EntityBook_Collect".Translate()))
                     CQFEntityBookBridge.Collect(pawnData);

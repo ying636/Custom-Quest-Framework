@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_GroupBook>小队本</CQF_GroupBook>
+  <CQF_GroupBook_Collect>收录到小队本</CQF_GroupBook_Collect>
+  <CQF_GroupBook_FromBook>从小队本添加</CQF_GroupBook_FromBook>
+  <CQF_MapGroups_Title>地图小队</CQF_MapGroups_Title>
+  <CQF_MapGroups_BackToList>返回小队列表</CQF_MapGroups_BackToList>
+  <CQF_MapGroups_New>新建小队</CQF_MapGroups_New>
+  <CQF_MapGroups_Local>本图独立配置</CQF_MapGroups_Local>
+  <CQF_MapGroups_Template>模板 · {0}</CQF_MapGroups_Template>
+  <CQF_MapGroups_Empty>新建一个地图小队，或从小队本添加模板。</CQF_MapGroups_Empty>
+  <CQF_MapGroups_Select>选择要编辑的小队。</CQF_MapGroups_Select>
+  <CQF_MapGroups_NoMatches>没有符合搜索条件的小队。</CQF_MapGroups_NoMatches>
+  <CQF_GroupTemplate_Title>小队模板编辑器</CQF_GroupTemplate_Title>
+  <CQF_GroupTemplate_Roster>成员生成方案</CQF_GroupTemplate_Roster>
+  <CQF_GroupTemplate_New>新建模板</CQF_GroupTemplate_New>
+  <CQF_GroupTemplate_NewConfirm>放弃当前草稿并新建小队模板？</CQF_GroupTemplate_NewConfirm>
+  <CQF_Spawn_Title>实体生成器</CQF_Spawn_Title>
+  <CQF_Spawn_Empty>添加实体生成数据，或从小队本添加整队模板。</CQF_Spawn_Empty>
+  <CQF_Spawn_JoinGroup>生成时加入小队</CQF_Spawn_JoinGroup>
+  <CQF_Spawn_JoinGroup_Tip>选择本图从小队本添加的一个小队。</CQF_Spawn_JoinGroup_Tip>
+  <CQF_Spawn_NoGroup>未指定小队</CQF_Spawn_NoGroup>
+  <CQF_Spawn_NoMapGroups>本图还没有从小队本添加的小队。</CQF_Spawn_NoMapGroups>
+  <CQF_Spawn_MapGroupOption>{0} · {1}</CQF_Spawn_MapGroupOption>
+  <CQF_Spawn_JoinSummary>加入 {0}</CQF_Spawn_JoinSummary>
+</LanguageData>

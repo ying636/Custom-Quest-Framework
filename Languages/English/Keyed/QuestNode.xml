@@ -77,4 +77,7 @@
   <CQF_QuestNodeCategory_CQF>CQF</CQF_QuestNodeCategory_CQF>
   <CQF_QuestNodeCategory_Vanilla>Vanilla</CQF_QuestNodeCategory_Vanilla>
 
+  <QuestNode_BindQuestBook>Node: Bind Quest Book</QuestNode_BindQuestBook>
+  <QuestNode_GenerateCustomWorldObject>Node: Generate Custom World Object</QuestNode_GenerateCustomWorldObject>
+  <QuestNode_Root_MainMap>Node: Generate Main Map</QuestNode_Root_MainMap>
 </LanguageData>

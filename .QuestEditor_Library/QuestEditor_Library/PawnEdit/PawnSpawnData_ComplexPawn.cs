@@ -22,10 +22,8 @@ namespace QuestEditor_Library
             }
 
             y += 30f;
-            Rect lordRect = new Rect(20f + x, y, 150f, 25f);
-            CQFEditorTools.DrawSelectableText(y, "LordNameWithTarget".Translate(), ref this.lordDataName, this.OpenLordSelector, x + 20f, 150f);
-            TooltipHandler.TipRegion(lordRect, "CustomLordNameTip".Translate());
-            y += 30f;
+            if (!ReferenceEquals(CQFEditorContext.FixedPawnHeader, this))
+                this.DrawMapGroup(ref y, x);
             this.DrawCanSaveWarning(ref y, x, inRect);
         }
 
@@ -42,10 +40,8 @@ namespace QuestEditor_Library
             }
 
             Dictionary<string, TargetInfo> result = new Dictionary<string, TargetInfo>();
-            if (setLord && lord == null && !this.lordDataName.NullOrEmpty())
-            {
-                MapComponent_CustomMapData.GetComp(map)?.TryGetLord(this.lordDataName, out lord);
-            }
+            if (!this.TryResolveMapGroup(map, ref lord))
+                return result;
 
             int count = this.count.RandomInRange;
             List<Pawn> pawns = new List<Pawn>();
@@ -65,6 +61,8 @@ namespace QuestEditor_Library
 
                 pawns.Add(pawn);
                 this.ActionAfterGeneration(pawn, quest, i, questTag);
+                if (lord?.LordJob is MultLevelLordJobBase && pawn.Faction != lord.faction)
+                    pawn.SetFaction(lord.faction);
                 lord?.AddPawn(pawn);
                 if (lord?.LordJob is LordJob_ComplexCustom complexJob)
                     complexJob.ApplyDefaultDutyMap(pawn, quest);
@@ -96,11 +94,6 @@ namespace QuestEditor_Library
                 result.Add(new XElement("pawnDef", this.pawnDef.defName));
             }
 
-            if (!this.lordDataName.NullOrEmpty())
-            {
-                result.Add(new XElement("lordDataName", this.lordDataName));
-            }
-
             return result;
         }
 
@@ -113,17 +106,6 @@ namespace QuestEditor_Library
         internal string PawnDisplayName(ComplexPawnDef def)
         {
             return def?.label.NullOrEmpty() == false ? def.label : def?.defName;
-        }
-
-        internal void OpenLordSelector()
-        {
-            if (Find.CurrentMap == null)
-            {
-                return;
-            }
-
-            MapComponent_CustomMapData comp = Find.CurrentMap.GetComponent<MapComponent_CustomMapData>();
-            CQFEditorTools.DrawFloatMenu(comp.Lords, lord => this.lordDataName = lord.name, lord => lord.name);
         }
 
         public ComplexPawnDef pawnDef;

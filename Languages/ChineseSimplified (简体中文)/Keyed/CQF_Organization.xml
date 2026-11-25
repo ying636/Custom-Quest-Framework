@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_Organization_Title>组织</CQF_Organization_Title>
+  <CQF_Organization_OverviewTab>概览</CQF_Organization_OverviewTab>
+  <CQF_Organization_RulesTab>规则</CQF_Organization_RulesTab>
+  <CQF_Organization_Tip>编排小队协作，查看本地图及其他楼层的组织成员和调动。</CQF_Organization_Tip>
+  <CQF_Organization_Select>选择组织</CQF_Organization_Select>
+  <CQF_Organization_NoRuntime>本图及其楼层尚无运行中的组织。</CQF_Organization_NoRuntime>
+  <CQF_Organization_RulesField>规则 · {0}</CQF_Organization_RulesField>
+  <CQF_Organization_Roster>{0} · {1} 名成员</CQF_Organization_Roster>
+  <CQF_Organization_EmptySquad>这支小队暂无成员。</CQF_Organization_EmptySquad>
+  <CQF_Organization_Moves>进行中的调动（{0}）</CQF_Organization_Moves>
+  <CQF_Organization_MoveRow>{0} → {1}</CQF_Organization_MoveRow>
+  <CQF_Organization_NewRules>新建规则</CQF_Organization_NewRules>
+  <CQF_Organization_LoadRules>打开规则</CQF_Organization_LoadRules>
+  <CQF_Organization_RulesHint>新建或打开规则。在「地图小队」中为组织小队选择规则，生成地图后即可使用。</CQF_Organization_RulesHint>
+  <CQF_Organization_TickInterval>定时检查间隔</CQF_Organization_TickInterval>
+  <CQF_Organization_AddRule>添加事件</CQF_Organization_AddRule>
+  <CQF_Organization_DeleteRule>删除事件 {0}？</CQF_Organization_DeleteRule>
+  <CQF_Organization_ApplyRuntime>保存并应用到选中的组织</CQF_Organization_ApplyRuntime>
+  <CQF_Organization_ReplaceDraft>打开另一套规则并放弃当前草稿？</CQF_Organization_ReplaceDraft>
+  <CQF_Organization_Saved>已保存组织规则 {0}。</CQF_Organization_Saved>
+  <CQF_Organization_Applied>已保存并应用组织规则 {0}。</CQF_Organization_Applied>
+  <CQF_Organization_InvalidDefName>请输入带模组前缀的标识，例如 CQF_StationRules。</CQF_Organization_InvalidDefName>
+  <CQF_Organization_ModOwned>规则 {0} 属于已加载的模组。请为草稿指定新标识后保存副本。</CQF_Organization_ModOwned>
+  <CQF_Organization_UnsupportedTrigger>这套规则含有编辑器无法读取的触发条件。</CQF_Organization_UnsupportedTrigger>
+  <CQF_Organization_PickSquad>选择运行中的小队</CQF_Organization_PickSquad>
+  <CQF_Organization_SquadOption>{0} · {1}</CQF_Organization_SquadOption>
+  <CQF_Organization_NoSquads>选中的组织暂无小队。</CQF_Organization_NoSquads>
+  <CQF_Organization_SquadTag>小队标签</CQF_Organization_SquadTag>
+  <CQF_Organization_MapScope>地图查找方式</CQF_Organization_MapScope>
+  <CQF_Organization_MapKey>地图标识（可留空）</CQF_Organization_MapKey>
+  <CQF_Organization_Lookup_RegionId>区域 ID</CQF_Organization_Lookup_RegionId>
+  <CQF_Organization_Lookup_MapKey>复合地图键</CQF_Organization_Lookup_MapKey>
+  <CQF_Organization_Lookup_MapTemplate>地图模板</CQF_Organization_Lookup_MapTemplate>
+  <CQF_Organization_RuleTitle>组织事件</CQF_Organization_RuleTitle>
+  <CQF_Organization_MoreActions>其他行为</CQF_Organization_MoreActions>
+  <CQF_Organization_EventKey>事件标识</CQF_Organization_EventKey>
+  <CQF_Organization_FilterSender>按发出事件的小队筛选</CQF_Organization_FilterSender>
+  <CQF_Organization_Sender>发出事件的小队</CQF_Organization_Sender>
+  <CQF_Organization_Once>只执行一次</CQF_Organization_Once>
+  <CQF_Organization_Cooldown>冷却（Tick）</CQF_Organization_Cooldown>
+  <CQF_Organization_Minimum>最少人数（−1 不限）</CQF_Organization_Minimum>
+  <CQF_Organization_Maximum>最多人数（−1 不限）</CQF_Organization_Maximum>
+  <CQF_Organization_Orders>小队命令</CQF_Organization_Orders>
+  <CQF_Organization_AddOrder>添加命令</CQF_Organization_AddOrder>
+  <CQF_Organization_OrderDuty>执行职责图</CQF_Organization_OrderDuty>
+  <CQF_Organization_OrderMove>调动到目标小队</CQF_Organization_OrderMove>
+  <CQF_Organization_OrderRow>{0} · {1}</CQF_Organization_OrderRow>
+  <CQF_Organization_OrderTitle>小队命令</CQF_Organization_OrderTitle>
+  <CQF_Organization_Recipient>接令小队</CQF_Organization_Recipient>
+  <CQF_Organization_Destination>目的地小队</CQF_Organization_Destination>
+  <CQF_Organization_DefaultNode>使用起始节点</CQF_Organization_DefaultNode>
+  <CQF_Organization_Trigger_Tick>定时检查</CQF_Organization_Trigger_Tick>
+  <CQF_Organization_Trigger_PawnJoined>成员加入组织</CQF_Organization_Trigger_PawnJoined>
+  <CQF_Organization_Trigger_PawnLeft>成员离开组织</CQF_Organization_Trigger_PawnLeft>
+  <CQF_Organization_Trigger_PawnKilled>成员死亡</CQF_Organization_Trigger_PawnKilled>
+  <CQF_Organization_Trigger_PawnArrived>成员抵达楼层</CQF_Organization_Trigger_PawnArrived>
+  <CQF_Organization_Trigger_PawnAssigned>成员分配到小队</CQF_Organization_Trigger_PawnAssigned>
+  <CQF_Organization_Trigger_MoveCompleted>成员调动完成</CQF_Organization_Trigger_MoveCompleted>
+  <CQF_Organization_Trigger_MoveCancelled>成员调动取消</CQF_Organization_Trigger_MoveCancelled>
+  <CQF_Organization_Trigger_MoveFailed>成员调动失败</CQF_Organization_Trigger_MoveFailed>
+  <CQF_Organization_Trigger_GroupAdded>小队加入组织</CQF_Organization_Trigger_GroupAdded>
+  <CQF_Organization_Trigger_GroupRemoved>小队移出组织</CQF_Organization_Trigger_GroupRemoved>
+  <CQF_Organization_Trigger_MapRemoved>地图移除</CQF_Organization_Trigger_MapRemoved>
+  <CQF_Organization_Trigger_External>收到信号</CQF_Organization_Trigger_External>
+</LanguageData>

@@ -11,6 +11,7 @@ namespace QuestEditor_Library
             int count = lord.Members.Count;
             if (this.minimumMembers >= 0 && count < this.minimumMembers) return false;
             if (this.maximumMembers >= 0 && count > this.maximumMembers) return false;
+            if (this.sourceSquad != null && !this.sourceSquad.Matches(signal.group)) return false;
             if (!this.groupTag.NullOrEmpty())
             {
                 MultLevelLordJobBase job = signal.group?.LordJob as MultLevelLordJobBase;
@@ -22,6 +23,7 @@ namespace QuestEditor_Library
         public LordEventSignalType type;
         [NoTranslate] public string signalTag;
         [NoTranslate] public string groupTag;
+        public MetaLordSquadSelector sourceSquad;
         public int minimumMembers = -1;
         public int maximumMembers = -1;
     }

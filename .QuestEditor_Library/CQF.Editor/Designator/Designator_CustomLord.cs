@@ -12,7 +12,7 @@ namespace QuestEditor_Library
     {
         public Designator_CustomLord()
         {
-            this.defaultLabel = "DesignatorLord".Translate();
+            this.defaultLabel = "CQF_MapGroups_Title".Translate();
             this.icon = Designator_CustomLord.icon_Lord;
             this.defaultDesc = "DesignatorLordDesc".Translate();
             this.tutorTag = "Lord";

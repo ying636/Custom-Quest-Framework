@@ -25,7 +25,8 @@ namespace QuestEditor_Library
         {
             Dictionary<string, TargetInfo> selected = GameTools.GetTargets(targets, quest, this.targetsText);
             TargetInfo mapTarget = GameTools.GetTarget(targets, quest, this.mapKey);
-            if (!this.mapKey.NullOrEmpty() && mapTarget.Map == null)
+            bool defaultSignalMap = this.operation == MetaLordOperation.Signal && this.mapKey == "TargetMap";
+            if (!this.mapKey.NullOrEmpty() && mapTarget.Map == null && !defaultSignalMap)
                 throw new InvalidOperationException("[CQF] MetaLord action mapKey has no map target: " + this.mapKey);
             if (mapTarget.Map != null)
                 selected["CQF_MetaLordMap"] = mapTarget;
@@ -38,8 +39,10 @@ namespace QuestEditor_Library
             if (map == null)
                 throw new InvalidOperationException("[CQF] MetaLord action has no map target: " + this.mapKey);
             MetaLordManager manager = map.GetComponent<MapComponent_CQFLord>().Manager;
-            MetaLord owner = manager.Get(this.organizationName, map);
             Pawn[] pawns = targets.Values.Select(t => t.Thing).OfType<Pawn>().Distinct().ToArray();
+            MetaLord owner = this.operation == MetaLordOperation.Signal && this.organizationName.NullOrEmpty()
+                ? manager.GetForPawn(pawns.FirstOrDefault())
+                : manager.Get(this.organizationName, map);
             if (this.operation == MetaLordOperation.CreateGroup)
             {
                 Faction resolved = pawns.FirstOrDefault()?.Faction ?? GameTools.GetFaction(this.faction, map);
@@ -77,7 +80,12 @@ namespace QuestEditor_Library
                 case MetaLordOperation.Signal:
                     if (this.signalTag.NullOrEmpty())
                         throw new InvalidOperationException("[CQF] MetaLord signal action requires signalTag.");
-                    owner.Trigger(new LordEventSignal(LordEventSignalType.External) { tag = this.signalTag, pawn = pawns.FirstOrDefault(), targetMap = map });
+                    Pawn sender = pawns.FirstOrDefault();
+                    owner.Trigger(new LordEventSignal(LordEventSignalType.External)
+                    {
+                        tag = this.signalTag, pawn = sender, targetMap = map, sourceMap = sender?.Map,
+                        group = manager.GetForPawn(sender) == owner ? sender.GetLord() : null
+                    });
                     break;
                 case MetaLordOperation.Disband:
                     manager.Remove(owner);
@@ -97,12 +105,17 @@ namespace QuestEditor_Library
             if (CQFUIStyle.ButtonText(new Rect(x, y, inRect.width - x - 12f, 30f), ("CQF_MetaLordOperation_" + this.operation).Translate()))
                 CQFEditorTools.DrawFloatMenu(Enum.GetValues(typeof(MetaLordOperation)).Cast<MetaLordOperation>().ToList(), value => this.operation = value, value => ("CQF_MetaLordOperation_" + value).Translate());
             y += 36f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordName".Translate(), ref this.organizationName, x, 180f);
+            string organizationLabel = (this.operation == MetaLordOperation.Signal ? "CQF_MetaLordReportOwner" : "CQF_MetaLordName").Translate();
+            CQFEditorTools.DrawLabelAndText_Line(y, organizationLabel, ref this.organizationName, x, 180f);
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordMapKey".Translate(), ref this.mapKey, x, 180f);
+            string mapLabel = (this.operation == MetaLordOperation.Signal ? "CQF_MetaLordReportMap" : "CQF_MetaLordMapKey").Translate();
+            CQFEditorTools.DrawLabelAndText_Line(y, mapLabel, ref this.mapKey, x, 180f);
             y += 30f;
-            CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordGroup".Translate(), ref this.groupName, x, 180f);
-            y += 30f;
+            if (this.operation is MetaLordOperation.CreateGroup or MetaLordOperation.Join or MetaLordOperation.Move or MetaLordOperation.RemoveGroup)
+            {
+                CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordGroup".Translate(), ref this.groupName, x, 180f);
+                y += 30f;
+            }
             if (this.operation == MetaLordOperation.Move)
             {
                 CQFEditorTools.DrawLabelAndText_Line(y, "CQF_MetaLordTimeout".Translate(), ref this.timeoutTicks, ref this.timeoutBuffer, x, 100f);

@@ -13,12 +13,21 @@ namespace QuestEditor_Library
 {
     public class QuestEditor_GroupEditor : Page, ICQFAIEditorHost
     {
-        public override string PageTitle => "GroupEditor".Translate().Colorize(CQFUIStyle.Accent);
+        public override Vector2 InitialSize => new(Mathf.Min(StandardSize.x, UI.screenWidth - 40f),
+            Mathf.Min(StandardSize.y, UI.screenHeight - 40f));
+        public override string PageTitle => "CQF_GroupTemplate_Title".Translate().Colorize(CQFUIStyle.Accent);
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(data.defName, () => data, value =>
         {
             data = (GroupDataDef)value;
             data.lord.Data.lordData = data.lord;
         }, isValid: () => Find.WindowStack.Windows.Contains(this), owner: this);
+
+        internal static void OpenDraft(GroupDataDef draft)
+        {
+            data = draft;
+            Find.WindowStack.Add(new QuestEditor_GroupEditor());
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
@@ -36,18 +45,19 @@ namespace QuestEditor_Library
             Rect viewport = left.ContractedBy(12f);
             Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(height, viewport.height));
             Widgets.BeginScrollView(viewport, ref scrollPos, content);
-            using CQFUIScope cqfContentScope1 = new CQFUIScope(content.width);
             using (new CQFUIScope(content.width))
             {
                 GroupDataDef current = QuestEditor_GroupEditor.data;
                 float y = 4f;
-                CQFEditorTools.DrawLabelAndText_Line(y, "LootBoxName".Translate(), ref current.defName, 0f, content.width - 176f);
-                y += 36f;
+                CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DefName".Translate(), ref current.defName, 0f, content.width);
+                y += 34f;
+                CQFEditorTools.DrawLabelAndText_Line(y, "Name".Translate(), ref current.label, 0f, content.width);
+                y += 34f;
                 current.lord.Draw(ref y, content, 0f);
                 if (!columns)
                 {
                     y += 12f;
-                    CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 0f, current.pawns, content, "PawnSpawnDatas".Translate(), pawn => pawn.dataName);
+                    CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 0f, current.pawns, content, "CQF_GroupTemplate_Roster".Translate(), pawn => pawn.dataName);
                 }
                 height = y + 12f;
             }
@@ -62,7 +72,7 @@ namespace QuestEditor_Library
                 using (new CQFUIScope(pawnContent.width))
                 {
                     float y = 4f;
-                    CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 0f, data.pawns, pawnContent, "PawnSpawnDatas".Translate(), pawn => pawn.dataName);
+                    CQFEditorTools.DrawPawnDataList_UseWindow_UseIcon(ref y, 0f, data.pawns, pawnContent, "CQF_GroupTemplate_Roster".Translate(), pawn => pawn.dataName);
                     pawnHeight = y + 12f;
                 }
                 Widgets.EndScrollView();
@@ -74,31 +84,15 @@ namespace QuestEditor_Library
             float y = 44f;
             float width = Mathf.Min(180f, (inRect.width - 16f) / 3f);
             float start = Mathf.Max(0f, inRect.width - width * 3f - 16f);
-            if (CQFUIStyle.ButtonText(new Rect(start + (width + 8f) * 2f, y, width, 32f), "LoadPremade".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(start + (width + 8f) * 2f, y, width, 32f), "CQF_GroupBook".Translate()))
             {
-                List<GroupDataDef> groups = new List<GroupDataDef>();
-                groups.AddRange(DefDatabase<GroupDataDef>.AllDefsListForReading);
-                groups.AddRange(CQFEditorTools.GetObject<GroupDataDef>(Path.Combine(CQFContentPaths.Quests, "Group"), "//QuestEditor_Library.GroupDataDef"));
-                CQFEditorTools.DrawFloatMenu<GroupDataDef>(groups, (x) =>
-                {
-                    QuestEditor_GroupEditor.data = x;
-                    QuestEditor_GroupEditor.data.lord.Data.lordData = QuestEditor_GroupEditor.data.lord;
-                }, (x) => x.defName);
+                CQFGroupBookCatalog.Open(group => QuestEditor_GroupEditor.data = CQFGroupBookCatalog.Copy(group));
             }
             if (CQFUIStyle.ButtonText(new Rect(start + width + 8f, y, width, 32f), "Save".Translate()))
             {
                 try
                 {
-                    string path = Path.Combine(CQFContentPaths.Quests, "Group", QuestEditor_GroupEditor.data.defName + ".xml");
-                    XElement defs = new XElement("Defs");
-                    XElement tree = QuestEditor_GroupEditor.data.SaveToXElement("QuestEditor_Library.GroupDataDef");
-                    defs.Add(tree);
-                    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-                    defs.Save(path);
-                    if (!DefDatabase<GroupDataDef>.AllDefsListForReading.Exists(d => d.defName == QuestEditor_GroupEditor.data.defName))
-                    {
-                        DefDatabase<GroupDataDef>.Add(QuestEditor_GroupEditor.data);
-                    }
+                    string path = CQFGroupBookCatalog.Save(QuestEditor_GroupEditor.data);
                     Messages.Message("SaveSucceed".Translate(path), MessageTypeDefOf.PositiveEvent);
                 }
                 catch (Exception e)
@@ -106,9 +100,9 @@ namespace QuestEditor_Library
                     Log.Error("Save error:" + e);
                 }
             }
-            if (CQFUIStyle.ButtonText(new Rect(start, y, width, 32f), "ResetBinding".Translate()))
+            if (CQFUIStyle.ButtonText(new Rect(start, y, width, 32f), "CQF_GroupTemplate_New".Translate()))
             {
-                Dialog_MessageBox dialog = new Dialog_MessageBox("ConfirmCreateNewDialogTree".Translate());
+                Dialog_MessageBox dialog = new Dialog_MessageBox("CQF_GroupTemplate_NewConfirm".Translate());
                 dialog.buttonBText = "Cancel".Translate();
                 dialog.buttonBAction = () => dialog.Close();
                 dialog.buttonAText = "Confirm".Translate();

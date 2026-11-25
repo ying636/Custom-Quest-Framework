@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <CQF_Organization_Title>Organization</CQF_Organization_Title>
+  <CQF_Organization_OverviewTab>Overview</CQF_Organization_OverviewTab>
+  <CQF_Organization_RulesTab>Rules</CQF_Organization_RulesTab>
+  <CQF_Organization_Tip>Coordinate squads and inspect the organization on this map and its other layers.</CQF_Organization_Tip>
+  <CQF_Organization_Select>Select organization</CQF_Organization_Select>
+  <CQF_Organization_NoRuntime>No active organization on this map or its other layers.</CQF_Organization_NoRuntime>
+  <CQF_Organization_RulesField>Rules · {0}</CQF_Organization_RulesField>
+  <CQF_Organization_Roster>{0} · {1} members</CQF_Organization_Roster>
+  <CQF_Organization_EmptySquad>This squad has no members.</CQF_Organization_EmptySquad>
+  <CQF_Organization_Moves>Active moves ({0})</CQF_Organization_Moves>
+  <CQF_Organization_MoveRow>{0} → {1}</CQF_Organization_MoveRow>
+  <CQF_Organization_NewRules>New rules</CQF_Organization_NewRules>
+  <CQF_Organization_LoadRules>Open rules</CQF_Organization_LoadRules>
+  <CQF_Organization_RulesHint>Create or open a rule set. Assign it to an organizational squad in the Map Squads editor to use it on generated maps.</CQF_Organization_RulesHint>
+  <CQF_Organization_TickInterval>Check interval</CQF_Organization_TickInterval>
+  <CQF_Organization_AddRule>Add event</CQF_Organization_AddRule>
+  <CQF_Organization_DeleteRule>Delete event {0}?</CQF_Organization_DeleteRule>
+  <CQF_Organization_ApplyRuntime>Save and apply to selected organization</CQF_Organization_ApplyRuntime>
+  <CQF_Organization_ReplaceDraft>Open another rule set and discard the current draft?</CQF_Organization_ReplaceDraft>
+  <CQF_Organization_Saved>Saved organization rules {0}.</CQF_Organization_Saved>
+  <CQF_Organization_Applied>Saved and applied organization rules {0}.</CQF_Organization_Applied>
+  <CQF_Organization_InvalidDefName>Enter an identifier with a mod prefix, such as CQF_StationRules.</CQF_Organization_InvalidDefName>
+  <CQF_Organization_ModOwned>Rules {0} belong to a loaded mod. Give this draft a new identifier to save a copy.</CQF_Organization_ModOwned>
+  <CQF_Organization_UnsupportedTrigger>This rule set contains a trigger that this editor cannot open.</CQF_Organization_UnsupportedTrigger>
+  <CQF_Organization_PickSquad>Pick an active squad</CQF_Organization_PickSquad>
+  <CQF_Organization_SquadOption>{0} · {1}</CQF_Organization_SquadOption>
+  <CQF_Organization_NoSquads>The selected organization has no active squads.</CQF_Organization_NoSquads>
+  <CQF_Organization_SquadTag>Squad tag</CQF_Organization_SquadTag>
+  <CQF_Organization_MapScope>Map lookup</CQF_Organization_MapScope>
+  <CQF_Organization_MapKey>Map value (optional)</CQF_Organization_MapKey>
+  <CQF_Organization_Lookup_RegionId>Region ID</CQF_Organization_Lookup_RegionId>
+  <CQF_Organization_Lookup_MapKey>Composite map key</CQF_Organization_Lookup_MapKey>
+  <CQF_Organization_Lookup_MapTemplate>Map template</CQF_Organization_Lookup_MapTemplate>
+  <CQF_Organization_RuleTitle>Organization event</CQF_Organization_RuleTitle>
+  <CQF_Organization_MoreActions>Other actions</CQF_Organization_MoreActions>
+  <CQF_Organization_EventKey>Event identifier</CQF_Organization_EventKey>
+  <CQF_Organization_FilterSender>Filter by originating squad</CQF_Organization_FilterSender>
+  <CQF_Organization_Sender>Originating squad</CQF_Organization_Sender>
+  <CQF_Organization_Once>Run once</CQF_Organization_Once>
+  <CQF_Organization_Cooldown>Cooldown (ticks)</CQF_Organization_Cooldown>
+  <CQF_Organization_Minimum>Organization members, min. (−1 = any)</CQF_Organization_Minimum>
+  <CQF_Organization_Maximum>Organization members, max. (−1 = any)</CQF_Organization_Maximum>
+  <CQF_Organization_Orders>Squad orders</CQF_Organization_Orders>
+  <CQF_Organization_AddOrder>Add order</CQF_Organization_AddOrder>
+  <CQF_Organization_OrderDuty>Run duty map</CQF_Organization_OrderDuty>
+  <CQF_Organization_OrderMove>Transfer to another squad</CQF_Organization_OrderMove>
+  <CQF_Organization_OrderRow>{0} · {1}</CQF_Organization_OrderRow>
+  <CQF_Organization_OrderTitle>Squad order</CQF_Organization_OrderTitle>
+  <CQF_Organization_Recipient>Receiving squad</CQF_Organization_Recipient>
+  <CQF_Organization_Destination>Destination squad</CQF_Organization_Destination>
+  <CQF_Organization_DefaultNode>Use the start node</CQF_Organization_DefaultNode>
+  <CQF_Organization_Trigger_Tick>On interval</CQF_Organization_Trigger_Tick>
+  <CQF_Organization_Trigger_PawnJoined>Member joined organization</CQF_Organization_Trigger_PawnJoined>
+  <CQF_Organization_Trigger_PawnLeft>Member left organization</CQF_Organization_Trigger_PawnLeft>
+  <CQF_Organization_Trigger_PawnKilled>Member killed</CQF_Organization_Trigger_PawnKilled>
+  <CQF_Organization_Trigger_PawnArrived>Member arrived on a layer</CQF_Organization_Trigger_PawnArrived>
+  <CQF_Organization_Trigger_PawnAssigned>Member assigned to squad</CQF_Organization_Trigger_PawnAssigned>
+  <CQF_Organization_Trigger_MoveCompleted>Member transfer completed</CQF_Organization_Trigger_MoveCompleted>
+  <CQF_Organization_Trigger_MoveCancelled>Member transfer cancelled</CQF_Organization_Trigger_MoveCancelled>
+  <CQF_Organization_Trigger_MoveFailed>Member transfer failed</CQF_Organization_Trigger_MoveFailed>
+  <CQF_Organization_Trigger_GroupAdded>Squad added</CQF_Organization_Trigger_GroupAdded>
+  <CQF_Organization_Trigger_GroupRemoved>Squad removed</CQF_Organization_Trigger_GroupRemoved>
+  <CQF_Organization_Trigger_MapRemoved>Map removed</CQF_Organization_Trigger_MapRemoved>
+  <CQF_Organization_Trigger_External>On signal</CQF_Organization_Trigger_External>
+</LanguageData>

@@ -2,13 +2,6 @@ using Verse;
 
 namespace QuestEditor_Library;
 
-public enum CQFCompositeMapLookup
-{
-    RegionId,
-    MapKey,
-    MapTemplate
-}
-
 public sealed class CQFCompositeMapDatabase : IExposable
 {
     public Map? Find(string key, CQFCompositeMapLookup lookup, CQFCompositeMapGroup? group = null)

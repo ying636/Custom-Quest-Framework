@@ -1,5 +1,6 @@
 using RimWorld;
 using Verse;
+using Verse.AI.Group;
 
 namespace QuestEditor_Library
 {
@@ -35,12 +36,14 @@ namespace QuestEditor_Library
         public void Notify_SignalReceived(Signal signal)
         {
             signal.args.TryGetArg("SUBJECT", out NamedArgument subject);
+            Pawn pawn = subject.arg as Pawn;
+            MetaLord senderOwner = this.manager.GetForPawn(pawn);
             foreach (MetaLord owner in new System.Collections.Generic.List<MetaLord>(this.manager.Lords))
             {
                 try
                 {
                     owner.Trigger(new LordEventSignal(LordEventSignalType.External)
-                    { tag = signal.tag, pawn = subject.arg as Pawn });
+                    { tag = signal.tag, pawn = pawn, sourceMap = pawn?.Map, group = senderOwner == owner ? pawn.GetLord() : null });
                 }
                 catch (System.Exception error)
                 {

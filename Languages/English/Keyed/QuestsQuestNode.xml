@@ -1373,4 +1373,11 @@
     <QuestNode_Unset_Tip>Remove the named entry from the quest slate.</QuestNode_Unset_Tip>
     <QuestNode_ViolentQuestsAllowed>Node: Check Whether Violent Quests Are Allowed</QuestNode_ViolentQuestsAllowed>
     <QuestNode_ViolentQuestsAllowed_Tip>Run the matching branch based on whether the current difficulty allows violent quests.</QuestNode_ViolentQuestsAllowed_Tip>
+  <QuestNode_Root_SightstealerArrival_Space>Node: Space Sightstealer Arrival Quest</QuestNode_Root_SightstealerArrival_Space>
+  <QuestNode_Root_DistressCall_FleshHive>Node: Flesh Hive Distress Call Quest</QuestNode_Root_DistressCall_FleshHive>
+  <QuestNode_Root_FleshSurvivor>Node: Flesh Survivor Quest</QuestNode_Root_FleshSurvivor>
+  <QuestNodeRootSpiderUnlock>Node: First Flame Protocol Quest</QuestNodeRootSpiderUnlock>
+  <QuestNodeRootWuDeLiDao>Node: Hanged Man Li Dao Quest</QuestNodeRootWuDeLiDao>
+  <QuestNode_DaisyRescue>Node: Daisy Rescue Quest</QuestNode_DaisyRescue>
+  <FatalisQuestRoot>Node: Containment Accident — Fatalis</FatalisQuestRoot>
 </LanguageData>

@@ -6,7 +6,7 @@
   <CQFAction_HibernateMap_Tip>休眠目标所属地图，保留地图及物件，停止地图和物件更新。激活后继续使用原地图，无需重新生成。</CQFAction_HibernateMap_Tip>
   <CQFAction_ActivateMap>行为：激活地图</CQFAction_ActivateMap>
   <CQFAction_ActivateMap_Tip>激活目标所属的休眠地图，将原地图重新加入活动地图列表并恢复更新，无需重新生成。</CQFAction_ActivateMap_Tip>
-  <CQFAction_MetaLord>行为：跨层组织操作</CQFAction_MetaLord>
+  <CQFAction_MetaLord>行为：组织操作</CQFAction_MetaLord>
   <!-- EN: Dialog actions -->
   <CQFActions>行为：</CQFActions>
   <CQF_RunActions>执行行为</CQF_RunActions>
@@ -303,7 +303,7 @@ Interacte interactive things -->
   <!-- EN: Set a global bool(true or no) to the quest database, which will take effect throughout the entire save -->
   <CQFAction_SetGlobalBool_Tip>设置一个全局判断值（真或否）到任务数据库中，这个判断值在整个游戏内生效</CQFAction_SetGlobalBool_Tip>
   <!-- EN: Search for lords with matching names from the database as the target. If it is in the group editor or custom lord, the edited lord will be automatically selected as the target. This field can be left blank -->
-  <LordNameTip>从数据库中搜寻符合名字的集群作为目标，如果是在集群编辑器或自定义集群中，自动以被编辑的集群作为目标，此项可以不填</LordNameTip>
+  <LordNameTip>从数据库中搜寻符合名字的小队作为目标，如果是在小队模板编辑器或自定义小队中，自动以被编辑的小队作为目标，此项可以不填</LordNameTip>
   <!-- EN: Action:replace(custom thing) -->
   <CQFAction_ReplaceUsingCustomThing>行为：替换（自定义事物）</CQFAction_ReplaceUsingCustomThing>
   <!-- EN: Edit Custom Thing -->
@@ -554,9 +554,9 @@ Group data can contain multiple Pawns, and when actions is executed, it will be 
   <CQFAction_SetCustomInspectText>行为：设置自定义检查文本</CQFAction_SetCustomInspectText>
   <CQFAction_SetCustomInspectText_Tip>设置所有带有 CompCustomText 的目标的检查文本。</CQFAction_SetCustomInspectText_Tip>
   <!-- EN: Lord action:visit colony -->
-  <CQFAction_Lord_Visit>集群行为：访问殖民地</CQFAction_Lord_Visit>
+  <CQFAction_Lord_Visit>小队行为：访问殖民地</CQFAction_Lord_Visit>
   <!-- EN: Set the lord job as tovisit colony, and the group will leave the map after the duration -->
-  <CQFAction_Lord_Visit_Tip>将集群行为设置为访问殖民地，集群将在持续时间之后离开地图</CQFAction_Lord_Visit_Tip>
+  <CQFAction_Lord_Visit_Tip>将小队行为设置为访问殖民地，小队将在持续时间之后离开地图</CQFAction_Lord_Visit_Tip>
   <CQFAction_CompleteQuestBookStep>行为：完成任务书步骤</CQFAction_CompleteQuestBookStep>
   <CQFAction_FailQuestBookStep>行为：使任务书步骤失败</CQFAction_FailQuestBookStep>
   <CQFAction_OpenQuestBook>行为：打开任务书</CQFAction_OpenQuestBook>

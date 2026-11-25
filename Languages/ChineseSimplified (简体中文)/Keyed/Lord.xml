@@ -2,20 +2,20 @@
 <LanguageData>
 
   <!-- EN: Lord name: -->
-  <LordName>集群名字：</LordName>
+  <LordName>小队名称：</LordName>
   <!-- EN: Lord name: -->
-  <LordNameWithTarget>集群名字：</LordNameWithTarget>
+  <LordNameWithTarget>小队名称：</LordNameWithTarget>
   <!-- EN: Automatically searches for lords matching the name and joins them at generation, or creates a lord with the job "CQF Custom Action" if this is empty. -->
-  <CustomLordNameTip>在生成时自动搜素符合名字的集群并加入，如果为空则自动创建一个行为为“CQF自定义行为”集群</CustomLordNameTip>
+  <CustomLordNameTip>在生成时自动搜素符合名字的小队并加入，如果为空则自动创建一个行为为“CQF自定义行为”小队</CustomLordNameTip>
   <!-- EN: Lord job:{0} -->
-  <CQF_LordJob>集群行为：{0}</CQF_LordJob>
+  <CQF_LordJob>小队行为：{0}</CQF_LordJob>
   <!-- EN: Actions after generation: -->
   <ActionsAfterGeneration>生成后行为：</ActionsAfterGeneration>
 
   <!-- EN: Custom lord -->
-  <DesignatorLord>自定义集群</DesignatorLord>
+  <DesignatorLord>自定义小队</DesignatorLord>
   <!-- EN: Customize lord within the map, lord data will be saved in the custom map def -->
-  <DesignatorLordDesc>在地图内自定义集群，集群数据会保存的自定义地图文件中</DesignatorLordDesc>
+  <DesignatorLordDesc>在地图内自定义小队，小队数据会保存的自定义地图文件中</DesignatorLordDesc>
 
   <!-- EN: CQF custom job -->
   <LordJob_Custom>CQF自定义行为</LordJob_Custom>
@@ -30,7 +30,7 @@
   <TargetPositionName>保卫中心：</TargetPositionName>
 
   <!-- EN: Group Editor -->
-  <GroupEditor>集群编辑器</GroupEditor>
+  <GroupEditor>小队模板编辑器</GroupEditor>
 
   <!-- EN: Visit colony -->
   <LordJob_VisitColony>访问殖民地</LordJob_VisitColony>
@@ -39,6 +39,38 @@
   <LordJob_DefendBase>保卫基地</LordJob_DefendBase>
 
   <!-- EN: Lord job data -->
-  <LordJobData>集群行为数据</LordJobData>
+  <LordJobData>小队行为数据</LordJobData>
 
+  <LordJob_DefendPoint>守卫指定地点</LordJob_DefendPoint>
+  <LordJob_ExitMapBest>从合适的出口撤离</LordJob_ExitMapBest>
+  <LordJob_ExitMapNear>从指定地点附近撤离</LordJob_ExitMapNear>
+  <LordJob_Travel>前往指定地点</LordJob_Travel>
+  <LordJob_TravelAndExit>前往指定地点后撤离</LordJob_TravelAndExit>
+  <LordJob_AssaultColony>进攻殖民地</LordJob_AssaultColony>
+  <LordJob_AssaultThings>进攻指定目标</LordJob_AssaultThings>
+  <LordJob_AssistColony>支援殖民地</LordJob_AssistColony>
+  <LordJob_BegForItems>请求物资</LordJob_BegForItems>
+  <LordJob_BestowingCeremony>举行授勋仪式</LordJob_BestowingCeremony>
+  <LordJob_BossgroupAssaultColony>指挥官机械群进攻殖民地</LordJob_BossgroupAssaultColony>
+  <LordJob_ChimeraAssault>嵌合兽突袭</LordJob_ChimeraAssault>
+  <LordJob_CreepJoiner>古怪同伴来访</LordJob_CreepJoiner>
+  <LordJob_DefendAndExpandHive>保卫并扩张虫巢</LordJob_DefendAndExpandHive>
+  <LordJob_DefendAttackedTraderCaravan>保护受袭商队</LordJob_DefendAttackedTraderCaravan>
+  <CQF_LordJobDataField>行为配置</CQF_LordJobDataField>
+  <CQF_LordJobField>小队行为</CQF_LordJobField>
+  <CQF_LordJobTargetField>地图目标键</CQF_LordJobTargetField>
+  <CQF_LordJobRadiusField>行动半径</CQF_LordJobRadiusField>
+  <CQF_LordJobUrgencyField>移动速度</CQF_LordJobUrgencyField>
+  <CQF_LordJobInvalidTarget>行为「{0}」找不到本地图上的目标「{1}」。</CQF_LordJobInvalidTarget>
+  <CQF_LordJobFactionRequired>行为「{0}」需要有效的地图派系。</CQF_LordJobFactionRequired>
+  <CQF_LordJobThingRequired>行为「{0}」需要地图目标键指向物体。</CQF_LordJobThingRequired>
+  <CQF_LordJobInvalidRadius>行为「{0}」需要大于零的行动半径。</CQF_LordJobInvalidRadius>
+  <CQF_LordJobTaskContext>行为「{0}」需要由原版任务提供参数。</CQF_LordJobTaskContext>
+  <CQF_LordJobNoConstructor>行为「{0}」没有可供直接创建的构造函数。</CQF_LordJobNoConstructor>
+  <CQF_LordJobUrgency_Amble>慢行</CQF_LordJobUrgency_Amble>
+  <CQF_LordJobUrgency_Walk>步行</CQF_LordJobUrgency_Walk>
+  <CQF_LordJobUrgency_Jog>小跑</CQF_LordJobUrgency_Jog>
+  <CQF_LordJobUrgency_Sprint>冲刺</CQF_LordJobUrgency_Sprint>
+  <CQF_LordJobPointTargetTip>填写地图目标键。留空时使用小队生成点或地图模板中心。</CQF_LordJobPointTargetTip>
+  <CQF_LordJobThingTargetTip>填写地图上已经存在的物体目标键。</CQF_LordJobThingTargetTip>
 </LanguageData>

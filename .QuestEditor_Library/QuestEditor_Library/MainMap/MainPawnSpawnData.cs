@@ -13,6 +13,8 @@ namespace QuestEditor_Library
     {
         public override Dictionary<string, TargetInfo> Spawn(IntVec3 position, Map map, string questTag, Quest quest, Lord lord = null, bool setLord = true)
         {
+            if (!this.TryResolveMapGroup(map, ref lord))
+                return new Dictionary<string, TargetInfo>();
             MainSite site = MainMapGenerationContext.CurrentSite;
             if (this.dataName.NullOrEmpty() || this.dataName == "undefined")
             {
@@ -131,6 +133,8 @@ namespace QuestEditor_Library
 
         internal void DrawMainPawnOptions(ref float y, Rect inRect, float x)
         {
+            if (!ReferenceEquals(CQFEditorContext.FixedPawnHeader, this))
+                this.DrawMapGroup(ref y, x);
             Widgets.CheckboxLabeled(new Rect(20f + x, y, 300f, 25f), "MainPawnAllowGetFromQuestDatabase".Translate(), ref this.allowGetFromQuestDatabase);
             y += 30f;
             if (this.allowGetFromQuestDatabase)

@@ -81,6 +81,8 @@ namespace QuestEditor_Library
                 return;
             }
             LoadDefs(questPath, "//QuestScriptDef", DefDatabase<QuestScriptDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<QuestScriptDef>(node, false), def => DefDatabase<QuestScriptDef>.Add(def));
+            LoadDefs(Path.Combine(questPath, "Group"), "//QuestEditor_Library.GroupDataDef", DefDatabase<GroupDataDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<GroupDataDef>(node, false), def => DefDatabase<GroupDataDef>.Add(def));
+            LoadDefs(Path.Combine(questPath, "Organization"), "//QuestEditor_Library.MetaLordEventDef", DefDatabase<MetaLordEventDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<MetaLordEventDef>(node, false), def => DefDatabase<MetaLordEventDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Map"), "//QuestEditor_Library.CustomMapDataDef", DefDatabase<CustomMapDataDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<CustomMapDataDef>(node, false), def => DefDatabase<CustomMapDataDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "Map"), "//QuestEditor_Library.MainMapDef", DefDatabase<MainMapDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<MainMapDef>(node, false), def => DefDatabase<MainMapDef>.Add(def));
             LoadDefs(Path.Combine(questPath, "DialogTree"), "//QuestEditor_Library.DialogTreeDef", DefDatabase<DialogTreeDef>.AllDefsListForReading, node => DirectXmlToObject.ObjectFromXml<DialogTreeDef>(node, false), def => DefDatabase<DialogTreeDef>.Add(def));

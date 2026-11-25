@@ -20,7 +20,18 @@ namespace QuestEditor_Library
                     (entry.trigger.minimumMembers >= 0 && entry.trigger.maximumMembers >= 0 && entry.trigger.minimumMembers > entry.trigger.maximumMembers))
                     yield return "Invalid event member range: " + entry.key;
                 if (entry.cooldownTicks < 0) yield return "Negative event cooldown: " + entry.key;
-                if (entry.actions == null || entry.actions.Count == 0 || entry.actions.Contains(null)) yield return "Missing event actions: " + entry.key;
+                if ((entry.actions?.Count ?? 0) + (entry.orders?.Count ?? 0) == 0) yield return "Missing event actions or orders: " + entry.key;
+                if (entry.actions?.Contains(null) == true) yield return "Null event action: " + entry.key;
+                foreach (MetaLordSquadOrder order in entry.orders ?? new List<MetaLordSquadOrder>())
+                {
+                    if (order?.recipient == null || (string.IsNullOrWhiteSpace(order.recipient.name) && string.IsNullOrWhiteSpace(order.recipient.tag)))
+                        yield return "Missing receiving squad name or tag: " + entry.key;
+                    if (order == null) continue;
+                    if (order.destination != null && (string.IsNullOrWhiteSpace(order.destination.name) || order.timeoutTicks <= 0))
+                        yield return "Invalid destination squad or move timeout: " + entry.key;
+                    if (order.destination == null && (order.dutyMap == null || (!string.IsNullOrEmpty(order.nodeId) && order.dutyMap.GetNode(order.nodeId) == null)))
+                        yield return "Invalid squad duty map or node: " + entry.key;
+                }
             }
         }
 

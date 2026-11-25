@@ -27,8 +27,10 @@ namespace QuestEditor_Library
             MetaLord result = this.Get(name, map);
             if (result != null)
             {
-                if (result.faction != faction || (events != null && result.eventDef != events) || (quest != null && result.quest != quest))
+                if (result.faction != faction || (!result.HasRuleOverride && events != null && result.eventDef != null && result.eventDef != events) || (quest != null && result.quest != quest))
                     throw new InvalidOperationException("[CQF] Conflicting MetaLord configuration: " + name);
+                if (!result.HasRuleOverride && result.eventDef == null && events != null)
+                    result.SetEventDefinition(events);
                 return result;
             }
             result = new MetaLord

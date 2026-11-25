@@ -15,6 +15,7 @@ namespace QuestEditor_Library
         public IReadOnlyList<LevelLord> Levels => this.levelLords.AsReadOnly();
         public IReadOnlyList<MoveRequirment> Moves => this.moves.AsReadOnly();
         public IReadOnlyList<MoveRequirment> RecentMoves => this.recentMoves.AsReadOnly();
+        internal bool HasRuleOverride => this.ruleOverride;
 
         public Lord CreateGroup(Map map, string groupName, DutyMapDef dutyMap = null, int capacity = 0, List<string> tags = null)
         {
@@ -394,6 +395,7 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.loadID, "loadID");
             Scribe_Values.Look(ref this.name, "name");
             Scribe_Values.Look(ref this.nextEventTick, "nextEventTick");
+            Scribe_Values.Look(ref this.ruleOverride, "ruleOverride");
             Scribe_References.Look(ref this.rootMap, "rootMap");
             Scribe_References.Look(ref this.faction, "faction");
             Scribe_References.Look(ref this.quest, "quest");
@@ -419,6 +421,15 @@ namespace QuestEditor_Library
             return "CQF_MetaLord_" + this.loadID;
         }
 
+        public void SetEventDefinition(MetaLordEventDef definition, bool isRuntimeOverride = false)
+        {
+            this.ruleOverride |= isRuntimeOverride;
+            if (this.eventDef == definition) return;
+            this.eventDef = definition;
+            this.eventStates.Clear();
+            this.nextEventTick = 0;
+        }
+
         public void Trigger(LordEventSignal signal)
         {
             if (this.disposed || this.eventDef == null) return;
@@ -435,7 +446,7 @@ namespace QuestEditor_Library
                     if (++processed > 256)
                         throw new InvalidOperationException("[CQF] MetaLord event recursion limit: " + this.name);
                     LordEventSignal current = this.eventQueue.Dequeue();
-                    foreach (MetaLordEvent entry in this.eventDef.events.ToArray())
+                    foreach (MetaLordEvent entry in this.eventDef?.events.ToArray() ?? Array.Empty<MetaLordEvent>())
                     {
                         if (this.disposed) break;
                         if (entry == null || string.IsNullOrWhiteSpace(entry.key) || entry.trigger == null)
@@ -452,11 +463,16 @@ namespace QuestEditor_Library
                             state.executed = true;
                             state.nextTick = Find.TickManager.TicksGame + Math.Max(0, entry.cooldownTicks);
                             Dictionary<string, TargetInfo> targets = current.MakeTargets(this);
-                            foreach (CQFAction action in entry.actions.ToArray())
+                            foreach (CQFAction action in entry.actions?.ToArray() ?? Array.Empty<CQFAction>())
                             {
                                 if (action == null) throw new InvalidOperationException("Null event action");
                                 action.Work(targets, this.quest);
                                 if (this.disposed) break;
+                            }
+                            foreach (MetaLordSquadOrder order in entry.orders?.ToArray() ?? Array.Empty<MetaLordSquadOrder>())
+                            {
+                                if (this.disposed) break;
+                                order.Execute(this);
                             }
                         }
                         catch (Exception error)
@@ -569,6 +585,7 @@ namespace QuestEditor_Library
         public MetaLordEventDef eventDef;
         internal MetaLordManager manager;
         private int nextEventTick;
+        private bool ruleOverride;
         private bool disposed;
         private bool processingEvents;
         private int memberRevision;

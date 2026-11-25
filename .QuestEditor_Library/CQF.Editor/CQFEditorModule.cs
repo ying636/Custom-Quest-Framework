@@ -13,6 +13,7 @@ namespace QuestEditor_Library
         {
             new Harmony("CQF_Editor").PatchAll(typeof(CQFEditorModule).Assembly);
             CQFEntityBookCatalog.Register();
+            CQFGroupBookBridge.Register(CQFGroupBookCatalog.Open);
             CQFEditorBridge.SymmetryUpdate = map => CQFEditorSymmetry.For(map).Update();
             CQFEditorBridge.SymmetryOnGUI = map =>
             {
