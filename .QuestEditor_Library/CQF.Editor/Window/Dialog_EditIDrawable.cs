@@ -17,13 +17,14 @@ namespace QuestEditor_Library
             this.symmetrySession = new CQFSymmetryEditSession(this.owner);
             this.questBook = questBook;
             this.forcePause = true;
+            this.absorbInputAroundWindow = iDrawable is PawnSpawnData;
             this.closeOnClickedOutside = false;
             this.doCloseX = true;
             this.draggable = true;
             this.resizeable = true;
         }
 
-        public override Vector2 InitialSize => new Vector2(620f, 620f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(620f, UI.screenWidth - 20f), Mathf.Min(620f, UI.screenHeight - 20f));
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(this.iDrawable.GetType().Name, () => this.iDrawable, value =>
         {
             foreach (System.Reflection.FieldInfo field in value.GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public))
@@ -35,6 +36,8 @@ namespace QuestEditor_Library
             base.WindowUpdate();
             windowRect.width = Mathf.Clamp(windowRect.width, Mathf.Min(420f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             windowRect.height = Mathf.Clamp(windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+            windowRect.x = Mathf.Clamp(windowRect.x, 0f, UI.screenWidth - windowRect.width);
+            windowRect.y = Mathf.Clamp(windowRect.y, 0f, UI.screenHeight - windowRect.height);
         }
 
         public override void PostClose()
@@ -48,24 +51,16 @@ namespace QuestEditor_Library
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Widgets.Label(new Rect(0f, 0f, inRect.width - 30f, 28f), (this.iDrawable is TrapComp ? "TrapComps".Translate() : this.iDrawable.GetType().Name.Translate()).Colorize(CQFUIStyle.Accent));
             float top = 36f;
+            float footer = 0f;
             if (this.iDrawable is PawnSpawnData pawnData)
             {
                 pawnData.DrawName(ref top, 0f, new Rect(0f, top, inRect.width, 36f));
                 using (new CQFEditorContext(this.owner))
                     pawnData.DrawMapGroup(ref top, 0f);
-                float entityButtonWidth = (inRect.width - 8f) / 2f;
-                if (CQFUIStyle.ButtonText(new Rect(0f, top, entityButtonWidth, 30f), "CQF_EntityBook_Collect".Translate()))
-                    CQFEntityBookBridge.Collect(pawnData);
-                if (CQFUIStyle.ButtonText(new Rect(entityButtonWidth + 8f, top, entityButtonWidth, 30f), "CQF_EntityBook_Title".Translate()))
-                {
-                    CQFEntityBookCatalog.Track(pawnData);
-                    CQFEntityBookBridge.OpenReferences(quest: Find.CurrentMap == null ? null : GameTools.GetQuestFromMap(Find.CurrentMap));
-                }
-                top += 36f;
-                top += 4f;
+                footer = 34f;
             }
-            Rect outRect = new Rect(0f, top, inRect.width, inRect.height - top);
-            Rect viewRect = new Rect(0f, 0f, Mathf.Max(100f, inRect.width - 20f), Mathf.Max(this.height + 10f, outRect.height));
+            Rect outRect = new Rect(0f, top, inRect.width, Mathf.Max(0f, inRect.height - top - footer));
+            Rect viewRect = new Rect(0f, 0f, Mathf.Max(0f, inRect.width - 20f), Mathf.Max(this.height + 10f, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             float y = 0f;
             if (questBook != null && iDrawable is CQFAction_QuestBookStep questBookStepAction)
@@ -74,11 +69,29 @@ namespace QuestEditor_Library
             }
             using (new CQFEditorContext(this.owner, this.iDrawable as PawnSpawnData))
             {
-                using CQFUIScope contentScope = new CQFUIScope(viewRect.width);
+                using CQFUIScope contentScope = new CQFUIScope(viewRect.width, outRect.height);
                 this.iDrawable.Draw(ref y, viewRect, 0f);
             }
             this.height = y;
             Widgets.EndScrollView();
+            if (this.iDrawable is PawnSpawnData recipe)
+            {
+                string collect = "CQF_EntityBook_Collect".Translate();
+                string book = "CQF_EntityBook_Title".Translate();
+                float available = Mathf.Max(0f, inRect.width - 22f);
+                float bookWidth = Mathf.Min(Text.CalcSize(book).x + 20f, available * 0.38f);
+                float collectWidth = Mathf.Min(Text.CalcSize(collect).x + 20f, Mathf.Max(0f, available - bookWidth - 8f));
+                Rect bookRect = new(available - bookWidth, inRect.height - 29f, bookWidth, 27f);
+                Rect collectRect = new(bookRect.x - 8f - collectWidth, bookRect.y, collectWidth, bookRect.height);
+                if (CQFUIStyle.ButtonText(collectRect, collect, false))
+                    CQFEntityBookBridge.Collect(recipe);
+                if (CQFUIStyle.ButtonText(bookRect, book, false))
+                {
+                    CQFEntityBookCatalog.Track(recipe);
+                    Map map = this.owner?.Map ?? Find.CurrentMap;
+                    CQFEntityBookBridge.OpenReferences(quest: map == null ? null : GameTools.GetQuestFromMap(map));
+                }
+            }
         }
 
         public string buffer;

@@ -14,6 +14,16 @@ namespace QuestEditor_Library
             return parents.Count == 0 ? null : parents[parents.Count - 1];
         }
 
+        internal static int GetOrganizationScope(Map map)
+        {
+#if RIMWORLD_1_7
+            foreach (Map level in GetAllParentMaps(map))
+                if (level.Parent is CQFCompositeMapParent { organizationScope: >= 0 } parent)
+                    return parent.organizationScope;
+#endif
+            return -1;
+        }
+
         public static List<MapPortal> GetPathPortal(Map source, Map destination)
         {
             if (source == null || destination == null || source.Disposed || destination.Disposed)

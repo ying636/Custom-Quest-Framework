@@ -116,6 +116,7 @@ public partial class MapComponent_Domain
                     entry.originalLord?.RemovePawn(entrant);
                     entrant.DeSpawn();
                     GenSpawn.Spawn(entrant, cell, map);
+                    Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(entrant)?.SuspendMemberForTemporaryMap(entrant);
                     if (entrant.drafter != null) entrant.drafter.Drafted = entry.drafted;
                 }
             if (extending) contest.AppendSide(this, template);

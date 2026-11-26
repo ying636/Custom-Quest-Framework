@@ -125,6 +125,51 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
         return true;
     }
 
+    internal Map? TravelingMap(Pawn pawn) =>
+        bySubject.TryGetValue(pawn, out var active) && cargo.Contains(pawn) ? active.current : null;
+
+    internal bool HasPawnOrder(Pawn pawn) => bySubject.ContainsKey(pawn);
+
+    internal bool KeepsOrganization(Pawn pawn, MetaLord owner) =>
+        bySubject.TryGetValue(pawn, out var active) && owner.IncludesMap(active.current) && owner.IncludesMap(active.destination);
+
+    internal bool RequestOrganizationMove(GameComponent_MapManager manager, MetaLord owner, Pawn pawn, Map source, Map target)
+    {
+        if (bySubject.TryGetValue(pawn, out var active))
+            return active.organization == owner && active.destination == target;
+        if (!manager.ContainsCrossMapThing(source, pawn) || pawn.Dead || pawn.Destroyed) return false;
+        var order = Start(pawn, source, target, CQFCrossMapOrderKind.Organization, Find.TickManager.TicksGame);
+        order.organization = owner;
+        order.expires = int.MaxValue;
+        return true;
+    }
+
+    internal Job? OrganizationJob(GameComponent_MapManager manager, MetaLord owner, Pawn pawn)
+    {
+        if (!bySubject.TryGetValue(pawn, out var active) || active.organization != owner ||
+            pawn.Map != active.current || pawn.Downed || pawn.Drafted || pawn.InMentalState || pawn.IsPrisoner ||
+            !manager.TryGetOrganizationStep(owner, active.current, active.destination, pawn, out CQFCrossMapStep step))
+            return null;
+        return WalkJob(step);
+    }
+
+    internal void StopOrganizationMove(Pawn pawn, MetaLord owner)
+    {
+        if (!bySubject.TryGetValue(pawn, out var active) || active.organization != owner) return;
+        if (cargo.Contains(pawn))
+        {
+            active.organization = null;
+            active.kind = CQFCrossMapOrderKind.Move;
+            active.destination = active.current.Disposed ? active.origin : active.current;
+            active.delivered = true;
+            Schedule(active, Find.TickManager.TicksGame);
+            return;
+        }
+        Complete(active);
+        if (pawn.Spawned && pawn.CurJobDef == CQFCrossMapDefs.CQF_CrossMapWalk)
+            pawn.jobs.EndCurrentJob(JobCondition.InterruptForced);
+    }
+
     internal Job? ReportJob(GameComponent_MapManager manager, Pawn pawn, Map receiver, string groupTag,
         int responders, int assemblyTicks, int cooldownTicks)
     {
@@ -210,6 +255,19 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
             return;
         }
         bool held = cargo.Contains(subject);
+        if (order.kind == CQFCrossMapOrderKind.Organization && subject is Pawn ordered &&
+            (order.organization == null || order.organization.Disposed || order.organization.GetMove(ordered)?.targetMap != order.destination))
+        {
+            if (order.organization != null) StopOrganizationMove(ordered, order.organization);
+            else if (!held) Complete(order);
+            else
+            {
+                order.kind = CQFCrossMapOrderKind.Move;
+                order.destination = order.current;
+                Schedule(order, now);
+            }
+            return;
+        }
         if (!held && !manager.ContainsCrossMapThing(order.current, subject))
         {
             Complete(order);
@@ -269,12 +327,6 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
                 guard.jobs.EndCurrentJob(JobCondition.InterruptForced);
             return;
         }
-        if (pawn is { Downed: true } || !manager.TryGetCrossMapStep(order.current, order.destination, pawn,
-            out CQFCrossMapStep step, order.preferredExit.IsValid ? order.preferredExit : null))
-        {
-            Schedule(order, now + 120);
-            return;
-        }
         if (held && !sleeping && pawn != null)
         {
             if (!Land(manager, order))
@@ -282,8 +334,31 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
                 Schedule(order, now + 60);
                 return;
             }
+            if (bySubject.GetValueOrDefault(subject) != order) return;
             held = false;
             order.marchUntil = 0;
+        }
+        CQFCrossMapStep step = default;
+        bool blocked = pawn is { Downed: true } || (order.organization != null && pawn is { } member &&
+            (member.Drafted || member.InMentalState || member.IsPrisoner));
+        bool hasStep = !blocked && (order.organization is { } organization
+            ? manager.TryGetOrganizationStep(organization, order.current, order.destination, pawn!, out step)
+            : manager.TryGetCrossMapStep(order.current, order.destination, pawn, out step, order.preferredExit.IsValid ? order.preferredExit : null));
+        MoveRequirment? move = pawn != null ? order.organization?.GetMove(pawn) : null;
+        if (!hasStep)
+        {
+            if (move != null)
+            {
+                move.status = MetaLordMoveStatus.Waiting;
+                move.reason = blocked ? "PawnUnavailable" : "PassageUnavailable";
+            }
+            Schedule(order, now + 120);
+            return;
+        }
+        if (move != null)
+        {
+            move.status = MetaLordMoveStatus.Moving;
+            move.reason = null;
         }
         if (!sleeping && pawn != null && !held)
         {
@@ -291,7 +366,7 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
                 pawn.Position.DistanceToSquared(step.Portal.Position) <= 8;
             if (!order.reachedDeparture || step.Departure != order.cell || !atDeparture)
             {
-                if (pawn.CurJobDef != CQFCrossMapDefs.CQF_CrossMapWalk)
+                if (pawn.CurJobDef != CQFCrossMapDefs.CQF_CrossMapWalk && pawn.CurJobDef != QEDefOf.CQF_MetaLordMove)
                 {
                     var target = step.Portal != null ? new LocalTargetInfo(step.Portal) : new LocalTargetInfo(step.Departure);
                     if (pawn.CanReach(target, step.Portal != null ? PathEndMode.Touch : PathEndMode.OnCell, Danger.Deadly))
@@ -311,6 +386,11 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
         }
         order.reachedDeparture = false;
         order.marchUntil = 0;
+        if (order.organization != null && pawn != null && step.Portal is CustomMapEntrance or CustomMapExit)
+        {
+            TraverseOrganizationPortal(manager, order, pawn, step, now, held, sleeping);
+            return;
+        }
         if (!held)
         {
             try { manager.DetachCrossMapThing(order.current, subject); }
@@ -326,6 +406,39 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
         order.current = step.Destination;
         order.cell = step.Arrival;
         Schedule(order, now);
+    }
+
+    private void TraverseOrganizationPortal(GameComponent_MapManager manager, CQFCrossMapOrder order, Pawn pawn,
+        CQFCrossMapStep step, int now, bool held, bool sleeping)
+    {
+        Map source = order.current;
+        if (sleeping) manager.Activate(source);
+        try
+        {
+            if (held && !Land(manager, order))
+            {
+                Schedule(order, now + 60);
+                return;
+            }
+            if (bySubject.GetValueOrDefault(pawn) != order) return;
+            var portal = (CQFMapPortal)step.Portal!;
+            if (portal.IsAvailable(pawn) && portal.IsEnterable(out _))
+            {
+                if (portal is CustomMapEntrance entrance) entrance.TryEnter(pawn);
+                else ((CustomMapExit)portal).Exit(pawn);
+            }
+        }
+        finally
+        {
+            if (pawn.Spawned)
+            {
+                order.current = pawn.Map;
+                order.cell = pawn.Position;
+            }
+            if (sleeping && !source.Disposed && pawn.Map != source) manager.Hibernate(source);
+        }
+        if (bySubject.GetValueOrDefault(pawn) == order)
+            Schedule(order, now + (order.current == step.Destination ? 1 : 120));
     }
 
     private void DeliverReport(GameComponent_MapManager manager, CQFCrossMapOrder order, int now)
@@ -415,7 +528,8 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
 
     private void Complete(CQFCrossMapOrder order)
     {
-        bySubject.Remove(order.subject);
+        if (bySubject.GetValueOrDefault(order.subject) == order)
+            bySubject.Remove(order.subject);
         orders.Remove(order);
     }
 

@@ -15,13 +15,14 @@ namespace QuestEditor_Library
             this.accepted = accepted;
             this.acceptLabelKey = acceptLabelKey;
             forcePause = true;
+            absorbInputAroundWindow = true;
             doCloseX = true;
             draggable = true;
             resizeable = true;
             closeOnClickedOutside = false;
         }
 
-        public override Vector2 InitialSize => new(680f, 660f);
+        public override Vector2 InitialSize => new(Mathf.Min(680f, UI.screenWidth - 20f), Mathf.Min(660f, UI.screenHeight - 20f));
 
         public PawnSpawnData Recipe => recipe;
 
@@ -60,6 +61,8 @@ namespace QuestEditor_Library
             base.WindowUpdate();
             windowRect.width = Mathf.Clamp(windowRect.width, Mathf.Min(420f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             windowRect.height = Mathf.Clamp(windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+            windowRect.x = Mathf.Clamp(windowRect.x, 0f, UI.screenWidth - windowRect.width);
+            windowRect.y = Mathf.Clamp(windowRect.y, 0f, UI.screenHeight - windowRect.height);
         }
 
         public override void DoWindowContents(Rect inRect)

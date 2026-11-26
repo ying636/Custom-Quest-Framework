@@ -12,17 +12,24 @@ public sealed class Dialog_CQFLayout : Window
         doCloseX = true; draggable = true; resizeable = true; forcePause = true;
     }
 
-    public override Vector2 InitialSize => new Vector2(620f, 760f);
+    public override Vector2 InitialSize => new Vector2(Mathf.Min(620f, UI.screenWidth - 24f), Mathf.Min(760f, UI.screenHeight - 24f));
 
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope scope = new CQFUIScope(inRect.width, inRect.height);
         Widgets.Label(new Rect(0f, 0f, inRect.width - 32f, 30f), "CustomMapStep_Layout".Translate());
         Rect viewport = new Rect(0f, 38f, inRect.width, inRect.height - 88f);
-        Rect content = new Rect(0f, 0f, viewport.width - 20f, height);
+        Rect content = new Rect(0f, 0f, viewport.width - 20f, Mathf.Max(viewport.height, height));
         Widgets.BeginScrollView(viewport, ref scroll, content);
-        float y = 0f; settings.Draw(ref y, content, 0f);
-        if (!string.IsNullOrEmpty(error)) { Widgets.Label(new Rect(0f, y, content.width, 100f), error); y += 104f; }
+        using CQFUIScope contentScope = new CQFUIScope(content.width, viewport.height);
+        float y = 0f;
+        settings.Draw(ref y, content, 0f);
+        if (!string.IsNullOrEmpty(error))
+        {
+            float errorHeight = Text.CalcHeight(error, content.width);
+            Widgets.Label(new Rect(0f, y, content.width, errorHeight), error);
+            y += errorHeight + 8f;
+        }
         height = y + 10f;
         Widgets.EndScrollView();
         if (CQFUIStyle.ButtonText(new Rect(0f, inRect.height - 40f, inRect.width, 34f), "CQF_Layout_Preview".Translate()))

@@ -13,14 +13,16 @@ public sealed class Dialog_CQFMapRegions : Window
         Select(selected ?? Registry.All.FirstOrDefault());
     }
 
-    public override Vector2 InitialSize => new Vector2(850f, 680f);
+    public override Vector2 InitialSize => new Vector2(Mathf.Min(850f, UI.screenWidth - 24f), Mathf.Min(680f, UI.screenHeight - 24f));
     private CQFMapRegionCollection Registry => MapComponent_CustomMapData.GetComp(map).Regions;
 
     public override void DoWindowContents(Rect inRect)
     {
         using CQFUIScope scope = new CQFUIScope(inRect.width, inRect.height);
-        Widgets.Label(new Rect(0f, 0f, inRect.width * 0.45f, 30f), "CQF_Region_Title".Translate());
-        if (CQFUIStyle.ButtonText(new Rect(inRect.width * 0.48f, 0f, inRect.width * 0.46f, 30f), "CustomMapStep_Layout".Translate()))
+        float actionWidth = Mathf.Min(170f, (inRect.width - 36f) * 0.45f);
+        Rect layoutButton = new Rect(inRect.width - actionWidth - 34f, 0f, actionWidth, 30f);
+        Widgets.Label(new Rect(0f, 0f, layoutButton.x - 10f, 30f), "CQF_Region_Title".Translate());
+        if (CQFUIStyle.ButtonText(layoutButton, "CustomMapStep_Layout".Translate()))
         {
             Close(); Find.WindowStack.Add(new Dialog_CQFLayout(map, reference: selected));
         }
@@ -31,7 +33,7 @@ public sealed class Dialog_CQFMapRegions : Window
             Close(); Find.DesignatorManager.Select(new Designator_CQFRegionPaint(map, draft, false, false));
         }
         Rect viewport = new Rect(0f, 78f, listWidth, inRect.height - 82f);
-        Widgets.BeginScrollView(viewport, ref listScroll, new Rect(0f, 0f, listWidth - 20f, Registry.All.Count * 38f));
+        Widgets.BeginScrollView(viewport, ref listScroll, new Rect(0f, 0f, listWidth - 20f, Mathf.Max(viewport.height, Registry.All.Count * 38f)));
         float row = 0f;
         foreach (CQFMapRegion region in Registry.All.ToList())
         {
@@ -41,7 +43,7 @@ public sealed class Dialog_CQFMapRegions : Window
         Widgets.EndScrollView();
         if (selected == null || !Registry.All.Contains(selected)) return;
         Rect details = new Rect(listWidth + 14f, 38f, inRect.width - listWidth - 14f, inRect.height - 42f);
-        Widgets.BeginScrollView(details, ref detailScroll, new Rect(0f, 0f, details.width - 20f, detailHeight));
+        Widgets.BeginScrollView(details, ref detailScroll, new Rect(0f, 0f, details.width - 20f, Mathf.Max(details.height, detailHeight)));
         float width = details.width - 22f;
         float y = 0f;
         Field("CQF_Region_Key", ref key, ref y, width);
@@ -97,6 +99,7 @@ public sealed class Dialog_CQFMapRegions : Window
     private void Select(CQFMapRegion? region)
     {
         selected = region; key = region?.key ?? ""; name = region?.name ?? ""; tags = string.Join(",", region?.tags ?? new List<string>());
+        detailScroll = Vector2.zero;
     }
 
     private void Field(string label, ref string value, ref float y, float width)

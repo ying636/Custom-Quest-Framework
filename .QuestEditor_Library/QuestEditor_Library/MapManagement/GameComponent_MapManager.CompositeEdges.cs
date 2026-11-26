@@ -109,7 +109,7 @@ public sealed partial class GameComponent_MapManager
 
     private void CheckCompositeEdgePawn(Pawn pawn, Map map)
     {
-        if (!pawn.pather.ChangedCellRecently(0) || !pawn.IsColonistPlayerControlled) return;
+        if (!pawn.pather.ChangedCellRecently(0) || !pawn.IsColonistPlayerControlled || crossMap.HasPawnOrder(pawn)) return;
         IntVec3 cell = pawn.Position;
         if (compositeEdgeSpawns.TryGetValue(pawn, out var spawn) && spawn.Map == map && spawn.Cell == cell) return;
         QueueCompositeEdgeTravel(pawn, map, cell);

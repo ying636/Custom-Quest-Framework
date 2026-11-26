@@ -159,7 +159,12 @@ public sealed partial class CQFDomainRuntime
                     if (item.thing.Destroyed) throw new InvalidOperationException("[CQF] Transferred thing was destroyed: " + item.thing.ThingID);
                     if (item.thing.Spawned) RelocateBattlefieldThing(item.thing, item.source, item.cell, item.rotation);
                     else GenSpawn.Spawn(item.thing, item.cell, item.source, item.rotation, respawningAfterLoad: true);
-                    if (item.thing is Pawn restored && item.lord != null) item.lord.AddPawn(restored);
+                    if (item.thing is Pawn restored)
+                    {
+                        if (item.lord != null) item.lord.AddPawn(restored);
+                        if (item.source.Parent is not MapParent_Domain)
+                            Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(restored)?.ResumeMemberFromTemporaryMap(restored);
+                    }
                 }
                 catch (Exception rollback) { failures.Add(rollback); }
             foreach (var pair in copied.AsEnumerable().Reverse())

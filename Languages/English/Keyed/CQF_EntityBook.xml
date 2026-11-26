@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <LanguageData>
+  <CQF_EntityBook_ListTab>Entries</CQF_EntityBook_ListTab>
+  <CQF_EntityBook_DetailsTab>Details</CQF_EntityBook_DetailsTab>
   <CQF_EntityBook_ChooseMember>Choose member {0}</CQF_EntityBook_ChooseMember>
   <CQF_EntityBook_ChooseMemberFirst>This source can produce multiple entities. Choose a specific member first.</CQF_EntityBook_ChooseMemberFirst>
   <CQF_EntityBook_CinematicAddRole>Add actor from entity book</CQF_EntityBook_CinematicAddRole>

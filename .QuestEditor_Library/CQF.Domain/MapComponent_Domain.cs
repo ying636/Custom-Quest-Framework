@@ -132,6 +132,7 @@ public sealed partial class MapComponent_Domain : MapComponent
                 entry.originalLord?.RemovePawn(entrant);
                 entrant.DeSpawn();
                 GenSpawn.Spawn(entrant, cell, map);
+                Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(entrant)?.SuspendMemberForTemporaryMap(entrant);
                 if (entrant.drafter != null) entrant.drafter.Drafted = entry.drafted;
             }
             worker.Entered(entrants);
@@ -499,9 +500,13 @@ public sealed partial class MapComponent_Domain : MapComponent
     private void RestorePawnState(Pawn pawn, DomainParticipant? entry, Map destination)
     {
         if (pawn.drafter != null && entry != null) pawn.drafter.Drafted = entry.drafted;
+        MetaLord? organization = Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(pawn);
         if (entry?.originalLord != null && destination == sourceMap
-            && destination.lordManager.lords.Contains(entry.originalLord) && !pawn.Downed && !pawn.Dead)
+            && destination.lordManager.lords.Contains(entry.originalLord) && !pawn.Downed && !pawn.Dead
+            && (entry.originalLord.LordJob is not MultLevelLordJobBase original || original.metaLord == organization))
             entry.originalLord.AddPawn(pawn);
+        if (destination.Parent is not MapParent_Domain)
+            organization?.ResumeMemberFromTemporaryMap(pawn);
     }
 
     private DomainDef? definition;

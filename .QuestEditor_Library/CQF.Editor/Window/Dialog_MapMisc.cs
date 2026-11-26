@@ -18,15 +18,18 @@ namespace QuestEditor_Library
             this.doCloseX = true;
         }
 
-        public override Vector2 InitialSize => new Vector2(640f, 700f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(640f, UI.screenWidth - 24f), Mathf.Min(700f, UI.screenHeight - 24f));
 
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             float y = 0f;
             float contentWidth = inRect.width - 20f;
-            Rect outRect = new Rect(0f, 0f, inRect.width, inRect.height);
-            Rect viewRect = new Rect(0f, 0f, contentWidth, Mathf.Max(this.height, inRect.height));
+            Text.Font = GameFont.Medium;
+            Widgets.Label(new Rect(0f, 0f, inRect.width - 36f, 34f), "AdvancedSetting".Translate().Colorize(CQFUIStyle.Accent));
+            Text.Font = GameFont.Small;
+            Rect outRect = new Rect(0f, 40f, inRect.width, inRect.height - 40f);
+            Rect viewRect = new Rect(0f, 0f, contentWidth, Mathf.Max(this.height, outRect.height));
             Widgets.BeginScrollView(outRect, ref this.pos, viewRect);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(viewRect.width);
 

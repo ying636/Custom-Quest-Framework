@@ -99,6 +99,7 @@ namespace QuestEditor_Library
         public void RemoveMember(Pawn pawn, string reason = "Removed")
         {
             if (pawn == null || !this.members.Remove(pawn)) return;
+            this.temporaryMembers.Remove(pawn);
             this.memberRevision++;
             Lord previous = pawn.GetLord();
             this.manager.Unbind(pawn, this);
@@ -112,10 +113,7 @@ namespace QuestEditor_Library
 
         public MoveRequirment RequestMove(Pawn pawn, Map destination, string group = null, int timeoutTicks = 60000)
         {
-            this.ValidateMap(destination);
-            if (this.manager.GetForPawn(pawn) != this || pawn == null || !pawn.Spawned || timeoutTicks <= 0)
-                throw new ArgumentException("[CQF] MetaLord move requires a spawned member and positive timeout.");
-            LevelPather.GetPathPortal(pawn.Map, destination);
+            Map source = this.ValidateMove(pawn, destination, timeoutTicks);
             MoveRequirment previous = this.GetMove(pawn);
             if (previous != null) this.FinishMove(previous, MetaLordMoveStatus.Cancelled, "Replaced", false);
             MoveRequirment result = new MoveRequirment
@@ -127,8 +125,14 @@ namespace QuestEditor_Library
             this.moveIndex[pawn] = result;
             if (previous != null) this.NotifyMoveResult(previous);
             if (this.GetMove(pawn) != result) return result;
-            if (pawn.Map == destination) this.PawnArrivedNewLevel(pawn, destination);
-            else this.RefreshDuty(pawn, true);
+            if (pawn.Spawned && source == destination) this.PawnArrivedNewLevel(pawn, destination);
+            else
+            {
+                if (pawn.Spawned) this.RefreshDuty(pawn, true);
+#if RIMWORLD_1_7
+                this.QueueCrossMapMove(result, source);
+#endif
+            }
             return result;
         }
 
@@ -148,6 +152,17 @@ namespace QuestEditor_Library
             portal = null;
             MoveRequirment move = this.GetMove(pawn);
             if (move == null || Find.TickManager.TicksGame < move.nextCheckTick) return false;
+#if RIMWORLD_1_7
+            var maps = GameComponent_MapManager.Instance;
+            if (maps != null && pawn.Spawned && this.IncludesMap(pawn.Map) &&
+                maps.TryGetOrganizationStep(this, pawn.Map, move.targetMap, pawn, out CQFCrossMapStep step) &&
+                step.Portal is CQFMapPortal passage && !pawn.Drafted && !pawn.Downed && !pawn.InMentalState)
+            {
+                portal = passage;
+                return true;
+            }
+            return false;
+#else
             try
             {
                 if (pawn.Map == move.targetMap)
@@ -176,12 +191,13 @@ namespace QuestEditor_Library
                 this.FinishMove(move, MetaLordMoveStatus.Failed, error.Message);
                 return false;
             }
+#endif
         }
 
         public void PawnArrivedNewLevel(Pawn pawn, Map level)
         {
-            if (this.disposed || this.manager.GetForPawn(pawn) != this) return;
-            if (level == null || level.Disposed || LevelPather.GetRoot(level) != this.rootMap)
+            if (this.disposed || this.manager.GetForPawn(pawn) != this || this.temporaryMembers.Contains(pawn)) return;
+            if (!this.IncludesMap(level))
             {
                 this.RemoveMember(pawn, "ExitedScope");
                 return;
@@ -233,8 +249,9 @@ namespace QuestEditor_Library
             foreach (MoveRequirment move in this.recentMoves)
                 if (move.targetMap == map) move.targetMap = null;
             this.levelLords.RemoveAll(l => l.level == map);
-            foreach (Pawn pawn in this.members.ToArray())
-                if (pawn.Map == map) this.RemoveMember(pawn, "MapRemoved");
+            if (map != null)
+                foreach (Pawn pawn in this.members.ToArray())
+                    if (pawn.Map == map || map.spawnedThings.Contains(pawn)) this.RemoveMember(pawn, "MapRemoved");
             this.Trigger(new LordEventSignal(LordEventSignalType.MapRemoved) { sourceMap = map });
         }
 
@@ -264,14 +281,30 @@ namespace QuestEditor_Library
                     this.RemoveMember(pawn, "MemberInvalid");
                     continue;
                 }
-                if (!pawn.Spawned) continue;
-                if (LevelPather.GetRoot(pawn.Map) != this.rootMap)
+                MoveRequirment move = this.GetMove(pawn);
+                if (this.temporaryMembers.Contains(pawn))
+                {
+                    if (move != null) move.createdTick += 60;
+                    continue;
+                }
+                if (!pawn.Spawned)
+                {
+#if RIMWORLD_1_7
+                    if (move != null)
+                    {
+                        move.createdTick += 60;
+                        Map source = this.MemberMap(pawn);
+                        if (this.IncludesMap(source)) this.QueueCrossMapMove(move, source);
+                    }
+#endif
+                    continue;
+                }
+                if (!this.IncludesMap(pawn.Map))
                 {
                     this.RemoveMember(pawn, "ExitedScope");
                     continue;
                 }
                 bool sleeping = GameComponent_MapManager.Instance?.IsHibernating(pawn.Map) == true;
-                MoveRequirment move = this.GetMove(pawn);
                 if (sleeping)
                 {
                     if (move != null) move.createdTick += 60;
@@ -295,6 +328,10 @@ namespace QuestEditor_Library
                     this.FinishMove(move, MetaLordMoveStatus.Failed, "Timeout");
                 else if (move.targetMap == pawn.Map && now >= move.nextCheckTick)
                     this.PawnArrivedNewLevel(pawn, pawn.Map);
+#if RIMWORLD_1_7
+                else if (move.targetMap != pawn.Map)
+                    this.QueueCrossMapMove(move, pawn.Map);
+#endif
             }
             if (this.eventDef != null && now >= this.nextEventTick)
             {
@@ -367,6 +404,9 @@ namespace QuestEditor_Library
             this.disposed = true;
             foreach (Pawn pawn in this.members.ToArray())
             {
+#if RIMWORLD_1_7
+                GameComponent_MapManager.Instance?.CrossMap.StopOrganizationMove(pawn, this);
+#endif
                 this.manager?.Unbind(pawn, this);
                 if (pawn.CurJobDef == QEDefOf.CQF_MetaLordMove)
                     pawn.jobs.EndCurrentJob(JobCondition.InterruptForced);
@@ -377,6 +417,7 @@ namespace QuestEditor_Library
                         if ((lord.LordJob as MultLevelLordJobBase)?.metaLord == this)
                             level.level.lordManager.RemoveLord(lord);
             this.members.Clear();
+            this.temporaryMembers.Clear();
             foreach (MoveRequirment move in this.moves)
             {
                 move.status = MetaLordMoveStatus.Cancelled;
@@ -396,11 +437,13 @@ namespace QuestEditor_Library
             Scribe_Values.Look(ref this.name, "name");
             Scribe_Values.Look(ref this.nextEventTick, "nextEventTick");
             Scribe_Values.Look(ref this.ruleOverride, "ruleOverride");
+            Scribe_Values.Look(ref this.scope, "scope", -1);
             Scribe_References.Look(ref this.rootMap, "rootMap");
             Scribe_References.Look(ref this.faction, "faction");
             Scribe_References.Look(ref this.quest, "quest");
             Scribe_Defs.Look(ref this.eventDef, "eventDef");
             Scribe_Collections.Look(ref this.members, "members", LookMode.Reference);
+            Scribe_Collections.Look(ref this.temporaryMembers, "temporaryMembers", LookMode.Reference);
             Scribe_Collections.Look(ref this.levelLords, "levelLords", LookMode.Deep);
             Scribe_Collections.Look(ref this.moves, "moves", LookMode.Deep);
             Scribe_Collections.Look(ref this.recentMoves, "recentMoves", LookMode.Deep);
@@ -409,6 +452,7 @@ namespace QuestEditor_Library
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 this.members ??= new List<Pawn>();
+                this.temporaryMembers ??= new HashSet<Pawn>();
                 this.levelLords ??= new List<LevelLord>();
                 this.moves ??= new List<MoveRequirment>();
                 this.recentMoves ??= new List<MoveRequirment>();
@@ -428,6 +472,39 @@ namespace QuestEditor_Library
             this.eventDef = definition;
             this.eventStates.Clear();
             this.nextEventTick = 0;
+        }
+
+        public bool IncludesMap(Map map) => !this.disposed && map != null && !map.Disposed &&
+            LevelPather.GetRoot(map) == this.rootMap && LevelPather.GetOrganizationScope(map) == this.scope;
+
+        public void SuspendMemberForTemporaryMap(Pawn pawn)
+        {
+            if (this.manager.GetForPawn(pawn) != this || !this.temporaryMembers.Add(pawn)) return;
+#if RIMWORLD_1_7
+            GameComponent_MapManager.Instance?.CrossMap.StopOrganizationMove(pawn, this);
+#endif
+        }
+
+        public void ResumeMemberFromTemporaryMap(Pawn pawn)
+        {
+            if (this.temporaryMembers.Remove(pawn) && pawn.Spawned)
+                this.PawnArrivedNewLevel(pawn, pawn.Map);
+        }
+
+        internal Map ValidateMove(Pawn pawn, Map destination, int timeoutTicks)
+        {
+            this.ValidateMap(destination);
+            if (this.manager.GetForPawn(pawn) != this || timeoutTicks <= 0)
+                throw new ArgumentException("[CQF] MetaLord move requires an organization member and positive timeout.");
+            Map source = this.MemberMap(pawn);
+            this.ValidateMap(source);
+#if RIMWORLD_1_7
+            if (GameComponent_MapManager.Instance?.HasOrganizationRoute(this, source, destination) != true)
+                throw new InvalidOperationException("[CQF] No organization route between maps: " + source + " / " + destination);
+#else
+            LevelPather.GetPathPortal(source, destination);
+#endif
+            return source;
         }
 
         public void Trigger(LordEventSignal signal)
@@ -492,9 +569,32 @@ namespace QuestEditor_Library
 
         private void ValidateMap(Map map)
         {
-            if (this.disposed || map == null || map.Disposed || LevelPather.GetRoot(map) != this.rootMap)
+            if (!this.IncludesMap(map))
                 throw new InvalidOperationException("[CQF] Map is outside MetaLord scope: " + this.name + "/" + map);
         }
+
+        private Map MemberMap(Pawn pawn)
+        {
+            if (pawn?.Map is { } active) return active;
+#if RIMWORLD_1_7
+            var maps = GameComponent_MapManager.Instance;
+            if (pawn != null && maps != null)
+                return maps.CrossMap.TravelingMap(pawn) ?? this.levelLords
+                    .Select(level => level.level).FirstOrDefault(map => map != null && maps.ContainsCrossMapThing(map, pawn));
+#endif
+            return null;
+        }
+
+#if RIMWORLD_1_7
+        private void QueueCrossMapMove(MoveRequirment move, Map source)
+        {
+            if (source == move.targetMap || this.GetMove(move.pawn) != move) return;
+            var maps = GameComponent_MapManager.Instance;
+            if (maps == null || maps.CrossMap.RequestOrganizationMove(maps, this, move.pawn, source, move.targetMap)) return;
+            move.status = MetaLordMoveStatus.Waiting;
+            move.reason = "AnotherCrossMapOrder";
+        }
+#endif
 
         private Lord SelectGroup(Pawn pawn, Map map, string group, bool create)
         {
@@ -552,6 +652,9 @@ namespace QuestEditor_Library
         {
             if (!this.moves.Remove(move)) return;
             this.moveIndex.Remove(move.pawn);
+#if RIMWORLD_1_7
+            GameComponent_MapManager.Instance?.CrossMap.StopOrganizationMove(move.pawn, this);
+#endif
             move.status = status;
             move.reason = reason;
             this.recentMoves.Add(move);
@@ -571,6 +674,7 @@ namespace QuestEditor_Library
 
         private void RefreshDuty(Pawn pawn, bool interrupt)
         {
+            if (this.temporaryMembers.Contains(pawn)) return;
             if (pawn?.GetLord()?.LordJob is MultLevelLordJobBase job && job.metaLord == this)
                 pawn.GetLord().CurLordToil?.UpdateAllDuties();
             if (interrupt && pawn?.CurJob != null && !pawn.Downed && !pawn.Drafted)
@@ -583,6 +687,8 @@ namespace QuestEditor_Library
         public Faction faction;
         public Quest quest;
         public MetaLordEventDef eventDef;
+
+        internal int scope = -1;
         internal MetaLordManager manager;
         private int nextEventTick;
         private bool ruleOverride;
@@ -590,6 +696,7 @@ namespace QuestEditor_Library
         private bool processingEvents;
         private int memberRevision;
         private List<Pawn> members = new List<Pawn>();
+        private HashSet<Pawn> temporaryMembers = new HashSet<Pawn>();
         private List<LevelLord> levelLords = new List<LevelLord>();
         private List<MoveRequirment> moves = new List<MoveRequirment>();
         private List<MoveRequirment> recentMoves = new List<MoveRequirment>();

@@ -15,11 +15,12 @@ namespace QuestEditor_Library
             this.iDrawable = iDrawable;
             this.symmetrySession = new CQFSymmetryEditSession(iDrawable as Thing);
             this.forcePause = true;
+            this.absorbInputAroundWindow = iDrawable is Spawner;
             this.closeOnClickedOutside = false;
             this.doCloseX = true;
         }
 
-        public override Vector2 InitialSize => new Vector2(580f, 650f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(580f, UI.screenWidth - 20f), Mathf.Min(650f, UI.screenHeight - 20f));
         public CQFAIEditorContext? AIContext => this.iDrawable is Thing thing ? CQFAIThingContext.Create(thing, this) : null;
 
         public override void PostClose()

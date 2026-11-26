@@ -11,8 +11,7 @@ namespace QuestEditor_Library
 
         public MetaLord Get(string name, Map map)
         {
-            Map root = LevelPather.GetRoot(map);
-            return this.metaLords.Find(l => !l.Disposed && l.name == name && l.rootMap == root);
+            return this.metaLords.Find(l => l.name == name && l.IncludesMap(map));
         }
 
         public MetaLord GetForPawn(Pawn pawn)
@@ -36,7 +35,8 @@ namespace QuestEditor_Library
             result = new MetaLord
             {
                 loadID = Find.UniqueIDsManager.GetNextLordID(), name = name,
-                rootMap = LevelPather.GetRoot(map), faction = faction, eventDef = events, quest = quest,
+                rootMap = LevelPather.GetRoot(map), scope = LevelPather.GetOrganizationScope(map),
+                faction = faction, eventDef = events, quest = quest,
                 manager = this
             };
             this.metaLords.Add(result);

@@ -37,6 +37,7 @@ public sealed partial class GameComponent_MapManager
                 phase = region.id;
                 CQFCompositeMapParent parent = (CQFCompositeMapParent)WorldObjectMaker.MakeWorldObject(CQFCompositeMapDefs.CQF_CompositeMapRegion);
                 parents.Add(parent);
+                parent.organizationScope = parents[0].ID;
                 parent.mapDataDef = region.map;
                 parent.quest = quest!;
                 parent.Tile = source.Tile;
@@ -213,6 +214,7 @@ public sealed partial class GameComponent_MapManager
         }
 
         if (pawn.drafter != null) pawn.drafter.Drafted = drafted;
+        Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(pawn)?.PawnArrivedNewLevel(pawn, target);
         crossMap.Pursue(pursuers, pawn, source, target, sourceCell);
         if (follow) CameraJumper.TryJumpAndSelect(new GlobalTargetInfo(pawn), CameraJumper.MovementMode.Cut);
         return true;

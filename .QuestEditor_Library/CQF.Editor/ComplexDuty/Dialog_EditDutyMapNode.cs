@@ -17,15 +17,15 @@ namespace QuestEditor_Library
             this.draggable = true;
         }
 
-        public override Vector2 InitialSize => new Vector2(520f, 680f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(520f, UI.screenWidth - 24f), Mathf.Min(680f, UI.screenHeight - 24f));
 
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope cqfUIScope = new CQFUIScope(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(5f, 5f, 420f, 30f), "CQF_DutyMapNodeEditor".Translate().Colorize(CQFUIStyle.Accent));
+            Widgets.Label(new Rect(5f, 5f, inRect.width - 38f, 30f), "CQF_DutyMapNodeEditor".Translate().Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
-            Rect view = new Rect(0f, 0f, inRect.width - 20f, this.height);
+            Rect view = new Rect(0f, 0f, inRect.width - 20f, Mathf.Max(this.height, inRect.height - 45f));
             Widgets.BeginScrollView(new Rect(0f, 40f, inRect.width, inRect.height - 45f), ref this.scrollPos, view);
             using CQFUIScope cqfContentScope1 = new CQFUIScope(view.width);
             float y = 5f;
@@ -38,7 +38,7 @@ namespace QuestEditor_Library
         {
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_DutyMapNodeId".Translate(), ref this.node.nodeId, 5f, 120f);
             y += 30f;
-            if (CQFUIStyle.ButtonText(new Rect(5f, y, 300f, 25f), "CQF_DutyType".Translate(CQFEditorTools.DutyLabel(this.node.duty) ?? "Null"), false))
+            if (CQFUIStyle.ButtonText(new Rect(5f, y, Mathf.Min(300f, inRect.width - 10f), 25f), "CQF_DutyType".Translate(CQFEditorTools.DutyLabel(this.node.duty) ?? "Null"), false))
             {
                 CQFEditorTools.OpenDutySelect(d => this.node.duty = d);
             }
@@ -53,7 +53,7 @@ namespace QuestEditor_Library
             y += 30f;
             CQFEditorTools.DrawLabelAndText_Line(y, "CQF_WanderRadius".Translate(), ref this.node.wanderRadius, ref this.wanderRadiusBuffer, 5f, 120f);
             y += 30f;
-            if (CQFUIStyle.ButtonText(new Rect(5f, y, 300f, 25f), "CQF_LocomotionUrgency".Translate(this.node.locomotion.ToString()), false))
+            if (CQFUIStyle.ButtonText(new Rect(5f, y, Mathf.Min(300f, inRect.width - 10f), 25f), "CQF_LocomotionUrgency".Translate(this.node.locomotion.ToString()), false))
             {
                 CQFEditorTools.DrawFloatMenu<LocomotionUrgency>(Enum.GetValues(typeof(LocomotionUrgency)).Cast<LocomotionUrgency>().ToList(), v => this.node.locomotion = v, v => v.ToString());
             }

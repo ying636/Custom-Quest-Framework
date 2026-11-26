@@ -17,7 +17,7 @@ public sealed class Dialog_CQFDialogVisualSettings : Window
         resizeable = true;
     }
 
-    public override Vector2 InitialSize => new(560f, 680f);
+    public override Vector2 InitialSize => new(Mathf.Min(560f, UI.screenWidth - 24f), Mathf.Min(680f, UI.screenHeight - 24f));
 
     public override void DoWindowContents(Rect inRect)
     {
@@ -25,6 +25,7 @@ public sealed class Dialog_CQFDialogVisualSettings : Window
         Rect view = new(0f, 30f, inRect.width, inRect.height - 30f);
         float width = view.width - 22f;
         Widgets.BeginScrollView(view, ref scroll, new Rect(0f, 0f, width, Mathf.Max(view.height, height)));
+        using CQFUIScope contentScope = new(width, view.height);
         try { height = draw(width) + 12f; }
         finally { Widgets.EndScrollView(); }
     }

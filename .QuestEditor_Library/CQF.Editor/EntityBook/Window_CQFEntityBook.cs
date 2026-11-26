@@ -16,10 +16,11 @@ namespace QuestEditor_Library
             doCloseX = true;
             draggable = true;
             resizeable = true;
+            absorbInputAroundWindow = true;
             closeOnClickedOutside = false;
         }
 
-        public override Vector2 InitialSize => new(980f, 700f);
+        public override Vector2 InitialSize => new(Mathf.Min(980f, UI.screenWidth - 20f), Mathf.Min(700f, UI.screenHeight - 20f));
 
         public bool HasVisibleSelection => current != null && MatchesFilters(current) && entries.Any(entry => entry.SourceId == current.SourceId);
 
@@ -55,19 +56,28 @@ namespace QuestEditor_Library
             base.WindowUpdate();
             windowRect.width = Mathf.Clamp(windowRect.width, Mathf.Min(640f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             windowRect.height = Mathf.Clamp(windowRect.height, Mathf.Min(420f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+            windowRect.x = Mathf.Clamp(windowRect.x, 0f, UI.screenWidth - windowRect.width);
+            windowRect.y = Mathf.Clamp(windowRect.y, 0f, UI.screenHeight - windowRect.height);
         }
 
         public override void DoWindowContents(Rect inRect)
         {
             using CQFUIScope scope = new(inRect.width, inRect.height);
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(0f, 0f, inRect.width - 40f, 32f), "CQF_EntityBook_Title".Translate().Colorize(CQFUIStyle.Accent));
+            Rect title = new(0f, 0f, inRect.width - 40f, 32f);
+            Widgets.Label(title, "CQF_EntityBook_Title".Translate().Colorize(CQFUIStyle.Accent));
             Text.Font = GameFont.Small;
+            if (inRect.width < 600f || inRect.height < 274f)
+            {
+                TooltipHandler.TipRegion(title, quest == null ? "CQF_EntityBook_ContextUnassigned".Translate() : "CQF_EntityBook_ContextQuest".Translate(quest.name));
+                DrawCompact(inRect);
+                return;
+            }
             Rect context = new(0f, 36f, inRect.width - 136f, 26f);
             Widgets.Label(context, (quest == null ? "CQF_EntityBook_ContextUnassigned".Translate() : "CQF_EntityBook_ContextQuest".Translate(quest.name)).Colorize(CQFUIStyle.Muted));
             TooltipHandler.TipRegion(context, "CQF_EntityBook_ContextTip".Translate());
             if (CQFUIStyle.ButtonText(new Rect(inRect.width - 128f, 34f, 128f, 30f), "CQF_EntityBook_Refresh".Translate())) Refresh(true);
-            float listWidth = Mathf.Clamp(inRect.width * 0.46f, 260f, 430f);
+            float listWidth = Mathf.Min(430f, Mathf.Max(inRect.width * 0.46f, Mathf.Min(260f, inRect.width * 0.48f)));
             string previousSearch = search;
             search = Widgets.TextField(new Rect(0f, 74f, listWidth, 30f), search);
             if (previousSearch != search) listScroll = Vector2.zero;
@@ -77,7 +87,7 @@ namespace QuestEditor_Library
             {
                 Rect tab = new(index * (tabWidth + 6f), 112f, tabWidth, 30f);
                 if (filter == index) CQFUIStyle.DrawHighlightSelected(tab);
-                if (CQFUIStyle.ButtonText(tab, new[] { "CQF_EntityBook_FilterAll", "CQF_EntityBook_FilterRecipes", "CQF_EntityBook_FilterTemplates" }[index].Translate(), false))
+                if (CQFUIStyle.ButtonText(tab, FilterLabel(index), false))
                 {
                     filter = index;
                     listScroll = Vector2.zero;
@@ -109,7 +119,56 @@ namespace QuestEditor_Library
             }
         }
 
-        private void DrawEntries(Rect rect)
+        private void DrawCompact(Rect rect)
+        {
+            float width = rect.width;
+            float buttonWidth = (width - 50f) / 3f;
+            Rect listTab = new(0f, 36f, buttonWidth, 30f);
+            Rect detailTab = new(listTab.xMax + 6f, 36f, buttonWidth, 30f);
+            Rect refresh = new(detailTab.xMax + 6f, 36f, buttonWidth, 30f);
+            CQFUIStyle.DrawBackground(compactDetails ? detailTab : listTab, true);
+            if (CQFUIStyle.ButtonText(listTab, "CQF_EntityBook_ListTab".Translate(), false, overrideTextAnchor: TextAnchor.MiddleCenter))
+                compactDetails = false;
+            if (CQFUIStyle.ButtonText(detailTab, "CQF_EntityBook_DetailsTab".Translate(), false, overrideTextAnchor: TextAnchor.MiddleCenter))
+                compactDetails = true;
+            if (CQFUIStyle.ButtonText(refresh, "CQF_EntityBook_Refresh".Translate())) Refresh(true);
+            if (CQFUIStyle.ButtonImage(new Rect(width - 28f, 38f, 26f, 26f), TexButton.Plus, tooltip: "CQF_EntityBook_NewRecipe".Translate()))
+                Find.WindowStack.Add(new Dialog_CQFEntityRecipe(new PawnSpawnData(), () => Refresh()));
+            if (compactDetails)
+            {
+                SynchronizeSelection();
+                DrawDetails(new Rect(0f, 74f, width, rect.height - 74f), dockActions: false);
+                return;
+            }
+
+            Rect searchField = new(0f, 74f, width * 0.60f, 28f);
+            string query = Widgets.TextField(searchField, search);
+            if (query != search)
+            {
+                search = query;
+                listScroll = Vector2.zero;
+            }
+            TooltipHandler.TipRegion(searchField, "CQF_EntityBook_SearchTip".Translate());
+            Rect filterField = new(searchField.xMax + 8f, 74f, width - searchField.xMax - 8f, 28f);
+            if (CQFUIStyle.ButtonText(filterField, FilterLabel(filter)))
+            {
+                Find.WindowStack.Add(new FloatMenu(Enumerable.Range(0, 3).Select(index => new FloatMenuOption(FilterLabel(index), () =>
+                {
+                    filter = index;
+                    listScroll = Vector2.zero;
+                })).ToList()));
+            }
+            DrawEntries(new Rect(0f, 110f, width, rect.height - 110f), selectOpensDetails: true);
+        }
+
+        private static string FilterLabel(int index) => (index switch
+        {
+            1 => "CQF_EntityBook_FilterRecipes",
+            2 => "CQF_EntityBook_FilterTemplates",
+            _ => "CQF_EntityBook_FilterAll"
+        }).Translate();
+
+        private void DrawEntries(Rect rect, bool selectOpensDetails = false)
         {
             CQFUIStyle.DrawMenuSection(rect);
             SynchronizeSelection();
@@ -141,13 +200,14 @@ namespace QuestEditor_Library
                 if (Widgets.ButtonInvisible(row))
                 {
                     SelectEntry(entry);
+                    if (selectOpensDetails) compactDetails = true;
                 }
             }
             if (visibleEntries.Count == 0) Widgets.Label(new Rect(10f, 10f, content.width - 20f, 60f), "CQF_EntityBook_Empty".Translate().Colorize(CQFUIStyle.Muted));
             Widgets.EndScrollView();
         }
 
-        private void DrawDetails(Rect rect)
+        private void DrawDetails(Rect rect, bool dockActions = true)
         {
             CQFUIStyle.DrawMenuSection(rect);
             useRecipeRect = default;
@@ -162,14 +222,18 @@ namespace QuestEditor_Library
             int selectionRows = (recipeSelected != null && (current!.Recipe != null || current.Template != null) ? 1 : 0) + (selected != null ? allowGroups ? 2 : 1 : 0)
                 + (selected == null && recipeSelected == null && (current!.Recipe != null || current.Template != null) ? 1 : 0);
             Rect inner = rect.ContractedBy(12f);
-            Rect viewport = new(inner.x, inner.y, inner.width, Mathf.Max(30f, inner.height - selectionRows * 42f));
+            Rect viewport = new(inner.x, inner.y, inner.width, Mathf.Max(0f, inner.height - (dockActions ? selectionRows * 42f : 0f)));
             Rect content = new(0f, 0f, viewport.width - 18f, Mathf.Max(viewport.height, detailsHeight));
             Widgets.BeginScrollView(viewport, ref detailScroll, content);
             using CQFUIScope scope = new(content.width);
             float y = 0f;
             Text.Font = GameFont.Medium;
-            float titleHeight = Text.CalcHeight(current.Label, content.width);
-            Widgets.Label(new Rect(0f, y, content.width, titleHeight), current.Label.Colorize(CQFUIStyle.Accent));
+            float titleHeight = dockActions ? Text.CalcHeight(current.Label, content.width) : 29f;
+            Rect title = new(0f, y, content.width, titleHeight);
+            string titleText = dockActions ? current.Label : current.Label.Truncate(title.width);
+            Widgets.Label(title, titleText.Colorize(CQFUIStyle.Accent));
+            if (titleText != current.Label)
+                TooltipHandler.TipRegion(title, current.Label);
             y += titleHeight + 8f;
             Text.Font = GameFont.Small;
             Widgets.Label(new Rect(0f, y, content.width, 26f), current.Origin.Colorize(CQFUIStyle.Muted));
@@ -218,9 +282,15 @@ namespace QuestEditor_Library
                 Widgets.Label(new Rect(0f, y, content.width, height), previewError.Colorize(Color.red));
                 y += height + 8f;
             }
+            if (!dockActions)
+            {
+                DrawSelectionButtons(new Rect(0f, y, content.width, selectionRows * 42f));
+                y += selectionRows * 42f;
+            }
             detailsHeight = y + 8f;
             Widgets.EndScrollView();
-            DrawSelectionButtons(new Rect(inner.x, viewport.yMax + 8f, inner.width, selectionRows * 42f));
+            if (dockActions)
+                DrawSelectionButtons(new Rect(inner.x, viewport.yMax + 8f, inner.width, selectionRows * 42f));
         }
 
         private void DrawSelectionButtons(Rect rect)
@@ -490,6 +560,7 @@ namespace QuestEditor_Library
         private string search = "";
         private string? error;
         private int filter;
+        private bool compactDetails;
         private Vector2 listScroll;
         private Vector2 detailScroll;
         private float detailsHeight;

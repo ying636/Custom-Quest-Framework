@@ -27,7 +27,7 @@ namespace QuestEditor_Library
             closeOnClickedOutside = false;
         }
 
-        public override Vector2 InitialSize => new Vector2(760f, 720f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(760f, UI.screenWidth - 24f), Mathf.Min(720f, UI.screenHeight - 24f));
 
         public override void DoWindowContents(Rect inRect)
         {

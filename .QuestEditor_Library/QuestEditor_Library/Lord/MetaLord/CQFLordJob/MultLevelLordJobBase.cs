@@ -51,9 +51,13 @@ namespace QuestEditor_Library
         public override void Notify_PawnLost(Pawn pawn, PawnLostCondition condition)
         {
             base.Notify_PawnLost(pawn, condition);
-            if (condition == PawnLostCondition.ExitedMap && pawn.Map != null &&
-                LevelPather.GetRoot(pawn.Map) == this.metaLord.rootMap)
-                return;
+            if (condition == PawnLostCondition.ExitedMap)
+            {
+                if (this.metaLord.IncludesMap(pawn.Map)) return;
+#if RIMWORLD_1_7
+                if (GameComponent_MapManager.Instance?.CrossMap.KeepsOrganization(pawn, this.metaLord) == true) return;
+#endif
+            }
             if (condition != PawnLostCondition.InMentalState && condition != PawnLostCondition.Drafted)
                 this.metaLord.RemoveMember(pawn, condition.ToString());
         }

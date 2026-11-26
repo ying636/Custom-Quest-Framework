@@ -218,6 +218,8 @@ namespace QuestEditor_Library
             {
                 result["Target"] = new TargetInfo(pawn);
             }
+            if (pawn != null && !result.ContainsKey("Pawn"))
+                result["Pawn"] = new TargetInfo(pawn);
             return result;
         }
 

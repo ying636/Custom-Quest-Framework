@@ -9,7 +9,8 @@ internal enum CQFCrossMapOrderKind
     Pursuit,
     Report,
     Reinforcement,
-    Haul
+    Haul,
+    Organization
 }
 
 internal sealed class CQFCrossMapOrder : IExposable
@@ -22,6 +23,7 @@ internal sealed class CQFCrossMapOrder : IExposable
         Scribe_References.Look(ref origin!, "origin");
         Scribe_References.Look(ref reportOrigin, "reportOrigin");
         Scribe_References.Look(ref quarry, "quarry");
+        Scribe_References.Look(ref organization, "organization");
         Scribe_Values.Look(ref cell, "cell");
         Scribe_Values.Look(ref preferredExit, "preferredExit", IntVec3.Invalid);
         Scribe_Values.Look(ref rotation, "rotation");
@@ -41,6 +43,7 @@ internal sealed class CQFCrossMapOrder : IExposable
     public Map origin = null!;
     public Map? reportOrigin;
     public Pawn? quarry;
+    public MetaLord? organization;
     public IntVec3 cell;
     public IntVec3 preferredExit = IntVec3.Invalid;
     public Rot4 rotation;

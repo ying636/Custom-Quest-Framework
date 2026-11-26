@@ -17,7 +17,7 @@ namespace QuestEditor_Library
             closeOnClickedOutside = true;
         }
 
-        public override Vector2 InitialSize => new Vector2(600f, 540f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(600f, UI.screenWidth - 24f), Mathf.Min(540f, UI.screenHeight - 24f));
 
         public override void DoWindowContents(Rect inRect)
         {
@@ -25,10 +25,10 @@ namespace QuestEditor_Library
             Text.Font = GameFont.Small;
             QuestBookStepState state = instance?.GetStepState(step.id);
             bool canCheck = instance?.state == QuestBookState.Active && state?.status == QuestBookStepStatus.Active;
-            Widgets.Label(new Rect(4f, 0f, inRect.width - 52f, 32f), "CQF_QuestBook_StepInfo".Translate().Colorize(CQFUIStyle.Accent));
+            Widgets.Label(new Rect(4f, 0f, inRect.width - 80f, 32f), "CQF_QuestBook_StepInfo".Translate().Colorize(CQFUIStyle.Accent));
             Color oldColor = GUI.color;
             GUI.color = canCheck ? Color.white : Color.gray;
-            Rect checkRect = new Rect(inRect.width - 34f, 2f, 28f, 28f);
+            Rect checkRect = new Rect(inRect.width - 68f, 2f, 28f, 28f);
             if (CQFUIStyle.ButtonImage(checkRect, TexButton.Reload) && canCheck)
             {
                 Messages.Message(instance.CheckObjectives(step.id) ? "CQF_QuestBook_ObjectivesChecked".Translate() : "CQF_QuestBook_ObjectiveCheckUnavailable".Translate(), MessageTypeDefOf.PositiveEvent);
@@ -48,12 +48,12 @@ namespace QuestEditor_Library
 
         private float CalculateContentHeight(float width)
         {
-            float height = GetStepCardHeight(width);
+            float height = 8f + GetStepCardHeight(width) + CardGap;
             bool hasInfo = step.rewardInfos.Any(info => info?.HasContent == true);
             bool hasRewards = !step.rewards.NullOrEmpty();
             if (hasInfo || hasRewards)
             {
-                height += GetRewardCardHeight(width) + 10f;
+                height += GetRewardCardHeight(width) + CardGap;
             }
             height += GetObjectiveCardHeight(width) + CardGap;
             return height;

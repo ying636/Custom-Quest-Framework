@@ -8,7 +8,7 @@ public sealed class Window_CQFOrganization : Window
 {
     public Window_CQFOrganization(Map? map)
     {
-        this.root = map == null ? null : LevelPather.GetRoot(map);
+        this.map = map;
         this.organization = this.Organizations().FirstOrDefault();
         this.doCloseX = true;
         this.forcePause = true;
@@ -24,7 +24,7 @@ public sealed class Window_CQFOrganization : Window
         Text.Font = GameFont.Medium;
         Widgets.Label(new Rect(0, 0, rect.width - 30, 34), "CQF_Organization_Title".Translate().Colorize(CQFUIStyle.Accent));
         Text.Font = GameFont.Small;
-        if (this.root == null)
+        if (this.map == null)
         {
             Rect authoring = new(0f, 40f, rect.width, rect.height - 40f);
             CQFUIStyle.DrawMenuSection(authoring);
@@ -59,8 +59,9 @@ public sealed class Window_CQFOrganization : Window
     private void DrawRuntime(Rect rect)
     {
         Rect select = new(rect.x, rect.y, rect.width, 30);
-        if (CQFUIStyle.ButtonText(select, this.organization?.name ?? "CQF_Organization_Select".Translate().ToString()))
-            CQFEditorTools.DrawFloatMenu(this.Organizations(), owner => this.organization = owner, owner => owner.name);
+        if (CQFUIStyle.ButtonText(select, this.organization is { } selected
+                ? DisplayName(selected.name) : "CQF_Organization_Select".Translate().ToString()))
+            CQFEditorTools.DrawFloatMenu(this.Organizations(), owner => this.organization = owner, owner => DisplayName(owner.name));
 
         Rect view = new(rect.x, rect.y + 38, rect.width, rect.height - 38);
         if (this.organization is not { Disposed: false } owner)
@@ -75,24 +76,30 @@ public sealed class Window_CQFOrganization : Window
         Rect content = new(0, 0, view.width - 18, Mathf.Max(view.height, rows * 26));
         Widgets.BeginScrollView(view, ref this.runtimeScroll, content);
         Widgets.Label(new Rect(0, 0, content.width, 26), "CQF_Organization_RulesField".Translate(
-            owner.eventDef?.LabelCap.ToString() ?? "CQF_MetaLord_Unassigned".Translate().ToString()));
+            owner.eventDef is { } rules
+                ? DisplayName(rules.defName, rules.LabelCap.ToString())
+                : "CQF_MetaLord_Unassigned".Translate().ToString()));
         float y = 29;
         foreach (var level in levels)
         {
-            Widgets.Label(new Rect(0, y, content.width, 26), level.level.Parent.LabelCap.ToString().Colorize(CQFUIStyle.Accent));
+            Rect heading = new(0, y, content.width, 26);
+            string mapName = MapName(level.level);
+            Widgets.Label(heading, mapName.Truncate(heading.width).Colorize(CQFUIStyle.Accent));
+            TooltipHandler.TipRegion(heading, mapName);
             y += 26;
             foreach (var lord in level.Lords)
             {
                 if (lord?.LordJob is not MultLevelLordJobBase job) continue;
                 Rect row = new(8, y, content.width - 8, 26);
-                string label = "CQF_Organization_Roster".Translate(job.groupName, lord.ownedPawns.Count);
+                string squad = DisplayName(job.groupName);
+                string label = "CQF_Organization_Roster".Translate(squad, lord.ownedPawns.Count);
                 if (Mouse.IsOver(row) && Text.CalcSize(label).x > row.width - 12f)
                     TooltipHandler.TipRegion(row, label);
                 if (CQFUIStyle.ButtonText(row, label, false, overrideTextAnchor: TextAnchor.MiddleLeft))
                 {
                     string members = string.Join("\n", lord.ownedPawns.Select(pawn => pawn.LabelShortCap.ToString()));
                     Find.WindowStack.Add(new Dialog_MessageBox(members.NullOrEmpty() ? "CQF_Organization_EmptySquad".Translate() : members,
-                        title: job.groupName));
+                        title: squad));
                 }
                 y += 26;
             }
@@ -102,13 +109,19 @@ public sealed class Window_CQFOrganization : Window
         foreach (var move in moves)
         {
             string label = "CQF_Organization_MoveRow".Translate(move.pawn?.LabelShortCap.ToString() ?? string.Empty,
-                move.targetGroup ?? move.targetMap?.Parent.LabelCap.ToString() ?? string.Empty);
+                move.targetGroup is { } squad ? DisplayName(squad) : MapName(move.targetMap));
             Rect row = new(0, y, content.width, 26);
             Widgets.Label(row, label.Truncate(row.width));
             TooltipHandler.TipRegion(row, label);
             y += 26;
         }
         Widgets.EndScrollView();
+
+        static string DisplayName(string key, string? fallback = null) =>
+            key.CanTranslate() ? key.Translate().ToString() : fallback ?? key;
+
+        static string MapName(Map? map) => map?.Parent is MapParent_Custom parent
+            ? parent.MapName : map?.Parent.LabelCap.ToString() ?? string.Empty;
     }
 
     private void DrawRules(Rect rect)
@@ -182,7 +195,7 @@ public sealed class Window_CQFOrganization : Window
     }
 
     private List<MetaLord> Organizations() => Current.Game?.GetComponent<GameComponent_MetaLord>().Manager.Lords
-        .Where(owner => !owner.Disposed && owner.rootMap == this.root).ToList() ?? new List<MetaLord>();
+        .Where(owner => owner.IncludesMap(this.map)).ToList() ?? new List<MetaLord>();
 
     private void ChangeDraft(Func<MetaLordEventDef> create)
     {
@@ -219,7 +232,7 @@ public sealed class Window_CQFOrganization : Window
         }
     }
 
-    private readonly Map? root;
+    private readonly Map? map;
     private MetaLord? organization;
     private MetaLordEventDef? draft;
     private Vector2 runtimeScroll;

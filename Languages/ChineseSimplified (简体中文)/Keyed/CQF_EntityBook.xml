@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <LanguageData>
+  <CQF_EntityBook_ListTab>条目</CQF_EntityBook_ListTab>
+  <CQF_EntityBook_DetailsTab>详情</CQF_EntityBook_DetailsTab>
   <CQF_EntityBook_ChooseMember>选择第 {0} 个成员</CQF_EntityBook_ChooseMember>
   <CQF_EntityBook_ChooseMemberFirst>这个来源可以生成多个实体，请先明确选择成员。</CQF_EntityBook_ChooseMemberFirst>
   <CQF_EntityBook_CinematicAddRole>从实体本添加演员</CQF_EntityBook_CinematicAddRole>

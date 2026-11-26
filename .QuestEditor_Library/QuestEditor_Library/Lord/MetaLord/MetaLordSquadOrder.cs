@@ -26,7 +26,7 @@ public sealed class MetaLordSquadOrder
                 throw new InvalidOperationException("[CQF] Squad order requires one destination squad: " + this.destination.name);
             Lord target = matches[0];
             foreach (Pawn pawn in pawns)
-                LevelPather.GetPathPortal(pawn.Map, target.Map);
+                owner.ValidateMove(pawn, target.Map, this.timeoutTicks);
             foreach (Pawn pawn in pawns)
             {
                 if (this.CanReceive(owner, pawn) && pawn.GetLord() != target)
@@ -58,7 +58,7 @@ public sealed class MetaLordSquadOrder
     }
 
     private bool CanReceive(MetaLord owner, Pawn pawn) =>
-        !owner.Disposed && pawn.Spawned && !pawn.Dead && !pawn.Downed && !pawn.IsPrisoner &&
+        !owner.Disposed && (pawn.Spawned || this.destination != null) && !pawn.Dead && !pawn.Downed && !pawn.IsPrisoner &&
         pawn.GetLord() is { } squad && squad.LordJob is MultLevelLordJobBase job &&
         job.metaLord == owner && this.recipient.Matches(squad);
 

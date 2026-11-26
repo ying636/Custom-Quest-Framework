@@ -2,6 +2,7 @@
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
+using Verse.AI;
 using Verse.AI.Group;
 
 namespace QuestEditor_Library;
@@ -67,7 +68,16 @@ public sealed partial class GameComponent_MapManager
     }
 
     internal bool TryGetCrossMapStep(Map source, Map destination, Pawn? pawn, out CQFCrossMapStep first,
-        IntVec3? preferredExit = null)
+        IntVec3? preferredExit = null) => FindCrossMapStep(source, destination, pawn, out first, preferredExit, null, false);
+
+    internal bool HasOrganizationRoute(MetaLord owner, Map source, Map destination) =>
+        source == destination || FindCrossMapStep(source, destination, null, out _, null, owner, true);
+
+    internal bool TryGetOrganizationStep(MetaLord owner, Map source, Map destination, Pawn pawn, out CQFCrossMapStep first) =>
+        FindCrossMapStep(source, destination, pawn, out first, null, owner, false);
+
+    private bool FindCrossMapStep(Map source, Map destination, Pawn? pawn, out CQFCrossMapStep first,
+        IntVec3? preferredExit, MetaLord? owner, bool topologyOnly)
     {
         first = default;
         if (source == destination || !IsRegisteredGameMap(source) || !IsRegisteredGameMap(destination)) return false;
@@ -93,12 +103,14 @@ public sealed partial class GameComponent_MapManager
             if (!routes.TryGetValue(next.Map, out List<CQFCrossMapStep>? steps)) continue;
             foreach (CQFCrossMapStep step in steps)
             {
-                if (!CanUse(step)) continue;
-                if (!visited.Add(step.Destination)) continue;
+                if (visited.Contains(step.Destination) || !CanUse(step)) continue;
+                visited.Add(step.Destination);
                 CQFCrossMapStep initial = next.Map == source ? step : next.First;
                 if (step.Destination == destination)
                 {
-                    first = initial;
+                    first = owner != null && initial.EdgeApproach is { } approach
+                        ? initial with { Departure = approach }
+                        : initial;
                     return true;
                 }
                 queue.Enqueue((step.Destination, initial));
@@ -106,8 +118,17 @@ public sealed partial class GameComponent_MapManager
         }
         return false;
 
-        bool CanUse(CQFCrossMapStep step) => IsCrossMapPassageOpen(step) &&
-            (pawn == null || step.Portal is not CQFMapPortal portal || portal.IsAllowed(pawn));
+        bool CanUse(CQFCrossMapStep step)
+        {
+            if (owner != null && !owner.IncludesMap(step.Destination)) return false;
+            if (topologyOnly) return !step.Destination.Disposed && step.Portal is not { Destroyed: true };
+            if (!IsCrossMapPassageOpen(step) || (pawn != null && step.Portal is CQFMapPortal portal && !portal.IsAllowed(pawn))) return false;
+            if (owner == null || pawn == null || step.Source != source || pawn.Map != source) return true;
+            if (step.Portal is CQFMapPortal passage && (!passage.IsAvailable(pawn) || !passage.IsEnterable(out _))) return false;
+            if (step.EdgeApproach.HasValue && !step.Departure.Standable(source)) return false;
+            LocalTargetInfo target = step.Portal is { } thing ? new LocalTargetInfo(thing) : new LocalTargetInfo(step.EdgeApproach ?? step.Departure);
+            return pawn.CanReach(target, step.Portal == null ? PathEndMode.OnCell : PathEndMode.Touch, Danger.Deadly);
+        }
     }
 
     internal bool ContainsCrossMapThing(Map map, Thing thing) =>
@@ -187,9 +208,11 @@ public sealed partial class GameComponent_MapManager
                 int offset = edge.length / 2;
                 IntVec3 fromCell = CQFCompositeMapDef.EdgeCell(from.Size, edge.fromEdge, edge.fromStart + offset);
                 IntVec3 toCell = CQFCompositeMapDef.EdgeCell(to.Size, edge.toEdge, edge.toStart + offset);
-                Add(from, to, fromCell, CQFCompositeMapDef.EdgeCell(to.Size, edge.toEdge, edge.toStart + offset, 1), null);
+                IntVec3 fromApproach = CQFCompositeMapDef.EdgeCell(from.Size, edge.fromEdge, edge.fromStart + offset, 1);
+                IntVec3 toApproach = CQFCompositeMapDef.EdgeCell(to.Size, edge.toEdge, edge.toStart + offset, 1);
+                Add(from, to, fromCell, toApproach, null, fromApproach);
                 if (edge.twoWay)
-                    Add(to, from, toCell, CQFCompositeMapDef.EdgeCell(from.Size, edge.fromEdge, edge.fromStart + offset, 1), null);
+                    Add(to, from, toCell, fromApproach, null, toApproach);
             }
         }
         return routes;
@@ -197,11 +220,11 @@ public sealed partial class GameComponent_MapManager
         static IntVec3 Departure(Thing portal, Map map) =>
             ThingUtility.InteractionCellWhenAt(portal.def, portal.Position, portal.Rotation, map);
 
-        void Add(Map from, Map to, IntVec3 departure, IntVec3 arrival, Thing? portal)
+        void Add(Map from, Map to, IntVec3 departure, IntVec3 arrival, Thing? portal, IntVec3? edgeApproach = null)
         {
             if (from.Disposed || to.Disposed || !departure.InBounds(from) || !arrival.InBounds(to)) return;
             if (!routes.TryGetValue(from, out List<CQFCrossMapStep>? edges)) routes.Add(from, edges = new());
-            edges.Add(new CQFCrossMapStep(from, to, departure, arrival, portal));
+            edges.Add(new CQFCrossMapStep(from, to, departure, arrival, portal, edgeApproach));
         }
     }
 

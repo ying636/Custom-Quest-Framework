@@ -25,7 +25,7 @@ namespace QuestEditor_Library
             this.saveMode = saveMode;
             def.isPart = true;
         }
-        public override Vector2 InitialSize => QuestEditor_SaveMapToFile.size;
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(size.x, UI.screenWidth - 24f), Mathf.Min(size.y, UI.screenHeight - 24f));
         public override string PageTitle => "SaveMapToFile".Translate();
         public CQFAIEditorContext? AIContext => Find.CurrentMap is Map map ? CQFAILiveMapContext.Create(map) : null;
 #if RIMWORLD_1_7

@@ -9,13 +9,6 @@
   <CQF_Composite_BranchInUse>Someone is using a connected passage.</CQF_Composite_BranchInUse>
   <CQF_Composite_BranchHasReturn>Another map still uses one of these maps as its return point.</CQF_Composite_BranchHasReturn>
   <CQF_Composite_TravelReport>Traveling to another map.</CQF_Composite_TravelReport>
-  <CQF_CompositeCity>Large City</CQF_CompositeCity>
-  <CQF_CompositeCity_Center>Central Plaza</CQF_CompositeCity_Center>
-  <CQF_CompositeCity_North>Residential</CQF_CompositeCity_North>
-  <CQF_CompositeCity_West>Warehouses</CQF_CompositeCity_West>
-  <CQF_CompositeCity_East>Gardens</CQF_CompositeCity_East>
-  <CQF_CompositeCity_South>Market District</CQF_CompositeCity_South>
-  <CQF_CompositeCity_Underground>Underground</CQF_CompositeCity_Underground>
   <CQF_Composite_EntryMap>{0} (entry map)</CQF_Composite_EntryMap>
   <CQF_Composite_EntranceButton>{0} · Entry: {1}</CQF_Composite_EntranceButton>
   <CQF_Composite_SelectTraveler>Select a colonist to use this passage.</CQF_Composite_SelectTraveler>

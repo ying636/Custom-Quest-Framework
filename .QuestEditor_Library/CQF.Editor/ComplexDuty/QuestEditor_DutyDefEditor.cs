@@ -314,22 +314,23 @@ namespace QuestEditor_Library
 
         private void DrawThinkNodeFields(ref float y, ThinkNode node, string key, float x, float width)
         {
-            List<FieldInfo> fields = this.GetEditableFields(node.GetType()).ToList();
+            List<FieldInfo> fields = this.GetVisibleThinkNodeFields(node);
+            int rows = fields.Count;
 #if RIMWORLD_1_7
-            if (node is JobGiver_CQFCrossMapTarget crossMap)
-            {
-                if (!string.IsNullOrWhiteSpace(crossMap.compositeMapKey))
-                    fields.RemoveAll(field => field.DeclaringType == typeof(JobGiver_TargetBase));
-                fields = fields.OrderBy(field => field.DeclaringType == typeof(JobGiver_CQFCrossMapTarget) ? 0 : 1).ToList();
-            }
+            JobGiver_CQFCrossMapTarget? crossMap = node as JobGiver_CQFCrossMapTarget;
+            if (crossMap != null) rows++;
 #endif
-            if (!fields.Any())
+            if (rows == 0)
             {
                 return;
             }
-            Rect fieldsRect = new Rect(x, y, width, fields.Count * 32f + 8f);
+            Rect fieldsRect = new Rect(x, y, width, rows * 32f + 8f);
             Widgets.DrawBoxSolid(fieldsRect, new Color(0.06f, 0.07f, 0.08f, 0.34f));
             y += 4f;
+#if RIMWORLD_1_7
+            if (crossMap != null)
+                this.DrawCrossMapTargetSelector(ref y, crossMap, x + 8f, width - 16f);
+#endif
             foreach (FieldInfo field in fields)
             {
                 this.DrawField(ref y, node, field, key + "." + field.Name, x + 8f, width - 16f);
@@ -337,10 +338,78 @@ namespace QuestEditor_Library
             y += 10f;
         }
 
+        private List<FieldInfo> GetVisibleThinkNodeFields(ThinkNode node)
+        {
+            List<FieldInfo> fields = this.GetEditableFields(node.GetType()).ToList();
+#if RIMWORLD_1_7
+            if (node is JobGiver_CQFCrossMapTarget crossMap)
+            {
+                bool composite = crossMap.UsesCompositeMapTarget;
+                fields.RemoveAll(field => field.DeclaringType == typeof(JobGiver_CQFCrossMapTarget) &&
+                    (!composite || field.Name is nameof(crossMap.targetSource) or nameof(crossMap.compositeMapLookup)));
+                if (composite)
+                    fields.RemoveAll(field => field.DeclaringType == typeof(JobGiver_TargetBase));
+
+                return fields.OrderByDescending(field => field.DeclaringType == typeof(JobGiver_CQFCrossMapTarget) ||
+                        field.DeclaringType == typeof(JobGiver_TargetBase))
+                    .ThenByDescending(field => field.Name is nameof(crossMap.compositeMapKey) or nameof(crossMap.targetKey))
+                    .ThenByDescending(field => field.DeclaringType == node.GetType())
+                    .ToList();
+            }
+#endif
+            return fields;
+        }
+
+#if RIMWORLD_1_7
+        private void DrawCrossMapTargetSelector(ref float y, JobGiver_CQFCrossMapTarget node, float x, float width)
+        {
+            Rect row = new Rect(x, y, width, 28f);
+            Rect label = new Rect(x + 4f, y + 4f, Mathf.Min(210f, width * 0.38f), 24f);
+            Rect control = new Rect(label.xMax + 12f, y + 2f, row.xMax - label.xMax - 16f, 24f);
+            Widgets.DrawHighlightIfMouseover(row);
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(label, "CQF_DutyField_compositeMapLookup".Translate().Colorize(new Color(0.78f, 0.8f, 0.82f)));
+            Text.Anchor = TextAnchor.UpperLeft;
+            string targetKeyLabel = "CQF_DutyField_targetKey".Translate().ToString();
+            string selected = node.UsesCompositeMapTarget ? this.EnumLabel(node.compositeMapLookup) : targetKeyLabel;
+            if (CQFUIStyle.ButtonText(control, selected, false))
+            {
+                List<FloatMenuOption> options = new()
+                {
+                    new FloatMenuOption(targetKeyLabel, () => node.targetSource = CQFCrossMapTargetSource.DutyTarget)
+                };
+                foreach (CQFCompositeMapLookup lookup in Enum.GetValues<CQFCompositeMapLookup>())
+                {
+                    options.Add(new FloatMenuOption(this.EnumLabel(lookup), () =>
+                    {
+                        node.targetSource = CQFCrossMapTargetSource.CompositeMap;
+                        node.compositeMapLookup = lookup;
+                    }));
+                }
+                Find.WindowStack.Add(new FloatMenu(options));
+            }
+            y += 32f;
+        }
+#endif
+
         private void DrawField(ref float y, object owner, FieldInfo field, string key, float x, float width)
         {
             string label = this.FieldLabel(field);
+#if RIMWORLD_1_7
+            if (owner is JobGiver_CQFCrossMapTarget crossMap && field.Name == nameof(crossMap.compositeMapKey))
+                label = this.EnumLabel(crossMap.compositeMapLookup);
+#endif
             float top = y;
+#if RIMWORLD_1_7
+            if (owner is JobGiver_CQFCrossMapReport report && field.Name == nameof(report.reinforcementGroupTag))
+            {
+                this.DrawValue(ref y, label, field.FieldType, field.GetValue(owner), value => field.SetValue(owner, value), key, x, width - 30f);
+                if (CQFUIStyle.ButtonImage(new Rect(x + width - 27f, top + 2f, 24f, 24f), TexButton.OpenDebugActionsMenu,
+                        tooltip: "CQF_GroupBook".Translate()))
+                    CQFGroupBookCatalog.OpenTags(tag => report.reinforcementGroupTag = tag);
+            }
+            else
+#endif
             this.DrawValue(ref y, label, field.FieldType, field.GetValue(owner), value => field.SetValue(owner, value), key, x, width);
 #if RIMWORLD_1_7
             if (owner is JobGiver_CQFCrossMapTarget && this.FieldTip(field) is { } tip)

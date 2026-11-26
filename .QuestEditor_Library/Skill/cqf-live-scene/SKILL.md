@@ -10,7 +10,7 @@ description: Build a CQF RimWorld scene from assets actually loaded by the game.
 ## 连游戏
 
 - 沿用用户授权的游戏实例。不要打开或操作用户的存档来代替隔离测试。无 CU 时，可以连接已启用的桥接，或在用户同意后用独立离线副本验证。
-- 在目标 CQF 安装内找 `MCP/CONNECT.md` 和 `MCP/CQF.McpHost.exe`。Host 通过 stdio 启动，参数为 `--pipe <管道名>`。使用现有 MCP 客户端，或用本 Skill 的 `scripts/cqf_stdio.py --host <Host路径> [--pipe <管道名>] status` 连线。脚本只在发现唯一 CQF 管道时自动选择。
+- 在 CQF 源码仓库找 `.QuestEditor_Library/MCP/CONNECT.md` 和 `.QuestEditor_Library/MCP/CQF.McpHost.exe`。Host 通过 stdio 启动，参数为 `--pipe <管道名>`。使用现有 MCP 客户端，或用本 Skill 的 `scripts/cqf_stdio.py --host <Host路径> [--pipe <管道名>] status` 连线。脚本只在发现唯一 CQF 管道时自动选择。
 - `cqf_session_get` 成功表示已经与游戏往返。核对 `gameLoaded` 和 `editingAllowed`。查素材走只读权限。创建和保存场景需要目标实例允许编辑。未启用桥接时，文件可用于查找安装和版本，实机加载结论要等桥接或隔离副本核实。
 
 ## 看实际可用的素材

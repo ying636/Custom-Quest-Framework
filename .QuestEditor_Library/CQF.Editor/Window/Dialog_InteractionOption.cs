@@ -14,7 +14,6 @@ namespace QuestEditor_Library
             this.operation = operation;
             this.owner = owner ?? CQFEditorContext.SourceThing;
             this.symmetrySession = new CQFSymmetryEditSession(this.owner);
-            this.windowRect = new Rect((UI.screenWidth - 760f) / 2f, (UI.screenHeight - 680f) / 2f, 760f, 680f);
             this.forceCatchAcceptAndCancelEventEvenIfUnfocused = true;
             this.closeOnAccept = false;
             this.closeOnCancel = false;
@@ -25,7 +24,7 @@ namespace QuestEditor_Library
             this.draggable = true;
             this.resizeable = true;
         }
-        public override Vector2 InitialSize => new Vector2(760f, 680f);
+        public override Vector2 InitialSize => new Vector2(Mathf.Min(760f, UI.screenWidth - 20f), Mathf.Min(680f, UI.screenHeight - 20f));
         public CQFAIEditorContext AIContext => new CQFAIEditorContext(nameof(InteractionOperation), () => this.operation, value =>
         {
             foreach (var field in new CQFAIModel().Fields(typeof(InteractionOperation))) field.SetValue(this.operation, field.GetValue(value));
@@ -36,6 +35,8 @@ namespace QuestEditor_Library
             base.WindowUpdate();
             this.windowRect.width = Mathf.Clamp(this.windowRect.width, Mathf.Min(380f, UI.screenWidth - 20f), UI.screenWidth - 20f);
             this.windowRect.height = Mathf.Clamp(this.windowRect.height, Mathf.Min(300f, UI.screenHeight - 20f), UI.screenHeight - 20f);
+            this.windowRect.x = Mathf.Clamp(this.windowRect.x, 0f, UI.screenWidth - this.windowRect.width);
+            this.windowRect.y = Mathf.Clamp(this.windowRect.y, 0f, UI.screenHeight - this.windowRect.height);
         }
 
         public override void PostClose()
