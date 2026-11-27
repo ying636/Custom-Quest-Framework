@@ -36,7 +36,8 @@ public sealed class CQFCompositeMapInstance : IExposable
     public bool UsesRegisteredMaps => definition == null;
     internal IReadOnlyList<CQFCompositeMapConnection> Edges => RootGroup.Edges;
     internal bool MinimapExpanded { get; set; } = true;
-    internal CQFCompositeMapPortal? Entrance => entrance;
+    internal CustomMapEntrance_Composite? Entrance => entrance;
+    internal IReadOnlyList<CustomMapEntrance_Composite> StandardEntrances => standardEntrances;
     internal Map? ViewableSource => UsesRegisteredMaps && source is { Disposed: false, Parent: CustomSite } ? source : null;
     internal Vector2 MinimapPosition { get => minimapPosition; set => minimapPosition = value; }
 
@@ -49,6 +50,8 @@ public sealed class CQFCompositeMapInstance : IExposable
         Scribe_References.Look(ref source, "source");
         Scribe_Values.Look(ref entranceCell, "entranceCell");
         Scribe_References.Look(ref entrance, "entrance");
+        Scribe_Collections.Look(ref standardEntrances, "standardEntrances", LookMode.Reference);
+        if (Scribe.mode == LoadSaveMode.PostLoadInit) standardEntrances ??= new();
         Scribe_Collections.Look(ref maps, "maps", LookMode.Value, LookMode.Reference, ref savedIds, ref savedMaps);
         Scribe_Collections.Look(ref groups, "groups", LookMode.Deep);
         groups ??= new();
@@ -69,7 +72,9 @@ public sealed class CQFCompositeMapInstance : IExposable
         mapDatabase.Register(RootGroup.Regions.First(region => region.id == id), map, RootGroup);
     }
 
-    internal void Bind(CQFCompositeMapPortal portal) => entrance = portal;
+    internal void Bind(CustomMapEntrance_Composite portal) => entrance = portal;
+
+    internal void AddStandardEntrance(CustomMapEntrance_Composite portal) => standardEntrances.Add(portal);
 
     internal void RestoreGroups()
     {
@@ -221,7 +226,8 @@ public sealed class CQFCompositeMapInstance : IExposable
     private Map source = null!;
     private IntVec3 entranceCell;
     private Vector2 minimapPosition = new(-1, -1);
-    private CQFCompositeMapPortal? entrance;
+    private CustomMapEntrance_Composite? entrance;
+    private List<CustomMapEntrance_Composite> standardEntrances = new();
     private Dictionary<string, Map> maps = new(StringComparer.Ordinal);
     private List<CQFCompositeMapGroup> groups = new();
     private CQFCompositeMapDatabase mapDatabase = new();

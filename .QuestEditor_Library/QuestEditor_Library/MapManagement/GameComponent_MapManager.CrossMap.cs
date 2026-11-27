@@ -189,10 +189,6 @@ public sealed partial class GameComponent_MapManager
         Dictionary<Map, List<CQFCrossMapStep>> routes = new();
         foreach (Map map in game.Maps.Concat(hibernatingMaps))
         {
-            foreach (Thing thing in map.listerThings.ThingsOfDef(CQFCompositeMapDefs.CQF_CompositeMapPortal))
-                if (thing is CQFCompositeMapPortal { Destination: { } destination } portal && !portal.Destroyed)
-                    Add(map, destination, Departure(portal, map), portal.Arrival, portal);
-
             if (map.Parent is MapParent_Custom { sourceMap: { } source, entrance: { Destroyed: false } entrance, Exit: { Destroyed: false } exit }
                 && ContainsCrossMapThing(source, entrance) && ContainsCrossMapThing(map, exit))
             {
@@ -202,6 +198,19 @@ public sealed partial class GameComponent_MapManager
         }
         foreach (CQFCompositeMapInstance instance in compositeMaps)
         {
+            foreach (CustomMapEntrance_Composite entrance in instance.StandardEntrances)
+            {
+                if (entrance is not { Destroyed: false, FixedSource: { } source, CustomMap: { } destination } ||
+                    !ContainsCrossMapThing(source, entrance)) continue;
+                if (entrance.FixedOneWay)
+                {
+                    Add(source, destination, Departure(entrance, source), entrance.GetDestinationLocation(), entrance);
+                    continue;
+                }
+                if (entrance.exit is not { Destroyed: false } exit || !ContainsCrossMapThing(destination, exit)) continue;
+                Add(source, destination, Departure(entrance, source), exit.Position, entrance);
+                Add(destination, source, Departure(exit, destination), entrance.Position, exit);
+            }
             foreach (CQFCompositeMapConnection edge in instance.Edges)
             {
                 if (instance.GetMap(edge.from) is not { } from || instance.GetMap(edge.to) is not { } to) continue;

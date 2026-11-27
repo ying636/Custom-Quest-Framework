@@ -330,7 +330,7 @@ namespace QuestEditor_Library
         {
             GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
             manager?.NotifyMapActivity(map);
-            if (thing is CQFCompositeMapPortal or CQFMapPortal) manager?.InvalidateCrossMapRoutes();
+            if (thing is CQFMapPortal) manager?.InvalidateCrossMapRoutes();
             if (thing is Pawn pawn)
             {
                 if (map.Parent is CQFCompositeMapParent) manager?.NotifyCompositeEdgeSpawned(pawn, map);
@@ -341,7 +341,7 @@ namespace QuestEditor_Library
         {
             GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
             manager?.NotifyMapActivity(map);
-            if (thing is CQFCompositeMapPortal or CQFMapPortal) manager?.InvalidateCrossMapRoutes();
+            if (thing is CQFMapPortal) manager?.InvalidateCrossMapRoutes();
             if (thing is Pawn pawn) Notify_PawnDespawned(pawn);
         }
 #endif

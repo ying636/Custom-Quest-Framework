@@ -482,12 +482,14 @@ namespace QuestEditor_Library
 
         private void Enter(Thing thing)
         {
-            if (thing == null || this.exit == null)
+            IntVec3 arrival = this.GetDestinationLocation();
+            if (thing == null || !arrival.IsValid)
             {
                 return;
             }
-            this.GetOtherMap();
-            if (this.exit.Map == null) throw new InvalidOperationException("[CQF] Portal destination is not active after map activation.");
+            Map destination = this.GetOtherMap();
+            if (destination == null || (this.exit != null && this.exit.Map != destination))
+                throw new InvalidOperationException("[CQF] Portal destination is not active after map activation.");
 #if RIMWORLD_1_7
             GameComponent_MapManager? manager = GameComponent_MapManager.Instance;
             Map source = this.Map;
@@ -501,7 +503,7 @@ namespace QuestEditor_Library
                 thing.DeSpawn();
             }
 
-            GenSpawn.Spawn(thing, this.exit.Position, this.exit.Map);
+            GenSpawn.Spawn(thing, arrival, destination);
             if (thing is Pawn pawn)
             {
                 this.OnEntered(pawn);
@@ -511,9 +513,9 @@ namespace QuestEditor_Library
             }
 
             this.thereIsPawnIsEntering = false;
-            if (this.exit.Position.Fogged(this.exit.Map))
+            if (arrival.Fogged(destination))
             {
-                FloodFillerFog.FloodUnfog(this.exit.Position, this.exit.Map);
+                FloodFillerFog.FloodUnfog(arrival, destination);
             }
 
             if (!(thing is Pawn))

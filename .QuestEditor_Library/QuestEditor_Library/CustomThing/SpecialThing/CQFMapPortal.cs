@@ -50,6 +50,19 @@ namespace QuestEditor_Library
             this.Notify_ThingAdded(pawn);
             MetaLord owner = Current.Game.GetComponent<GameComponent_MetaLord>().Manager.GetForPawn(pawn);
             owner?.PawnArrivedNewLevel(pawn, pawn.Map);
+#if RIMWORLD_1_7
+            if (pawn.IsColonistPlayerControlled && GameComponent_MapManager.Instance is { } manager)
+            {
+                Map? source = this switch
+                {
+                    CustomMapEntrance_Composite { FixedSource: { } from } => from,
+                    CustomMapExit { entrance: CustomMapEntrance_Composite { FixedSource: not null, CustomMap: { } from } } => from,
+                    _ => null
+                };
+                if (source != null && source != pawn.Map)
+                    manager.CrossMap.Pursue(manager.CrossMap.FindPursuers(pawn, source, this.Position), pawn, source, pawn.Map, this.Position);
+            }
+#endif
             if (pawn.GetLord() is Lord l) 
             {
                 if (owner == null && ((l.LordJob is LordJob_AssaultColony)

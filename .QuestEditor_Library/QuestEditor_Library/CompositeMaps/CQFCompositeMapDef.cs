@@ -13,6 +13,10 @@ public sealed class CQFCompositeMapDef : Def
     internal IEnumerable<string> Validate()
     {
         if (regions.Count < 2) yield return defName + ": at least two regions are required.";
+        if (entranceDef != null && !typeof(CustomMapEntrance_Composite).IsAssignableFrom(entranceDef.thingClass))
+            yield return defName + ": the entrance must use a CQF composite entrance.";
+        if (exitDef != null && !typeof(CustomMapExit).IsAssignableFrom(exitDef.thingClass))
+            yield return defName + ": the exit must use a CQF map exit.";
         Dictionary<string, CQFCompositeMapRegion> ids = new(StringComparer.Ordinal);
         HashSet<IntVec2> positions = new();
         foreach (CQFCompositeMapRegion region in regions)
@@ -99,6 +103,8 @@ public sealed class CQFCompositeMapDef : Def
     public List<CQFCompositeMapConnection> portals = new();
     public string entry = "";
     public IntVec3 entryCell = IntVec3.Invalid;
+    public ThingDef? entranceDef;
+    public ThingDef? exitDef;
     public bool showEntranceTitle;
     public CQFCompositeMapPlacement appendedLayout;
 }

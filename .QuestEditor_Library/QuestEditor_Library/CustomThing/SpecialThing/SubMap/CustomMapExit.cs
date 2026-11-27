@@ -72,7 +72,7 @@ namespace QuestEditor_Library
             }
 
             if (this.entrance != null && (this.entrance.Destroyed || !this.entrance.opended || (!this.entrance.Spawned &&
-                GameComponent_MapManager.Instance?.IsHibernating((this.Map?.Parent as RimWorld.Planet.PocketMapParent)?.sourceMap) != true)))
+                GameComponent_MapManager.Instance?.IsHibernating(this.ResolveSourceMap()) != true)))
             {
                 reason = "EntranceIsBlocked".Translate();
                 return false;
@@ -190,9 +190,17 @@ namespace QuestEditor_Library
 
         public override Map GetOtherMap()
         {
-            Map destination = this.entrance?.Map ?? (this.Map?.Parent as RimWorld.Planet.PocketMapParent)?.sourceMap;
+            Map? destination = this.ResolveSourceMap();
             if (destination == null) throw new InvalidOperationException("[CQF] Portal exit has no source map reference.");
             return GameComponent_MapManager.Instance?.Activate(destination) ?? destination;
+        }
+
+        private Map? ResolveSourceMap()
+        {
+#if RIMWORLD_1_7
+            if (this.entrance is CustomMapEntrance_Composite { FixedSource: { } source }) return source;
+#endif
+            return this.entrance?.Map ?? (this.Map?.Parent as RimWorld.Planet.PocketMapParent)?.sourceMap;
         }
 
         public override IntVec3 GetDestinationLocation()

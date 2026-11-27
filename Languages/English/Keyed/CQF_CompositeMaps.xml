@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
   <CQF_CompositeMap>Composite Maps</CQF_CompositeMap>
-  <CQF_Composite_PortalTravel>Use passage to {0}</CQF_Composite_PortalTravel>
   <CQF_Composite_DestinationUnavailable>The destination map is unavailable.</CQF_Composite_DestinationUnavailable>
   <CQF_Composite_ArrivalBlocked>The arrival point is blocked.</CQF_Composite_ArrivalBlocked>
   <CQF_Composite_FullMap>Open full map</CQF_Composite_FullMap>
   <CQF_Composite_BranchOccupied>Someone is still on the connected maps.</CQF_Composite_BranchOccupied>
   <CQF_Composite_BranchInUse>Someone is using a connected passage.</CQF_Composite_BranchInUse>
   <CQF_Composite_BranchHasReturn>Another map still uses one of these maps as its return point.</CQF_Composite_BranchHasReturn>
-  <CQF_Composite_TravelReport>Traveling to another map.</CQF_Composite_TravelReport>
   <CQF_Composite_EntryMap>{0} (entry map)</CQF_Composite_EntryMap>
   <CQF_Composite_EntranceButton>{0} · Entry: {1}</CQF_Composite_EntranceButton>
-  <CQF_Composite_SelectTraveler>Select a colonist to use this passage.</CQF_Composite_SelectTraveler>
   <CQFAction_ShowMapTitle>Action: show map title</CQFAction_ShowMapTitle>
   <CQF_EntranceTitleText>Entrance text</CQF_EntranceTitleText>
 </LanguageData>

@@ -189,7 +189,7 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
         return WalkJob(step);
     }
 
-    internal List<Pawn>? FindPursuers(Pawn target, Map source)
+    internal List<Pawn>? FindPursuers(Pawn target, Map source, IntVec3? departure = null)
     {
         if (!target.IsColonistPlayerControlled) return null;
         List<Pawn>? result = null;
@@ -198,7 +198,7 @@ internal sealed class CQFCrossMapCoordinator : IExposable, IThingHolder
             if (pawn.Downed || pawn.Dead || pawn == target || bySubject.ContainsKey(pawn)) continue;
             bool predation = pawn.CurJob?.def == JobDefOf.PredatorHunt && pawn.CurJob.targetA.Thing == target;
             if (!predation && (!pawn.HostileTo(target) || pawn.mindState.enemyTarget != target)) continue;
-            if (pawn.Position.DistanceToSquared(target.Position) > 24 * 24) continue;
+            if (pawn.Position.DistanceToSquared(departure ?? target.Position) > 24 * 24) continue;
             (result ??= new()).Add(pawn);
         }
         return result;

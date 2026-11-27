@@ -10,11 +10,32 @@
     <selectable>false</selectable>
     <expandingIcon>false</expandingIcon>
   </WorldObjectDef>
-  <ThingDef>
-    <defName>CQF_CompositeMapPortal</defName>
+  <ThingDef ParentName="CustomThing_Entrance">
+    <defName>CQF_CompositeEntrance</defName>
     <label>passage</label>
     <description>A passage connecting two maps.</description>
-    <thingClass>QuestEditor_Library.CQFCompositeMapPortal</thingClass>
+    <thingClass>QuestEditor_Library.CustomMapEntrance_Composite</thingClass>
+    <category>Building</category>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Standable</passability>
+    <selectable>true</selectable>
+    <useHitPoints>false</useHitPoints>
+    <rotatable>false</rotatable>
+    <graphicData>
+      <graphicClass>Graphic_Single</graphicClass>
+      <texPath>Spawner</texPath>
+    </graphicData>
+    <building>
+      <deconstructible>false</deconstructible>
+      <alwaysDeconstructible>false</alwaysDeconstructible>
+      <expandHomeArea>false</expandHomeArea>
+    </building>
+  </ThingDef>
+  <ThingDef ParentName="CustomThing_Exit">
+    <defName>CQF_CompositeExit</defName>
+    <label>passage</label>
+    <description>A passage connecting two maps.</description>
+    <thingClass>QuestEditor_Library.CustomMapExit</thingClass>
     <category>Building</category>
     <altitudeLayer>Building</altitudeLayer>
     <passability>Standable</passability>
@@ -36,12 +57,4 @@
     <order>10000</order>
     <genStep Class="QuestEditor_Library.GenStep_CompositeMapVisibility" />
   </GenStepDef>
-  <JobDef>
-    <defName>CQF_CompositeMapTravel</defName>
-    <driverClass>QuestEditor_Library.JobDriver_CompositeMapTravel</driverClass>
-    <reportString>Traveling to another map.</reportString>
-    <playerInterruptible>true</playerInterruptible>
-    <casualInterruptible>false</casualInterruptible>
-    <carryThingAfterJob>true</carryThingAfterJob>
-  </JobDef>
 </Defs>

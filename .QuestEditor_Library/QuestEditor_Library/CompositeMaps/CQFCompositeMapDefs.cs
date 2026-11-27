@@ -8,8 +8,8 @@ public static class CQFCompositeMapDefs
 {
     static CQFCompositeMapDefs() => DefOfHelper.EnsureInitializedInCtor(typeof(CQFCompositeMapDefs));
 
-    public static WorldObjectDef CQF_CompositeMapRegion = null!;
-    public static ThingDef CQF_CompositeMapPortal = null!;
-    public static JobDef CQF_CompositeMapTravel = null!;
-    public static GenStepDef CQF_CompositeMapVisibility = null!;
+    public static WorldObjectDef CQF_CompositeMapRegion;
+    public static ThingDef CQF_CompositeEntrance;
+    public static ThingDef CQF_CompositeExit;
+    public static GenStepDef CQF_CompositeMapVisibility;
 }

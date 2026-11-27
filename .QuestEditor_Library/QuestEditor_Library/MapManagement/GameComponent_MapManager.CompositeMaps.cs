@@ -28,7 +28,7 @@ public sealed partial class GameComponent_MapManager
 
         CQFCompositeMapInstance instance = new(definition, source, entranceCell);
         List<CQFCompositeMapParent> parents = new();
-        CQFCompositeMapPortal? entrance = null;
+        CustomMapEntrance_Composite? entrance = null;
         string phase = definition.defName;
         try
         {
@@ -57,12 +57,10 @@ public sealed partial class GameComponent_MapManager
                 Map from = instance.GetMap(link.from)!;
                 Map to = instance.GetMap(link.to)!;
                 phase = link.from + " / " + link.to;
-                PlacePortal(from, link.fromCell, to, link.toCell);
-                if (link.twoWay) PlacePortal(to, link.toCell, from, link.fromCell);
+                PlaceCompositeEntrance(instance, definition, from, link.fromCell, to, link.toCell, link.twoWay);
             }
             phase = definition.entry;
-            PlacePortal(entryMap, definition.entryCell, source, entranceCell);
-            entrance = PlacePortal(source, entranceCell, entryMap, definition.entryCell);
+            entrance = PlaceCompositeEntrance(instance, definition, source, entranceCell, entryMap, definition.entryCell, twoWay: true);
             instance.Bind(entrance);
             compositeMaps.Add(instance);
             foreach (Map map in instance.Maps) compositeByMap.Add(map, instance);
@@ -177,11 +175,11 @@ public sealed partial class GameComponent_MapManager
         QueueCompositeTransfer(() =>
         {
             if (pawn.Spawned && pawn.Map == source && pawn.Position == cell)
-                TryTravelCompositeMap(pawn, target, arrival, edge: true);
+                TryTravelCompositeEdge(pawn, target, arrival);
         });
     }
 
-    internal bool TryTravelCompositeMap(Pawn pawn, Map? target, IntVec3 arrival, bool edge = false)
+    private bool TryTravelCompositeEdge(Pawn pawn, Map? target, IntVec3 arrival)
     {
         if (target == null || target.Disposed)
         {
@@ -189,8 +187,8 @@ public sealed partial class GameComponent_MapManager
             return false;
         }
         Activate(target);
-        if (!CanLand(target, arrival, edge) &&
-            !CellFinder.TryFindRandomCellNear(arrival, target, 3, cell => CanLand(target, cell, edge), out arrival))
+        if (!CanLandAtEdge(target, arrival) &&
+            !CellFinder.TryFindRandomCellNear(arrival, target, 3, cell => CanLandAtEdge(target, cell), out arrival))
         {
             Messages.Message("CQF_Composite_ArrivalBlocked".Translate(), pawn, MessageTypeDefOf.RejectInput, historical: false);
             return false;
@@ -305,8 +303,8 @@ public sealed partial class GameComponent_MapManager
         return false;
     }
 
-    private static bool CanLand(Map map, IntVec3 cell, bool edge) => ValidArrival(map, cell) &&
-        (!edge || (cell.x > 0 && cell.z > 0 && cell.x < map.Size.x - 1 && cell.z < map.Size.z - 1)) &&
+    private static bool CanLandAtEdge(Map map, IntVec3 cell) => ValidArrival(map, cell) &&
+        cell.x > 0 && cell.z > 0 && cell.x < map.Size.x - 1 && cell.z < map.Size.z - 1 &&
         cell.GetFirstPawn(map) == null;
 
     private static bool IsCompositeColonist(Pawn pawn) => pawn.IsColonist || pawn.IsSlaveOfColony;
@@ -334,14 +332,33 @@ public sealed partial class GameComponent_MapManager
         }
     }
 
-    private static CQFCompositeMapPortal PlacePortal(Map map, IntVec3 cell, Map otherMap, IntVec3 otherCell)
+    private static CustomMapEntrance_Composite PlaceCompositeEntrance(CQFCompositeMapInstance instance,
+        CQFCompositeMapDef definition, Map source, IntVec3 sourceCell, Map destination, IntVec3 destinationCell, bool twoWay)
     {
-        if (!ValidArrival(map, cell) || cell.GetFirstBuilding(map) != null || !ValidArrival(otherMap, otherCell))
-            throw new InvalidOperationException("[CQF] Invalid composite map portal cells: " + cell + " / " + otherCell);
-        CQFCompositeMapPortal portal = (CQFCompositeMapPortal)ThingMaker.MakeThing(CQFCompositeMapDefs.CQF_CompositeMapPortal);
-        portal.Bind(otherMap, otherCell);
-        GenSpawn.Spawn(portal, cell, map);
-        return portal;
+        ThingDef entranceDef = definition.entranceDef ?? CQFCompositeMapDefs.CQF_CompositeEntrance;
+        ThingDef exitDef = definition.exitDef ?? CQFCompositeMapDefs.CQF_CompositeExit;
+        if (!GenAdj.OccupiedRect(sourceCell, Rot4.North, entranceDef.size).Cells
+                .All(cell => ValidArrival(source, cell) && cell.GetFirstBuilding(source) == null) ||
+            !ValidArrival(destination, destinationCell) ||
+            (twoWay && !GenAdj.OccupiedRect(destinationCell, Rot4.North, exitDef.size).Cells
+                .All(cell => ValidArrival(destination, cell) && cell.GetFirstBuilding(destination) == null)))
+            throw new InvalidOperationException("[CQF] Invalid composite map portal cells: " + sourceCell + " / " + destinationCell);
+
+        var entrance = (CustomMapEntrance_Composite)ThingMaker.MakeThing(entranceDef, GenStuff.DefaultStuffFor(entranceDef));
+        var exit = twoWay ? (CustomMapExit)ThingMaker.MakeThing(exitDef, GenStuff.DefaultStuffFor(exitDef)) : null;
+        entrance.BindFixedPassage(source, destination, exit, destinationCell);
+        if (exit != null) GenSpawn.Spawn(exit, destinationCell, destination, Rot4.North);
+        try
+        {
+            GenSpawn.Spawn(entrance, sourceCell, source, Rot4.North);
+        }
+        catch
+        {
+            if (entrance.Spawned) entrance.Destroy();
+            throw;
+        }
+        instance.AddStandardEntrance(entrance);
+        return entrance;
     }
 
     internal static bool ValidArrival(Map map, IntVec3 cell) =>
